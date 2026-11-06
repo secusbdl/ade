@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-06T14:44:44.869530+00:00",
+  "createdUtc": "2026-11-06T15:27:07.272900+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "cdf57434d020f5c8e3aee50250dac6476b0b6d65",
+  "developmentCommit": "595c96296915093df688673cb211a3dd7e75323e",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 2760,
-  "bytes": 28050898,
+  "fileCount": 2780,
+  "bytes": 28170105,
   "files": [
     {
       "path": ".gitattributes",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 41858,
-      "sha256": "c7f10cc95028fce48d33dfbb58cef7d5d8cf95ef202d0c38cb95247073fa743d"
+      "bytes": 42385,
+      "sha256": "6a6cf7c92e6e4492fba8e0ecddfdaf495ab3ef2a2425039f3963e29ff83e6d75"
     },
     {
       "path": "CMakePresets.json",
@@ -94,8 +94,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 12242,
-      "sha256": "789e61ce90209341deed2db4bb4fba924a2c88fa21ac7cb91a2273e384cf2fce"
+      "bytes": 14578,
+      "sha256": "9a2671d21adabcfa2f51df98826765cdb799f5931c1ef1c4d9cab9b86dd145ad"
     },
     {
       "path": "assets/fonts/Geist-Italic-Variable.ttf",
@@ -2053,6 +2053,11 @@
       "sha256": "e6db7857eeab6e30be2fb7b85516aba8564e6f83a8483c23c3e23246f3299988"
     },
     {
+      "path": "audit/native-close-process-verification.json",
+      "bytes": 3047,
+      "sha256": "e188e39df386acd233aba06625ca9b8179b49b7101dc09cc0ef7c8794c654c6f"
+    },
+    {
       "path": "audit/native-core-progress.md",
       "bytes": 10091,
       "sha256": "ab11edee22310bcbea648212aeaac260465f5dd8976bc892debb927988b00908"
@@ -2071,6 +2076,76 @@
       "path": "audit/native-file-previews.json",
       "bytes": 2987,
       "sha256": "c8714068aa3cac11e7991d26f8b750dd2348da1df5402ef9d0594c6ee80a15dd"
+    },
+    {
+      "path": "audit/native-git-worktree-live-verification.json",
+      "bytes": 8654,
+      "sha256": "51c6e059b38895246c8e923767ff6c84151168d3e1da668e340c39efcadafbd7"
+    },
+    {
+      "path": "audit/native-github-live-verification.json",
+      "bytes": 18146,
+      "sha256": "094944a32e94d3da28c2d32afcdbe2cca9d059aaa417ba3d58b0a3b58a546e7f"
+    },
+    {
+      "path": "audit/native-live-validation/native_context.txt",
+      "bytes": 742,
+      "sha256": "60d2eb66356581d54bfdd796c3d5ce04bd06504907dc86fb2ce7436601883cdb"
+    },
+    {
+      "path": "audit/native-live-validation/native_git.txt",
+      "bytes": 1210,
+      "sha256": "63f103a7787648330dbd01d9966ecba7422e2e35d0e4c727a721dd8f083d0f82"
+    },
+    {
+      "path": "audit/native-live-validation/native_plugin_runtime.txt",
+      "bytes": 1639,
+      "sha256": "e98f8a5311a28ce98f726aa752cc6074f5465f01deadbbe59ad0d42e825cd658"
+    },
+    {
+      "path": "audit/native-live-validation/native_plugins.txt",
+      "bytes": 1717,
+      "sha256": "553adcd5e7dc06c469a6f5f0fdb5a851e233e493042fd0b5afb84159bf8a7544"
+    },
+    {
+      "path": "audit/native-live-validation/native_smoke_plugins.txt",
+      "bytes": 1131,
+      "sha256": "ee7bb969402de7ff1a5d539cd134701329f265ce08eb0b84c8b65560274d7a7d"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-finalSmoke-ctest.txt",
+      "bytes": 205,
+      "sha256": "34ec08709ddc3d901055ddb84007a3dbde2e3439388cf217a962b212703451a6"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-finalSmoke-ctest.xml",
+      "bytes": 347,
+      "sha256": "c871ee7eda555c98e7751315789a1b68ac960292108046eba35568ccf6aefa7e"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-initial-ctest.txt",
+      "bytes": 619,
+      "sha256": "ebdef2977b0f6e6f0fcf63549165bf2885483286e0180dee06f87877a5afadba"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-initial-ctest.xml",
+      "bytes": 833,
+      "sha256": "c0353750b5b6182348d919d2a893254c39c0595872bef5911b47f999c9e15a6e"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-platformCorrected-ctest.txt",
+      "bytes": 313,
+      "sha256": "0d887b895c08cf9721f37770fa8097363c583beedc9ced158d0ca67807d2ab84"
+    },
+    {
+      "path": "audit/native-live-validation/smoke-platformCorrected-ctest.xml",
+      "bytes": 378,
+      "sha256": "6578240301a6a4f51926ea622eea43da9a7a57a1211d8428e6231e09a5cbf5bb"
+    },
+    {
+      "path": "audit/native-smoke-plugin-verification.json",
+      "bytes": 13088,
+      "sha256": "73ab6c3b2d42415a26902a1afe69a298251c9911607798a4664f889cb57415ee"
     },
     {
       "path": "audit/network-broker-evidence.md",
@@ -2443,6 +2518,16 @@
       "sha256": "0235e3488457de028112a3560e85c97ef5b83e10c80534588b793acbd8c7a36e"
     },
     {
+      "path": "audit/plugin-integration/export-build.txt",
+      "bytes": 34421,
+      "sha256": "98bb46b70428111cbb96927a3fefb06bb82e19196f09e3a0dea69a9b06f89c32"
+    },
+    {
+      "path": "audit/plugin-integration/export-configure.txt",
+      "bytes": 1904,
+      "sha256": "ac6880fbbef5534cc16036dab1be0efaecf3773928c5e78c72090027e2dd62f2"
+    },
+    {
       "path": "audit/plugin-integration/final-targeted-run/build-output.txt",
       "bytes": 3457,
       "sha256": "c77bb32f3089ecc23f761921f6eeb0da126778c0234a88e234bac20a3d718933"
@@ -2606,6 +2691,16 @@
       "path": "audit/plugin-packaged-controls.json",
       "bytes": 5572,
       "sha256": "c9d567ea78ed76478a16bed26a4fbafcbef1971b3a7fb417d69ecb58b31b512b"
+    },
+    {
+      "path": "audit/plugin-publication.json",
+      "bytes": 6023,
+      "sha256": "014dc7516a7cfc26baa39efed594956a0bcd97ae160e4059661437f1dae9b09d"
+    },
+    {
+      "path": "audit/plugin-source-export-verification.json",
+      "bytes": 4402,
+      "sha256": "942502c380854ec2f64d836c7cea09739c36fa22ea8eaf5e7b609a41ce45a643"
     },
     {
       "path": "audit/presentation-native.json",
@@ -11229,8 +11324,8 @@
     },
     {
       "path": "src/git/GitService.cpp",
-      "bytes": 46162,
-      "sha256": "8af45461a7b5decb8c31e9b0e11e6eaf0cd4fc8a26d8e42feaf26bde2b288055"
+      "bytes": 46477,
+      "sha256": "42f3228aea4f7785f8cd53f09d811b95d2376dac232460dec087a3294f42d863"
     },
     {
       "path": "src/git/GitService.h",
@@ -11344,8 +11439,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 7580,
-      "sha256": "f12c5119d9fc3c159f23c93d6946f3c41b3df1836d75b6c6b120f77bad536b2e"
+      "bytes": 10460,
+      "sha256": "c6351737e4fa47161e586353d332df563dcb48729105ea37644e5a3137385397"
     },
     {
       "path": "src/mutations/FileMutationDiff.h",
@@ -12404,8 +12499,8 @@
     },
     {
       "path": "tests/test_git.cpp",
-      "bytes": 27861,
-      "sha256": "96b2804559ecec2d34f22c631cb4c44c7258b02cbd94a65337018df702597906"
+      "bytes": 30610,
+      "sha256": "ab0822034cc738c773aff3f4677a5a4809c4fbce8a6f77474b4fe0090e436d9f"
     },
     {
       "path": "tests/test_git_host.cpp",
@@ -12601,6 +12696,11 @@
       "path": "tests/test_sidebar_navigation.cpp",
       "bytes": 10496,
       "sha256": "e6ec99cb25b75e5f9d778260e085b8316f26a3b72b00df5ed7fa61fb5aa4a5f9"
+    },
+    {
+      "path": "tests/test_smoke_plugins.cpp",
+      "bytes": 11581,
+      "sha256": "9a7c946e550249aa36d8a3c6095c1373743ce125d3028c3ccc68d36340253775"
     },
     {
       "path": "tests/test_terminal.cpp",

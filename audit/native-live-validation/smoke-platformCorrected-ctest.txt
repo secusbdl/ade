@@ -1,0 +1,12 @@
+Test project D:/age/ADE/build-next
+    Start 64: native_smoke_plugins
+1/1 Test #64: native_smoke_plugins .............***Failed    2.05 sec
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.32 sec
+
+The following tests FAILED:
+	 64 - native_smoke_plugins (Failed)
+Errors while running CTest

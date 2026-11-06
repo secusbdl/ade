@@ -69,6 +69,7 @@ class GitTest:public QObject {
 private slots:
     void nulDelimitedParsers();
     void regularUnbornAndLinkedRoots();
+    void windowsLongWorktreePaths();
     void statusDiffAndRawBytes();
     void renameAndStagedDeletionRecreated();
     void dirtyCheckoutProtection();
@@ -111,6 +112,37 @@ void GitTest::regularUnbornAndLinkedRoots() {
     QCOMPARE(waitFor(service,service.switchBranch(f.root,"linked/topic")).error.code,GitErrorCode::BranchCheckedOut);
     Fixture unborn(false); GitService empty(unborn.options()); empty.setWorkspaceContext(unborn.context());
     result=waitFor(empty,empty.inspect(unborn.root)); QVERIFY(ok(result)); QVERIFY(!result.snapshot.status.dirty);
+}
+void GitTest::windowsLongWorktreePaths() {
+#ifndef Q_OS_WIN
+    QSKIP("Git for Windows long-path command policy.");
+#else
+    Fixture f; QVERIFY2(f.error.isEmpty(),qPrintable(f.error));
+    QVERIFY(f.run({"config","core.longpaths","false"}));
+    QVERIFY(f.run({"branch","before-long-file","main"}));
+    const auto relative=QString("nested/")+QString(80,'x')+".txt";
+    const QByteArray original="Deep worktree path bytes\r\nlast";
+    QVERIFY(f.root.size()+1+relative.size()<260);
+    QVERIFY(write(f.root+'/'+relative,original)); QVERIFY(f.run({"add","--",relative})); QVERIFY(f.run({"commit","-m","deep tracked file"}));
+    const auto configBefore=read(f.root+"/.git/config"); QVERIFY(!configBefore.isEmpty());
+    // Keep the worktree root below Git's separate explicit $GIT_DIR bound;
+    // the tracked file itself must exceed MAX_PATH after checkout.
+    auto options=f.options(); options.managedWorktreeRoot=f.base.path()+"/managed-"+QString(qMax(1,160-int(f.base.path().size())),'m');
+    GitService service(options); service.setWorkspaceContext(f.context());
+    auto created=waitFor(service,service.createWorktree(f.root,"windows-long-path","main")); QVERIFY(ok(created));
+    const auto linked=created.path; const auto longFile=linked+'/'+relative; QVERIFY(longFile.size()>260);
+    QCOMPARE(read(longFile),original); QVERIFY(created.snapshot.isWorktree); QVERIFY(!created.snapshot.status.dirty);
+    auto content=waitFor(service,service.fileDiff(linked,relative,false)); QVERIFY(ok(content)); QCOMPARE(content.fileDiff.original,original); QCOMPARE(content.fileDiff.modified,original);
+    auto switched=waitFor(service,service.switchBranch(linked,"before-long-file")); QVERIFY(ok(switched)); QVERIFY(!QFileInfo::exists(longFile));
+    switched=waitFor(service,service.switchBranch(linked,"windows-long-path")); QVERIFY(ok(switched)); QCOMPARE(read(longFile),original);
+    const QByteArray changed="Changed long-path bytes\n"; QVERIFY(write(longFile,changed));
+    auto state=waitFor(service,service.status(linked)); QVERIFY(ok(state)); QVERIFY(state.status.known); QVERIFY(state.status.dirty); QCOMPARE(state.status.unstagedCount,1);
+    QCOMPARE(waitFor(service,service.removeWorktree(linked)).error.code,GitErrorCode::DirtyWorktree); QCOMPARE(read(longFile),changed);
+    QVERIFY(write(longFile,original)); state=waitFor(service,service.status(linked)); QVERIFY(ok(state)); QVERIFY(!state.status.dirty);
+    QVERIFY(ok(waitFor(service,service.removeWorktree(linked)))); QVERIFY(!QFileInfo::exists(linked));
+    const auto trees=waitFor(service,service.worktrees(f.root)); QVERIFY(ok(trees)); QCOMPARE(trees.worktrees.size(),1);
+    QCOMPARE(read(f.root+"/.git/config"),configBefore);
+#endif
 }
 void GitTest::statusDiffAndRawBytes() {
     Fixture f; GitService service(f.options()); service.setWorkspaceContext(f.context());

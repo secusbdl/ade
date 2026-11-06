@@ -1,0 +1,18 @@
+Test project D:/age/ADE/build-next
+    Start 60: native_plugins
+1/4 Test #60: native_plugins ...................   Passed    1.14 sec
+    Start 62: native_plugin_runtime
+2/4 Test #62: native_plugin_runtime ............   Passed   10.23 sec
+    Start 64: native_smoke_plugins
+3/4 Test #64: native_smoke_plugins .............***Timeout 120.04 sec
+
+    Start 72: native_context
+4/4 Test #72: native_context ...................   Passed    0.25 sec
+
+75% tests passed, 1 tests failed out of 4
+
+Total Test time (real) = 131.67 sec
+
+The following tests FAILED:
+	 64 - native_smoke_plugins (Timeout)
+Errors while running CTest

@@ -54,6 +54,12 @@ identical model reasoning or output.
 | Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, workspace/content controls and provider/plugin configuration | `src/ui` |
 | Network/integrations | Credential redaction, per-host authorization and packaged integration instructions | `src/network`, `src/plugins`, `assets/plugins` |
 
+On Windows, the Git/worktree service passes `-c core.longpaths=true` per command
+so tracked paths can exceed 260 characters without changing repository or global
+Git configuration. Git still enforces a separate explicit `GIT_DIR` root-length
+limit; this does not remove every path constraint. See the
+[worktree validation evidence](audit/native-git-worktree-live-verification.json).
+
 CMake exports reusable static targets including `ade_core`, `ade_attachments`,
 `ade_file_transformer`, `ade_transcript_links`, `ade_network`, `ade_plugins`, `ade_host`, `ade_editor`,
 `ade_terminal`, `ade_shell`, `ade_git_ui`, and `ade_ui`. The application and its UI tests share
@@ -135,7 +141,37 @@ Their actual worker flows are tested with synthetic tokens and exact service
 URLs through a simulated transport. This is not a claim that a user's live
 account permissions or every remote API operation have been tested.
 
+`--smoke --data-dir <profile>` uses that profile's configured provider, encrypted
+`plugin-credentials.json` and `preferences.json`. It honors plugin enable/disable
+settings and loads the same bundled skill roster, `readContext` access and invoked
+skill context as a normal chat. Configure the profile in Settings first; there is
+no plugin-token command-line argument. Invalid plugin storage or malformed
+preferences stop the run before contacting the model.
+
+Smoke runs use the real native agent, QuickJS worker and network broker without
+opening the main window. Use `--provider <id>`, `--prompt`, `--timeout` and
+`--report` to bound and record a run. Approval-gated tools are denied unless
+`--always-allow` is explicitly supplied. Interactive questions, chat UI and
+mini-app tabs are not exercised; settings are loaded at startup. Reports contain
+conversation and tool output and should remain private. The subprocess regression
+uses a loopback model and synthetic credential-state checks, with no external
+plugin request.
+
 ## Evidence and remaining work
+
+The November 6 live GitHub check used an actual native ADE chat to read identity
+and repository state, create two isolated validation branches and one marker,
+open and merge [test PR #1](https://github.com/secusbdl/ade/pull/1), and remove
+both test branches. Main remained unchanged throughout that test. The token
+needed selected-repository **Contents: read/write** and **Pull requests:
+read/write** access; a successful identity check alone did not establish write
+permission. See `audit/native-github-live-verification.json` for the bounded
+results and `audit/native-smoke-plugin-verification.json` for local regressions.
+This does not establish live access for the other four services.
+
+The same executable's native titlebar X was checked while idle and while a
+chat sandbox worker was active. The app and its owned worker/console processes
+exited in the tested cases; see `audit/native-close-process-verification.json`.
 
 Tests establish the cases they exercise. The audit directory retains dated
 before/after failures, local protocol fixtures and limited live-service evidence.

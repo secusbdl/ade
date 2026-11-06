@@ -1,0 +1,142 @@
+{
+  "verifiedUtc": "2026-11-06T14:46:40.440755+00:00",
+  "sourceDevelopmentCommit": "cdf57434d020f5c8e3aee50250dac6476b0b6d65",
+  "sourceExport": "out/publish-ade-plugins",
+  "manifestSha256": "ae3c0028f401cf6c37e78199511839080139c220665799d074762777161040d1",
+  "manifestFiles": 2760,
+  "manifestHashMismatches": 0,
+  "sourceAuditHashesVerified": 20,
+  "sourceAuditHashMismatches": 0,
+  "excludedAuditImages": 49,
+  "scan": {
+    "textFiles": 2754,
+    "highConfidenceCandidatePaths": [],
+    "privateStatePathCandidates": [],
+    "scope": "Bounded token/private-key/JWT shapes and private-state filenames. No live credential files opened. Not a universal secret detector."
+  },
+  "reference": {
+    "stagewise": {
+      "files": 1400,
+      "bytes": 10798194,
+      "errors": []
+    },
+    "file-mutations": {
+      "files": 17,
+      "bytes": 108307,
+      "errors": []
+    },
+    "git-usage": {
+      "files": 16,
+      "bytes": 78341,
+      "errors": []
+    }
+  },
+  "freshBuild": {
+    "result": "passed",
+    "targets": [
+      "ADE",
+      "ADE-sandbox-worker"
+    ],
+    "version": "ADE 0.1.0",
+    "binaries": [
+      {
+        "path": "build/bin/ADE.exe",
+        "bytes": 80878224,
+        "sha256": "d61b61b57a077bd8829bb2fa7228a7f77da771ad4682e5ce364a56770c324cc2",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "build/bin/ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "ec7eeffb0eb33a3cce863e7e43bb9c4f7988c10831edaf1915e31615e645c008",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "build/bin/WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ],
+    "scope": "Built from the exact curated source export using the installed toolchain. Does not claim a fresh-machine installation test or binary bit-reproducibility."
+  }
+}

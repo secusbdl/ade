@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-11-06T15:22:26.984785+00:00",
+  "scope": "Native --smoke plugin initialization and existing related local regressions. No real GitHub credentials, live chats, or external service request evidence is included.",
+  "developmentBase": "cd7baa2fdae9985ab765a8381899c3b2972d89b3",
+  "sourceState": "Uncommitted reviewed working tree; exact current source hashes below. No commit or new test run was performed while preparing this audit.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "canonicalization": "Source and text/XML evidence SHA256 values use raw bytes with CRLF replaced by LF; no other normalization. PE hashes use exact binary bytes.",
+  "implementation": [
+    "The smoke runner loads the selected profile preferences envelope with a 2 MiB pre-read and actual-read bound, then configures its fixed smoke-session NetworkBroker using the existing PluginCatalog and separate DPAPI-encrypted plugin-credentials.json.",
+    "The existing catalog controls registered credential types and exact service origins; saved plugin enable/disable preferences are respected. No token-bearing CLI argument or alternate credential destination was added.",
+    "Plugin materialization supplies the same available-skill roster, enabled readContext mounts, contextOptionsFor settings and invoked-skill lookup used by MainWindow. Configuration completes before the first model request.",
+    "The smoke process retains the default production network manager. Only the fixture model endpoint is loopback; the new subprocess test performs no plugin fetch."
+  ],
+  "tests": {
+    "status": "All four retained suite reports pass; 57 passed cases including QtTest init/cleanup. This is a union of the existing three passing initial-run reports plus the repaired smoke rerun, not a claim of one all-green combined run.",
+    "passedSuites": 4,
+    "failedSuites": 0,
+    "passedCasesIncludingLifecycle": 57,
+    "rows": [
+      {
+        "suite": "native_smoke_plugins",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 2034,
+        "sourceReport": "build-next/Testing/native_smoke_plugins.txt",
+        "report": "audit/native-live-validation/native_smoke_plugins.txt",
+        "reportSha256CanonicalLf": "ee7bb969402de7ff1a5d539cd134701329f265ce08eb0b84c8b65560274d7a7d",
+        "bytesCanonicalLf": 1131
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 986,
+        "sourceReport": "build-next/Testing/native_plugins.txt",
+        "report": "audit/native-live-validation/native_plugins.txt",
+        "reportSha256CanonicalLf": "553adcd5e7dc06c469a6f5f0fdb5a851e233e493042fd0b5afb84159bf8a7544",
+        "bytesCanonicalLf": 1717
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 10178,
+        "sourceReport": "build-next/Testing/native_plugin_runtime.txt",
+        "report": "audit/native-live-validation/native_plugin_runtime.txt",
+        "reportSha256CanonicalLf": "e98f8a5311a28ce98f726aa752cc6074f5465f01deadbbe59ad0d42e825cd658",
+        "bytesCanonicalLf": 1639
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 207,
+        "sourceReport": "build-next/Testing/native_context.txt",
+        "report": "audit/native-live-validation/native_context.txt",
+        "reportSha256CanonicalLf": "60d2eb66356581d54bfdd796c3d5ce04bd06504907dc86fb2ce7436601883cdb",
+        "bytesCanonicalLf": 742
+      }
+    ],
+    "smokeFixtureRows": [
+      "No preferences file: GitHub enabled by default; stored synthetic credential resolves.",
+      "Saved GitHub enabled flag: bundled skill readable and credential configured.",
+      "Saved GitHub disabled flag: skill absent/unreadable and credential unavailable.",
+      "Missing credential store: skill remains enabled but credential configured=false.",
+      "Malformed encrypted plugin store fails before any model request and preserves the file.",
+      "Malformed preferences fail before any model request and preserve the file.",
+      "Non-boolean enabled flag fails before any model request and preserves the file.",
+      "Preferences exceeding 2 MiB fail before any model request and preserve the file."
+    ],
+    "smokeAssertions": [
+      "Launch actual ADE.exe and the native QuickJS worker; local provider emits readContext and executeSandboxJs, then receives the correlated tool results.",
+      "Parse the sandbox result envelope and its JSON-string result; require the exact configured boolean.",
+      "Enabled skill text appears in the subsequent actual provider request; disabled skill text does not become available through readContext.",
+      "Synthetic plugin and model secret values are absent from model message bodies, report, stdout and stderr. The test returns a boolean and reports no opaque credential handle.",
+      "Encrypted on-disk plugin storage does not contain the synthetic plaintext token."
+    ],
+    "relatedCoverage": {
+      "native_plugins": "Catalog materialization, stored credential validation, allowlists/cache and deletion/reentry paths; exact cases in retained report.",
+      "native_plugin_runtime": "Actual host/QuickJS flows for all five bundled integrations with synthetic encrypted tokens and a simulated QNetworkAccessManager preserving exact original URLs/headers, plus PostHog EU, disable/rotation, origin/reflection/redirect and cancellation/destruction cases.",
+      "native_context": "Context discovery, scopes, disabled skills, resource reads, bounds and junction/reference checks; exact cases in retained report."
+    }
+  },
+  "harnessCorrections": [
+    {
+      "issue": "The initial subprocess fixture forced QT_QPA_PLATFORM=offscreen on the actual ADE executable, which imports the Windows platform. The smoke suite timed out at its 120-second CTest limit before its first model request.",
+      "evidence": [
+        {
+          "sourceReport": "private/live-smoke-regressions.log",
+          "report": "audit/native-live-validation/smoke-initial-ctest.txt",
+          "reportSha256CanonicalLf": "ebdef2977b0f6e6f0fcf63549165bf2885483286e0180dee06f87877a5afadba",
+          "bytesCanonicalLf": 619
+        },
+        {
+          "sourceReport": "private/live-smoke-regressions.xml",
+          "report": "audit/native-live-validation/smoke-initial-ctest.xml",
+          "reportSha256CanonicalLf": "c0353750b5b6182348d919d2a893254c39c0595872bef5911b47f999c9e15a6e",
+          "bytesCanonicalLf": 833
+        }
+      ],
+      "fix": "The fixture removes the inherited platform override and launches the native Windows child hidden with CREATE_NO_WINDOW and STARTF_USESHOWWINDOW/SW_HIDE. Production platform imports were not changed."
+    },
+    {
+      "issue": "After platform correction, the credential call returned the expected value but the fixture regex assumed the boolean was in unwrapped JSON. executeSandboxJs returns an object whose result is a JSON string.",
+      "evidence": [
+        {
+          "sourceReport": "private/live-smoke-corrected.log",
+          "report": "audit/native-live-validation/smoke-platformCorrected-ctest.txt",
+          "reportSha256CanonicalLf": "0d887b895c08cf9721f37770fa8097363c583beedc9ced158d0ca67807d2ab84",
+          "bytesCanonicalLf": 313
+        },
+        {
+          "sourceReport": "private/live-smoke-corrected.xml",
+          "report": "audit/native-live-validation/smoke-platformCorrected-ctest.xml",
+          "reportSha256CanonicalLf": "6578240301a6a4f51926ea622eea43da9a7a57a1211d8428e6231e09a5cbf5bb",
+          "bytesCanonicalLf": 378
+        }
+      ],
+      "fix": "The fixture validates/parses both JSON layers and requires configured to be a boolean equal to the expected enabled/credential state.",
+      "evidenceLimit": "The intermediate detailed QtTest text was overwritten and is not retained. The failed CTest log/XML is retained; no intermediate case count is asserted."
+    }
+  ],
+  "finalSmokeRun": [
+    {
+      "sourceReport": "private/live-smoke-final.log",
+      "report": "audit/native-live-validation/smoke-finalSmoke-ctest.txt",
+      "reportSha256CanonicalLf": "34ec08709ddc3d901055ddb84007a3dbde2e3439388cf217a962b212703451a6",
+      "bytesCanonicalLf": 205
+    },
+    {
+      "sourceReport": "private/live-smoke-final.xml",
+      "report": "audit/native-live-validation/smoke-finalSmoke-ctest.xml",
+      "reportSha256CanonicalLf": "c871ee7eda555c98e7751315789a1b68ac960292108046eba35568ccf6aefa7e",
+      "bytesCanonicalLf": 347
+    }
+  ],
+  "changedSourceHashes": [
+    {
+      "path": "src/main.cpp",
+      "sha256CanonicalLf": "c6351737e4fa47161e586353d332df563dcb48729105ea37644e5a3137385397",
+      "bytesCanonicalLf": 10460
+    },
+    {
+      "path": "tests/test_smoke_plugins.cpp",
+      "sha256CanonicalLf": "9a7c946e550249aa36d8a3c6095c1373743ce125d3028c3ccc68d36340253775",
+      "bytesCanonicalLf": 11581
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256CanonicalLf": "6a6cf7c92e6e4492fba8e0ecddfdaf495ab3ef2a2425039f3963e29ff83e6d75",
+      "bytesCanonicalLf": 42385
+    },
+    {
+      "path": "README.md",
+      "sha256CanonicalLf": "9a2671d21adabcfa2f51df98826765cdb799f5931c1ef1c4d9cab9b86dd145ad",
+      "bytesCanonicalLf": 14578
+    }
+  ],
+  "relevantBindingSourceHashes": [
+    {
+      "path": "src/plugins/PluginCatalog.cpp",
+      "sha256CanonicalLf": "92793bcdc3567ca99aa9d1858d829b98121eda71f9b6bb3bf40247c07bea8c2f",
+      "bytesCanonicalLf": 15169
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "sha256CanonicalLf": "c313038bdf1393566b15cee923e25412c4e31057546d4644b317bfa8c5cbbeb3",
+      "bytesCanonicalLf": 10774
+    },
+    {
+      "path": "src/network/NetworkBroker.cpp",
+      "sha256CanonicalLf": "a6d92e66b5b6f3ca8a15226fa82b92974cfd7148d53d9deca6452d2c3364d0c2",
+      "bytesCanonicalLf": 27678
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256CanonicalLf": "7168f86d36bac3ab2a946b8f58ea2d3f45d7a18e187cb05e3c63301f2bec6a6d",
+      "bytesCanonicalLf": 26008
+    },
+    {
+      "path": "src/core/ContextLoader.cpp",
+      "sha256CanonicalLf": "a589eb488cfb662764f9f0afca4d020126b5e9e47633f1d57e1672a3d95a20db",
+      "bytesCanonicalLf": 19683
+    },
+    {
+      "path": "src/ui/ContextPreferences.cpp",
+      "sha256CanonicalLf": "271ffc54b96d2bb08499406657fe6a2a077ff1106e7dc3a5dbf2b19920817730",
+      "bytesCanonicalLf": 2609
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "sha256CanonicalLf": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648",
+      "bytesCanonicalLf": 13532
+    },
+    {
+      "path": "tests/test_plugin_runtime.cpp",
+      "sha256CanonicalLf": "685ca287364b9b3b1c1b27f26694ab4b166504be2a6f455a0a057cf522dd80f3",
+      "bytesCanonicalLf": 18481
+    }
+  ],
+  "currentBuildBinaries": [
+    {
+      "path": "build-next/bin/ADE.exe",
+      "sha256": "9780aa861c08cd6912fe45a722a5a91c9de348e1ddea96bfc83a104d11ecf764",
+      "bytes": 80892188
+    },
+    {
+      "path": "build-next/bin/ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "bytes": 19775944
+    },
+    {
+      "path": "build-next/bin/WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "bytes": 194912
+    }
+  ],
+  "binaryScope": "These identify build-next/bin at audit preparation. They do not certify a fresh export, installed package, or clean-machine deployment.",
+  "review": "The author re-read initialization, test assertions and CMake dependencies; a peer source-only pass found no additional concrete initialization/authorization/wire-secrecy defect. CMake grouping and README documentation were tidied without changing tested behavior; git diff --check passed.",
+  "limits": [
+    "No real token file, profile credentials or raw live conversation was read or copied by this audit task. Real-service validation is separate.",
+    "The subprocess smoke credential check covers GitHub with synthetic values and does not make a remote plugin request. Five-plugin transport fixtures do not establish real account permissions, TLS/network behavior or every API operation.",
+    "Smoke loads settings once at startup and does not exercise MainWindow controls, interactive question forms or mini-app tabs. Approval-gated tools require explicit --always-allow in unattended runs.",
+    "Smoke validates the preferences envelope and plugin settings through the catalog; it does not duplicate SettingsPage validation for unrelated UI fields.",
+    "The passing scoped reports do not establish full Stagewise parity, universal secret-exfiltration resistance or zero defects. No new aggregate full-suite claim is made."
+  ]
+}

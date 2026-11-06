@@ -120,7 +120,14 @@ public:
     bool mutationStarted=false;
     QProcessEnvironment environment=safeEnvironment();
     ProcessResult command(const QString &cwd,const QStringList &args,bool mutation=false) {
-        QStringList finalArgs{"--literal-pathspecs","-c","color.ui=false","-c","core.quotePath=false"}; finalArgs+=args;
+        QStringList finalArgs{"--literal-pathspecs","-c","color.ui=false","-c","core.quotePath=false"};
+#ifdef Q_OS_WIN
+        // Git for Windows defaults to MAX_PATH-limited checkout operations.
+        // Managed worktrees can exceed that limit even when the source clone
+        // fits. Opt in per command without changing any repository/user config.
+        finalArgs<<"-c"<<"core.longpaths=true";
+#endif
+        finalArgs+=args;
         if(mutation) mutationStarted=true;
         return runProcess(options.gitExecutable,finalArgs,cwd,environment,cancel,mutation?options.mutationTimeoutMs:options.readTimeoutMs,options.outputLimit);
     }

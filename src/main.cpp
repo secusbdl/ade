@@ -1,7 +1,10 @@
 #include "ui/MainWindow.h"
 #include "ui/AppStyle.h"
+#include "ui/ContextPreferences.h"
+#include "ui/SettingsPage.h"
 #include "core/AgentEngine.h"
 #include "core/ProviderStore.h"
+#include "plugins/PluginCatalog.h"
 #include "browser/browserwidget.h"
 #include "browser/BrowserToolBridge.h"
 #include "runtime/AgentToolHost.h"
@@ -15,12 +18,65 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSaveFile>
+#include <QRegularExpression>
+#include <QSet>
 #include <QStandardPaths>
 #include <QTextStream>
 #include <QTimer>
 #include <algorithm>
 #include <memory>
 using namespace ade;
+namespace {
+bool smokePreferences(const QString& directory, QJsonObject* preferences, QString* error) {
+    *preferences = SettingsPage::defaultPreferences();
+    QFile file(directory + "/preferences.json");
+    if (!file.exists()) return true;
+    constexpr qint64 limit = 2 * 1024 * 1024;
+    if (!file.open(QIODevice::ReadOnly) || file.size() > limit) {
+        *error = "Preferences could not be read within their size limit.";
+        return false;
+    }
+    const auto bytes = file.read(limit + 1);
+    QJsonParseError parseError;
+    const auto document = QJsonDocument::fromJson(bytes, &parseError);
+    if (bytes.size() > limit || file.error() != QFileDevice::NoError
+        || parseError.error != QJsonParseError::NoError || !document.isObject()
+        || document.object()["schemaVersion"] != QJsonValue(1)
+        || !document.object()["preferences"].isObject()) {
+        *error = "Preferences have an unsupported or invalid format.";
+        return false;
+    }
+    *preferences = document.object()["preferences"].toObject();
+    return true;
+}
+bool configureSmokePlugins(AgentToolHost& host, PluginCatalog& catalog, const QString& directory,
+                           const QString& workspace, const QString& prompt, QString* error) {
+    QJsonObject preferences;
+    if (!smokePreferences(directory, &preferences, error)
+        || !catalog.configureAgent(*host.network(), host.agentId(), directory, preferences, error))
+        return false;
+    const auto plugins = PluginCatalog::context(directory, preferences, error);
+    if (!error->isEmpty()) return false;
+    auto options = contextOptionsFor(preferences, workspace, QDir::homePath());
+    options.pluginsDirectory = plugins.pluginsDirectory;
+    options.disabledPluginIds = plugins.disabledPluginIds;
+    ContextLoader loader;
+    const auto snapshot = loader.load(options);
+    QSet<QString> requested;
+    const QRegularExpression links("\\[[^\\]]*\\]\\(slash:([^\\)]+)\\)");
+    auto matches = links.globalMatch(prompt);
+    while (matches.hasNext())
+        requested.insert(QUrl::fromPercentEncoding(matches.next().captured(1).toUtf8()));
+    const auto command = prompt.trimmed().section(QRegularExpression("\\s+"), 0, 0);
+    for (const auto& skill : snapshot.skills)
+        if (skill.userInvocable && (requested.contains(skill.id)
+            || (command.startsWith('/') && (skill.id == command.mid(1)
+                || skill.name.compare(command.mid(1), Qt::CaseInsensitive) == 0))))
+            options.invokedSkillIds.append(skill.id);
+    host.configureContext(options);
+    return true;
+}
+}
 int main(int argc,char** argv) {
     QApplication app(argc,argv);app.setApplicationName("ADE");app.setOrganizationName("ADE");app.setApplicationVersion("0.1.0");
     initializeAppStyle(app);
@@ -56,7 +112,11 @@ int main(int argc,char** argv) {
         std::unique_ptr<BrowserWidget> browser;
         BrowserToolBridge browserTools;
         AgentToolHost toolHost(&engine,&browserTools,"smoke-session",directory);toolHost.setWorkspace(parser.value("workspace"));
-        ContextOptions contextOptions;contextOptions.workspace=parser.value("workspace");toolHost.configureContext(contextOptions);
+        PluginCatalog pluginCatalog;
+        if (!configureSmokePlugins(toolHost, pluginCatalog, directory, engine.workspace(), parser.value("prompt"), &error)) {
+            QTextStream(stderr) << "Cannot configure smoke plugins: " << error << '\n';
+            return 2;
+        }
         QJsonArray attachments;AttachmentStore attachmentStore(directory);AttachmentMounts mounts;
         if(!engine.workspace().isEmpty())mounts.insert("ws1",engine.workspace());
         for(const auto& path:parser.values("attach")){

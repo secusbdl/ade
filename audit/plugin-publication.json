@@ -1,0 +1,143 @@
+{
+  "verifiedUtc": "2026-11-06T14:48:17.494713+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "commit": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+  "method": "GitHub Desktop UI: confirmed ade/main and outgoing commit, clicked Push origin once, observed Pushing to origin then Fetch origin / Last fetched just now; outgoing badge cleared, accessibility push complete, no error. CUA completion recorded.",
+  "independentRemoteVerification": {
+    "command": "git ls-remote https://github.com/secusbdl/ade.git HEAD refs/heads/main",
+    "refs": {
+      "HEAD": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+      "refs/heads/main": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+    }
+  },
+  "sourceDevelopmentCommit": "cdf57434d020f5c8e3aee50250dac6476b0b6d65",
+  "publicationParent": "d95488c7a7d4ee7f50755833fb6ecb4e86ef17cb",
+  "publicationCheckout": "out/publish-ade-reference",
+  "developmentHistoryImported": false,
+  "committedFiles": 2761,
+  "sourceFiles": 2760,
+  "committedSourceHashMismatches": 0,
+  "testReportHashesVerified": 28,
+  "committedManifestSha256": "90e6031ab4227fd6c1860200667ec3e084ce6ab4b4539e431e06ba9af65947ea",
+  "sourceExportVerification": "audit/plugin-source-export-verification.json",
+  "validation": {
+    "report": "audit/plugin-integration.json",
+    "suites": 28,
+    "passedQtCasesIncludingLifecycle": 497,
+    "scope": "28 selected regression suites passed in a combined run after correcting the platform override for six Windows tests; all targets built. The preceding checkpoint passed80/80 suites; this update does not claim all83 were rerun.",
+    "packagedControls": "audit/plugin-packaged-controls.json",
+    "liveCredentialsOrRequestsUsedForThisBatch": false,
+    "freshExport": "ADE and native worker rebuilt from exact curated source; version and static dependency imports verified. Same installed toolchain, not fresh-machine provisioning or bit-identical binaries."
+  },
+  "readyBuild": {
+    "directory": "out/plugin-reference-checkpoint",
+    "versionSmoke": "ADE 0.1.0",
+    "files": [
+      {
+        "path": "ADE.exe",
+        "bytes": 80878224,
+        "sha256": "ef3ffae37c6e84a6a1c097bf92f141833578323119eeceabd6b1d720430c9251",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ]
+  },
+  "limitations": [
+    "New automated plugin/service tests use synthetic credentials and transport responses plus loopback model streams; no real keys or live service requests were used.",
+    "A connection check verifies only its read endpoint. Service permissions, TLS/DNS, all remote mutations and actual user account entitlements are not established.",
+    "No close failure reproduced in the previous ready artifact; that was not the older preview reported by the user. Both controls are checked again in the new packaged artifact.",
+    "Provider/model reasoning is nondeterministic and not claimed identical. OAuth/install ecosystem and other full-parity gaps remain recorded in README/reference-readiness.",
+    "Runtime requires installed WebView2 Evergreen, Git and PowerShell. There is no Node/Electron sidecar; no clean-machine provisioning test is claimed."
+  ]
+}

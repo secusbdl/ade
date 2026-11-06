@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "status": "verified_with_explicit_limits",
+  "observedDateUtc": "2026-11-06",
+  "scope": "Actual local scratch-clone execution through production ade_git GitService; independent complete Git regression suite. No GUI, plugin-chat, PR or merge claim.",
+  "auditPreparation": "Derived from completed evidence; no additional tests, UI actions, credential access or remote operations.",
+  "environment": {
+    "os": "Windows 11",
+    "qt": "6.11.2 static MinGW",
+    "compiler": "GCC 16.2.0",
+    "git": "2.55.0.windows.2"
+  },
+  "implementation": {
+    "target": "ade_git",
+    "api": "ade::GitService",
+    "helper": "Ignored independent one-job build using actual production src/git sources",
+    "nodeSidecar": false
+  },
+  "scratchInput": {
+    "kind": "Dedicated clean anonymous-HTTPS clone supplied by parent task",
+    "initialBranch": "main",
+    "expectedAndFinalHead": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+    "initialWorktreeCount": 1,
+    "usageHistoryKnown": false
+  },
+  "defect": {
+    "trigger": "Managed worktree checkout pushed tracked file paths beyond 260 characters although the original clone was usable.",
+    "reproducedLiveAttempts": 2,
+    "operation": "CreateWorktree",
+    "errorCode": "ProcessFailed",
+    "gitExitCode": 128,
+    "recognizedLocalErrorMarkers": [
+      "Filename too long",
+      "unable to create file"
+    ],
+    "mayHaveMutated": true,
+    "failedAttemptLocalBranchesRetained": 2,
+    "failedWorktreeRegistrationRetained": false,
+    "beforeGitServiceCanonicalLFSha256": "8af45461a7b5decb8c31e9b0e11e6eaf0cd4fc8a26d8e42feaf26bde2b288055"
+  },
+  "fix": {
+    "source": "src/git/GitService.cpp",
+    "change": "Windows-only per-command -c core.longpaths=true. No repository/global Git configuration change.",
+    "officialSources": [
+      {
+        "url": "https://gitforwindows.org/faq",
+        "supports": "Git for Windows long-path checkout support requires core.longpaths."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/git-for-windows/git/v2.55.0.windows.2/setup.c",
+        "supports": "setup_explicit_git_dir retains a separate PATH_MAX-based GIT_DIR length guard."
+      }
+    ]
+  },
+  "liveAfter": {
+    "passed": true,
+    "operationCount": 18,
+    "assertionCount": 20,
+    "assertionsFailed": 0,
+    "startedUtc": "2026-11-06T15:05:12.653Z",
+    "finishedUtc": "2026-11-06T15:05:31.856Z",
+    "operations": [
+      "inspect initial clone",
+      "list initial worktrees",
+      "enumerate local branches without fetch",
+      "create linked worktree",
+      "list with linked worktree",
+      "create and checkout second local branch",
+      "switch linked worktree back",
+      "reject branch already checked out elsewhere",
+      "read untracked status",
+      "read working diff",
+      "read byte-preserving file diff",
+      "refuse dirty worktree removal",
+      "verify clean status before removal",
+      "refuse settings removal while mounted",
+      "remove clean unmounted worktree",
+      "verify worktree registration cleanup",
+      "verify local branches retained",
+      "inspect unchanged original clone"
+    ],
+    "expectedRefusals": [
+      {
+        "operation": "reject branch already checked out elsewhere",
+        "code": "BranchCheckedOut"
+      },
+      {
+        "operation": "refuse dirty worktree removal",
+        "code": "DirtyWorktree"
+      },
+      {
+        "operation": "refuse settings removal while mounted",
+        "code": "MountedWorktree"
+      }
+    ]
+  },
+  "regression": {
+    "test": "GitTest::windowsLongWorktreePaths",
+    "before": {
+      "passedIncludingLifecycle": 2,
+      "failed": 1,
+      "failure": "Actual checkout failed with Filename too long."
+    },
+    "after": {
+      "passedIncludingLifecycle": 3,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 9821
+    },
+    "coverage": [
+      "Tracked file absolute path exceeds 260 characters while original clone path remains below that limit",
+      "Repository core.longpaths explicitly false before service execution",
+      "Actual create and byte-preserving fileDiff",
+      "Branch checkout removes and restores long-path file",
+      "Status detects modification and dirty refusal preserves exact bytes",
+      "Clean worktree removal without force",
+      "Exact .git/config bytes unchanged"
+    ],
+    "completeIsolatedSuite": {
+      "source": "tests/test_git.cpp",
+      "passedIncludingLifecycle": 21,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 101053
+    }
+  },
+  "finalLocalState": {
+    "createdLinkedDirectoryRemoved": true,
+    "createdLinkedRegistrationRemoved": true,
+    "originalWorktreesRemaining": 1,
+    "originalMainHeadUnchanged": true,
+    "originalWorktreeClean": true,
+    "sentinelRemovedAfterByteVerification": true,
+    "forceRemovalUsed": false,
+    "localTestBranchesRetained": {
+      "total": 4,
+      "failedAttempts": 2,
+      "successfulSequence": 2
+    },
+    "scratchCloneAndEvidenceRetained": true,
+    "remoteOperations": 0,
+    "remoteConfigurationChanged": false
+  },
+  "limits": [
+    "This verifies native production GitService execution, not GUI interaction or GitHub plugin/PR/merge behavior.",
+    "Git for Windows retains a separate explicit GIT_DIR root-length restriction; the fix does not remove every Git/filesystem path constraint.",
+    "Automatic age/history cleanup was not exercised; imported usage history remained unknown.",
+    "Worktree removal deliberately retains branches. Failed creation attempts also left local branch refs, preserved and counted here.",
+    "21 passing isolated Git cases do not assert a new complete application-suite pass or universal defect freedom."
+  ],
+  "sourceHashNormalization": "UTF-8 without BOM, CRLF normalized to LF",
+  "productionAndRegressionSourceHashes": {
+    "src/git/GitParsing.cpp": "270dbed98a2c41eb3c20e2c574fe7b071660d04b81849f0b166a88cbebb1ddae",
+    "src/git/GitService.cpp": "42f3228aea4f7785f8cd53f09d811b95d2376dac232460dec087a3294f42d863",
+    "src/git/GitService.h": "44a30aa627dc7a362efba5a9fe6a3c3951983979ae2179ec3b17cfb917f2215a",
+    "src/git/GitTypes.h": "ead206a4ccd88a5e138bc7cebdf94465e74bd0ca3b854e55dbff30489fbef51d",
+    "src/git/ProcessRunner.cpp": "e1b7c9a8f1346cdfb3b3f349575ecfe25a24f00eda299c469c56143ece6b99bd",
+    "tests/test_git.cpp": "ab0822034cc738c773aff3f4677a5a4809c4fbce8a6f77474b4fe0090e436d9f"
+  },
+  "retainedPrivateEvidence": [
+    {
+      "id": "initial_live_failure",
+      "filename": "git-worktree-report.json",
+      "sha256RawBytes": "11afc2ae6ef81112bd3e2f877d31ea4c88f26bd511a99b75a6c55e3941285373"
+    },
+    {
+      "id": "diagnosed_live_failure",
+      "filename": "git-worktree-longpath-before.json",
+      "sha256RawBytes": "37b61bc18cdaeee50f83a6a327924f586e584788d9a5cd5a47c5bc927e30fd30"
+    },
+    {
+      "id": "successful_live_probe",
+      "filename": "git-worktree-fixed-report.json",
+      "sha256RawBytes": "8bd34a7608bb4093b7320e3828f092827747221101f6a722c152397d7bb813b3"
+    },
+    {
+      "id": "focused_before",
+      "filename": "longpath-regression-targeted-before.txt",
+      "sha256RawBytes": "69f419496b8f3e93a8c0b3df58d586085e256fe5d3c9a625ee5f25a3057914f3"
+    },
+    {
+      "id": "focused_after",
+      "filename": "longpath-regression-targeted-after.txt",
+      "sha256RawBytes": "81c5a9a617ffe572283479e971ec8ff0a94304255e3629c998e583f32601b8ed"
+    },
+    {
+      "id": "full_suite_text",
+      "filename": "full-git-after.txt",
+      "sha256RawBytes": "2a1f15f5bf20539c5203f6e3199af0d404ac054f9714284bd3fef2cc949f3f89"
+    },
+    {
+      "id": "full_suite_junit",
+      "filename": "full-git-after.xml",
+      "sha256RawBytes": "94f6724d25fd95cc205dbc7e62dd2b25501937aa097f75dda7c65defc7de9f13"
+    }
+  ],
+  "sanitization": {
+    "absoluteLocalPathsIncluded": false,
+    "credentialOrProfileDataIncluded": false,
+    "originUrlsOrRawServiceErrorBodiesIncluded": false,
+    "scratchBranchNoncesIncluded": false,
+    "evidencePolicy": "Only basenames and content hashes identify ignored local evidence; private reports were not copied."
+  },
+  "publicRegressionEvidence": {
+    "path": "audit/native-live-validation/native_git.txt",
+    "sha256CanonicalLF": "63f103a7787648330dbd01d9966ecba7422e2e35d0e4c727a721dd8f083d0f82",
+    "normalization": "UTF-8 without BOM; CRLF normalized to LF; otherwise unchanged",
+    "redactions": 0,
+    "sanitizationReview": "Successful QtTest output contains only toolchain versions, test names and totals; no local paths, profile data, credentials, remote URLs or service bodies.",
+    "passedIncludingLifecycle": 21,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 101053
+  }
+}

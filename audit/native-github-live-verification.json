@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T15:26:30.826139+00:00",
+  "scope": "Authorized real GitHub requests through actual ADE --smoke AgentEngine, QuickJS worker, PluginCatalog and NetworkBroker. Separate GUI connection and close verification is linked below.",
+  "repository": "https://github.com/secusbdl/ade",
+  "pullRequest": "https://github.com/secusbdl/ade/pull/1",
+  "binary": {
+    "path": "out/live-github-checkpoint/ADE.exe",
+    "sha256": "9780aa861c08cd6912fe45a722a5a91c9de348e1ddea96bfc83a104d11ecf764",
+    "bytes": 80892188
+  },
+  "protocol": {
+    "provider": "DeepSeek",
+    "requestedModel": "deepseek-chat",
+    "actualModel": "deepseek-flash",
+    "githubApiVersion": "2022-11-28",
+    "credentialType": "github-pat",
+    "tool": "executeSandboxJs",
+    "transport": "Production HTTPS network manager; no mock or connector used for the remote mutations"
+  },
+  "permissionCorrection": {
+    "before": "Token authenticated but had public-repository read access only. Actual POST refs returned403 despite account permissions.push=true.",
+    "ui": "User explicitly requested correction in Brave. Selected only secusbdl/ade; Contents read/write, Pull requests read/write, required Metadata read. No account permissions, token regeneration or expiration change. GitHub showed token-updated confirmation.",
+    "after": "Exact same stored encrypted credential created the ref with201."
+  },
+  "result": {
+    "liveReadPassed": true,
+    "branchAndMarkerCreated": true,
+    "pullRequestCreatedAndMerged": true,
+    "mergeSha": "37dc273de4f953159bbe26534a94825e94ccce49",
+    "mainBeforeAndAfter": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+    "testBranchesRemoved": true,
+    "markerBytesVerified": true
+  },
+  "phases": [
+    {
+      "phase": "read-only",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 28702,
+      "tools": [
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "status_user": 200,
+          "login": "secusbdl",
+          "status_repo": 200,
+          "full_name": "secusbdl/ade",
+          "default_branch": "main",
+          "permissions": {
+            "admin": true,
+            "maintain": true,
+            "push": true,
+            "triage": true,
+            "pull": true
+          },
+          "permissions_push": true,
+          "allow_squash_merge": "absent",
+          "allow_merge_commit": "absent",
+          "allow_rebase_merge": "absent",
+          "private": false,
+          "status_ref": 200,
+          "ref": "refs/heads/main",
+          "main_sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+          "main_type": "commit"
+        }
+      ],
+      "privateSummarySha256": "23235ecf54f79168458336f9b2e6714446c5f5ac16733fb5f93f2143701b6557",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    },
+    {
+      "phase": "create-base",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 8066,
+      "tools": [
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "result": "failed",
+          "status": 403,
+          "githubMessage": "Resource not accessible by personal access token",
+          "documentationUrl": "https://docs.github.com/rest/git/refs#create-a-reference",
+          "acceptedPermissions": "contents=write; contents=write,workflows=write",
+          "mainShaVerified": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+        }
+      ],
+      "privateSummarySha256": "cd772fd64b90d2b43be9ab1a32bb6702214a1315c527d943932c0fe8ca04cafd",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    },
+    {
+      "phase": "create-base-retry",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 8674,
+      "tools": [
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "step1": {
+            "status": 200,
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+            "message": null,
+            "acceptedPerms": "contents=read"
+          },
+          "step2": {
+            "status": 404,
+            "message": "Not Found",
+            "acceptedPerms": "contents=read"
+          },
+          "step3": {
+            "status": 201,
+            "message": null,
+            "acceptedPerms": "contents=write; contents=write,workflows=write",
+            "oauthScopes": null
+          },
+          "createdRef": "refs/heads/ade-validation-b388b6fc-base",
+          "createdSha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+          "result": "CREATED"
+        }
+      ],
+      "privateSummarySha256": "cbfa96e243a3645829d6ddfcb1103d06bef6ac87c0ded23bf106412c31ae9082",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    },
+    {
+      "phase": "create-pr",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 28760,
+      "tools": [
+        "executeSandboxJs",
+        "executeSandboxJs",
+        "executeSandboxJs",
+        "executeSandboxJs",
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "main": {
+            "status": 200,
+            "ref": "refs/heads/main",
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+          },
+          "base": {
+            "status": 200,
+            "ref": "refs/heads/ade-validation-b388b6fc-base",
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+          },
+          "head": {
+            "status": 404,
+            "message": "Not Found"
+          },
+          "checks": {
+            "mainOk": true,
+            "baseOk": true,
+            "headAbsent": true
+          }
+        },
+        {
+          "status": 201,
+          "ref": "refs/heads/ade-validation-b388b6fc-head",
+          "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+          "blobSha": null,
+          "ok": true
+        },
+        {
+          "status": 201,
+          "path": ".ade-validation/b388b6fc.txt",
+          "branchUsed": "ade-validation-b388b6fc-head",
+          "commitSha": "cc3ab63b71d6d2733b035453f61609b600b3dc24",
+          "commitMessage": "test: validate native ADE GitHub plugin",
+          "fileBlobSha": "17c5e5252a5c610587043492b2722d6eb66e7297",
+          "size": 43,
+          "ok": true,
+          "returnedContent": "",
+          "returnedLineCount": 0
+        },
+        {
+          "status": 201,
+          "number": 1,
+          "url": "https://github.com/secusbdl/ade/pull/1",
+          "state": "open",
+          "head": {
+            "ref": "ade-validation-b388b6fc-head",
+            "sha": "cc3ab63b71d6d2733b035453f61609b600b3dc24",
+            "label": "secusbdl:ade-validation-b388b6fc-head"
+          },
+          "base": {
+            "ref": "ade-validation-b388b6fc-base",
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+            "label": "secusbdl:ade-validation-b388b6fc-base"
+          },
+          "ok": true
+        },
+        {
+          "pr": {
+            "status": 200,
+            "number": 1,
+            "url": "https://github.com/secusbdl/ade/pull/1",
+            "state": "open",
+            "merged": false,
+            "mergeable": true,
+            "mergeableState": "clean",
+            "commits": 1,
+            "additions": 1,
+            "deletions": 0,
+            "changedFiles": 1,
+            "head": {
+              "ref": "ade-validation-b388b6fc-head",
+              "sha": "cc3ab63b71d6d2733b035453f61609b600b3dc24"
+            },
+            "base": {
+              "ref": "ade-validation-b388b6fc-base",
+              "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+            }
+          },
+          "files": {
+            "status": 200,
+            "count": 1,
+            "items": [
+              {
+                "filename": ".ade-validation/b388b6fc.txt",
+                "status": "added",
+                "additions": 1,
+                "deletions": 0,
+                "changes": 1,
+                "blobUrl": "https://github.com/secusbdl/ade/blob/cc3ab63b71d6d2733b035453f61609b600b3dc24/.ade-validation%2Fb388b6fc.txt",
+                "patch": "@@ -0,0 +1 @@\n+ADE GitHub plugin live validation b388b6fc"
+              }
+            ]
+          },
+          "refsAfter": {
+            "main": {
+              "status": 200,
+              "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+            },
+            "base": {
+              "status": 200,
+              "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+            },
+            "head": {
+              "status": 200,
+              "sha": "cc3ab63b71d6d2733b035453f61609b600b3dc24"
+            }
+          }
+        }
+      ],
+      "privateSummarySha256": "b5e58fb977f9ca207887fe29e14bb9a8a7526b5c834628f443e112263028df62",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    },
+    {
+      "phase": "merge-pr",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 20941,
+      "tools": [
+        "executeSandboxJs",
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "mergeFlags": {
+            "allow_merge_commit": true,
+            "allow_squash_merge": true,
+            "allow_rebase_merge": true
+          },
+          "repoStatus": 200,
+          "prStatus": 200,
+          "filesStatus": 200,
+          "mainRefStatus": 200,
+          "baseRefStatus": 200,
+          "headRefStatus": 200,
+          "pr": {
+            "number": 1,
+            "state": "open",
+            "merged": false,
+            "mergeable": true,
+            "mergeable_state": "clean",
+            "baseLabel": "secusbdl:ade-validation-b388b6fc-base",
+            "headLabel": "secusbdl:ade-validation-b388b6fc-head",
+            "baseSha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+            "headSha": "cc3ab63b71d6d2733b035453f61609b600b3dc24",
+            "htmlUrl": "https://github.com/secusbdl/ade/pull/1"
+          },
+          "files": [
+            {
+              "filename": ".ade-validation/b388b6fc.txt",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "patch": "@@ -0,0 +1 @@\n+ADE GitHub plugin live validation b388b6fc"
+            }
+          ],
+          "mainSha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+          "baseSha": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+          "headSha": "cc3ab63b71d6d2733b035453f61609b600b3dc24"
+        },
+        {
+          "selected_merge_method": "merge",
+          "statuses": {
+            "repo_metadata": 200,
+            "main_ref_pre": 200,
+            "base_ref_pre": 200,
+            "head_ref_pre": 200,
+            "pr_pre": 200,
+            "pr_files_pre": 200,
+            "merge_put": 200,
+            "pr_after": 200,
+            "base_ref_after": 200,
+            "main_ref_after": 200,
+            "marker_contents": 200
+          },
+          "merge_response": {
+            "merged": true,
+            "message": "Pull Request successfully merged",
+            "sha": "37dc273de4f953159bbe26534a94825e94ccce49"
+          },
+          "refs_after": {
+            "main": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+            "ade-validation-b388b6fc-base": "37dc273de4f953159bbe26534a94825e94ccce49",
+            "ade-validation-b388b6fc-head": "cc3ab63b71d6d2733b035453f61609b600b3dc24"
+          },
+          "pr_after": {
+            "state": "closed",
+            "merged": true,
+            "merged_at": "2026-11-06T15:23:43Z",
+            "merge_commit_sha": "37dc273de4f953159bbe26534a94825e94ccce49"
+          },
+          "marker": {
+            "sha": "17c5e5252a5c610587043492b2722d6eb66e7297",
+            "size": 43,
+            "content": null
+          },
+          "pr_url": "https://github.com/secusbdl/ade/pull/1",
+          "assertions": {
+            "preconditions_200": true,
+            "main_pre_exact": true,
+            "base_pre_exact": true,
+            "head_pre_exact": true,
+            "pr_was_open_unmerged": true,
+            "single_file_added_exact": true,
+            "merge_http_200": true,
+            "merge_merged_true": true,
+            "pr_closed_and_merged": true,
+            "base_equals_merge_sha": true,
+            "main_unchanged": true,
+            "marker_sha_exact": true,
+            "marker_size_43": true,
+            "marker_content_exact": false,
+            "no_branch_deleted": true
+          }
+        }
+      ],
+      "privateSummarySha256": "85783c4c0ecc4bcdf9b543225f450badcb24042e494a28cb4033ca8fe39e542d",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    },
+    {
+      "phase": "verify-cleanup",
+      "chatCompleted": true,
+      "requestedModel": "deepseek-chat",
+      "actualModel": "deepseek-flash",
+      "elapsedMs": 21782,
+      "tools": [
+        "executeSandboxJs",
+        "executeSandboxJs",
+        "executeSandboxJs"
+      ],
+      "structuredToolResults": [
+        {
+          "step": 1,
+          "checks": {
+            "pr1Status": 200,
+            "pr1Ok": true,
+            "mainOk": true,
+            "markerOk": true
+          },
+          "pr1": {
+            "status": 200,
+            "state": "closed",
+            "merged": true,
+            "baseRef": "ade-validation-b388b6fc-base",
+            "headRef": "ade-validation-b388b6fc-head",
+            "mergeCommitSha": "37dc273de4f953159bbe26534a94825e94ccce49",
+            "url": "https://github.com/secusbdl/ade/pull/1"
+          },
+          "main": {
+            "status": 200,
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+          },
+          "marker": {
+            "status": 200,
+            "encoding": "base64",
+            "sha": "17c5e5252a5c610587043492b2722d6eb66e7297",
+            "size": 43,
+            "markerBase64Matched": true
+          },
+          "allStep1Passed": true,
+          "expected": {
+            "baseRef": "ade-validation-b388b6fc-base",
+            "headRef": "ade-validation-b388b6fc-head",
+            "headSha": "cc3ab63b71d6d2733b035453f61609b600b3dc24",
+            "mergeSha": "37dc273de4f953159bbe26534a94825e94ccce49",
+            "mainSha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+          }
+        },
+        {
+          "step": 2,
+          "deletions": [],
+          "headPreCheck": {
+            "status": 200,
+            "sha": "cc3ab63b71d6d2733b035453f61609b600b3dc24"
+          },
+          "headDelete": {
+            "status": 204,
+            "performed": true
+          },
+          "basePreCheck": {
+            "status": 200,
+            "sha": "37dc273de4f953159bbe26534a94825e94ccce49"
+          },
+          "baseDelete": {
+            "status": 204,
+            "performed": true
+          },
+          "deletionsOk": true
+        },
+        {
+          "step": 3,
+          "headRefAfterDelete": {
+            "ref": "ade-validation-b388b6fc-head",
+            "status": 404,
+            "absent": true
+          },
+          "baseRefAfterDelete": {
+            "ref": "ade-validation-b388b6fc-base",
+            "status": 404,
+            "absent": true
+          },
+          "branchesDeleted": true,
+          "main": {
+            "status": 200,
+            "sha": "62d98f6c39afb7fca03e143f72dd7316eee8c818"
+          },
+          "mainUnchanged": true,
+          "pr1": {
+            "status": 200,
+            "state": "closed",
+            "merged": true,
+            "url": "https://github.com/secusbdl/ade/pull/1"
+          },
+          "pr1Merged": true
+        }
+      ],
+      "privateSummarySha256": "569412cf4c84696b151b42242e06d836c0e69a9e926470113deb07591deb8425",
+      "credentialScan": "No exact raw/base64/URL-encoded configured tokens found in report or console."
+    }
+  ],
+  "evidenceInterpretation": [
+    "Chat completion does not establish operation success: create-base completed conversationally but its GitHub mutation failed403.",
+    "Structured tool statuses and exact ref/file readbacks supply the evidence. Model narrative is deliberately not copied; its early explanation of absent merge flags was not established.",
+    "The merge readback script attempted unsupported Buffer decoding and reported marker_content_exact=false while SHA/size matched. A separate read-only comparison of normalized base64 to the known marker proved exact43 bytes before cleanup; no merge was repeated."
+  ],
+  "credentialHandling": "User-supplied GitHub token and existing authorized provider key were stored only as Windows DPAPI encrypted values in isolated ignored profiles. Host substitutes opaque credential handles only for allowed GitHub origin. Each raw private report and console was scanned internally for exact raw/base64/URL-encoded configured secrets before any selected evidence was displayed. Raw chat, model reasoning, credential files and profile data are not published.",
+  "relatedEvidence": {
+    "smoke": "audit/native-smoke-plugin-verification.json",
+    "worktree": "audit/native-git-worktree-live-verification.json",
+    "close": "audit/native-close-process-verification.json"
+  },
+  "limits": [
+    "Live remote operation coverage is GitHub only; other four services have synthetic transport fixtures, not live-account verification.",
+    "Smoke does not verify transcript rendering or identical model reasoning. Existing UI and stream fixtures remain separate evidence.",
+    "The sandbox does not implement the entire Node Buffer/importModule API. The direct base64 comparison avoided that missing API rather than claiming it fixed.",
+    "Ref cleanup used fresh expected-SHA checks on owned disposable branches. GitHub DELETE ref has no atomic SHA compare-and-swap.",
+    "All results are bounded tests, not full Stagewise parity or a universal zero-defect claim."
+  ]
+}

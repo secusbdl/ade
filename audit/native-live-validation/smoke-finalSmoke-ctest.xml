@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="2"
+	timestamp="2026-11-06T17:03:35"
+	>
+	<testcase name="native_smoke_plugins" classname="native_smoke_plugins" time="2.27037" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

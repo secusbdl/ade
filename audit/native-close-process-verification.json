@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-11-06",
+  "artifact": "build-next/bin/ADE.exe",
+  "sha256": "9780aa861c08cd6912fe45a722a5a91c9de348e1ddea96bfc83a104d11ecf764",
+  "method": "Actual Windows titlebar X via computer-use; separate ignored profiles/workspaces; process identity inspection and bounded process observation.",
+  "credentialHandling": "Only the three explicitly authorized encrypted/configuration files were copied into new profiles. Their contents were not read or decrypted by the testing agent. No credential was typed, logged or published.",
+  "githubConnectionCheck": {
+    "result": "pass",
+    "observedStatus": "Connection verified for this read endpoint. Other operations depend on the token's permissions.",
+    "remoteScope": "Authorized read-only saved-token connection check. No repository mutation."
+  },
+  "idle": {
+    "result": "pass",
+    "appPid": 38452,
+    "ownedWorkersBefore": [],
+    "closeAction": "Native top-right titlebar X while Settings was idle after the completed read-only connection check.",
+    "deadlineSeconds": 15,
+    "observedExitedByMs": 12966,
+    "measurement": "Upper bound from timestamp immediately before X input to subsequent process enumeration; not an exact shutdown duration.",
+    "appPresentAfter": false,
+    "ownedWorkersAfter": []
+  },
+  "busy": {
+    "result": "pass",
+    "appPid": 33608,
+    "ownedWorkersBefore": [10404],
+    "ownedConsoleHostsObserved": [46752],
+    "deadlineSeconds": 15,
+    "observedExitedByMs": 229,
+    "measurement": "Upper bound from timestamp immediately before X input to the process monitor result file's write timestamp. The monitor held handles for the exact app and descendants and wrote its result only after every handle reported HasExited. This is not an exact shutdown duration.",
+    "timingProbeNote": "The monitor's initial sampled timestamp preceded its process scan and yielded a stale negative interval; that field is not used. The independently retained result file write timestamp supplies the valid upper bound above.",
+    "appPresentAfter": false,
+    "ownedWorkersAfter": [],
+    "ownedConsoleHostsAfter": [],
+    "closeAction": "Native top-right titlebar X while Stop agent was visible and executeSandboxJs was Running.",
+    "detail": "One authorized read-only GET /user, followed by a requested 20-second local timer, kept the actual sandbox worker active for the close test. The script was inspected before approval. No remote mutation was requested or performed.",
+    "earlierAttempt": "The first scratch window received manual input, so testing paused. After explicit user readiness, that earlier PID and worker were already absent; a new isolated profile was used without opening or modifying the user's draft/history."
+  },
+  "limits": [
+    "Idle and active-worker close behavior passed for this exact executable and these isolated cases; this does not establish every possible shutdown path.",
+    "No raw chat/history, token, screenshot, or existing user-profile contents are included in this audit."
+  ]
+}
