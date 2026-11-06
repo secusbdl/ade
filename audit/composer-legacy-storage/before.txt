@@ -1,0 +1,10 @@
+********* Start testing of SessionCleanupTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SessionCleanupTests::initTestCase()
+FAIL!  : SessionCleanupTests::legacyMissingCleanupFieldLoadsWithoutChangingHistory(empty-legacy-store) 'error.isEmpty()' returned FALSE. (Conversation cleanup records are invalid. Original data was preserved.)
+D:/age/ADE/tests/test_session_cleanup.cpp(57) : failure location
+FAIL!  : SessionCleanupTests::legacyMissingCleanupFieldLoadsWithoutChangingHistory(existing-legacy-chat) 'error.isEmpty()' returned FALSE. (Conversation cleanup records are invalid. Original data was preserved.)
+D:/age/ADE/tests/test_session_cleanup.cpp(57) : failure location
+PASS   : SessionCleanupTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 7ms
+********* Finished testing of SessionCleanupTests *********

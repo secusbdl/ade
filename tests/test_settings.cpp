@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPushButton>
@@ -27,6 +28,8 @@ private slots:
     void keyboardZoomPersistsAndRetiredControlsCannotSave();
     void corruptPluginStoreIsNotOverwritten();
     void sitePermissionsValidateAndPersist();
+    void objectSitePermissionRecords_data();
+    void objectSitePermissionRecords();
     void historyOpensThroughNativeHost();
 };
 
@@ -194,6 +197,38 @@ void SettingsTest::sitePermissionsValidateAndPersist(){
     SettingsPage reopened(directory.path());QCOMPARE(reopened.preference("browsing.permissionExceptions"),page.preference("browsing.permissionExceptions"));
     QVERIFY(page.setSitePermission("camera",QUrl("https://example.com"),"default"));QVERIFY(page.preference("browsing.permissionExceptions").toObject().isEmpty());
     page.selectSection("browsing");QCOMPARE(page.findChild<QComboBox*>("permission_fullscreen")->currentData().toString(),QString("allow"));
+}
+
+void SettingsTest::objectSitePermissionRecords_data(){
+    QTest::addColumn<QJsonValue>("record");QTest::addColumn<QString>("label");QTest::addColumn<bool>("valid");
+    for(const auto &setting:QStringList{"ask","allow","block"})
+        QTest::newRow(qPrintable("object-"+setting))<<QJsonValue(QJsonObject{{"setting",setting}})<<setting<<true;
+    for(int setting=0;setting<3;++setting)
+        QTest::newRow(qPrintable("object-enum-"+QString::number(setting)))<<QJsonValue(QJsonObject{{"setting",setting}})<<QStringList{"ask","allow","block"}[setting]<<true;
+    QTest::newRow("object-missing")<<QJsonValue(QJsonObject{})<<QString()<<false;
+    for(const auto &entry:QList<QPair<QString,QJsonValue>>{{"null",QJsonValue(QJsonValue::Null)},{"boolean",true},{"negative",-1},{"large",3},{"fractional",1.5},{"unknown","unknown"},{"array",QJsonArray{}},{"nested",QJsonObject{}}})
+        QTest::newRow(qPrintable("object-invalid-"+entry.first))<<QJsonValue(QJsonObject{{"setting",entry.second}})<<QString()<<false;
+}
+
+void SettingsTest::objectSitePermissionRecords(){
+    QFETCH(QJsonValue,record);QFETCH(QString,label);QFETCH(bool,valid);
+    QTemporaryDir directory;QVERIFY(directory.isValid());auto preferences=SettingsPage::defaultPreferences();
+    auto browsing=preferences.value("browsing").toObject();browsing["permissionExceptions"]=QJsonObject{{"camera",QJsonObject{{"https://example.test",record}}}};preferences["browsing"]=browsing;
+    const auto original=QJsonDocument(QJsonObject{{"schemaVersion",1},{"preferences",preferences}}).toJson();
+    QFile file(directory.filePath("preferences.json"));QVERIFY(file.open(QIODevice::WriteOnly));QCOMPARE(file.write(original),original.size());file.close();
+    SettingsPage page(directory.path());
+    if(valid){
+        QVERIFY2(page.storageError().isEmpty(),qPrintable(page.storageError()));
+        QCOMPARE(page.preference("browsing.permissionExceptions").toObject().value("camera").toObject().value("https://example.test"),record);
+        page.selectSection("browsing");bool rendered=false;
+        for(const auto* text:page.findChildren<QLabel*>())if(text->text()==QString("camera · ")+label)rendered=true;
+        QVERIFY2(rendered,"Stored object permission must render its actual setting label.");
+        QVERIFY(page.setPreference("agent.keepAwake",false));SettingsPage reopened(directory.path());QVERIFY(reopened.storageError().isEmpty());
+        QCOMPARE(reopened.preference("browsing.permissionExceptions").toObject().value("camera").toObject().value("https://example.test"),record);
+    }else{
+        QVERIFY(!page.storageError().isEmpty());QVERIFY(!page.setPreference("agent.keepAwake",false));
+        QVERIFY(file.open(QIODevice::ReadOnly));QCOMPARE(file.readAll(),original);
+    }
 }
 
 void SettingsTest::historyOpensThroughNativeHost(){

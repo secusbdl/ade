@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SessionCleanupTests" timestamp="2026&#x002D;11&#x002D;06T17:42:47" hostname="VOID" tests="4" failures="2" errors="0" skipped="0" time="0.007">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SessionCleanupTests" time="0.000"/>
+  <testcase name="legacyMissingCleanupFieldLoadsWithoutChangingHistory(empty&#x002D;legacy&#x002D;store)" classname="SessionCleanupTests" time="0.002">
+    <failure type="fail" message="&apos;error.isEmpty()&apos; returned FALSE. (Conversation cleanup records are invalid. Original data was preserved.)"/>
+  </testcase>
+  <testcase name="legacyMissingCleanupFieldLoadsWithoutChangingHistory(existing&#x002D;legacy&#x002D;chat)" classname="SessionCleanupTests" time="0.002">
+    <failure type="fail" message="&apos;error.isEmpty()&apos; returned FALSE. (Conversation cleanup records are invalid. Original data was preserved.)"/>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="SessionCleanupTests" time="0.000"/>
+</testsuite>

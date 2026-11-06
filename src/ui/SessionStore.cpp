@@ -125,7 +125,10 @@ QList<Conversation> SessionStore::load(QString* error) const {
         result.push_back(s);
     }
     if(!validSideChatParents(result)){if(error)*error="Side chat refers to a missing, nested, or cyclic parent. Original data was preserved.";return {};}
-    const auto pending=doc.object()["pendingCleanup"];
+    // Legacy stores omit this optional field. value() preserves Undefined and
+    // owns the result; mutable operator[] inserts null and returns a proxy into
+    // the temporary object, which is already destroyed at the next statement.
+    const auto pending=doc.object().value("pendingCleanup");
     if(!pending.isUndefined()&&(!pending.isArray()||pending.toArray().size()>10000)) {
         if(error)*error="Conversation cleanup records are invalid. Original data was preserved.";
         return {};

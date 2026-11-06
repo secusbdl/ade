@@ -1,0 +1,41 @@
+{
+  "verifiedUtc": "2026-11-06T15:33:25.297959+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "commit": "5c979e86afdc1924fd58a019e2ebd9ebe47f9a61",
+  "parent": "62d98f6c39afb7fca03e143f72dd7316eee8c818",
+  "method": "GitHub Desktop UI, exact curated ADE/main outgoing commit; pushed once and observed completion. No CLI push or development-history import.",
+  "independentRemoteRefs": {
+    "HEAD": "5c979e86afdc1924fd58a019e2ebd9ebe47f9a61",
+    "refs/heads/main": "5c979e86afdc1924fd58a019e2ebd9ebe47f9a61"
+  },
+  "remoteTestRefsAbsent": true,
+  "sourceDevelopmentCommit": "595c96296915093df688673cb211a3dd7e75323e",
+  "sourceExportVerification": "audit/native-live-source-export-verification.json",
+  "manifestFiles": 2780,
+  "committedFiles": 2781,
+  "committedSourceHashMismatches": 0,
+  "committedManifestSha256": "6b5c6fa06c8c8df0e821091ec5a4bb53bd47901538d3f9645a44b063a7a822b3",
+  "manifestNormalization": "The prepared JSON manifest was canonicalized by Git text rules; its committed blob hash is authoritative. Every listed source blob was verified byte-exact after commit.",
+  "validation": {
+    "selectedSuites": 5,
+    "passedCasesIncludingLifecycle": 78,
+    "scope": "Four plugin/context suites57 cases from combined passing reports and corrected smoke rerun, plus independent Git suite21; not all84 application suites rerun.",
+    "liveGitHub": "audit/native-github-live-verification.json",
+    "nativeClose": "audit/native-close-process-verification.json",
+    "worktrees": "audit/native-git-worktree-live-verification.json"
+  },
+  "readyBuild": {
+    "path": "out/live-github-checkpoint/ADE.exe",
+    "sha256": "9780aa861c08cd6912fe45a722a5a91c9de348e1ddea96bfc83a104d11ecf764",
+    "sourceCommit": "595c96296915093df688673cb211a3dd7e75323e",
+    "unchangedAfterLiveAndCloseTests": true
+  },
+  "fullStagewiseParity": false,
+  "limitations": [
+    "Live service account validation covered GitHub only.",
+    "Windows path handling retains the separate Git explicit GIT_DIR bound.",
+    "Sandbox Node API and full UI/provider parity remain incomplete as documented in README.",
+    "The ready EXE is the binary actually used for live and close tests. The separate fresh export build verifies source buildability; byte-identical rebuilds are not claimed."
+  ]
+}

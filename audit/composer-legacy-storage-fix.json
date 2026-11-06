@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-11-06T15:44:59.990743+00:00",
+  "scope": "Native SessionStore backward compatibility for an omitted optional pendingCleanup field; isolated actual-file regression. Root-owned UI integration verification is pending and not claimed here.",
+  "reportedSymptom": "An older conversation file was rejected with Conversation cleanup records are invalid. Original data was preserved.; the UI showed no current chat and Send was unavailable.",
+  "rootCause": {
+    "expressionBefore": "const auto pending=doc.object()[\"pendingCleanup\"];",
+    "expressionAfter": "const auto pending=doc.object().value(\"pendingCleanup\");",
+    "explanation": "doc.object() returns a temporary non-const QJsonObject. Its mutable operator[] inserts a null value for a missing key and returns QJsonValueRef; auto retains that proxy after the temporary is destroyed. The optional-field check therefore does not reliably receive an owned Undefined value. The synthetic legacy files reproduce the exact rejection. value() is non-mutating and returns an owned QJsonValue, preserving Undefined for an omitted field.",
+    "qtContract": "Installed Qt6.11.2 qjsonobject.h operator[] mutable overload returns QJsonValueRef; qjsonvalue.h Qt6 proxy stores a QJsonObject pointer. No Qt source or upstream reference was changed."
+  },
+  "userMetadataCorroboration": {
+    "reportedBy": "Parent investigator",
+    "observation": "One older schema-1 chat without the optional field.",
+    "privacy": "Metadata-only corroboration; no real profile path, file hash, chat content or credential is retained here. This subagent did not read user profile/history data."
+  },
+  "change": "One lookup changed to value(), with an explanatory lifetime/legacy comment. Validation rules, storage format and cleanup authority remain unchanged.",
+  "tests": [
+    {
+      "phase": "before",
+      "passedIncludingLifecycle": 2,
+      "failed": 2,
+      "skipped": 0,
+      "milliseconds": 7,
+      "reports": [
+        {
+          "path": "audit/composer-legacy-storage/before.txt",
+          "sha256CanonicalLf": "57f20cb128deb482b4369e30649671c31b99426e74dc5dde7e3af1185315fd02"
+        },
+        {
+          "path": "audit/composer-legacy-storage/before.xml",
+          "sha256CanonicalLf": "0328e620d858589f78fd5969419059a9803e4a6b58d2ecfbd105a6be7e4abca5"
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "passedIncludingLifecycle": 33,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 422,
+      "reports": [
+        {
+          "path": "audit/composer-legacy-storage/after.txt",
+          "sha256CanonicalLf": "e30ab4fef5c9eb592759cefd8e370ede99ee76a37ea868a62a26902c49a2546c"
+        },
+        {
+          "path": "audit/composer-legacy-storage/after.xml",
+          "sha256CanonicalLf": "d7780898dfff2fe255eb324cae6b9ea62cd595553bfb61726ae3557d697aa106"
+        }
+      ]
+    }
+  ],
+  "newCoverage": [
+    "Two real-file legacy cases: empty sessions and one existing chat omit pendingCleanup; load succeeds, no cleanup callback runs, and file bytes remain unchanged until an explicit save.",
+    "The existing legacy chat retains its exact message JSON, metadata and unsent draft through append/save/restart; the normal save emits an empty pendingCleanup array.",
+    "Explicit null, boolean, number, string, object and more than 10,000 cleanup entries remain invalid; load/save/cleanup refuse them and original file bytes remain unchanged."
+  ],
+  "existingCoverage": "All existing cleanup regressions also pass: invalid/duplicate/case-alias IDs, retained-chat conflicts, non-string entries, stale revisions, inter-window lock protection, partial/exception retry behavior and root-junction containment.",
+  "testMethod": "Independent private Release QtCore/QtTest build compiles actual SessionStore, ScopedDirectory, QueuedMessages and AgentPresentation with the production cleanup test. Before target uses a byte copy of the prior SessionStore.cpp; after target uses the fixed production source. Hidden native processes, synthetic temporary directories only; no shared build or live service requests.",
+  "sourceHashes": [
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256CanonicalLf": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7",
+      "bytesCanonicalLf": 15430
+    },
+    {
+      "path": "tests/test_session_cleanup.cpp",
+      "sha256CanonicalLf": "393c20d65bd7a1eb16a6447bbc9ddb3b5e4fa04aa0fbf889c0761e0fcc34e147",
+      "bytesCanonicalLf": 16569
+    }
+  ],
+  "beforeSourceSha256CanonicalLf": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677",
+  "canonicalization": "SHA256 of source and evidence bytes after CRLF-to-LF replacement only; retained text/XML uses LF.",
+  "limits": [
+    "Detailed UI startup/Send/restart regression and rebuilt application verification remain root-owned and pending at audit creation.",
+    "The fix accepts an absent optional field; it does not reinterpret explicit null/invalid fields, repair malformed records, overwrite rejected data or delete history.",
+    "33 passing cases include QtTest init/cleanup. They establish these exercised storage cases, not a universal zero-defect or full-port parity guarantee."
+  ],
+  "filesChanged": [
+    "src/ui/SessionStore.cpp",
+    "tests/test_session_cleanup.cpp"
+  ],
+  "execution": "Existing before/after evidence copied without repeating tests; no README/CMake changes or commit.",
+  "uiVerification": "Completed separately in audit/composer-send-verification.json; initial pending wording describes audit preparation time."
+}

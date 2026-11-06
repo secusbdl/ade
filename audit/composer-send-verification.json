@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T15:52:51.098172+00:00",
+  "status": "passed",
+  "problem": "Opening an older valid schema1 sessions file without optional pendingCleanup rejected storage, left no current conversation and disabled Send despite typed text.",
+  "fix": "Use a non-mutating owned JSON value for optional cleanup lookup. Missing field remains Undefined; existing malformed values still fail validation. No history reset or invalid-store overwrite.",
+  "additionalChange": "Two Settings permission-exception lookups now also use owned JSON values. Their new tests passed before the defensive fix; no separate visible Settings defect was reproduced.",
+  "storageReproduction": "audit/composer-legacy-storage-fix.json",
+  "settingsEvidence": "audit/composer-settings-owned-values.json",
+  "tests": {
+    "passedSuites": 6,
+    "passedCasesIncludingLifecycle": 137,
+    "rows": [
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4029,
+        "report": {
+          "path": "audit/composer-legacy-storage/native_main_chrome.txt",
+          "sha256CanonicalLf": "65f4b471b6a5535ffd8284e806201517b0fbe5b327a1ffbe3a1da1279f4d4484"
+        }
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16830,
+        "report": {
+          "path": "audit/composer-legacy-storage/native_conversations.txt",
+          "sha256CanonicalLf": "d6709f4093a94a6a31dc82f66889660e2b4c94616c5acab01d1838610d047cd8"
+        }
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 451,
+        "report": {
+          "path": "audit/composer-legacy-storage/native_session_cleanup.txt",
+          "sha256CanonicalLf": "98d40e4958a7de8926cbfae6747e04c487a0d52ece65b43011ad9a758156b21a"
+        }
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1754,
+        "report": {
+          "path": "audit/composer-legacy-storage/native_ui.txt",
+          "sha256CanonicalLf": "03e4d5dd5f1de7b1fb11ac2f16112cedab6b5ee377630561a1da9ee4813c01bb"
+        }
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4921,
+        "report": {
+          "path": "audit/composer-legacy-storage/native_ui_audit.txt",
+          "sha256CanonicalLf": "15dc643f4b9d73224e4a6cc14e4038c9fba938d1977b117b8899c00abeb37cf4"
+        }
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 501,
+        "report": {
+          "path": "audit/composer-legacy-storage/settings-after.txt",
+          "sha256CanonicalLf": "0a3c2df5e0153cd3afbcc5a16b9c6f20ab55d9c32e95d9fdb5dfb32c427abdbc"
+        }
+      }
+    ],
+    "ctest": {
+      "path": "audit/composer-legacy-storage/ctest.txt",
+      "sha256CanonicalLf": "36f2cf733361107207b30826f633dd7206b88c4f0ab61a2eea4f0da192c42f6e"
+    },
+    "scope": "Five selected suites run together after build; Settings full suite ran separately after its owned-value change. Counts include QtTest lifecycle. No complete84-suite rerun claim."
+  },
+  "uiRegression": "Two cases load raw legacy JSON, type hi there, send by button or Enter, receive a two-chunk local SSE reply, retain exact earlier messages and title, then restart and enable Send again. Initial source file bytes are unchanged before the first explicit message save.",
+  "packagedUi": {
+    "schemaVersion": 1,
+    "observedAtUtc": "2026-11-06T15:50:46.4587948Z",
+    "status": "passed",
+    "method": "Actual Windows UI via computer-use @oai/sky",
+    "executable": "out/composer-send-fix/ADE.exe",
+    "executableSha256": "a161b5819863f6fa7133dd92071bff6eab5d2bea839bae4a58fdf4a899f7f0d7",
+    "scope": "Isolated synthetic legacy profile and loopback fixture provider only; no credential contents read",
+    "legacyEnvelope": {
+      "pendingCleanup": "omitted at launch",
+      "earlierUserAndAssistantMessagesLoaded": true,
+      "cleanupErrorAbsent": true
+    },
+    "send": {
+      "pid": 39248,
+      "input": "Hi there",
+      "sendEnabledObserved": true,
+      "action": "Clicked native Send message button",
+      "busyStateObserved": true,
+      "reply": "The legacy chat sent successfully.",
+      "providerErrorAbsent": true
+    },
+    "restart": {
+      "pid": 3688,
+      "earlierMessagesRetained": true,
+      "newUserMessageRetained": true,
+      "newAssistantReplyRetained": true,
+      "cleanupErrorAbsent": true
+    },
+    "closure": {
+      "action": "Native titlebar X for each isolated instance",
+      "allTestPidsAbsent": true,
+      "testPids": [
+        2508,
+        39248,
+        3688
+      ],
+      "userPidStillRunning": true,
+      "userWindowAndDraftUntouched": true
+    },
+    "harnessCorrection": {
+      "initialPid": 2508,
+      "initialError": "Invalid provider configuration format.",
+      "cause": "Synthetic provider envelope used schemaVersion:1 instead of required version:1",
+      "correctedBy": "Root agent",
+      "productionFixRequired": false,
+      "legacyChatAlreadyLoadedDuringInitialAttempt": true
+    },
+    "screenshots": [
+      {
+        "file": "provider-fixture-error.png",
+        "sha256": "ca46d2c1b2310b31daabb22a35a7bb288f701d77023d168028aed9b4a97ed724"
+      },
+      {
+        "file": "send-enabled.png",
+        "sha256": "13588ee52ffac4606e87c342eb0da626d5a9ec2837c51d1716ca7f03127ad3df"
+      },
+      {
+        "file": "reply-received.png",
+        "sha256": "9a81ad3571c93de9aa73887870ffe46c5f23f034f2f7fb480802484999659d16"
+      },
+      {
+        "file": "restart-retained.png",
+        "sha256": "b653b3f645bea4e964d23d5da821edd021b0af0b6dd87dd90fd7a5d8612a5f6b"
+      },
+      {
+        "file": "restart-history.png",
+        "sha256": "e62addd3b87804a65d67288db4451555e8df71095eb5ac24cc6c3cce9f2c43b2"
+      }
+    ],
+    "limits": [
+      "Synthetic loopback provider; no live service credentials or remote service calls",
+      "This verifies the observed legacy-envelope Send and restart cases, not every startup configuration"
+    ]
+  },
+  "fixtureTransport": {
+    "requests": 1,
+    "legacyHistoryReceived": true,
+    "newMessageReceived": true
+  },
+  "actualUserStoreReadOnly": {
+    "errorClass": "none",
+    "pendingCleanupCount": 0,
+    "sessionCount": 1,
+    "success": true,
+    "unchangedBytes": true
+  },
+  "sourceFiles": [
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256CanonicalLf": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7",
+      "bytesCanonicalLf": 15430
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "sha256CanonicalLf": "845b5c448e5707f7e21a8a3be7519aa5cf20cb967341cec6bf0e775c8f2c00dd",
+      "bytesCanonicalLf": 93616
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "sha256CanonicalLf": "c8310415525fbe0ff60dc9efa387e16e6ce118e653a39541df9ff46f4a02ddac",
+      "bytesCanonicalLf": 21715
+    },
+    {
+      "path": "tests/test_session_cleanup.cpp",
+      "sha256CanonicalLf": "393c20d65bd7a1eb16a6447bbc9ddb3b5e4fa04aa0fbf889c0761e0fcc34e147",
+      "bytesCanonicalLf": 16569
+    },
+    {
+      "path": "tests/test_settings.cpp",
+      "sha256CanonicalLf": "279c878899278f6aa6bd16d5d71e30803d8f873a1d50af17631c64e9edf606fe",
+      "bytesCanonicalLf": 15410
+    },
+    {
+      "path": "README.md",
+      "sha256CanonicalLf": "e0308a4cdaa9a512deccda768ba034f17de79f38785d0500a1b04669a6acc9a9",
+      "bytesCanonicalLf": 14950
+    }
+  ],
+  "binaries": [
+    {
+      "path": "ADE.exe",
+      "sha256": "a161b5819863f6fa7133dd92071bff6eab5d2bea839bae4a58fdf4a899f7f0d7",
+      "bytes": 80892188,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "path": "ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "bytes": 19775944,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "bytes": 194912,
+      "peImports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "build": "Targeted rebuild of ADE and affected UI/conversation/cleanup targets from reviewed source; package bytes match those actually exercised by Windows UI.",
+  "userData": "The actual user session file was loaded read-only through fixed production SessionStore and byte equality was verified before/after. User window/draft, provider/plugin keys and original data were not changed. Only isolated synthetic profiles were written.",
+  "limits": [
+    "The already-running old executable does not acquire this fix until restarted.",
+    "Truly malformed storage still refuses to overwrite data; general corruption-recovery UX was not redesigned.",
+    "The UI reply used a loopback fixture, not a new live model request.",
+    "Full Stagewise feature, visual and model-behavior parity remains incomplete."
+  ]
+}

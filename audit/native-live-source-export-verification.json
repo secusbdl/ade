@@ -1,0 +1,419 @@
+{
+  "verifiedUtc": "2026-11-06T15:27:58.880097+00:00",
+  "sourceDevelopmentCommit": "595c96296915093df688673cb211a3dd7e75323e",
+  "sourceExport": "out/live-github-source-export",
+  "manifestSha256": "673a2a8e36072d108b70e817fcf6fc1163f101dab2573acd24b5d2cceab86086",
+  "manifestFiles": 2780,
+  "manifestHashMismatches": 0,
+  "currentSourceAuditHashesVerified": 18,
+  "retainedSmokeEvidenceHashesVerified": 10,
+  "excludedAuditImages": 49,
+  "scan": {
+    "textFiles": 2774,
+    "highConfidenceCandidatePaths": [],
+    "privateStatePathCandidates": [],
+    "scope": "Bounded credential/private-key/JWT shapes and private-state names across all exported text. No live credentials read. Not a universal secret detector."
+  },
+  "historicalEvidence": "Older audit hashes describe their historical source snapshots and are not rewritten to claim current tests.",
+  "referenceVerification": "prepare-publication.py verified1400pinnedStagewise,17file-mutation and16Git-usage files in source and exactexport.",
+  "freshBuild": {
+    "verifiedUtc": "2026-11-06T15:30:00.050527+00:00",
+    "scope": "Fresh configure and targeted build from the curated source export using the existing installed Windows toolchain. No source edits, root/package rebuild, full test rerun or live request.",
+    "sourceExport": "out/live-github-source-export",
+    "sourceDevelopmentCommit": "595c96296915093df688673cb211a3dd7e75323e",
+    "publicationManifestSha256": "673a2a8e36072d108b70e817fcf6fc1163f101dab2573acd24b5d2cceab86086",
+    "manifestFileCount": 2780,
+    "selectedExportSourceHashes": [
+      {
+        "path": "src/main.cpp",
+        "sha256ExactExportBytes": "c6351737e4fa47161e586353d332df563dcb48729105ea37644e5a3137385397"
+      },
+      {
+        "path": "CMakeLists.txt",
+        "sha256ExactExportBytes": "6a6cf7c92e6e4492fba8e0ecddfdaf495ab3ef2a2425039f3963e29ff83e6d75"
+      },
+      {
+        "path": "CMakePresets.json",
+        "sha256ExactExportBytes": "2a5df27305000419ff194b093f8a1ce8b55775aee4d83d3097e4f0de469fc154"
+      },
+      {
+        "path": "scripts/build.ps1",
+        "sha256ExactExportBytes": "69bf87cb7cddfcb0d4938d048813941a0a153d13474b7bcc77275c503e10b459"
+      }
+    ],
+    "manifestScope": "Selected build-input hashes checked against PUBLICATION.json here; the parent independently verifies the complete manifest and secret scan.",
+    "build": {
+      "result": "passed",
+      "targets": [
+        "ADE",
+        "ADE-sandbox-worker"
+      ],
+      "parallel": 6,
+      "directory": "out/live-github-source-export/build",
+      "configureLog": "private/live-github-export-configure.log",
+      "buildLog": "private/live-github-export-build.log",
+      "configuration": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "C:/mingw64/bin/g++.exe",
+        "CMAKE_C_COMPILER": "C:/mingw64/bin/gcc.exe",
+        "CMAKE_MAKE_PROGRAM": "C:\\mingw64\\bin\\ninja.exe",
+        "CMAKE_PREFIX_PATH": "C:\\Qt\\6.11.2-mingw64-static",
+        "OPENSSL_ROOT_DIR": "C:\\Qt\\openssl-3.5.8-mingw64-static",
+        "OPENSSL_USE_STATIC_LIBS": "TRUE",
+        "ADE_BUILD_EXPERIMENTS": "OFF"
+      },
+      "warningLines": 57
+    },
+    "version": {
+      "argument": "--version",
+      "stdout": "ADE 0.1.0",
+      "exitCode": 0,
+      "launch": "Start-Process -WindowStyle Hidden -Wait; native Windows Qt platform, no main window",
+      "stdoutReport": "private/live-github-export-version.txt",
+      "stderrReport": "private/live-github-export-version.stderr.txt"
+    },
+    "binaries": [
+      {
+        "path": "build/bin/ADE.exe",
+        "bytes": 80892188,
+        "sha256": "0a37580d352d89905faef29a823602ca0dec585972525dcac05edcaf5509bf5f",
+        "format": "pei-x86-64",
+        "imports": [
+          {
+            "name": "ADVAPI32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "AUTHZ.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "bcrypt.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "comdlg32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "CRYPT32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "d3d11.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "d3d12.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "d3d9.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "DNSAPI.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "dwmapi.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "DWrite.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "dxgi.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "GDI32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "IMM32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "IPHLPAPI.DLL",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "KERNEL32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "api-ms-win-crt-convert-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-environment-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-filesystem-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-heap-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-locale-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-math-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-private-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-runtime-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-stdio-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-string-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-time-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-utility-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "ncrypt.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "NETAPI32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "ntdll.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "ODBC32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "ole32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "OLEAUT32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "api-ms-win-core-winrt-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-core-winrt-string-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "Secur32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "SETUPAPI.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "SHCORE.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "SHELL32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "SHLWAPI.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "api-ms-win-core-synch-l1-2-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "USER32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "USERENV.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "UxTheme.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "VERSION.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WINHTTP.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WINMM.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WS2_32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WTSAPI32.dll",
+            "classification": "Windows System32 library"
+          }
+        ],
+        "nonSystemPeImports": [],
+        "dynamicQtCompilerOpenSslNodeElectronImports": []
+      },
+      {
+        "path": "build/bin/ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "fee7285d97dab0399bcb1d0c8db9c3abaeecb92259a3b679b31985a2a97245ef",
+        "format": "pei-x86-64",
+        "imports": [
+          {
+            "name": "ADVAPI32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "AUTHZ.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "KERNEL32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "api-ms-win-crt-convert-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-environment-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-filesystem-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-heap-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-locale-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-math-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-private-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-runtime-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-stdio-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-string-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-time-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "api-ms-win-crt-utility-l1-1-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "NETAPI32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "ntdll.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "ole32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "SHELL32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "api-ms-win-core-synch-l1-2-0.dll",
+            "classification": "Windows API set"
+          },
+          {
+            "name": "USER32.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "USERENV.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "VERSION.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WINMM.dll",
+            "classification": "Windows System32 library"
+          },
+          {
+            "name": "WS2_32.dll",
+            "classification": "Windows System32 library"
+          }
+        ],
+        "nonSystemPeImports": [],
+        "dynamicQtCompilerOpenSslNodeElectronImports": []
+      },
+      {
+        "path": "build/bin/WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "format": "pei-x86-64",
+        "imports": [
+          {
+            "name": "KERNEL32.dll",
+            "classification": "Windows System32 library"
+          }
+        ],
+        "nonSystemPeImports": [],
+        "dynamicQtCompilerOpenSslNodeElectronImports": []
+      }
+    ],
+    "loaderMatchesVendoredCopy": true,
+    "limits": [
+      "The export build is separate from the root build and any packaged preview; binary equality across build locations is not asserted.",
+      "PE import tables contain no dynamic Qt/compiler/OpenSSL/Node/Electron imports. ADE still explicitly loads the accompanying WebView2Loader.dll, and browser pages need an installed WebView2 runtime.",
+      "Git and terminal features use installed Git and system shells. Import inspection and --version do not exercise these runtime features.",
+      "This is an existing-machine fresh-source build, not a clean-machine installation or universal deployment/parity guarantee. No tests were rerun."
+    ]
+  }
+}

@@ -40,6 +40,53 @@ bool seed(SessionStore& store,const QString& directory,const QStringList& delete
 class SessionCleanupTests:public QObject {
     Q_OBJECT
 private slots:
+    void legacyMissingCleanupFieldLoadsWithoutChangingHistory_data(){
+        QTest::addColumn<bool>("populated");
+        QTest::newRow("empty-legacy-store")<<false;
+        QTest::newRow("existing-legacy-chat")<<true;
+    }
+    void legacyMissingCleanupFieldLoadsWithoutChangingHistory(){
+        QFETCH(bool,populated);QTemporaryDir data;QString error;
+        const QJsonArray history{QJsonObject{{"role","user"},{"content","Preserve the original fixture message."}},
+            QJsonObject{{"role","assistant"},{"content","Preserved reply"},{"metadata",QJsonObject{{"fixture","history-metadata"}}}}};
+        QJsonArray records;
+        if(populated)records.append(QJsonObject{{"id","legacy"},{"title","Existing fixture"},{"draft","Unsent fixture draft"},{"messages",history}});
+        const auto original=QJsonDocument(QJsonObject{{"schemaVersion",1},{"sessions",records}}).toJson();
+        QVERIFY(put(data.filePath("sessions.json"),original));SessionStore store(data.path());
+        auto loaded=store.load(&error);
+        QVERIFY2(error.isEmpty(),qPrintable(error));QCOMPARE(loaded.size(),populated?1:0);QVERIFY(store.pendingCleanup().isEmpty());
+        if(populated){QCOMPARE(loaded.first().messages,history);QCOMPARE(loaded.first().draft,QString("Unsent fixture draft"));}
+        QCOMPARE(bytes(data.filePath("sessions.json")),original);
+        int cleanups=0;
+        QVERIFY(process(store,loaded,[&](const QString&,const QString&,QString*){++cleanups;return true;},&error));QCOMPARE(cleanups,0);
+        QCOMPARE(bytes(data.filePath("sessions.json")),original);
+        loaded.append(chat("new-chat"));QVERIFY2(store.save(loaded,&error),qPrintable(error));
+        const auto saved=QJsonDocument::fromJson(bytes(data.filePath("sessions.json"))).object();
+        QVERIFY(saved.value("pendingCleanup").isArray());QVERIFY(saved.value("pendingCleanup").toArray().isEmpty());
+        SessionStore restarted(data.path());const auto after=restarted.load(&error);
+        QVERIFY2(error.isEmpty(),qPrintable(error));QCOMPARE(after.size(),populated?2:1);
+        if(populated){QCOMPARE(after.first().messages,history);QCOMPARE(after.first().draft,QString("Unsent fixture draft"));}
+    }
+    void invalidCleanupFieldStillFailsClosed_data(){
+        QTest::addColumn<QJsonValue>("pending");
+        QTest::newRow("null")<<QJsonValue(QJsonValue::Null);
+        QTest::newRow("boolean")<<QJsonValue(false);
+        QTest::newRow("number")<<QJsonValue(0);
+        QTest::newRow("string")<<QJsonValue("");
+        QTest::newRow("object")<<QJsonValue(QJsonObject{});
+        QJsonArray tooMany;for(int i=0;i<10001;++i)tooMany.append("gone-"+QString::number(i));
+        QTest::newRow("too-many-records")<<QJsonValue(tooMany);
+    }
+    void invalidCleanupFieldStillFailsClosed(){
+        QFETCH(QJsonValue,pending);QTemporaryDir data;QString error;
+        const QJsonArray records{QJsonObject{{"id","keep"},{"title","Retained fixture"},{"messages",QJsonArray{}}}};
+        const auto original=QJsonDocument(QJsonObject{{"schemaVersion",1},{"sessions",records},{"pendingCleanup",pending}}).toJson();
+        QVERIFY(put(data.filePath("sessions.json"),original));SessionStore store(data.path());
+        QVERIFY(store.load(&error).isEmpty());QVERIFY(error.contains("cleanup records are invalid"));
+        QVERIFY(!store.save({chat("replacement")},&error));QVERIFY(!error.isEmpty());
+        int cleanups=0;QVERIFY(!process(store,{},[&](const QString&,const QString&,QString*){++cleanups;return true;},&error));
+        QCOMPARE(cleanups,0);QCOMPARE(bytes(data.filePath("sessions.json")),original);
+    }
     void concurrentWriterCannotResurrectChatDuringCleanup(){
         QTemporaryDir data;SessionStore first(data.path());QString error;QVERIFY2(seed(first,data.path(),{"gone"},&error),qPrintable(error));
         bool called=false,competingSave=true;QString competingError;

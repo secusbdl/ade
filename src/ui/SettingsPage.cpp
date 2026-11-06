@@ -264,7 +264,7 @@ bool validPreferences(const QJsonObject &preferences) {
         for(auto site=sites.begin();site!=sites.end();++site){
             const QUrl origin(site.key(),QUrl::StrictMode);
             if(!validWebUrl(site.key())||!origin.path().isEmpty()||origin.hasQuery()||origin.hasFragment())return false;
-            const auto setting=site.value().isObject()?site.value().toObject()["setting"]:site.value();
+            const QJsonValue setting=site.value().isObject()?site.value().toObject().value("setting"):QJsonValue(site.value());
             if(!validSetting(setting)&&!(setting.isDouble()&&setting.toDouble()==setting.toInt()&&setting.toInt()>=0&&setting.toInt()<=2))return false;
         }
     }
@@ -1033,7 +1033,7 @@ void SettingsPage::buildBrowsing(QVBoxLayout *layout) {
     heading(layout,"Site exceptions","Rules apply to one origin, including its port.");
     const auto exceptions=preference("browsing.permissionExceptions").toObject();
     for(auto type=exceptions.begin();type!=exceptions.end();++type){const auto sites=type.value().toObject();for(auto site=sites.begin();site!=sites.end();++site){
-        auto setting=site.value().isObject()?site.value().toObject()["setting"]:site.value();
+        const QJsonValue setting=site.value().isObject()?site.value().toObject().value("setting"):QJsonValue(site.value());
         const QString label=setting.isString()?setting.toString():QStringList{"ask","allow","block"}.value(setting.toInt());
         QHBoxLayout* row;card(layout,site.key(),type.key()+" · "+label,&row);auto* remove=new QPushButton("Remove");row->addWidget(remove);
         connect(remove,&QPushButton::clicked,this,[this,type=type.key(),origin=site.key()]{if(setSitePermission(type,QUrl(origin),"default"))buildContent();});

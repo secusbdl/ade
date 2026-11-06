@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "classification": "defensive_owned_value_change",
+  "scope": "Settings permission-exception startup validation and Browsing General display only. Separate from the reproduced missing pendingCleanup conversation-store bug.",
+  "change": "Both object-shaped permission lookups now produce explicit owned QJsonValue values through QJsonObject::value(), including the fallback branch; no temporary JSON proxy is retained.",
+  "beforeFailureReproduced": false,
+  "evidenceInterpretation": "All newly added cases already passed before this change. The evidence establishes preserved behavior and defensive ownership, not a reproduced Settings user-visible failure.",
+  "newRegressionRows": {
+    "total": 15,
+    "valid": 6,
+    "invalid": 9,
+    "validForms": "Object setting ask/allow/block and numeric enum 0/1/2",
+    "invalidForms": [
+      "missing",
+      "null",
+      "boolean",
+      "negative",
+      "out-of-range",
+      "fractional",
+      "unknown string",
+      "array",
+      "nested object"
+    ],
+    "checks": [
+      "Persisted object-shaped records load successfully for valid forms",
+      "Browsing General renders the exact setting label",
+      "Valid records retain their value through unrelated save and restart",
+      "Invalid records prevent saving and preserve original preference bytes"
+    ]
+  },
+  "results": {
+    "beforeFocused": {
+      "passedIncludingLifecycle": 17,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 299
+    },
+    "afterFullSettings": {
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 501
+    }
+  },
+  "retainedWarnings": "Standalone Settings target reports missing bundled plugin SVG resources; warnings remain in the unfiltered successful log. This test does not establish icon-rendering parity.",
+  "normalization": "UTF-8 without BOM, CRLF normalized to LF. XML machine hostname replaced with redacted; no other content changes.",
+  "sourceHashesCanonicalLF": {
+    "src/ui/SettingsPage.cpp": "845b5c448e5707f7e21a8a3be7519aa5cf20cb967341cec6bf0e775c8f2c00dd",
+    "tests/test_settings.cpp": "279c878899278f6aa6bd16d5d71e30803d8f873a1d50af17631c64e9edf606fe"
+  },
+  "evidence": [
+    {
+      "path": "audit/composer-legacy-storage/settings-before.txt",
+      "sha256CanonicalLF": "acb2f2af3638b68a55fafaf4b7a270d7017a9ffd4d1d63a140aa77a065dc114d",
+      "hostnameRedactions": 0
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-before.xml",
+      "sha256CanonicalLF": "ae5e70edb9fe855add8e49773ab6c2d045fcc926e5e9c5be19b4d9d913dd90be",
+      "hostnameRedactions": 1
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-after.txt",
+      "sha256CanonicalLF": "0a3c2df5e0153cd3afbcc5a16b9c6f20ab55d9c32e95d9fdb5dfb32c427abdbc",
+      "hostnameRedactions": 0
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-after.xml",
+      "sha256CanonicalLF": "b6f7afc6278dfd7f24f3bc556ab905d77df7b11a7756530f4cb1cf246c10d8ce",
+      "hostnameRedactions": 1
+    }
+  ]
+}

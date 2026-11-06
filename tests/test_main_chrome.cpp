@@ -8,6 +8,9 @@
 #include <QComboBox>
 #include <QDir>
 #include <QDialog>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QLineEdit>
 #include <QLabel>
 #include <QPushButton>
@@ -19,6 +22,7 @@
 #include <QToolButton>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTimer>
 #include <QtTest>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -29,6 +33,28 @@ namespace {
 bool seed(const QString& path){Conversation value;value.id="fixture";value.title="Fixture chat";value.draft="";return SessionStore(path).save({value});}
 void showHidden(MainWindow& window){window.setAttribute(Qt::WA_DontShowOnScreen);window.resize(1540,940);window.show();QCoreApplication::processEvents();}
 QToolButton* sidebarToggle(MainWindow& window){for(auto* button:window.findChildren<QToolButton*>())if(button->accessibleName()=="Toggle sidebar")return button;return nullptr;}
+class ComposerReplyServer : public QTcpServer {
+public:
+    QList<QJsonObject> requests;
+    ComposerReplyServer(){
+        listen(QHostAddress::LocalHost);
+        connect(this,&QTcpServer::newConnection,this,[this]{while(auto* socket=nextPendingConnection()){
+            connect(socket,&QTcpSocket::disconnected,socket,&QObject::deleteLater);
+            connect(socket,&QTcpSocket::readyRead,this,[this,socket]{
+                if(socket->property("handled").toBool()){socket->readAll();return;}
+                const auto bytes=socket->property("request").toByteArray()+socket->readAll();socket->setProperty("request",bytes);
+                const auto end=bytes.indexOf("\r\n\r\n");if(end<0)return;
+                int length=0;for(const auto& line:bytes.left(end).split('\n'))if(line.toLower().startsWith("content-length:"))length=line.mid(15).trimmed().toInt();
+                if(bytes.size()<end+4+length)return;
+                socket->setProperty("handled",true);requests.append(QJsonDocument::fromJson(bytes.mid(end+4,length)).object());
+                const QByteArray first="data: {\"choices\":[{\"delta\":{\"content\":\"Local \"}}]}\n\n";
+                const QByteArray last="data: {\"choices\":[{\"delta\":{\"content\":\"reply.\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n\n";
+                socket->write("HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: "+QByteArray::number(first.size()+last.size())+"\r\nConnection: close\r\n\r\n"+first);
+                QTimer::singleShot(25,socket,[socket,last]{socket->write(last);socket->disconnectFromHost();});
+            });
+        }});
+    }
+};
 }
 class MainChromeTest:public QObject{
     Q_OBJECT
@@ -82,6 +108,37 @@ private slots:
         QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
         auto* stop=window.findChild<QToolButton*>("stopButton");auto* send=window.findChild<QToolButton*>("sendButton");auto* input=window.findChild<Composer*>();QVERIFY(stop&&send&&input);
         QVERIFY(stop->isHidden());QVERIFY(!send->isEnabled());input->setPlainText("Ready");QVERIFY(send->isEnabled());input->clear();QVERIFY(!send->isEnabled());
+    }
+    void legacyChatCanSendAndRestart_data(){
+        QTest::addColumn<bool>("enter");QTest::newRow("send-button")<<false;QTest::newRow("enter-key")<<true;
+    }
+    void legacyChatCanSendAndRestart(){
+        QFETCH(bool,enter);QTemporaryDir data;ComposerReplyServer provider;QVERIFY(data.isValid());QVERIFY(provider.isListening());
+        QString error;const ProviderConfig config{"fixture","Local fixture",QString("http://127.0.0.1:%1/v1").arg(provider.serverPort()),"synthetic-composer-key","fixture-model","openai"};
+        QVERIFY2(ProviderStore::save(data.filePath("providers.json"),{config},&error),qPrintable(error));
+        const QJsonArray history{QJsonObject{{"role","user"},{"content","Earlier question"}},QJsonObject{{"role","assistant"},{"content","Earlier answer"}}};
+        const QJsonObject legacy{{"id","legacy-chat"},{"title","Retained chat"},{"providerId","fixture"},{"model","fixture-model"},{"draft",""},{"messages",history},{"titleLocked",true}};
+        // An actual older file, not produced by the current writer: cleanup and
+        // newer optional fields are absent. This is the user's startup failure.
+        const auto original=QJsonDocument(QJsonObject{{"schemaVersion",1},{"sessions",QJsonArray{legacy}}}).toJson();
+        {QFile file(data.filePath("sessions.json"));QVERIFY(file.open(QIODevice::WriteOnly));QCOMPARE(file.write(original),qint64(original.size()));}
+        {
+            MainWindow window(data.path());showHidden(window);QCOMPARE(window.currentSessionId(),QString("legacy-chat"));
+            auto* input=window.findChild<Composer*>();auto* send=window.findChild<QToolButton*>("sendButton");QVERIFY(input&&send);
+            QVERIFY(!window.findChild<QLabel*>("sessionStatus")->text().contains("cleanup records are invalid"));
+            {QFile file(data.filePath("sessions.json"));QVERIFY(file.open(QIODevice::ReadOnly));QCOMPARE(file.readAll(),original);}
+            QVERIFY(!send->isEnabled());QTest::keyClicks(input,"hi there");QVERIFY(send->isEnabled());
+            if(enter)QTest::keyClick(input,Qt::Key_Return);else send->click();
+            QTRY_COMPARE_WITH_TIMEOUT(provider.requests.size(),1,5000);
+            auto* engine=window.findChild<AgentEngine*>();QVERIFY(engine);QTRY_VERIFY_WITH_TIMEOUT(!engine->isBusy()&&engine->lastTurnSucceeded(),5000);
+            const auto wire=QJsonDocument(provider.requests.first()).toJson();QVERIFY(wire.contains("Earlier question"));QVERIFY(wire.contains("Earlier answer"));QVERIFY(wire.contains("hi there"));
+            const auto stored=SessionStore(data.path()).load(&error);QVERIFY2(error.isEmpty(),qPrintable(error));QCOMPARE(stored.size(),1);QCOMPARE(stored[0].id,QString("legacy-chat"));
+            QCOMPARE(stored[0].messages.size(),4);QCOMPARE(stored[0].messages[0],history[0]);QCOMPARE(stored[0].messages[1],history[1]);
+            QCOMPARE(stored[0].messages.last().toObject()["content"].toString(),QString("Local reply."));QVERIFY(input->toPlainText().isEmpty());
+        }
+        MainWindow reopened(data.path());showHidden(reopened);QCOMPARE(reopened.currentSessionId(),QString("legacy-chat"));
+        auto* input=reopened.findChild<Composer*>();input->setPlainText("Next message");QVERIFY(reopened.findChild<QToolButton*>("sendButton")->isEnabled());
+        const auto stored=SessionStore(data.path()).load(&error);QVERIFY(error.isEmpty());QCOMPARE(stored[0].messages.size(),4);QCOMPARE(stored[0].title,QString("Retained chat"));
     }
     void persistedSidebarAndZoomPreserveCollapsedState(){
         QTemporaryDir data;QVERIFY(seed(data.path()));

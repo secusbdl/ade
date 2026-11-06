@@ -159,6 +159,12 @@ plugin request.
 
 ## Evidence and remaining work
 
+Older ADE profiles that omit the optional conversation cleanup field now load
+without resetting history. The regression covers typing and sending with the
+button or Enter, receiving a local streamed reply, and reopening the saved chat.
+Invalid cleanup records still refuse writes. See
+`audit/composer-legacy-storage-fix.json` and `audit/composer-send-verification.json`.
+
 The November 6 live GitHub check used an actual native ADE chat to read identity
 and repository state, create two isolated validation branches and one marker,
 open and merge [test PR #1](https://github.com/secusbdl/ade/pull/1), and remove

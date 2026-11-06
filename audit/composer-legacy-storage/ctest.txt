@@ -1,0 +1,15 @@
+Test project D:/age/ADE/build-next
+    Start 36: native_main_chrome
+1/5 Test #36: native_main_chrome ...............   Passed    4.41 sec
+    Start 38: native_conversations
+2/5 Test #38: native_conversations .............   Passed   16.99 sec
+    Start 40: native_session_cleanup
+3/5 Test #40: native_session_cleanup ...........   Passed    0.57 sec
+    Start 73: native_ui
+4/5 Test #73: native_ui ........................   Passed    1.93 sec
+    Start 74: native_ui_audit
+5/5 Test #74: native_ui_audit ..................   Passed    5.09 sec
+
+100% tests passed out of 5
+
+Total Test time (real) =  29.00 sec

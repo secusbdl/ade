@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SettingsTest" timestamp="2026&#x002D;11&#x002D;06T17:43:51" hostname="redacted" tests="17" failures="0" errors="0" skipped="0" time="0.299">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SettingsTest" time="0.000"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;ask)" classname="SettingsTest" time="0.104"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;allow)" classname="SettingsTest" time="0.026"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;block)" classname="SettingsTest" time="0.025"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;enum&#x002D;0)" classname="SettingsTest" time="0.026"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;enum&#x002D;1)" classname="SettingsTest" time="0.025"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;enum&#x002D;2)" classname="SettingsTest" time="0.026"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;missing)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;null)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;boolean)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;negative)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;large)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;fractional)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;unknown)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;array)" classname="SettingsTest" time="0.007"/>
+  <testcase name="objectSitePermissionRecords(object&#x002D;invalid&#x002D;nested)" classname="SettingsTest" time="0.008"/>
+  <testcase name="cleanupTestCase" classname="SettingsTest" time="0.000"/>
+</testsuite>

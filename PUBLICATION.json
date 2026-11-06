@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-06T15:27:07.272900+00:00",
+  "createdUtc": "2026-11-06T15:53:30.922057+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "595c96296915093df688673cb211a3dd7e75323e",
+  "developmentCommit": "e2efe11b8df9a9dc4471b46a07460c081e7bd25e",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 2780,
-  "bytes": 28170105,
+  "fileCount": 2799,
+  "bytes": 28261508,
   "files": [
     {
       "path": ".gitattributes",
@@ -94,8 +94,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 14578,
-      "sha256": "9a2671d21adabcfa2f51df98826765cdb799f5931c1ef1c4d9cab9b86dd145ad"
+      "bytes": 14950,
+      "sha256": "e0308a4cdaa9a512deccda768ba034f17de79f38785d0500a1b04669a6acc9a9"
     },
     {
       "path": "assets/fonts/Geist-Italic-Variable.ttf",
@@ -411,6 +411,91 @@
       "path": "audit/comparison-file-read-write.json",
       "bytes": 1145,
       "sha256": "6810d71ed303656e4b08c6648d2e823799793351f5b608c70cf018be60d02936"
+    },
+    {
+      "path": "audit/composer-legacy-storage-fix.json",
+      "bytes": 5590,
+      "sha256": "69b2dbce9caf2c9060df24b7e561937beade54d3eda698a4b70916c014a25d81"
+    },
+    {
+      "path": "audit/composer-legacy-storage/after.txt",
+      "bytes": 2515,
+      "sha256": "e30ab4fef5c9eb592759cefd8e370ede99ee76a37ea868a62a26902c49a2546c"
+    },
+    {
+      "path": "audit/composer-legacy-storage/after.xml",
+      "bytes": 4037,
+      "sha256": "d7780898dfff2fe255eb324cae6b9ea62cd595553bfb61726ae3557d697aa106"
+    },
+    {
+      "path": "audit/composer-legacy-storage/before.txt",
+      "bytes": 944,
+      "sha256": "57f20cb128deb482b4369e30649671c31b99426e74dc5dde7e3af1185315fd02"
+    },
+    {
+      "path": "audit/composer-legacy-storage/before.xml",
+      "bytes": 1274,
+      "sha256": "0328e620d858589f78fd5969419059a9803e4a6b58d2ecfbd105a6be7e4abca5"
+    },
+    {
+      "path": "audit/composer-legacy-storage/ctest.txt",
+      "bytes": 609,
+      "sha256": "36f2cf733361107207b30826f633dd7206b88c4f0ab61a2eea4f0da192c42f6e"
+    },
+    {
+      "path": "audit/composer-legacy-storage/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "d6709f4093a94a6a31dc82f66889660e2b4c94616c5acab01d1838610d047cd8"
+    },
+    {
+      "path": "audit/composer-legacy-storage/native_main_chrome.txt",
+      "bytes": 4927,
+      "sha256": "65f4b471b6a5535ffd8284e806201517b0fbe5b327a1ffbe3a1da1279f4d4484"
+    },
+    {
+      "path": "audit/composer-legacy-storage/native_session_cleanup.txt",
+      "bytes": 2515,
+      "sha256": "98d40e4958a7de8926cbfae6747e04c487a0d52ece65b43011ad9a758156b21a"
+    },
+    {
+      "path": "audit/composer-legacy-storage/native_ui.txt",
+      "bytes": 965,
+      "sha256": "03e4d5dd5f1de7b1fb11ac2f16112cedab6b5ee377630561a1da9ee4813c01bb"
+    },
+    {
+      "path": "audit/composer-legacy-storage/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "15dc643f4b9d73224e4a6cc14e4038c9fba938d1977b117b8899c00abeb37cf4"
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-after.txt",
+      "bytes": 4373,
+      "sha256": "0a3c2df5e0153cd3afbcc5a16b9c6f20ab55d9c32e95d9fdb5dfb32c427abdbc"
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-after.xml",
+      "bytes": 5108,
+      "sha256": "b6f7afc6278dfd7f24f3bc556ab905d77df7b11a7756530f4cb1cf246c10d8ce"
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-before.txt",
+      "bytes": 1421,
+      "sha256": "acb2f2af3638b68a55fafaf4b7a270d7017a9ffd4d1d63a140aa77a065dc114d"
+    },
+    {
+      "path": "audit/composer-legacy-storage/settings-before.xml",
+      "bytes": 2392,
+      "sha256": "ae5e70edb9fe855add8e49773ab6c2d045fcc926e5e9c5be19b4d9d913dd90be"
+    },
+    {
+      "path": "audit/composer-send-verification.json",
+      "bytes": 11521,
+      "sha256": "0688542c3daa1ac15fa1fcd553692ce707b84a688588b015b39f2bbbad3009b6"
+    },
+    {
+      "path": "audit/composer-settings-owned-values.json",
+      "bytes": 3067,
+      "sha256": "21e17e48ba2c01e0923bda69b49f3602ffd148c83c3278123d07733a8b941e6a"
     },
     {
       "path": "audit/context-live-evidence.json",
@@ -2086,6 +2171,16 @@
       "path": "audit/native-github-live-verification.json",
       "bytes": 18146,
       "sha256": "094944a32e94d3da28c2d32afcdbe2cca9d059aaa417ba3d58b0a3b58a546e7f"
+    },
+    {
+      "path": "audit/native-live-publication.json",
+      "bytes": 2313,
+      "sha256": "f898f337116d4753f95c4c0738aa319f35132fc4a8cd10ac294aa3d809d2b8dc"
+    },
+    {
+      "path": "audit/native-live-source-export-verification.json",
+      "bytes": 14443,
+      "sha256": "333bec740476bab2de95e9ad4bbb2b7367dccb32962cc5643467e33725be7cdb"
     },
     {
       "path": "audit/native-live-validation/native_context.txt",
@@ -12269,8 +12364,8 @@
     },
     {
       "path": "src/ui/SessionStore.cpp",
-      "bytes": 15185,
-      "sha256": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677"
+      "bytes": 15430,
+      "sha256": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7"
     },
     {
       "path": "src/ui/SessionStore.h",
@@ -12279,8 +12374,8 @@
     },
     {
       "path": "src/ui/SettingsPage.cpp",
-      "bytes": 93562,
-      "sha256": "a42377f600391c6e7669a89ecea181e123e340cdebc14aa0790773c081ab4e81"
+      "bytes": 93616,
+      "sha256": "845b5c448e5707f7e21a8a3be7519aa5cf20cb967341cec6bf0e775c8f2c00dd"
     },
     {
       "path": "src/ui/SettingsPage.h",
@@ -12539,8 +12634,8 @@
     },
     {
       "path": "tests/test_main_chrome.cpp",
-      "bytes": 16525,
-      "sha256": "576cecc189157236d2c76adcf19dcef92eed21c27a736f53026654f2a27d5fb9"
+      "bytes": 21715,
+      "sha256": "c8310415525fbe0ff60dc9efa387e16e6ce118e653a39541df9ff46f4a02ddac"
     },
     {
       "path": "tests/test_mini_apps.cpp",
@@ -12634,8 +12729,8 @@
     },
     {
       "path": "tests/test_session_cleanup.cpp",
-      "bytes": 12959,
-      "sha256": "9c669a594067b6c40b80ac411a7899ae7fe243c5cbd705154d563ca136700723"
+      "bytes": 16569,
+      "sha256": "393c20d65bd7a1eb16a6447bbc9ddb3b5e4fa04aa0fbf889c0761e0fcc34e147"
     },
     {
       "path": "tests/test_session_logs.cpp",
@@ -12644,8 +12739,8 @@
     },
     {
       "path": "tests/test_settings.cpp",
-      "bytes": 12550,
-      "sha256": "c21304e303efb2fb5f0fdd23309d01edc24a31cfaccb7b41339c29cc5b4b41d3"
+      "bytes": 15410,
+      "sha256": "279c878899278f6aa6bd16d5d71e30803d8f873a1d50af17631c64e9edf606fe"
     },
     {
       "path": "tests/test_settings_audit.cpp",
