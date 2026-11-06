@@ -1,0 +1,28 @@
+{
+  "status": "Component sources frozen after independent verification; integrated host verification belongs to root",
+  "baseline_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "problem": "Native CodeEditor inferred dark mode from palette Base lightness. With a transparent QPlainTextEdit stylesheet background this can choose dark syntax on a light painted surface. The root light preview visibly contained the previous dark keyword/string/number values.",
+  "change": {
+    "api": ["CodeEditor::setDarkTheme(bool)", "EditorWidget::setDarkTheme(bool)", "GitPanel::setDarkTheme(bool)"],
+    "behavior": "An explicit theme overrides automatic palette inference, rehighlights immediately and survives later PaletteChange events. EditorWidget forwards to its editor; GitPanel forwards to both read-only diff previews. Root wires existing and newly opened editors and the Git pane.",
+    "production_files": ["src/editor/CodeEditor.h", "src/editor/CodeEditor.cpp", "src/editor/EditorWidget.h", "src/editor/EditorWidget.cpp", "src/git/GitPanel.h", "src/git/GitPanel.cpp"],
+    "source_boundary": "Theme APIs, token colors and comment italic style only; no Git backend, filesystem I/O, tokenizer grammar or editor lifecycle changes."
+  },
+  "provenance": {
+    "semantic_mapping": "upstream/stagewise/packages/stage-ui/src/styles/code-block-syntax.css",
+    "monaco_consumption": "upstream/stagewise/apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx configureMonacoTheme",
+    "exact_shipped_values": ["upstream/stagewise/apps/browser/src/ui/components/ui/code-block-light-theme.json", "upstream/stagewise/apps/browser/src/ui/components/ui/code-block-dark-theme.json"],
+    "light": {"keyword": "#e14238", "string": "#975ee6", "number": "#d74089", "comment": "#505868"},
+    "dark": {"keyword": "#76e2c6", "string": "#ffadce", "number": "#ffb885", "comment": "#8e94a1"},
+    "comment_style": "italic",
+    "scope_note": "Values are the pinned repository's shipped generated theme snapshot. Full computed CSS/personalization-color equivalence and Monaco tokenization are not claimed."
+  },
+  "verification": {
+    "editor": {"log": "audit/editor-theme-tests.txt", "passed": 27, "failed": 0, "skipped": 0, "warnings": 0, "elapsed_ms": 780},
+    "git_preview_targeted": {"log": "audit/git-preview-theme-tests.txt", "passed_including_init_cleanup": 3, "failed": 0, "skipped": 0, "elapsed_ms": 65},
+    "regressions": ["Explicit light with transparent Base uses light keyword/string/number/comment formats", "Dynamic light-dark-light changes rehighlight existing text without modifying source content", "Later contradictory PaletteChange does not erase explicit host theme", "Both read-only Git previews receive the explicit theme"],
+    "hidden_renders_inspected": ["audit/editor-theme-light.png", "audit/editor-theme-dark.png"],
+    "environment": "Independent temporary CMake build; Qt 6.11.2 static MinGW; offscreen platform. No interaction with the user's active app."
+  },
+  "remaining_gaps": ["Root stylesheet globally setting Geist can override CodeEditor Roboto Mono and QFont-based zoom; reported to root separately", "Existing syntax highlighter covers a subset of language categories and is not Monaco semantic-token or LSP parity", "Callers that do not use the explicit theme API retain the previous palette-based fallback"]
+}

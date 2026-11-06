@@ -1,0 +1,47 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Native worker buffered Fetch subset and opaque credential IPC; not full Node/Web API compatibility",
+  "implementation": ["src/sandbox/SandboxHost.h", "src/sandbox/SandboxHost.cpp", "src/sandbox/worker_main.cpp", "src/sandbox/network_bootstrap.h", "src/network/NetworkBroker.h", "src/network/NetworkBroker.cpp"],
+  "architecture": "QuickJS worker uses correlated JSON promise IPC. The parent NetworkBroker performs QtNetwork I/O, host-authorized credential lookup, origin checks, substitution, response reflection checks and cancellation. No credential value/secret map enters worker IPC or browser page parameters.",
+  "host_contract": {
+    "signals": ["networkRequest(requestId, hostDerivedAgentId, requestObject)", "credentialRequest(requestId, hostDerivedAgentId, typeId)", "contextReset(agentId)", "brokerCancellationRequested(requestId)"],
+    "completion_slots": ["completeNetworkRequest(requestId, responseObject, errorString)", "completeCredentialRequest(requestId, valueObjectOrNull, errorString)"],
+    "identity": "Agent identity comes from the host's pending execution record, never sandbox request fields or the mutable current-agent setter.",
+    "lifecycle": "Per-fetch abort rejects that fetch without resetting unrelated work or globals. Tool cancellation/deadline/memory failure resets the agent context and revokes opaque handles. Worker exit/explicit reset and idle JS callback failure also notify context invalidation. Late completion IDs are ignored. Outstanding unawaited APIs are canceled at tool return."
+  },
+  "tested_behaviors": [
+    "Headers construction from objects/pairs/Headers, case-insensitive lookup, append/set/delete/iteration, invalid name/value rejection and immutable network response headers",
+    "Request POST text and typed-array slice binary bytes; clones preserve bytes and consumed requests cannot be reused",
+    "Response status/ok/url/redirected/statusText, text/json/bytes/arrayBuffer, clone/bodyUsed and constructors/static json/error/redirect",
+    "Fetch response text strips initial UTF8 BOM while Buffer/file behavior continues to preserve bytes",
+    "HTTP404 resolves response with ok=false; transport errors and redirect:error reject; ordinary/manual redirects differ correctly",
+    "AbortController before dispatch and during a held response; AbortSignal.timeout/any and custom reasons; one aborted fetch leaves another successful and globals intact; abort after headers rejects subsequent body consumption",
+    "Opaque credentials reach only the configured loopback destination; another origin and another agent's handles reject; credential redirects remain manual; reflected fake secret is rejected without appearing in worker output",
+    "Cancellation and synchronous timeout revoke cached handles and reset globals without duplicate reset notifications",
+    "Concurrent agent RPC identity/correlation and idle callback reset; immediate host deletion from contextReset is safe",
+    "Actual 2MiB buffered response succeeds and 2MiB+1 is rejected"
+  ],
+  "bounds": {"default_upload_bytes":1048576,"default_response_bytes":2097152,"default_network_timeout_ms":30000,"maximum_abort_signal_timeout_ms":180000,"worker_IPC_bytes":33554432,"worker_default_memory_bytes":67108864},
+  "verification": {
+    "suite": "tests/test_sandbox_network.cpp",
+    "result": "12 passed, 0 failed, 0 skipped including init/cleanup; 5.230s",
+    "logs": ["test-results/sandbox-network-tests.txt", "test-results/sandbox-network-tests.xml"],
+    "original_sandbox_regressions": "17 passed, 0 failed after network integration; test-results/sandbox-network-baseline.txt/xml",
+    "build_recipe": "audit/sandbox-probe/CMakeLists.txt; target ade-sandbox-network-tests; native worker adjacent to executable",
+    "network_access": "Controlled localhost TCP fixtures only; fake credential values only. No actual tokens, external service access, or browser privacy approvals."
+  },
+  "concrete_cancellation_fix": "Root native_runtime reproduced active network I/O continuing immediately after engine.cancel(). Standalone before-fix regression test-results/sandbox-cancel-before-fix.txt independently observed broker completions=0 instead of1. SandboxHost::cancel now synchronously detaches and cancels only that execution's broker RPCs before returning; worker interrupt/reset completion remains asynchronous. Final two-agent regression proves unrelated held fetch remains alive and each request settles once.",
+  "remaining_differences": [
+    "Buffered bodies only; no ReadableStream, Blob, FormData, full URL/URLSearchParams globals, upload streaming or complete Fetch/DOM specification compliance",
+    "Only Request method, headers, body, redirect, signal and credentials:omit options are supported; other options reject explicitly",
+    "Browser cookie loading/saving is disabled, Cookie request headers are rejected and Set-Cookie response headers are omitted",
+    "Security/size policies intentionally reject headers, origins, response reflection and request/response sizes accepted by unrestricted Node fetch",
+    "No HTTPS importModule implementation, full Node builtin layer or plugin app messaging in this slice",
+    "Root AgentToolHost/PluginCatalog wiring controls which credential types each agent may request; default broker policy denies all"
+  ],
+  "sources": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts"
+  ]
+}

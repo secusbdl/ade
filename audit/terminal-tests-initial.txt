@@ -1,0 +1,20 @@
+********* Start testing of TerminalTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TerminalTest::initTestCase()
+PASS   : TerminalTest::splitUnicodeAndControlSequences()
+PASS   : TerminalTest::cursorEraseAlternateScreenAndColours()
+PASS   : TerminalTest::boundedHistoryAndResize()
+PASS   : TerminalTest::keyboardPasteAndProtocolReplies()
+PASS   : TerminalTest::titleDirectoryAndFragmentLimits()
+FAIL!  : TerminalTest::interactiveConPtyAndResize() 'model.plainText().contains("READY")' returned FALSE. ()
+D:/age/ADE/tests/test_terminal.cpp(58) : failure location
+FAIL!  : TerminalTest::stoppingKillsOnlyOwnedProcessTree() 'model.plainText().contains("READY")' returned FALSE. ()
+D:/age/ADE/tests/test_terminal.cpp(59) : failure location
+PASS   : TerminalTest::invalidStartsAreRecoverable()
+FAIL!  : TerminalTest::highVolumeOutputAndImmediateStop() 'output.contains("READY")' returned FALSE. ()
+D:/age/ADE/tests/test_terminal.cpp(61) : failure location
+FAIL!  : TerminalTest::nativeWidgetGeometryAndInput() 'widget.terminalModel()->plainText().contains("READY")' returned FALSE. ()
+D:/age/ADE/tests/test_terminal.cpp(62) : failure location
+PASS   : TerminalTest::cleanupTestCase()
+Totals: 8 passed, 4 failed, 0 skipped, 0 blacklisted, 75044ms
+********* Finished testing of TerminalTest *********

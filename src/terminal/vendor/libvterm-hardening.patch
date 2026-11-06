@@ -1,0 +1,152 @@
+--- a/src/vterm_internal.h
++++ b/src/vterm_internal.h
+@@ -192,6 +192,7 @@
+       CSI_LEADER,
+       CSI_ARGS,
+       CSI_INTERMED,
++      CSI_IGNORE, /* ADE: discard a CSI that exceeded the fixed argument cap */
+       DCS_COMMAND,
+       /* below here are the "string states" */
+       OSC_COMMAND,
+--- a/src/parser.c
++++ b/src/parser.c
+@@ -100,6 +100,7 @@
+     case CSI_LEADER:
+     case CSI_ARGS:
+     case CSI_INTERMED:
++    case CSI_IGNORE:
+     case OSC_COMMAND:
+     case DCS_COMMAND:
+       break;
+@@ -111,13 +112,14 @@
+ size_t vterm_input_write(VTerm *vt, const char *bytes, size_t len)
+ {
+   size_t pos = 0;
+-  const char *string_start;
++  const char *string_start = NULL;
+ 
+   switch(vt->parser.state) {
+   case NORMAL:
+   case CSI_LEADER:
+   case CSI_ARGS:
+   case CSI_INTERMED:
++  case CSI_IGNORE:
+   case OSC_COMMAND:
+   case DCS_COMMAND:
+     string_start = NULL;
+@@ -142,7 +144,8 @@
+ 
+     if(c == 0x00 || c == 0x7f) { // NUL, DEL
+       if(IS_STRING_STATE()) {
+-        string_fragment(vt, string_start, bytes + pos - string_start, false);
++        if(string_start)
++          string_fragment(vt, string_start, bytes + pos - string_start, false);
+         string_start = bytes + pos + 1;
+       }
+       if(vt->parser.emit_nul)
+@@ -171,7 +174,7 @@
+       if(vt->parser.state == SOS)
+         continue; // All other C0s permitted in SOS
+ 
+-      if(IS_STRING_STATE())
++      if(IS_STRING_STATE() && string_start)
+         string_fragment(vt, string_start, bytes + pos - string_start, false);
+       do_control(vt, c);
+       if(IS_STRING_STATE())
+@@ -180,7 +183,7 @@
+     }
+     // else fallthrough
+ 
+-    size_t string_len = bytes + pos - string_start;
++    size_t string_len = string_start ? (size_t)(bytes + pos - string_start) : 0;
+ 
+     if(vt->parser.in_esc) {
+       // Hoist an ESC letter into a C1 if we're not in a string mode
+@@ -222,8 +225,12 @@
+       if(c >= '0' && c <= '9') {
+         if(vt->parser.v.csi.args[vt->parser.v.csi.argi] == CSI_ARG_MISSING)
+           vt->parser.v.csi.args[vt->parser.v.csi.argi] = 0;
+-        vt->parser.v.csi.args[vt->parser.v.csi.argi] *= 10;
+-        vt->parser.v.csi.args[vt->parser.v.csi.argi] += c - '0';
++        /* ADE hardening: bound numeric input below the missing/flag bits. */
++        long *arg = &vt->parser.v.csi.args[vt->parser.v.csi.argi];
++        if(*arg > (0x3fffffffL - (c - '0')) / 10)
++          *arg = 0x3fffffffL;
++        else
++          *arg = *arg * 10 + c - '0';
+         break;
+       }
+       if(c == ':') {
+@@ -231,6 +238,14 @@
+         c = ';';
+       }
+       if(c == ';') {
++        /* ADE hardening: ignore overlong sequences rather than write past
++         * the fixed CSI parameter array. CSI_INTERMED consumes until final. */
++        if(vt->parser.v.csi.argi >= CSI_ARGS_MAX-1) {
++          vt->parser.intermedlen = 0;
++          vt->parser.state = CSI_IGNORE;
++          vt->parser.v.csi.argi = 0;
++          break;
++        }
+         vt->parser.v.csi.argi++;
+         vt->parser.v.csi.args[vt->parser.v.csi.argi] = CSI_ARG_MISSING;
+         break;
+@@ -258,14 +273,20 @@
+       ENTER_NORMAL_STATE();
+       break;
+ 
++    case CSI_IGNORE:
++      if(c >= 0x40 && c <= 0x7e)
++        ENTER_NORMAL_STATE();
++      break;
++
+     case OSC_COMMAND:
+       /* Numerical value of command */
+       if(c >= '0' && c <= '9') {
+         if(vt->parser.v.osc.command == -1)
+           vt->parser.v.osc.command = 0;
++        if(vt->parser.v.osc.command > (0x3fffffff - (c - '0')) / 10)
++          vt->parser.v.osc.command = 0x3fffffff;
+         else
+-          vt->parser.v.osc.command *= 10;
+-        vt->parser.v.osc.command += c - '0';
++          vt->parser.v.osc.command = vt->parser.v.osc.command * 10 + c - '0';
+         break;
+       }
+       if(c == ';') {
+--- a/src/state.c
++++ b/src/state.c
+@@ -322,6 +322,12 @@
+ 
+       /* Add extra ones */
+       while(i < npoints && vterm_unicode_is_combining(codepoints[i])) {
++        /* ADE: a screen cell retains at most this many codepoints. Do not
++         * grow an unbounded cross-chunk buffer for repeated combining marks. */
++        if(saved_i >= VTERM_MAX_CHARS_PER_CELL) {
++          i++;
++          continue;
++        }
+         if(saved_i >= state->combine_chars_size)
+           grow_combine_buffer(state);
+         state->combine_chars[saved_i++] = codepoints[i++];
+@@ -1230,6 +1236,10 @@
+     break;
+ 
+   case 0x62: { // REP - ECMA-48 8.3.103
++    /* ADE: REP before any printable glyph has a zero-width empty glyph;
++     * the loop below would never advance. */
++    if(state->combine_width <= 0 || !state->combine_chars[0])
++      break;
+     const int row_width = THISROWWIDTH(state);
+     count = CSI_ARG_COUNT(args[0]);
+     col = state->pos.col + count;
+@@ -1871,7 +1881,7 @@
+ 
+     case ' '|('q'<<8): {
+       // Query DECSCUSR
+-      int reply;
++      int reply = 2; /* ADE: defined fallback for an unknown cursor shape. */
+       switch(state->mode.cursor_shape) {
+         case VTERM_PROP_CURSORSHAPE_BLOCK:     reply = 2; break;
+         case VTERM_PROP_CURSORSHAPE_UNDERLINE: reply = 4; break;

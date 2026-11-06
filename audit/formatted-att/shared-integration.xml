@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="6"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="26"
+	timestamp="2026-11-05T16:54:03"
+	>
+	<testcase name="native_formatted_att" classname="native_formatted_att" time="3.4396" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_attachment_mount" classname="native_attachment_mount" time="1.35259" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_read_lifecycle" classname="native_read_lifecycle" time="1.13166" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_read_runtime" classname="native_read_runtime" time="2.81926" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_engine_observers" classname="native_engine_observers" time="8.85342" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_core" classname="native_core" time="8.88685" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

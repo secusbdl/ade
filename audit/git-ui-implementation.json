@@ -1,0 +1,52 @@
+{
+  "baseline": {"version": "1.31.1", "commit": "17a0123a0e896885465df36169457199d5225eb5"},
+  "status": "Implemented native GitPanel; host integration owned by root agent",
+  "sources": ["src/git/GitPanel.h", "src/git/GitPanel.cpp", "src/git/ui/CMakeLists.txt", "src/git/resources/git_ui.qrc", "src/git/resources/worktree-words.json", "tests/test_git_ui.cpp"],
+  "build": "add_subdirectory(src/git/ui); ade_git_ui links ade_git, ade_editor, Qt6::Widgets. Backend ade_git stays QtCore-only.",
+  "api": {
+    "workspace": "setWorkspaceContext(hostTrustedContext); setWorkspace(path, conversationId). A conversation ID is required to distinguish different chats sharing the same repository.",
+    "mutations": "setMutationGuard(path,operation) runs before submitting Git work. mutationStarted and mutationFinished notify the host of in-flight paths. False guard response performs no Git action.",
+    "mount": "mountWorktreeRequested(path,setupMetadata) fires only after successful creation in the original UI context, or an explicit existing-worktree selection. Host attaches the correct conversation, then starts setup using nonempty metadata.",
+    "remove": "worktreeRemovalStarted before request; worktreeRemoved only after Git success; worktreeRemovalFinished after result. Host detaches surviving chats only on successful removal, and blocks remount during removal.",
+    "order": "mutationFinished occurs before mountWorktreeRequested so the host can release mutation guards before mounting.",
+    "edit": "openDiffRequested(workspace,path,false,oldPath) asks the host to open the working file in its byte-preserving editor. Both preview panes remain readonly.",
+    "stale_contexts": "Pending read results are ignored after context change. Filesystem mutations already in flight finish, but their old-context creation results cannot mount into a newly active chat. The current context is refreshed afterward."
+  },
+  "implemented": [
+    "Native branch/worktree action bar and Changes/Worktrees tabs",
+    "Fresh repository status counts, changed files, staged markers, added/deleted counts, rename paths and binary indicators",
+    "HEAD/index versus HEAD/working-file selection with native CodeEditor line gutters and syntax; UTF8/UTF16 decoding through TextFileIO",
+    "Readonly index snapshots and explicit working-file editor signal",
+    "Branch source selection from actual available local/remote refs, explicit remote fetch and refresh result",
+    "Local branch switching with branches already checked out elsewhere disabled",
+    "Create branch/worktree dialogs, names generated using the exact pinned 911-adjective/953-noun source wordbank and collision avoidance",
+    "Worktree tree with main/current/locked state and source-backed creation-time ordering",
+    "Main-worktree deletion disabled; fresh deletion info; dirty Delete anyway confirmation; branches retained; ignored-file loss explained for clean removal",
+    "Host dirty-editor/busy-run veto callback, affected-path signals and stale chat-response suppression",
+    "Visible-panel five-second refresh fallback and explicit refresh, retaining selected preview and updating external file changes"
+  ],
+  "source_contracts": [
+    "apps/browser/src/ui/screens/main/agent-chat/chat/_components/workspace-select.tsx:1259",
+    "apps/browser/src/ui/screens/main/agent-chat/chat/_components/worktree-utils.ts:69",
+    "apps/browser/src/ui/screens/main/file-tree/file-tree-diff-view.tsx:100",
+    "apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx:1000"
+  ],
+  "visual_evidence": ["audit/git-panel-light.png", "audit/git-panel-dark.png"],
+  "validation": {
+    "first_run": {"passed": 10, "failed": 0, "skipped": 0, "evidence": "audit/git-ui-tests-first.txt"},
+    "final_run": {"passed": 11, "failed": 0, "skipped": 0, "duration_ms": 56422, "evidence": "audit/git-ui-tests.txt", "status": "passed"},
+    "platform": "Qt offscreen plugin: dialogs, tests and raster renders do not display, focus or interact with the user's desktop windows",
+    "fixtures_only": true,
+    "coverage": ["untrusted workspace rejection and disabled actions", "readonly staged and working byte-preserving preview selection", "binary preview rejection", "late workspace result suppression", "successful create emits mount metadata", "host veto creates no worktree", "main-delete and checked-out branch disabled states", "dirty deletion cancel/confirm and start/finish/success signals", "external modification refresh and removal of obsolete previews", "same-repository different-chat creation cannot mount a late result", "hidden native light/dark render"]
+  },
+  "remaining_gaps": [
+    "The side-by-side preview does not reproduce Monaco's aligned change hunks, intraline colors, minimap or advanced diff controls.",
+    "A dedicated Git changes sidebar and the exact upstream workspace popover layout remain visual integration work; this is a functional native pane.",
+    "Per-repository setup settings UI and cleanup candidate/snooze UI are not part of GitPanel, although backend APIs exist.",
+    "No stage/unstage/commit/push buttons were fabricated: those were not present in the examined pinned Git RPC contracts.",
+    "Polling is a visible-panel refresh fallback; native recursive filesystem/ref watcher parity remains future integration work.",
+    "Binary, submodule and symlink diff presentation remain limited as documented in the backend audit.",
+    "Host session persistence, unsaved editor handling, busy agent policy and setup-after-mount sequencing require the parent MainWindow integration and its own tests."
+  ],
+  "resource_provenance": "src/git/resources/PROVENANCE.json"
+}

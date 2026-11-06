@@ -1,0 +1,28 @@
+********* Start testing of BrowserToolsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserToolsTest::initTestCase()
+PASS   : BrowserToolsTest::definitionsAndStableTabs()
+PASS   : BrowserToolsTest::domNavigationHistoryAndScreenshot()
+PASS   : BrowserToolsTest::outOfOrderResponsesAreCorrelated()
+PASS   : BrowserToolsTest::consoleCaptureFiltersDelayAndNavigation()
+PASS   : BrowserToolsTest::timeoutIgnoresLateCompletion()
+PASS   : BrowserToolsTest::cancellationAndDuplicateIdsSettleOnce()
+PASS   : BrowserToolsTest::closingTabSettlesPendingRead()
+PASS   : BrowserToolsTest::invalidArgumentsAndProtocolErrors()
+PASS   : BrowserToolsTest::profilesDoNotSharePageStorage()
+PASS   : BrowserToolsTest::bridgeCanBeDestroyedWithPendingProtocolRequest()
+PASS   : BrowserToolsTest::permissionDefaultsAndExactOriginExceptions()
+PASS   : BrowserToolsTest::notificationDefaultsOverrideAndAskAreEnforced()
+PASS   : BrowserToolsTest::permissionTimeoutNavigationAndLateDecision()
+PASS   : BrowserToolsTest::changingPolicyResolvesOutstandingPermission()
+PASS   : BrowserToolsTest::browserCanBeDeletedDuringPermissionPrompt()
+PASS   : BrowserToolsTest::fullscreenPolicyGatesNativeWindowRequest()
+PASS   : BrowserToolsTest::clearSelectedProfileDataPreservesUnselectedTypes()
+PASS   : BrowserToolsTest::downloadSelectionPreservesExistingFilesAndSavesBytes()
+PASS   : BrowserToolsTest::downloadPauseResumeAndCancel()
+PASS   : BrowserToolsTest::downloadDecisionTimeoutAndDestruction()
+PASS   : BrowserToolsTest::downloadCanBeDestroyedWhileDestinationIsAccepted()
+PASS   : BrowserToolsTest::dataClearRejectsUnreadyAndDuplicateRequests()
+PASS   : BrowserToolsTest::cleanupTestCase()
+Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 18226ms
+********* Finished testing of BrowserToolsTest *********

@@ -1,0 +1,12 @@
+{
+  "recordedUtc": "2026-11-05T08:56:40.3000699Z",
+  "scope": "Live MainWindow agent turn followed by native UtilityService title generation",
+  "provider": "deepseek",
+  "configuredModel": "deepseek-v4-pro",
+  "title": "Explain native C++ file watching",
+  "autoTitleAttempted": true,
+  "messages": 2,
+  "titleChangedFromPrompt": true,
+  "nativeExeSha256": "332EAB7510292AA5F30DEA7032E94400C2E4888CF7848B5BC474B8BDBBD77DC9",
+  "limitations": "Not a paired upstream comparison; title request actual-model alias was not independently recorded."
+}

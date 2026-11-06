@@ -1,0 +1,88 @@
+{
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "isolated native layout slice; verification evidence in handoff.json",
+  "contracts": [
+    {
+      "behavior": "Content is visible only when at least one relevant tab exists and content is not collapsed. Hiding does not close tabs.",
+      "source": [
+        "apps/browser/src/ui/screens/main/index.tsx:116-126",
+        "apps/browser/src/ui/screens/main/_components/content-collapsed-context.tsx"
+      ],
+      "native": "WorkbenchSplitter holds has-content and persistent collapsed state separately; no browser is automatically recreated after last tab close."
+    },
+    {
+      "behavior": "Content preferred fraction starts at70%; chat minimum20%; filetree independently visible, source requested12% constrained by15% min/45% max and96px minimum.",
+      "source": [
+        "apps/browser/src/ui/screens/main/index.tsx:58",
+        "apps/browser/src/ui/screens/main/index.tsx:128-144",
+        "apps/browser/src/ui/screens/main/index.tsx:380-397"
+      ],
+      "native": "Separate content/filetree preferences; 70%/15% effective defaults; native control minima and narrow adaptation described below."
+    },
+    {
+      "behavior": "Empty chat/history plus footer is vertically centered. Existing messages grow history to fill space and keep footer below. Footer max width768.",
+      "source": [
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/index.tsx:132-158",
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx:1263-1297",
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/panel-footer.tsx:1913-2054"
+      ],
+      "native": "ChatSurface has centered bounded footer and switches history stretch only when projected rows exist; no fictional welcome content."
+    },
+    {
+      "behavior": "Transcript rows max width768 and remain centered independently of edge scrollbar.",
+      "source": [
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx:1141",
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx:1170"
+      ],
+      "native": "ConversationView adjusts content margins by viewport width and app scale without rebuilding message widgets."
+    },
+    {
+      "behavior": "Top actions expose actual browser, terminal and filetree; hide/show uses existing-content toggle. Source Side chat is a real separate feature.",
+      "source": [
+        "apps/browser/src/ui/screens/main/_components/new-tab-buttons.tsx",
+        "apps/browser/src/ui/screens/main/_components/content-toggle-button.tsx",
+        "apps/browser/src/ui/screens/main/index.tsx:233-280"
+      ],
+      "native": "Browser/terminal/tree are functional; Side chat is omitted until implemented. Downloads/Git remain reachable through native actions."
+    },
+    {
+      "behavior": "Native shortcuts retain Ctrl+T, Ctrl+Alt+T, Ctrl+Alt+B, Ctrl+Shift+B, Ctrl+Shift+E and close current content with Ctrl+W.",
+      "source": [
+        "apps/browser/src/shared/hotkeys.ts:247-260",
+        "apps/browser/src/shared/hotkeys.ts:370",
+        "apps/browser/src/shared/hotkeys.ts:461-469"
+      ],
+      "native": "QShortcut actions use existing tab/editor close guards."
+    },
+    {
+      "behavior": "Window minimum350x250.",
+      "source": [
+        "apps/browser/src/backend/services/window-layout/index.ts:589-590"
+      ],
+      "native": "Native window minimum matches; compact layout keeps navigation, composer and explicit content reachable."
+    },
+    {
+      "behavior": "Read label removes recognized mount prefix.",
+      "source": [
+        "apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/read.tsx:229",
+        "native src/core/ToolExecutor.cpp:271-273"
+      ],
+      "native": "ws1 and w1 plus upstream short hex w prefixes display relative path; arbitrary ws19 remains unchanged."
+    }
+  ],
+  "nativeAdaptations": [
+    "Below520 logical px the sidebar becomes a temporary navigation view; selecting/collapsing it returns workbench without changing desktop saved collapsed state.",
+    "Below520 logical px explicit content occupies the workbench; hide restores chat/filetree. Choosing Files restores the chat/filetree view. Tabs/processes remain alive.",
+    "Native controls reserve usable pixel minima in addition to source percentages. Final physical widths therefore differ at constrained sizes.",
+    "Explicitly opened browser focuses its address input; initial default tab is removed. Nonempty configured startup URL still opens a browser.",
+    "Scrollbar/content backgrounds are transparent after setWidget, preserving actual chatSurface colors instead of application Window color."
+  ],
+  "remainingGaps": [
+    "No per-agent content-tab visibility/filtering/persistence; existing native tabs remain window-scoped.",
+    "No recent-workspace suggestion journal or source dismissal behavior.",
+    "Filetree is real read-only QFileSystemModel with editor opening, but source multi-workspace picker, Files/Diff tab, search UI, Git diff decorations and preview behavior are not supplied by this slice.",
+    "Side chat, source watcher/local-server popovers, exact divider/icon/hover animation geometry and source workspace chooser menu are not implemented here.",
+    "Existing workspace dropdown text includes a missing-font chevron in rendered fixture; this is recorded rather than claimed pixel identical.",
+    "No virtualized transcript or new markdown capabilities; existing transcript contract limits remain."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "baseline": {"project": "Stagewise", "version": "1.31.1", "commit": "17a0123a0e896885465df36169457199d5225eb5"},
+  "status": "Native backend implemented and independently tested; host UI integration pending",
+  "owned_sources": ["src/git/**", "tests/test_git.cpp"],
+  "architecture": {
+    "runtime": "Native C++ QtCore worker pool and QProcess; system Git executable is an external deployment dependency. No Node or Electron.",
+    "api": "GitService methods return request IDs, completed(id,GitResult) delivers immutable snapshots. WorktreeSetupRunner emits progress/final WorktreeSetupRun values.",
+    "serialization": "Per-commonGitDir locks within each GitService; linked and regular worktrees of the same repository share one lock. No stale read cache. Host context is refreshed when a queued operation starts.",
+    "process_lifecycle": "Windows children start suspended, join a kill-on-close Job Object, then resume. Timeouts/cancellation/output caps tear down descendants. No shell interpolation for Git commands.",
+    "path_scope": "Host-opened/mounted exact roots and canonical managed worktrees only. Windows final-handle path resolution checks junctions and symlinks; paths cannot escape repository/managed roots.",
+    "mutation_result": "mayHaveMutated is conservative once a mutation command was attempted. A successful mutation remains successful if refreshing the post-mutation snapshot fails, with an explicit warning. Host should refresh after failed/interrupted mutations too."
+  },
+  "source_contracts": [
+    {"feature": "Repository identity, exact root scope, status and linked worktrees", "source": "apps/browser/src/backend/services/git/index.ts:252", "native": "GitService inspect/status/worktrees", "status": "implemented"},
+    {"feature": "Branches, explicit remote refresh, default branches and checked-out paths", "source": "apps/browser/src/backend/services/git/index.ts:405", "native": "GitService branches", "status": "implemented"},
+    {"feature": "Checkout uses Git dirty-overlap safeguards, without force/reset/stash", "source": "apps/browser/src/backend/services/git/index.ts:888", "native": "GitService switchBranch/createBranch", "status": "implemented"},
+    {"feature": "Creation from remote source fetches the exact refspec; new worktrees use no-track", "source": "apps/browser/src/backend/services/git/index.ts:617", "native": "GitService sourceRef/createWorktree", "status": "implemented"},
+    {"feature": "Managed path is SHA256 repository ID prefix plus worktree name", "source": "apps/browser/src/backend/services/git/index.ts:1107", "native": "GitService createWorktree; ADE default ~/.ade/worktrees", "status": "implemented with separate ADE root"},
+    {"feature": "Numstat, rename status, untracked line counts and staged/working aggregation", "source": "apps/browser/src/backend/services/git/index.ts:1155", "native": "GitService diff and NUL-delimited GitParsing", "status": "implemented"},
+    {"feature": "HEAD versus index is readonly; HEAD versus working file is editable; renamed HEAD uses old path", "source": "apps/browser/src/backend/services/git/index.ts:1531", "native": "GitService fileDiff returns exact bytes and disk mtime", "status": "implemented backend; editor integration pending"},
+    {"feature": "Explicit removal refreshes status, blocks main worktree, requires force for dirty, keeps branch", "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts:1070", "native": "GitService deletionInfo/removeWorktree Explicit", "status": "implemented; host chat detach required"},
+    {"feature": "Delete worktree first, then optionally delete chats only after success", "source": "apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx:1010", "native": "worktreeRemoved signal; host owns optional chat deletion", "status": "host pending; actual runtime overrides stale shared-contract comment"},
+    {"feature": "Settings safe deletion: managed, unmounted, attached and clean", "source": "apps/browser/src/backend/services/worktree-setup-settings.ts:414", "native": "GitRemovePolicy Settings and setupRepositories", "status": "implemented"},
+    {"feature": "Cleanup: managed, unmounted, clean, attached, unused for seven days and merged into allowed local branch", "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts:1350", "native": "cleanupCandidates and GitRemovePolicy Cleanup; unknown usage fails closed", "status": "implemented backend; snooze UI pending"},
+    {"feature": "Setup scripts persisted per repository as .stagewise/worktree-setup.sh and .ps1", "source": "apps/browser/src/backend/services/worktree-setup-settings.ts:150", "native": "saveSetupScript/setupRepositories", "status": "implemented backend; current global Settings placeholder not migrated"},
+    {"feature": "Creation records metadata; execution begins only after new workspace is mounted", "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts:921", "native": "createWorktree returns metadata; startAfterMount explicitly called by host", "status": "implemented boundary; host pending"},
+    {"feature": "Target script before main script; platform-specific Stagewise file before Codex TOML fallback", "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts:178", "native": "WorktreeSetupRunner", "status": "implemented"},
+    {"feature": "Codex setup platform override then generic setup.script", "source": "apps/browser/src/backend/services/codex-worktree-setup.ts:15", "native": "CodexSetup with original toml++ 3.4.0 parser", "status": "implemented"},
+    {"feature": "20-minute setup deadline, 12000-character stream tails, 150ms progress, one active run per worktree", "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts:20", "native": "WorktreeSetupRunner", "status": "implemented"}
+  ],
+  "validation": {
+    "environment": "Windows 11; Qt 6.11.2 static; MinGW GCC 16.2.0; Git 2.55.0.windows.2; dedicated temporary repositories only",
+    "first_run": {"passed": 17, "failed": 0, "skipped": 0, "evidence": "audit/git-tests-first.txt"},
+    "expanded_run": {"passed": 20, "failed": 0, "skipped": 0, "duration_ms": 102760, "evidence": "audit/git-tests.txt"},
+    "covered": ["regular, linked and unborn roots", "exact-root rejection", "NUL records with newline/tab filenames", "staged/working raw bytes and UTF16 BOM", "renames and staged delete/recreated file", "binary and ignored/untracked status", "dirty overlapping checkout refusal and nonoverlapping preservation", "hostile ref names and literal shell metacharacters", "main/dirty/mounted/detached/unmanaged/locked removal policies", "branch retained after deletion", "merged/unmerged and recent/old/unknown-usage cleanup", "remote refresh and exact source fetch using local bare repository", "credential-free remote URL rendering", "Windows junction escape", "mutation serialization and cancellation", "successful mutation with failed refresh", "child startup errors, deadline/output caps and process-tree teardown", "per-repository setup persistence and target priority", "actual PowerShell setup success/nonzero exit", "Codex platform TOML fallback, malformed TOML and no-script result", "setup cancellation/timeout/tails"],
+    "no_user_repo_mutations": true,
+    "protected_old_app_untouched": true,
+    "real_credentials_read": false
+  },
+  "remaining_gaps": [
+    "MainWindow workspace/chat detach, mount sequencing and per-repository Settings editor are not connected by this module.",
+    "The host must prevent a worktree from being mounted while its removal is in flight; the service cannot atomically control UI mounts or external Git processes.",
+    "Filesystem/ref refresh watchers and seven-day cleanup snooze persistence are host integration work. Calls always read fresh Git state.",
+    "Git working diff rejects symlink/junction file editing; binary bytes are retained but need a non-text presentation. Dedicated submodule diff rendering is not implemented.",
+    "Git itself removes ignored files during an otherwise clean worktree removal; this matches the pinned upstream Git policy and is exercised in a fixture.",
+    "Untracked-file line counting and diff results have explicit output/file limits; oversized content yields an error instead of silent truncation.",
+    "The current global worktrees.setupScript setting is not silently executed or migrated; upstream scripts belong to the selected repository.",
+    "Setup does not itself establish a workspace mount; only the host may call startAfterMount using metadata from a successful creation.",
+    "Only Windows process-tree ownership is implemented/tested. POSIX process-group lifecycle and macOS shell sessions remain unverified.",
+    "No exhaustive Git-version, filesystem, credential-helper, hook, submodule or remote-auth compatibility claim is made. Existing user Git configuration/hooks still apply to explicit Git actions."
+  ],
+  "third_party": {"tomlplusplus": "src/git/vendor/tomlplusplus-3.4.0/provenance.json", "license": "MIT", "runtime_dependency": "System Git executable; no new managed runtime"}
+}

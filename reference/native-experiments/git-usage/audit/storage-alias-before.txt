@@ -1,0 +1,10 @@
+********* Start testing of UsageTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UsageTests::initTestCase()
+FAIL!  : UsageTests::storageAliasRetargetCannotRedirectWrites() Compared values are not the same
+   Actual   (read(other+"/worktree-usage.json")): "{\"historyRevision\":\"\",\"records\":[{\"createdAt\":-1,\"dismissedAt\":-1,\"evidence\":1,\"firstObservedAt\":1000,\"instance\":\"fixture-1\",\"lastUsedAt\":1000,\"path\":\"C:/fixture/worktree\",\"repository\":\"C:/fixture/main/.git\"}],\"recove"...
+   Expected (before)                            : "{\"historyRevision\":\"\",\"records\":[],\"recoverySince\":0,\"schemaVersion\":1,\"trackingOpen\":true}"
+D:/age/ADE/private/git-usage-stage/tests/test_git_usage.cpp(55) : failure location
+PASS   : UsageTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 91ms
+********* Finished testing of UsageTests *********

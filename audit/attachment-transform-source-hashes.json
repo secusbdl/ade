@@ -1,0 +1,25 @@
+{
+  "audit": "read-only attachment transformation and dependency inventory",
+  "date": "2026-11-05",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceSha256": {
+    "packages/agent-core/src/file-read-transformer/index.ts": "767dcca8c62a7365e3564fbf6d098f82547858b1bca676e1da389d8f018d2e3c",
+    "packages/agent-core/src/file-read-transformer/transformers/pdf.ts": "6bb6e21cbc6a2086319608658fe47afe5834d227858c58f7a3406c321831f44d",
+    "packages/agent-core/src/file-read-transformer/transformers/archive.ts": "736348d1750ca91a473818b0ae5d4260d1a54a2e46a4186df1ce7feeab47b1f6",
+    "packages/agent-core/src/file-read-transformer/transformers/raw-image.ts": "a5a8310d6e12228631c2a8ccb230939414713949e3b8204d3b8235cfb2816778",
+    "packages/agent-core/src/file-read-transformer/transformers/disk-image.ts": "fdade5e3239c76d436422f680a459ce6b062321433035c6703cd9060f45fac86",
+    "packages/agent-core/src/file-read-transformer/transformers/source-code.ts": "eec30ccb36bc5f4e58c595c6ad824c816bba425c287a5fd7aeb3b5ac4f04be02",
+    "packages/agent-core/src/file-read-transformer/transformers/markdown.ts": "7be6b23da79ea74c3d8ce095d9e813f40019cc3cd1e104ecd30bbebf33546a9a",
+    "packages/agent-core/src/file-read-transformer/transformers/svg.ts": "23e2902dc90b4911df8d31b564636f1ec60c596ca66c3d7179dc4782aab19c4f",
+    "packages/agent-core/src/file-read-transformer/format-directory-tree.ts": "092b1ed1df9d27e857448249c01c850d365cbb3863ab35f5fa35e814ac193cac",
+    "packages/agent-core/src/file-read-transformer/ast/symbol-extractor.ts": "3b0a2fef2f2887e3f9f9a9c7ad122886563793b17c653f477970ad5b62da1b4c",
+    "packages/agent-core/src/ast/language-map.ts": "6b3fc0a409b350a569effe75ea0400612b51d579906f58fa30d4d4f910f4dea2",
+    "pnpm-lock.yaml": "7d9ed765b62de592cd5c3160396ee49d8935ca44cc9430bd4650f14ab079ea05"
+  },
+  "localSdk": "C:/Qt/6.11.2-mingw64-static",
+  "localSbom": [
+    "C:/Qt/6.11.2-mingw64-static/sbom/qtbase-6.11.2.spdx",
+    "C:/Qt/6.11.2-mingw64-static/sbom/qtimageformats-6.11.2.spdx"
+  ],
+  "implementationEvidence": "No advanced transformations implemented or dependency link tests run by this read-only audit."
+}

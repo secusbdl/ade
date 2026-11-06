@@ -1,0 +1,19 @@
+********* Start testing of AttachmentMountTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AttachmentMountTests::initTestCase()
+PASS   : AttachmentMountTests::flatListingValidatesCapturedNames(normal)
+PASS   : AttachmentMountTests::flatListingValidatesCapturedNames(dotfile)
+PASS   : AttachmentMountTests::flatListingValidatesCapturedNames(space)
+PASS   : AttachmentMountTests::flatListingValidatesCapturedNames(unicode)
+PASS   : AttachmentMountTests::flatListingValidatesCapturedNames(directory)
+PASS   : AttachmentMountTests::noWorkspaceReadsOriginalAndGeneratedBytes()
+PASS   : AttachmentMountTests::textAndEmptyFilesAreExactAndLargeReadsReject()
+PASS   : AttachmentMountTests::mutationsAndEscapePathsNeverTouchBlobs()
+PASS   : AttachmentMountTests::agentIdentityAndSnapshotsAreIsolated()
+PASS   : AttachmentMountTests::cancellationBeforeQueuedReadAndLateRepliesIsolated()
+PASS   : AttachmentMountTests::brokerCancellationGenerationAndReentrantDestruction()
+PASS   : AttachmentMountTests::invalidOwnedRootCannotUseGlobalArtifactFallback()
+PASS   : AttachmentMountTests::junctionsAndReplacedRootFailClosed()
+PASS   : AttachmentMountTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 565ms
+********* Finished testing of AttachmentMountTests *********

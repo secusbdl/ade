@@ -1,0 +1,67 @@
+[
+  {
+    "path": "src/attachments/FileReadCapture.h",
+    "baselineSha256": "caae61a39fa02fc70e6e6020e9e62f1983b11ba2ead30a8a1156c7516385fa4e",
+    "stagedSha256": "ecbca6b95cac4912240135a9757bfa7b1cb9ccb6adf087c57d4c0f450cffbb2f"
+  },
+  {
+    "path": "src/attachments/FileReadSnapshotStore.cpp",
+    "baselineSha256": "b0c934f7722bdb11c777aef62f4630e24e64388aa6119c53fde006a0a9e649be",
+    "stagedSha256": "d02a7c5a6cf0335a5607fb8cb8b8cdc8701018f3198460f46d0d5c8f031b976b"
+  },
+  {
+    "path": "src/core/ToolExecutor.h",
+    "baselineSha256": "772a4f1a1a74ef7019a1f226fc809dede68d0c36e479e5843f3225128c7d5693",
+    "stagedSha256": "85021511b4139353b309c423492b1f7c88aec448e6973f3c2bd6bc7aa5266848"
+  },
+  {
+    "path": "src/core/ToolExecutor.cpp",
+    "baselineSha256": "fed05a7e34737c0dbfd092398b04f47a0533010789cd12587a50e0a474c37e37",
+    "stagedSha256": "5da22a4d0b801a633d257d6a49df906b56b20e98c7fb723a0fc0fa0b726ee34f"
+  },
+  {
+    "path": "src/core/AgentEngine.h",
+    "baselineSha256": "52e373cdf640c923b7c4a11666ed8e2bfb6f6340ebeeffc200f3efec5576e216",
+    "stagedSha256": "7c856295424c61b81451567ee858561d2a47564f0b8b966c0ef720ed48f987b2"
+  },
+  {
+    "path": "src/core/AgentEngine.cpp",
+    "baselineSha256": "3cd79e873c969370678151b2ee78aacb4cd449aca0c8c0151b9dc0ba127017d4",
+    "stagedSha256": "b73dc23b4d99c2bd5abd0dfe561fbfbaf4e2f2c8375c6594d97b1c4012e4ee5c"
+  },
+  {
+    "path": "src/runtime/AttachmentFileBroker.h",
+    "baselineSha256": "6d6154e4fe6b8da28c9bf4ee08f2b661dffc004495e4199b0fcf21959aac09e2",
+    "stagedSha256": "a05fd1ddd88f5bae8a229be5cbab58a103385750986d01814f78f6f573e54f0d"
+  },
+  {
+    "path": "src/runtime/AttachmentFileBroker.cpp",
+    "baselineSha256": "34fcf0a1c0bde77e8ce3a3b7633aa513c5294fcfe5981bf3dfd9dbdbf3506606",
+    "stagedSha256": "c64081a80013e62f894ff1716b361e5615da233ec63c4556ab2b1c4c97e161d0"
+  },
+  {
+    "path": "src/runtime/AgentToolHost.cpp",
+    "baselineSha256": "2f2b70124ab527ae7b9054042ea4c726f4d7069888a48c283aea6445c5a1c646",
+    "stagedSha256": "2a5edebb61e11da5346b50ad869ad53d97cdd29d6288717dea31b9c00692d87e"
+  },
+  {
+    "path": "tests/test_formatted_att.cpp",
+    "sha256": "f390beb5124c994007772feddf5c19bfb696ca2dc49c973369071e6403eb26e0"
+  },
+  {
+    "path": "build/test_formatted_att.exe",
+    "sha256": "e58a04f45a4541503418796f6f66e95603cb9601b9a89aadd51c1677090e8fa4"
+  },
+  {
+    "path": "build/test_formatted_att_before.exe",
+    "sha256": "24e644db3d7cb74b52cc20ba98bcdea13d00353a7ca39c3868958019a6498f75"
+  },
+  {
+    "path": "build/test_read_runtime.exe",
+    "sha256": "820ed35467cb587964d0d8803f11853c45b0a128cbeb650a8c11062812a7accc"
+  },
+  {
+    "path": "build/test_attachment_mount.exe",
+    "sha256": "3ed72a49b1cbca1482130167f85cc2e3cd95e397b6d297a44d6a6b05127eefe2"
+  }
+]

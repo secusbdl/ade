@@ -1,0 +1,22 @@
+********* Start testing of UiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UiTest::initTestCase()
+PASS   : UiTest::storeRoundTripAndInvalidFile()
+PASS   : UiTest::storeRejectsStaleOrCorruptOverwrite()
+FAIL!  : UiTest::conversationSelectionPreservesWorkspaces() Compared values are not the same
+   Actual   (list->count()): 3
+   Expected (2)            : 2
+D:/age/ADE/tests/test_ui.cpp(64) : failure location
+QWARN  : UiTest::draftsStayWithTheirConversations() QFont::setPointSize: Point size <= 0 (-1), must be greater than 0
+FAIL!  : UiTest::draftsStayWithTheirConversations() Compared values are not the same
+   Actual   (window.currentSessionId()): "97fe79bb-bac2-4597-9f47-e84c403e485a"
+   Expected (firstId)                  : "db1a20f8-de62-4f42-8e22-82c1d5a97a9a"
+D:/age/ADE/tests/test_ui.cpp(80) : failure location
+PASS   : UiTest::selectionsKeepInstanceAndModelIdentity()
+PASS   : UiTest::encryptedProviderStoreRejectsStaleAndCorruptWrites()
+PASS   : UiTest::emptyComposerStaysCompact()
+PASS   : UiTest::sendStreamsAndPersists()
+PASS   : UiTest::browserPreferencesAndDownloadsReachNativeHost()
+PASS   : UiTest::cleanupTestCase()
+Totals: 9 passed, 2 failed, 0 skipped, 0 blacklisted, 1252ms
+********* Finished testing of UiTest *********

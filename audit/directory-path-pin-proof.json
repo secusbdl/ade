@@ -1,0 +1,10 @@
+{
+  "fixture": "D:\\age\\ADE\\private\\attachment-mount-stage\\audit\\directory-pin-4c8e00c612e74cfda0e6c3d8ff2e55d0",
+  "handleShareReadWriteOnly": true,
+  "validatedHandleTarget": "\\\\?\\D:\\age\\ADE\\private\\attachment-mount-stage\\audit\\directory-pin-4c8e00c612e74cfda0e6c3d8ff2e55d0\\workspace\\real",
+  "handleTargetAfterAliasSwap": "\\\\?\\D:\\age\\ADE\\private\\attachment-mount-stage\\audit\\directory-pin-4c8e00c612e74cfda0e6c3d8ff2e55d0\\workspace\\real",
+  "enumeratedThroughOriginalPath": [
+    "outside-only-name.txt"
+  ],
+  "reproducedAliasSwapLeak": true
+}

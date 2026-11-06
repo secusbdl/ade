@@ -1,0 +1,77 @@
+{
+  "status": "Private staged implementation, focused tests complete; production migration and cleanup wiring not authorized yet",
+  "pinnedUpstream": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceEvidence": [
+    {
+      "path": "packages/agent-core/src/services/agent-persistence/db.ts",
+      "lines": [
+        33,
+        71,
+        629
+      ],
+      "finding": "All root CHAT rows, including archived history, contribute max lastMessageAt for each raw/realpath-matched mountedWorkspaces[] entry. This is not a historical journal."
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "lines": [
+        986,
+        990,
+        1172,
+        1279,
+        1345,
+        1429
+      ],
+      "finding": "Mounted exclusion uses active mount registry. Candidate is managed, registered linked attached worktree, clean and unmounted, last use absent or at least seven days old, and merged into an allowed local target. Fresh checks before each removal; no branch deletion; partial results."
+    },
+    {
+      "path": "apps/browser/src/backend/services/preferences.ts",
+      "lines": [
+        1039,
+        1062
+      ],
+      "finding": "Dismissal timestamps per path; seven-day snooze and pruning only after a successful candidate scan."
+    }
+  ],
+  "nativeGaps": [
+    "Conversation stores one workspace, replaced on reconnect; prior workspace associations cannot be reconstructed from current sessions.",
+    "Live owner lifecycle is a host concern currently being revised; archived history is not an implicit mount.",
+    "No deletion UI or automatic cleanup is part of this staging slice. Existing usageKnown=false remains unchanged.",
+    "Physical identity verified on Windows NTFS fixtures; unsupported platform/identity calls return unverified."
+  ],
+  "proposedDataBoundary": {
+    "identity": "Current authorized Git snapshot plus exact administrative directory are probed. Physical common/admin/root FILE_ID_INFO128 and creation timestamps form the instance token. Journal does not discover or authorize paths.",
+    "states": [
+      "UnknownImportedHistory",
+      "VerifiedLiveUse",
+      "VerifiedNewInstance"
+    ],
+    "unknown": "Time alone cannot convert an unknown imported record into never-used. Missing identity or unknown usage blocks candidate eligibility.",
+    "pathReuse": "Recreation of root or administrative directory yields a new identity and cannot inherit previous usage at the same path.",
+    "activity": "Successful live mount/use records monotonic maximum activity timestamp for that worktree instance independently of any chat's current workspace. Historical archived activity can be retained as a hint without claiming completeness.",
+    "mounts": "Ephemeral owner -> set of instance identities, not durable history. Supports multiple mounts per owner in the module; native host remains single-workspace. Archived history does not itself create an active mount, but a host may explicitly keep it mounted conservatively.",
+    "failClosed": "Invalid schema, duplicate identity records, external revision conflict, missing identity, lock failure, future timestamps and incomplete tracking prevent cleanup eligibility. Cached health never claims complete scope. Validated health rechecks persisted revision."
+  },
+  "implementationPlan": [
+    "Implemented pure eligibility policy and multi-owner mount registry with asynchronous generation tickets.",
+    "Implemented bounded journal with QSaveFile, lifetime QLockFile, expected revision, staged in-memory commit, clean-close marker, external-history revision and recovery floor.",
+    "Implemented Windows physical identity helper with bounded metadata relationship reads and 128-bit common/admin/root identities.",
+    "Private evidence: 30/30 focused tests; production cleanup remains absent."
+  ],
+  "requiredRegressions": [
+    "reconnect preserves prior instance usage",
+    "multiple owner/mount references",
+    "archive history vs mounted distinction",
+    "same path new instance does not inherit usage",
+    "unknown imported history remains blocked after seven days",
+    "last use max across out-of-order events",
+    "exact seven-day and snooze boundaries",
+    "future clock values block",
+    "restart and clean-close/crash recovery",
+    "corrupt/oversized/duplicate storage preserved",
+    "external revision conflict",
+    "failed save does not commit in-memory draft",
+    "lock contention",
+    "snooze pruning only on complete successful scan",
+    "new dirty/mounted/setup/busy state invalidates a previously eligible candidate"
+  ]
+}

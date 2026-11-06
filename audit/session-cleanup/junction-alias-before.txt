@@ -1,0 +1,13 @@
+********* Start testing of SessionCleanupTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SessionCleanupTests::initTestCase()
+FAIL!  : SessionCleanupTests::rootAlias(unchanged) 'okay==(mode!="before")' returned FALSE. (Opened directory is outside the selected mount.; Qt canonical alias=C:/Users/secus/AppData/Local/Temp/session_cleanup-ouvWME/alias; actual=C:/Users/secus/AppData/Local/Temp/session_cleanup-ouvWME/original)
+D:/age/ADE/tests/test_session_cleanup.cpp(120) : failure location
+PASS   : SessionCleanupTests::rootAlias(retarget-before)
+FAIL!  : SessionCleanupTests::rootAlias(retarget-during) 'okay==(mode!="before")' returned FALSE. (Opened directory is outside the selected mount.; Qt canonical alias=C:/Users/secus/AppData/Local/Temp/session_cleanup-DSgjbn/alias; actual=C:/Users/secus/AppData/Local/Temp/session_cleanup-DSgjbn/original)
+D:/age/ADE/tests/test_session_cleanup.cpp(120) : failure location
+FAIL!  : SessionCleanupTests::ordinarySaveCannotRebindAnIdenticalRevisionAlias() '!store.save({chat("keep")},&error)' returned FALSE. (An ordinary save must not adopt a retargeted directory even when its JSON revision is identical.)
+D:/age/ADE/tests/test_session_cleanup.cpp(108) : failure location
+PASS   : SessionCleanupTests::cleanupTestCase()
+Totals: 3 passed, 3 failed, 0 skipped, 0 blacklisted, 271ms
+********* Finished testing of SessionCleanupTests *********

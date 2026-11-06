@@ -1,0 +1,54 @@
+{
+  "status": "native metadata watcher, shared-service adapter and host integration implemented; integrated root-disappearance defect reproduced and fixed; final focused watcher24/24 passed; shared source/build frozen for the next integrated checkpoint",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceContracts": [
+    {"path":"upstream/stagewise/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts","line":130,"contract":"Common Git directory, root HEAD, worktrees directory, immediate worktree directories and their HEAD files only. Ignore refs, objects, index, logs and deeper paths."},
+    {"path":"upstream/stagewise/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts","line":1588,"contract":"One native watcher per commonGitDir, workspace owner references, ignore initial events, 400ms revision debounce, release last reference tears down watcher."}
+  ],
+  "implementation": {
+    "files":["src/git/GitRepositoryWatcher.h","src/git/GitRepositoryWatcher.cpp","src/git/GitService.h","src/git/GitService.cpp","src/git/GitPanel.h","src/git/GitPanel.cpp","src/git/WorktreeSettingsController.cpp"],
+    "backendDependencies":"QtCore only; QFileSystemWatcher, QThreadPool, SHA-256; existing system Git resolves authorized repository snapshots",
+    "hostApi":["bool GitService::watchWorkspace(ownerId,workspace)","void GitService::unwatchWorkspace(ownerId)","repositoryTopologyChanged(commonGitDir,revision)","repositoryWatchCoverageChanged(commonGitDir,complete,reason)","repositoryWatchError(ownerId,reason)"],
+    "ownership":"Host owns stable chat/mount owner IDs. Service owns one watcher instance; canonical common directory groups share watches. Owners are resolved by authorized asynchronous inspect; retarget, release and context revocation remove pending-request mappings before stale completion can subscribe.",
+    "fingerprint":"Physical root identity, sorted immediate metadata directory names and bounded HEAD contents/absence. No directory mtimes or ordinary files. Initial scan is a baseline. Only an actual fingerprint change restarts the 400ms debounce; index churn cannot repeatedly postpone an already-detected HEAD change.",
+    "nativePaths":"Reconcile registered paths after each scan and reattach atomic-replaced HEAD files. Rescan after successful new attachments closes the scan/attach gap. Last owner removal cancels scans and stops/removes native watches and timers.",
+    "bounds":{"defaultWorktreeEntries":2048,"defaultHeadBytes":16384,"defaultCombinedHeadBytes":4194304,"defaultRepositories":128,"defaultOwners":4096,"concurrentOrQueuedScansAndProbes":2,"initialScanCoalescingMs":50,"incompleteCoverageRetryMs":5000,"completeCoverageRootIdentityProbeMs":5000,"deferredProbePerGroup":1},
+    "rootAvailability":"Windows native directory watches can remain attached to a renamed directory without notifying its old path. A bounded worker probe checks only root availability and physical identity every five seconds while coverage is complete. It does not read HEAD, refs, index, status or parent-directory contents. Disappearance or replacement schedules a full scan; identity change tears down old watches before reattachment. Windows token uses volume/file index plus directory creation time; POSIX uses device/inode and remains untested here. Deferred probes prevent synchronized groups beyond the two-worker cap from being starved.",
+    "fileSafety":"Windows canonical paths and same-handle HEAD reads use GetFinalPathNameByHandleW; metadata child junctions and symlinks are rejected. Enumeration is incremental and counts all immediate entries. Actual bytes read, including oversized HEADs, consume the total read budget.",
+    "ui":"Matching topology events refresh Source control after in-flight reads settle and refresh loaded worktree settings without replacing dirty drafts. Other repositories do not refresh the active panel. No read-completion event emits topology changes.",
+    "separateStatusPolling":"Existing visible-panel five-second status/diff polling is retained. Symbolic HEAD contents do not change on ordinary commits, and this watcher deliberately ignores index/refs/project files."
+  },
+  "validation": {
+    "toolchain":"Windows 11, Qt6.11.2 static MinGW64, GCC16.2, independent ignored private/git-watcher-stage build",
+    "mainSuite":{"passed":19,"failed":0,"durationMs":16755,"log":"audit/git-watcher-tests.txt"},
+    "additionalCases":{"passedIncludingLifecycle":4,"newCases":2,"log":"audit/git-watcher-alias-limit-tests.txt","cases":["canonical NTFS junction alias shares one repository group","sole owner can retarget with maximum repository count one"]},
+    "uiSuite":{"passedIncludingLifecycle":4,"failed":0,"durationMs":17086,"log":"audit/git-watcher-ui-tests.txt"},
+    "cases":["main and linked checkout share native watchers","external worktree add/remove","atomic HEAD replacement followed by another edit","ignored index/objects/refs churn","changed-fingerprint burst debounce","continuous index noise does not starve HEAD delivery","rejected retarget preserves existing subscription","release/reacquire drops stale scans","per-file/combined/entry bounds and recovery","metadata root disappearance and return","observer deletion/release","metadata junction rejection","service shared owners","stale async inspected workspace","pending and active context revocation","error observer can delete service","hidden panel updates on external topology","setup drafts survive automatic refresh","unrelated repo changes do not refresh active panel","no topology refresh feedback loop"],
+    "fixtureScope":"All Git mutations and junctions are inside dedicated temporary test repositories. Actual ADE checkout/worktrees and the user's running desktop app were not mutated or automated.",
+    "firstUiFailure":"The initial quiescence assertion sampled completed reads before a legitimate asynchronous branch query finished. Fixed the test to wait for the expected initial plus topology read operations; no production fix was needed for that assertion.",
+    "warnings":"Qt may report FindNextChangeNotification access denied as fixture worktree metadata directories are removed; the removal/reattachment assertions pass. Offscreen UI test has no deployed system font directory and logs Qt's font warning; this suite tests behavior, not font rendering.",
+    "independentReview":"native_core read the worker, bounded HEAD reads, fingerprint, ownership, queued publication and service adapter. No additional concrete defect found. This was a source review, not fuzzing or runtime/race reproduction."
+  },
+  "sharedBuildFollowup":{
+    "initialIntegration":"31/33 suites passed; native_git_watcher and native_git_watcher_ui failed. Qt stdout was empty in CTest on this Windows build, so the first core watcher's failed assertion is unknown. Real MainWindow external-topology/draft-preservation host test passed.",
+    "uiReproduction":"stalePanelContextDoesNotRefreshWrongRepository sampled 4 completed requests before the legitimate fifth initial request finished. Actual 5 versus expected4 reproduced with detailed file output in audit/git-watcher-ui-shared-failure.txt.",
+    "uiFix":"Await all five initial requests (four panel reads plus the independent owner inspection) before attributing subsequent requests to an unrelated repository event. Production watcher logic was unchanged.",
+    "uiFixedResult":{"passed":4,"failed":0,"durationMs":17417,"log":"audit/git-watcher-ui-shared-fixed.txt"},
+    "coreReruns":[{"passed":21,"failed":0,"durationMs":18940,"log":"audit/git-watcher-shared-failure.txt"},{"passed":21,"failed":0,"durationMs":18764,"log":"audit/git-watcher-shared-repeat.txt"}],
+    "laterIntegratedReproduction":"Next full run passed33/34 suites and identified repositoryDisappearsAndReturns: coverage stayed true after renaming the common Git directory. The detailed failure is preserved in audit/git-watcher-integrated-root-disappearance.txt.",
+    "deterministicReproduction":"After waiting500ms for the initial attachment rescan to settle, the focused pre-fix case failed2pass1fail in18351ms: audit/git-watcher-root-settled-before-fix.txt. Earlier passing runs were accidentally covered by that pending startup rescan.",
+    "rootFix":"Add availability-only physical-root probes, identity-change watch reattachment, and bounded deferred probing fairness. Keep metadata scans/event semantics separate from status/diff polling.",
+    "firstFixedResults":{"corePassed":23,"coreFailed":0,"coreDurationMs":22093,"coreLog":"audit/git-watcher-root-fixed.txt","uiPassed":4,"uiFailed":0,"uiDurationMs":17309,"uiLog":"audit/git-watcher-ui-root-fixed.txt"},
+    "newRegressions":["settled root rename/disappearance and return without explicit refresh","replacement root with identical HEAD text reattaches subsequent events","blocked native signals prove availability probes do not poll HEAD contents","six repositories are eventually probed despite the two-worker cap"],
+    "finalFocusedResult":{"passed":24,"failed":0,"durationMs":23213,"log":"audit/git-watcher-availability-final.txt","scope":"Final production watcher source including deferred-probe fairness. Shared build released to root; no full-suite rerun by this agent."}
+  },
+  "remainingLimits":[
+    "This is HEAD/topology notification, not a general Git status watcher or full Stagewise parity claim.",
+    "Native OS notifications can be lost or become unavailable. Root identity is checked every five seconds; incomplete coverage retries metadata scans every five seconds. Explicit refresh is available, and existing status/diff polling remains independent.",
+    "A directory scan is not an atomic snapshot of all HEAD files. Native events schedule another scan while one is active; successful watch additions also trigger a follow-up scan. This reduces ordinary scan/attachment races without claiming universal loss-free notification.",
+    "Bounds constrain path count, bytes and outstanding work. A filesystem or network share can still block an OS read; shutdown waits for the at-most-two workers. Network filesystem cancellation/latency was not runtime-tested.",
+    "Windows final-handle containment was tested; POSIX canonical fallback was not runtime-tested and has weaker pathname-race guarantees.",
+    "The service does not discover new authority; host must register/release current session/mount owners. Native conversation storage remains single-workspace.",
+    "Worktree usage-history accuracy, multi-mount session storage and cleanup remain unimplemented; usageKnown stays conservative."
+  ]
+}

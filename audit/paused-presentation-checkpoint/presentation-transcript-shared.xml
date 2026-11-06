@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="3"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="23"
+	timestamp="2026-11-05T17:49:03"
+	>
+	<testcase name="native_presentation" classname="native_presentation" time="17.4723" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript" classname="native_transcript" time="2.96707" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_ui" classname="native_transcript_ui" time="3.00895" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

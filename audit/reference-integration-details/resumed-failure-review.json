@@ -1,0 +1,28 @@
+{
+  "scope": "Resolve the four suites saved in audit/paused-native-port-2026-11-05.json; no live credentials or user files.",
+  "filesChanged": ["tests/test_attachments.cpp","tests/test_runtime.cpp","tests/test_ui.cpp","tests/test_editor.cpp"],
+  "productionSourceChanged": false,
+  "changes": [
+    "Attachment assertions compare every original captured metadata field exactly after separating versioned display metadata. Display IDs/parts/attachments are independently verified; all four actual wire requests exclude UI metadata and display IDs.",
+    "The runtime attachment fixture retains exact reference/hash/metadata equality and checks display metadata without allowing original attachment bytes into saved history.",
+    "Composer test verifies the source max-h-64 (256px) cap, scale-adjusted cap, overflow scrolling, and shrink/reset to zero scroll range.",
+    "Windows editor regression holds an external non-delete-sharing read handle over the same UTF16 LE+BOM+LF kind of file. Normal and explicit-overwrite saves both fail safely, preserve exact file bytes and dirty buffer, leave no temporary file, then succeed after handle release."
+  ],
+  "validation": {
+    "fourSuiteReport":"four-suites-after.xml",
+    "attachments":{"passed":23,"failed":0,"report":"native_attachments-after.txt"},
+    "runtime":{"passed":10,"failed":0,"report":"native_runtime-after.txt"},
+    "ui":{"passed":11,"failed":0,"report":"native_ui-after.txt"},
+    "editor":{"passed":29,"failed":0,"report":"native_editor-after.txt","finalXml":"editor-final.xml"},
+    "originalEditorRow":{"consecutiveRuns":30,"passedEach":3,"failed":0,"logs":"editor-original-row-1.txt through editor-original-row-30.txt"},
+    "originalEditorSuite":{"consecutiveRuns":10,"passedEach":27,"failed":0,"logs":"editor-original-full-1.txt through editor-original-full-10.txt"},
+    "controlledFailure":"Both new Windows rows report: Save failed; the previous file was preserved: Access is denied."
+  },
+  "limits": [
+    "The original full-suite editor denial did not recur; its actual external cause remains unresolved. Controlled sharing denial demonstrates expected failure semantics, not proof that the old failure was caused by a reader or antivirus.",
+    "No speculative retry, permission bypass, direct-write fallback or production save change was introduced.",
+    "An initial reproduction launch requested an offscreen plugin absent from the original editor target. GDB identified init_platform waiting in a modal error; only the owned process was stopped, then native-Windows hidden-process runs were used. This was a harness setup error, not an editor regression.",
+    "A dangling QJsonValueRef was caught in the newly added retained-history assertion during the first targeted rerun and corrected to an owning QJsonValue before the final pass; no engine change was needed.",
+    "These are focused suites, not a new full application integration result or complete parity claim."
+  ]
+}

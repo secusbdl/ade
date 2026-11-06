@@ -1,0 +1,18 @@
+<RCC>
+  <qresource prefix="/ade/plugins">
+    <file alias="github/SKILL.md">github/SKILL.md</file>
+    <file alias="github/metadata.json">github/metadata.json</file>
+    <file alias="posthog/SKILL.md">posthog/SKILL.md</file>
+    <file alias="posthog/metadata.json">posthog/metadata.json</file>
+    <file alias="supabase/SKILL.md">supabase/SKILL.md</file>
+    <file alias="supabase/metadata.json">supabase/metadata.json</file>
+    <file alias="vercel/SKILL.md">vercel/SKILL.md</file>
+    <file alias="vercel/metadata.json">vercel/metadata.json</file>
+    <file alias="figma/SKILL.md">figma/SKILL.md</file>
+    <file alias="figma/metadata.json">figma/metadata.json</file>
+    <file alias="figma/apps/figma-app/index.html">figma/apps/figma-app/index.html</file>
+    <file alias="figma/apps/figma-app/styles.css">figma/apps/figma-app/styles.css</file>
+    <file alias="PROVENANCE.json">PROVENANCE.json</file>
+    <file alias="LICENSE">LICENSE</file>
+  </qresource>
+</RCC>

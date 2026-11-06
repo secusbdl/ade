@@ -1,0 +1,640 @@
+#include "MainWindow.h"
+#include "Composer.h"
+#include "AttachmentStrip.h"
+#include "attachments/AttachmentStore.h"
+#include "Icons.h"
+#include "ProviderDialog.h"
+#include "ModelSelection.h"
+#include "ContextPreferences.h"
+#include "SettingsPage.h"
+#include "DownloadsPage.h"
+#include "browser/browserwidget.h"
+#include "browser/BrowserToolBridge.h"
+#include "core/AgentEngine.h"
+#include "core/ProviderStore.h"
+#include "core/UtilityService.h"
+#include "runtime/AgentToolHost.h"
+#include "editor/EditorWidget.h"
+#include "terminal/TerminalWidget.h"
+#include "git/GitPanel.h"
+#include "git/WorktreeSetupRunner.h"
+#include "git/WorktreeSettingsController.h"
+#include "git/WorktreeSettingsPane.h"
+#include <QApplication>
+#include <QBuffer>
+#include <QImage>
+#include <QCloseEvent>
+#include <QComboBox>
+#include <QCompleter>
+#include <QDateTime>
+#include <QDir>
+#include <QFileDialog>
+#include <QFileSystemModel>
+#include <QHBoxLayout>
+#include <QInputDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QMenu>
+#include <QMessageBox>
+#include <QPlainTextEdit>
+#include <QProcess>
+#include <QPushButton>
+#include <QSaveFile>
+#include <QScrollBar>
+#include <QSettings>
+#include <QStackedWidget>
+#include <QRegularExpression>
+#include <QStyleHints>
+#include <QShortcut>
+#include <QSplitter>
+#include <QTabWidget>
+#include <QTabBar>
+#include <QTextBrowser>
+#include <QTextDocument>
+#include <QTimer>
+#include <QToolButton>
+#include <QTreeView>
+#include <QUuid>
+#include <algorithm>
+namespace ade {
+namespace {
+QToolButton* button(const QString& image,const QString& hint,QWidget* parent=nullptr) {
+    auto* b=new QToolButton(parent);b->setIcon(icon(image));b->setToolTip(hint);b->setAccessibleName(hint);b->setFixedSize(30,30);b->setAutoRaise(true);return b;
+}
+QString markdown(QString text) {
+    QTextDocument document;document.setDefaultFont(QFont("Geist",10));document.setMarkdown(text);auto html=document.toHtml();
+    const auto start=html.indexOf("<body");const auto body=html.indexOf('>',start);const auto end=html.lastIndexOf("</body>");
+    return body>=0&&end>body?html.mid(body+1,end-body-1):text.toHtmlEscaped();
+}
+}
+MainWindow::MainWindow(QString dataDirectory,QWidget* parent):QMainWindow(parent),m_store(std::move(dataDirectory)),m_providerRepository(m_store.directory()+"/providers.json") {
+    setWindowTitle("ADE");setObjectName("adeMainWindow");resize(1540,940);setMinimumSize(960,600);
+    setWindowIcon(icon("agent",QColor("#4169ff")));
+    QString error,providerError;m_sessions=m_store.load(&error);m_providers=m_providerRepository.load(&providerError);if(error.isEmpty())error=providerError;
+    buildUi();applyPreferences();refreshModels();refreshAgents();
+    QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);
+    const auto lastId=settings.value("lastConversationId").toString();
+    if(const auto* saved=find(lastId);saved&&!saved->archived)selectConversation(lastId);
+    if(m_currentId.isEmpty())for(const auto& s:m_sessions)if(!s.archived){selectConversation(s.id);break;}
+    if(m_currentId.isEmpty())newConversation();
+    if(!error.isEmpty())m_status->setText(error);
+    else QTimer::singleShot(0,this,&MainWindow::retryConversationCleanup);
+    if(settings.contains("geometry"))restoreGeometry(settings.value("geometry").toByteArray());
+    if(settings.contains("splitter"))m_splitter->restoreState(settings.value("splitter").toByteArray());
+}
+void MainWindow::buildUi() {
+    m_browserBridge=new BrowserToolBridge(this);
+    m_pages=new QStackedWidget;setCentralWidget(m_pages);
+    auto* central=new QWidget;central->setObjectName("appSurface");m_pages->addWidget(central);
+    auto* root=new QHBoxLayout(central);root->setContentsMargins(0,0,0,0);root->setSpacing(0);
+    m_sidebar=new QWidget;m_sidebar->setObjectName("sidebar");m_sidebar->setFixedWidth(230);root->addWidget(m_sidebar);
+    auto* side=new QVBoxLayout(m_sidebar);side->setContentsMargins(10,12,10,12);side->setSpacing(10);
+    auto* collapse=button("sidebar","Toggle sidebar");side->addWidget(collapse);side->addSpacing(18);
+    auto* newAgent=new QPushButton(icon("new"),"New Agent");newAgent->setObjectName("newAgentButton");newAgent->setCursor(Qt::PointingHandCursor);newAgent->setMinimumHeight(36);side->addWidget(newAgent);
+    m_search=new QLineEdit;m_search->setObjectName("agentSearch");m_search->addAction(icon("search"),QLineEdit::LeadingPosition);m_search->setPlaceholderText("Search agents…       Ctrl K");side->addWidget(m_search);side->addSpacing(8);
+    auto* section=new QHBoxLayout;auto* agentsLabel=new QLabel("Agents");agentsLabel->setProperty("muted",true);section->addWidget(agentsLabel);section->addStretch();
+    auto* grouping=new QToolButton;grouping->setText("Group by Age ⌄");grouping->setAutoRaise(true);section->addWidget(grouping);side->addLayout(section);
+    auto* today=new QLabel("Today");today->setProperty("muted",true);side->addWidget(today);
+    m_agents=new QListWidget;m_agents->setObjectName("agentList");m_agents->setContextMenuPolicy(Qt::CustomContextMenu);side->addWidget(m_agents,1);
+    auto* bottom=new QHBoxLayout;bottom->addStretch();auto* settings=button("settings","Settings");settings->setObjectName("settingsButton");bottom->addWidget(settings);side->addLayout(bottom);
+    m_splitter=new QSplitter(Qt::Horizontal);m_splitter->setObjectName("workspaceSplitter");m_splitter->setHandleWidth(2);root->addWidget(m_splitter,1);
+    m_chat=new QWidget;m_chat->setObjectName("chatSurface");m_chat->setMinimumWidth(410);m_splitter->addWidget(m_chat);
+    auto* chatLayout=new QVBoxLayout(m_chat);chatLayout->setContentsMargins(42,32,42,10);chatLayout->setSpacing(8);
+    m_transcript=new QTextBrowser;m_transcript->setObjectName("conversationView");m_transcript->setOpenLinks(false);m_transcript->setFrameShape(QFrame::NoFrame);m_transcript->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);chatLayout->addWidget(m_transcript,1);
+    m_status=new QLabel;m_status->setObjectName("sessionStatus");m_status->setWordWrap(true);m_status->setProperty("muted",true);chatLayout->addWidget(m_status);
+    auto* composerBox=new QWidget;composerBox->setObjectName("composerBox");auto* compose=new QVBoxLayout(composerBox);compose->setContentsMargins(9,7,8,7);compose->setSpacing(4);
+    m_attachments=new AttachmentStrip;compose->addWidget(m_attachments);
+    connect(m_attachments,&AttachmentStrip::removeRequested,this,[this](int index){
+        auto* session=current();if(!session||index<0||index>=session->draftAttachments.size())return;
+        const auto previous=session->draftAttachments;session->draftAttachments.removeAt(index);
+        if(!saveSessions())session->draftAttachments=previous;
+        refreshAttachments();
+    });
+    m_composer=new Composer;compose->addWidget(m_composer);
+    connect(m_composer,&Composer::filesAttached,this,&MainWindow::attachFiles);
+    connect(m_composer,&Composer::imageAttached,this,&MainWindow::attachImage);
+    auto* draftTimer=new QTimer(this);draftTimer->setSingleShot(true);draftTimer->setInterval(500);
+    connect(m_composer,&QPlainTextEdit::textChanged,this,[this,draftTimer]{if(auto* s=current()){s->draft=m_composer->toPlainText();draftTimer->start();}});
+    connect(draftTimer,&QTimer::timeout,this,&MainWindow::saveSessions);
+    auto* attachmentRow=new QHBoxLayout;attachmentRow->addStretch();auto* attach=button("attach","Attach files");attachmentRow->addWidget(attach);compose->addLayout(attachmentRow);
+    auto* controls=new QHBoxLayout;controls->setSpacing(4);m_models=new QComboBox;m_models->setObjectName("modelSelector");m_models->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);m_models->setMinimumContentsLength(10);m_models->setMaximumWidth(270);controls->addWidget(m_models);
+    m_permissions=new QComboBox;m_permissions->setObjectName("permissionSelector");m_permissions->addItem("Ask before changes",false);m_permissions->addItem("Always allow",true);controls->addWidget(m_permissions);controls->addStretch();
+    connect(m_permissions,&QComboBox::currentIndexChanged,this,[this]{
+        const auto* session=current();if(!session)return;
+        const bool previous=session->alwaysAllow;
+        if(session->archived||(m_engines.value(session->id)&&m_engines[session->id]->isBusy())){
+            const QSignalBlocker blocker(m_permissions);m_permissions->setCurrentIndex(previous?1:0);return;
+        }
+        auto next=m_sessions;for(auto& candidate:next)if(candidate.id==session->id)candidate.alwaysAllow=m_permissions->currentData().toBool();
+        if(!commitConversationState(next,m_store.pendingCleanup())){const QSignalBlocker blocker(m_permissions);m_permissions->setCurrentIndex(previous?1:0);}
+    });
+    m_models->setEditable(true);m_models->setInsertPolicy(QComboBox::NoInsert);m_models->lineEdit()->setPlaceholderText("Search models…");
+    m_models->completer()->setCompletionMode(QCompleter::PopupCompletion);m_models->completer()->setFilterMode(Qt::MatchContains);m_models->completer()->setCaseSensitivity(Qt::CaseInsensitive);
+    connect(m_models,&QComboBox::activated,this,[this](int index){if(auto* s=current()){const auto selection=ModelSelection::fromJson(m_models->itemData(index).toJsonObject());s->providerId=selection.providerId;s->model=selection.modelId;s->presetId=selection.presetId;saveSessions();}});
+    m_stop=button("stop","Stop agent");m_stop->setObjectName("stopButton");m_stop->setEnabled(false);controls->addWidget(m_stop);
+    m_send=button("send","Send message");m_send->setObjectName("sendButton");m_send->setIcon(icon("send",Qt::white));m_send->setFixedSize(34,34);controls->addWidget(m_send);compose->addLayout(controls);chatLayout->addWidget(composerBox);
+    m_workspace=new QToolButton;m_workspace->setObjectName("connectWorkspaceButton");m_workspace->setIcon(icon("folder"));m_workspace->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);m_workspace->setText("Connect workspace  +");m_workspace->setAutoRaise(true);chatLayout->addWidget(m_workspace,0,Qt::AlignLeft);
+    m_tabs=new QTabWidget;m_tabs->setObjectName("contentTabs");m_tabs->setDocumentMode(true);m_tabs->setTabsClosable(true);m_tabs->setMovable(true);m_tabs->setMinimumWidth(300);m_splitter->addWidget(m_tabs);
+    auto* tabControls=new QWidget;auto* tc=new QHBoxLayout(tabControls);tc->setContentsMargins(0,0,4,0);tc->setSpacing(1);auto* plus=button("plus","New browser tab");auto* files=button("folder","Workspace files");auto* terminal=button("terminal","Open terminal");tc->addWidget(plus);tc->addWidget(terminal);tc->addWidget(files);m_tabs->setCornerWidget(tabControls);
+    m_fileModel=new QFileSystemModel(this);m_files=new QTreeView(this);m_files->hide();m_files->setObjectName("workspaceFiles");m_files->setModel(m_fileModel);m_files->setHeaderHidden(true);for(int col=1;col<4;++col)m_files->hideColumn(col);
+    m_downloads=new DownloadsPage(m_store.directory(),this);m_downloads->hide();
+    connect(m_downloads,&DownloadsPage::storageErrorOccurred,this,[this](const QString& error){m_status->setText(error);});
+    auto* downloads=button("download","Downloads (Ctrl+J)");tc->addWidget(downloads);connect(downloads,&QToolButton::clicked,this,&MainWindow::showDownloads);
+    initializeGit();auto* git=button("branch","Source control (Ctrl+Shift+G)");git->setObjectName("sourceControlButton");tc->addWidget(git);connect(git,&QToolButton::clicked,this,&MainWindow::showGit);
+    addBrowserTab();m_splitter->setSizes({800,540});
+    connect(newAgent,&QPushButton::clicked,this,&MainWindow::newConversation);
+    connect(collapse,&QToolButton::clicked,this,[this]{m_sidebar->setFixedWidth(m_sidebar->width()==230?185:230);});
+    connect(settings,&QToolButton::clicked,this,&MainWindow::showSettings);
+    connect(m_search,&QLineEdit::textChanged,this,&MainWindow::refreshAgents);
+    connect(m_agents,&QListWidget::currentItemChanged,this,[this](QListWidgetItem* item){if(item)selectConversation(item->data(Qt::UserRole).toString());});
+    connect(m_agents,&QWidget::customContextMenuRequested,this,&MainWindow::showConversationMenu);
+    connect(m_send,&QToolButton::clicked,this,&MainWindow::send);connect(m_composer,&Composer::submitted,this,&MainWindow::send);
+    connect(m_stop,&QToolButton::clicked,this,[this]{if(m_engines.contains(m_currentId))m_engines[m_currentId]->cancel();});
+    connect(m_workspace,&QToolButton::clicked,this,&MainWindow::chooseWorkspace);
+    connect(m_transcript,&QTextBrowser::anchorClicked,this,&MainWindow::addBrowserTab);
+    connect(plus,&QToolButton::clicked,this,[this]{addBrowserTab();});
+    connect(terminal,&QToolButton::clicked,this,&MainWindow::showTerminal);
+    connect(files,&QToolButton::clicked,this,[this]{if(!current()||current()->workspace.isEmpty()){chooseWorkspace();if(!current()||current()->workspace.isEmpty())return;}int index=m_tabs->indexOf(m_files);if(index<0)index=m_tabs->addTab(m_files,icon("folder"),"Files");m_tabs->setCurrentIndex(index);});
+    connect(m_files,&QTreeView::doubleClicked,this,[this](const QModelIndex& index){if(!m_fileModel->isDir(index))openFile(m_fileModel->filePath(index));});
+    connect(m_tabs,&QTabWidget::tabCloseRequested,this,[this](int index){
+        auto* page=m_tabs->widget(index);if(!page)return;
+        if(auto* editor=qobject_cast<EditorWidget*>(page);editor&&!editor->requestClose())return;
+        const auto instance=page->property("appInstanceId").toString();
+        if(!instance.isEmpty())if(auto* host=m_toolHosts.value(page->property("appAgentId").toString())){
+            host->apps()->closeTab(instance);return;
+        }
+        m_tabs->removeTab(index);if(page!=m_files&&page!=m_downloads&&page!=m_git)page->deleteLater();if(m_tabs->count()==0)addBrowserTab();
+    });
+    connect(m_tabs,&QTabWidget::currentChanged,this,[this](int index){if(auto* page=m_tabs->widget(index)){if(m_fullscreenBrowser&&!page->isAncestorOf(m_fullscreenBrowser))setBrowserFullscreen(m_fullscreenBrowser,false);const auto id=page->property("browserTabId").toString();if(!id.isEmpty())m_browserBridge->setActiveTab(id);}});
+    connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
+    new QShortcut(QKeySequence("Ctrl+N"),this,[this]{newConversation();});
+    new QShortcut(QKeySequence("Ctrl+K"),this,[this]{m_search->setFocus();m_search->selectAll();});
+    new QShortcut(QKeySequence("Ctrl+,"),this,[this]{showSettings();});
+    new QShortcut(QKeySequence("Ctrl+Shift+O"),this,[this]{chooseWorkspace();});
+    new QShortcut(QKeySequence("Ctrl+T"),this,[this]{addBrowserTab();});
+    new QShortcut(QKeySequence("Ctrl+Alt+T"),this,[this]{showTerminal();});
+    new QShortcut(QKeySequence("Ctrl+J"),this,[this]{showDownloads();});
+    new QShortcut(QKeySequence("Ctrl+Shift+G"),this,[this]{showGit();});
+    m_fullscreenExit=new QShortcut(QKeySequence(Qt::Key_Escape),this,[this]{if(m_fullscreenBrowser)setBrowserFullscreen(m_fullscreenBrowser,false);});m_fullscreenExit->setEnabled(false);
+    connect(grouping,&QToolButton::clicked,this,[this,grouping]{QMenu menu;auto* active=menu.addAction("Active agents");auto* archived=menu.addAction("Archived chats");auto* result=menu.exec(grouping->mapToGlobal(QPoint(0,grouping->height())));if(!result)return;m_agents->setProperty("showArchived",result==archived);grouping->setText(result==active?"Group by Age ⌄":"Archived chats ⌄");refreshAgents();});
+    m_settings=new SettingsPage(m_store.directory());m_pages->addWidget(m_settings);
+    configureWorktreeSettingsPage();
+    connect(m_settings,&SettingsPage::backRequested,this,[this]{m_pages->setCurrentIndex(0);});
+    connect(m_settings,&SettingsPage::providersRequested,this,[this]{showProviders();m_settings->reload();});
+    connect(m_settings,&SettingsPage::preferencesChanged,this,&MainWindow::applyPreferences);
+    connect(qApp->styleHints(),&QStyleHints::colorSchemeChanged,this,[this]{
+        if(m_settings->preference("personalization.appearance").toString()=="system")applyPreferences();
+    });
+    connect(m_settings,&SettingsPage::openUrlRequested,this,[this](const QUrl& url){m_pages->setCurrentIndex(0);addBrowserTab(url);});
+    connect(m_settings,&SettingsPage::clearBrowsingDataRequested,this,&MainWindow::clearBrowsingData);
+    connect(m_settings,&SettingsPage::pluginCredentialsChanged,this,&MainWindow::refreshPluginConfiguration);
+    connect(m_settings,&SettingsPage::restoreConversationRequested,this,[this](const QString& id){restoreConversation(id);});
+    connect(m_settings,&SettingsPage::deleteConversationRequested,this,&MainWindow::requestDeleteConversation);
+    const auto startup=m_settings->preference("browsing.startupUrl").toString();
+    if(!startup.isEmpty()){if(auto* browser=m_tabs->widget(0)->findChild<BrowserWidget*>())browser->navigate(QUrl(startup));}
+}
+Conversation* MainWindow::find(const QString& id){for(auto& s:m_sessions)if(s.id==id)return &s;return nullptr;}
+Conversation* MainWindow::current(){return find(m_currentId);}
+void MainWindow::refreshAgents(){QSignalBlocker block(m_agents);m_agents->clear();const auto query=m_search->text().trimmed();for(const auto& s:m_sessions){if(s.archived!=m_agents->property("showArchived").toBool())continue;if(!query.isEmpty()&&!s.title.contains(query,Qt::CaseInsensitive))continue;auto* item=new QListWidgetItem(icon("agent",QColor(m_engines.contains(s.id)&&m_engines[s.id]->isBusy()?"#2eab83":"#009dda")),s.title,m_agents);item->setData(Qt::UserRole,s.id);item->setSizeHint(QSize(180,34));if(s.id==m_currentId)m_agents->setCurrentItem(item);}}
+void MainWindow::refreshModels(){
+    const QSignalBlocker blocker(m_models);const auto previous=ModelSelection::fromJson(m_models->currentData().toJsonObject()).key();
+    m_models->clear();
+    const auto selections=availableModelSelections(m_providers,m_settings?m_settings->preference("modelCatalogs").toObject():QJsonObject{},m_settings?m_settings->preference("modelPresets").toArray():QJsonArray{});
+    int restore=-1;
+    for(const auto& selection:selections){m_models->addItem(selection.label,selection.toJson());m_models->setItemData(m_models->count()-1,selection.modelId,Qt::ToolTipRole);if(selection.key()==previous)restore=m_models->count()-1;}
+    if(restore>=0)m_models->setCurrentIndex(restore);
+    if(m_models->count()==0)m_models->addItem("Configure a provider…",QJsonObject{});
+    restoreModelSelection();
+}
+void MainWindow::restoreModelSelection(){
+    const auto* s=current();if(!s||s->providerId.isEmpty())return;
+    ModelSelection saved{s->providerId,s->model,s->presetId,{},{}};
+    for(int i=0;i<m_models->count();++i){const auto candidate=ModelSelection::fromJson(m_models->itemData(i).toJsonObject());if((!saved.presetId.isEmpty()&&candidate.presetId==saved.presetId)||candidate.key()==saved.key()){m_models->setCurrentIndex(i);return;}}
+    // Old conversations keep their exact model even if the default/catalog changed.
+    // A removed preset keeps that model but no longer supplies its overrides.
+    ProviderConfig provider;saved.presetId.clear();
+    if(saved.resolve(m_providers,&provider)){saved.label=provider.name+" / "+saved.modelId;m_models->addItem(saved.label,saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
+    else {m_models->addItem("Saved provider unavailable",saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
+}
+void MainWindow::selectConversation(const QString& id){
+    auto* s=find(id);if(!s)return;
+    if(auto* previous=current();previous&&previous->id!=id){
+        previous->draft=m_composer->toPlainText();
+        if(!saveSessions()){refreshAgents();return;}
+    }
+    m_currentId=id;if(!s->archived)m_liveConversationOwners.insert(id);restoreModelSelection();
+    {const QSignalBlocker blocker(m_permissions);m_permissions->setCurrentIndex(s->alwaysAllow?1:0);}
+    {const QSignalBlocker block(m_composer);m_composer->setPlainText(s->draft);}
+    refreshAttachments();
+    m_workspace->setText(s->workspace.isEmpty()?"Connect workspace  +":QFileInfo(s->workspace).fileName()+"  ⌄");m_workspace->setToolTip(s->workspace);
+    m_files->setModel(s->workspace.isEmpty()?nullptr:m_fileModel);
+    if(!s->workspace.isEmpty())m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));
+    const bool busy=m_engines.contains(id)&&m_engines[id]->isBusy();m_send->setEnabled(!busy&&!s->archived);m_stop->setEnabled(busy);m_models->setEnabled(!busy&&!s->archived);m_permissions->setEnabled(!busy&&!s->archived);m_workspace->setEnabled(!busy&&!s->archived);m_composer->setReadOnly(s->archived);
+    m_status->clear();renderConversation();refreshAgents();
+    if(!s->archived){QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("lastConversationId",id);}
+    updateGitContext();
+}
+QString MainWindow::transcriptHtml(const Conversation& session) const {
+    const bool dark=qApp->palette().color(QPalette::Base).lightness()<128;
+    const QString foreground=dark?"#e8e8ed":"#25272a",panel=dark?"#2b303a":"#f1f1f1",muted=dark?"#a6abb4":"#74777d";
+    QString html=QString("<html><head><style>body{font-family:'Geist';font-size:13px;color:%1;}pre{background:%2;white-space:pre-wrap;padding:10px;}code{font-family:'Roboto Mono';}a{color:#5683eb;}p{line-height:150%;}td{padding:9px;}p.meta{color:%3;font-size:12px;}</style></head><body>").arg(foreground,dark?panel:QString("#f2f4f6"),muted);
+    for(const auto& value:session.messages){const auto m=value.toObject();const auto role=m["role"].toString();const auto content=m["content"].toString();if(role=="system")continue;
+        if(role=="user")html+="<table align='right' cellspacing='0' cellpadding='9' bgcolor='"+panel+"'><tr><td>"+content.toHtmlEscaped().replace("\n","<br>")+"</td></tr></table><br clear='all'><br>";
+        else if(role=="tool")html+="<p class='meta'>✓ Tool result</p><pre>"+content.left(3000).toHtmlEscaped()+"</pre>";
+        else if(role=="assistant"&&!content.isEmpty())html+=markdown(content)+"<br>";
+        for(const auto& entry:m["metadata"].toObject()["attachments"].toArray()) {
+            const auto ref=entry.toObject();const auto name=ref["originalFileName"].toString(QFileInfo(ref["path"].toString()).fileName());
+            html+="<p class='meta'>Attachment: "+name.toHtmlEscaped()+"</p>";
+        }
+    }
+    for(const auto& entry:m_toolEvents.value(session.id))html+="<p class='meta'>"+entry.toHtmlEscaped()+"</p>";
+    if(!m_streams.value(session.id).isEmpty())html+=markdown(m_streams.value(session.id));
+    return html+"</body></html>";
+}
+void MainWindow::renderConversation(){const auto* s=current();if(!s)return;auto* bar=m_transcript->verticalScrollBar();const bool follow=bar->maximum()-bar->value()<70;const int old=bar->value();m_transcript->setHtml(transcriptHtml(*s));bar->setValue(follow?bar->maximum():old);}
+bool MainWindow::saveSessions(){QString error;if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);return false;}return true;}
+AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))return m_engines[id];
+    if(const auto* session=find(id);session&&!session->archived)m_liveConversationOwners.insert(id);
+    auto* engine=new AgentEngine(this);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
+    auto* host=new AgentToolHost(engine,m_browserBridge,id,m_store.directory(),engine);m_toolHosts.insert(id,host);host->setWorkspace(engine->workspace());
+    connect(host,&QObject::destroyed,this,[this,id,host]{if(m_toolHosts.value(id)==host)m_toolHosts.remove(id);});
+    connectAppTabs(host);
+    connect(host,&AgentToolHost::output,this,[this,id](const QString&,const QString& output){m_toolEvents[id].append(output.left(4000));if(id==m_currentId)renderConversation();});
+    connect(host,&AgentToolHost::attachmentCreated,this,[this,id](const QString&,const QString& path,const QString&){m_toolEvents[id].append("Created attachment: "+path);if(id==m_currentId)renderConversation();});
+    connect(engine,&AgentEngine::textDelta,this,[this,id](const QString& text){m_streams[id]+=text;if(id==m_currentId&&!m_transcript->property("renderPending").toBool()){m_transcript->setProperty("renderPending",true);QTimer::singleShot(40,this,[this]{m_transcript->setProperty("renderPending",false);renderConversation();});}});
+    connect(engine,&AgentEngine::toolStarted,this,[this,id](const QString&,const QString& name,const QJsonObject&){m_toolEvents[id].append("› "+name);if(id==m_currentId){m_status->setText(name);renderConversation();}});
+    connect(engine,&AgentEngine::toolFinished,this,[this,id](const QString&,const QString&,bool error){if(id==m_currentId)m_status->setText(error?"Tool returned an error":"Working…");});
+    connect(engine,&AgentEngine::approvalRequired,this,[this,id,engine](const QString& toolId,const QString& name,const QJsonObject& args){auto* box=new QMessageBox(QMessageBox::Question,"Tool approval",name+"\n\n"+QString::fromUtf8(QJsonDocument(args).toJson(QJsonDocument::Indented)),QMessageBox::Yes|QMessageBox::No,this);box->setAttribute(Qt::WA_DeleteOnClose);box->setInformativeText("Agent: "+(find(id)?find(id)->title:id));connect(box,&QMessageBox::finished,engine,[engine,toolId](int result){engine->approveTool(toolId,result==QMessageBox::Yes);});box->open();});
+    connect(engine,&AgentEngine::busyChanged,this,[this,id](bool busy){if(id==m_currentId){m_send->setEnabled(!busy);m_stop->setEnabled(busy);m_models->setEnabled(!busy);m_permissions->setEnabled(!busy);m_workspace->setEnabled(!busy);}refreshAgents();});
+    connect(engine,&AgentEngine::failed,this,[this,id](const QString& error){if(id==m_currentId)m_status->setText(error);});
+    connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->updated=QDateTime::currentMSecsSinceEpoch();}if(engine->lastTurnSucceeded())generateTitle(id);m_streams.remove(id);m_toolEvents.remove(id);saveSessions();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
+    updateGitContext();
+    return engine;
+}
+void MainWindow::send(){
+    auto* s=current();if(!s||s->archived||(m_composer->toPlainText().trimmed().isEmpty()&&s->draftAttachments.isEmpty()))return;
+    if(gitPathBusy(s->workspace)){m_status->setText("Wait for the workspace operation to finish before running this agent.");return;}
+    if(m_composer->toPlainText().trimmed()=="/compact"&&s->draftAttachments.isEmpty()){compressContext();return;}
+    auto* engine=engineFor(s->id);if(engine->isBusy())return;
+    const auto selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());ProviderConfig provider;
+    if(!selection.resolve(m_providers,&provider)){showProviders();return;}
+    if(m_models->currentText()!=m_models->itemText(m_models->currentIndex())){m_status->setText("Select a model from the search results before sending.");return;}
+    engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray()),selection.presetId);engine->setWorkspace(s->workspace);engine->setAlwaysAllow(s->alwaysAllow);
+    if(auto* host=m_toolHosts.value(s->id)){QString workspaceError;if(!host->setWorkspace(s->workspace,&workspaceError)){m_status->setText(workspaceError);return;}}
+    if(auto* host=m_toolHosts.value(s->id)){
+        const QPointer<MainWindow> self(this);const QPointer<AgentToolHost> owner(host);
+        QString pluginError;
+        const auto agentId=host->agentId();
+        const bool configured=m_pluginCatalog.configureAgent(*host->network(),agentId,m_store.directory(),m_settings->preferences(),&pluginError);
+        if(!self||!owner)return;
+        if(!configured){
+            m_status->setText("Plugin configuration: "+pluginError);return;
+        }
+        const auto pluginContext=PluginCatalog::context(m_store.directory(),m_settings->preferences(),&pluginError);
+        if(!pluginError.isEmpty()){m_status->setText("Plugin context: "+pluginError);return;}
+        configureAppRoots(host,pluginContext);
+        if(!self||!owner)return;
+        auto options=contextOptionsFor(m_settings->preferences(),s->workspace,QDir::homePath());
+        options.pluginsDirectory=pluginContext.pluginsDirectory;options.disabledPluginIds=pluginContext.disabledPluginIds;
+        const auto snapshot=host->configureContext(options);
+        const auto command=m_composer->toPlainText().trimmed().section(QRegularExpression("\\s+"),0,0);
+        if(command.startsWith('/'))for(const auto& skill:snapshot.skills)if(skill.userInvocable&&(skill.name.compare(command.mid(1),Qt::CaseInsensitive)==0||skill.id==command.mid(1))){options.invokedSkillIds.append(skill.id);break;}
+        if(!options.invokedSkillIds.isEmpty())host->configureContext(options);
+    }
+    QString attachmentError;QJsonObject metadata;
+    if(auto* host=m_toolHosts.value(s->id))metadata=host->captureAttachments(s->draftAttachments,&attachmentError);
+    if(!attachmentError.isEmpty()){m_status->setText("Attachment: "+attachmentError);return;}
+    auto previous=*s;previous.draft=m_composer->toPlainText();const auto text=previous.draft.trimmed();
+    s->providerId=provider.id;s->model=provider.model;s->presetId=selection.presetId;
+    s->draft.clear();s->draftAttachments={};
+    if(s->messages.isEmpty()&&!s->titleLocked)s->title=text.isEmpty()?"Attached files":text.simplified().left(55);
+    QJsonObject message{{"role","user"},{"content",text}};
+    if(!metadata["attachments"].toArray().isEmpty())message["metadata"]=metadata;
+    s->messages.append(message);
+    if(!saveSessions()){*s=previous;return;}
+    {const QSignalBlocker blocker(m_composer);m_composer->clear();}
+    refreshAttachments();m_status->setText("Working…");renderConversation();refreshAgents();
+    const QPointer<MainWindow> self(this);const QPointer<AgentEngine> owner(engine);const auto history=engine->messages();
+    const bool accepted=engine->submitWithAttachments(text,metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject());
+    if(!self||!owner)return;
+    // A validation rejection emits finished without accepting this draft. Keep
+    // its exact text and attachment references; do not undo an accepted turn or
+    // a replacement submission started by an observer.
+    if(!accepted&&!owner->isBusy()&&owner->messages()==history){
+        auto* rejected=find(previous.id);if(!rejected)return;
+        *rejected=previous;
+        if(m_currentId==previous.id){
+            const QSignalBlocker blocker(m_composer);m_composer->setPlainText(previous.draft);
+            refreshAttachments();renderConversation();refreshAgents();restoreModelSelection();
+        }
+        QString recoveryError;
+        if(!m_store.save(m_sessions,&recoveryError))conversationError(m_status->text()+"\nThe draft is retained here, but could not be saved: "+recoveryError);
+    }
+}
+void MainWindow::refreshAttachments(){if(m_attachments)m_attachments->setAttachments(current()?current()->draftAttachments:QJsonArray{});}
+void MainWindow::attachFiles(const QStringList& paths){
+    auto* session=current();if(!session||paths.isEmpty())return;
+    AttachmentStore store(m_store.directory());AttachmentMounts mounts;
+    if(!session->workspace.isEmpty())mounts.insert("ws1",session->workspace);
+    const auto previous=session->draftAttachments;QStringList errors;
+    for(const auto& path:paths){
+        if(session->draftAttachments.size()>=32){errors.append("A message can contain at most 32 attachments.");break;}
+        QString error;const auto ref=store.importFile(session->id,path,mounts,&error);
+        if(!error.isEmpty()){errors.append(QFileInfo(path).fileName()+": "+error);continue;}
+        bool duplicate=false;for(const auto& value:session->draftAttachments)duplicate|=value.toObject()["path"]==ref.path;
+        if(!duplicate)session->draftAttachments.append(ref.toJson());
+    }
+    if(!saveSessions())session->draftAttachments=previous;
+    else if(!errors.isEmpty())m_status->setText(errors.join('\n'));
+    refreshAttachments();
+}
+void MainWindow::attachImage(const QImage& image){
+    auto* session=current();if(!session||image.isNull())return;
+    if(session->draftAttachments.size()>=32){m_status->setText("A message can contain at most 32 attachments.");return;}
+    if(qint64(image.width())*image.height()>64*1024*1024){m_status->setText("The pasted image exceeds the 64 megapixel limit.");return;}
+    QByteArray bytes;QBuffer buffer(&bytes);buffer.open(QIODevice::WriteOnly);
+    if(!image.save(&buffer,"PNG")){m_status->setText("The pasted image could not be encoded.");return;}
+    QString error;const auto ref=AttachmentStore(m_store.directory()).write(session->id,"Pasted image.png",bytes,&error);
+    if(!error.isEmpty()){m_status->setText(error);return;}
+    const auto previous=session->draftAttachments;session->draftAttachments.append(ref.toJson());
+    if(!saveSessions())session->draftAttachments=previous;
+    refreshAttachments();
+}
+void MainWindow::submitPrompt(const QString& prompt){m_composer->setPlainText(prompt);send();}
+void MainWindow::configureUtilities(UtilityService* service,const Conversation& session){
+    ModelSelection selection{session.providerId,session.model,session.presetId,{},{}};
+    const auto presets=m_settings->preference("modelPresets").toArray();service->setMainModels(selectedModelChain(selection,m_providers,presets));
+    QJsonObject activePreset;for(const auto& value:presets)if(value.toObject()["id"].toString()==session.presetId&&!session.presetId.isEmpty()){activePreset=value.toObject();break;}
+    const auto titles=activePreset.isEmpty()?m_settings->preference("utilityModels.titleGeneration").toArray():activePreset["titleGeneration"].toArray();
+    const auto compression=activePreset.isEmpty()?m_settings->preference("utilityModels.contextCompression").toArray():activePreset["contextCompression"].toArray();
+    service->setTitleModels(resolveModelEntries(m_providers,titles));service->setCompressionModels(resolveModelEntries(m_providers,compression));
+}
+void MainWindow::generateTitle(const QString& id){
+    auto* session=find(id);if(!session||session->titleLocked||session->autoTitleAttempted||session->messages.isEmpty())return;
+    const auto last=session->messages.last().toObject();if(last["role"].toString()!="assistant"||last["content"].toString().trimmed().isEmpty())return;
+    session->autoTitleAttempted=true;const auto originalTitle=session->title;
+    auto* utility=new UtilityService(this);configureUtilities(utility,*session);m_utilities.insert(id,utility);
+    connect(utility,&UtilityService::titleReady,this,[this,id,originalTitle,utility](const QString& title){
+        if(m_utilities.value(id)!=utility)return;
+        m_utilities.remove(id);
+        if(auto* s=find(id);s&&!s->titleLocked&&s->title==originalTitle){s->title=title;saveSessions();refreshAgents();}
+        utility->deleteLater();
+    });
+    connect(utility,&UtilityService::failed,this,[this,id,utility](const QString&){if(m_utilities.value(id)==utility)m_utilities.remove(id);utility->deleteLater();});
+    utility->generateTitle(session->messages);
+}
+void MainWindow::compressContext(){
+    auto* session=current();if(!session)return;const auto id=session->id;auto* engine=engineFor(id);
+    if(engine->isBusy()){m_status->setText("Wait for the agent before compressing context.");return;}
+    const auto snapshot=engine->messages();const int boundary=UtilityService::compressionBoundary(snapshot);
+    if(boundary<0){m_status->setText("This conversation is too short to compress while preserving recent turns.");return;}
+    if(auto existing=m_utilities.take(id)){existing->cancel();existing->deleteLater();}
+    auto* utility=new UtilityService(this);configureUtilities(utility,*session);m_utilities.insert(id,utility);
+    connect(utility,&UtilityService::compressionReady,this,[this,id,engine,snapshot,boundary,utility](const QString& briefing){
+        if(m_utilities.value(id)!=utility)return;
+        m_utilities.remove(id);
+        if(!engine->isBusy()&&engine->messages()==snapshot&&engine->applyCompression(boundary,briefing)){
+            if(auto* s=find(id))s->messages=engine->messages();
+            saveSessions();
+            if(id==m_currentId){m_status->setText("Context compressed. The complete conversation remains saved.");renderConversation();}
+        }else if(id==m_currentId)m_status->setText("The conversation changed during compression. Its context was preserved.");
+        utility->deleteLater();
+    });
+    connect(utility,&UtilityService::failed,this,[this,id,utility](const QString& error){if(m_utilities.value(id)==utility)m_utilities.remove(id);if(id==m_currentId)m_status->setText("Context compression failed: "+error);utility->deleteLater();});
+    QJsonArray prefix;for(int i=0;i<boundary;++i)prefix.append(snapshot[i]);
+    if(m_composer->toPlainText().trimmed()=="/compact")m_composer->clear();
+    m_status->setText("Compressing context…");utility->compressHistory(prefix);
+}
+void MainWindow::showProviders(){QString error;const auto latest=m_providerRepository.load(&error);if(!error.isEmpty()){m_status->setText(error);return;}m_providers=latest;ProviderDialog dialog(m_providers,m_settings->preference("modelCatalogs").toObject(),this);if(dialog.exec()!=QDialog::Accepted)return;auto providers=dialog.providers();if(!m_providerRepository.save(providers,&error)){m_status->setText(error);return;}m_providers=providers;if(!m_settings->setPreference("modelCatalogs",dialog.modelCatalogs()))m_status->setText("Provider saved, but the discovered catalog could not be saved.");refreshModels();}
+void MainWindow::showSettings(){m_settings->setContextWorkspace(current()?current()->workspace:QString());m_settings->reload();m_pages->setCurrentWidget(m_settings);}
+void MainWindow::applyPreferences(){
+    if(!m_settings)return;
+    refreshModels();
+    if(!qApp->property("adeBaseStyleSheet").isValid())qApp->setProperty("adeBaseStyleSheet",qApp->styleSheet());
+    QString style=qApp->property("adeBaseStyleSheet").toString();
+    const auto appearance=m_settings->preference("personalization.appearance").toString("system");
+    const bool dark=appearance=="dark"||(appearance=="system"&&qApp->styleHints()->colorScheme()==Qt::ColorScheme::Dark);
+    if(!qApp->property("adeBasePalette").isValid())qApp->setProperty("adeBasePalette",QVariant::fromValue(qApp->palette()));
+    auto palette=qvariant_cast<QPalette>(qApp->property("adeBasePalette"));
+    if(dark){palette.setColor(QPalette::Window,QColor("#21242b"));palette.setColor(QPalette::Base,QColor("#21242b"));palette.setColor(QPalette::AlternateBase,QColor("#252a33"));palette.setColor(QPalette::Text,QColor("#e8e8ed"));palette.setColor(QPalette::WindowText,QColor("#e8e8ed"));palette.setColor(QPalette::Button,QColor("#2b303a"));palette.setColor(QPalette::ButtonText,QColor("#e8e8ed"));palette.setColor(QPalette::PlaceholderText,QColor("#a6abb4"));}
+    else {palette.setColor(QPalette::Window,QColor("#eff4fa"));palette.setColor(QPalette::Base,QColor("#fdfdfd"));palette.setColor(QPalette::AlternateBase,QColor("#f2f4f6"));palette.setColor(QPalette::Text,QColor("#292a2d"));palette.setColor(QPalette::WindowText,QColor("#292a2d"));palette.setColor(QPalette::Button,QColor("#f2f2f2"));palette.setColor(QPalette::ButtonText,QColor("#292a2d"));palette.setColor(QPalette::PlaceholderText,QColor("#64676c"));}
+    qApp->setPalette(palette);
+    if(dark){const QList<QPair<QString,QString>> colors={{"#292a2d","#e8e8ed"},{"#eff4fa","#1d222c"},{"#fdfdfd","#21242b"},{"#fcfcfc","#21242b"},{"#fafafa","#252a33"},{"#e2e8ee","#343d4b"},{"#e8edf2","#303846"},{"#e5ebf1","#2b3340"},{"#f2f2f2","#2b303a"},{"#e6e6e6","#3d424b"},{"#e4e6e8","#3d424b"},{"#e4e5e7","#3d424b"},{"#64676c","#c4c8d0"},{"#6a6d72","#bec3cb"},{"#e1e1e1","#393d45"},{"#eeeff1","#313743"},{"#fff","#252a33"},{"#22262b","#eceef4"}};for(const auto& pair:colors)style.replace(pair.first,pair.second,Qt::CaseInsensitive);}
+    const double scale=m_settings->preference("personalization.uiZoom").toInt(100)/100.0;
+    auto bodyFont=qApp->font();bodyFont.setPixelSize(qMax(1,qRound(13*scale)));qApp->setFont(bodyFont);
+    if(scale!=1.0){QRegularExpression expression("([0-9]+)px");auto matches=expression.globalMatch(style);QList<QPair<qsizetype,qsizetype>> positions;QStringList replacements;while(matches.hasNext()){auto match=matches.next();positions.append({match.capturedStart(),match.capturedLength()});replacements.append(QString::number(qMax(1,qRound(match.captured(1).toInt()*scale)))+"px");}for(int i=positions.size()-1;i>=0;--i)style.replace(positions[i].first,positions[i].second,replacements[i]);}
+    const QMap<QString,QString> accents={{"blue","#4778d7"},{"violet","#855ad2"},{"green","#348a67"},{"amber","#ac7a24"},{"neutral","#777f8c"}};
+    const auto accent=accents.value(m_settings->preference("personalization.theme").toString(),"#4778d7");
+    style.replace("#7193ff",accent).replace("#4b75f8",QColor(accent).darker(110).name());
+    qApp->setStyleSheet(style);m_sidebar->setFixedWidth(qRound(230*scale));
+    for(auto* browser:findChildren<BrowserWidget*>())if(!browser->property("miniAppBrowser").toBool()&&browser->property("adeOwnerAgentId").toString().isEmpty()){browser->setPermissionDefaults(m_settings->preference("browsing.permissions").toObject());browser->setPermissionExceptions(m_settings->preference("browsing.permissionExceptions").toObject());}
+    for(auto* terminal:findChildren<TerminalWidget*>()){terminal->setDarkTheme(dark);terminal->setZoomPercent(m_settings->preference("personalization.uiZoom").toInt(100));}
+    for(auto* editor:findChildren<EditorWidget*>())editor->setDarkTheme(dark);
+    if(m_git)m_git->setDarkTheme(dark);
+    for(auto* pane:findChildren<WorktreeSettingsPane*>())pane->setDarkTheme(dark);
+    const QPointer<MainWindow> self(this);refreshPluginConfiguration();if(!self)return;
+    if(current())renderConversation();
+    updateAppThemes();
+}
+void MainWindow::importKeys(const QString& path){QString error;auto providers=m_providerRepository.load(&error);if(!error.isEmpty()){m_status->setText(error);return;}const auto imported=ProviderStore::importKeyFile(path,&error);if(imported.isEmpty()&&!error.isEmpty()){m_status->setText(error);return;}for(const auto& p:imported){auto it=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& a){return a.id==p.id;});if(it==providers.end())providers.append(p);else *it=p;}if(!m_providerRepository.save(providers,&error)){m_status->setText(error);return;}m_providers=providers;refreshModels();}
+void MainWindow::chooseWorkspace(){const auto path=QFileDialog::getExistingDirectory(this,"Connect workspace",current()?current()->workspace:QString());if(!path.isEmpty())connectWorkspace(path);}
+void MainWindow::connectWorkspace(const QString& path){
+    auto* s=current();if(!s||!QFileInfo(path).isDir())return;
+    if(s->archived){conversationError("Restore this chat before changing its workspace.");return;}
+    if(gitPathBusy(path)||gitPathBusy(s->workspace)){m_status->setText("Wait for the workspace operation to finish before changing workspaces.");return;}
+    if(m_engines.contains(s->id)&&m_engines[s->id]->isBusy()){m_status->setText("Stop the agent before changing workspace.");return;}
+    const auto canonical=GitService::canonicalPath(path);if(canonical.isEmpty()){m_status->setText("The workspace path could not be resolved.");return;}
+    const auto previous=s->workspace;const auto previousAttachments=s->draftAttachments;
+    if(GitService::pathKey(previous)!=GitService::pathKey(canonical)){
+        // A draft's selected file must not silently follow ws1 to a new root.
+        AttachmentStore store(m_store.directory());const AttachmentMounts mounts{{"ws1",previous},{"w1",previous}};QJsonArray retained;
+        for(const auto& entry:s->draftAttachments){
+            QString error;const auto ref=AttachmentRef::fromJson(entry.toObject(),&error);
+            if(ref.path.startsWith("att/")){retained.append(entry);continue;}
+            const auto bytes=store.read(s->id,ref,mounts,&error);
+            if(!error.isEmpty()){m_status->setText("Keep or remove the unreadable draft attachment before changing workspace: "+error);return;}
+            const auto copy=store.write(s->id,ref.originalFileName.isEmpty()?QFileInfo(ref.path).fileName():ref.originalFileName,bytes,&error);
+            if(!error.isEmpty()){m_status->setText("Could not preserve the draft attachment: "+error);return;}
+            retained.append(copy.toJson());
+        }
+        s->draftAttachments=retained;
+    }
+    s->workspace=canonical;
+    if(!saveSessions()){s->workspace=previous;s->draftAttachments=previousAttachments;return;}
+    m_liveConversationOwners.insert(s->id);
+    if(auto* host=m_toolHosts.value(s->id)){QString error;if(!host->setWorkspace(s->workspace,&error)){s->workspace=previous;s->draftAttachments=previousAttachments;saveSessions();m_status->setText(error);return;}}
+    if(m_engines.contains(s->id))m_engines[s->id]->setWorkspace(s->workspace);
+    m_files->setModel(m_fileModel);m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));m_workspace->setText(QFileInfo(s->workspace).fileName()+"  ⌄");m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();
+}
+void MainWindow::addBrowserTab(const QUrl& url){auto* page=new QWidget;auto* layout=new QVBoxLayout(page);layout->setContentsMargins(0,0,0,0);layout->setSpacing(0);auto* navWidget=new QWidget;navWidget->setObjectName("browserNavigation");auto* nav=new QHBoxLayout(navWidget);nav->setContentsMargins(5,3,5,3);auto* back=button("back","Back");auto* forward=button("forward","Forward");auto* reload=button("reload","Reload");auto* address=new QLineEdit;address->setObjectName("browserAddress");address->setPlaceholderText("Search or enter address");nav->addWidget(back);nav->addWidget(forward);nav->addWidget(reload);nav->addWidget(address,1);layout->addWidget(navWidget);auto* browser=new BrowserWidget;browser->setProfileDirectory(m_store.directory()+"/browser");page->setProperty("browserTabId",m_browserBridge->registerTab(browser));layout->addWidget(browser,1);const auto index=m_tabs->addTab(page,icon("globe"),"New tab");m_tabs->setCurrentIndex(index);
+    connect(address,&QLineEdit::returnPressed,page,[this,browser,address]{QString text=address->text().trimmed();if(text.isEmpty())return;QUrl target;if(text.contains(' ')||(!text.contains('.')&&!text.contains(':')&&text!="localhost")){QString searchTemplate="https://www.google.com/search?q=%s";if(m_settings){const auto selected=m_settings->preference("browsing.defaultEngineId").toString();for(const auto& value:m_settings->preference("browsing.searchEngines").toArray()){const auto engine=value.toObject();if(engine["id"].toString()==selected){searchTemplate=engine["url"].toString();break;}}}target=QUrl(searchTemplate.replace("%s",QString::fromUtf8(QUrl::toPercentEncoding(text))));}else target=QUrl::fromUserInput(text);if(target.scheme()=="https"||target.scheme()=="http"||target.scheme()=="about")browser->navigate(target);});
+    connect(back,&QToolButton::clicked,browser,&BrowserWidget::back);connect(forward,&QToolButton::clicked,browser,&BrowserWidget::forward);connect(reload,&QToolButton::clicked,browser,&BrowserWidget::reload);
+    connect(browser,&BrowserWidget::urlChanged,address,[address](const QUrl& value){address->setText(value==QUrl("about:blank")?QString():value.toDisplayString());});
+    connect(browser,&BrowserWidget::titleChanged,page,[this,page](const QString& title){auto i=m_tabs->indexOf(page);if(i>=0)m_tabs->setTabText(i,title.isEmpty()?"New tab":title.left(28));});
+    connect(browser,&BrowserWidget::errorOccurred,page,[this](const QString& message){m_status->setText(message);});
+    if(m_downloads)m_downloads->attachBrowser(browser);
+    connect(browser,&BrowserWidget::fullscreenChanged,this,[this,browser](bool enabled){setBrowserFullscreen(browser,enabled);});
+    connect(browser,&BrowserWidget::browsingDataCleared,this,[this](const QString& id,bool success,const QString& error){if(!m_dataClearId.isEmpty()&&id==m_dataClearId)finishBrowsingDataClear(success,error);});
+    connect(browser,&QObject::destroyed,this,[this,browser]{if(m_dataClearBrowser==browser||(!m_dataClearId.isEmpty()&&m_dataClearBrowser.isNull()))finishBrowsingDataClear(false,"The browser closed while clearing data.");if(!m_fullscreenHidden.isEmpty()&&m_fullscreenBrowser.isNull())setBrowserFullscreen(nullptr,false);});
+    if(m_settings){browser->setPermissionDefaults(m_settings->preference("browsing.permissions").toObject());browser->setPermissionExceptions(m_settings->preference("browsing.permissionExceptions").toObject());}
+    connect(browser,&BrowserWidget::permissionRequested,page,[this,browser](const QString& requestId,const QUrl& origin,const QString& permission,bool){
+        const QMap<QString,QString> names={{"media","camera or microphone"},{"geolocation","location"},{"notifications","notifications"},{"clipboard-read","clipboard"},{"fullscreen","fullscreen"},{"downloads","multiple downloads"}};
+        auto* box=new QMessageBox(QMessageBox::Question,"Website permission",origin.toDisplayString()+" wants access to "+names.value(permission,permission)+".",QMessageBox::Yes|QMessageBox::No,this);
+        box->setAttribute(Qt::WA_DeleteOnClose);box->setDefaultButton(QMessageBox::No);box->button(QMessageBox::Yes)->setText("Allow");box->button(QMessageBox::No)->setText("Block");
+        const QPointer<BrowserWidget> safeBrowser(browser);
+        connect(box,&QMessageBox::finished,this,[safeBrowser,requestId](int choice){if(safeBrowser)safeBrowser->resolvePermission(requestId,choice==QMessageBox::Yes);});
+        connect(browser,&BrowserWidget::permissionRequestFinished,box,[box,requestId](const QString& settled,bool){if(settled==requestId)box->reject();});
+        connect(browser,&QObject::destroyed,box,&QDialog::reject);box->open();
+    });
+    connect(browser,&BrowserWidget::loadingChanged,page,[this,browser,page](bool loading){if(!loading){const auto index=m_tabs->indexOf(page);recordBrowserHistory(browser->currentUrl(),index>=0?m_tabs->tabText(index):QString());}});
+    connect(browser,&BrowserWidget::titleChanged,page,[this,browser](const QString& title){recordBrowserHistory(browser->currentUrl(),title);});
+    QUrl target=url;if(url==QUrl("about:blank")&&m_settings){const auto custom=m_settings->preference("browsing.newTabUrl").toString();if(!custom.isEmpty())target=QUrl(custom);}browser->navigate(target);
+}
+void MainWindow::recordBrowserHistory(const QUrl& url,const QString& title){
+    if(url.scheme()!="https"&&url.scheme()!="http")return;
+    const QString path=m_store.directory()+"/browsing-history.json";QFile file(path);QJsonArray entries;
+    if(file.exists()){if(!file.open(QIODevice::ReadOnly)||file.size()>4*1024*1024)return;QJsonParseError parse;const auto doc=QJsonDocument::fromJson(file.readAll(),&parse);if(parse.error!=QJsonParseError::NoError)return;entries=doc.isArray()?doc.array():doc.object()["entries"].toArray();}
+    QUrl clean=url;clean.setUserInfo(QString());const QString address=clean.toString();const auto now=QDateTime::currentMSecsSinceEpoch();
+    if(!entries.isEmpty()&&entries.first().toObject()["url"].toString()==address){auto entry=entries.first().toObject();entry["title"]=title;entries.replace(0,entry);}else entries.prepend(QJsonObject{{"url",address},{"title",title},{"visitedAt",now}});
+    while(entries.size()>5000)entries.removeLast();
+    QSaveFile output(path);if(output.open(QIODevice::WriteOnly)){const auto data=QJsonDocument(entries).toJson();if(output.write(data)==data.size())output.commit();}
+}
+void MainWindow::openFile(const QString& path){
+    const auto canonical=QFileInfo(path).canonicalFilePath();
+    for(int i=0;i<m_tabs->count();++i)if(auto* editor=qobject_cast<EditorWidget*>(m_tabs->widget(i));editor&&!canonical.isEmpty()&&QFileInfo(editor->filePath()).canonicalFilePath()==canonical){m_tabs->setCurrentIndex(i);return;}
+    auto* editor=new EditorWidget;editor->setDarkTheme(qApp->palette().color(QPalette::Base).lightness()<128);QString error;
+    if(!editor->openFile(path,&error)){m_status->setText(error);delete editor;return;}
+    editor->setProperty("filePath",editor->filePath());
+    connect(editor,&EditorWidget::modifiedChanged,this,[this,editor](bool modified){const auto index=m_tabs->indexOf(editor);if(index>=0)m_tabs->setTabText(index,QFileInfo(editor->filePath()).fileName()+(modified?" •":""));});
+    connect(editor,&EditorWidget::fileSaved,this,[this](const QString& file){m_status->setText("Saved "+QFileInfo(file).fileName());});
+    connect(editor,&EditorWidget::errorOccurred,this,[this](const QString& message){m_status->setText(message);});
+    m_tabs->setCurrentIndex(m_tabs->addTab(editor,QFileInfo(path).fileName()));
+}
+MainWindow::~MainWindow(){
+    // Child destruction occurs after derived members are destroyed. Browser
+    // teardown signals must not access those members during QObject cleanup.
+    for(auto* child:findChildren<QObject*>())disconnect(child,nullptr,this,nullptr);
+    // Some browser connections are scoped to the tab page and capture the host.
+    // Stop managers first, then disconnect those callbacks before tab teardown.
+    delete m_downloads;m_downloads=nullptr;
+    delete m_worktreeSettings;m_worktreeSettings=nullptr;
+    delete m_git;m_git=nullptr;delete m_worktreeSetup;m_worktreeSetup=nullptr;
+    for(auto* browser:findChildren<BrowserWidget*>())disconnect(browser,nullptr,nullptr,nullptr);
+}
+
+void MainWindow::showTerminal(){
+    auto* terminal=new TerminalWidget;
+    terminal->setObjectName("workspaceTerminal");
+    const auto appearance=m_settings->preference("personalization.appearance").toString("system");
+    terminal->setDarkTheme(appearance=="dark"||(appearance=="system"&&qApp->styleHints()->colorScheme()==Qt::ColorScheme::Dark));
+    terminal->setZoomPercent(m_settings->preference("personalization.uiZoom").toInt(100));
+    connect(terminal,&TerminalWidget::titleChanged,this,[this,terminal](const QString& title){const int index=m_tabs->indexOf(terminal);if(index>=0)m_tabs->setTabText(index,title.isEmpty()?"Terminal":title.left(32));});
+    connect(terminal,&TerminalWidget::workingDirectoryChanged,this,[this,terminal](const QString& path){const int index=m_tabs->indexOf(terminal);if(index>=0)m_tabs->setTabToolTip(index,path);});
+    connect(terminal,&TerminalWidget::errorOccurred,this,[this](const QString& error){m_status->setText(error);});
+    connect(terminal,&TerminalWidget::exited,this,[this,terminal](quint32 code){const int index=m_tabs->indexOf(terminal);if(index>=0)m_tabs->setTabText(index,QString("Terminal · exited %1").arg(code));});
+    m_tabs->setCurrentIndex(m_tabs->addTab(terminal,icon("terminal"),"Terminal"));
+    const auto workspace=current()?current()->workspace:QString();QString error;
+    if(!terminal->start(workspace.isEmpty()?QDir::homePath():workspace,&error))m_status->setText(error);
+    terminal->setFocus();
+}
+
+void MainWindow::showDownloads(){
+    m_pages->setCurrentIndex(0);int index=m_tabs->indexOf(m_downloads);
+    if(index<0)index=m_tabs->addTab(m_downloads,icon("download"),"Downloads");
+    m_tabs->setCurrentIndex(index);m_downloads->show();
+}
+
+void MainWindow::refreshPluginConfiguration(){
+    if(!m_settings)return;
+    if(m_toolHosts.isEmpty())return;
+    QString contextError;const auto context=PluginCatalog::context(m_store.directory(),m_settings->preferences(),&contextError);
+    QList<QPointer<AgentToolHost>> hosts;for(auto* host:m_toolHosts)hosts.append(host);
+    const QPointer<MainWindow> self(this);
+    const auto directory=m_store.directory();const auto preferences=m_settings->preferences();
+    for(const auto& host:hosts){
+        if(!host)continue;
+        const auto agentId=host->agentId();QString error;
+        const bool configured=m_pluginCatalog.configureAgent(*host->network(),agentId,directory,preferences,&error);
+        if(!self)return;
+        if(!configured)m_status->setText("Plugin configuration: "+error);
+        if(host)configureAppRoots(host,contextError.isEmpty()?context:PluginContext{});
+        if(!self)return;
+    }
+    if(!contextError.isEmpty())m_status->setText("Plugin context: "+contextError);
+}
+
+void MainWindow::setBrowserFullscreen(BrowserWidget* browser,bool enabled){
+    if(!enabled){
+        if(browser&&m_fullscreenBrowser&&browser!=m_fullscreenBrowser)return;
+        if(m_fullscreenHidden.isEmpty())return;
+        if(m_fullscreenBrowser)m_fullscreenBrowser->executeScript("document.exitFullscreen().catch(()=>{})");
+        m_fullscreenExit->setEnabled(false);
+        for(const auto& widget:m_fullscreenHidden)if(widget)widget->show();
+        m_fullscreenHidden.clear();m_fullscreenBrowser.clear();setWindowState(m_beforeFullscreenState);return;
+    }
+    if(!browser||m_fullscreenBrowser==browser)return;
+    auto* page=browser->parentWidget();
+    if(m_tabs->currentWidget()!=page||m_pages->currentIndex()!=0){browser->executeScript("document.exitFullscreen().catch(()=>{})");return;}
+    if(m_fullscreenBrowser)setBrowserFullscreen(m_fullscreenBrowser,false);
+    m_beforeFullscreenState=windowState();m_fullscreenBrowser=browser;
+    m_fullscreenExit->setEnabled(true);
+    const QList<QWidget*> chrome={m_sidebar,m_chat,m_tabs->tabBar(),m_tabs->cornerWidget(),page->findChild<QWidget*>("browserNavigation")};
+    for(auto* widget:chrome)if(widget&&!widget->isHidden()){m_fullscreenHidden.append(widget);widget->hide();}
+    showFullScreen();browser->setFocus();
+}
+
+void MainWindow::clearBrowsingData(const QJsonObject& options){
+    if(!m_dataClearId.isEmpty()){m_settings->completeBrowsingDataClear(false,"A data-clearing operation is already running.");return;}
+    QJsonObject browserOptions;
+    for(const auto& name:{"history","cookies","cache","storage","downloads"})if(options[name].toBool())browserOptions[name]=true;
+    BrowserWidget* selected=nullptr;
+    if(!browserOptions.isEmpty()){
+        for(auto* browser:findChildren<BrowserWidget*>())if(browser->isReady()&&!browser->property("miniAppBrowser").toBool()){selected=browser;break;}
+        if(!selected){m_settings->completeBrowsingDataClear(false,"Open a browser tab and wait for it to load before clearing browser data.");return;}
+    }
+    m_dataClearId=QUuid::createUuid().toString(QUuid::WithoutBraces);m_dataClearOptions=options;m_dataClearBrowser=selected;
+    if(selected)selected->clearBrowsingData(m_dataClearId,browserOptions);
+    else finishBrowsingDataClear(true,{});
+}
+
+void MainWindow::finishBrowsingDataClear(bool success,const QString& error){
+    if(m_dataClearId.isEmpty())return;
+    const auto options=m_dataClearOptions;m_dataClearId.clear();m_dataClearOptions={};m_dataClearBrowser.clear();
+    if(!success){m_settings->completeBrowsingDataClear(false,error);return;}
+    QStringList failures;
+    for(const auto& entry:QList<QPair<QString,QString>>{{"history","browsing-history.json"},{"pluginCredentials","plugin-credentials.json"}}){
+        if(!options[entry.first].toBool())continue;
+        const auto path=QDir(m_store.directory()).filePath(entry.second);
+        if(QFile::exists(path)&&!QFile::remove(path))failures.append(entry.first);
+    }
+    if(options["permissionExceptions"].toBool()&&!m_settings->setPreference("browsing.permissionExceptions",QJsonObject{}))failures.append("site permissions");
+    if(options["downloads"].toBool()&&!m_downloads->clearHistory())failures.append("download history");
+    const QPointer<MainWindow> self(this);
+    if(options["pluginCredentials"].toBool())refreshPluginConfiguration();
+    if(!self)return;
+    m_settings->completeBrowsingDataClear(failures.isEmpty(),failures.isEmpty()?QString():"Some selected data was cleared, but these items failed: "+failures.join(", "));
+}
+void MainWindow::closeEvent(QCloseEvent* event){
+    bool discardSetupDrafts=false;
+    if(m_worktreeSettings&&m_worktreeSettings->isMutating()){
+        m_status->setText("Wait for the worktree operation to finish before closing.");event->ignore();return;
+    }
+    if(m_worktreeSettings&&m_worktreeSettings->hasUnsavedDrafts()){
+        const auto choice=QMessageBox::question(this,"Unsaved setup scripts","Discard the unsaved worktree setup scripts and close?",QMessageBox::Discard|QMessageBox::Cancel,QMessageBox::Cancel);
+        if(choice!=QMessageBox::Discard){event->ignore();return;}
+        // Retain drafts until all remaining close checks succeed.
+        discardSetupDrafts=true;
+    }
+    for(int i=0;i<m_tabs->count();++i)if(auto* editor=qobject_cast<EditorWidget*>(m_tabs->widget(i));editor&&!editor->requestClose()){event->ignore();return;}
+    for(auto* engine:std::as_const(m_engines))if(engine->isBusy())engine->cancel();
+    if(auto* s=current())s->draft=m_composer->toPlainText();
+    if(!saveSessions()){event->ignore();return;}
+    if(discardSetupDrafts)m_worktreeSettings->discardDrafts();
+    for(auto utility:std::as_const(m_utilities))if(utility)utility->cancel();
+    if(m_worktreeSetup)m_worktreeSetup->cancelAll();
+    QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("geometry",saveGeometry());settings.setValue("splitter",m_splitter->saveState());QMainWindow::closeEvent(event);
+}
+}

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "status": "Experimental native reference only; not part of production targets or full-suite totals.",
+  "license": "Project AGPL-3.0, see ../../../LICENSE. Preserve source attribution and pinned contract references.",
+  "sourceUnmodified": true,
+  "originalStage": "private/git-usage-stage",
+  "savedValidation": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "result": "audit/tests-final.txt",
+    "newValidationRun": false
+  },
+  "scopeAndLimits": "Unintegrated usage/identity journal and cleanup eligibility policy only. Does not remove worktrees or authorize filesystem roots. Unknown-history, recovery-floor and physical-identity restrictions remain. No host event wiring, mount sequencing or cleanup UI enabled.",
+  "dependencies": [
+    "Qt6::Core",
+    "Qt6::Test",
+    "Windows physical identity APIs",
+    "GitTypes.h copied only as historical standalone fixture context; production integration must use current src/git/GitTypes.h"
+  ],
+  "buildReference": "CMakeLists.stage.txt preserves the original standalone staged CMake byte-for-byte. ../CMakeLists.txt supplies explicit optional root targets via ADE_BUILD_EXPERIMENTS (default OFF). The libraries remain unlinked to ADE. Fresh exported-target validation is pending parent execution; earlier saved counts are not a new build claim.",
+  "supersededHistoricalDocuments": [
+    "audit/migration-manifest.json exclusions describe a future production migration, not this broader reference archive. No production cleanup is enabled."
+  ],
+  "excluded": [
+    "build artifacts",
+    "runtime profile/data",
+    "Qt or other dependency copies",
+    "rename-probe",
+    "unrelated stage sources"
+  ],
+  "files": [
+    {
+      "path": "src/git/WorktreeUsage.h",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsage.h",
+      "bytes": 2471,
+      "sha256": "cd7d5ead3e4e71be72b1aa31363d845e49a9189ad1beac1e459442a2cf62e626"
+    },
+    {
+      "path": "src/git/WorktreeUsage.cpp",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsage.cpp",
+      "bytes": 7071,
+      "sha256": "153b363f6557a6d4280244db8850dc67155be2becf0f9f3c81152400c85399f4"
+    },
+    {
+      "path": "src/git/WorktreeUsageJournal.h",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsageJournal.h",
+      "bytes": 1884,
+      "sha256": "bc7c5ecc6ab1ccfa04f9bce6b6b86088ecffa821fd365bdc932547f7ad5d748e"
+    },
+    {
+      "path": "src/git/WorktreeUsageJournal.cpp",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsageJournal.cpp",
+      "bytes": 13207,
+      "sha256": "e7136c267e1a1966c74763be1e4709262270ddbbfd54ce3be571b377ed167b5a"
+    },
+    {
+      "path": "src/git/WorktreeUsageIdentity.h",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsageIdentity.h",
+      "bytes": 528,
+      "sha256": "58a9ab24495ec5505b58658ca1db30e00f86cf162e09dee401e7b8f9f2b710dc"
+    },
+    {
+      "path": "src/git/WorktreeUsageIdentity.cpp",
+      "originalStagePath": "private/git-usage-stage/src/git/WorktreeUsageIdentity.cpp",
+      "bytes": 6975,
+      "sha256": "3c369e840cfb0a2a79b5e26c78dc47095193603f3392cb56ef053d566a7095fa"
+    },
+    {
+      "path": "src/git/GitTypes.h",
+      "originalStagePath": "private/git-usage-stage/src/git/GitTypes.h",
+      "bytes": 4106,
+      "sha256": "ead206a4ccd88a5e138bc7cebdf94465e74bd0ca3b854e55dbff30489fbef51d"
+    },
+    {
+      "path": "tests/test_git_usage.cpp",
+      "originalStagePath": "private/git-usage-stage/tests/test_git_usage.cpp",
+      "bytes": 18320,
+      "sha256": "578659934a9db8ee2d6535bf8675140b5b9d06bc4355ec1768dcea526a6dbe42"
+    },
+    {
+      "path": "CMakeLists.stage.txt",
+      "originalStagePath": "private/git-usage-stage/CMakeLists.txt",
+      "bytes": 761,
+      "sha256": "945f399c222b3648bf900411391137f8e866c8072d3c2d096716e973590b5a4d"
+    },
+    {
+      "path": "HANDOFF.md",
+      "originalStagePath": "private/git-usage-stage/HANDOFF.md",
+      "bytes": 7946,
+      "sha256": "d1ec62effa65b4672f725217c70b9beafd5e4d4b8f1087723cacfa6d79d37850"
+    },
+    {
+      "path": "audit/contract.json",
+      "originalStagePath": "private/git-usage-stage/audit/contract.json",
+      "bytes": 4696,
+      "sha256": "d8f515ae8b972d22a5a14e4ce1a5f58e382779de7e698031a8ff94686f205df7"
+    },
+    {
+      "path": "audit/migration-manifest.json",
+      "originalStagePath": "private/git-usage-stage/audit/migration-manifest.json",
+      "bytes": 3051,
+      "sha256": "f15ee7744b321ea53fdca8a46fe9e398bd2d44217054f61ed7104afafe6a7cec"
+    },
+    {
+      "path": "audit/tests-final.txt",
+      "originalStagePath": "private/git-usage-stage/audit/tests-final.txt",
+      "bytes": 2257,
+      "sha256": "92d90ad70b98a597de56a3380537a1e0dce1cc57a034dcb2c93dccdebf454e4b"
+    },
+    {
+      "path": "audit/tests-final.xml",
+      "originalStagePath": "private/git-usage-stage/audit/tests-final.xml",
+      "bytes": 3472,
+      "sha256": "a7ac572c25eafb3199b1586afae05e495d4498ad93febcf598cd24d5999811d3"
+    },
+    {
+      "path": "audit/storage-alias-before.txt",
+      "originalStagePath": "private/git-usage-stage/audit/storage-alias-before.txt",
+      "bytes": 1005,
+      "sha256": "bfda8db0deef506c351cfc444fca4da19d47f3b9b485485040b1d51c2e6bdf68"
+    },
+    {
+      "path": "audit/root-identity-before.txt",
+      "originalStagePath": "private/git-usage-stage/audit/root-identity-before.txt",
+      "bytes": 591,
+      "sha256": "f923e6b6bc51f959315be61c90ff9df1b34810abf57c7f5a31bae22e5872c0e4"
+    }
+  ]
+}

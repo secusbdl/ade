@@ -1,0 +1,16 @@
+/build*/
+/out/
+/upstream/
+/private/
+/test-results/
+/audit/*-build/
+/audit/*.zip
+/audit/*.nupkg
+*.o
+*.obj
+*.user
+*.log
+api_keys*
+*.dmp
+__pycache__/
+*.py[cod]

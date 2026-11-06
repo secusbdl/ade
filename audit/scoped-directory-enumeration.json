@@ -1,0 +1,74 @@
+{
+  "verified_on": "2026-11-05",
+  "defects": [
+    {
+      "operation": "readDirectory",
+      "observed": "A stale QFileInfo from a retargeted in-mount alias exposed OUTSIDE_ONLY_NAME.txt after the alias was restored before resolvePath; missing child destinations were accepted through the inside ancestor."
+    },
+    {
+      "operation": "glob",
+      "observed": "The same stale iterator path/type schedule returned OUTSIDE_ONLY_NAME.txt. grepSearch did not leak bytes because the final same-handle file read rejected the missing inside target."
+    },
+    {
+      "operation": "AttachmentFileBroker::list",
+      "observed": "Swapping the owned attachment directory at iterator start and during a later AttachmentStore root reopen returned OUTSIDE_ONLY_NAME.txt; restoring the root before the final canonical-string check bypassed that check."
+    }
+  ],
+  "before": {
+    "report": "private/raw-enumeration-stage/audit/before.txt",
+    "junit": "private/raw-enumeration-stage/audit/before.xml",
+    "source_manifest": "private/raw-enumeration-stage/audit/production-snapshot.json",
+    "passed": 3,
+    "failed": 3,
+    "scope": "Copied actual production implementations, actual Qt enumeration and actual fixture filesystem changes. Test-local wrappers control only the boundary timing; no validation results are forged."
+  },
+  "implementation": {
+    "reader": "src/core/ScopedDirectory.cpp",
+    "windows": "Open a directory with FILE_LIST_DIRECTORY and without FILE_SHARE_DELETE, validate the final handle path against the immutable selected scope, then enumerate FILE_ID_BOTH_DIR_INFO from that same handle. Retain the handle while processing descendants. Only an explicitly selected top-level workspace/apps alias may be followed; child and attachment-root opens use FILE_FLAG_OPEN_REPARSE_POINT and reject directory reparse points. Child paths come from the validated canonical parent plus native captured names.",
+    "consumers": [
+      "formatted read/ls manifests",
+      "raw readDirectory",
+      "glob",
+      "grepSearch",
+      "read-only att/ readdir"
+    ],
+    "broker": "Validate flat captured names and native type attributes directly while the directory remains pinned; never reopen an AttachmentStore path to validate a listing item. Invalid names, directories and reparse points error without a partial listing.",
+    "budgets": "Raw lists return at most 4096 entries and 64 Ki characters, depth 8; any bound error returns no partial JSON. Formatted manifests retain 10000-entry and requested-depth limits. Search captures at most 10000 entries, traverses at most depth 64, reads 512 KiB per file /8 MiB aggregate, and reports truncation. Search stops opening descendants after its captured-entry budget is exhausted."
+  },
+  "after": {
+    "raw_report": "test-results/raw-enumeration-fixed.txt",
+    "raw_junit": "test-results/raw-enumeration-fixed.xml",
+    "raw_passed": 13,
+    "raw_failed": 0,
+    "formatted_report": "test-results/directory-races-shared-reader.txt",
+    "formatted_junit": "test-results/directory-races-shared-reader.xml",
+    "formatted_passed": 9,
+    "formatted_failed": 0,
+    "cases": [
+      "Original raw/glob/att exploit schedules retained; fixed handle boundary also explicitly required to execute",
+      "Top-level alias retarget after validated handle path cannot expose outside names or bytes",
+      "Attachment directory replacement blocked while its listing handle is pinned",
+      "Raw 4097 entries returns error with no partial list; 4096 returns exact full JSON",
+      "Deep chain raw read errors; glob/grep report depth truncation while retaining ordinary matches",
+      "Recursive raw/glob/grep never descend through child junctions",
+      "Existing formatted alias, held worker cancellation, same-ID replacement and protected destroyed-owner regressions remain green"
+    ],
+    "attachment_name_rows": "Five additional broker rows added by native_core; final integrated execution recorded separately by parent."
+  },
+  "source_sha256": {
+    "src/core/ScopedDirectory.cpp": "c26ea590e8d2f5bcdc0abff4127e0b818e0c59373d5f04f3b37df4cd93074c34",
+    "src/core/ScopedDirectory.h": "df79a743b346dfacb2d585e532a98de5bd676c33c5d449a29a14b76105535548",
+    "src/core/ToolExecutor.cpp": "8e02b0bd224fa8f92e01be430fbb702efdb222de9ed7a08c228c453cb9ef6c1d",
+    "src/runtime/AttachmentFileBroker.cpp": "34fcf0a1c0bde77e8ce3a3b7633aa513c5294fcfe5981bf3dfd9dbdbf3506606",
+    "tests/test_raw_enumeration_races.cpp": "6984309e1cf3b8f6f0e4cacaa273e1dc1cf818a1be3ba0ccb59c58763e0f5680",
+    "tests/test_file_tools_races.cpp": "eb10d2f3e4c9c51ae2d4dd1b3acfcce64fdbf4b53405556ba8483ce40526b094",
+    "tests/test_attachment_mount.cpp": "480ecf0fbe663eb850c5ac87d4554cb3c7bef68b16e702776a4ae05213735f77"
+  },
+  "limits": [
+    "Windows MinGW deployment only; non-Windows fallback has no equivalent same-handle enumeration guarantee.",
+    "Directory content may change while open; this is a contained namespace capture, not an atomic snapshot of all directory entries.",
+    "Explicit root aliases resolve within the selected mount; concurrently replaced child links fail closed.",
+    "These deterministic schedules establish tested containment/lifecycle boundaries, not universal filesystem race freedom.",
+    "All mutations used owned temporary fixtures; no external paths, live credentials or services were accessed."
+  ]
+}

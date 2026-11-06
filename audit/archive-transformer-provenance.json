@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-05",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceSha256": {
+    "packages/agent-core/src/file-read-transformer/transformers/archive.ts": "736348d1750ca91a473818b0ae5d4260d1a54a2e46a4186df1ce7feeab47b1f6",
+    "packages/agent-core/src/file-read-transformer/format-directory-tree.ts": "092b1ed1df9d27e857448249c01c850d365cbb3863ab35f5fa35e814ac193cac",
+    "packages/agent-core/src/file-read-transformer/format-utils.ts": "7c537541df3d63b79df221b17357da668425b9cca18ecc3c7bc3f94f183c8a4e",
+    "pnpm-lock.yaml": "7d9ed765b62de592cd5c3160396ee49d8935ca44cc9430bd4650f14ab079ea05"
+  },
+  "zlib": {
+    "version": "1.3.2 (Qt)",
+    "target": "Qt6::ZlibPrivate",
+    "sdk": "C:/Qt/6.11.2-mingw64-static",
+    "archiveSha256": "70d4ccbf760e36d09b55a2424d049b86c35d17b2e18610577b82db8f996a6023",
+    "notice": "src/attachments/archive/ZLIB-NOTICE.txt",
+    "newExternalRuntime": false
+  },
+  "references": [
+    "https://raw.githubusercontent.com/thejoshwolfe/yauzl/3.3.0/index.js",
+    "https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT"
+  ],
+  "cp437": "128 high-byte mappings generated from Windows .NET Encoding.GetEncoding(437); no external implementation copied",
+  "noExtraction": true
+}

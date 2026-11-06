@@ -1,0 +1,22 @@
+********* Start testing of BeforeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BeforeTest::initTestCase()
+FAIL!  : BeforeTest::reasoningOnlyCancellation(openai) Compared values are not the same
+   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2
+D:/age/ADE/private/presentation-stage/tests/test_presentation_before.cpp(24) : failure location
+FAIL!  : BeforeTest::reasoningOnlyCancellation(anthropic) Compared values are not the same
+   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2
+D:/age/ADE/private/presentation-stage/tests/test_presentation_before.cpp(24) : failure location
+FAIL!  : BeforeTest::reasoningOnlyCancellation(google) Compared values are not the same
+   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2
+D:/age/ADE/private/presentation-stage/tests/test_presentation_before.cpp(24) : failure location
+FAIL!  : BeforeTest::reasoningOnlyCancellation(responses) Compared values are not the same
+   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2
+D:/age/ADE/private/presentation-stage/tests/test_presentation_before.cpp(24) : failure location
+PASS   : BeforeTest::cleanupTestCase()
+Totals: 2 passed, 4 failed, 0 skipped, 0 blacklisted, 461ms
+********* Finished testing of BeforeTest *********

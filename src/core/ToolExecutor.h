@@ -1,0 +1,59 @@
+#pragma once
+
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QObject>
+#include <QProcess>
+#include <QTimer>
+#include <atomic>
+#include <memory>
+#include "attachments/FileReadCapture.h"
+
+namespace ade {
+
+class ToolExecutor final : public QObject {
+    Q_OBJECT
+public:
+    explicit ToolExecutor(QObject *parent = nullptr);
+    ~ToolExecutor() override;
+    bool setWorkspace(const QString &path);
+    QString workspace() const { return m_workspace; }
+    bool setAppsDirectory(const QString &path);
+    QString appsDirectory() const { return m_appsDirectory; }
+    QString resolvePath(const QString &path, QString *error = nullptr) const;
+    static bool requiresApproval(const QString &name);
+    static QJsonArray definitions();
+    void setFileReadCommitter(FileReadCommitter committer) { if(m_id.isEmpty())m_fileReadCommitter=std::move(committer); }
+    void setAttachmentReadSource(FileReadSource source) { if(m_id.isEmpty())m_attachmentReadSource=std::move(source); }
+    bool hasAttachmentReadSource() const { return bool(m_attachmentReadSource); }
+    void execute(const QString &id, const QString &name, const QJsonObject &arguments);
+    void cancel();
+
+signals:
+    void completed(QString id, QString output, bool error, QJsonObject metadata = {});
+    void fileChanged(QString path, QByteArray before, QByteArray after);
+    void processOutput(QString id, QString output);
+
+private:
+    void finish(const QString &output, bool error = false, bool truncate = true, const QJsonObject &metadata = {});
+    QString rootForPath(const QString &requested, QString *relative = nullptr) const;
+    void executeFileTool(const QString &name, const QJsonObject &arguments);
+    void executeCommand(const QJsonObject &arguments);
+    void drainProcess();
+    void closeJob();
+    QString m_workspace;
+    QString m_appsDirectory;
+    QString m_id;
+    QProcess *m_process = nullptr;
+    QTimer m_processTimeout;
+    QByteArray m_processOutput;
+    bool m_outputTruncated = false;
+    bool m_commandTimedOut = false;
+    quint64 m_generation = 0;
+    std::shared_ptr<std::atomic_bool> m_fileReadCancelled;
+    FileReadCommitter m_fileReadCommitter;
+    FileReadSource m_attachmentReadSource;
+    void *m_job = nullptr;
+};
+
+} // namespace ade

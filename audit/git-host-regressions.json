@@ -1,0 +1,33 @@
+{
+  "status": "Verified by root integrated target: 13 passed, 0 failed, 0 skipped",
+  "test_source": "tests/test_git_host.cpp",
+  "test_slots": 11,
+  "verified_run": {
+    "evidence": "test-results/git-host-fixed.txt",
+    "total_passed_including_init_cleanup": 13,
+    "failed": 0,
+    "skipped": 0,
+    "elapsed_ms": 21245,
+    "warnings": ["Offscreen platform propagateSizeHints/raise limitations", "QFileSystemWatcher Access is denied when the linked target behind a watched junction is removed", "QObject wildcard disconnect warning from BrowserWidget teardown"],
+    "scope": "Separate offscreen test process; temporary Git repos, local HTTP fixtures and fixture ConPTY shell only. No user repository mutation or real model request."
+  },
+  "production_edits": "None by this review agent in this phase; parent owns host fixes",
+  "first_run": {
+    "result": "Test-harness crash, diagnosed and fixed",
+    "reproduction_log": "audit/git-host-before.txt",
+    "case": "removedLegacyJunctionDetachesAllAffectedChats",
+    "debugger": "C:/mingw64/bin/gdb.exe -batch -ex run -ex bt --args build-next/bin/test_git_host.exe removedLegacyJunctionDetachesAllAffectedChats -o -,txt",
+    "observed_stack": ["QAbstractItemView::model() const", "GitHostTest::removedLegacyJunctionDetachesAllAffectedChats()"],
+    "cause": "The Files view had not yet been opened or parented; findChild returned null and the test dereferenced it.",
+    "test_fix": "Open the actual Workspace files action before inspecting the view, assert its pointer, and retain that pointer across removal. Also applied to noWorkspaceChatClearsFileTree."
+  },
+  "additional_source_finding": {
+    "id": "unopened-files-view-lifetime",
+    "source": "src/ui/MainWindow.cpp buildUi and destructor",
+    "problem": "The Files view is allocated without a parent. When never opened in the tab widget, it remains an unowned hidden top-level widget after MainWindow is destroyed.",
+    "fix_by_parent": "Constructed with MainWindow ownership and explicitly hidden until mounted into a tab; regression passes.",
+    "regression": "unopenedFilesViewIsDestroyedWithWindow retains a QPointer to the newly created view and requires destruction with the host; it cleans a surviving widget after recording the failing condition."
+  },
+  "source_findings_already_fixed_by_parent": ["junction aliases persisted as canonical paths; removal captures affected chat IDs before target disappears", "unknown historical usage keeps cleanup disabled", "empty-workspace chat detaches the Files model"],
+  "remaining_limit": "If sessions.json persistence fails after Git removal succeeded, in-memory chat references detach but stale persisted references can survive. The error is visible; a future deletion journal or reconciliation is needed for stronger recovery."
+}

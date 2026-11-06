@@ -1,0 +1,18 @@
+{
+  "read_lifecycle_review": {
+    "scope": "Read-only bounded review of private FileReadCapture/FileReadSnapshotStore and AttachmentPipeline ownership paths; no edits.",
+    "findings": [
+      "Failed clone into populated target invalidated target lease before returning failure.",
+      "Empty source clone returned success without validating populated destination."
+    ],
+    "confirmation": "native_core reproduced both in private/read-lifecycle-stage/clone-before.txt then fixed destination preflight/revocation ordering. Owner reports full stage21/21 pass; no independent rerun claimed.",
+    "production_status": "Not migrated; staged ToolExecutor must rebase onto shared ScopedDirectory and current AgentEngine lifecycle."
+  },
+  "mutation_plan_files": [
+    "contract-inventory.json",
+    "native-architecture.json",
+    "fixture-plan.json",
+    "source-manifest.json"
+  ],
+  "all_mutation_tests_status": "Planned only; not implemented or executed."
+}

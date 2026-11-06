@@ -1,0 +1,87 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../.github/assets/logo-combo-dark.svg">
+  <img src="../.github/assets/logo-combo.svg" alt="stagewise" height="60" />
+</picture>
+
+<h3>面向开源模型的 Agentic IDE</h3>
+
+<p>
+  <a href="../README.md">English</a> ·
+  简体中文 ·
+  <a href="./README.de.md">Deutsch</a> ·
+  <a href="./README.ja.md">日本語</a> ·
+  <a href="./README.es.md">Español</a> ·
+  <a href="./README.ko.md">한국어</a> ·
+  <a href="./README.pt.md">Português</a> ·
+  <a href="./README.fr.md">Français</a> ·
+  <a href="./README.it.md">Italiano</a> ·
+  <a href="./README.hi.md">हिन्दी</a> ·
+  <a href="./README.ru.md">Русский</a> ·
+  <a href="./README.uk.md">Українська</a>
+</p>
+
+<p>
+  <a href="https://github.com/stagewise-io/stagewise/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/stagewise" /></a>
+  <a href="https://github.com/stagewise-io/stagewise/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/stagewise-io/stagewise" /></a>
+  <a href="https://discord.gg/gkdGsDYaKA"><img alt="加入 Discord" src="https://img.shields.io/discord/1229378372141056010?label=Discord&logo=discord&logoColor=white" /></a>
+  <a href="https://x.com/stagewise_io"><img alt="X (前 Twitter) 关注" src="https://img.shields.io/twitter/follow/stagewise_io" /></a>
+</p>
+
+</div>
+
+![stagewise 演示](../apps/website/src/app/%28home%29/_components/feature-images/full-demo-dark.webp)
+
+## 关于项目
+
+**stagewise** 是一款面向开发者的开源 Agentic IDE，内置编程智能体。
+
+- **在同一工具中浏览与构建** — 无需切换上下文
+- **使用编程智能体**，该智能体可**完整访问你标签页的控制台与调试器**
+- **进行临时测试修改**，或**连接代码库**以实现永久编辑
+- **逆向工程**任意网站的组件、样式系统和调色板
+- **IDE 集成**，在您喜爱的编辑器中查看并应用代码更改
+- **自带 API 密钥（BYOK）** — 全面支持所有 AI 服务商
+
+## 快速开始
+
+从 [stagewise.io](https://ade.stagewise.io) 下载 stagewise，并按照简短的新手引导完成设置。
+
+## 使用你的编程订阅
+
+支持为所有主流模型服务商自带 API 密钥（BYOK）——还可以注册完全自定义的服务商（包括本地推理！）与自定义模型。
+
+### 一键导入 —— 直接使用现有订阅
+
+通过一个 API 密钥接入以下任意订阅，即可在 stagewise 中解锁该服务商提供的所有模型。
+
+| **订阅** | **服务商** | **主推模型** | **控制台** |
+| -------- | ---------- | ------------ | ---------- |
+| Kimi | [Moonshot AI](https://platform.moonshot.ai) | Kimi K3、Kimi K2.7 Code、Kimi K2.6、Kimi K2.5 | [获取 API 密钥](https://platform.moonshot.ai/console/api-keys) |
+| Qwen 编程计划 | [阿里云 DashScope](https://dashscope.console.aliyun.com) | Qwen 3-Coder 30B-A3B、Qwen 3-32B | [获取 API 密钥](https://dashscope.console.aliyun.com/apiKey) |
+| MiniMax | [MiniMax](https://platform.minimax.io) | MiniMax M3, MiniMax M2.7 | [获取 API 密钥](https://platform.minimax.io/user-center/basic-information/interface-key) |
+| Xiaomi MiMo | [Xiaomi MiMo](https://platform.xiaomimimo.com) | MiMo-V2.5-Pro、MiMo-V2.5 | [获取 API 密钥](https://platform.xiaomimimo.com/#/console/plan-manage) |
+| Mistral | [Mistral](https://console.mistral.ai) | Mistral Medium 3.5、Mistral Large 3、Mistral Small 4、Codestral | [获取 API 密钥](https://console.mistral.ai/api-keys) |
+
+### stagewise 账户（即将停用）
+
+> [!NOTE]
+> stagewise 账户服务将于 2026 年 11 月底停止。要继续使用 stagewise，请改为自带订阅或 API 密钥——参见上方选项。
+
+## 许可证
+
+stagewise 由 stagewise GmbH 开发，基于 AGPLv3 许可证发布。
+
+有关许可证模式的更多信息，请访问 [GNU 许可证常见问题解答](https://www.gnu.org/licenses/gpl-faq.html)。
+
+对于超出 AGPLv3 许可范围的使用场景，欢迎[联系我们](mailto:sales@stagewise.io)。
+
+## 问题反馈
+
+如发现 Bug 或有新想法，欢迎[提交 Issue](https://github.com/stagewise-io/stagewise/issues/new)。
+
+## 社区与支持
+
+- [加入我们的 Discord](https://discord.gg/gkdGsDYaKA)
+- 在 [GitHub 上提交 Issue](https://github.com/stagewise-io/stagewise/issues/new) 获取开发支持。

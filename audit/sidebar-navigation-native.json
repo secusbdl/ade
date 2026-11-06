@@ -1,0 +1,54 @@
+{
+  "scope": "Native sidebar grouping and persistent pins, with asynchronous trusted Git worktree projection",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceContracts": [
+    "apps/browser/src/ui/screens/main/_lib/agent-list-model.ts",
+    "apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx"
+  ],
+  "implemented": [
+    "Local-calendar age groups; stable created/lastMessage activity ordering and backward-compatible activity timestamp migration",
+    "Ordered global pins, context pin/unpin/reorder, durable preferences, archive/delete unpin after successful session commit",
+    "Workspace/repository/worktree grouping, empty known worktrees, collapse preferences, active selection reveal",
+    "Bounded asynchronous Git inspection; old service/topology result retirement and immediate cached-label removal on detach"
+  ],
+  "regressionsBefore": [
+    "reference-integration-details/sidebar-git-before.txt",
+    "reference-integration-details/sidebar-detach-before.txt"
+  ],
+  "validation": {
+    "initialModelCases": 19,
+    "initialNavigationCases": 9,
+    "fullIntegration": "reference-integration.json"
+  },
+  "limits": [
+    "Pin/workspace drag-and-drop and worktree pagination remain unimplemented",
+    "Search filters locally instead of opening the upstream command center",
+    "Native sidebar reflects the single-workspace conversation model; full multi-mount support remains a separate gap"
+  ],
+  "files": [
+    {
+      "path": "src/ui/SidebarModel.cpp",
+      "sha256": "2f4399e0fd885291cecbc946e4ec94a3edd478c3d6ee536e48df1cc571a6b51a"
+    },
+    {
+      "path": "src/ui/SidebarModel.h",
+      "sha256": "07c24ba5662e44554da0d7437040fe1b8442098d13e20323c86684a015c87daf"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.cpp",
+      "sha256": "b083f47461722f4303624938c4bfe7f3b9eb99dca4c018bcc292a711cd5a45b1"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.h",
+      "sha256": "6253e985b7f39102c69bd17de98f818e320a889c935adf1b2fcb8e8716994c53"
+    },
+    {
+      "path": "tests/test_sidebar_model.cpp",
+      "sha256": "8d8e6915b2bbb1b8c9d33e1bbb3a7d3aec03393a624824c2cf3d8ab5b8e2fcff"
+    },
+    {
+      "path": "tests/test_sidebar_navigation.cpp",
+      "sha256": "e6ec99cb25b75e5f9d778260e085b8316f26a3b72b00df5ed7fa61fb5aa4a5f9"
+    }
+  ]
+}

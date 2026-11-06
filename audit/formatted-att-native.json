@@ -1,0 +1,115 @@
+{
+  "status": "Narrow production migration complete; six focused shared-build suites passed. Full application integration pending next presentation/layout integration.",
+  "root": "D:\\age\\ADE",
+  "upstream": {
+    "version": "1.31.1",
+    "commit": "17a0123a0e896885465df36169457199d5225eb5"
+  },
+  "sources": [
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts:81-85",
+      "behavior": "att is a static read-only mount bound through hostPaths.agentAttachmentsDir(deps.agentInstanceId), independent of workspace mounts."
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts:330-373",
+      "behavior": "read validates ranges/resolves with read permission and returns a compact loaded-context message. ls resolves with read permission and returns no payload."
+    },
+    {
+      "path": "packages/agent-core/src/file-read-transformer/resolve-path.ts:28-32",
+      "behavior": "att/blob references resolve using the host-owned current agent ID."
+    },
+    {
+      "path": "packages/agent-core/src/file-read-transformer/path-references.ts:129-161",
+      "behavior": "Completed tool-read calls retain independent per-call range/preview requests; this extractor does not include tool-ls."
+    }
+  ],
+  "implementation": [
+    "AttachmentFileBroker::formattedSource returns a value-only FileReadSource closure fixed to the broker agent and accepted physical data/root paths; it captures no QObject.",
+    "ToolExecutor routes only formatted read/ls att requests before workspace resolution, copies the closure and existing committer into its cancellable worker, and publishes only the original generation/request result.",
+    "Capture pins the attachment directory through the observation. File bodies/mtime are read once through AttachmentStore's existing bounded same-handle reader. Listing uses names from the validated directory handle and refuses directories, reparse entries and invalid flat blob names.",
+    "The existing snapshot committer lease, input hash, compact acknowledgment, metadata and pipeline provider reinjection are reused. Original bytes/typed manifests are absent from saved message JSON.",
+    "FileReadSnapshotStore explicitly validates att root as a directory and flat att/blob paths as files. Existing clone/remove/revocation preserves the new namespace without new context APIs.",
+    "AgentEngine exposes read/ls with an att reader even without workspace/apps, but does not advertise unrelated mutation/command tools in that configuration. Raw sandbox att reads continue through their existing separate broker."
+  ],
+  "api": {
+    "FileReadCapture.h": "using FileReadSource = std::function<bool(const QString& tool,const QString& path,const FileReadParams&,FileReadCapture*,const std::atomic_bool*,QString*)>;",
+    "AttachmentFileBroker.h": "FileReadSource formattedSource() const;",
+    "ToolExecutor.h": "void setAttachmentReadSource(FileReadSource); bool hasAttachmentReadSource() const;",
+    "AgentEngine.h": "void setAttachmentReadSource(FileReadSource);",
+    "host": "AgentToolHost constructor installs the fixed broker reader. No new tool names, result signal arities, session fields or external protocol completion APIs."
+  },
+  "migrateOnly": [
+    "src/attachments/FileReadCapture.h",
+    "src/attachments/FileReadSnapshotStore.cpp",
+    "src/core/ToolExecutor.h",
+    "src/core/ToolExecutor.cpp",
+    "src/core/AgentEngine.h",
+    "src/core/AgentEngine.cpp",
+    "src/runtime/AttachmentFileBroker.h",
+    "src/runtime/AttachmentFileBroker.cpp",
+    "src/runtime/AgentToolHost.cpp",
+    "tests/test_formatted_att.cpp"
+  ],
+  "mergeRequirements": [
+    "Apply narrow changed hunks, never overwrite production from all staged copies. Copied ProviderService, ContextLoader and other attachment files are independent-build scaffolding only.",
+    "Engine staged baseline was refreshed after parent changed submitWithAttachments to return bool. Retain all latest acceptance, history recovery, queued network and callback lifetime guards during later migration.",
+    "Root test target: qt_add_executable(test_formatted_att tests/test_formatted_att.cpp); target_link_libraries(test_formatted_att PRIVATE ade_host Qt6::Test Qt6::ZlibPrivate); add_test(NAME native_formatted_att COMMAND test_formatted_att -o <Testing>/native_formatted_att.txt,txt); timeout45. QCoreApplication fixture; this new suite requires no live credentials, display or worker.",
+    "Existing targets already compile the modified source/header files. No new runtime dependency/license is introduced. The archive fixture uses Qt bundled zlib only."
+  ],
+  "evidence": {
+    "before": {
+      "report": "audit/test_formatted_att_before.txt",
+      "counts": {
+        "passed": 2,
+        "failed": 4
+      },
+      "meaning": "Same actual-host/protocol fixture linked already-built production libraries without building shared tree: every supported protocol failed the exact ranged-content assertion; tool result reported att mount unavailable."
+    },
+    "formatted": {
+      "report": "audit/test_formatted_att.txt",
+      "counts": {
+        "passed": 33,
+        "failed": 0,
+        "skipped": 0
+      },
+      "milliseconds": 2692
+    },
+    "readLifecycle": {
+      "report": "audit/test_read_runtime.txt",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0
+      },
+      "milliseconds": 2098
+    },
+    "rawAttachmentMount": {
+      "report": "audit/test_attachment_mount.txt",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0
+      },
+      "milliseconds": 611
+    },
+    "peerReview": "license_review inspected changed source for fixed-agent/root/cancel boundaries; no additional concrete defect found. Source-only review, not an independent test rerun.",
+    "fixtureCoverage": "Four-provider ranged reinjection after deletion, typed directory history after clone/deletion, image/binary/ZIP/JAR/WAR/TAR/TGZ rendering, changed fork blob versus cloned original, foreign chat denial, att-only tool availability, traversal/ADS/reserved name/nesting rejection, mutation refusal, unexpected flat entries, canceled reused IDs, lease revocation, snapshot kind/path validation, empty/oversize bytes and Windows root/junction replacement.",
+    "sharedIntegration": {
+      "report": "audit/formatted-att/shared-integration.xml",
+      "suites": 6,
+      "failures": 0,
+      "elapsedSeconds": 26.5
+    }
+  },
+  "limits": [
+    "This closes formatted access through the existing native flat att namespace; it does not claim unrestricted upstream path equivalence. Native rejects nested blob directories, backslashes and reserved/invalid Windows blob names.",
+    "Native formatted captures remain bounded to 4 MiB per file; listing captures at most 4096 flat entries and the existing transformer renders its bounded tree. Archives are listings only, never extraction or execution.",
+    "Native ls uses the existing typed manifest+compact acknowledgment lifecycle; pinned upstream ls returns no payload and path-references extracts only read. This is an intentional existing native difference, not newly claimed source parity.",
+    "Snapshot eviction remains bounded by existing store policy. Clone/restart guarantees apply while original snapshots remain available; malformed/missing metadata yields existing unavailable-context handling.",
+    "Filesystem pinning is strongest on the target Windows implementation. Non-Windows same-handle guarantees are weaker. Concurrent in-place writers can produce a bounded observed byte sequence; this is not a globally atomic filesystem transaction.",
+    "Raw Buffer/text att reads stay separate and uncaptured. PDF/Office/RAW/disk/AST transformations and other previously documented unsupported codecs are unchanged.",
+    "Explicit tool reads identify the type from the actual blob filename; they do not recover the original friendly name from old attachment-reference metadata. Existing generated imports retain only the final suffix, so a compound .tar.gz import stored as .gz can lose archive inference on later explicit read. This existing filename/catalog gap remains; .tgz and the tested archive extensions are supported.",
+    "Fixtures use local generated files and loopback providers only. Six focused production suites passed; full application integration remains pending the presentation/layout integration."
+  ],
+  "evidenceDirectory": "audit/formatted-att"
+}

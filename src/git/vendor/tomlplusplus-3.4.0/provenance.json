@@ -1,0 +1,15 @@
+{
+  "name": "toml++",
+  "version": "3.4.0",
+  "upstream": "https://github.com/marzer/tomlplusplus",
+  "tag": "v3.4.0",
+  "license": "MIT",
+  "copyright": "Mark Gillard",
+  "retrieved": "2026-11-05",
+  "files": {
+    "toml.hpp": {"url": "https://raw.githubusercontent.com/marzer/tomlplusplus/v3.4.0/toml.hpp", "sha256": "6b5172ad4dd6519aec67b919181fa7a38a2234131e5b2afa232dfe444819783e"},
+    "LICENSE": {"url": "https://raw.githubusercontent.com/marzer/tomlplusplus/v3.4.0/LICENSE", "sha256": "529bc3900a9571e49db285b0df432397e70b881cc3bf48de6667ae74ff4b06d8"}
+  },
+  "modifications": "None. Original amalgamated header and license.",
+  "purpose": "Native TOML parsing for upstream-compatible Codex worktree setup fallback. Header-only; no added runtime."
+}

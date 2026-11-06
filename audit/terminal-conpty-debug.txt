@@ -1,0 +1,41 @@
+********* Start testing of TerminalTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TerminalTest::initTestCase()
+FAIL!  : TerminalTest::interactiveConPtyAndResize() 'model.plainText().contains(QString::fromUtf8("ECHO:日本😀"))' returned FALSE. (READY
+ECHO:hello
+READY
+ECHO:hello
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SIZE:93x31
+ECHO:日本��)
+D:/age/ADE/tests/test_terminal.cpp(59) : failure location
+PASS   : TerminalTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 18590ms
+********* Finished testing of TerminalTest *********

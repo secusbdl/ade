@@ -1,0 +1,28 @@
+{
+  "verified_on": "2026-11-05",
+  "implementation": ["src/ui/DownloadsPage.h", "src/ui/DownloadsPage.cpp"],
+  "test_source": "tests/test_downloads.cpp",
+  "contract": {
+    "lifetime": "One DownloadsPage manager per application data directory, attached once to each BrowserWidget. Hiding the page leaves transfers running. Manager teardown cancels its owned transfers and records unfinished work as interrupted.",
+    "selection": "Default native save-file dialog obtains an explicit destination and overwrite confirmation. A destination-chooser seam lets the controlled tests select only temporary fixture paths.",
+    "actions": ["pause", "resume live operation", "cancel", "open completed existing file", "show containing folder", "search", "remove selected terminal history", "clear finished history"],
+    "history": "Atomic downloads.json with version1,500-entry maximum,4MiB file bound, strict record validation, and optimistic stale-write detection. Corrupt/externally changed history is preserved instead of overwritten.",
+    "no_automatic_deletion": "Downloaded files are never deleted. History entries are removed only by explicit history actions. The500-entry bound refuses new transfers with a clear-history notice rather than automatically evicting old history.",
+    "clearing": "clearHistory preserves all live operations, including paused/resumable interrupted transfers. History-only removal rolls back in-memory changes if persistence fails.",
+    "restart": "Completed records restore normally; unfinished records restore as Interrupted with resume unavailable. A closed browser's native operation cannot be reconstructed from persisted metadata."
+  },
+  "verification": {
+    "result": "10 passed,0 failed,0 skipped in8042ms",
+    "logs": ["test-results/downloads-tests.txt", "test-results/downloads-tests.xml"],
+    "fixture": "Actual WebView2 downloads from a loopback HTTP server; native destination chooser replaced with explicit temporary paths only in tests. QDesktopServices file URLs intercepted without opening files or launching applications.",
+    "cases": ["exact transferred bytes and persistence/reload", "idempotent attachBrowser", "Open/Show folder route to selected local file/folder", "search and history removal preserve files", "save-dialog cancel", "existing destination refusal and explicit overwrite", "actual pause/resume/cancel UI actions", "clearHistory preserves active transfers", "restart interruption and disabled invalid Open/Resume", "corrupt/stale history preservation", "browser tab closure settles records", "manager deletion from downloadAdded signal", "500-entry history limit does not evict records"]
+  },
+  "upstream_audit": {
+    "commit": "17a0123a0e896885465df36169457199d5225eb5",
+    "contract_states": ["in_progress", "complete", "cancelled", "interrupted"],
+    "native_states": ["awaiting-path", "in-progress", "paused", "completed", "canceled", "interrupted"],
+    "observed": "Pinned upstream defines download results/control metadata (filename,URL,targetPath,bytes,state,active/paused/resumable flags) and Chromium-history download-table clearing. This native page implements those user-facing lifecycle concepts with its own WebView2 state adapter and JSON persistence. No dedicated transfer-handler or download-page implementation was found in the pinned source search, so exact UI parity is not asserted.",
+    "sources": ["upstream/stagewise/apps/browser/src/shared/karton-contracts/pages-api/types.ts", "upstream/stagewise/apps/browser/src/shared/karton-contracts/ui/index.ts", "upstream/stagewise/apps/browser/src/backend/services/history/index.ts", "upstream/stagewise/apps/browser/src/backend/services/pages.ts"]
+  },
+  "remaining_gaps": ["Cross-restart transfer resume/restart", "upstream speed-history graphs and transfer ETA", "SQLite/Chromium download-history migration", "full upstream visual parity"]
+}

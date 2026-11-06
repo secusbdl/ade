@@ -1,0 +1,36 @@
+{
+  "verified_on": "2026-11-05",
+  "defect": "Directory capture validated and pinned an opened Windows target handle but then enumerated the original path using QDirIterator. An allowed in-mount junction alias could be retargeted without renaming the pinned target. Shallow/preview listing then exposed filenames from a separate outside fixture.",
+  "boundary_proof": "audit/directory-path-pin-proof.json",
+  "deterministic_test": "tests/test_file_tools_races.cpp",
+  "test_mechanism": "The test translation unit includes the actual ToolExecutor.cpp with local CreateFileW/GetFinalPathNameByHandleW wrappers. Windows headers are included first, so the wrappers call the original APIs. Only the controlled FILE_LIST_DIRECTORY fixture handle triggers mutation, immediately after the final canonical path buffer is filled. Production has no test hook or altered authority.",
+  "before": {
+    "report": "test-results/directory-alias-before.txt",
+    "junit": "test-results/directory-alias-before.xml",
+    "source": "Private reconstruction of the reviewed old captureDirectory helper inside the current asynchronous adapter; not an earlier Git commit.",
+    "passed": 2,
+    "failed": 4,
+    "observed": "Shallow ls and directory preview returned OUTSIDE_ROOT_MARKER.txt. Recursive ls and full directory read failed after child path validation detected the retargeted alias. The four tests require the originally validated directory to remain readable with no outside marker."
+  },
+  "fix": "Windows captureDirectory now enumerates FILE_ID_BOTH_DIR_INFO records from the validated handle using GetFileInformationByHandleEx. Recursive opens use the validated canonical directory path plus each contained child name and validate a fresh child handle. File contents already use same-handle scoped reads. Formatted captures execute on QtConcurrent with immutable arguments, a shared atomic cancellation flag and a context-owned QFutureWatcher.",
+  "after": {
+    "report": "test-results/directory-races-final.txt",
+    "junit": "test-results/directory-races-final.xml",
+    "passed": 9,
+    "failed": 0,
+    "tested_tool_executor_sha256": "2c75c8125bc923c7195e17e546b462109a1a8e709c42e2897a16c0d03ddc39a1",
+    "cases": [
+      "Shallow/recursive ls and full/preview directory read retain owned markers after alias retargeting",
+      "Cancel while the actual worker is held at an opened directory boundary yields only the cancellation",
+      "A replacement using the same request ID completes while the obsolete worker remains held and receives no stale completion after release",
+      "Destroying ToolExecutor while held returns promptly; its storage is changed to PAGE_NOACCESS before the worker resumes and completes without accessing it"
+    ]
+  },
+  "limits": "All path mutation was confined to owned temporary fixtures. The held-worker tests establish the tested cancellation/destruction boundaries; they do not prove universal filesystem race freedom or bounded latency of arbitrary operating-system calls. Parent integrated suite results and later source revisions are tracked separately.",
+  "shared_reader_followup": {
+    "audit": "audit/scoped-directory-enumeration.json",
+    "report": "test-results/directory-races-shared-reader.txt",
+    "passed": 9,
+    "failed": 0
+  }
+}

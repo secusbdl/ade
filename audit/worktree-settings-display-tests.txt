@@ -1,0 +1,8 @@
+********* Start testing of WorktreeSettingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorktreeSettingsTest::initTestCase()
+QWARN  : WorktreeSettingsTest::columnsKeepStatusVisibleAtNarrowWidths() This plugin does not support propagateSizeHints()
+PASS   : WorktreeSettingsTest::columnsKeepStatusVisibleAtNarrowWidths()
+PASS   : WorktreeSettingsTest::cleanupTestCase()
+Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 2009ms
+********* Finished testing of WorktreeSettingsTest *********

@@ -1,0 +1,283 @@
+{
+  "source": "upstream/stagewise/apps/browser/src/shared/available-models.ts",
+  "aliases": {
+    "smart": "glm-5.2",
+    "quick": "gemini-3.5-flash",
+    "default": "deepseek-v4-pro"
+  },
+  "models": [
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-opus-5.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-sonnet-5.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-opus-5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-fable-5.1"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-fable-5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-opus-4.8"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-opus-4.7"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-opus-4.6"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-6.1-sol"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-6-astra"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-6-sol"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-6-luna"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.6-sol"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.6-terra"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.6-luna"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.4"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3.1-pro-preview"
+    },
+    {
+      "image": true,
+      "constraintFamily": "OpenAi",
+      "id": "gpt-5.3-codex"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-sonnet-5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-sonnet-4.6"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "kimi-k3"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Google",
+      "id": "kimi-k2.7-code"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "kimi-k2.6"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "kimi-k2.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "OpenAi",
+      "id": "gpt-5.3-chat"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.4-mini"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3.8-flash"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3.5-flash-lite"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3.5-flash"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3-flash-preview"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Anthropic",
+      "id": "claude-haiku-4.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "gemini-3.1-flash-lite"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Gpt54",
+      "id": "gpt-5.4-nano"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "qwen3-32b"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "qwen3-coder-30b-a3b-instruct"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "deepseek-v4-pro"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "deepseek-v4.1-flash"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "deepseek-v4-flash"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "glm-5.3"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "glm-5.2"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "glm-5.1"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Google",
+      "id": "glm-5v-turbo"
+    },
+    {
+      "image": true,
+      "constraintFamily": "TenMiB",
+      "id": "minimax-m3"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "minimax-m2.7"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "MiniMax-M2"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "mimo-v2.5-pro"
+    },
+    {
+      "image": true,
+      "constraintFamily": "TenMiB",
+      "id": "mimo-v2.5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "mistral-large-2512"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "mistral-medium-3-5"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "mistral-small-2603"
+    },
+    {
+      "image": false,
+      "constraintFamily": "Native",
+      "id": "codestral-2508"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "grok-4.7"
+    },
+    {
+      "image": true,
+      "constraintFamily": "Native",
+      "id": "grok-4.5"
+    }
+  ],
+  "nativeImageByteCeiling": 20971520,
+  "sourceSha256": "b3cde89af8c99d850aa60e62ee6cb0c1a80151de6c33705df0facd21fe1db884",
+  "commit": "17a0123a0e896885465df36169457199d5225eb5"
+}

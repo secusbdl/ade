@@ -1,0 +1,47 @@
+{
+  "status": "Frozen final narrow lifetime follow-on; apply after tab-followon.patch",
+  "before": {
+    "registration": {
+      "exitCode": -1073741819,
+      "hex": "0xc0000005",
+      "stack": "QTabWidget::addTab called from the deleted MainWindow::addBrowserTab after BrowserToolBridge::tabsChanged"
+    },
+    "activation": {
+      "exitCode": -1073741819,
+      "hex": "0xc0000005",
+      "firstGuardAttempt": "Post-call guard alone was insufficient: Qt QTabBar::insertTab resumed after currentChanged observer destroyed its owner."
+    }
+  },
+  "change": "Parent provisional page/browser before registration. Check QPointer ownership after callback boundaries. Suppress QTabWidget currentChanged during internal insertion/selection, then publish the final selection once after Qt returns; guard afterwards. Existing navigation/permission/history logic preserved.",
+  "after": {
+    "ui": "11 passed, 0 failed, 1 explicit real-WebView skip; 1774 ms; process exit 0",
+    "realWebView": "3 passed, 0 failed, 0 skipped; 1455 ms; process exit 0",
+    "regression": "Both direct owner-deletion rows pass and assert provisional BrowserWidget was owned and destroyed."
+  },
+  "evidence": [
+    "audit/browser-open-before-registration.txt",
+    "audit/browser-open-before-activation.txt",
+    "audit/browser-open-before-stack.txt",
+    "audit/browser-open-activation-firstfix-stack.txt",
+    "audit/browser-open-ui-final.txt",
+    "audit/browser-open-ui-final.xml",
+    "audit/browser-open-real-final.txt",
+    "audit/browser-open-real-final.xml"
+  ],
+  "files": [
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "179c092b8c24c74faaa6a3dcd8428ba39db827d42e2771f84ce1aee33cc032b8"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "4513aa9e21b32d343f4e84cce1d9954863a967f8f2a6dfd33814f0d64b64c21e"
+    }
+  ],
+  "limits": [
+    "Narrowly tests deletion during BrowserToolBridge registration and QTabWidget currentChanged through the scoped external-link route; not a universal Qt/browser reentrancy audit.",
+    "Historical ordinary fallback shares this guarded opening function; healthy actual localhost close/reopen behavior was rerun.",
+    "No real user data, credentials, or external page requests.",
+    "Real WebView fixture still reports transient temporary-profile cleanup warning; no matching fixture browser/test processes remained after completion."
+  ]
+}

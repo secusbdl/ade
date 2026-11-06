@@ -1,0 +1,20 @@
+{
+  "version": 6,
+  "configurePresets": [{
+    "name": "mingw-static",
+    "generator": "Ninja",
+    "binaryDir": "${sourceDir}/build",
+    "cacheVariables": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CXX_COMPILER": "$penv{ADE_TOOLCHAIN_DIRECTORY}/g++.exe",
+      "CMAKE_C_COMPILER": "$penv{ADE_TOOLCHAIN_DIRECTORY}/gcc.exe",
+      "CMAKE_MAKE_PROGRAM": "$penv{ADE_TOOLCHAIN_DIRECTORY}/ninja.exe",
+      "CMAKE_PREFIX_PATH": "$penv{ADE_QT_PREFIX}",
+      "OPENSSL_ROOT_DIR": "$penv{ADE_OPENSSL_ROOT}",
+      "OPENSSL_USE_STATIC_LIBS": "TRUE"
+    },
+    "environment": {"PATH": "$penv{ADE_TOOLCHAIN_DIRECTORY};$penv{ADE_QT_PREFIX}/bin;$penv{PATH}"}
+  }],
+  "buildPresets": [{"name": "mingw-static", "configurePreset": "mingw-static", "jobs": 3}],
+  "testPresets": [{"name": "mingw-static", "configurePreset": "mingw-static", "output": {"outputOnFailure": true}}]
+}

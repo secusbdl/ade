@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "createdDate": "2026-11-06",
+  "purpose": "Original neutral text monograms identifying integration settings. These are not service logos, Nucleo assets or ADE product marks.",
+  "author": "ADE contributors",
+  "license": "AGPL-3.0; see ../../LICENSE",
+  "design": "Original rounded rectangle and generic sans-serif letter initials. No path geometry copied from the services or upstream.",
+  "assets": [
+    {
+      "plugin": "figma",
+      "file": "figma.svg",
+      "sha256": "075dea2275d629b051642637c72068f58ce61ca3aa13094581678c58d56ca7f9",
+      "label": "F"
+    },
+    {
+      "plugin": "github",
+      "file": "github.svg",
+      "sha256": "d94e6f1759f5feea561ac15ce671e3edf9e9c2e2af437c9f50cc5ee442190533",
+      "label": "GH"
+    },
+    {
+      "plugin": "posthog",
+      "file": "posthog.svg",
+      "sha256": "3cfadfcdd3bc7d71148c0fbd0bb55077b477db903eb06e1d53d257c0d51f6930",
+      "label": "PH"
+    },
+    {
+      "plugin": "supabase",
+      "file": "supabase.svg",
+      "sha256": "0870cb0c8d03e416e9de601ca935a3afa0f3ae6cb160f8cf5918dc5bbfd78ce5",
+      "label": "S"
+    },
+    {
+      "plugin": "vercel",
+      "file": "vercel.svg",
+      "sha256": "800110ee3e15bcc83e468dcb9d1f233f2d9f4596d141453c3354a3ef2b376d06",
+      "label": "V"
+    }
+  ],
+  "supersedes": "Previous5 service SVG payloads copied from Stagewise were replaced for the public source reference. Development Git history still contains those originals; publish a curated fresh tree as described in audit/publication-review.json."
+}

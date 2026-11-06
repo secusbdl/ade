@@ -1,0 +1,79 @@
+{
+  "status": "Private stage frozen; production integration and shared full regression pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "tests": {
+    "resolver": "39 passed, 0 failed, 112 ms",
+    "actualMainWindow": "8 passed, 0 failed, 1500 ms"
+  },
+  "productionChangedByThisSlice": false,
+  "patch": "migration.patch",
+  "files": [
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "e7f974acaeb2ae71cf0e24639b18a22d7e91bac6057553a03d5a2bfd423ba158"
+    },
+    {
+      "path": "src/ui/ConversationView.h",
+      "sha256": "43d2163d092f051191d2c21144885a806450ee85ac7fa414d3d9bed58792374e"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "sha256": "b54cea506c66cd92cca4226585d0a80b46040d0362924a1803a7dc10de8daa26"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "d4d837119afd496416be6c4e4aee74e5a0cafac66d3559bf3e482c0ca06efa6f"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "0cd18af679098bf54d6d0e6915e42cde7b4ef9002b3dd08ce34c23a1468397a2"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "4ab97226a22a47579c8fbee62fc362f5c85caaa5e202c7d0ef5cb5641bf59132"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.h",
+      "sha256": "9b46be263908def79116be1e7f9e13ab4d6b54a47ee8ba02288348b3114d9c0e"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.cpp",
+      "sha256": "7c60cc9d6251ff3c9702d8de38fe9ef5d006a6508131f62428c62b43d1e4caac"
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "sha256": "71da12d998731fae8c3a913b5ac27a61a60611184f262f23c165e1c0b4839f87"
+    },
+    {
+      "path": "tests/test_transcript_links.cpp",
+      "sha256": "116153a9d88641697f03cb267fe26c26a8812fa91b34c837d7cfb2c2f5a2201d"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "6209d386e464ab6eadd25b0794e6b4d9199e642adaed26ac6ea51a048c31a916"
+    }
+  ],
+  "evidence": [
+    "audit/first.txt",
+    "audit/first.xml",
+    "audit/final.txt",
+    "audit/final.xml",
+    "audit/ui-first.txt",
+    "audit/ui-first.xml",
+    "audit/ui-final.txt",
+    "audit/ui-final.xml"
+  ],
+  "limitations": [
+    "Current Windows handle-backed implementation; other operating systems fail closed.",
+    "Runtime-only workspace provenance: preexisting/forked/restarted rows are unbound and cannot open workspace/apps links.",
+    "Native UI has no trusted per-message tab snapshot yet and rejects tab links. Resolver supports matching browser session plus allowed live IDs, or recorded http(s) historical fallback.",
+    "Attachment UI previews supported text encodings in a separate read-only tab; binary/image/PDF/archive viewers are not part of this slice.",
+    "Legacy aliases parse in resolver, but the existing Markdown scheme allowlist does not yet emit all of them. Shell links remain unsupported.",
+    "Source line suffix and query parameters are retained by resolver; the pinned UI also drops the parsed line number before opening. Native expanded-media UI remains unimplemented.",
+    "Link creation requires accessible current attachment storage and every configured mount; an unavailable mount may prevent other link actions in that scope.",
+    "20 MiB file preview bound, configurable only by host up to 64 MiB; bytes are a bounded capture, not an atomic snapshot during concurrent in-place writes.",
+    "Scope options and per-message provenance must be supplied only from trusted host/session state; a lease is checked against its chat, not a caller-supplied data-directory string.",
+    "Workspace Action holds non-delete-sharing handles only through synchronous editor load; retaining it through saving would block atomic replacement.",
+    "No user files, API credentials, or external service actions used. Loopback provider fixtures only."
+  ]
+}

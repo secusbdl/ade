@@ -1,0 +1,48 @@
+{
+  "verified_on": "2026-11-05",
+  "test_source": "tests/test_browser.cpp",
+  "toolchain": "Static Qt 6.11.2 / MinGW-w64 GCC 16.2.0 / Windows 11 x64",
+  "runtime": "Microsoft Edge WebView2 156.0.4314.58",
+  "external_requests": "Tests serve their own loopback HTTP fixture and use no provider credentials.",
+  "result": {
+    "exit_code": 0,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "duration_ms": 5716,
+    "text_log": "test-results/browser-tests.txt",
+    "junit_log": "test-results/browser-tests.xml"
+  },
+  "reproduced_and_fixed": [
+    {
+      "defect": "Callback accesses a partly destroyed QWidget during asynchronous browser creation",
+      "reproduction": "Show and immediately delete multiple BrowserWidgets, allowing queued native callbacks between iterations.",
+      "before": "Process crashed with 0xC000041D. GDB stopped on SIGSEGV in QLabel::setText from BrowserWidget::reportError in the controller-completion callback.",
+      "cause": "QPointer becomes null in QObject destruction, after derived BrowserWidget state and QWidget children can already be destroyed. Native message dispatch can run in that interval.",
+      "fix": "Each callback checks a separate weak lifetime token invalidated at the start of BrowserWidget destruction. Late controller completion closes its returned controller without touching the widget.",
+      "regression_tests": ["destroyDuringAsyncCreation", "destroyWithOutstandingOperations", "destroyFromReadySignal", "destroyFromNavigationSignal"]
+    },
+    {
+      "defect": "The browser viewport does not reflect a resize of a hidden/native Qt host",
+      "before": "resizeAndScreenshot failed because innerWidth did not increase after the widget resized.",
+      "cause": "Reading HWND client bounds in resizeEvent can observe stale/native-hidden geometry.",
+      "fix": "Compute physical browser bounds from Qt's new logical widget size and devicePixelRatioF.",
+      "regression_tests": ["resizeAndScreenshot"]
+    }
+  ],
+  "additional_regression_guards": [
+    "A readyChanged receiver may navigate without the initial pending URL subsequently overwriting its choice.",
+    "Older canceled navigation completions do not incorrectly clear loading for a later navigation.",
+    "Screenshot-before-ready emits an error instead of silently failing.",
+    "Failed loopback navigation recovers on the next page.",
+    "Two simultaneous browser views keep independent page DOMs.",
+    "CDP success, unknown methods, and malformed parameters are reported separately.",
+    "Popup navigation remains inside the preview widget."
+  ],
+  "limits": [
+    "This suite verifies the listed browser/component behavior, not full Stagewise feature parity.",
+    "Only Windows x64 with the installed WebView2 Runtime was exercised.",
+    "The Qt application and MinGW C++ runtimes are statically linked; the WebView2 loader and browser runtime are external dependencies.",
+    "No live AI provider, authentication, or credential behavior is covered by these browser tests."
+  ]
+}

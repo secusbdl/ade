@@ -1,0 +1,107 @@
+********* Start testing of HistoryRecoveryTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HistoryRecoveryTest::initTestCase()
+FAIL!  : HistoryRecoveryTest::repairsInheritedCallsWithoutExecution(openai) Compared values are not the same
+   Actual   (prepared.size()): 4
+   Expected (6)              : 6
+D:/age/ADE/tests/test_history_recovery.cpp(80) : failure location
+FAIL!  : HistoryRecoveryTest::repairsInheritedCallsWithoutExecution(anthropic) Compared values are not the same
+   Actual   (prepared.size()): 4
+   Expected (6)              : 6
+D:/age/ADE/tests/test_history_recovery.cpp(80) : failure location
+FAIL!  : HistoryRecoveryTest::repairsInheritedCallsWithoutExecution(google) Compared values are not the same
+   Actual   (prepared.size()): 4
+   Expected (6)              : 6
+D:/age/ADE/tests/test_history_recovery.cpp(80) : failure location
+FAIL!  : HistoryRecoveryTest::repairsInheritedCallsWithoutExecution(responses) Compared values are not the same
+   Actual   (prepared.size()): 4
+   Expected (6)              : 6
+D:/age/ADE/tests/test_history_recovery.cpp(80) : failure location
+FAIL!  : HistoryRecoveryTest::repairsInheritedCallsWithoutExecution(google-without-native-ids) Compared values are not the same
+   Actual   (prepared.size()): 4
+   Expected (6)              : 6
+D:/age/ADE/tests/test_history_recovery.cpp(80) : failure location
+FAIL!  : HistoryRecoveryTest::repairsOlderBatchesAndAllowsReusedIds() Compared values are not the same
+   Actual   (history[1].toObject()["tool_call_id"].toString()): ""
+   Expected ("same")                                          : same
+D:/age/ADE/tests/test_history_recovery.cpp(96) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(duplicate-call-id) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(duplicate-result-id) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(orphan-result) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(wrong-case-result) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(result-after-user-boundary) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(missing-id) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(numeric-id) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(non-array-calls) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(non-assistant-calls) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(non-string-arguments) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(anthropic-native-mismatch) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(anthropic-native-missing) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(google-native-mismatch) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(google-native-missing) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(responses-native-mismatch) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+FAIL!  : HistoryRecoveryTest::malformedHistoryRejectsAtomically(responses-native-missing) Compared values are not the same
+   Actual   (failed.size()): 0
+   Expected (1)            : 1
+D:/age/ADE/tests/test_history_recovery.cpp(119) : failure location
+PASS   : HistoryRecoveryTest::rejectedConfigurationDoesNotPublishRecovery()
+FAIL!  : HistoryRecoveryTest::partialArgumentsAreInterruptedWithoutRewritingOriginalCall() Compared values are not the same
+   Actual   (results(engine.messages()).size()): 0
+   Expected (1)                                : 1
+D:/age/ADE/tests/test_history_recovery.cpp(126) : failure location
+FAIL!  : HistoryRecoveryTest::cancellationAfterRecoveryKeepsHistoryPaired() Compared values are not the same
+   Actual   (engine.messages().size()): 2
+   Expected (3)                       : 3
+D:/age/ADE/tests/test_history_recovery.cpp(130) : failure location
+FAIL!  : HistoryRecoveryTest::busySourceForkRecoversOnlyTarget() Compared values are not the same
+   Actual   (results(fork.messages()).size()): 0
+   Expected (1)                              : 1
+D:/age/ADE/tests/test_history_recovery.cpp(135) : failure location
+PASS   : HistoryRecoveryTest::cleanupTestCase()
+Totals: 3 passed, 25 failed, 0 skipped, 0 blacklisted, 2188ms
+********* Finished testing of HistoryRecoveryTest *********

@@ -1,0 +1,992 @@
+import { Button, buttonVariants } from '@stagewise/stage-ui/components/button';
+import { Input } from '@stagewise/stage-ui/components/input';
+import { OverlayScrollbar } from '@stagewise/stage-ui/components/overlay-scrollbar';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@stagewise/stage-ui/components/tooltip';
+import { useKartonState, useKartonProcedure } from '@ui/hooks/use-karton';
+import { useTrack } from '@ui/hooks/use-track';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
+import { cn } from '@ui/utils';
+import {
+  IconChevronRightOutline18,
+  IconCheck2Outline18,
+} from '@stagewise/icons';
+import type {
+  OnboardingProviderIdentity,
+  UIEventProperties,
+} from '@shared/karton-contracts/ui/telemetry';
+import type {
+  ProviderInstance,
+  ProviderInstanceTypeId,
+} from '@shared/karton-contracts/ui/shared-types';
+import { getTypeDisplayInfo } from '@shared/provider-instance-helpers';
+import {
+  CODING_PLANS,
+  validateCodingPlanBaseUrl,
+  type CodingPlan,
+  type CodingPlanId,
+} from '@shared/coding-plans';
+import { ProviderLogo } from '@ui/components/provider-logos';
+import { OllamaLogo } from '@ui/components/provider-logos/ollama';
+import { OpenRouterLogo } from '@ui/components/provider-logos/openrouter';
+import { BackButton, NextButton, OnboardingBottomNav } from '../index';
+
+// ─── Unified Provider Entries ──────────────────────────────────────────────
+
+export type ProviderEntry = {
+  key: string;
+  kind: 'vendor-api' | 'coding-plan' | 'gateway' | 'self-hosted';
+  typeId: ProviderInstanceTypeId;
+  displayName: string;
+  tagline: string;
+  getApiKeyUrl?: string;
+  helpText?: string;
+  planId?: CodingPlanId;
+  /** Optional disclaimer rendered below the help text (e.g. unofficial status). */
+  disclaimer?: string;
+  /** Extra endpoint routing info shown below the help text. */
+  endpointHelpText?: string;
+  defaultBaseUrl?: string;
+  configurableEndpoint?: CodingPlan['configurableEndpoint'];
+};
+
+/** All vendor API types shown in the unified provider list. */
+const VENDOR_API_TYPES: ProviderInstanceTypeId[] = [
+  'anthropic-api',
+  'openai-api',
+  'google-api',
+  'deepseek-api',
+  'z-ai-api',
+  'moonshotai-api',
+  'alibaba-api',
+  'minimax-api',
+  'xiaomi-mimo-api',
+  'mistral-api',
+  'x-ai-api',
+];
+
+const GATEWAY_TYPES: ProviderInstanceTypeId[] = ['openrouter'];
+
+const SELF_HOSTED_TYPES: ProviderInstanceTypeId[] = ['ollama'];
+
+function buildUnifiedEntries(): ProviderEntry[] {
+  const entries: ProviderEntry[] = [];
+
+  for (const typeId of VENDOR_API_TYPES) {
+    const info = getTypeDisplayInfo(typeId);
+    entries.push({
+      key: typeId,
+      kind: 'vendor-api',
+      typeId,
+      displayName: info.displayName,
+      tagline: info.helpText ?? '',
+      getApiKeyUrl: info.getApiKeyUrl,
+      helpText: info.helpText,
+    });
+  }
+
+  for (const typeId of GATEWAY_TYPES) {
+    const info = getTypeDisplayInfo(typeId);
+    entries.push({
+      key: typeId,
+      kind: 'gateway',
+      typeId,
+      displayName: info.displayName,
+      tagline: info.helpText ?? '',
+      getApiKeyUrl: info.getApiKeyUrl,
+      helpText: info.helpText,
+    });
+  }
+
+  for (const plan of Object.values(CODING_PLANS)) {
+    entries.push({
+      key: `plan:${plan.id}`,
+      kind: 'coding-plan',
+      typeId: `${plan.provider}-api` as ProviderInstanceTypeId,
+      displayName: plan.displayName,
+      tagline: plan.tagline,
+      getApiKeyUrl: plan.apiKeyUrl,
+      helpText: plan.helpText,
+      planId: plan.id,
+      disclaimer: plan.disclaimer,
+      endpointHelpText: plan.endpointHelpText,
+      defaultBaseUrl: plan.baseUrl,
+      configurableEndpoint: plan.configurableEndpoint,
+    });
+  }
+
+  for (const typeId of SELF_HOSTED_TYPES) {
+    const info = getTypeDisplayInfo(typeId);
+    entries.push({
+      key: typeId,
+      kind: 'self-hosted',
+      typeId,
+      displayName: info.displayName,
+      tagline: info.description,
+      defaultBaseUrl: info.defaultBaseUrl,
+    });
+  }
+
+  return entries;
+}
+
+const UNIFIED_ENTRIES = buildUnifiedEntries();
+
+function getTelemetryIdentity(
+  entry: ProviderEntry,
+): OnboardingProviderIdentity {
+  return {
+    provider_key: entry.key,
+    provider_type: entry.kind === 'coding-plan' ? 'coding-plan' : entry.typeId,
+    provider_kind: entry.kind,
+    ...(entry.planId ? { plan_id: entry.planId } : {}),
+  };
+}
+
+export type ProviderStepSummary = Pick<
+  UIEventProperties['onboarding-provider-step-completed'],
+  'connected_provider_count' | 'connected_provider_keys'
+> & {
+  provider_step_skipped: boolean;
+};
+
+export function getProviderInstanceTelemetryKey(
+  instance: ProviderInstance,
+): string {
+  if (instance.typeId === 'coding-plan') {
+    const planId = instance.config.planId;
+    if (planId) return `plan:${planId}`;
+  }
+  return instance.typeId;
+}
+
+export function summarizeProviderInstances(
+  instances: ProviderInstance[],
+): Omit<ProviderStepSummary, 'provider_step_skipped'> {
+  const connectedProviderKeys = instances.map(getProviderInstanceTelemetryKey);
+  return {
+    connected_provider_count: connectedProviderKeys.length,
+    connected_provider_keys: connectedProviderKeys,
+  };
+}
+
+export function createProviderStepSummary(
+  instances: ProviderInstance[],
+  connectedDuringStepCount: number,
+): ProviderStepSummary {
+  return {
+    ...summarizeProviderInstances(instances),
+    provider_step_skipped: connectedDuringStepCount === 0,
+  };
+}
+
+type ProviderConnectionResult = {
+  entry: ProviderEntry;
+  success: boolean;
+};
+const VENDOR_ENTRIES = UNIFIED_ENTRIES.filter((e) => e.kind === 'vendor-api');
+const CODING_PLAN_ENTRIES = UNIFIED_ENTRIES.filter(
+  (e) => e.kind === 'coding-plan',
+);
+const GATEWAY_ENTRIES = UNIFIED_ENTRIES.filter((e) => e.kind === 'gateway');
+const SELF_HOSTED_ENTRIES = UNIFIED_ENTRIES.filter(
+  (e) => e.kind === 'self-hosted',
+);
+
+// ─── Truncated Error Text ──────────────────────────────────────────────────
+
+export function TruncatedErrorText({ text }: { text: string }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const checkTruncation = useCallback(() => {
+    if (ref.current) {
+      setIsTruncated(ref.current.scrollWidth > ref.current.clientWidth);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkTruncation();
+  }, [checkTruncation, text]);
+
+  return (
+    <Tooltip open={isTruncated && tooltipOpen} onOpenChange={setTooltipOpen}>
+      <TooltipTrigger>
+        <button
+          ref={ref}
+          type="button"
+          className="block w-full truncate text-left text-error-foreground text-xs"
+          tabIndex={isTruncated ? 0 : -1}
+          onMouseEnter={() => {
+            checkTruncation();
+            setTooltipOpen(true);
+          }}
+          onMouseLeave={() => setTooltipOpen(false)}
+          onFocus={() => {
+            checkTruncation();
+            setTooltipOpen(true);
+          }}
+          onBlur={() => setTooltipOpen(false)}
+        >
+          {text}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{text}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+// ─── Provider Logo for Detail View ──────────────────────────────────────────
+
+function EntryLogo({
+  entry,
+  className,
+}: {
+  entry: ProviderEntry;
+  className?: string;
+}) {
+  if (entry.kind === 'coding-plan' && entry.planId) {
+    const plan = CODING_PLANS[entry.planId];
+    return (
+      <ProviderLogo
+        provider={plan.provider}
+        className={className ?? 'size-5'}
+      />
+    );
+  }
+  if (entry.kind === 'self-hosted' && entry.typeId === 'ollama') {
+    return <OllamaLogo className={className ?? 'size-5'} />;
+  }
+  if (entry.typeId === 'openrouter') {
+    return <OpenRouterLogo className={className ?? 'size-5'} />;
+  }
+  const vendor = entry.typeId.slice(0, -4) as Parameters<
+    typeof ProviderLogo
+  >[0]['provider'];
+  return <ProviderLogo provider={vendor} className={className ?? 'size-5'} />;
+}
+
+// ─── Provider List Card ────────────────────────────────────────────────────
+
+function ProviderListCard({
+  entry,
+  isConnected,
+  onClick,
+}: {
+  entry: ProviderEntry;
+  isConnected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <div className="rounded-lg border border-derived bg-surface-1">
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={isConnected}
+        className={cn(
+          'flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors',
+          !isConnected && 'cursor-pointer hover:bg-surface-2',
+          isConnected && 'cursor-default',
+        )}
+      >
+        <EntryLogo entry={entry} className="size-5 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium text-foreground text-sm">
+            {entry.displayName}
+          </p>
+          {entry.tagline && (
+            <p className="truncate text-muted-foreground text-xs">
+              {entry.tagline}
+            </p>
+          )}
+        </div>
+        {isConnected ? (
+          <span className="inline-flex shrink-0 items-center gap-1 font-medium text-success-foreground text-xs">
+            <IconCheck2Outline18 className="size-4" />
+            Connected
+          </span>
+        ) : (
+          <IconChevronRightOutline18 className="size-4 shrink-0 text-muted-foreground" />
+        )}
+      </button>
+    </div>
+  );
+}
+
+// ─── Connection Detail View ─────────────────────────────────────────────────
+
+export function ConnectionDetailView({
+  entry,
+  onBack,
+  onboardingRunId,
+  getNextAttemptNumber,
+  onConnectionResult,
+}: {
+  entry: ProviderEntry;
+  onBack: () => void;
+  onboardingRunId: string;
+  getNextAttemptNumber: (entry: ProviderEntry) => number;
+  onConnectionResult: (result: ProviderConnectionResult) => void;
+}) {
+  const addProviderInstance = useKartonProcedure(
+    (p) => p.preferences.addProviderInstance,
+  );
+  const openExternalUrl = useKartonProcedure((p) => p.openExternalUrl);
+  const track = useTrack();
+
+  const [apiKey, setApiKey] = useState(
+    entry.kind === 'self-hosted' ? (entry.defaultBaseUrl ?? '') : '',
+  );
+  const [endpoint, setEndpoint] = useState(
+    entry.configurableEndpoint ? (entry.defaultBaseUrl ?? '') : '',
+  );
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleConnect = useCallback(async () => {
+    if (!apiKey.trim()) return;
+    const endpointResult = entry.configurableEndpoint
+      ? validateCodingPlanBaseUrl(endpoint)
+      : undefined;
+    if (endpointResult && !endpointResult.success) {
+      setError(endpointResult.error);
+      return;
+    }
+    setIsConnecting(true);
+    setError(null);
+    const attemptNumber = getNextAttemptNumber(entry);
+    const startedAt = performance.now();
+    const identity = getTelemetryIdentity(entry);
+    void track('onboarding-provider-connect-attempted', {
+      onboarding_run_id: onboardingRunId,
+      ...identity,
+      attempt_number: attemptNumber,
+    });
+    try {
+      let discoveredModelCount = 0;
+      if (entry.kind === 'vendor-api' || entry.kind === 'gateway') {
+        const result = await addProviderInstance({
+          typeId: entry.typeId,
+          config: {},
+          validateApiKey: apiKey.trim(),
+        });
+        if (!result.success) {
+          setError(result.error);
+          void track('onboarding-provider-connect-failed', {
+            onboarding_run_id: onboardingRunId,
+            ...identity,
+            attempt_number: attemptNumber,
+            duration_ms: performance.now() - startedAt,
+            failure_stage: 'credential-validation',
+            error_kind: 'validation-error',
+          });
+          onConnectionResult({ entry, success: false });
+          return;
+        }
+        discoveredModelCount = result.discoveredModels.length;
+      } else if (entry.kind === 'self-hosted') {
+        const result = await addProviderInstance({
+          typeId: entry.typeId,
+          config: { baseUrl: apiKey.trim() },
+        });
+        if (!result.success) {
+          setError(result.error);
+          void track('onboarding-provider-connect-failed', {
+            onboarding_run_id: onboardingRunId,
+            ...identity,
+            attempt_number: attemptNumber,
+            duration_ms: performance.now() - startedAt,
+            failure_stage: 'credential-validation',
+            error_kind: 'validation-error',
+          });
+          onConnectionResult({ entry, success: false });
+          return;
+        }
+        discoveredModelCount = result.discoveredModels.length;
+      } else if (entry.planId) {
+        const plan = CODING_PLANS[entry.planId];
+        const result = await addProviderInstance({
+          typeId: 'coding-plan',
+          config: {
+            planId: plan.id,
+            baseUrl: endpointResult?.success
+              ? endpointResult.baseUrl
+              : plan.baseUrl,
+          },
+          validateApiKey: apiKey.trim(),
+        });
+        if (!result.success) {
+          setError(result.error);
+          void track('onboarding-provider-connect-failed', {
+            onboarding_run_id: onboardingRunId,
+            ...identity,
+            attempt_number: attemptNumber,
+            duration_ms: performance.now() - startedAt,
+            failure_stage: 'credential-validation',
+            error_kind: 'validation-error',
+          });
+          onConnectionResult({ entry, success: false });
+          return;
+        }
+        discoveredModelCount = result.discoveredModels.length;
+      }
+      void track('onboarding-provider-connected', {
+        onboarding_run_id: onboardingRunId,
+        ...identity,
+        attempt_number: attemptNumber,
+        duration_ms: performance.now() - startedAt,
+        discovered_model_count: discoveredModelCount,
+      });
+      onConnectionResult({ entry, success: true });
+      onBack();
+    } catch {
+      setError('Connection failed. Please try again.');
+      void track('onboarding-provider-connect-failed', {
+        onboarding_run_id: onboardingRunId,
+        ...identity,
+        attempt_number: attemptNumber,
+        duration_ms: performance.now() - startedAt,
+        failure_stage: 'rpc',
+        error_kind: 'unknown-error',
+      });
+      onConnectionResult({ entry, success: false });
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [
+    apiKey,
+    endpoint,
+    entry,
+    addProviderInstance,
+    getNextAttemptNumber,
+    onBack,
+    onConnectionResult,
+    onboardingRunId,
+    track,
+  ]);
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 pt-1 pb-4">
+        {/* Provider header: logo + name + tagline */}
+        <div className="flex items-start gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-surface-1">
+            <EntryLogo entry={entry} className="size-5 text-foreground" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-medium text-foreground text-sm">
+              {entry.displayName}
+            </h3>
+            {entry.tagline && (
+              <p className="mt-0.5 text-muted-foreground text-xs">
+                {entry.tagline}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {entry.configurableEndpoint && (
+          <div className="space-y-1">
+            <p className="font-medium text-muted-foreground text-xs">
+              {entry.configurableEndpoint.label}
+            </p>
+            <Input
+              type="url"
+              placeholder={entry.configurableEndpoint.placeholder}
+              value={endpoint}
+              onValueChange={(value) => {
+                setEndpoint(value);
+                setError(null);
+              }}
+              disabled={isConnecting}
+              aria-invalid={error ? true : undefined}
+              size="sm"
+              style={{ maxWidth: 'none' }}
+            />
+            <p className="text-subtle-foreground text-xs">
+              {entry.configurableEndpoint.helpText}
+            </p>
+          </div>
+        )}
+
+        <Input
+          autoFocus
+          type={entry.kind === 'self-hosted' ? 'text' : 'password'}
+          placeholder={
+            entry.kind === 'self-hosted'
+              ? 'Enter base URL...'
+              : 'Enter API key...'
+          }
+          value={apiKey}
+          onValueChange={(v) => {
+            setApiKey(v);
+            setError(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && apiKey.trim()) {
+              void handleConnect();
+            }
+          }}
+          disabled={isConnecting}
+          aria-invalid={error ? true : undefined}
+          size="sm"
+          style={{ maxWidth: 'none' }}
+          className={cn(error && 'border-error-foreground')}
+        />
+
+        {error && <TruncatedErrorText text={error} />}
+
+        {!error && entry.kind === 'self-hosted' && (
+          <p className="text-subtle-foreground text-xs">
+            Enter the base URL of your {entry.displayName} instance. Default is{' '}
+            {entry.defaultBaseUrl}.
+          </p>
+        )}
+
+        {!error && entry.helpText && (
+          <p className="text-subtle-foreground text-xs">
+            <span className="inline-flex items-center gap-1">
+              {entry.helpText}
+              {entry.getApiKeyUrl && (
+                <button
+                  type="button"
+                  onClick={() => void openExternalUrl(entry.getApiKeyUrl!)}
+                  className={cn(
+                    buttonVariants({ variant: 'link', size: 'xs' }),
+                    'shrink-0',
+                  )}
+                >
+                  Create key
+                </button>
+              )}
+            </span>
+            {entry.endpointHelpText && (
+              <span className="mt-0.5 block text-2xs text-subtle-foreground">
+                {entry.endpointHelpText}
+              </span>
+            )}
+          </p>
+        )}
+
+        {entry.disclaimer && (
+          <p className="text-2xs text-warning-foreground">{entry.disclaimer}</p>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button variant="ghost" size="sm" onClick={onBack}>
+          Back
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
+          disabled={
+            !apiKey.trim() ||
+            isConnecting ||
+            (!!entry.configurableEndpoint && !endpoint.trim())
+          }
+          onClick={() => void handleConnect()}
+        >
+          {isConnecting ? 'Connecting...' : 'Connect'}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Scrollable Provider List ──────────────────────────────────────────────
+
+function ScrollableProviderList({
+  searchQuery,
+  isEntryConnected,
+  onSelectEntry,
+}: {
+  searchQuery: string;
+  isEntryConnected: (entry: ProviderEntry) => boolean;
+  onSelectEntry: (entry: ProviderEntry) => void;
+}) {
+  const query = searchQuery.trim().toLowerCase();
+
+  const filteredVendorEntries = useMemo(
+    () =>
+      query
+        ? VENDOR_ENTRIES.filter((e) =>
+            e.displayName.toLowerCase().includes(query),
+          )
+        : VENDOR_ENTRIES,
+    [query],
+  );
+
+  const filteredGatewayEntries = useMemo(
+    () =>
+      query
+        ? GATEWAY_ENTRIES.filter((e) =>
+            e.displayName.toLowerCase().includes(query),
+          )
+        : GATEWAY_ENTRIES,
+    [query],
+  );
+
+  const filteredSelfHostedEntries = useMemo(
+    () =>
+      query
+        ? SELF_HOSTED_ENTRIES.filter((e) =>
+            e.displayName.toLowerCase().includes(query),
+          )
+        : SELF_HOSTED_ENTRIES,
+    [query],
+  );
+
+  const filteredCodingPlanEntries = useMemo(
+    () =>
+      query
+        ? CODING_PLAN_ENTRIES.filter((e) =>
+            e.displayName.toLowerCase().includes(query),
+          )
+        : CODING_PLAN_ENTRIES,
+    [query],
+  );
+
+  // Split all entries into connected vs unconnected.
+  // Connected entries are shown in a single section at the top.
+  const allFilteredEntries = useMemo(
+    () => [
+      ...filteredCodingPlanEntries,
+      ...filteredGatewayEntries,
+      ...filteredSelfHostedEntries,
+      ...filteredVendorEntries,
+    ],
+    [
+      filteredCodingPlanEntries,
+      filteredGatewayEntries,
+      filteredSelfHostedEntries,
+      filteredVendorEntries,
+    ],
+  );
+
+  const connectedEntries = useMemo(
+    () => allFilteredEntries.filter((e) => isEntryConnected(e)),
+    [allFilteredEntries, isEntryConnected],
+  );
+
+  const unconnectedCodingPlanEntries = useMemo(
+    () => filteredCodingPlanEntries.filter((e) => !isEntryConnected(e)),
+    [filteredCodingPlanEntries, isEntryConnected],
+  );
+
+  const unconnectedGatewayEntries = useMemo(
+    () => filteredGatewayEntries.filter((e) => !isEntryConnected(e)),
+    [filteredGatewayEntries, isEntryConnected],
+  );
+
+  const unconnectedSelfHostedEntries = useMemo(
+    () => filteredSelfHostedEntries.filter((e) => !isEntryConnected(e)),
+    [filteredSelfHostedEntries, isEntryConnected],
+  );
+
+  const unconnectedVendorEntries = useMemo(
+    () => filteredVendorEntries.filter((e) => !isEntryConnected(e)),
+    [filteredVendorEntries, isEntryConnected],
+  );
+
+  const noResults =
+    query.length > 0 &&
+    connectedEntries.length === 0 &&
+    unconnectedCodingPlanEntries.length === 0 &&
+    unconnectedGatewayEntries.length === 0 &&
+    unconnectedSelfHostedEntries.length === 0 &&
+    unconnectedVendorEntries.length === 0;
+
+  return (
+    <div className="min-h-0 pb-4">
+      <OverlayScrollbar
+        className="h-80 sm:h-96"
+        viewportClassName="scroll-fade-y scroll-fade-6"
+        contentClassName="flex flex-col gap-4"
+      >
+        {noResults && (
+          <p className="py-4 text-center text-muted-foreground text-xs">
+            No providers match &quot;{query}&quot;
+          </p>
+        )}
+
+        {/* Connected — all connected entries across categories */}
+        {connectedEntries.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-medium text-foreground text-xs">Connected</p>
+            <div className="flex flex-col gap-2">
+              {connectedEntries.map((entry) => (
+                <ProviderListCard
+                  key={entry.key}
+                  entry={entry}
+                  isConnected={isEntryConnected(entry)}
+                  onClick={() => onSelectEntry(entry)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Coding Plans */}
+        {unconnectedCodingPlanEntries.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-medium text-foreground text-xs">Coding Plans</p>
+            <div className="flex flex-col gap-2">
+              {unconnectedCodingPlanEntries.map((entry) => (
+                <ProviderListCard
+                  key={entry.key}
+                  entry={entry}
+                  isConnected={isEntryConnected(entry)}
+                  onClick={() => onSelectEntry(entry)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Gateways */}
+        {unconnectedGatewayEntries.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-medium text-foreground text-xs">Gateways</p>
+            <div className="flex flex-col gap-2">
+              {unconnectedGatewayEntries.map((entry) => (
+                <ProviderListCard
+                  key={entry.key}
+                  entry={entry}
+                  isConnected={isEntryConnected(entry)}
+                  onClick={() => onSelectEntry(entry)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Self-Hosted */}
+        {unconnectedSelfHostedEntries.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-medium text-foreground text-xs">Self-Hosted</p>
+            <div className="flex flex-col gap-2">
+              {unconnectedSelfHostedEntries.map((entry) => (
+                <ProviderListCard
+                  key={entry.key}
+                  entry={entry}
+                  isConnected={isEntryConnected(entry)}
+                  onClick={() => onSelectEntry(entry)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Official API Keys */}
+        {unconnectedVendorEntries.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-medium text-foreground text-xs">
+              Official API Keys
+            </p>
+            <div className="flex flex-col gap-2">
+              {unconnectedVendorEntries.map((entry) => (
+                <ProviderListCard
+                  key={entry.key}
+                  entry={entry}
+                  isConnected={isEntryConnected(entry)}
+                  onClick={() => onSelectEntry(entry)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </OverlayScrollbar>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────
+
+export function StepConfigureProviders({
+  onNext,
+  onboardingRunId,
+  onSummary,
+}: {
+  onNext: () => void;
+  onboardingRunId: string;
+  onSummary: (summary: ProviderStepSummary) => void;
+}) {
+  const preferences = useKartonState((s) => s.preferences);
+  const track = useTrack();
+
+  const [selectedEntry, setSelectedEntry] = useState<ProviderEntry | null>(
+    null,
+  );
+  const [searchQuery, setSearchQuery] = useState('');
+  const stepStartedAtRef = useRef(performance.now());
+  const viewedProviderKeysRef = useRef(new Set<string>());
+  const connectedDuringStepKeysRef = useRef(new Set<string>());
+  const attemptCountsRef = useRef(new Map<string, number>());
+  const connectionAttemptCountRef = useRef(0);
+  const connectionFailureCountRef = useRef(0);
+  const searchUsedRef = useRef(false);
+
+  // Check if a provider entry is already connected.
+  const isEntryConnected = useCallback(
+    (entry: ProviderEntry) => {
+      if (entry.kind === 'coding-plan' && entry.planId) {
+        return !!preferences.providerInstances?.some(
+          (instance) =>
+            instance.typeId === 'coding-plan' &&
+            (instance.config as { planId?: string }).planId === entry.planId &&
+            !!(instance.config as { encryptedApiKey?: string }).encryptedApiKey,
+        );
+      }
+      if (entry.kind === 'self-hosted') {
+        return !!preferences.providerInstances?.find(
+          (i) => i.typeId === entry.typeId,
+        );
+      }
+      const inst = preferences.providerInstances?.find(
+        (i) => i.typeId === entry.typeId,
+      );
+      return (
+        !!inst &&
+        !!(inst.config as { encryptedApiKey?: string }).encryptedApiKey
+      );
+    },
+    [preferences],
+  );
+
+  const handleBack = useCallback(() => {
+    setSelectedEntry(null);
+    setSearchQuery('');
+  }, []);
+
+  const getNextAttemptNumber = useCallback((entry: ProviderEntry) => {
+    const next = (attemptCountsRef.current.get(entry.key) ?? 0) + 1;
+    attemptCountsRef.current.set(entry.key, next);
+    connectionAttemptCountRef.current += 1;
+    return next;
+  }, []);
+
+  const handleConnectionResult = useCallback(
+    ({ entry, success }: ProviderConnectionResult) => {
+      if (success) connectedDuringStepKeysRef.current.add(entry.key);
+      else connectionFailureCountRef.current += 1;
+    },
+    [],
+  );
+
+  const handleSelectEntry = useCallback(
+    (entry: ProviderEntry) => {
+      const position = UNIFIED_ENTRIES.findIndex(
+        (candidate) => candidate.key === entry.key,
+      );
+      viewedProviderKeysRef.current.add(entry.key);
+      void track('onboarding-provider-detail-viewed', {
+        onboarding_run_id: onboardingRunId,
+        ...getTelemetryIdentity(entry),
+        position: Math.max(position, 0),
+        search_active: searchQuery.trim().length > 0,
+        already_connected: isEntryConnected(entry),
+      });
+      setSelectedEntry(entry);
+    },
+    [isEntryConnected, onboardingRunId, searchQuery, track],
+  );
+
+  const handleSearchChange = useCallback((value: string) => {
+    if (value.trim()) searchUsedRef.current = true;
+    setSearchQuery(value);
+  }, []);
+
+  const handleNext = useCallback(() => {
+    const summary = createProviderStepSummary(
+      preferences.providerInstances ?? [],
+      connectedDuringStepKeysRef.current.size,
+    );
+    void track('onboarding-provider-step-completed', {
+      onboarding_run_id: onboardingRunId,
+      duration_ms: performance.now() - stepStartedAtRef.current,
+      connected_provider_count: summary.connected_provider_count,
+      connected_provider_keys: summary.connected_provider_keys,
+      skipped_without_provider: summary.provider_step_skipped,
+      connected_during_step_count: connectedDuringStepKeysRef.current.size,
+      viewed_provider_count: viewedProviderKeysRef.current.size,
+      connection_attempt_count: connectionAttemptCountRef.current,
+      connection_failure_count: connectionFailureCountRef.current,
+      search_used: searchUsedRef.current,
+    });
+    onSummary(summary);
+    onNext();
+  }, [onNext, onSummary, onboardingRunId, preferences, track]);
+
+  return (
+    <>
+      <div className="app-no-drag flex flex-1 flex-col items-center justify-center overflow-hidden">
+        <div className="flex w-full max-w-xl flex-col px-8">
+          {/* Fixed header — stays visible while the list scrolls */}
+          <div className="flex shrink-0 flex-col gap-4 pt-8 pb-4">
+            <div className="flex flex-col items-center gap-1">
+              <h1 className="font-medium text-foreground text-xl">
+                {selectedEntry
+                  ? `Connect ${selectedEntry.displayName}`
+                  : 'Connect your providers'}
+              </h1>
+              {!selectedEntry && (
+                <p className="text-center text-muted-foreground text-sm">
+                  Add API keys or coding plans to use your own models. You can
+                  skip this and configure later in Settings.
+                </p>
+              )}
+            </div>
+
+            {/* Search input — only in list mode */}
+            {!selectedEntry && (
+              <Input
+                type="text"
+                placeholder="Search providers..."
+                value={searchQuery}
+                onValueChange={handleSearchChange}
+                className="w-full"
+              />
+            )}
+          </div>
+
+          {selectedEntry ? (
+            /* Connection detail view */
+            <div className="min-h-0 pb-4">
+              <ConnectionDetailView
+                entry={selectedEntry}
+                onBack={handleBack}
+                onboardingRunId={onboardingRunId}
+                getNextAttemptNumber={getNextAttemptNumber}
+                onConnectionResult={handleConnectionResult}
+              />
+            </div>
+          ) : (
+            /* Scrollable provider list with groups */
+            <ScrollableProviderList
+              searchQuery={searchQuery}
+              isEntryConnected={isEntryConnected}
+              onSelectEntry={handleSelectEntry}
+            />
+          )}
+        </div>
+      </div>
+      {selectedEntry ? (
+        /* Detail mode: Back only, no Next */
+        <OnboardingBottomNav
+          left={<BackButton onClick={handleBack} />}
+          right={null}
+        />
+      ) : (
+        <OnboardingBottomNav
+          left={null}
+          right={<NextButton onClick={handleNext} label="Next" />}
+        />
+      )}
+    </>
+  );
+}

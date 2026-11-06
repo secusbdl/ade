@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="HistoryRecoveryTest" timestamp="2026&#x002D;11&#x002D;05T15:48:51" hostname="VOID" tests="28" failures="0" errors="0" skipped="0" time="1.228">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="repairsInheritedCallsWithoutExecution(openai)" classname="HistoryRecoveryTest" time="0.183"/>
+  <testcase name="repairsInheritedCallsWithoutExecution(anthropic)" classname="HistoryRecoveryTest" time="0.179"/>
+  <testcase name="repairsInheritedCallsWithoutExecution(google)" classname="HistoryRecoveryTest" time="0.192"/>
+  <testcase name="repairsInheritedCallsWithoutExecution(responses)" classname="HistoryRecoveryTest" time="0.126"/>
+  <testcase name="repairsInheritedCallsWithoutExecution(google&#x002D;without&#x002D;native&#x002D;ids)" classname="HistoryRecoveryTest" time="0.231"/>
+  <testcase name="repairsOlderBatchesAndAllowsReusedIds" classname="HistoryRecoveryTest" time="0.066"/>
+  <testcase name="malformedHistoryRejectsAtomically(duplicate&#x002D;call&#x002D;id)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(duplicate&#x002D;result&#x002D;id)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(orphan&#x002D;result)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(wrong&#x002D;case&#x002D;result)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(result&#x002D;after&#x002D;user&#x002D;boundary)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(missing&#x002D;id)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(numeric&#x002D;id)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(non&#x002D;array&#x002D;calls)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(non&#x002D;assistant&#x002D;calls)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(non&#x002D;string&#x002D;arguments)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(anthropic&#x002D;native&#x002D;mismatch)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(anthropic&#x002D;native&#x002D;missing)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(google&#x002D;native&#x002D;mismatch)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(google&#x002D;native&#x002D;missing)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(responses&#x002D;native&#x002D;mismatch)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="malformedHistoryRejectsAtomically(responses&#x002D;native&#x002D;missing)" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="rejectedConfigurationDoesNotPublishRecovery" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="partialArgumentsAreInterruptedWithoutRewritingOriginalCall" classname="HistoryRecoveryTest" time="0.065"/>
+  <testcase name="cancellationAfterRecoveryKeepsHistoryPaired" classname="HistoryRecoveryTest" time="0.000"/>
+  <testcase name="busySourceForkRecoversOnlyTarget" classname="HistoryRecoveryTest" time="0.182"/>
+  <testcase name="cleanupTestCase" classname="HistoryRecoveryTest" time="0.000"/>
+</testsuite>

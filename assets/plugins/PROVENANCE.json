@@ -1,0 +1,35 @@
+{
+  "upstream": "https://github.com/stagewise-io/stagewise",
+  "version": "1.31.1",
+  "commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceDirectory": "apps/browser/bundled/plugins",
+  "copyright": "stagewise GmbH and respective contributors",
+  "license": "AGPL-3.0",
+  "files": {
+    "github/SKILL.md": "b8f11920a97f8480db04f1e42be44d8aa9ca3e436cabed0636f7ce447ba0b40d",
+    "github/metadata.json": "f0cfcfdac917991ad6c92496eb79b58a3d360646a8d6d101fecefb66a9b5380a",
+    "posthog/SKILL.md": "8362b0dd91977c33f754263aa41ca8f512a8eb8c9b5834aa1c3d0e453410f717",
+    "posthog/metadata.json": "7122b65edac5f72eea1fd2dc039c41b40cc21c037744181ca1bd52f39bfe2558",
+    "supabase/SKILL.md": "2e5cb01fa051b3fc7494e4b5b167845a2d5cee89bf08f0e4b1b130e8f8fb42f3",
+    "supabase/metadata.json": "9a6ca423dd3fac4344fd8f7b6d573aec5ac037db1a7f9604abca2eb231df0f45",
+    "vercel/SKILL.md": "2a9ef5861260132862aafdbe020fde2c3b1164139c0204168b9c683c3f5d0ae3",
+    "vercel/metadata.json": "ca01e7b35ff16e8d19cb8220a91211702011e1fca2c68029664a65cba682ff9e",
+    "figma/SKILL.md": "e1cf41134f99ec2e7ea69f6d966effecebbcb967b4c42843443c02a72e986f5b",
+    "figma/metadata.json": "bf6e8470c39d3318c35b0648157330a83f8978391ff223da8dbefdbdd88d7aad",
+    "figma/apps/figma-app/index.html": "c8d627289608a6539dc200096a1188be276c1ff53977d2844cbcac39745b6920",
+    "figma/apps/figma-app/styles.css": "ca7178e1d3692488ca702dcc031976977f2e34c077952f40a6f2fb815370472a",
+    "LICENSE": "7d0c975152f5743a98bd29350c63ab99a5cceb000da4c6f74037cef80e8396e3"
+  },
+  "patches": [
+    {
+      "file": "figma/apps/figma-app/index.html",
+      "upstreamSha256": "02620675b563d02f5c27e5dcfb4e0189863db8b461a328a48c19c3ef3fafe188",
+      "packagedSha256": "c8d627289608a6539dc200096a1188be276c1ff53977d2844cbcac39745b6920",
+      "reason": "Custom message data was interpreted as markup through innerHTML.",
+      "change": "Create a pre element, assign className and textContent, then replaceChildren. Preserve payload and acknowledgement semantics; render data as literal text."
+    }
+  ],
+  "verification": {
+    "figma": "test-results/sandbox-app-integration.txt: native QuickJS, WebView and MiniAppHost with local fake Figma selection; literal custom-data injection regression. Real Figma account/session behavior is not asserted."
+  }
+}

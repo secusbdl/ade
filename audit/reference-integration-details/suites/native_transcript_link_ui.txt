@@ -1,0 +1,17 @@
+********* Start testing of TranscriptLinkUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TranscriptLinkUiTest::initTestCase()
+PASS   : TranscriptLinkUiTest::rejectsStaleChatAndPartBeforeClipboardAction()
+PASS   : TranscriptLinkUiTest::fixedChatAttachmentOpensReadOnlyWithoutSaveAndClosesWithHost()
+PASS   : TranscriptLinkUiTest::binaryAttachmentRemainsExplicitlyUnsupported()
+PASS   : TranscriptLinkUiTest::newTurnWorkspaceAuthorityDoesNotUpgradeOldHistoryOrSurviveWorkspaceSwap()
+PASS   : TranscriptLinkUiTest::realMarkdownEmitsScopedIdentityAndToleratesOwnerDeletion()
+PASS   : TranscriptLinkUiTest::restartDoesNotInventWorkspaceProvenance()
+PASS   : TranscriptLinkUiTest::liveTabsRejectUnknownCrossChatAndClosedMiniApps()
+SKIP   : TranscriptLinkUiTest::closedOrdinaryTabReopensOnlyCapturedLoopbackUrl() Real WebView fixture requires QT_QPA_PLATFORM=windows; run the same suite with the native Windows platform.
+D:/age/ADE/tests/test_transcript_link_ui.cpp(323) : failure location
+PASS   : TranscriptLinkUiTest::ordinaryLinkToleratesOwnerDeletion(registration)
+PASS   : TranscriptLinkUiTest::ordinaryLinkToleratesOwnerDeletion(activation)
+PASS   : TranscriptLinkUiTest::cleanupTestCase()
+Totals: 11 passed, 0 failed, 1 skipped, 0 blacklisted, 1893ms
+********* Finished testing of TranscriptLinkUiTest *********

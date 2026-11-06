@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-05",
+  "scope": "SettingsPage native implementation and integration observed in current MainWindow.cpp. This is a development handoff, not full Stagewise parity.",
+  "sourceBaseline": "17a0123a0e896885465df36169457199d5225eb5",
+  "files": [
+    "src/ui/SettingsPage.h",
+    "src/ui/SettingsPage.cpp",
+    "tests/test_settings.cpp"
+  ],
+  "api": {
+    "constructor": "SettingsPage(QString dataDir,QWidget* parent=nullptr)",
+    "signals": [
+      "backRequested()",
+      "providersRequested()",
+      "preferencesChanged()",
+      "restoreConversationRequested(QString id)"
+    ],
+    "storage": "dataDir/preferences.json with schemaVersion=1; dataDir/plugin-credentials.json via Windows DPAPI ProviderStore; no key file read"
+  },
+  "verification": {
+    "initialIntegratedBuild": "Parent reported native_settings/core/ui/browser tests passed before subsequent audit fixes.",
+    "latestAuditFixes": "Parent rebuild pending at creation of this handoff; see parent verification log for final result.",
+    "newRegressionScope": [
+      "Keyboard zoom persistence",
+      "Retired controls cannot mutate new content",
+      "External preferences edit protection",
+      "Malformed known preference shapes preserved",
+      "Oversized settings rejected before write",
+      "Corrupt plugin credential store preserved",
+      "DPAPI encryption fixture, no plaintext on disk",
+      "Navigation and archive restore signals",
+      "Search URL validation and persistence"
+    ]
+  },
+  "items": [
+    {
+      "section": "Agent / General",
+      "implemented": [
+        "Keep-awake preference",
+        "Notification loudness preference"
+      ],
+      "remaining": [
+        "Wire keep-awake to active agent work and idle states",
+        "Notification event playback, sound packs and per-event settings"
+      ]
+    },
+    {
+      "section": "Agent / Models & Providers",
+      "implemented": [
+        "Provider cards linked to native ProviderDialog",
+        "Ordered utility title-generation/context-compression models (add, move up, remove)",
+        "Named provider/model presets (create, remove)"
+      ],
+      "remaining": [
+        "Utility model fallback runtime execution",
+        "Model discovery/capability metadata per instance",
+        "Preset editing and native picker consumption",
+        "Full upstream authentication/coding-subscription provider variants",
+        "Exact upstream preset sampling/reasoning/token parameters"
+      ]
+    },
+    {
+      "section": "Agent / Skills & Context",
+      "implemented": [
+        "Local directories/files can be added, enabled, removed and opened",
+        "Paths persist"
+      ],
+      "remaining": [
+        "Skill discovery and parsing",
+        "Per-workspace rules and inheritance",
+        "Agent context injection",
+        "Upstream scope semantics and install/update workflow"
+      ]
+    },
+    {
+      "section": "Agent / Worktrees",
+      "implemented": [
+        "Setup script and worktree base directory persist"
+      ],
+      "remaining": [
+        "Run setup script with upstream environment variables on actual new worktrees",
+        "Per-workspace lifecycle UI and rollback/cleanup semantics"
+      ]
+    },
+    {
+      "section": "Agent / Plugins",
+      "implemented": [
+        "Figma, GitHub, PostHog, Supabase, Vercel cards",
+        "Enable flags",
+        "Separate Windows DPAPI credential storage; save/replace/remove; no token is read back into input"
+      ],
+      "remaining": [
+        "Bundled skills/operations runtime",
+        "Per-plugin credential semantics, OAuth and service permissions",
+        "PostHog regional host/project configuration",
+        "Additional upstream bundled plugins",
+        "Upstream plugin install/update and settings schema"
+      ]
+    },
+    {
+      "section": "Agent / Archived chats",
+      "implemented": [
+        "Search stored archived conversations",
+        "Emit restore ID; MainWindow unarchives/persists/rebuilds"
+      ],
+      "remaining": [
+        "Full upstream grouping/filtering and context menu parity"
+      ]
+    },
+    {
+      "section": "Personalization",
+      "implemented": [
+        "System/light/dark appearance persisted and consumed locally and by MainWindow",
+        "Zoom 70-130 persisted and applied; keyboard/mouse supported",
+        "Local settings accent theme selection applied",
+        "English language selected"
+      ],
+      "remaining": [
+        "MainWindow accent theme consumer",
+        "Additional languages",
+        "Exact visual/layout comparison at DPI/zoom levels",
+        "Full upstream color scheme/background customization"
+      ]
+    },
+    {
+      "section": "Browsing / General",
+      "implemented": [
+        "Google/Bing/DuckDuckGo built-ins",
+        "Custom engine name/keyword/URL validation; add/remove; default selection",
+        "MainWindow address search uses selected URL template",
+        "New-tab/startup URL persistence and MainWindow consumption",
+        "Permission-default selections persist"
+      ],
+      "remaining": [
+        "Permission enforcement in browser runtime",
+        "Per-site exception controls",
+        "Full upstream engine edit/keyword shortcuts",
+        "Startup restore-session and full new-tab modes"
+      ]
+    },
+    {
+      "section": "Browsing / Clear data",
+      "implemented": [
+        "Explicit selection and confirmation to remove ADE history and plugin credential files"
+      ],
+      "remaining": [
+        "Browser cookies/cache/site storage clearing",
+        "Time-range filtering and full upstream categories"
+      ]
+    },
+    {
+      "section": "Browsing / History",
+      "implemented": [
+        "Read/search recorded history",
+        "MainWindow records browser history",
+        "Double-click opens URL in OS browser"
+      ],
+      "remaining": [
+        "Open selected URL inside ADE browser",
+        "Per-entry deletion/time grouping",
+        "Full upstream search/pagination and history metadata"
+      ]
+    },
+    {
+      "section": "Account",
+      "implemented": [
+        "BYOK provider configuration route"
+      ],
+      "remaining": [
+        "Google/GitHub/email authentication service",
+        "Existing subscription login and account status",
+        "Account logout/billing/usage if required by upstream scope"
+      ]
+    },
+    {
+      "section": "About",
+      "implemented": [
+        "ADE version, pinned source version/SHA, upstream/license links, app-data folder"
+      ],
+      "remaining": [
+        "Signed release updates and updater lifecycle",
+        "Full third-party about/license listing",
+        "Exact upstream diagnostic/version details"
+      ]
+    }
+  ]
+}

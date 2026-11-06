@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "Native presentation sources migrated by parent; frozen independent evidence retained here. Full application integration was still running when this audit record was written.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeBaselineCommit": "dcacf3989f762c314261cc7613e7d32142d87b8c",
+  "contract": "presentation/contract.json",
+  "scopeAndLimits": "presentation/handoff.json",
+  "sourceAndBinaryHashes": "presentation/manifest.json",
+  "migrationPatch": "presentation/migration.patch",
+  "orderedExample": "presentation/expected-ordered-schema.json",
+  "independentValidation": [
+    {"suite":"presentation","passed":89,"failed":0,"evidence":"presentation/tests-final.txt","xml":"presentation/tests-final.xml"},
+    {"suite":"core","passed":48,"failed":0,"evidence":"presentation/core-final.txt","xml":"presentation/core-final.xml"},
+    {"suite":"engine observers","passed":56,"failed":0,"evidence":"presentation/observers-final.txt","xml":"presentation/observers-final.xml"},
+    {"suite":"history recovery","passed":28,"failed":0,"evidence":"presentation/history-final.txt","xml":"presentation/history-final.xml"}
+  ],
+  "reproductions": [
+    {"issue":"Existing native engine discarded canceled reasoning-only output across all four protocols.","before":"presentation/reasoning-retention-before.txt","result":"Four intended before-feature failures; retained UI-only reasoning regressions pass after."},
+    {"issue":"Immediate approval decision from displayChanged emitted a stale approvalRequired notification.","before":"presentation/approval-reentry-before.txt","result":"Both allow and deny reproduced; phase/index guard fixed."},
+    {"issue":"Forged UI-only marker suppressed legacy function_call, refusal or audio replay fields.","before":"presentation/ui-marker-replay-before.txt","result":"Three reproduced failures; exact allowed host envelope now required."},
+    {"issue":"Empty native part starts bypassed text bounds; saved display ID could collide with a derived legacy ID.","before":"presentation/display-bounds-before.txt","result":"Both reproduced; runtime 20,000-part cap and collision-safe final ID allocation fixed."}
+  ],
+  "peerReview":"Bounded source review by license_review; findings reproduced locally. Peer did not independently execute these tests.",
+  "runtimeScope":"Fake loopback providers and tokens only; no live provider request or real user credential was used for this presentation slice.",
+  "preservedBehavior":"Latest queued reply callbacks, lifetime/generation guards, accepted-submit bool semantics, formatted att routing, native signatures and existing attachment/snapshot metadata remain intact.",
+  "remainingLimits":"Visual parity, durable mid-stream checkpoints/fork capture, old histories whose original interleaving was never retained, and unavailable tool-specific actions remain separate work. Passing fixture suites establish the exercised scope, not complete parity or zero defects."
+}

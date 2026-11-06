@@ -1,0 +1,8 @@
+********* Start testing of ReadLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ReadLifecycleTest::initTestCase()
+FAIL!  : ReadLifecycleTest::pipelineLeaseCannotCrossChatIdentity() '!QJsonDocument(wrong).toJson().contains("private-first-only")' returned FALSE. ()
+D:/age/ADE/private/read-lifecycle-stage/tests/test_read_lifecycle.cpp(167) : failure location
+PASS   : ReadLifecycleTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 9ms
+********* Finished testing of ReadLifecycleTest *********

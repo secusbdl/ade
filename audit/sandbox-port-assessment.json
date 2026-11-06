@@ -1,0 +1,51 @@
+{
+  "assessed_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstream_execution_contract": {
+    "tool": "executeSandboxJs",
+    "input": ["explanation", "script"],
+    "output": ["message", "result"],
+    "execution": "Persistent per-agent Node.js VM context in a separate utility worker process; each script runs in an async IIFE. No page document/window. Globals persist across calls.",
+    "deadlines": "30 seconds synchronous VM timeout; 45 seconds asynchronous inactivity timeout reset by API.output/createAttachment; 3 minutes hard wall-clock cap.",
+    "API": ["sendCDP", "onCDPEvent", "getCredential", "output", "createAttachment", "openApp", "closeApp", "sendMessage", "onMessage"],
+    "host_globals": ["setTimeout", "clearTimeout", "setInterval", "clearInterval", "setImmediate", "clearImmediate", "fetch", "Headers", "Request", "Response", "AbortController", "AbortSignal", "URL", "URLSearchParams", "TextEncoder", "TextDecoder", "Blob", "FormData", "Buffer", "structuredClone", "atob", "btoa", "queueMicrotask", "crypto.randomUUID", "process compatibility shim", "require", "importModule", "self", "global", "fs", "fsPromises"],
+    "allowed_node_modules": ["buffer", "crypto", "events", "path", "querystring", "stream", "string_decoder", "url", "util", "zlib", "assert"],
+    "sandboxed_node_modules": ["fs", "fs/promises"],
+    "filesystem": "Mount-prefixed paths and per-mount read/list/create/edit/delete permissions. att is read-only to fs; new attachments use API.createAttachment. Filesystem changes emit diff notifications.",
+    "network": "fetch uses credential placeholders with origin-gated substitution; HTTPS importModule fetches/caches bundled modules. No raw provider keys should be made page globals.",
+    "not_exposed": "Raw process/child_process, net/http/https/http2/tls/dns, worker_threads/vm/os and other blocked modules. Shell execution remains a separate native tool."
+  },
+  "qjsengine_probe": {
+    "version": "Installed Qt 6.11.2 MinGW static build",
+    "source": "audit/browser-probe/js-runtime-probe.cpp",
+    "log": "test-results/js-runtime-probe.txt",
+    "observed": {
+      "Promise": "available",
+      "async_await": "SyntaxError: Expected token ','",
+      "globalThis": "ReferenceError: globalThis is not defined",
+      "BigInt": "undefined",
+      "fetch": "undefined",
+      "Buffer": "undefined",
+      "require": "undefined",
+      "setInterrupted": "Successfully interrupted a bounded infinite-loop probe from another native thread."
+    },
+    "conclusion": "QJSEngine cannot directly execute current upstream async-IIFE scripts. A globalThis alias is simple, but async syntax/transpilation and host APIs would be substantial compatibility work."
+  },
+  "native_worker_candidate": {
+    "engine": "QuickJS-NG v0.18.0, commit d7215b0ad3fc2c562e8317fd9bca058fd4863804",
+    "reason": "Modern ECMAScript including async functions; embeddable native C API with memory/stack limits and interrupt hooks.",
+    "windows_build": "VERIFIED: native GCC 16.2.0 MinGW64 static C engine and QtCore C++ worker compile/link/run. No Qt, QuickJS, libstdc++ or libwinpthread DLL imports; Windows system DLL imports remain.",
+    "recommended_shape": "Separate native worker process with one bounded runtime/context per agent, a controlled promise/job queue, deadline watchdog, and correlated IPC to the C++ host for CDP, mounted filesystem, attachments, network and app messaging.",
+    "compatibility_work": "Implement and test the actual upstream host APIs and required Node-module behavior. A JavaScript engine alone is not a Node.js compatibility layer. Do not expose the engine's unrestricted OS/stdio/process modules. Preserve origin-scoped credential substitution in the native network broker.",
+    "status": "Native executeSandboxJs subset implemented and tested. See audit/sandbox-native.json for tested behavior and remaining upstream gaps. Full Node/API parity is not established."
+  },
+  "sources": [
+    "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+    "upstream/stagewise/apps/browser/src/backend/services/sandbox/ipc.ts",
+    "upstream/stagewise/apps/browser/src/backend/env-domains/sandbox-domain-adapter.prompt.md",
+    "https://doc.qt.io/qt-6/qjsengine.html",
+    "https://bellard.org/quickjs/quickjs.html",
+    "https://github.com/quickjs-ng/quickjs",
+    "https://raw.githubusercontent.com/quickjs-ng/quickjs/master/CMakeLists.txt"
+  ]
+}

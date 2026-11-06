@@ -1,0 +1,44 @@
+{
+  "verified_on": "2026-11-05",
+  "implementation": ["src/browser/browserwidget.h", "src/browser/browserwidget.cpp"],
+  "clear_data": {
+    "entry": "clearBrowsingData(requestId,QJsonObject options)",
+    "completion": "browsingDataCleared(requestId,bool success,QString error)",
+    "boolean_options": ["cookies", "cache", "storage", "indexedDB", "serviceWorkers", "cacheStorage", "history", "downloads"],
+    "engine": "WebView2 ICoreWebView2Profile2::ClearBrowsingData with selected enum flags. Applies to the shared browser profile, so the host should issue one request per profile, not per tab.",
+    "bounds": "45-second completion watchdog, eight concurrent requests maximum, duplicate-ID detection with correlation tokens. Unknown options/timeRange/non-boolean values reject explicitly before clearing.",
+    "scope": "All-time selected runtime data only. Local ADE history/download JSON, plugin credentials and application permission preferences remain host-owned. No downloaded file is deleted. If the view is destroyed, the runtime may complete or abandon the operation without a callback; the host must close/settle its UI on QObject destruction.",
+    "verification": "Real loopback localStorage clear preserves cookies and Cache Storage; then selected cookies/cacheStorage/HTTP cache clear removes them. Unready, invalid timeRange, duplicate ID and widget deletion in completion tested."
+  },
+  "downloads": {
+    "engine": "WebView2 DownloadStarting COM deferral and DownloadOperation bytes/state events; default WebView download dialog suppressed.",
+    "entry_signal": "downloadRequested(id,sourceUrl,suggestedName,mimeType,totalBytes)",
+    "commands": ["acceptDownload(id,absolutePath,overwrite=false)", "cancelDownload(id)", "pauseDownload(id)", "resumeDownload(id)"],
+    "signals": ["downloadStarted(id,path)", "downloadProgress(id,receivedBytes,totalBytes)", "downloadStateChanged(id,state,canResume,error)", "downloadFinished(id,path,success,error)"],
+    "states": ["awaiting-path", "in-progress", "paused", "interrupted", "completed", "canceled"],
+    "destination": "The native host selects an absolute destination. Existing files are rejected unless overwrite=true is explicitly supplied. Directory/symlink destinations, Windows device names, trailing dot/space components and alternate streams reject. Concurrent active downloads cannot share the same normalized destination.",
+    "permission_distinction": "A destination choice is requested for each download. The separate downloads permission maps to WebView2 MultipleAutomaticDownloads and is not misrepresented as a blanket permission for first/manual downloads.",
+    "lifecycle": "32 active download limit; destination prompt times out after120seconds by default (configurable50..120000ms). Cancel/timeout/deletion completes pending deferrals and cancels operations. Late decisions are ignored. Paused/resumable interrupted operations retain their native handle; completed/canceled records detach callbacks.",
+    "verification": ["real loopback Content-Disposition filename and total-byte metadata", "exact1024-byte save", "existing file preserved when overwrite not confirmed", "512KiB transfer pause/resume with HTTP Range and exact bytes", "cancel after data reaches destination", "unanswered destination timeout", "late accept ignored", "delete widget while selection pending", "delete widget from downloadStarted while accepting COM deferral"],
+    "host_responsibilities": "Native file chooser/overwrite confirmation, downloads list/history persistence and user-visible progress controls are MainWindow responsibilities. This component never executes downloaded files."
+  },
+  "test_evidence": {
+    "test_source": "tests/test_browser_tools.cpp",
+    "full_suite": "24 passed,0 failed,0 skipped in15206ms",
+    "component_regressions": "14 passed,0 failed,0 skipped in5716ms",
+    "logs": ["test-results/browser-tool-tests.txt", "test-results/browser-tool-tests.xml", "test-results/browser-clear-data-tests.txt", "test-results/browser-download-tests.txt", "test-results/browser-tests.txt"],
+    "fixture": "Only local loopback HTTP and temporary profiles/files. No external website approvals, real device permission acquisition or provider credentials."
+  },
+  "remaining_gaps": [
+    "Time-range clearing and upstream Electron-specific database/favicons/vacuum semantics are not exposed by this BrowserWidget API.",
+    "Persistent cross-restart download history and resume are host/product work, not established by an in-memory WebView download handle.",
+    "Multiple automatic download permission behavior is mapped, but the tests cover native destination/transfer lifecycle rather than Chromium's heuristic trigger for that permission.",
+    "Tests establish these listed Windows/WebView2 behaviors; full upstream browser/device parity is not claimed."
+  ],
+  "sources": [
+    "upstream/stagewise/apps/browser/src/backend/services/pages.ts",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2profile2",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2downloadstartingeventargs",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2downloadoperation"
+  ]
+}

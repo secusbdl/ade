@@ -1,0 +1,5 @@
+add_library(ade_git_ui STATIC ../GitPanel.h ../GitPanel.cpp ../WorktreeSettingsController.h ../WorktreeSettingsController.cpp ../WorktreeSettingsPane.h ../WorktreeSettingsPane.cpp ../resources/git_ui.qrc)
+set_target_properties(ade_git_ui PROPERTIES AUTOMOC ON AUTORCC ON)
+target_compile_features(ade_git_ui PUBLIC cxx_std_20)
+target_include_directories(ade_git_ui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+target_link_libraries(ade_git_ui PUBLIC ade_git ade_editor Qt6::Widgets)

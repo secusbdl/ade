@@ -1,0 +1,41 @@
+{
+  "status": "Private only. Integration contract proposal; do not copy staged files over production ToolExecutor/AgentEngine.",
+  "build": {
+    "library_sources": [
+      "src/FileMutationStore.h",
+      "src/FileMutationStore.cpp"
+    ],
+    "dependencies": [
+      "Qt6::Core",
+      "Qt6::Sql",
+      "Windows system APIs"
+    ],
+    "test_dependencies": [
+      "Qt6::Test"
+    ],
+    "static_requirements": "CMAKE_LINK_SEARCH_END_STATIC TRUE and existing static MinGW flags; no Node/Electron dependency."
+  },
+  "ownership": "One FileMutationStore object is fixed to profile data directory and agent ID; all QtSql calls must stay on its owning native worker thread. A per-agent process lock serializes apply/undo/recover; immutable host mount bindings are captured into each plan.",
+  "request_provenance": "Host generates a unique nonce per dispatch and supplies agentId/toolCallId/tool/path/content/edits/move. Never accept a page/model-selected backing root, data directory or nonce. Same provider tool ID may be reused across turns because nonce remains unique.",
+  "adapter_order": [
+    "Rebase against production read lifecycle first, preserving trailing ToolExecutor completion metadata and value-only formatted-read committer",
+    "Create dedicated native journal coordinator/worker in host lifecycle; use fresh current source, not a stale staged ToolExecutor copy",
+    "Route only authorized native mutation tools through the coordinator and carry the immutable cancellation token/dispatch generation",
+    "Publish normal tool success only after durable commit. A cancellation after commit cannot claim rollback; retain the durable record even if the engine rejects a stale completion",
+    "Return journal nonce in host-owned result metadata and preserve fileChanged compatibility signals after commit, with current QPointer/generation guards",
+    "Host undo resolves the original bound mount and owner; do not map old ws1 records to a replacement workspace",
+    "Implement pending scope before exposing complete source schemas: automatic parents, file-to-directory destination semantics, recursive operation manifests, group undo, raw fs adapters and history UI"
+  ],
+  "api": {
+    "constructor": "FileMutationStore(QString dataDirectory, QString agentId)",
+    "open": "bool open(QString* error)",
+    "mounts": "bool bindMount(prefix,root,writable,error)",
+    "execute": "Result execute(Request,const std::atomic_bool* cancelled=nullptr)",
+    "undo": "Result undo(agentId,originalNonce,undoNonce,cancelled)",
+    "recover": "QList<Result> recover()",
+    "describe": "QJsonObject describe(nonce,error)"
+  },
+  "failure_contract": "success=false/recoveryRequired=false means no committed mutation and successful cleanup/rollback or a preflight failure; recoveryRequired=true means retained journal/owned artifacts need recovery or a conflict remains. success=true may still carry a cleanup warning after commit; never translate that into an unchanged-files claim.",
+  "new_lifecycle_work": "Chat permanent deletion must remove only that agent journal records after durable cleanup marker commit, preserving snapshots referenced by other agents. Conversation forks must not silently gain undo authority over original-agent mutations. These APIs are not implemented in this prototype.",
+  "ready_tests": "mutation-tests.txt/xml, 40 passed; no production test-count claim."
+}

@@ -1,0 +1,441 @@
+{
+  "status": "Paused at explicit user request; unfinished objective preserved",
+  "recordedUtc": "2026-11-05T16:08:26.752327+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeBaselineBeforeCheckpoint": "dcacf3989f762c314261cc7613e7d32142d87b8c",
+  "latestRunnableBuild": "out/presentation-streaming-preview/ADE.exe",
+  "lastAllGreenBuild": "out/read-context-conversations-checkpoint/ADE.exe",
+  "lastAllGreenScope": "ac99672,40/40 suites; predates formatted att and new transcript/chrome",
+  "fullIntegration": {
+    "suites": 45,
+    "passed": 41,
+    "failed": 4,
+    "seconds": 472.0,
+    "report": "audit/paused-presentation-checkpoint/integration.xml",
+    "details": [
+      {
+        "suite": "native_presentation",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 89 passed, 0 failed, 0 skipped, 0 blacklisted, 16692ms"
+      },
+      {
+        "suite": "native_transcript",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 33 passed, 0 failed, 0 skipped, 0 blacklisted, 2423ms"
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 2321ms"
+      },
+      {
+        "suite": "native_main_chrome",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 2712ms"
+      },
+      {
+        "suite": "native_formatted_att",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 33 passed, 0 failed, 0 skipped, 0 blacklisted, 2775ms"
+      },
+      {
+        "suite": "native_conversations",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 18543ms"
+      },
+      {
+        "suite": "native_history_recovery",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 28 passed, 0 failed, 0 skipped, 0 blacklisted, 1157ms"
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 512ms"
+      },
+      {
+        "suite": "native_raw_enumeration_races",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 1911ms"
+      },
+      {
+        "suite": "native_git_watcher",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 23841ms"
+      },
+      {
+        "suite": "native_git_watcher_ui",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 22119ms"
+      },
+      {
+        "suite": "native_file_tools_races",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 742ms"
+      },
+      {
+        "suite": "native_archive_transformer",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 41ms"
+      },
+      {
+        "suite": "native_file_tools",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 50ms"
+      },
+      {
+        "suite": "native_attachment_mount",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 662ms"
+      },
+      {
+        "suite": "native_file_transformer",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms"
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 42841ms"
+      },
+      {
+        "suite": "native_git_host",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 48505ms"
+      },
+      {
+        "suite": "native_sandbox_apps",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 2098ms"
+      },
+      {
+        "suite": "native_runtime_apps",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 6494ms"
+      },
+      {
+        "suite": "native_git",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 112315ms"
+      },
+      {
+        "suite": "native_git_ui",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 64779ms"
+      },
+      {
+        "suite": "native_app_resources",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 66ms"
+      },
+      {
+        "suite": "native_mini_apps",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 3484ms"
+      },
+      {
+        "suite": "native_attachments",
+        "passed": false,
+        "failures": [
+          "FAIL!  : AttachmentTest::nativeEngineImageRequest(openai) Compared values are not the same",
+          "FAIL!  : AttachmentTest::nativeEngineImageRequest(responses) Compared values are not the same",
+          "FAIL!  : AttachmentTest::nativeEngineImageRequest(anthropic) Compared values are not the same",
+          "FAIL!  : AttachmentTest::nativeEngineImageRequest(google) Compared values are not the same",
+          "FAIL!  : AttachmentTest::fallbackRebuildsFromOriginalReferences() Compared values are not the same",
+          "FAIL!  : AttachmentTest::preparationFailureAndCancellationKeepOriginalHistory() Compared values are not the same"
+        ],
+        "totals": "Totals: 17 passed, 6 failed, 0 skipped, 0 blacklisted, 872ms"
+      },
+      {
+        "suite": "native_read_lifecycle",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 454ms"
+      },
+      {
+        "suite": "native_read_runtime",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2161ms"
+      },
+      {
+        "suite": "native_plugins",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 1070ms"
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 5421ms"
+      },
+      {
+        "suite": "native_downloads",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 8556ms"
+      },
+      {
+        "suite": "native_settings_audit",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 343ms"
+      },
+      {
+        "suite": "native_network",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 1885ms"
+      },
+      {
+        "suite": "native_terminal",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 3105ms"
+      },
+      {
+        "suite": "native_engine_observers",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 8265ms"
+      },
+      {
+        "suite": "native_core",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8752ms"
+      },
+      {
+        "suite": "native_context",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 254ms"
+      },
+      {
+        "suite": "native_ui",
+        "passed": false,
+        "failures": [
+          "FAIL!  : UiTest::emptyComposerStaysCompact() 'composer.height()<=220' returned FALSE. ()"
+        ],
+        "totals": "Totals: 10 passed, 1 failed, 0 skipped, 0 blacklisted, 2351ms"
+      },
+      {
+        "suite": "native_ui_audit",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 8423ms"
+      },
+      {
+        "suite": "native_editor",
+        "passed": false,
+        "failures": [
+          "FAIL!  : EditorTest::encodingAndEolRoundTrip(2-1-0a) 'widget.save(&error)' returned FALSE. (Save failed; the previous file was preserved: Access is denied.)"
+        ],
+        "totals": "Totals: 26 passed, 1 failed, 0 skipped, 0 blacklisted, 1527ms"
+      },
+      {
+        "suite": "native_sandbox",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 27 passed, 0 failed, 0 skipped, 0 blacklisted, 5701ms"
+      },
+      {
+        "suite": "native_runtime",
+        "passed": false,
+        "failures": [
+          "FAIL!  : RuntimeTests::userAttachmentIsPreparedAndPersistedAsReference() Compared values are not the same"
+        ],
+        "totals": "Totals: 9 passed, 1 failed, 0 skipped, 0 blacklisted, 6632ms"
+      },
+      {
+        "suite": "native_fonts",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 396ms"
+      },
+      {
+        "suite": "native_browser",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 7172ms"
+      },
+      {
+        "suite": "native_settings",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 461ms"
+      },
+      {
+        "suite": "native_browser_tools",
+        "passed": true,
+        "failures": [],
+        "totals": "Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 18226ms"
+      }
+    ]
+  },
+  "newFocusedChecks": "89 presentation and33 transcript component cases passed; integrated transcript UI4/4 including lifecycle setup/cleanup passed.",
+  "unresolvedFailures": [
+    "native_attachments:4 provider rows compare entire attachment metadata; actual now also contains versioned display. Review assertions while retaining exact attachment/native wire checks.",
+    "native_runtime: saved attachment metadata equality also observes the new display field. Review preservation semantics before changing assertion.",
+    "native_ui: long-composer assertion still expects<=220, while new upstream-derived cap is256. Review test intent.",
+    "native_editor: encodingAndEolRoundTrip(2-1-0a) failed Save with Access is denied. Cause unverified; reproduce without assuming transient failure."
+  ],
+  "liveComparison": {
+    "earlierPairedContext": "audit/paired-read-context-native.json",
+    "currentPreviewObserved": true,
+    "newRequestsOnPreview": 0,
+    "observedDifferences": [
+      "Light transcript scroll area is blue inside white chat surface.",
+      "Compact read label retains native ws1/ prefix.",
+      "Native always opens browser content; reference chat-only layout differs.",
+      "Native showed a provider-supplied legacy Thought part; reference paired response did not show one. Exact model output/reasoning identity is not established."
+    ],
+    "sideBySideLimit": "Both live apps inspected in alternating windows; literal half-screen arrangement was not completed."
+  },
+  "stagedWorkArchive": "out\\checkpoints\\2026-11-05-paused-native-port\\unfinished-stages-source.zip",
+  "stagedWorkArchiveSha256": "09ab5abc8f27eb89f0111fe5a4c77ce430d09ddf86f688e294f4793303f53f5a",
+  "stagedFiles": 376,
+  "stagedWorkStatus": {
+    "sidebar-navigation-stage": "Unfinished; consult stage stop-checkpoint status. Not integrated.",
+    "workbench-layout-stage": "Baseline plus uncompiled layout/helper edits. No build/test run; background/ws1 regression fixes pending.",
+    "transcript-links-stage": "Not created; read-only source audit only. Proposed resolver/API remains pending.",
+    "file-mutations-stage": "Prior private40-case store prototype; host adapters/recursive operations/lifecycle/UI remain pending.",
+    "git-usage-stage": "Prior private30-case journal/policy; host lifecycle and cleanup integration remain pending."
+  },
+  "binaries": [
+    {
+      "file": "out\\presentation-streaming-preview\\ADE.exe",
+      "bytes": 77964756,
+      "sha256": "accde9afa022e014cf5d8ca440d997be4750c32f2d7e26c5f6fe3652a641cf4e",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "file": "out\\presentation-streaming-preview\\ADE-sandbox-worker.exe",
+      "bytes": 19775944,
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "file": "out\\presentation-streaming-preview\\WebView2Loader.dll",
+      "bytes": 194912,
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "imports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "credentialScan": {
+    "authorizedValuesChecked": 14,
+    "filesChecked": 527,
+    "matches": 0
+  },
+  "resumeOrder": [
+    "Reproduce and resolve the four full-suite failures, preserving original logs.",
+    "Finish private workbench and sidebar stages; inspect their checkpoint manifests and rebase narrow hooks.",
+    "Correct transcript background/ws1 labels and scoped internal-link routing, then validate real UI.",
+    "Continue the full source feature inventory; do not treat these checkpoints as full parity."
+  ],
+  "runtimeState": "Reference Stagewise and own native visual fixture may remain open; user preview is separate. Do not close or alter the user test window on resume."
+}

@@ -1,0 +1,176 @@
+[0/2] Re-checking globbed directories...
+-- GLOB mismatch!
+The following files were added:
+  +D:/age/ADE/src/ui/MainWindowLinks.cpp
+-- GLOB mismatch!
+The following files were added:
+  +D:/age/ADE/src/ui/ChevronToolButton.h
+[1/2] Re-running CMake...
+-- Using Qt bundled ZLIB.
+-- Using Qt bundled PCRE2.
+-- Using Qt bundled PNG.
+-- Using Qt bundled Harfbuzz.
+-- Using Qt bundled Freetype.
+-- Using Qt bundled Jpeg.
+-- Configuring done (0.6s)
+-- Generating done (1.6s)
+-- Build files have been written to: D:/age/ADE/build-next
+[0/4] Re-checking globbed directories...
+[1/238] Automatic MOC and UIC for target ade_file_transformer
+[2/236] Automatic MOC and UIC for target ade_network
+[3/234] Automatic MOC and UIC for target ade_editor
+[4/232] Automatic MOC and UIC for target ADE-sandbox-worker
+[5/230] Automatic MOC and UIC for target ade_core
+[6/228] Automatic MOC and UIC for target test_git_ui
+[7/226] Automatic MOC and UIC for target ade_attachments
+[8/224] Automatic MOC and UIC for target ade_plugins
+[9/222] Automatic MOC and UIC for target ade_transcript_links
+[10/222] Building CXX object CMakeFiles/ade_transcript_links.dir/ade_transcript_links_autogen/mocs_compilation.cpp.obj
+[11/222] Automatic MOC and UIC for target ade_host
+[12/222] Automatic MOC and UIC for target test_transcript
+[13/222] Building CXX object CMakeFiles/ade_host.dir/ade_host_autogen/mocs_compilation.cpp.obj
+[14/222] Automatic MOC and UIC for target render_settings
+[15/221] Automatic MOC and UIC for target test_fonts
+[16/219] Automatic MOC and UIC for target provider_probe
+[17/217] Building CXX object CMakeFiles/ade_transcript_links.dir/src/links/TranscriptLinkResolver.cpp.obj
+[18/217] Automatic MOC and UIC for target test_sidebar_model
+[19/215] Linking CXX static library libade_transcript_links.a
+[20/215] Automatic MOC and UIC for target test_presentation
+[21/213] Automatic MOC and UIC for target test_history_recovery
+[22/211] Automatic MOC and UIC for target test_session_cleanup
+[23/210] Automatic MOC and UIC for target test_raw_enumeration_races
+[24/208] Automatic MOC and UIC for target test_git_watcher
+[25/206] Building CXX object CMakeFiles/ade_host.dir/src/runtime/AgentToolHost.cpp.obj
+[26/206] Automatic MOC and UIC for target test_git_watcher_ui
+[27/204] Linking CXX static library libade_host.a
+[28/204] Automatic MOC and UIC for target test_file_tools_races
+[29/202] Automatic MOC and UIC for target test_transcript_links
+[30/202] Automatic MOC and UIC for target test_archive_transformer
+[31/200] Automatic MOC and UIC for target test_file_tools
+[32/198] Automatic MOC and UIC for target ade_ui
+[33/198] Automatic MOC and UIC for target test_formatted_att
+[34/197] Automatic MOC and UIC for target test_attachment_mount
+[35/196] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[36/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ConversationView.cpp.obj
+[37/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowApps.cpp.obj
+[38/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowConversations.cpp.obj
+[39/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowGit.cpp.obj
+[40/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[41/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowWorkbench.cpp.obj
+[42/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowLinks.cpp.obj
+[43/196] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SessionStore.cpp.obj
+[44/196] Automatic MOC and UIC for target test_file_transformer
+[45/194] Automatic MOC and UIC for target test_worktree_settings
+[46/192] Automatic MOC and UIC for target test_sandbox_apps
+[47/191] Automatic MOC and UIC for target test_runtime_apps
+[48/190] Automatic MOC and UIC for target test_git
+[49/188] Automatic MOC and UIC for target test_app_resources
+[50/187] Automatic MOC and UIC for target test_mini_apps
+[51/186] Automatic MOC and UIC for target test_attachments
+[52/184] Automatic MOC and UIC for target test_read_lifecycle
+[53/182] Automatic MOC and UIC for target test_read_runtime
+[54/181] Automatic MOC and UIC for target test_plugins
+[55/179] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SidebarNavigation.cpp.obj
+[56/179] Automatic MOC and UIC for target test_sandbox_network
+[57/178] Automatic MOC and UIC for target test_downloads
+[58/177] Automatic MOC and UIC for target test_settings_audit
+[59/176] Automatic MOC and UIC for target test_network
+[60/174] Automatic MOC and UIC for target test_terminal
+[61/172] Automatic MOC and UIC for target test_engine_observers
+[62/170] Automatic MOC and UIC for target test_core
+[63/168] Automatic MOC and UIC for target test_context
+[64/166] Automatic MOC and UIC for target test_editor
+[65/164] Automatic MOC and UIC for target test_sandbox
+[66/163] Automatic MOC and UIC for target test_browser
+[67/161] Automatic MOC and UIC for target test_settings
+[68/160] Automatic MOC and UIC for target test_browser_tools
+[69/158] Automatic MOC and UIC for target test_runtime
+[70/157] Building CXX object CMakeFiles/test_transcript.dir/test_transcript_autogen/mocs_compilation.cpp.obj
+[71/157] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SettingsPage.cpp.obj
+[72/157] Linking CXX static library libade_ui.a
+[73/157] Automatic MOC and UIC for target ADE
+[74/156] Automatic MOC and UIC for target test_transcript_link_ui
+[75/156] Automatic MOC and UIC for target test_workbench_layout
+[76/155] Automatic MOC and UIC for target test_workbench_helpers
+[77/154] Building CXX object CMakeFiles/test_transcript.dir/tests/test_transcript.cpp.obj
+[78/154] Automatic MOC and UIC for target test_chevron
+[79/154] Automatic MOC and UIC for target test_sidebar_navigation
+[80/153] Building CXX object CMakeFiles/test_transcript.dir/src/ui/ConversationView.cpp.obj
+[81/153] Automatic MOC and UIC for target test_transcript_ui
+[82/152] Automatic MOC and UIC for target test_conversations
+[83/151] Automatic MOC and UIC for target test_main_chrome
+[84/150] Automatic MOC and UIC for target test_git_host
+[85/149] Automatic MOC and UIC for target test_ui_audit
+[86/148] Automatic MOC and UIC for target test_ui
+[87/147] Building CXX object CMakeFiles/ADE.dir/src/main.cpp.obj
+[88/147] Building CXX object CMakeFiles/test_transcript_links.dir/test_transcript_links_autogen/mocs_compilation.cpp.obj
+[89/147] Building CXX object CMakeFiles/render_settings.dir/src/ui/SessionStore.cpp.obj
+[90/147] Building CXX object CMakeFiles/test_transcript_link_ui.dir/test_transcript_link_ui_autogen/mocs_compilation.cpp.obj
+[91/147] Building CXX object CMakeFiles/render_settings.dir/src/ui/SettingsPage.cpp.obj
+[92/147] Building CXX object CMakeFiles/test_transcript_links.dir/tests/test_transcript_links.cpp.obj
+[93/147] Building CXX object CMakeFiles/test_transcript_link_ui.dir/tests/test_transcript_link_ui.cpp.obj
+[94/147] Building CXX object CMakeFiles/test_chevron.dir/test_chevron_autogen/mocs_compilation.cpp.obj
+[95/147] Building CXX object CMakeFiles/test_workbench_helpers.dir/tests/test_workbench_helpers.cpp.obj
+[96/147] Building CXX object CMakeFiles/test_workbench_layout.dir/tests/test_workbench_layout.cpp.obj
+[97/147] Building CXX object CMakeFiles/test_chevron.dir/tests/test_chevron.cpp.obj
+[98/147] Building CXX object CMakeFiles/test_sidebar_navigation.dir/tests/test_sidebar_navigation.cpp.obj
+[99/147] Building CXX object CMakeFiles/test_transcript_ui.dir/tests/test_transcript_ui.cpp.obj
+[100/147] Building CXX object CMakeFiles/test_main_chrome.dir/tests/test_main_chrome.cpp.obj
+D:/age/ADE/tests/test_main_chrome.cpp: In member function 'void MainChromeTest::keyboardCanReopenAndFocusSearch()':
+D:/age/ADE/tests/test_main_chrome.cpp:95:158: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   95 |         QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);window.activateWindow();QApplication::setActiveWindow(&window);auto* input=window.findChild<Composer*>();input->setFocus();QCoreApplication::processEvents();
+      |                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestkeyboard.h:27,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestevent.h:14,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_gui.h:17,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_widgets.h:15,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest.h:282,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/QtTest:11,
+                 from D:/age/ADE/tests/test_main_chrome.cpp:19:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[101/147] Building CXX object CMakeFiles/test_session_cleanup.dir/src/ui/SessionStore.cpp.obj
+[102/147] Building CXX object CMakeFiles/test_formatted_att.dir/tests/test_formatted_att.cpp.obj
+[103/147] Building CXX object CMakeFiles/test_conversations.dir/tests/test_conversations.cpp.obj
+[104/147] Building CXX object CMakeFiles/test_attachment_mount.dir/tests/test_attachment_mount.cpp.obj
+[105/147] Building CXX object CMakeFiles/test_git_host.dir/tests/test_git_host.cpp.obj
+[106/147] Building CXX object CMakeFiles/test_runtime_apps.dir/tests/test_runtime_apps.cpp.obj
+[107/147] Building CXX object CMakeFiles/test_read_runtime.dir/src/ui/SessionStore.cpp.obj
+[108/147] Building CXX object CMakeFiles/test_read_runtime.dir/tests/test_read_runtime.cpp.obj
+[109/147] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/SessionStore.cpp.obj
+[110/147] Building CXX object CMakeFiles/test_ui.dir/tests/test_ui.cpp.obj
+[111/147] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/SettingsPage.cpp.obj
+[112/147] Building CXX object CMakeFiles/test_ui_audit.dir/tests/test_ui_audit.cpp.obj
+[113/147] Building CXX object CMakeFiles/test_runtime.dir/tests/test_runtime.cpp.obj
+[114/147] Building CXX object CMakeFiles/test_settings.dir/src/ui/SessionStore.cpp.obj
+[115/147] Linking CXX executable bin\ADE.exe
+[116/147] Building CXX object CMakeFiles/test_settings.dir/src/ui/SettingsPage.cpp.obj
+[117/147] Linking CXX executable bin\test_transcript_links.exe
+[118/147] Linking CXX executable bin\test_transcript_link_ui.exe
+[119/147] Linking CXX executable bin\test_workbench_layout.exe
+[120/147] Linking CXX executable bin\test_workbench_helpers.exe
+[121/147] Linking CXX executable test_transcript.exe
+[122/147] Linking CXX executable bin\test_chevron.exe
+[123/147] Linking CXX executable bin\test_sidebar_navigation.exe
+[124/147] Linking CXX executable bin\test_transcript_ui.exe
+[125/147] Linking CXX executable bin\test_main_chrome.exe
+[126/147] Linking CXX executable bin\test_formatted_att.exe
+[127/147] Linking CXX executable test_session_cleanup.exe
+[128/147] Linking CXX executable bin\test_conversations.exe
+[129/147] Linking CXX executable bin\test_attachment_mount.exe
+[130/147] Linking CXX executable bin\test_git_host.exe
+[131/147] Linking CXX executable bin\test_sandbox_apps.exe
+[132/147] Linking CXX executable bin\test_runtime_apps.exe
+[133/147] Linking CXX executable bin\test_app_resources.exe
+[134/147] Linking CXX executable bin\test_mini_apps.exe
+[135/147] Linking CXX executable bin\test_read_runtime.exe
+[136/147] Linking CXX executable render_settings.exe
+[137/147] Linking CXX executable bin\test_sandbox_network.exe
+[138/147] Linking CXX executable bin\test_downloads.exe
+[139/147] Linking CXX executable test_settings_audit.exe
+[140/147] Linking CXX executable bin\test_ui.exe
+[141/147] Linking CXX executable bin\test_ui_audit.exe
+[142/147] Linking CXX executable bin\test_sandbox.exe
+[143/147] Linking CXX executable bin\test_runtime.exe
+[144/147] Linking CXX executable test_settings.exe

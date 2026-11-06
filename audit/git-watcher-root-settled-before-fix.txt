@@ -1,0 +1,8 @@
+********* Start testing of GitWatcherTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitWatcherTests::initTestCase()
+FAIL!  : GitWatcherTests::repositoryDisappearsAndReturns() '!coverage.last()[1].toBool()' returned FALSE. ()
+D:/age/ADE/tests/test_git_watcher.cpp(135) : failure location
+PASS   : GitWatcherTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 18351ms
+********* Finished testing of GitWatcherTests *********

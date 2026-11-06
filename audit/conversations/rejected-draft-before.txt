@@ -1,0 +1,27 @@
+********* Start testing of ConversationsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ConversationsTest::initTestCase()
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) Rejected-history preservation: visibleDraft= false  diskDraft= false  reopenedDraft= false  draftAttachments= true  reopenedAttachments= true
+FAIL!  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) Compared values are not the same
+   Actual   (visibleDraft): ""
+   Expected (rawDraft)    : " \t keep this exact\n  draft \t\n"
+D:/age/ADE/tests/test_conversations.cpp(232) : failure location
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) Rejected-history preservation: visibleDraft= false  diskDraft= false  reopenedDraft= false  draftAttachments= false  reopenedAttachments= false
+FAIL!  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) Compared values are not the same
+   Actual   (visibleDraft): ""
+   Expected (rawDraft)    : " \t keep this exact\n  draft \t\n"
+D:/age/ADE/tests/test_conversations.cpp(232) : failure location
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) Rejected-history preservation: visibleDraft= false  diskDraft= false  reopenedDraft= false  draftAttachments= false  reopenedAttachments= false
+FAIL!  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) Compared values are not the same
+   Actual   (visibleDraft): ""
+   Expected (rawDraft)    : " \t\n  "
+D:/age/ADE/tests/test_conversations.cpp(232) : failure location
+PASS   : ConversationsTest::cleanupTestCase()
+Totals: 2 passed, 3 failed, 0 skipped, 0 blacklisted, 753ms
+********* Finished testing of ConversationsTest *********

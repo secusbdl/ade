@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Read-only main workbench/chrome/sidebar/composer comparison. No production edits, builds, new screenshots, or behavioral test execution. Archived settings are excluded from this slice.",
+  "authority": "Pinned source defines behavior and default geometry. The supplied workbench image shows a saved, user-adjusted split/theme; it does not prove upstream defaults. Preserve restored user layout before applying defaults.",
+  "branding": "AGENTS.md requires ADE branding and independently drawn icons. Match semantic placement, optical size, state, spacing and accessibility without copying Stagewise marks or proprietary Nucleo assets.",
+  "units": "Source Tailwind dimensions below are logical CSS pixels at 100% UI zoom and a 16px rem. Qt device-independent geometry must scale once; screenshot physical pixels are not widget dimensions.",
+  "imagesInspected": [
+    {
+      "path": "audit/reference-images/workbench.png",
+      "size": [
+        2560,
+        1600
+      ],
+      "role": "User reference; includes Windows chrome/taskbar and live browser content"
+    },
+    {
+      "path": "audit/workbench-preview/workbench-light.png",
+      "size": [
+        2310,
+        1410
+      ],
+      "role": "Existing native fixture, predates latest conversation/archived-page changes"
+    },
+    {
+      "path": "audit/workbench-preview/workbench-dark.png",
+      "size": [
+        2310,
+        1410
+      ],
+      "role": "Existing native fixture; no paired upstream dark screenshot in this review"
+    }
+  ],
+  "pixelObservations": {
+    "method": "Read-only sampling of existing bitmap pixels; points (100,500) sidebar and (800,500) chat, far from content.",
+    "reference": {
+      "sidebar": "#f0f4f9",
+      "chat": "#fdfcfc"
+    },
+    "nativeLight": {
+      "sidebar": "#eff4fa",
+      "chat": "#fdfdfd"
+    },
+    "nativeDark": {
+      "sidebar": "#1d222c",
+      "chat": "#21242b"
+    },
+    "interpretation": "Current light background colors are already close to this reference. Do not replace them with default neutral-token values without considering the selected theme. The larger discrepancies are composition and state behavior."
+  },
+  "contracts": [
+    {
+      "id": "sidebar-collapse-resize",
+      "priority": 1,
+      "upstream": "Sidebar starts at18% of root panel, min6%/max50% with CSS min176px/max672px. It can collapse to0, remembers its expanded width, persists collapse across restart, and double-clicking its resize handle resets18%. Titlebar row is40px; sidebar inner padding8px and top offset48px. Collapsed chat titlebar retains toggle/new-chat/title.",
+      "native": "MainWindow.cpp:93–104,149 fixes sidebar230px and toggles230/185; no sidebar resize handle or actual collapse. applyPreferences:432 writes230*zoom, but toggle compares literal230, so non100% zoom uses inconsistent geometry. Chat has no collapsed-sidebar titlebar.",
+      "suggestion": "Use a persisted outer QSplitter with explicit collapsed bool and remembered logical width. Provide toggle in stable titlebar position, hide/collapse sidebar to0, restore exact prior width. Scale minimums once and retain settings/main layout continuity.",
+      "refs": [
+        "sidebarConfig",
+        "sidebar",
+        "sidebarCollapse",
+        "titlebar"
+      ]
+    },
+    {
+      "id": "workbench-panels",
+      "priority": 1,
+      "upstream": "Chat and content live in one rounded-left12px content shell with subtle1px ring; divider2px. Default content70%/chat30%, chat min20%/max80%; visible file tree is a third panel with stored size, min15%/max45%. Content is hidden when there are no visible tabs or explicitly collapsed. Layout sizes persist.",
+      "native": "MainWindow.cpp:103–146 starts800/540 chat/content, hard minimum410/300px, keeps a browser tab present, and puts Files into a content tab. Only chat top-left corner has14px radius; whole content shell and bottom-left rounding differ. Existing saved QSplitter restoration is useful and must remain.",
+      "suggestion": "Keep restored split sizes; use source defaults only on first run. Add real content visibility toggle and independent file-tree pane when implementing its behavior. Round the enclosing workbench surface, not only chat. Verify minimum960px window and zoom70/100/130 without clipped controls.",
+      "refs": [
+        "rootLayout",
+        "contentPanel",
+        "agentChat"
+      ]
+    },
+    {
+      "id": "sidebar-list-behavior",
+      "priority": 1,
+      "upstream": "New Agent is32px high; search is a command-center launcher, with a separate shortcut badge. Group by Age/Workspace is functional; age buckets Today/Yesterday/Last7days/Last30days/Older derive from activity, and pinned rows form their own section. Agent rows are32px with14px elided titles and status indicators.",
+      "native": "MainWindow.cpp:96–101,174,182,201 shows36px New Agent, a literal Ctrl K inside editable placeholder, a permanently visible Today label, and34px rows in storage order. Group by Age actually chooses Active/Archived; Ctrl+K focuses a substring filter rather than command center.",
+      "suggestion": "Implement honest age/workspace grouping and conditional headers, stable ordering and meaningful grouping menu. Use separate shortcut label. Treat command center, pin/reorder/status detail as feature work; do not claim a local filter is source-equivalent search.",
+      "refs": [
+        "agentList",
+        "agentCard"
+      ]
+    },
+    {
+      "id": "chat-measure",
+      "priority": 1,
+      "upstream": "Chat panel outer padding4px. Footer and history columns center at max768px; footer padding4px. Last assistant wrapper adds6px horizontal padding,24px left content inset and96px bottom breathing space plus status-card height. History has turn-aware scroll/last-message spacing. Empty history returns a natural-height suggestions section, so the parent justify-center centers the empty-chat suggestion/composer group; populated history fills available height.",
+      "native": "MainWindow.cpp:105–107 fixes42px horizontal/32px top inset and has no centered max-width column. It becomes cramped when chat narrows and grows too wide when content is hidden. renderConversation replaces all HTML and follows within70px of bottom; this is simpler than upstream anchored history behavior. The transcript always consumes stretch, keeping an empty composer at the bottom rather than the centered empty-chat group.",
+      "suggestion": "Create a width-capped centered footer/content container, reduce fixed side margins responsively, and preserve deliberate scroll position. Keep transcript-scroll changes separate from basic geometry so lifecycle behavior is not accidentally changed.",
+      "refs": [
+        "agentChat",
+        "chatPanel",
+        "chatHistory"
+      ]
+    },
+    {
+      "id": "composer-layout",
+      "priority": 1,
+      "upstream": "Composer is horizontal: flexible editor/selector column plus narrow right action rail. Border radius6px, padding8px, gap4px, subtle ring/shadow; dark surface differs from chat background. Editor is14px with relaxed line-height and max editable256px. Model/context/approval row wraps with8px gaps. Right rail has32px context-select/attach/send buttons; send icon16px and circular fill.",
+      "native": "Composer.h forces74–220px text height; MainWindow.cpp:108–138 adds a separate attachment-button row before a single nonwrapping model/permission/stop/send row. Model max270px and long permission text can crowd the410px chat minimum. Box radius9px; send34px. Existing native render visibly clips model text and leaves excess blank composer height.",
+      "suggestion": "Use QHBoxLayout for editor+32px action rail, a wrapping/width-aware selector row, compact content-driven editor height capped256px, and a capped centered footer. Preserve exact draft text/attachment behavior and Enter/Shift+Enter. Do not add a dead context-selector button before its real browser selection feature exists.",
+      "refs": [
+        "panelFooter",
+        "chatInput"
+      ]
+    },
+    {
+      "id": "composer-state",
+      "priority": 1,
+      "upstream": "Send enablement derives from nonempty text/attachments and input state. Stop exists only while working and without a pending question. Input remains useful for queued messages during work; Enter can flush a queue, suggestion popup owns Enter, and Esc has contextual stop/dismiss behavior. Approval has Always ask/Smart/Always allow.",
+      "native": "Send remains enabled on idle empty input (send() returns), disabled stop remains visible, and busyChanged disables send/model/approval/workspace. No queued-message/suggestion/Smart contract. Composer Enter always emits unless Shift. Existing bool policy persistence is correct for its implemented subset.",
+      "suggestion": "First make empty-send and idle-stop visuals reflect actual state. Queue, pending-question, suggestions and Smart approval require complete behavior, not labels. Preserve explicit AgentEngine acceptance semantics so rejection cannot erase drafts.",
+      "refs": [
+        "panelFooter",
+        "chatInput",
+        "approval"
+      ]
+    },
+    {
+      "id": "content-chrome",
+      "priority": 2,
+      "upstream": "Tabs28px high,12px labels,16px icons,6px radius; row has4px vertical padding,6px left/8px right. New browser/terminal actions28px hug end of tabs while the tab list alone scrolls; fixed pane actions stay at right. Global and agent-owned tabs are separated. Browser navigation is36px high with state-disabled Back/Forward and loading Stop replacing Reload.",
+      "native": "AppStyle.cpp uses tabs8px/12px padding,2px margin,min75px; title clipped to28 characters. Many actions share one QTabWidget corner. MainWindow.cpp:472–480 has variable-height nav and always-enabled Back/Forward/Reload, no loading Stop state or global/agent tab grouping.",
+      "suggestion": "Set explicit compact tab/nav metrics and elide visually while retaining full tooltip/title. Keep creation controls next to tabs, pane actions fixed, and let labels scroll. Bind navigation enablement/loading action to real browser state; owner-aware tab filtering is separate required functionality.",
+      "refs": [
+        "contentPanel",
+        "sortableTabs",
+        "browserChrome",
+        "navButtons"
+      ]
+    },
+    {
+      "id": "theme-font-scale",
+      "priority": 2,
+      "upstream": "Geist sans and Roboto Mono match native font family choices. Main text/selectors14px, labels12px. Semantic background/foreground/surface/border/muted tokens vary together by theme; focus-visible outline2px. Default tokens use OKLCH palette; selected theme can change hue/chroma. OS titlebar geometry is counter-scaled where required.",
+      "native": "AppStyle default13px and transcriptHtml13px differ from source chat14px. applyPreferences substitutes selected literal hex values and scales stylesheet pixel strings/font/sidebar only; code-set margins, minimum widths and button dimensions remain unscaled. Drawn QIcon pixmaps keep their original gray after theme changes. Old dark render shows low-contrast chrome icons.",
+      "suggestion": "Centralize semantic theme/metric values, regenerate independently drawn icons with palette changes, and apply one logical zoom policy to layouts and fonts. Keep accessible focus cues. Match supplied screenshot theme as a state rather than forcing source default colors.",
+      "refs": [
+        "theme",
+        "palette",
+        "fonts",
+        "chatInput"
+      ]
+    },
+    {
+      "id": "transcript-interactions",
+      "priority": 2,
+      "upstream": "Reference shows compact collapsible tool groups and inline tool progress. Source renders typed user/assistant/tool/error/status/attachment structures, editable user messages, context usage, and turn file edits rather than one flattened HTML document.",
+      "native": "transcriptHtml renders user tables, generic Tool result plus truncated pre blocks, plain attachment labels and transient tool-event text. This is a material interaction and visual gap, not fixed by spacing alone.",
+      "suggestion": "Plan typed native turn/message widgets or a native document model with real collapsible tool rows and explicit action callbacks. Preserve original history and attachment metadata; do not represent omitted content as complete output.",
+      "refs": [
+        "chatHistory",
+        "panelFooter"
+      ]
+    }
+  ],
+  "sourceReferences": {
+    "sidebarConfig": {
+      "path": "apps/browser/src/ui/screens/main/_components/sidebar-panel-config.ts",
+      "lines": [
+        1,
+        7
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/_components/sidebar-panel-config.ts#L1"
+    },
+    "sidebar": {
+      "path": "apps/browser/src/ui/screens/main/sidebar/index.tsx",
+      "lines": [
+        43,
+        106
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/index.tsx#L43"
+    },
+    "sidebarCollapse": {
+      "path": "apps/browser/src/ui/screens/main/_components/sidebar-collapsed-context.tsx",
+      "lines": [
+        11,
+        65
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/_components/sidebar-collapsed-context.tsx#L11"
+    },
+    "titlebar": {
+      "path": "apps/browser/src/ui/screens/main/_components/sidebar-titlebar-row.tsx",
+      "lines": [
+        54,
+        137
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/_components/sidebar-titlebar-row.tsx#L54"
+    },
+    "rootLayout": {
+      "path": "apps/browser/src/ui/screens/main/index.tsx",
+      "lines": [
+        54,
+        150,
+        305,
+        404
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/index.tsx#L54"
+    },
+    "agentChat": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/index.tsx",
+      "lines": [
+        121,
+        152
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/index.tsx#L121"
+    },
+    "agentList": {
+      "path": "apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx",
+      "lines": [
+        258,
+        286,
+        642,
+        680,
+        2437,
+        2629
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx#L258"
+    },
+    "agentCard": {
+      "path": "apps/browser/src/ui/screens/main/sidebar/agents-list/_components/agent-card.tsx",
+      "lines": [
+        135,
+        164,
+        212,
+        280
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/agents-list/_components/agent-card.tsx#L135"
+    },
+    "chatPanel": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/index.tsx",
+      "lines": [
+        125,
+        159
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/index.tsx#L125"
+    },
+    "chatHistory": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+      "lines": [
+        1110,
+        1147,
+        1264,
+        1330
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx#L1110"
+    },
+    "panelFooter": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/panel-footer.tsx",
+      "lines": [
+        819,
+        866,
+        1911,
+        2009
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/panel-footer.tsx#L819"
+    },
+    "chatInput": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-input.tsx",
+      "lines": [
+        410,
+        418,
+        472,
+        488,
+        810,
+        917,
+        947,
+        1042
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-input.tsx#L410"
+    },
+    "approval": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/tool-approval-select.tsx",
+      "lines": [
+        47,
+        76
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/tool-approval-select.tsx#L47"
+    },
+    "contentPanel": {
+      "path": "apps/browser/src/ui/screens/main/content/index.tsx",
+      "lines": [
+        709,
+        804
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/content/index.tsx#L709"
+    },
+    "sortableTabs": {
+      "path": "packages/stage-ui/src/components/sortable-tabs.tsx",
+      "lines": [
+        229,
+        276
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/stage-ui/src/components/sortable-tabs.tsx#L229"
+    },
+    "browserChrome": {
+      "path": "apps/browser/src/ui/screens/main/content/_components/per-tab-content.tsx",
+      "lines": [
+        74,
+        93
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/content/_components/per-tab-content.tsx#L74"
+    },
+    "navButtons": {
+      "path": "apps/browser/src/ui/screens/main/content/_components/nav-buttons.tsx",
+      "lines": [
+        29,
+        122
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/content/_components/nav-buttons.tsx#L29"
+    },
+    "theme": {
+      "path": "packages/stage-ui/src/styles/theme.css",
+      "lines": [
+        1,
+        123
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/stage-ui/src/styles/theme.css#L1"
+    },
+    "palette": {
+      "path": "packages/stage-ui/src/styles/palette.css",
+      "lines": [
+        43,
+        121
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/stage-ui/src/styles/palette.css#L43"
+    },
+    "fonts": {
+      "path": "apps/browser/src/shared/tailwind/browser-base.css",
+      "lines": [
+        13,
+        30
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/tailwind/browser-base.css#L13"
+    }
+  },
+  "recommendedNextSlice": "Native responsive shell/composer metrics and truthful empty/busy controls first; sidebar collapse/grouping next; typed transcript and full command-center/queue/tab-ownership behaviors remain separate required slices. Preserve existing lifecycle tests and persisted layout/drafts.",
+  "futureValidationPlan": [
+    "Side-by-side reference/native at matched client size, DPI, zoom, theme and saved split; empty/populated chat, long model/title/workspace names.",
+    "Sidebar collapse/restore/restart and settings round-trip; split resize with content hidden/visible and file tree shown.",
+    "Window960x600 and1540x940, zoom70/100/130, light/dark; no clipped model/approval controls or offscreen send/workspace actions.",
+    "Keyboard focus, Enter/Shift+Enter, empty/attachment-only send, busy/idle stop, draft rejection preservation, browser Back/Forward/loading state.",
+    "Only claim visual/behavior parity for compared states; screenshots and source inspection alone do not establish full parity."
+  ],
+  "limits": [
+    "Read-only source/previous-render review; recommendations are not implemented or verified.",
+    "The five settings references are not main-workbench geometry evidence; only workbench.png and existing native light/dark renders were inspected here.",
+    "Screenshot physical dimensions and selected colors differ from source defaults and may include user preferences/DPI. No global pixel-perfect claim.",
+    "Native QWidget/COM browser implementation and independent ADE branding remain required; no Electron/Node UI shell is proposed."
+  ],
+  "reviewedAtUtc": "2026-11-05T14:43:25.7600639Z",
+  "nativeSourceSha256": {
+    "src/ui/AppStyle.cpp": "57874602d940fa4968738fa745660db62e9d78437715fbe7206f5c1e11a25742",
+    "src/ui/MainWindow.cpp": "03ef3e2c4fece21f1d8d37107529789156f1da170d61aeb6bcea8a9f0d7a249f",
+    "src/ui/Composer.h": "6f93040e8b1588d4094c204a9966a9fb2e0aee72e1949f029459999684ef7aa1",
+    "src/ui/AppFonts.cpp": "3822619d34a714f13c52c0ca6d0975360841ab7871459f24c2036150e2017a58",
+    "src/ui/Icons.cpp": "dcc33947b217e876ada09742cbf386d4ab7766e050bec8576cf64d311fe980b3"
+  }
+}

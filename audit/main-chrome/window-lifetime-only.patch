@@ -1,0 +1,32 @@
+--- a/src/ui/MainWindow.cpp
++++ b/src/ui/MainWindow.cpp
+@@ -14,6 +14,7 @@
+ #include "core/ProviderStore.h"
+ #include "core/UtilityService.h"
+ #include "runtime/AgentToolHost.h"
++#include "apps/MiniAppPage.h"
+ #include "editor/EditorWidget.h"
+ #include "terminal/TerminalWidget.h"
+ #include "git/GitPanel.h"
+@@ -518,11 +519,19 @@
+     // teardown signals must not access those members during QObject cleanup.
+     for(auto* child:findChildren<QObject*>())disconnect(child,nullptr,this,nullptr);
+     // Some browser connections are scoped to the tab page and capture the host.
+-    // Stop managers first, then disconnect those callbacks before tab teardown.
++    // Stop managers first, then tear tabs down while derived members live.
+     delete m_downloads;m_downloads=nullptr;
+     delete m_worktreeSettings;m_worktreeSettings=nullptr;
+     delete m_git;m_git=nullptr;delete m_worktreeSetup;m_worktreeSetup=nullptr;
+-    for(auto* browser:findChildren<BrowserWidget*>())disconnect(browser,nullptr,nullptr,nullptr);
++    // Keep QObject::destroyed observers intact (notably Qt's stylesheet cache).
++    // Tear browsers down now, while callbacks scoped to their pages can still
++    // safely reference MainWindow members; QObject base teardown is too late.
++    // MiniAppPage owns and explicitly destroys its browser; destroy the page
++    // first so its raw owned pointer cannot outlive a separately deleted child.
++    QList<QPointer<MiniAppPage>> apps;for(auto* app:findChildren<MiniAppPage*>())apps.append(app);
++    for(const auto& app:apps)if(app)delete app;
++    QList<QPointer<BrowserWidget>> browsers;for(auto* browser:findChildren<BrowserWidget*>())browsers.append(browser);
++    for(const auto& browser:browsers)if(browser)delete browser;
+ }
+ 
+ void MainWindow::showTerminal(){

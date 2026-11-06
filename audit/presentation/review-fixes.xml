@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="PresentationTest" timestamp="2026&#x002D;11&#x002D;05T17:41:50" hostname="VOID" tests="10" failures="0" errors="0" skipped="0" time="1.138">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="PresentationTest" time="0.000"/>
+  <testcase name="savedIdsCannotCollideWithLegacyIds" classname="PresentationTest" time="0.000"/>
+  <testcase name="emptyPartFloodIsBounded" classname="PresentationTest" time="0.385"/>
+  <testcase name="allPartKindsShareOneRuntimeBound" classname="PresentationTest" time="0.111"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(function_call)" classname="PresentationTest" time="0.001"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(refusal)" classname="PresentationTest" time="0.000"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(audio)" classname="PresentationTest" time="0.000"/>
+  <testcase name="runningOutputIsBoundedAndReplaced(ascii)" classname="PresentationTest" time="0.339"/>
+  <testcase name="runningOutputIsBoundedAndReplaced(unicode)" classname="PresentationTest" time="0.298"/>
+  <testcase name="cleanupTestCase" classname="PresentationTest" time="0.000"/>
+</testsuite>

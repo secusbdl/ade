@@ -1,0 +1,43 @@
+{
+  "status": "Source-backed proposal only; no production edits in this phase",
+  "baseline_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "host_review": {
+    "tests": "tests/test_git_host.cpp",
+    "findings": [
+      {"id": "junction-session-detach", "source": "src/ui/MainWindow.cpp connectWorkspace; src/ui/MainWindowGit.cpp worktreeRemoved", "problem": "QFileInfo canonical paths can preserve junction aliases. Once Git deletes the target, resolving the alias fails and lexical comparison cannot identify affected persisted chats.", "fix_by_parent": "Store Windows-final-handle canonical paths on connect; capture affected chat IDs before removal, detach those IDs after success, including old persisted aliases."},
+      {"id": "usage-incomplete", "source": "src/ui/MainWindowGit.cpp updateGitContext", "problem": "Native single-workspace chats erase the previous workspace association when reconnecting. Session load success is not proof that old worktree usage is known.", "fix_by_parent": "Keep cleanup usageKnown=false until sufficient persisted usage accounting is available."},
+      {"id": "stale-file-tree", "source": "src/ui/MainWindow.cpp selectConversation", "problem": "Switching to a chat without a workspace retained the previous file model/root. Empty rootPath would expose the Computer root rather than an empty workspace.", "fix_by_parent": "Detach the file model for empty-workspace chats, restore it on a valid connect/select."}
+    ],
+    "coverage": ["real linked worktree and junction aliases", "archived/surviving chat detach and message preservation", "conservative cleanup gating", "workspace-specific Files view", "busy mutation send/reconnect gates", "actual PowerShell setup after successful persisted mount", "failed persistence prevents setup", "unsaved junction-alias editor veto", "other chat's busy local-fixture agent veto", "active ConPTY terminal veto"]
+  },
+  "verified_usage_source_correction": {
+    "important": "The upstream implementation is not a dedicated historical usage journal. A journal is a proposed native adaptation.",
+    "query": "packages/agent-core/src/services/agent-persistence/db.ts:629 queries every root-chat agent row for lastMessageAt and mountedWorkspaces[].",
+    "aggregation": "db.ts:71 collectWorkspaceLastUsedAtByPath matches requested worktree paths against raw and realpath-resolved stored mount paths, then takes the maximum lastMessageAt.",
+    "native_difference": "Native Conversation currently has one replaced workspace string. Upstream supports multiple persisted mounts. This prevents assuming equivalent coverage from native current workspace plus session.updated alone."
+  },
+  "proposed_work": [
+    {
+      "name": "Per-repository worktree settings pane",
+      "source": "apps/browser/src/ui/screens/settings/sections/agent-settings.worktree-setup.tsx",
+      "contract": ["Horizontal repository chooser with managed-worktree count", "Shell (.sh) and PowerShell (.ps1) tabs, Windows defaults PowerShell", "Existing script content or source template; separate draft per variant", "Reset and Save enabled only for dirty draft; Ctrl+S", "Display script path, Codex setup fallback notice and copyable environment-variable names", "Search managed worktrees; display branch, clean/current/removable reason and relative last use", "Deletion through Settings policy only: managed, unmounted, attached and clean; branch retained"],
+      "native_plan": "New WorktreeSettingsPane QWidget consuming existing GitService setupRepositories/saveSetupScript/removeWorktree(Settings) APIs. Replace the global worktrees.setupScript placeholder only after repository selection and real file persistence are wired. Preserve unsaved drafts across refresh; reject external-script conflicts rather than silently overwrite.",
+      "host_boundary": "Share the host mutation guard and start/finish tracking with GitPanel so Settings deletion also respects running agents, terminals and setups. Do not bypass the host guard by calling the bare service from a widget.",
+      "tests": ["two repositories and two variants do not exchange drafts", "late list/save result cannot replace newly selected repo", "failed/conflicting save retains draft and existing bytes", "read-only/oversize/corrupt script failures visible", "mounted/dirty/detached/unmanaged removal disabled and freshly rechecked", "template reset, Ctrl+S and variable copy"]
+    },
+    {
+      "name": "Complete usage accounting and cleanup prompt",
+      "source": ["packages/agent-core/src/services/agent-persistence/db.ts:71", "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts:985", "apps/browser/src/backend/services/preferences.ts:1039", "apps/browser/src/ui/screens/main/sidebar/worktree-cleanup-badge.tsx"],
+      "contract": ["Startup scan proposes clean unmounted attached managed worktrees unused at least seven days and merged into a permitted local branch", "Never remove automatically; show candidate branch, merged target, path and last-use age", "Don't Clean persists per-path dismissal for seven days", "Prune snoozes when candidate disappears or snooze expires", "Batch cleanup rechecks each candidate immediately before Git removal and reports partial failures"],
+      "native_plan": "Either implement upstream multi-mount persistence, or add a versioned canonical-path usage journal as a conservative adaptation. Record successful connect/selection/activity independently of current-chat workspace; use QSaveFile, QLockFile, validation and external-change detection. Keep usageKnown=false on corrupt/incomplete storage. For migration without prior history, conservatively mark existing managed paths recently used instead of inferring they were never used. Store per-path dismissedAt and prune only after a successful scan.",
+      "tests": ["reconnect does not erase previous use", "restart retains use and snooze", "corrupt/external-change storage disables cleanup and is not overwritten", "seven-day boundary with injected clock", "mounted/setup/dirty state changes after prompt block removal", "partial success does not delete branches or unrelated paths", "journal unknown state cannot become a destructive candidate"]
+    },
+    {
+      "name": "Shared event-driven worktree metadata watcher",
+      "source": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts:130 and :1578",
+      "contract": ["One watcher per commonGitDir with mounted-workspace reference counts", "Allow only commonGitDir root, root HEAD, worktrees directory, worktrees/<name> directories and their HEAD files", "Ignore objects, refs, logs, index and deeper churn", "Detect root/linked branch switches, detach, external worktree add/remove and atomic HEAD replacement", "400ms debounce; release final reference and pending timer on teardown"],
+      "native_plan": "New GitRepositoryWatcher using QFileSystemWatcher for the allowlist. Rebuild subscriptions when topology or atomic replacement changes watched paths. Since directoryChanged does not report individual children, compare bounded HEAD/topology fingerprints before emitting changes to avoid index-churn refresh storms. Share by canonical commonGitDir. Use visible-panel polling only when watcher coverage fails, and retain explicit branch/remote refresh for events outside this upstream topology contract.",
+      "tests": ["external worktree add/remove", "main and linked checkout/detach", "HEAD.lock atomic rename reattaches watcher", "index/objects/log churn does not emit topology changes", "multiple mounts share watcher and last release stops notifications", "failed watches fall back visibly without tight polling", "shutdown during debounce produces no stale callback"]
+    }
+  ]
+}

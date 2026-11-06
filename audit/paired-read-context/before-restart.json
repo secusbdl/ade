@@ -1,0 +1,668 @@
+{
+  "reference": [
+    {
+      "id": "4a44c5d1-e743-497b-ad61-936bcbb5a9b9",
+      "parent_agent_instance_id": null,
+      "title": "Parity read context 01",
+      "title_locked_by_user": 1,
+      "active_model_id": "deepseek-v4-pro",
+      "active_provider_instance_id": "deepseek-api-8ba213ae-ec0f-4d80-8973-20df219ca43d",
+      "tool_approval_mode": "alwaysAllow",
+      "mounted_workspaces": [
+        {
+          "path": "D:\\age\\ADE\\private\\paired-read-context-01\\upstream",
+          "permissions": [
+            "read",
+            "list",
+            "create",
+            "edit",
+            "delete"
+          ]
+        }
+      ],
+      "messages": [
+        {
+          "seq": 0,
+          "role": "user",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Read w3ec4/probe.txt lines 2-2 with read. Reply only READY. Use no other tools."
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:39.979Z",
+            "partsMetadata": []
+          }
+        },
+        {
+          "seq": 1,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "tool-read",
+              "toolCallId": "call_00_BlzfUm7CSshgDSsVwunp0555",
+              "state": "output-available",
+              "title": null,
+              "input": {
+                "path": "w3ec4/probe.txt",
+                "start_line": 2,
+                "end_line": 2,
+                "preview": false
+              },
+              "output": {
+                "message": "File opened and loaded into context."
+              },
+              "rawInput": null,
+              "errorText": null,
+              "providerExecuted": null,
+              "preliminary": null
+            },
+            {
+              "type": "text",
+              "text": "",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:40.087Z",
+            "partsMetadata": [
+              null,
+              null,
+              {
+                "startedAt": "2026-11-05T15:14:48.241Z",
+                "endedAt": "2026-11-05T15:14:48.241Z"
+              }
+            ],
+            "pathReferences": {
+              "w3ec4/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+            }
+          }
+        },
+        {
+          "seq": 2,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "READY",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:48.297Z",
+            "partsMetadata": [
+              null,
+              {
+                "startedAt": "2026-11-05T15:14:52.323Z",
+                "endedAt": "2026-11-05T15:14:52.370Z"
+              }
+            ]
+          }
+        },
+        {
+          "seq": 3,
+          "role": "user",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Read w3ec4/probe.txt lines 4-4 with read. Reply only READY. Use no other tools."
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:18:59.143Z",
+            "partsMetadata": []
+          }
+        },
+        {
+          "seq": 4,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "tool-read",
+              "toolCallId": "call_00_ET_wQuq4yPNDFat3VkyYXU60299",
+              "state": "output-available",
+              "title": null,
+              "input": {
+                "path": "w3ec4/probe.txt",
+                "start_line": 4,
+                "end_line": 4,
+                "preview": false
+              },
+              "output": {
+                "message": "File opened and loaded into context."
+              },
+              "rawInput": null,
+              "errorText": null,
+              "providerExecuted": null,
+              "preliminary": null
+            },
+            {
+              "type": "text",
+              "text": "",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:18:59.267Z",
+            "partsMetadata": [
+              null,
+              null,
+              {
+                "startedAt": "2026-11-05T15:19:01.426Z",
+                "endedAt": "2026-11-05T15:19:01.427Z"
+              }
+            ],
+            "pathReferences": {
+              "w3ec4/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+            }
+          }
+        },
+        {
+          "seq": 5,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "READY",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:19:01.502Z",
+            "partsMetadata": [
+              null,
+              {
+                "startedAt": "2026-11-05T15:19:02.697Z",
+                "endedAt": "2026-11-05T15:19:02.746Z"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fada3992-9a4b-41e0-8c22-3f707e317206",
+      "parent_agent_instance_id": null,
+      "title": "Fork: Parity read context 01",
+      "title_locked_by_user": 1,
+      "active_model_id": "deepseek-v4-pro",
+      "active_provider_instance_id": "deepseek-api-8ba213ae-ec0f-4d80-8973-20df219ca43d",
+      "tool_approval_mode": "alwaysAllow",
+      "mounted_workspaces": [
+        {
+          "path": "D:\\age\\ADE\\private\\paired-read-context-01\\upstream",
+          "permissions": [
+            "read",
+            "list",
+            "create",
+            "edit",
+            "delete"
+          ]
+        }
+      ],
+      "messages": [
+        {
+          "seq": 0,
+          "role": "user",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Read w3ec4/probe.txt lines 2-2 with read. Reply only READY. Use no other tools."
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:39.979Z",
+            "partsMetadata": []
+          }
+        },
+        {
+          "seq": 1,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "tool-read",
+              "toolCallId": "call_00_BlzfUm7CSshgDSsVwunp0555",
+              "state": "output-available",
+              "title": null,
+              "input": {
+                "path": "w3ec4/probe.txt",
+                "start_line": 2,
+                "end_line": 2,
+                "preview": false
+              },
+              "output": {
+                "message": "File opened and loaded into context."
+              },
+              "rawInput": null,
+              "errorText": null,
+              "providerExecuted": null,
+              "preliminary": null
+            },
+            {
+              "type": "text",
+              "text": "",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:40.087Z",
+            "partsMetadata": [
+              null,
+              null,
+              {
+                "startedAt": "2026-11-05T15:14:48.241Z",
+                "endedAt": "2026-11-05T15:14:48.241Z"
+              }
+            ],
+            "pathReferences": {
+              "w3ec4/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+            }
+          }
+        },
+        {
+          "seq": 2,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "READY",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:14:48.297Z",
+            "partsMetadata": [
+              null,
+              {
+                "startedAt": "2026-11-05T15:14:52.323Z",
+                "endedAt": "2026-11-05T15:14:52.370Z"
+              }
+            ]
+          }
+        },
+        {
+          "seq": 3,
+          "role": "user",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Read w3ec4/probe.txt lines 4-4 with read. Reply only READY. Use no other tools."
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:18:59.143Z",
+            "partsMetadata": []
+          }
+        },
+        {
+          "seq": 4,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "tool-read",
+              "toolCallId": "call_00_ET_wQuq4yPNDFat3VkyYXU60299",
+              "state": "output-available",
+              "title": null,
+              "input": {
+                "path": "w3ec4/probe.txt",
+                "start_line": 4,
+                "end_line": 4,
+                "preview": false
+              },
+              "output": {
+                "message": "File opened and loaded into context."
+              },
+              "rawInput": null,
+              "errorText": null,
+              "providerExecuted": null,
+              "preliminary": null
+            },
+            {
+              "type": "text",
+              "text": "",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:18:59.267Z",
+            "partsMetadata": [
+              null,
+              null,
+              {
+                "startedAt": "2026-11-05T15:19:01.426Z",
+                "endedAt": "2026-11-05T15:19:01.427Z"
+              }
+            ],
+            "pathReferences": {
+              "w3ec4/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+            }
+          }
+        },
+        {
+          "seq": 5,
+          "role": "assistant",
+          "parts": [
+            {
+              "type": "step-start"
+            },
+            {
+              "type": "text",
+              "text": "READY",
+              "providerMetadata": null,
+              "state": "done"
+            }
+          ],
+          "metadata": {
+            "createdAt": "2026-11-05T15:19:01.502Z",
+            "partsMetadata": [
+              null,
+              {
+                "startedAt": "2026-11-05T15:19:02.697Z",
+                "endedAt": "2026-11-05T15:19:02.746Z"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "referenceProvider": {
+    "id": "deepseek-api-8ba213ae-ec0f-4d80-8973-20df219ca43d",
+    "name": "Parity DeepSeek 01",
+    "typeId": "deepseek-api",
+    "thinking": {
+      "deepseek-v4-pro": {
+        "enabled": true,
+        "provider": "openai-compatible",
+        "value": "high"
+      }
+    },
+    "baseUrlOverride": null,
+    "credentialSource": "Dedicated instance configured through Stagewise UI from authorized DEEPSEEK_API_KEY entry; no secret retained here"
+  },
+  "native": {
+    "pendingCleanup": [],
+    "schemaVersion": 1,
+    "sessions": [
+      {
+        "alwaysAllow": true,
+        "archived": false,
+        "archivedAt": 0,
+        "autoTitleAttempted": false,
+        "created": 1793892149266,
+        "draft": "",
+        "draftAttachments": [],
+        "id": "288e4ce5-9e3e-4ed4-92fd-ffa640f523bf",
+        "messages": [
+          {
+            "content": "Read ws1/probe.txt lines 2-2 with read. Reply only READY. Use no other tools.",
+            "role": "user"
+          },
+          {
+            "content": "",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"path\": \"ws1/probe.txt\", \"start_line\": 2, \"end_line\": 2}",
+                  "name": "read"
+                },
+                "id": "call_00_ET_2pBoCr07XP9ly4wiEXuW3711",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "File opened and loaded into context.",
+            "metadata": {
+              "fileReads": [
+                {
+                  "inputHash": "f8b7873752d93e6ec36e24cbcf019260dcbf64785297b2e4cdd033a5c83ec07d",
+                  "kind": "file",
+                  "params": {
+                    "endLine": 2,
+                    "startLine": 2
+                  },
+                  "path": "ws1/probe.txt",
+                  "tool": "read",
+                  "version": 1
+                }
+              ],
+              "pathMetadata": {
+                "ws1/probe.txt": {
+                  "kind": "file",
+                  "modified": "2026-11-05T15:05:57.574Z",
+                  "originalFileName": "probe.txt",
+                  "size": 77
+                }
+              },
+              "pathReferences": {
+                "ws1/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+              }
+            },
+            "role": "tool",
+            "tool_call_id": "call_00_ET_2pBoCr07XP9ly4wiEXuW3711"
+          },
+          {
+            "content": "READY",
+            "role": "assistant"
+          },
+          {
+            "content": "Read ws1/probe.txt lines 4-4 with read. Reply only READY. Use no other tools.",
+            "role": "user"
+          },
+          {
+            "content": "",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"path\": \"ws1/probe.txt\", \"start_line\": 4, \"end_line\": 4}",
+                  "name": "read"
+                },
+                "id": "call_00_ET_qiCvTtSupBSvDmpVVBJE7097",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "File opened and loaded into context.",
+            "metadata": {
+              "fileReads": [
+                {
+                  "inputHash": "001a2b634dd859b5ede1108b1f0bd75d8559d5dbd993f2f5bcee8635ca7f26ae",
+                  "kind": "file",
+                  "params": {
+                    "endLine": 4,
+                    "startLine": 4
+                  },
+                  "path": "ws1/probe.txt",
+                  "tool": "read",
+                  "version": 1
+                }
+              ],
+              "pathMetadata": {
+                "ws1/probe.txt": {
+                  "kind": "file",
+                  "modified": "2026-11-05T15:05:57.574Z",
+                  "originalFileName": "probe.txt",
+                  "size": 77
+                }
+              },
+              "pathReferences": {
+                "ws1/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+              }
+            },
+            "role": "tool",
+            "tool_call_id": "call_00_ET_qiCvTtSupBSvDmpVVBJE7097"
+          },
+          {
+            "content": "READY",
+            "role": "assistant"
+          }
+        ],
+        "model": "deepseek-v4-pro",
+        "presetId": "",
+        "providerId": "deepseek-parity-01",
+        "title": "Fork: Parity read context 01",
+        "titleLocked": true,
+        "updated": 1793892149266,
+        "workspace": "D:/age/ADE/private/paired-read-context-01/native"
+      },
+      {
+        "alwaysAllow": true,
+        "archived": false,
+        "archivedAt": 0,
+        "autoTitleAttempted": false,
+        "created": 1793891297556,
+        "draft": "",
+        "draftAttachments": [],
+        "id": "e21f33c6-cc47-41ea-9feb-ff56bd6f216c",
+        "messages": [
+          {
+            "content": "Read ws1/probe.txt lines 2-2 with read. Reply only READY. Use no other tools.",
+            "role": "user"
+          },
+          {
+            "content": "",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"path\": \"ws1/probe.txt\", \"start_line\": 2, \"end_line\": 2}",
+                  "name": "read"
+                },
+                "id": "call_00_ET_2pBoCr07XP9ly4wiEXuW3711",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "File opened and loaded into context.",
+            "metadata": {
+              "fileReads": [
+                {
+                  "inputHash": "f8b7873752d93e6ec36e24cbcf019260dcbf64785297b2e4cdd033a5c83ec07d",
+                  "kind": "file",
+                  "params": {
+                    "endLine": 2,
+                    "startLine": 2
+                  },
+                  "path": "ws1/probe.txt",
+                  "tool": "read",
+                  "version": 1
+                }
+              ],
+              "pathMetadata": {
+                "ws1/probe.txt": {
+                  "kind": "file",
+                  "modified": "2026-11-05T15:05:57.574Z",
+                  "originalFileName": "probe.txt",
+                  "size": 77
+                }
+              },
+              "pathReferences": {
+                "ws1/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+              }
+            },
+            "role": "tool",
+            "tool_call_id": "call_00_ET_2pBoCr07XP9ly4wiEXuW3711"
+          },
+          {
+            "content": "READY",
+            "role": "assistant"
+          },
+          {
+            "content": "Read ws1/probe.txt lines 4-4 with read. Reply only READY. Use no other tools.",
+            "role": "user"
+          },
+          {
+            "content": "",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{\"path\": \"ws1/probe.txt\", \"start_line\": 4, \"end_line\": 4}",
+                  "name": "read"
+                },
+                "id": "call_00_ET_qiCvTtSupBSvDmpVVBJE7097",
+                "type": "function"
+              }
+            ]
+          },
+          {
+            "content": "File opened and loaded into context.",
+            "metadata": {
+              "fileReads": [
+                {
+                  "inputHash": "001a2b634dd859b5ede1108b1f0bd75d8559d5dbd993f2f5bcee8635ca7f26ae",
+                  "kind": "file",
+                  "params": {
+                    "endLine": 4,
+                    "startLine": 4
+                  },
+                  "path": "ws1/probe.txt",
+                  "tool": "read",
+                  "version": 1
+                }
+              ],
+              "pathMetadata": {
+                "ws1/probe.txt": {
+                  "kind": "file",
+                  "modified": "2026-11-05T15:05:57.574Z",
+                  "originalFileName": "probe.txt",
+                  "size": 77
+                }
+              },
+              "pathReferences": {
+                "ws1/probe.txt": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4"
+              }
+            },
+            "role": "tool",
+            "tool_call_id": "call_00_ET_qiCvTtSupBSvDmpVVBJE7097"
+          },
+          {
+            "content": "READY",
+            "role": "assistant"
+          }
+        ],
+        "model": "deepseek-v4-pro",
+        "presetId": "",
+        "providerId": "deepseek-parity-01",
+        "title": "Parity read context 01",
+        "titleLocked": true,
+        "updated": 1793891983232,
+        "workspace": "D:/age/ADE/private/paired-read-context-01/native"
+      }
+    ]
+  }
+}

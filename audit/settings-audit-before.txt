@@ -1,0 +1,24 @@
+********* Start testing of SettingsAudit *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SettingsAudit::initTestCase()
+FAIL!  : SettingsAudit::workspaceInstructionsAndDisabledSkillsStayScoped() 'contextOptionsFor(page.preferences(),b,{}).respectAgentsMd' returned FALSE. (A workspace instruction preference leaked into another workspace.)
+D:/age/ADE/tests/test_settings_audit.cpp(45) : failure location
+FAIL!  : SettingsAudit::disablingGlobalSkillPreservesWorkspaceOverride() 'options.disabledGlobalSkills.contains("settings-audit-shared")' returned FALSE. ()
+D:/age/ADE/tests/test_settings_audit.cpp(58) : failure location
+FAIL!  : SettingsAudit::failedInstructionSaveRollsBackControl() 'respect->isChecked()' returned FALSE. ()
+D:/age/ADE/tests/test_settings_audit.cpp(65) : failure location
+FAIL!  : SettingsAudit::failedDirectorySaveRollsBackControl() 'enabled->isChecked()' returned FALSE. ()
+D:/age/ADE/tests/test_settings_audit.cpp(70) : failure location
+FAIL!  : SettingsAudit::failedGlobalOptInSaveRollsBackControl() '!enabled->isChecked()' returned FALSE. ()
+D:/age/ADE/tests/test_settings_audit.cpp(75) : failure location
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-array-main-models)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-object-main-model)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(negative-nested-output-limit)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(fractional-thinking-budget)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(empty-nested-provider)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(invalid-title-model)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-array-compression-models)
+PASS   : SettingsAudit::unavailablePresetNeverSilentlySelectsAnotherProvider()
+PASS   : SettingsAudit::cleanupTestCase()
+Totals: 10 passed, 5 failed, 0 skipped, 0 blacklisted, 286ms
+********* Finished testing of SettingsAudit *********

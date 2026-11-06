@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "scope": "SessionStore durable cleanup lock span, revision validation, retained/cleanup IDs and Windows junction root authority",
+  "reviewedAtUtc": "2026-11-05T14:05:30.5123275Z",
+  "productionOwner": "root",
+  "testOwner": "license_review",
+  "environment": {
+    "os": "Windows 11",
+    "qt": "6.11.2 static",
+    "compiler": "GCC 16.2.0 MinGW",
+    "temporaryFixturesOnly": true
+  },
+  "regressions": [
+    {
+      "id": "unlocked-cleanup-writer",
+      "beforeEvidence": "audit/session-cleanup/unlocked-callback-before.txt",
+      "reproduction": "ADE_SESSION_CLEANUP_BEFORE reconstructs the previous MainWindow save/callback/save sequence against real SessionStore I/O. This is a behavioral reconstruction, not a binary built from an old repository commit.",
+      "observed": "A second store saved the deleted chat as retained during the cleanup callback. Its owned fixture file was already deleted before the final stale-revision save failed.",
+      "fixed": "processPendingCleanup holds the same sessions.lock through validated initial persistence, cleanup callbacks and final remaining-marker commit."
+    },
+    {
+      "id": "junction-canonical-authority",
+      "beforeEvidence": "audit/session-cleanup/junction-alias-before.txt",
+      "beforeSource": "audit/session-cleanup/SessionStore-before-win32-root.cpp",
+      "beforeSourceSha256": "dac087e46a517fe848b4074df787d549e08b776aa4ccac08dc5c3980a1f4c5de",
+      "observed": "QFileInfo::canonicalFilePath returned the junction alias on this Windows/Qt build. Ordinary save accepted a retargeted alias with identical sessions.json; unchanged and during-retarget cleanup fixtures also failed their expected behavior.",
+      "fixed": "Resolve directories through GetFinalPathNameByHandleW, pin the accepted directory, and use its resolved path for locks, JSON I/O and cleanup callbacks. A retarget before operation is rejected; a retarget during callback cannot redirect that callback to the foreign fixture."
+    }
+  ],
+  "verified": {
+    "test": "tests/test_session_cleanup.cpp",
+    "report": "audit/session-cleanup/after.txt",
+    "fullXmlReport": "test-results/session-cleanup-tests.xml",
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "milliseconds": 521,
+    "command": "private/session-cleanup-probe/build/session_cleanup.exe -o test-results/session-cleanup-tests.txt,txt -o test-results/session-cleanup-tests.xml,junitxml",
+    "cases": [
+      "Concurrent writer cannot resurrect cleanup target",
+      "Stale revision invokes no cleanup",
+      "Partial failure survives restart and retries only remaining IDs",
+      "Callback exception preserves marker",
+      "Candidate retained/cleanup overlap rejects before cleanup",
+      "Invalid and case-duplicate retained/cleanup IDs reject on save/load",
+      "Nonstring cleanup record fails closed",
+      "Identical-revision alias retarget cannot be adopted by ordinary save",
+      "Unchanged junction works",
+      "Before-operation alias retarget rejects",
+      "During-callback retarget preserves original cleanup authority"
+    ],
+    "sourceSha256": "4a1b6022d71752816c075328fbb4eb39fcf44a1dd68beff2a4d597bb1d498ffa",
+    "testSha256": "72c3771b731d7b77415f9b58265b4895f1b7bd975c9b69522a2fcb705000e773"
+  },
+  "boundedReview": {
+    "result": "No additional concrete defect found in the changed lock/revision/ID validation and Windows root resolution paths.",
+    "inspected": [
+      "src/ui/SessionStore.cpp",
+      "src/ui/SessionStore.h",
+      "src/core/ScopedDirectory.cpp",
+      "tests/test_session_cleanup.cpp"
+    ],
+    "limitations": [
+      "These tests cover cooperating SessionStore writers and deterministic junction retargets on this Windows build; they do not establish universal filesystem race immunity.",
+      "The callback fixture deletes only owned temporary marker files; downstream attachment/read-snapshot removal has separate suites.",
+      "Exception/restart fixtures do not establish power-loss durability or exercise every possible final-save disk failure.",
+      "Non-Windows fallback does not have the Windows directory-handle pin guarantee."
+    ]
+  }
+}

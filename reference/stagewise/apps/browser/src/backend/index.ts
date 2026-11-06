@@ -1,0 +1,161 @@
+import unhandled from 'electron-unhandled';
+unhandled();
+
+import { app, protocol } from 'electron';
+import started from 'electron-squirrel-startup';
+import path from 'node:path';
+import { installStartupOpenUrlListener } from './startup-url-events';
+import { applyPendingAppDataReset } from './utils/app-data-reset';
+import { seedIsolatedDevProfile } from './utils/seed-isolated-dev-profile';
+
+// CRITICAL: `main` is imported dynamically (below in the 'ready' handler)
+// instead of statically. On Windows machines without the VC++ redistributable
+// installed system-wide, static imports eagerly load native .node addons
+// (@libsql, sharp, etc.) whose transitive vcruntime140.dll dependency cannot be
+// resolved when the process is launched by Squirrel's Update.exe (different
+// working directory). Keeping the import dynamic ensures Squirrel install/
+// uninstall/update events are handled cleanly without touching native code.
+
+const isSmokeTest = process.argv.includes('--smoke-test');
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (started) {
+  app.quit();
+}
+
+// Keep the dev identity stable so isolated profiles can read safeStorage data
+// copied from the default dev profile. Window titles still use __APP_NAME__.
+app.setName(
+  __APP_RELEASE_CHANNEL__ === 'dev' ? 'stagewise (Dev-Build)' : __APP_NAME__,
+);
+if (process.platform === 'win32') {
+  app.setAppUserModelId(
+    `com.squirrel.${__APP_BASE_NAME__}.${__APP_BASE_NAME__}`,
+  );
+}
+app.applicationMenu = null;
+installStartupOpenUrlListener();
+
+// Set the right path structure for the app
+// We keep userData where it is, but we will put session data into a sub-folder called "session"
+app.setPath('userData', path.join(app.getPath('appData'), __APP_BASE_NAME__));
+app.setPath('sessionData', path.join(app.getPath('userData'), 'session'));
+
+// Register custom protocols as privileged (must happen before app.ready)
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'stagewise',
+    privileges: {
+      standard: true,
+      secure: true,
+      allowServiceWorkers: true,
+      codeCache: true,
+      stream: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+  {
+    scheme: 'attachment',
+    privileges: {
+      standard: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+  {
+    scheme: 'workspace',
+    privileges: {
+      standard: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+  {
+    scheme: 'plans',
+    privileges: {
+      standard: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+  {
+    scheme: 'app',
+    privileges: {
+      standard: true,
+      secure: true,
+      stream: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+]);
+
+const singleInstanceLock = app.requestSingleInstanceLock();
+
+if (!singleInstanceLock) {
+  app.quit();
+} else if (!started) {
+  try {
+    applyPendingAppDataReset(app.getPath('userData'));
+  } catch (error) {
+    console.error('[AppDataReset] Failed to reset app data', error);
+  }
+
+  try {
+    const copiedFileCount = seedIsolatedDevProfile(
+      app.getPath('appData'),
+      app.getPath('userData'),
+      __APP_BASE_NAME__,
+    );
+    if (copiedFileCount > 0) {
+      console.log(
+        `[DevProfile] Seeded ${copiedFileCount} file(s) from the default dev profile`,
+      );
+    }
+  } catch (error) {
+    console.error('[DevProfile] Failed to seed isolated dev profile', error);
+  }
+}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', async () => {
+  // Don't load native modules during Squirrel install/uninstall events.
+  // The process is about to quit — loading them would crash on Windows
+  // machines without system-wide VC++ redistributable.
+  if (started) return;
+
+  if (isSmokeTest) {
+    // Validate the full import tree is intact, then exit.
+    try {
+      await import('./main');
+      console.log('[smoke-test] App ready — all modules loaded successfully.');
+      app.exit(0);
+    } catch (error) {
+      console.error('[smoke-test] Failed to load application:', error);
+      app.exit(1);
+    }
+    return;
+  }
+
+  const { main } = await import('./main');
+  main({ launchOptions: { verbose: true } });
+});
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  // macOS apps typically keep the app running when all windows are closed but I (glenn) think that is bs so we'll quit the app when all windows are closed - no matter which platform.
+  app.quit();
+});
+
+app.on('activate', () => {});

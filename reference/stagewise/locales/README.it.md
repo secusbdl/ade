@@ -1,0 +1,86 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../.github/assets/logo-combo-dark.svg">
+  <img src="../.github/assets/logo-combo.svg" alt="stagewise" height="60" />
+</picture>
+
+<h3>L'IDE agentica per i modelli open-source</h3>
+
+<p>
+  <a href="../README.md">English</a> ·
+  <a href="./README.zh-CN.md">简体中文</a> ·
+  <a href="./README.de.md">Deutsch</a> ·
+  <a href="./README.ja.md">日本語</a> ·
+  <a href="./README.es.md">Español</a> ·
+  <a href="./README.ko.md">한국어</a> ·
+  <a href="./README.pt.md">Português</a> ·
+  <a href="./README.fr.md">Français</a> ·
+  Italiano ·
+  <a href="./README.hi.md">हिन्दी</a> ·
+  <a href="./README.ru.md">Русский</a> ·
+  <a href="./README.uk.md">Українська</a>
+</p>
+
+<p>
+  <a href="https://github.com/stagewise-io/stagewise/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/npm/l/stagewise" /></a>
+  <a href="https://github.com/stagewise-io/stagewise/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/stagewise-io/stagewise" /></a>
+  <a href="https://discord.gg/gkdGsDYaKA"><img alt="Unisciti su Discord" src="https://img.shields.io/discord/1229378372141056010?label=Discord&logo=discord&logoColor=white" /></a>
+  <a href="https://x.com/stagewise_io"><img alt="Segui su X (ex Twitter)" src="https://img.shields.io/twitter/follow/stagewise_io" /></a>
+</p>
+
+</div>
+
+![stagewise demo](../apps/website/src/app/%28home%29/_components/feature-images/full-demo-dark.webp)
+
+## Informazioni sul progetto
+
+**stagewise** è un IDE agentico open source per sviluppatori con un agente di programmazione integrato.
+
+- **Naviga e sviluppa** nello stesso strumento — senza cambio di contesto
+- **Lavora con un agente di programmazione** che ha **pieno accesso alla console e al debugger della tua scheda**
+- **Apporta modifiche di prova temporanee** o **collega una base di codice** per modifiche permanenti
+- **Reverse engineering** dei componenti, dei sistemi di stili e delle tavolozze dei colori di qualsiasi sito web
+- **Integrazione IDE** per visualizzare e applicare le modifiche al codice nel tuo editor preferito
+- **Porta la tua chiave API (BYOK)** — pienamente compatibile con tutti i provider di IA
+
+## Introduzione
+
+Scarica stagewise da [stagewise.io](https://ade.stagewise.io) e segui la breve guida di onboarding.
+
+## Usa il tuo abbonamento di programmazione
+
+Porta la tua chiave per tutti i provider di modelli popolari — puoi anche registrare provider completamente personalizzati (inclusa l'inferenza locale!) e definire modelli personalizzati.
+
+### Importazione facile — usa il tuo abbonamento esistente
+
+Collega uno dei seguenti abbonamenti con una singola chiave API per sbloccare tutti i modelli offerti dal provider direttamente in stagewise.
+
+| **Abbonamento** | **Provider** | **Modelli in evidenza** | **Dashboard** |
+| --------------- | ------------- | ---------------------- | ------------ |
+| Kimi | [Moonshot AI](https://platform.moonshot.ai) | Kimi K3, Kimi K2.7 Code, Kimi K2.6, Kimi K2.5 | [Ottieni chiave API](https://platform.moonshot.ai/console/api-keys) |
+| Qwen Coding Plan | [Alibaba DashScope](https://dashscope.console.aliyun.com) | Qwen 3-Coder 30B-A3B, Qwen 3-32B | [Ottieni chiave API](https://dashscope.console.aliyun.com/apiKey) |
+| MiniMax | [MiniMax](https://platform.minimax.io) | MiniMax M3, MiniMax M2.7 | [Ottieni chiave API](https://platform.minimax.io/user-center/basic-information/interface-key) |
+| Xiaomi MiMo | [Xiaomi MiMo](https://platform.xiaomimimo.com) | MiMo-V2.5-Pro, MiMo-V2.5 | [Ottieni chiave API](https://platform.xiaomimimo.com/#/console/plan-manage) |
+
+### Account stagewise (dismissione)
+
+> [!NOTE]
+> Il servizio di account stagewise verrà dismesso alla fine di novembre 2026. Per continuare a usare stagewise, porta invece il tuo abbonamento o le tue chiavi API — vedi le opzioni sopra.
+
+## Licenza
+
+stagewise è sviluppato da stagewise GmbH e offerto con licenza AGPLv3.
+
+Per maggiori informazioni sul modello di licenza, visita le [FAQ sulle licenze GNU](https://www.gnu.org/licenses/gpl-faq.html).
+
+Per casi d'uso che ricadono al di fuori dell'ambito consentito dalla licenza AGPLv3, non esitare a [contattarci](mailto:sales@stagewise.io).
+
+## Problemi
+
+Non esitare ad [aprire una issue](https://github.com/stagewise-io/stagewise/issues/new) se hai trovato un bug o hai una nuova idea.
+
+## Comunità e supporto
+
+- [Unisciti al nostro Discord](https://discord.gg/gkdGsDYaKA)
+- Apri una [issue su GitHub](https://github.com/stagewise-io/stagewise/issues/new) per supporto allo sviluppo.

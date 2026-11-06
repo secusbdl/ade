@@ -1,0 +1,23 @@
+{
+  "recordedUtc": "2026-11-05T08:39:22.2351491Z",
+  "scope": "Live native AgentToolHost integration; does not establish upstream feature parity",
+  "provider": "deepseek",
+  "model": "deepseek-v4-pro",
+  "reasoning": "high",
+  "resultMatchesExpectedBytes": true,
+  "fixtureBytes": 29,
+  "resultBytes": 38,
+  "resultSha256": "94D4D845288D60CBE4E8839EDDD25807E6198CB85BCE613F6FA8AD252B3FD45E",
+  "nativeExeSha256": "206137CAAA11E9C951F4287F7EF93E702023CADD6508996F8847F163419AFF2F",
+  "workerSha256": "970D5DE6F34547E31B0120E343D883A3DBE4F014C692594B4BEFE564F24172B2",
+  "toolCalls": [
+    "getBrowserTabs",
+    "executeSandboxJs",
+    "executeSandboxJs"
+  ],
+  "persistentValue": 7193,
+  "domMarker": "ADE_BROWSER_FIXTURE_4862",
+  "counterAfterClick": 1,
+  "report": "test-results/native-sandbox-live.json",
+  "elapsedMs": 79235
+}

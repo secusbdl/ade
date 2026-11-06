@@ -1,0 +1,419 @@
+{
+  "recordedUtc": "2026-11-05T14:50:08.578613+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "suiteCount": 40,
+  "latestFailures": 0,
+  "skipped": 0,
+  "elapsedSecondsAsReportedInJUnit": 433.0,
+  "report": "test-results\\integrated-read-context-conversations-final.xml",
+  "detailedResults": [
+    {
+      "suite": "native_conversations",
+      "passedIncludingLifecycle": 26,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 20641
+    },
+    {
+      "suite": "native_history_recovery",
+      "passedIncludingLifecycle": 28,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1006
+    },
+    {
+      "suite": "native_session_cleanup",
+      "passedIncludingLifecycle": 25,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 474
+    },
+    {
+      "suite": "native_raw_enumeration_races",
+      "passedIncludingLifecycle": 13,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1568
+    },
+    {
+      "suite": "native_git_watcher",
+      "passedIncludingLifecycle": 24,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 23459
+    },
+    {
+      "suite": "native_git_watcher_ui",
+      "passedIncludingLifecycle": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 22705
+    },
+    {
+      "suite": "native_file_tools_races",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 706
+    },
+    {
+      "suite": "native_archive_transformer",
+      "passedIncludingLifecycle": 37,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 40
+    },
+    {
+      "suite": "native_file_tools",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 44
+    },
+    {
+      "suite": "native_attachment_mount",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 574
+    },
+    {
+      "suite": "native_file_transformer",
+      "passedIncludingLifecycle": 32,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3
+    },
+    {
+      "suite": "native_worktree_settings",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 44355
+    },
+    {
+      "suite": "native_git_host",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 57903
+    },
+    {
+      "suite": "native_sandbox_apps",
+      "passedIncludingLifecycle": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2040
+    },
+    {
+      "suite": "native_runtime_apps",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5807
+    },
+    {
+      "suite": "native_git",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 112533
+    },
+    {
+      "suite": "native_git_ui",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 54901
+    },
+    {
+      "suite": "native_app_resources",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 72
+    },
+    {
+      "suite": "native_mini_apps",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3170
+    },
+    {
+      "suite": "native_attachments",
+      "passedIncludingLifecycle": 23,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 919
+    },
+    {
+      "suite": "native_read_lifecycle",
+      "passedIncludingLifecycle": 21,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 508
+    },
+    {
+      "suite": "native_read_runtime",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2528
+    },
+    {
+      "suite": "native_plugins",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 950
+    },
+    {
+      "suite": "native_sandbox_network",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5246
+    },
+    {
+      "suite": "native_downloads",
+      "passedIncludingLifecycle": 10,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8285
+    },
+    {
+      "suite": "native_settings_audit",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 308
+    },
+    {
+      "suite": "native_network",
+      "passedIncludingLifecycle": 19,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2001
+    },
+    {
+      "suite": "native_terminal",
+      "passedIncludingLifecycle": 17,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3023
+    },
+    {
+      "suite": "native_engine_observers",
+      "passedIncludingLifecycle": 56,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8475
+    },
+    {
+      "suite": "native_core",
+      "passedIncludingLifecycle": 48,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8340
+    },
+    {
+      "suite": "native_context",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 161
+    },
+    {
+      "suite": "native_ui",
+      "passedIncludingLifecycle": 11,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1690
+    },
+    {
+      "suite": "native_ui_audit",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3043
+    },
+    {
+      "suite": "native_editor",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1005
+    },
+    {
+      "suite": "native_sandbox",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4550
+    },
+    {
+      "suite": "native_runtime",
+      "passedIncludingLifecycle": 10,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5179
+    },
+    {
+      "suite": "native_fonts",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 285
+    },
+    {
+      "suite": "native_browser",
+      "passedIncludingLifecycle": 14,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 6100
+    },
+    {
+      "suite": "native_settings",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 292
+    },
+    {
+      "suite": "native_browser_tools",
+      "passedIncludingLifecycle": 24,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 15710
+    }
+  ],
+  "executable": "out/read-context-conversations-checkpoint/ADE.exe",
+  "versionSmoke": "ADE 0.1.0",
+  "binaryDependencies": [
+    {
+      "file": "ADE.exe",
+      "bytes": 77398949,
+      "sha256": "EF2A1D6E80640269B65BB2E29A2565E9EB5BC285B57EA505A9BED84D1BA068AF",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    },
+    {
+      "file": "ADE-sandbox-worker.exe",
+      "bytes": 19775944,
+      "sha256": "036424EC5D5426C149D443715F6B6261ADA4F277D504F782BA0453293D0B8377",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    },
+    {
+      "file": "WebView2Loader.dll",
+      "bytes": 194912,
+      "sha256": "D3FCE90BDEECB08596E377DEA6A316354DD8949E32FF09B89D51BE00C14E21B6",
+      "imports": [
+        "KERNEL32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    }
+  ],
+  "coveredChanges": [
+    "Per-call immutable formatted file-read snapshots and provider context reinjection",
+    "Independent chat forks, archives, restoration, durable deletion and retryable owned cleanup",
+    "Interrupted inherited tool-history recovery and rejected-send draft preservation",
+    "Last active chat restoration and per-chat Ask/Always allow policy persistence/inheritance",
+    "Native archive rows, timestamp ordering, debounced search and pagination"
+  ],
+  "progression": [
+    "Focused read-context suites passed after two previous raw-output assertions were updated to validate compact acknowledgments, metadata and actual next-request context.",
+    "Three malformed-history send fixtures reproduced loss of exact draft text and attachment references before the acceptance/restoration fix.",
+    "Cleanup fixtures reproduced a cooperating-writer lock gap and actual Windows junction canonical-path mismatch before their fixes.",
+    "Initial full run passed38/40; two old UI assertions expected newest-chat restart and removed global archive action. Updated them to verify last-selected draft and exact per-row conversation identity.",
+    "This final complete run passed all40 suites without skipped cases."
+  ],
+  "limits": [
+    "Full feature and visual parity remain unfinished; the detailed upstream inventory remains in scope.",
+    "Current transcript still uses the earlier single-document rendering; ordered reasoning/tool presentation and main-layout polish are staged separately.",
+    "No paired live-provider comparison on this binary; old live evidence does not establish matching settings or exact behavior.",
+    "Formatted att/ mount, durable worktree usage journal and file-mutation journal are staged separately and not part of this snapshot.",
+    "Smart approval, child/side chats, multi-workspace and remaining lifecycle/tool/browser/account behavior are incomplete.",
+    "Read-context ls reinjection and original version preservation include intentional corrections beyond pinned upstream behavior.",
+    "Browser uses WebView2Loader.dll and installed Edge Evergreen; Git and shells remain external.",
+    "Internal development snapshot, not a complete release distribution/toolchain source bundle."
+  ]
+}

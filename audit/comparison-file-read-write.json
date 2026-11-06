@@ -1,0 +1,19 @@
+{
+  "recordedUtc": "2026-11-05T07:48:41.3645149Z",
+  "scope": "Single workspace read/write/read outcome comparison; not complete feature or protocol parity",
+  "upstreamVersion": "1.31.1",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeModel": "deepseek-chat",
+  "upstreamModel": "default alias deepseek-v4-pro",
+  "upstreamKeySource": "Existing configured DeepSeek provider; equality to supplied key file not established",
+  "nativeKeySource": "User authorized local API key file; no credential copied to evidence",
+  "sameOutcome": false,
+  "nativeSha256": "68DA0B5069892218AEA97D3A08EB8CD4C6FE659BDEE3B30C3F546302ACDD3D17",
+  "referenceSha256": "765C48F55C9BF1E96C0EEA3E3EA0BC5DD5FFB539AAD4106BBDCFBDB0F6D3998A",
+  "nativeLength": 32,
+  "referenceLength": 33,
+  "referenceInitialAttempt": "Long pasted task became a textclip attachment; model treated it as data and asked for instruction",
+  "referenceFollowup": "Execute the task in the attached text.",
+  "referenceCompletion": "NATIVE_PORT_VERIFIED",
+  "remaining": "Repeat with same exact provider key/model/reasoning/input form; validate many more workflows"
+}

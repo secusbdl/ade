@@ -1,0 +1,45 @@
+********* Start testing of AttachmentTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AttachmentTest::initTestCase()
+PASS   : AttachmentTest::originalsReferencesCloneAndDelete()
+PASS   : AttachmentTest::scopeAndJunctions()
+PASS   : AttachmentTest::textSnapshotsAndBinaryFallback()
+PASS   : AttachmentTest::modelImageConstraintsAndFourSerializers()
+PASS   : AttachmentTest::toolMediaPreservesToolPairsAndSignedHistory()
+PASS   : AttachmentTest::requestBoundsAndMalformedMetadata()
+PASS   : AttachmentTest::pinnedModelCapabilities()
+PASS   : AttachmentTest::snapshotsPersistAfterDeletionAndStayAgentScoped()
+FAIL!  : AttachmentTest::nativeEngineImageRequest(openai) Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_960e20b56de0425ca2530db2e7b99f45.png"}],"display":{"id":"47136eea-8d21-4174-9038-43ca4b523b1a","parts":[{"id":"47136eea-8d21-4174-9038-43ca4b523b1a/0","state":"done","text":"","type":"text"}],"version":1},"pathMetadata":{"att/input_960e20b56de0425ca2530db2e7b99f45.png":{"modified":"2026-11-05T16:00:15.173Z","size":815}},"pathReferences":{"att/input_960e20b56de0425ca2530db2e7b99f45.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_960e20b56de0425ca2530db2e7b99f45.png"}],"pathMetadata":{"att/input_960e20b56de0425ca2530db2e7b99f45.png":{"modified":"2026-11-05T16:00:15.173Z","size":815}},"pathReferences":{"att/input_960e20b56de0425ca2530db2e7b99f45.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+D:/age/ADE/tests/test_attachments.cpp(231) : failure location
+FAIL!  : AttachmentTest::nativeEngineImageRequest(responses) Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_d9669000859d4b979c3ff2b4687cfef1.png"}],"display":{"id":"16d23ec4-151b-4c71-86d2-b43db5ad3bc4","parts":[{"id":"16d23ec4-151b-4c71-86d2-b43db5ad3bc4/0","state":"done","text":"","type":"text"}],"version":1},"pathMetadata":{"att/input_d9669000859d4b979c3ff2b4687cfef1.png":{"modified":"2026-11-05T16:00:15.297Z","size":815}},"pathReferences":{"att/input_d9669000859d4b979c3ff2b4687cfef1.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_d9669000859d4b979c3ff2b4687cfef1.png"}],"pathMetadata":{"att/input_d9669000859d4b979c3ff2b4687cfef1.png":{"modified":"2026-11-05T16:00:15.297Z","size":815}},"pathReferences":{"att/input_d9669000859d4b979c3ff2b4687cfef1.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+D:/age/ADE/tests/test_attachments.cpp(231) : failure location
+FAIL!  : AttachmentTest::nativeEngineImageRequest(anthropic) Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_a46a3339ee874e69bdf9a407446f311c.png"}],"display":{"id":"efc5312d-9013-4db9-afcc-9c5b19a696ac","parts":[{"id":"efc5312d-9013-4db9-afcc-9c5b19a696ac/0","state":"done","text":"","type":"text"}],"version":1},"pathMetadata":{"att/input_a46a3339ee874e69bdf9a407446f311c.png":{"modified":"2026-11-05T16:00:15.369Z","size":815}},"pathReferences":{"att/input_a46a3339ee874e69bdf9a407446f311c.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_a46a3339ee874e69bdf9a407446f311c.png"}],"pathMetadata":{"att/input_a46a3339ee874e69bdf9a407446f311c.png":{"modified":"2026-11-05T16:00:15.369Z","size":815}},"pathReferences":{"att/input_a46a3339ee874e69bdf9a407446f311c.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+D:/age/ADE/tests/test_attachments.cpp(231) : failure location
+FAIL!  : AttachmentTest::nativeEngineImageRequest(google) Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_9eff916e5e45468c8570a4efa78f06f5.png"}],"display":{"id":"8e8fae40-1e09-46fa-b3b7-89bbdafaaecb","parts":[{"id":"8e8fae40-1e09-46fa-b3b7-89bbdafaaecb/0","state":"done","text":"","type":"text"}],"version":1},"pathMetadata":{"att/input_9eff916e5e45468c8570a4efa78f06f5.png":{"modified":"2026-11-05T16:00:15.509Z","size":815}},"pathReferences":{"att/input_9eff916e5e45468c8570a4efa78f06f5.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_9eff916e5e45468c8570a4efa78f06f5.png"}],"pathMetadata":{"att/input_9eff916e5e45468c8570a4efa78f06f5.png":{"modified":"2026-11-05T16:00:15.509Z","size":815}},"pathReferences":{"att/input_9eff916e5e45468c8570a4efa78f06f5.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+D:/age/ADE/tests/test_attachments.cpp(231) : failure location
+FAIL!  : AttachmentTest::fallbackRebuildsFromOriginalReferences() Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_dda431fff11e4985833ee1b96f301747.png"}],"display":{"id":"d72c0cfc-2492-4972-b99f-324004c5bd80","parts":[{"id":"d72c0cfc-2492-4972-b99f-324004c5bd80/0","state":"done","text":"describe","type":"text"}],"version":1},"pathMetadata":{"att/input_dda431fff11e4985833ee1b96f301747.png":{"modified":"2026-11-05T16:00:15.625Z","size":815}},"pathReferences":{"att/input_dda431fff11e4985833ee1b96f301747.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"input.png","path":"att/input_dda431fff11e4985833ee1b96f301747.png"}],"pathMetadata":{"att/input_dda431fff11e4985833ee1b96f301747.png":{"modified":"2026-11-05T16:00:15.625Z","size":815}},"pathReferences":{"att/input_dda431fff11e4985833ee1b96f301747.png":"d5ac6e4f4a5364d199f79ecfb7c94f34e2de59ab540f4c91ec47b490eede8b61"}})
+D:/age/ADE/tests/test_attachments.cpp(246) : failure location
+FAIL!  : AttachmentTest::preparationFailureAndCancellationKeepOriginalHistory() Compared values are not the same
+   Actual   (engine.messages()[0].toObject()["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"file.txt","path":"att/file_40d3d4681faa4ceda4ec099493e01f08.txt"}],"display":{"id":"6ad11221-5ee0-41aa-8f29-62990bacc3b1","parts":[{"id":"6ad11221-5ee0-41aa-8f29-62990bacc3b1/0","state":"done","text":"review","type":"text"}],"version":1},"pathMetadata":{"att/file_40d3d4681faa4ceda4ec099493e01f08.txt":{"modified":"2026-11-05T16:00:15.752Z","size":8}},"pathReferences":{"att/file_40d3d4681faa4ceda4ec099493e01f08.txt":"0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5"}})
+   Expected (metadata)                                              : QJsonObject({"attachments":[{"originalFileName":"file.txt","path":"att/file_40d3d4681faa4ceda4ec099493e01f08.txt"}],"pathMetadata":{"att/file_40d3d4681faa4ceda4ec099493e01f08.txt":{"modified":"2026-11-05T16:00:15.752Z","size":8}},"pathReferences":{"att/file_40d3d4681faa4ceda4ec099493e01f08.txt":"0682c5f2076f099c34cfdd15a9e063849ed437a49677e6fcc5b4198c76575be5"}})
+D:/age/ADE/tests/test_attachments.cpp(255) : failure location
+PASS   : AttachmentTest::structuredTextPreparationAndCapturedMetadata()
+PASS   : AttachmentTest::malformedCapturedMetadata(not-object)
+PASS   : AttachmentTest::malformedCapturedMetadata(empty)
+PASS   : AttachmentTest::malformedCapturedMetadata(wrong-size)
+PASS   : AttachmentTest::malformedCapturedMetadata(string-size)
+PASS   : AttachmentTest::malformedCapturedMetadata(invalid-time)
+PASS   : AttachmentTest::malformedCapturedMetadata(wrong-time-type)
+PASS   : AttachmentTest::cleanupTestCase()
+Totals: 17 passed, 6 failed, 0 skipped, 0 blacklisted, 872ms
+********* Finished testing of AttachmentTest *********

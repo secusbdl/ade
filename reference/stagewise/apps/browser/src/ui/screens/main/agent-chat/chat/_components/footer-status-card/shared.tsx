@@ -1,0 +1,103 @@
+import { useState } from 'react';
+import { cn } from '@ui/utils';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@stagewise/stage-ui/components/collapsible';
+import { OverlayScrollbar } from '@stagewise/stage-ui/components/overlay-scrollbar';
+
+/** Extract text content from a AgentMessage's parts */
+export function getMessageText(message: {
+  parts: { type: string; text?: string }[];
+}): string {
+  const textPart = message.parts.find((p) => p.type === 'text');
+  return textPart && 'text' in textPart ? (textPart.text ?? '') : '';
+}
+
+export interface StatusCardSection {
+  trigger: (isOpen: boolean) => React.ReactNode;
+  contentClassName?: string;
+  content: React.ReactNode;
+  key: string;
+  defaultOpen?: boolean;
+  /** When true, content is wrapped in an OverlayScrollbar with max-h and fade mask. */
+  scrollable?: boolean;
+}
+
+function ScrollableContent({ children }: { children: React.ReactNode }) {
+  return (
+    <OverlayScrollbar
+      className="max-h-48"
+      viewportClassName="scroll-fade-y scroll-fade-4"
+      options={{
+        overflow: { x: 'hidden', y: 'scroll' },
+      }}
+    >
+      {children}
+    </OverlayScrollbar>
+  );
+}
+
+export function StatusCardSectionComponent({
+  item,
+  showDivider,
+}: {
+  item: StatusCardSection;
+  showDivider: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(item.defaultOpen ?? true);
+
+  return (
+    <div className="w-full">
+      <Collapsible className="w-full" open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger
+          size="condensed"
+          render={<div />}
+          nativeButton={false}
+          className="w-full cursor-pointer p-0 hover:bg-transparent active:bg-transparent"
+        >
+          {item.trigger(isOpen)}
+        </CollapsibleTrigger>
+        {item.content && (
+          <CollapsibleContent
+            className={cn('w-full duration-0!', item.contentClassName)}
+          >
+            {item.scrollable ? (
+              <ScrollableContent>{item.content}</ScrollableContent>
+            ) : (
+              item.content
+            )}
+          </CollapsibleContent>
+        )}
+      </Collapsible>
+      {showDivider && (
+        <hr className="my-1 h-px w-full border-derived bg-background" />
+      )}
+    </div>
+  );
+}
+
+export function StatusCardComponent({
+  items,
+  ref,
+}: {
+  items: StatusCardSection[];
+  ref?: React.RefObject<HTMLDivElement>;
+}) {
+  return (
+    <div
+      ref={ref}
+      data-status-card
+      className="absolute right-2 bottom-[calc(100%+1px)] left-2 -z-10 flex flex-col items-center justify-between rounded-t-lg border-derived border-t border-r border-l bg-background p-1"
+    >
+      {items.map((item, index) => (
+        <StatusCardSectionComponent
+          key={item.key}
+          item={item}
+          showDivider={index < items.length - 1}
+        />
+      ))}
+    </div>
+  );
+}

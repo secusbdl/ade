@@ -1,0 +1,967 @@
+--- a/src/core/AgentEngine.h
++++ b/src/core/AgentEngine.h
+@@ -4,6 +4,7 @@
+ #include "ModelFallback.h"
+ #include "SseParser.h"
+ #include "ToolExecutor.h"
++#include "AgentPresentation.h"
+ #include <QJsonArray>
+ #include <QMap>
+ #include <QNetworkAccessManager>
+@@ -39,6 +40,8 @@
+     void setAlwaysAllow(bool enabled) { m_alwaysAllow = enabled; }
+     void setMessages(const QJsonArray &messages);
+     QJsonArray messages() const { return m_messages; }
++    QJsonArray displayMessages() const;
++    static QJsonArray displayHistory(const QJsonArray& history);
+     bool isBusy() const { return m_busy; }
+     bool lastTurnSucceeded() const { return m_lastTurnSucceeded; }
+     QString workspace() const { return m_tools.workspace(); }
+@@ -46,6 +49,9 @@
+     QString actualModel() const { return m_actualModel; }
+     void setExternalTools(const QJsonArray &definitions);
+     void completeExternalTool(const QString &requestId, const QString &output, bool error);
++    // UI-only bounded preview, accepted only for the currently running opaque
++    // external request token. The final canonical tool result replaces it.
++    bool appendExternalToolOutput(const QString &requestId,const QString &text);
+     void completeExternalToolWithAttachments(const QString &requestId, const QString &output, bool error,
+                                              const QJsonArray &references, const QJsonObject &pathReferences = {}, const QJsonObject &pathMetadata = {});
+ 
+@@ -59,6 +65,7 @@
+     void busyChanged(bool busy);
+     void fileChanged(QString path, QByteArray before, QByteArray after);
+     void reasoningDelta(QString text);
++    void displayChanged();
+     void externalToolRequested(QString requestId, QString name, QJsonObject arguments);
+     void externalToolCancellationRequested(QString requestId);
+     void effectiveProviderChanged(QString providerId, QString modelId, int index);
+@@ -75,7 +82,8 @@
+     void consumeResponses(const QJsonObject &object, bool streaming);
+     void dispatchTool(const ToolCall &call, const QJsonObject &arguments);
+     void runNextTool();
+-    void recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata = {});
++    void recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata = {}, const QString &displayState = {});
++    void syncDisplayMetadata();
+     void retainPartialResponse();
+     void settleOutstandingTools(const QString &reason);
+     void complete();
+@@ -96,12 +104,15 @@
+     QTimer m_externalDeadline;
+     SseParser m_parser;
+     QJsonArray m_messages;
++    AgentPresentation m_display;
++    int m_displayHistoryIndex = -1;
+     QMap<int, ToolCall> m_streamCalls;
+     QMap<int, QJsonObject> m_nativeBlocks;
+     QJsonArray m_googleParts;
+     QJsonArray m_externalDefinitions;
+     QStringList m_externalNames;
+     QString m_externalRequestId;
++    bool m_externalOutputTruncated = false;
+     QList<ToolCall> m_pendingTools;
+     int m_toolIndex = 0;
+     QString m_waitingApproval;
+--- a/src/core/AgentEngine.cpp
++++ b/src/core/AgentEngine.cpp
+@@ -5,6 +5,7 @@
+ #include <QJsonDocument>
+ #include <QNetworkRequest>
+ #include <QSet>
++#include <QScopeGuard>
+ #include <QUuid>
+ #include <QUrl>
+ 
+@@ -141,7 +142,20 @@
+ }
+ 
+ void AgentEngine::setMessages(const QJsonArray &messages) {
+-    if (!m_busy) { if (m_messages != messages) m_fallback.reset(); m_messages = messages; }
++    if (!m_busy) { const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;if(changed)emit displayChanged(); }
++}
++QJsonArray AgentEngine::displayHistory(const QJsonArray& history){return AgentPresentation::history(history);}
++QJsonArray AgentEngine::displayMessages() const {
++    auto result=displayHistory(m_messages);
++    if(!m_responseRetained&&!m_display.id().isEmpty()&&(m_busy||!m_display.empty()))result.append(m_display.row(m_busy));
++    return result;
++}
++void AgentEngine::syncDisplayMetadata(){
++    if(m_displayHistoryIndex<0||m_displayHistoryIndex>=m_messages.size())return;
++    const auto message=m_messages[m_displayHistoryIndex].toObject();
++    const auto previous=message["metadata"].toObject()["display"].toObject();
++    if(previous["id"]!=m_display.id())return;
++    m_messages[m_displayHistoryIndex]=AgentPresentation::withMetadata(message,m_display.metadata(previous.contains("uiOnly")));
+ }
+ 
+ void AgentEngine::setExternalTools(const QJsonArray &definitions) {
+@@ -205,6 +219,8 @@
+     if(!recoverInterruptedHistory(m_messages,&recovered,&historyError)){rejectSubmission(historyError);return false;}
+     QJsonObject message{{"role", "user"}, {"content", prompt}};
+     if (!references.isEmpty()) {QJsonObject metadata{{"attachments", references}, {"pathReferences", pathReferences}};if(!pathMetadata.isEmpty())metadata["pathMetadata"]=pathMetadata;message["metadata"]=metadata;}
++    const auto displayId=QUuid::createUuid().toString(QUuid::WithoutBraces);
++    message=AgentPresentation::withMetadata(message,QJsonObject{{"version",1},{"id",displayId},{"parts",QJsonArray{QJsonObject{{"id",displayId+"/0"},{"type","text"},{"text",prompt},{"state","done"}}}}});
+     recovered.append(message);m_messages=std::move(recovered);
+     m_busy = true;
+     const auto generation=++m_generation;
+@@ -214,6 +230,11 @@
+     m_toolIndex = 0;
+     m_waitingApproval.clear();
+     m_actualModel.clear();
++    // The accepted user row can notify observers before requestModel resets the
++    // next round. Cancellation at that notification must not retain an old round.
++    m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;
++    emit displayChanged();
++    if(!self||generation!=m_generation||!m_busy)return true;
+     emit busyChanged(true);
+     if(!self||generation!=m_generation||!m_busy)return true;
+     requestModel();
+@@ -244,6 +265,9 @@
+     m_done = false;
+     m_sse = true;
+     m_responseRetained = false;
++    m_display.begin();m_displayHistoryIndex=-1;
++    emit displayChanged();
++    if(!self||generation!=m_generation||!m_busy)return;
+     QString instructions = QStringLiteral(
+         "You are ADE, a native agentic IDE coding assistant. Be accurate and concise. "
+         "Use tools to inspect and modify the connected workspace; never claim an operation succeeded without a tool result. "
+@@ -342,6 +366,11 @@
+ void AgentEngine::consumeCompletion(const QJsonObject &object, bool streaming) {
+     const QPointer<AgentEngine> self(this);
+     const auto generation = m_generation;
++    const auto displayNotification=qScopeGuard([self,generation]{
++        if(!self||self->m_generation!=generation||!self->m_busy)return;
++        if(self->m_display.limitExceeded()){self->fail("Provider presentation exceeded its 20,000-part limit.");return;}
++        emit self->displayChanged();
++    });
+     if (object.contains("error") && !object["error"].isNull()) {
+         m_streamError = object["error"].isObject()
+             ? object["error"].toObject()["message"].toString("Provider reported an error.")
+@@ -361,6 +390,7 @@
+     const auto reasoning = delta["reasoning_content"].toString();
+     if (!reasoning.isEmpty() && m_streamReasoning.size() + reasoning.size() <= 2 * 1024 * 1024) {
+         m_streamReasoning += reasoning;
++        m_display.text("reasoning",reasoning);
+         emit reasoningDelta(reasoning);
+         if (!self || generation != m_generation || !m_busy) return;
+     }
+@@ -370,6 +400,7 @@
+             m_streamError = QStringLiteral("Assistant response exceeded the size limit."); return;
+         }
+         m_streamText += text;
++        m_display.text("text",text);
+         emit textDelta(text);
+         if (!self || generation != m_generation || !m_busy) return;
+     }
+@@ -386,6 +417,7 @@
+         if (target.arguments.size() > 4 * 1024 * 1024 || target.name.size() > 256 || target.id.size() > 512) {
+             m_streamError = QStringLiteral("Provider tool call exceeded the size limit."); return;
+         }
++        m_display.tool(index,target.id,target.name,target.arguments);
+     }
+ }
+ 
+@@ -429,11 +461,14 @@
+             auto &call = m_streamCalls[index];
+             call.id = block["id"].toString(); call.name = block["name"].toString();
+             if (!block["input"].toObject().isEmpty()) call.arguments = QString::fromUtf8(QJsonDocument(block["input"].toObject()).toJson(QJsonDocument::Compact));
++            m_display.tool(index,call.id,call.name,call.arguments);
+         } else if (blockType == "text") {
+             const auto text = block["text"].toString();
++            m_display.text("text",text,"anthropic/"+QString::number(index));
+             m_streamText += text; if (!text.isEmpty()) emit textDelta(text);
+         } else if (blockType == "thinking") {
+             const auto thought = block["thinking"].toString();
++            m_display.text("reasoning",thought,"anthropic/"+QString::number(index));
+             m_streamReasoning += thought; if (!thought.isEmpty()) emit reasoningDelta(thought);
+         }
+     } else if (type == "content_block_delta") {
+@@ -442,13 +477,16 @@
+         const auto delta = object["delta"].toObject(); const auto deltaType = delta["type"].toString();
+         if (deltaType == "text_delta") {
+             const auto text = delta["text"].toString(); m_streamText += text;
++            m_display.text("text",text,"anthropic/"+QString::number(index));
+             block["text"] = block["text"].toString() + text; emit textDelta(text);
+         } else if (deltaType == "thinking_delta") {
+             const auto thought = delta["thinking"].toString(); m_streamReasoning += thought;
++            m_display.text("reasoning",thought,"anthropic/"+QString::number(index));
+             block["thinking"] = block["thinking"].toString() + thought; emit reasoningDelta(thought);
+         } else if (deltaType == "signature_delta") block["signature"] = block["signature"].toString() + delta["signature"].toString();
+         else if (deltaType == "input_json_delta") {
+             auto &call = m_streamCalls[index]; call.arguments += delta["partial_json"].toString();
++            m_display.tool(index,call.id,call.name,call.arguments);
+             if (call.arguments.size() > 4 * 1024 * 1024) m_streamError = "Anthropic tool arguments exceeded the limit.";
+         }
+     } else if (type == "content_block_stop" && m_streamCalls.contains(index)) {
+@@ -458,8 +496,10 @@
+         const auto input = QJsonDocument::fromJson(call.arguments.toUtf8(), &parse);
+         if (parse.error != QJsonParseError::NoError || !input.isObject()) { m_streamError = "Anthropic tool arguments were incomplete."; return; }
+         m_nativeBlocks[index]["input"] = input.object();
++        m_display.tool(index,call.id,call.name,call.arguments);
+     }
+     if (!self || generation != m_generation || !m_busy) return;
++    if(type=="content_block_stop")m_display.closePart("anthropic/"+QString::number(index));
+     if (m_streamText.size() + m_streamReasoning.size() > 4 * 1024 * 1024) m_streamError = "Anthropic response exceeded the size limit.";
+ }
+ 
+@@ -479,6 +519,7 @@
+         m_googleParts.append(part); // Preserve thoughtSignature and part ordering verbatim.
+         const auto text = part["text"].toString();
+         if (!text.isEmpty()) {
++            m_display.text(part["thought"].toBool()?"reasoning":"text",text);
+             if (part["thought"].toBool()) { m_streamReasoning += text; emit reasoningDelta(text); }
+             else { m_streamText += text; emit textDelta(text); }
+         }
+@@ -490,7 +531,8 @@
+             call.id = function["id"].toString("call_" + QUuid::createUuid().toString(QUuid::WithoutBraces));
+             call.name = function["name"].toString();
+             call.arguments = QString::fromUtf8(QJsonDocument(function["args"].toObject()).toJson(QJsonDocument::Compact));
+-            m_streamCalls[m_streamCalls.size()] = call;
++            const int index=m_streamCalls.size();m_streamCalls[index]=call;
++            m_display.tool(index,call.id,call.name,call.arguments);
+         }
+     }
+     if (m_streamText.size() + m_streamReasoning.size() > 4 * 1024 * 1024 || m_googleParts.size() > 20000) {
+@@ -506,6 +548,18 @@
+     const QPointer<AgentEngine> self(this);
+     const auto generation = m_generation;
+     const auto type = object["type"].toString();
++    const auto presentItem=[this](int index,const QJsonObject& item){
++        const auto kind=item["type"].toString();
++        if(kind=="function_call")m_display.tool(index,item["call_id"].toString(),item["name"].toString(),item["arguments"].toString());
++        else if(kind=="message"&&!m_display.hasKey("responses/fallback/text")){
++            int partIndex=0;for(const auto& value:item["content"].toArray()){
++                const auto part=value.toObject();const auto key="responses/text/"+QString::number(index)+'/'+QString::number(partIndex++);
++                if(part["type"]=="output_text"||part["type"]=="refusal")m_display.setText("text",part["type"]=="refusal"?part["refusal"].toString():part["text"].toString(),key);
++            }
++        }else if(kind=="reasoning"&&!m_display.hasKey("responses/fallback/reasoning")){
++            int partIndex=0;for(const auto& value:item["summary"].toArray())m_display.setText("reasoning",value.toObject()["text"].toString(),"responses/reasoning/"+QString::number(index)+'/'+QString::number(partIndex++));
++        }
++    };
+     const bool terminal = !streaming || type == "response.completed" || type == "response.incomplete" || type == "response.failed";
+     const auto response = streaming ? object["response"].toObject() : object;
+     if (response["model"].isString()) m_actualModel = response["model"].toString();
+@@ -550,11 +604,14 @@
+         }
+         const auto textRest = text.mid(m_streamText.size()), reasoningRest = reasoning.mid(m_streamReasoning.size());
+         m_streamText = text; m_streamReasoning = reasoning;
++        m_nativeBlocks = blocks; m_streamCalls = calls;
++        for(auto it=blocks.cbegin();it!=blocks.cend();++it)presentItem(it.key(),it.value());
++        if(m_display.hasKey("responses/fallback/text"))m_display.setText("text",text,"responses/fallback/text");
++        if(m_display.hasKey("responses/fallback/reasoning"))m_display.setText("reasoning",reasoning,"responses/fallback/reasoning");
+         if (!textRest.isEmpty()) emit textDelta(textRest);
+         if (!self || generation != m_generation || !m_busy) return;
+         if (!reasoningRest.isEmpty()) emit reasoningDelta(reasoningRest);
+         if (!self || generation != m_generation || !m_busy) return;
+-        m_nativeBlocks = blocks; m_streamCalls = calls;
+         if (type == "response.incomplete" || status == "incomplete") {
+             const auto reason = response["incomplete_details"].toObject()["reason"].toString();
+             if (reason == "max_output_tokens") m_finishReason = "length";
+@@ -568,8 +625,29 @@
+         if (m_streamText.size() + m_streamReasoning.size() + delta.size() > 4 * 1024 * 1024) {
+             m_streamError = "Responses output exceeded the size limit."; return;
+         }
++        const auto displayType=type=="response.reasoning_summary_text.delta"?QStringLiteral("reasoning"):QStringLiteral("text");
++        const int index=object["output_index"].toInt(-1),partIndex=object[displayType=="reasoning"?"summary_index":"content_index"].toInt(0);
++        const auto key=index<0?"responses/fallback/"+displayType:"responses/"+displayType+'/'+QString::number(index)+'/'+QString::number(partIndex);
++        m_display.text(displayType,delta,key);
+         if (type == "response.reasoning_summary_text.delta") { m_streamReasoning += delta; emit reasoningDelta(delta); }
+         else { m_streamText += delta; emit textDelta(delta); }
++        return;
++    }
++    if(type=="response.output_text.done"||type=="response.refusal.done"||type=="response.reasoning_summary_text.done"){
++        const auto displayType=type=="response.reasoning_summary_text.done"?QStringLiteral("reasoning"):QStringLiteral("text");
++        const int index=object["output_index"].toInt(-1),partIndex=object[displayType=="reasoning"?"summary_index":"content_index"].toInt(0);
++        m_display.closePart(index<0?"responses/fallback/"+displayType:"responses/"+displayType+'/'+QString::number(index)+'/'+QString::number(partIndex));return;
++    }
++    if(type=="response.reasoning_summary_part.added"||type=="response.content_part.added"){
++        const bool thought=type=="response.reasoning_summary_part.added";
++        const auto partType=object["part"].toObject()["type"].toString();
++        if((thought&&partType=="summary_text")||(!thought&&(partType=="output_text"||partType=="refusal"))){
++            const int index=object["output_index"].toInt(-1),partIndex=object[thought?"summary_index":"content_index"].toInt(-1);
++            if(index>=0&&index<128&&partIndex>=0&&partIndex<20000){
++                const auto kind=thought?QStringLiteral("reasoning"):QStringLiteral("text");
++                m_display.text(kind,{},"responses/"+kind+'/'+QString::number(index)+'/'+QString::number(partIndex));
++            }
++        }
+         return;
+     }
+     if (type == "response.output_item.added" || type == "response.output_item.done"
+@@ -580,6 +658,7 @@
+             const auto item = object["item"].toObject();
+             if (item.isEmpty()) { m_streamError = "Responses output item was empty."; return; }
+             m_nativeBlocks[index] = item;
++            presentItem(index,item);
+             if (item["type"] == "function_call") m_streamCalls[index] = {item["call_id"].toString(), item["name"].toString(), item["arguments"].toString()};
+         } else {
+             if (!m_streamCalls.contains(index)) { m_streamError = "Responses function arguments preceded their item."; return; }
+@@ -587,7 +666,9 @@
+             if (type.endsWith(".done")) call.arguments = object["arguments"].toString();
+             else call.arguments += object["delta"].toString();
+             if (call.arguments.size() > 4 * 1024 * 1024) m_streamError = "Responses function arguments exceeded the size limit.";
+-        }
++            m_display.tool(index,call.id,call.name,call.arguments);
++        }
++        if(type.endsWith(".done")&&m_streamCalls.contains(index))m_display.toolState(m_streamCalls[index].id,"input-available");
+     }
+ }
+ 
+@@ -659,7 +740,10 @@
+         fail(QStringLiteral("The provider returned no assistant text or tool calls.")); return;
+     }
+     m_retry = 0;
++    m_display.finish();
+     retainPartialResponse();
++    emit displayChanged();
++    if(!self||generation!=m_generation||!m_busy)return;
+     if (m_streamCalls.isEmpty()) { complete(); return; }
+     m_pendingTools = m_streamCalls.values();
+     m_toolIndex = 0;
+@@ -667,9 +751,10 @@
+ }
+ 
+ void AgentEngine::retainPartialResponse() {
+-    if (m_responseRetained || (m_streamText.isEmpty() && m_streamCalls.isEmpty())) return;
++    if (m_responseRetained || (m_streamText.isEmpty() && m_streamReasoning.isEmpty() && m_streamCalls.isEmpty())) return;
++    const bool uiOnly=m_streamText.isEmpty()&&m_streamCalls.isEmpty()&&!m_streamReasoning.isEmpty()&&!m_busy;
+     QJsonObject message{{"role", "assistant"}, {"content", m_streamText}};
+-    if (!m_streamReasoning.isEmpty() && ProviderProtocol::kind(m_provider) == "openai") {
++    if (!uiOnly&&!m_streamReasoning.isEmpty() && ProviderProtocol::kind(m_provider) == "openai") {
+         message["reasoning_content"] = m_streamReasoning;
+         message["ade_reasoning_source"] = QJsonObject{{"providerId", m_provider.id}, {"model", m_provider.model}};
+     }
+@@ -678,18 +763,20 @@
+     if (ProviderProtocol::kind(m_provider) == "responses" && (!m_done || !m_streamError.isEmpty() || m_finishReason == "length"))
+         native = {}; // Incomplete signed/native output cannot safely be replayed.
+     if (ProviderProtocol::kind(m_provider) == "google") native = m_googleParts;
+-    if (!native.isEmpty()) message["ade_native"] = QJsonObject{{"protocol", ProviderProtocol::kind(m_provider)},
++    if (!uiOnly&&!native.isEmpty()) message["ade_native"] = QJsonObject{{"protocol", ProviderProtocol::kind(m_provider)},
+         {"providerId", m_provider.id}, {"model", m_provider.model}, {"content", native}};
+     if (!m_streamCalls.isEmpty() && m_streamError.isEmpty()) {
+         QJsonArray calls;
+         for (auto it = m_streamCalls.begin(); it != m_streamCalls.end(); ++it) {
+             if (it->id.isEmpty()) it->id = "call_" + QUuid::createUuid().toString(QUuid::WithoutBraces);
++            m_display.tool(it.key(),it->id,it->name,it->arguments);
+             calls.append(QJsonObject{{"id", it->id}, {"type", "function"},
+                 {"function", QJsonObject{{"name", it->name}, {"arguments", it->arguments}}}});
+         }
+         message["tool_calls"] = calls;
+     }
+-    m_messages.append(message);
++    m_displayHistoryIndex=m_messages.size();
++    m_messages.append(AgentPresentation::withMetadata(message,m_display.metadata(uiOnly)));
+     m_responseRetained = true;
+ }
+ 
+@@ -712,7 +799,11 @@
+     if(!self||generation!=m_generation||!m_busy)return;
+     const bool readOnlyExternal = call.name == "getBrowserTabs" || call.name == "readConsoleLogs" || call.name == "readContext";
+     if (ToolExecutor::requiresApproval(call.name) && !readOnlyExternal && !m_alwaysAllow) {
++        const auto approvalIndex=m_toolIndex;
+         m_waitingApproval = call.id;
++        m_display.toolState(call.id,"approval-requested");syncDisplayMetadata();emit displayChanged();
++        if(!self||generation!=m_generation||!m_busy)return;
++        if(m_waitingApproval!=call.id||m_toolIndex!=approvalIndex)return;
+         emit approvalRequired(call.id, call.name, document.object());
+         return;
+     }
+@@ -721,8 +812,12 @@
+ 
+ void AgentEngine::dispatchTool(const ToolCall &call, const QJsonObject &arguments) {
+     if(!m_busy||m_toolIndex>=m_pendingTools.size()||m_pendingTools[m_toolIndex].id!=call.id)return;
++    const auto generation=m_generation;const QPointer<AgentEngine> self(this);
++    m_display.toolState(call.id,"running");syncDisplayMetadata();emit displayChanged();
++    if(!self||generation!=m_generation||!m_busy)return;
+     if (m_externalNames.contains(call.name)) {
+         m_externalRequestId = QUuid::createUuid().toString(QUuid::WithoutBraces);
++        m_externalOutputTruncated = false;
+         m_externalDeadline.start(120000);
+         emit externalToolRequested(m_externalRequestId, call.name, arguments);
+     } else m_tools.execute(call.id, call.name, arguments);
+@@ -746,19 +841,47 @@
+     if (!m_busy || id != m_waitingApproval || m_toolIndex >= m_pendingTools.size()) return;
+     m_waitingApproval.clear();
+     const auto call = m_pendingTools[m_toolIndex];
+-    if (!allow) { recordToolResult(id, "The user denied this action. Do not repeat it without new user authorization.", true); return; }
++    if (!allow) { recordToolResult(id, "The user denied this action. Do not repeat it without new user authorization.", true,{},"output-denied"); return; }
+     dispatchTool(call, QJsonDocument::fromJson(call.arguments.toUtf8()).object());
+ }
+ 
+-void AgentEngine::recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata) {
++bool AgentEngine::appendExternalToolOutput(const QString& requestId,const QString& text) {
++    if(!m_busy||requestId.isEmpty()||requestId!=m_externalRequestId||text.isEmpty()||m_externalOutputTruncated
++        ||m_toolIndex>=m_pendingTools.size())return false;
++    const auto callId=m_pendingTools[m_toolIndex].id;
++    constexpr int maximum=64*1024;
++    const auto previous=m_display.toolOutput(callId);
++    // Redact the joined preview so a credential split across chunks cannot be
++    // reassembled into a visible full value. No provider-history data changes.
++    auto joined=redact(previous+text.left(maximum));
++    const auto utf8=joined.toUtf8();
++    if(text.size()>maximum||utf8.size()>maximum){
++        const QString marker="\n[Output truncated at 64 KiB.]";
++        int end=qMin<qsizetype>(utf8.size(),maximum-marker.toUtf8().size());
++        while(end>0&&end<utf8.size()&&(static_cast<unsigned char>(utf8[end])&0xc0)==0x80)--end;
++        joined=QString::fromUtf8(utf8.constData(),end)+marker;
++        m_externalOutputTruncated=true;
++    }
++    if(!m_display.setToolOutput(callId,joined))return false;
++    syncDisplayMetadata();
++    emit displayChanged();
++    return true; // An observer may have canceled/replaced/deleted this engine.
++}
++
++void AgentEngine::recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata,const QString& displayState) {
+     if (!m_busy || m_toolIndex >= m_pendingTools.size() || m_pendingTools[m_toolIndex].id != id) return;
+     const auto safeOutput = redact(output);const auto completedId=id;
+     QJsonObject message{{"role", "tool"}, {"tool_call_id", completedId}, {"content", (error ? QStringLiteral("Error: ") : QString()) + safeOutput}};
+     if (!metadata.isEmpty()) message["metadata"] = metadata;
++    const auto state=displayState.isEmpty()?(error?QStringLiteral("output-error"):QStringLiteral("output-available")):displayState;
++    message=AgentPresentation::withMetadata(message,QJsonObject{{"version",1},{"toolState",state}});
+     m_messages.append(message);
++    m_display.toolState(completedId,state);syncDisplayMetadata();
+     ++m_toolIndex;
+     const auto generation = m_generation;const QPointer<AgentEngine> self(this);
+     emit toolFinished(completedId, safeOutput, error);
++    if(!self||generation!=m_generation||!m_busy)return;
++    emit displayChanged();
+     if(!self||generation!=m_generation||!m_busy)return;
+     QTimer::singleShot(0, this, [this, generation] { if (m_busy && generation == m_generation) runNextTool(); });
+ }
+@@ -777,7 +900,12 @@
+     m_toolIndex = 0;
+     m_waitingApproval.clear();
+     // Settle the whole protocol block before observers may start a new turn.
+-    for(const auto& call:pending)m_messages.append(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",reason}});
++    const auto terminal=reason=="Action cancelled by the user."?QStringLiteral("canceled"):QStringLiteral("output-error");
++    for(const auto& call:pending){
++        m_messages.append(AgentPresentation::withMetadata(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",reason}},QJsonObject{{"version",1},{"toolState",terminal}}));
++        m_display.toolState(call.id,terminal);
++    }
++    syncDisplayMetadata();
+     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
+     if(!request.isEmpty()){
+         emit externalToolCancellationRequested(request);
+@@ -809,6 +937,8 @@
+     m_lastTurnSucceeded = true;
+     m_busy = false;
+     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
++    m_display.finish();syncDisplayMetadata();emit displayChanged();
++    if(!self||generation!=m_generation)return;
+     emit busyChanged(false);
+     if(!self||generation!=m_generation)return;
+     emit finished();
+@@ -821,10 +951,13 @@
+     m_busy=false;
+     stopNetwork();
+     if(!self||generation!=m_generation)return;
++    m_display.finish("error");m_display.error(safeMessage);syncDisplayMetadata();
+     retainPartialResponse();
+     m_tools.cancel();
+     if(!self||generation!=m_generation)return;
+     settleOutstandingTools("Action interrupted because the turn failed.");
++    if(!self||generation!=m_generation)return;
++    emit displayChanged();
+     if(!self||generation!=m_generation)return;
+     emit busyChanged(false);
+     if(!self||generation!=m_generation)return;
+@@ -841,11 +974,14 @@
+     m_busy=false;
+     stopNetwork();
+     if(!self||generation!=m_generation)return;
++    m_display.finish("canceled");syncDisplayMetadata();
+     retainPartialResponse();
+     m_tools.cancel();
+     if(!self||generation!=m_generation)return;
+     settleOutstandingTools("Action cancelled by the user.");
+     if(!self||generation!=m_generation)return;
++    emit displayChanged();
++    if(!self||generation!=m_generation)return;
+     emit busyChanged(false);
+     if(!self||generation!=m_generation)return;
+     emit finished();
+--- a/src/core/ProviderProtocol.cpp
++++ b/src/core/ProviderProtocol.cpp
+@@ -1,4 +1,5 @@
+ #include "ProviderProtocol.h"
++#include "AgentPresentation.h"
+ #include <QJsonDocument>
+ #include <QMap>
+ #include <QSet>
+@@ -69,8 +70,9 @@
+     } else if (protocol == "google") request.setRawHeader("x-goog-api-key", provider.apiKey.toUtf8());
+     else if (!provider.apiKey.isEmpty()) request.setRawHeader("Authorization", "Bearer " + provider.apiKey.toUtf8());
+ }
+-ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonArray &history,
++ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonArray &sourceHistory,
+                                            const QString &system, const QJsonArray &tools) {
++    QJsonArray history;for(const auto& value:sourceHistory)if(!AgentPresentation::isUiOnly(value.toObject()))history.append(value);
+     QString base = p.baseUrl;
+     while (base.endsWith('/')) base.chop(1);
+     const auto protocol = kind(p);
+--- /dev/null
++++ b/src/core/AgentPresentation.h
+@@ -0,0 +1,44 @@
++#pragma once
++#include <QElapsedTimer>
++#include <QHash>
++#include <QJsonArray>
++#include <QJsonObject>
++
++namespace ade {
++// Presentation data is deliberately independent of the provider-native payload.
++// All mutations happen during engine events; snapshot()/history() only read.
++class AgentPresentation {
++public:
++    static constexpr int MaximumParts = 20000;
++    void begin();
++    bool empty() const { return m_parts.isEmpty(); }
++    QString id() const { return m_id; }
++    bool limitExceeded() const { return m_limitExceeded; }
++    void text(const QString& type,const QString& delta,const QString& key={});
++    void setText(const QString& type,const QString& text,const QString& key);
++    bool hasKey(const QString& key) const { return m_keys.contains(key); }
++    void tool(int index,const QString& callId,const QString& name,const QString& arguments);
++    void closePart(const QString& key,const QString& state="done");
++    void toolState(const QString& callId,const QString& state);
++    QString toolOutput(const QString& callId) const;
++    bool setToolOutput(const QString& callId,const QString& output);
++    void finish(const QString& state="done");
++    void error(const QString& text,const QString& state="error");
++    QJsonObject metadata(bool uiOnly=false) const;
++    QJsonObject row(bool provisional) const;
++    static QJsonArray history(const QJsonArray& messages);
++    static bool isUiOnly(const QJsonObject& message);
++    static QJsonObject withMetadata(QJsonObject message,const QJsonObject& display);
++private:
++    int findPart(const QString& key) const;
++    bool allowNewPart();
++    void closeAt(int index,const QString& state);
++    QJsonArray parts() const;
++    QString m_id;
++    QJsonArray m_parts;
++    QHash<QString,int> m_keys;
++    QHash<int,qint64> m_started;
++    QElapsedTimer m_clock;
++    bool m_limitExceeded = false;
++};
++}
+--- /dev/null
++++ b/src/core/AgentPresentation.cpp
+@@ -0,0 +1,173 @@
++#include "AgentPresentation.h"
++#include <QCryptographicHash>
++#include <QJsonDocument>
++#include <QSet>
++#include <QUuid>
++
++namespace ade {
++namespace {
++QString freshId(){return QUuid::createUuid().toString(QUuid::WithoutBraces);}
++QString contentText(const QJsonValue& content){
++    if(content.isString())return content.toString();
++    QString result;
++    for(const auto& value:content.toArray()){const auto part=value.toObject();if(part["type"]=="text"||part["type"]=="output_text")result+=part["text"].toString();}
++    return result;
++}
++bool validDisplay(const QJsonObject& display){
++    if(display["version"]!=1||!display["id"].isString()||display["id"].toString().isEmpty()||display["id"].toString().size()>128||!display["parts"].isArray()||display["parts"].toArray().size()>AgentPresentation::MaximumParts)return false;
++    QSet<QString> ids;
++    for(const auto& value:display["parts"].toArray()){
++        const auto part=value.toObject();const auto id=part["id"].toString(),type=part["type"].toString();
++        if(!value.isObject()||id.isEmpty()||id.size()>256||ids.contains(id)||!QStringList{"text","reasoning","tool","error"}.contains(type))return false;
++        if(type!="tool"&&!part["text"].isString())return false;
++        if(type=="tool"&&(!part["toolCallId"].isString()||!part["name"].isString()||!part["inputText"].isString()))return false;
++        if(type=="tool"){
++            if(!QStringList{"input-streaming","input-available","approval-requested","running","output-available","output-error","output-denied","canceled"}.contains(part["state"].toString()))return false;
++        }else if(!QStringList{"streaming","done","error","canceled"}.contains(part["state"].toString()))return false;
++        if(part.contains("durationMs")&&(!part["durationMs"].isDouble()||part["durationMs"].toDouble()<0))return false;
++        ids.insert(id);
++    }
++    return true;
++}
++bool displayMatches(const QJsonObject& display,const QJsonObject& message){
++    if(!validDisplay(display))return false;
++    QString text,reasoning;QJsonArray tools;
++    for(const auto& value:display["parts"].toArray()){
++        const auto part=value.toObject();
++        if(part["type"]=="text")text+=part["text"].toString();
++        else if(part["type"]=="reasoning")reasoning+=part["text"].toString();
++        else if(part["type"]=="tool")tools.append(part);
++    }
++    if(text!=contentText(message["content"]))return false;
++    if(message["reasoning_content"].isString()&&reasoning!=message["reasoning_content"].toString())return false;
++    const auto calls=message["tool_calls"].toArray();
++    if(!calls.isEmpty()&&calls.size()!=tools.size())return false;
++    QSet<QString> matched;
++    for(const auto& value:calls){const auto call=value.toObject(),fn=call["function"].toObject();bool found=false;
++        for(const auto& toolValue:tools){const auto tool=toolValue.toObject();if(call["id"]==tool["toolCallId"]&&!matched.contains(tool["id"].toString())){
++            if(fn["name"]!=tool["name"]||fn["arguments"]!=tool["inputText"])return false;
++            matched.insert(tool["id"].toString());found=true;break;
++        }}
++        if(!found)return false;
++    }
++    return true;
++}
++QJsonObject toolPart(const QString& id,const QJsonObject& call){
++    const auto fn=call["function"].toObject();const auto inputText=fn["arguments"].toString();
++    QJsonObject part{{"id",id},{"type","tool"},{"toolCallId",call["id"]},{"name",fn["name"]},{"inputText",inputText},{"state","input-available"}};
++    QJsonParseError error;const auto input=QJsonDocument::fromJson(inputText.toUtf8(),&error);if(error.error==QJsonParseError::NoError&&input.isObject())part["input"]=input.object();return part;
++}
++QJsonArray legacyParts(const QJsonObject& message,const QString& id){
++    QJsonArray parts;const auto calls=message["tool_calls"].toArray();int toolIndex=0;
++    const auto appendText=[&](const QString& type,const QString& text){if(!text.isEmpty())parts.append(QJsonObject{{"id",id+"/"+QString::number(parts.size())},{"type",type},{"text",text},{"state","done"}});};
++    const auto appendTool=[&]{if(toolIndex<calls.size())parts.append(toolPart(id+"/"+QString::number(parts.size()),calls[toolIndex++].toObject()));};
++    const auto native=message["ade_native"].toObject();const auto protocol=native["protocol"].toString();
++    if(message["role"]=="assistant"&&!native["content"].toArray().isEmpty()){
++        for(const auto& value:native["content"].toArray()){
++            const auto part=value.toObject();const auto type=part["type"].toString();
++            if(protocol=="anthropic"){
++                if(type=="thinking")appendText("reasoning",part["thinking"].toString());
++                else if(type=="text")appendText("text",part["text"].toString());
++                else if(type=="tool_use")appendTool();
++            }else if(protocol=="google"){
++                appendText(part["thought"].toBool()?"reasoning":"text",part["text"].toString());
++                if(part["functionCall"].isObject())appendTool();
++            }else if(protocol=="responses"){
++                if(type=="message")for(const auto& item:part["content"].toArray()){const auto itemObject=item.toObject();appendText("text",itemObject["type"]=="refusal"?itemObject["refusal"].toString():itemObject["text"].toString());}
++                else if(type=="reasoning")for(const auto& item:part["summary"].toArray())appendText("reasoning",item.toObject()["text"].toString());
++                else if(type=="function_call")appendTool();
++            }
++        }
++    }
++    if(parts.isEmpty()){appendText("reasoning",message["reasoning_content"].toString());appendText("text",contentText(message["content"]));}
++    while(toolIndex<calls.size())appendTool();
++    return parts;
++}
++QString legacyId(const QJsonObject& message,QHash<QString,int>* occurrences){
++    auto stable=message;auto metadata=stable["metadata"].toObject();metadata.remove("display");if(metadata.isEmpty())stable.remove("metadata");else stable["metadata"]=metadata;
++    const auto hash=QString::fromLatin1(QCryptographicHash::hash(QJsonDocument(stable).toJson(QJsonDocument::Compact),QCryptographicHash::Sha256).toHex().left(24));
++    return "legacy-"+hash+'-'+QString::number((*occurrences)[hash]++);
++}
++}
++void AgentPresentation::begin(){m_id=freshId();m_parts={};m_keys.clear();m_started.clear();m_clock.start();m_limitExceeded=false;}
++int AgentPresentation::findPart(const QString& key)const{return m_keys.value(key,-1);}
++bool AgentPresentation::allowNewPart(){if(m_parts.size()<MaximumParts)return true;m_limitExceeded=true;return false;}
++void AgentPresentation::closeAt(int index,const QString& state){
++    if(index<0||index>=m_parts.size())return;
++    auto part=m_parts[index].toObject();
++    if(part["type"]=="tool")return;
++    if(part["state"]!="streaming")return;
++    part["state"]=state;if(part["type"]=="reasoning"&&m_started.contains(index))part["durationMs"]=qMax<qint64>(0,m_clock.elapsed()-m_started.take(index));m_parts[index]=part;
++}
++void AgentPresentation::text(const QString& type,const QString& delta,const QString& key){
++    // An explicit native part-start has an identity before its first delta.
++    if(delta.isEmpty()&&key.isEmpty())return;
++    if(m_id.isEmpty())begin();
++    int index=key.isEmpty()?-1:findPart(key);
++    if(index<0&&key.isEmpty()&&!m_parts.isEmpty()){
++        const auto last=m_parts.last().toObject();if(last["type"]==type&&last["state"]=="streaming")index=m_parts.size()-1;
++    }
++    if(index<0){
++        if(!allowNewPart())return;
++        if(!m_parts.isEmpty())closeAt(m_parts.size()-1,"done");
++        index=m_parts.size();
++        m_parts.append(QJsonObject{{"id",m_id+"/"+QString::number(index)},{"type",type},{"text",QString()},{"state","streaming"}});
++        if(!key.isEmpty())m_keys.insert(key,index);
++        if(type=="reasoning")m_started[index]=m_clock.elapsed();
++    }
++    auto part=m_parts[index].toObject();part["text"]=part["text"].toString()+delta;m_parts[index]=part;
++}
++void AgentPresentation::tool(int index,const QString& callId,const QString& name,const QString& arguments){
++    if(m_id.isEmpty())begin();
++    const auto key="tool/"+QString::number(index);int position=findPart(key);
++    if(position<0){if(!allowNewPart())return;if(!m_parts.isEmpty())closeAt(m_parts.size()-1,"done");position=m_parts.size();m_keys.insert(key,position);m_parts.append(QJsonObject{{"id",m_id+"/"+QString::number(position)},{"type","tool"},{"state","input-streaming"}});}
++    auto part=m_parts[position].toObject();part["toolCallId"]=callId;part["name"]=name;part["inputText"]=arguments;
++    QJsonParseError error;const auto input=QJsonDocument::fromJson(arguments.toUtf8(),&error);if(error.error==QJsonParseError::NoError&&input.isObject())part["input"]=input.object();else part.remove("input");m_parts[position]=part;
++}
++void AgentPresentation::setText(const QString& type,const QString& value,const QString& key){const int index=findPart(key);if(index<0){text(type,value,key);return;}auto part=m_parts[index].toObject();part["text"]=value;m_parts[index]=part;}
++void AgentPresentation::closePart(const QString& key,const QString& state){closeAt(findPart(key),state);}
++void AgentPresentation::toolState(const QString& callId,const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){part["state"]=state;m_parts[i]=part;return;}}}
++QString AgentPresentation::toolOutput(const QString& callId)const{for(const auto& value:m_parts){const auto part=value.toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId)return part["output"].toString();}return {};}
++bool AgentPresentation::setToolOutput(const QString& callId,const QString& output){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){if(part["output"]==output)return false;part["output"]=output;m_parts[i]=part;return true;}}return false;}
++void AgentPresentation::finish(const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"){if(part["state"]=="input-streaming"){part["state"]=state=="done"?"input-available":state=="error"?"output-error":state;m_parts[i]=part;}}else closeAt(i,state);}}
++void AgentPresentation::error(const QString& text,const QString& state){if(text.isEmpty())return;if(m_id.isEmpty())begin();if(!allowNewPart())return;m_parts.append(QJsonObject{{"id",m_id+"/"+QString::number(m_parts.size())},{"type","error"},{"text",text},{"errorText",text},{"state",state}});}
++QJsonArray AgentPresentation::parts()const{
++    auto result=m_parts;for(auto it=m_started.cbegin();it!=m_started.cend();++it){auto part=result[it.key()].toObject();part["durationMs"]=qMax<qint64>(0,m_clock.elapsed()-it.value());result[it.key()]=part;}return result;
++}
++QJsonObject AgentPresentation::metadata(bool uiOnly)const{QJsonObject result{{"version",1},{"id",m_id},{"parts",parts()}};if(uiOnly)result["uiOnly"]=QJsonObject{{"version",1},{"kind","interrupted-reasoning"}};return result;}
++QJsonObject AgentPresentation::row(bool provisional)const{return {{"id",m_id},{"role","assistant"},{"provisional",provisional},{"parts",parts()}};}
++QJsonObject AgentPresentation::withMetadata(QJsonObject message,const QJsonObject& display){auto metadata=message["metadata"].toObject();metadata["display"]=display;message["metadata"]=metadata;return message;}
++bool AgentPresentation::isUiOnly(const QJsonObject& message){
++    const auto display=message["metadata"].toObject()["display"].toObject(),marker=display["uiOnly"].toObject();
++    if(message["role"]!="assistant"||!validDisplay(display)||marker["version"]!=1||marker["kind"]!="interrupted-reasoning")return false;
++    // Only the exact host-created envelope is eligible. Unknown replay fields
++    // (legacy function_call, refusal, audio, or future provider fields) must not
++    // disappear merely because an imported record carries a UI marker.
++    for(auto it=message.begin();it!=message.end();++it)
++        if(it.key()!="role"&&it.key()!="content"&&it.key()!="metadata")return false;
++    if(!message["content"].isString()||!message["content"].toString().isEmpty()||message.contains("tool_calls")||message.contains("ade_native")||message.contains("reasoning_content"))return false;
++    const auto metadata=message["metadata"].toObject();if((metadata.contains("attachments")&&(!metadata["attachments"].isArray()||!metadata["attachments"].toArray().isEmpty()))||metadata.contains("fileReads"))return false;
++    bool reasoning=false;for(const auto& value:display["parts"].toArray()){const auto part=value.toObject();if(part["type"]=="reasoning")reasoning=true;else if(part["type"]!="error")return false;if(part["state"]!="error"&&part["state"]!="canceled"&&part["state"]!="done")return false;}return reasoning;
++}
++QJsonArray AgentPresentation::history(const QJsonArray& messages){
++    QJsonArray result;QHash<QString,int> occurrences;int assistant=-1;QSet<QString> completed,rowIds;
++    for(const auto& value:messages){
++        const auto message=value.toObject();const auto role=message["role"].toString();if(role=="system")continue;
++        if(role=="tool"&&assistant>=0){
++            auto row=result[assistant].toObject();auto parts=row["parts"].toArray();const auto callId=message["tool_call_id"].toString();
++            if(!completed.contains(callId))for(int i=0;i<parts.size();++i){auto part=parts[i].toObject();if(part["type"]!="tool"||part["toolCallId"]!=callId)continue;
++                const auto output=contentText(message["content"]);const auto stored=message["metadata"].toObject()["display"].toObject();auto state=stored["version"]==1?stored["toolState"].toString():QString();
++                if(!QStringList{"output-available","output-error","output-denied","canceled"}.contains(state))state=output.startsWith("Error:")?"output-error":"output-available";
++                part["state"]=state;part["output"]=output;if(state!="output-available")part["errorText"]=output;parts[i]=part;completed.insert(callId);break;
++            }
++            row["parts"]=parts;const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty()){auto all=row["attachments"].toArray();for(const auto& entry:attachments)all.append(entry);row["attachments"]=all;}result[assistant]=row;continue;
++        }
++        assistant=-1;completed.clear();const auto display=message["metadata"].toObject()["display"].toObject();const bool saved=displayMatches(display,message)&&!rowIds.contains(display["id"].toString());auto id=saved?display["id"].toString():legacyId(message,&occurrences);
++        const auto baseId=id;int collision=1;while(rowIds.contains(id))id=baseId+'~'+QString::number(collision++);rowIds.insert(id);
++        QJsonObject row{{"id",id},{"role",role},{"provisional",false},{"parts",saved?display["parts"].toArray():legacyParts(message,id)}};
++        const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty())row["attachments"]=attachments;
++        result.append(row);if(role=="assistant")assistant=result.size()-1;
++    }
++    return result;
++}
++}
+--- /dev/null
++++ b/tests/test_presentation.cpp
+@@ -0,0 +1,241 @@
++#include "core/AgentEngine.h"
++#include "core/AgentPresentation.h"
++#include "core/ProviderProtocol.h"
++#include <QFile>
++#include <QJsonDocument>
++#include <QPointer>
++#include <QSignalSpy>
++#include <QTcpServer>
++#include <QTcpSocket>
++#include <QtTest>
++using namespace ade;
++namespace {
++QByteArray event(const QJsonObject& object){return "data: "+QJsonDocument(object).toJson(QJsonDocument::Compact)+"\n\n";}
++QByteArray chat(const QJsonObject& delta,const QJsonValue& finish=QJsonValue::Null){return event({{"choices",QJsonArray{QJsonObject{{"delta",delta},{"finish_reason",finish}}}}});}
++QJsonObject call(const QString& id="same-call",const QString& arguments="{\"x\":1}"){
++    return {{"index",0},{"id",id},{"type","function"},{"function",QJsonObject{{"name","inspectFixture"},{"arguments",arguments}}}};
++}
++QJsonObject responseItem(const QString& type,const QString& text){
++    if(type=="reasoning")return {{"id","reason-1"},{"type","reasoning"},{"encrypted_content","SIGNED_FIXTURE"},{"summary",QJsonArray{QJsonObject{{"type","summary_text"},{"text",text}}}}};
++    return {{"id","message-1"},{"type","message"},{"role","assistant"},{"content",QJsonArray{QJsonObject{{"type","output_text"},{"text",text}}}}};
++}
++QJsonObject responseCall(){return {{"id","item-1"},{"type","function_call"},{"call_id","same-call"},{"name","inspectFixture"},{"arguments","{\"x\":1}"}};}
++QList<QByteArray> round(const QString& protocol,bool tool=true){
++    if(protocol=="openai"){
++        if(!tool)return {chat({{"content","Final"}},"stop"),"data: [DONE]\n\n"};
++        auto partial=call("same-call","{\"x\":");auto rest=call("","1}");rest.remove("id");auto fn=rest["function"].toObject();fn.remove("name");rest["function"]=fn;
++        return {chat({{"reasoning_content","Think"}}),chat({{"content","Before"}}),chat({{"tool_calls",QJsonArray{partial}}}),chat({{"tool_calls",QJsonArray{rest}}},"tool_calls"),"data: [DONE]\n\n"};
++    }
++    if(protocol=="anthropic"){
++        if(!tool)return {event({{"type","content_block_start"},{"index",0},{"content_block",QJsonObject{{"type","text"},{"text","Final"}}}}),event({{"type","message_delta"},{"delta",QJsonObject{{"stop_reason","end_turn"}}}}),event({{"type","message_stop"}})};
++        return {event({{"type","content_block_start"},{"index",0},{"content_block",QJsonObject{{"type","thinking"},{"thinking","Think"},{"signature","SIGNED_FIXTURE"}}}}),
++            event({{"type","content_block_stop"},{"index",0}}),
++            event({{"type","content_block_start"},{"index",1},{"content_block",QJsonObject{{"type","text"},{"text","Before"}}}}),
++            event({{"type","content_block_stop"},{"index",1}}),
++            event({{"type","content_block_start"},{"index",2},{"content_block",QJsonObject{{"type","tool_use"},{"id","same-call"},{"name","inspectFixture"},{"input",QJsonObject{}}}}}),
++            event({{"type","content_block_delta"},{"index",2},{"delta",QJsonObject{{"type","input_json_delta"},{"partial_json","{\"x\":"}}}}),
++            event({{"type","content_block_delta"},{"index",2},{"delta",QJsonObject{{"type","input_json_delta"},{"partial_json","1}"}}}}),
++            event({{"type","content_block_stop"},{"index",2}}),event({{"type","message_delta"},{"delta",QJsonObject{{"stop_reason","tool_use"}}}}),event({{"type","message_stop"}})};
++    }
++    if(protocol=="google"){
++        auto chunk=[](const QJsonArray& parts,bool done=false){QJsonObject candidate{{"content",QJsonObject{{"role","model"},{"parts",parts}}}};if(done)candidate["finishReason"]="STOP";return event({{"candidates",QJsonArray{candidate}}});};
++        if(!tool)return {chunk(QJsonArray{QJsonObject{{"text","Final"}}},true)};
++        return {chunk(QJsonArray{QJsonObject{{"text","Think"},{"thought",true},{"thoughtSignature","SIGNED_FIXTURE"}}}),chunk(QJsonArray{QJsonObject{{"text","Before"}}}),chunk(QJsonArray{QJsonObject{{"functionCall",QJsonObject{{"id","same-call"},{"name","inspectFixture"},{"args",QJsonObject{{"x",1}}}}}}},true)};
++    }
++    if(!tool)return {event({{"type","response.output_text.delta"},{"output_index",0},{"content_index",0},{"delta","Final"}}),event({{"type","response.completed"},{"response",QJsonObject{{"status","completed"},{"output",QJsonArray{responseItem("message","Final")}}}}})};
++    auto started=responseCall();started["arguments"]="";
++    return {event({{"type","response.reasoning_summary_text.delta"},{"output_index",0},{"summary_index",0},{"delta","Think"}}),
++        event({{"type","response.reasoning_summary_text.done"},{"output_index",0},{"summary_index",0},{"text","Think"}}),
++        event({{"type","response.output_text.delta"},{"output_index",1},{"content_index",0},{"delta","Before"}}),
++        event({{"type","response.output_item.added"},{"output_index",2},{"item",started}}),
++        event({{"type","response.function_call_arguments.delta"},{"output_index",2},{"delta","{\"x\":"}}),
++        event({{"type","response.function_call_arguments.delta"},{"output_index",2},{"delta","1}"}}),
++        event({{"type","response.output_item.done"},{"output_index",2},{"item",responseCall()}}),
++        event({{"type","response.completed"},{"response",QJsonObject{{"status","completed"},{"output",QJsonArray{responseItem("reasoning","Think"),responseItem("message","Before"),responseCall()}}}}})};
++}
++struct Reply{QList<QByteArray> chunks;bool hold=false;int status=200;};
++class Server:public QObject{
++public:
++    QTcpServer server;QString protocol="openai";QList<Reply> replies;QList<QJsonObject> requests;
++    Server(){server.listen(QHostAddress::LocalHost);connect(&server,&QTcpServer::newConnection,this,[this]{while(auto* socket=server.nextPendingConnection()){
++        connect(socket,&QTcpSocket::disconnected,socket,&QObject::deleteLater);
++        connect(socket,&QTcpSocket::readyRead,this,[this,socket]{
++            if(socket->property("handled").toBool()){socket->readAll();return;}
++            auto bytes=socket->property("bytes").toByteArray()+socket->readAll();socket->setProperty("bytes",bytes);
++            const int end=bytes.indexOf("\r\n\r\n");if(end<0)return;int length=0;
++            for(const auto& line:bytes.left(end).split('\n'))if(line.toLower().startsWith("content-length:"))length=line.mid(15).trimmed().toInt();
++            if(bytes.size()<end+4+length)return;
++            socket->setProperty("handled",true);
++            requests.append(QJsonDocument::fromJson(bytes.mid(end+4,length)).object());auto reply=replies.isEmpty()?Reply{round(protocol,false)}:replies.takeFirst();
++            int total=0;for(const auto& chunk:reply.chunks)total+=chunk.size();if(reply.hold)total+=1000000;
++            socket->write("HTTP/1.1 "+QByteArray::number(reply.status)+" Test\r\nContent-Type: text/event-stream\r\nContent-Length: "+QByteArray::number(total)+"\r\nConnection: close\r\n\r\n");
++            const QPointer<QTcpSocket> safe(socket);int delay=0;
++            for(const auto& chunk:reply.chunks){delay+=15;QTimer::singleShot(delay,socket,[safe,chunk]{if(safe&&safe->state()==QAbstractSocket::ConnectedState)safe->write(chunk);});}
++            if(!reply.hold)QTimer::singleShot(delay+15,socket,[safe]{if(safe)safe->disconnectFromHost();});
++        });
++    }});}
++    ProviderConfig provider()const{return {"fixture","Fixture",QString("http://127.0.0.1:%1/v1").arg(server.serverPort()),"fake-token-only","fixture-model",protocol};}
++};
++QJsonArray tools(){return {QJsonObject{{"type","function"},{"function",QJsonObject{{"name","inspectFixture"},{"description","Fixture"},{"parameters",QJsonObject{{"type","object"},{"properties",QJsonObject{{"x",QJsonObject{{"type","integer"}}}}}}}}}}};}
++QJsonArray assistantRows(const QJsonArray& rows){QJsonArray out;for(const auto& row:rows)if(row.toObject()["role"]=="assistant")out.append(row);return out;}
++QJsonObject findTool(const QJsonArray& rows){for(const auto& row:rows)for(const auto& part:row.toObject()["parts"].toArray())if(part.toObject()["type"]=="tool")return part.toObject();return {};}
++QStringList partTypes(const QJsonObject& row){QStringList out;for(const auto& part:row["parts"].toArray())out.append(part.toObject()["type"].toString());return out;}
++void protocols(){QTest::addColumn<QString>("protocol");for(const auto& p:{"openai","anthropic","google","responses"})QTest::newRow(p)<<QString(p);}
++QJsonObject textMessage(const QString& text){return {{"role","assistant"},{"content",text}};}
++}
++class PresentationTest:public QObject{
++    Q_OBJECT
++private slots:
++    void multiRound_data(){protocols();}
++    void multiRound(){
++        QFETCH(QString,protocol);Server server;server.protocol=protocol;server.replies={{round(protocol)}};
++        AgentEngine engine;engine.setProvider(server.provider());engine.setExternalTools(tools());
++        QSignalSpy finished(&engine,&AgentEngine::finished);QSignalSpy errors(&engine,&AgentEngine::failed);QList<QJsonArray> snapshots;
++        connect(&engine,&AgentEngine::displayChanged,&engine,[&]{const auto original=engine.messages();snapshots.append(engine.displayMessages());QCOMPARE(engine.messages(),original);});
++        connect(&engine,&AgentEngine::approvalRequired,&engine,[&](const QString& id){QTimer::singleShot(10,&engine,[&,id]{engine.approveTool(id,true);});});
++        connect(&engine,&AgentEngine::externalToolRequested,&engine,[&](const QString& id){QTimer::singleShot(15,&engine,[&,id]{engine.completeExternalToolWithAttachments(id,"OUTPUT",false,QJsonArray{QJsonObject{{"path","att/fake.txt"}}});});});
++        engine.submit("Question");QTRY_COMPARE_WITH_TIMEOUT(finished.size(),1,4000);QCOMPARE(errors.size(),0);QCOMPARE(server.requests.size(),2);
++        const auto rows=engine.displayMessages(), assistants=assistantRows(rows);QCOMPARE(rows.size(),3);QCOMPARE(assistants.size(),2);
++        const auto first=assistants[0].toObject();QCOMPARE(partTypes(first),QStringList({"reasoning","text","tool"}));
++        const auto parts=first["parts"].toArray();QCOMPARE(parts[0].toObject()["text"].toString(),"Think");QCOMPARE(parts[1].toObject()["text"].toString(),"Before");
++        QVERIFY(parts[0].toObject().contains("durationMs"));QVERIFY(parts[0].toObject()["durationMs"].toDouble()>=0);
++        QCOMPARE(parts[2].toObject()["state"].toString(),"output-available");QCOMPARE(parts[2].toObject()["output"].toString(),"OUTPUT");QCOMPARE(parts[2].toObject()["input"].toObject(),QJsonObject({{"x",1}}));
++        QCOMPARE(first["attachments"].toArray().size(),1);QCOMPARE(assistants[1].toObject()["parts"].toArray()[0].toObject()["text"].toString(),"Final");
++        QSet<QString> states;bool provisional=false;for(const auto& snapshot:snapshots){QSet<QString> ids;int provisionalCount=0;for(const auto& row:snapshot){const auto object=row.toObject();QVERIFY(!ids.contains(object["id"].toString()));ids.insert(object["id"].toString());if(object["provisional"].toBool())++provisionalCount;
++                if(object["id"]==first["id"]&&object["provisional"].toBool()){provisional=true;for(int i=0;i<object["parts"].toArray().size();++i)QCOMPARE(object["parts"].toArray()[i].toObject()["id"],parts[i].toObject()["id"]);}}
++            QVERIFY(provisionalCount<=1);const auto tool=findTool(snapshot);if(!tool.isEmpty())states.insert(tool["state"].toString());}
++        QVERIFY(provisional);for(const auto& state:{"input-streaming","input-available","approval-requested","running","output-available"})QVERIFY2(states.contains(state),state);
++        const auto retained=engine.messages();AgentEngine restarted;restarted.setMessages(retained);QCOMPARE(restarted.displayMessages(),rows);QCOMPARE(AgentEngine::displayHistory(retained),rows);
++        auto undecorated=retained;for(int i=0;i<undecorated.size();++i){auto message=undecorated[i].toObject();auto metadata=message["metadata"].toObject();metadata.remove("display");if(metadata.isEmpty())message.remove("metadata");else message["metadata"]=metadata;undecorated[i]=message;}
++        QCOMPARE(ProviderProtocol::prepare(server.provider(),retained,"same",tools()).body,ProviderProtocol::prepare(server.provider(),undecorated,"same",tools()).body);
++        const auto legacy=assistantRows(AgentEngine::displayHistory(undecorated));QCOMPARE(partTypes(legacy[0].toObject()),QStringList({"reasoning","text","tool"}));
++        QCOMPARE(engine.messages(),retained);
++        const auto wire=QJsonDocument(server.requests[1]).toJson(QJsonDocument::Compact);QVERIFY(!wire.contains("durationMs"));QVERIFY(!wire.contains("approval-requested"));QVERIFY(!wire.contains("metadata"));
++        if(protocol!="openai")QVERIFY(wire.contains("SIGNED_FIXTURE"));
++    }
++    void states_data(){QTest::addColumn<QString>("terminal");for(const auto& state:{"output-denied","output-error","canceled"})QTest::newRow(state)<<QString(state);}
++    void states(){
++        QFETCH(QString,terminal);Server server;server.replies={{round("openai")}};AgentEngine engine;engine.setProvider(server.provider());engine.setExternalTools(tools());QSignalSpy done(&engine,&AgentEngine::finished);
++        connect(&engine,&AgentEngine::approvalRequired,&engine,[&](const QString& id){engine.approveTool(id,terminal!="output-denied");});
++        connect(&engine,&AgentEngine::externalToolRequested,&engine,[&](const QString& id){if(terminal=="canceled")engine.cancel();else engine.completeExternalTool(id,"BAD",true);});
++        engine.submit("Q");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,4000);QCOMPARE(findTool(engine.displayMessages())["state"].toString(),terminal);
++    }
++    void displayObserverCanDecideApproval_data(){QTest::addColumn<bool>("allow");QTest::newRow("allow")<<true;QTest::newRow("deny")<<false;}
++    void displayObserverCanDecideApproval(){
++        QFETCH(bool,allow);Server server;server.replies={{round("openai")}};AgentEngine engine;engine.setProvider(server.provider());engine.setExternalTools(tools());QSignalSpy done(&engine,&AgentEngine::finished),approvals(&engine,&AgentEngine::approvalRequired);bool decided=false;
++        connect(&engine,&AgentEngine::displayChanged,&engine,[&]{const auto tool=findTool(engine.displayMessages());if(!decided&&tool["state"]=="approval-requested"){decided=true;engine.approveTool(tool["toolCallId"].toString(),allow);}});
++        connect(&engine,&AgentEngine::externalToolRequested,&engine,[&](const QString& id){engine.completeExternalTool(id,"DONE",false);});
++        engine.submit("Q");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,4000);QVERIFY(decided);QCOMPARE(approvals.size(),0);QCOMPARE(findTool(engine.displayMessages())["state"].toString(),allow?"output-available":"output-denied");
++    }
++    void reasoningOnly_data(){QTest::addColumn<QString>("protocol");QTest::addColumn<bool>("failure");for(const auto& p:{"openai","anthropic","google","responses"})for(bool fail:{false,true})QTest::newRow(qPrintable(QString(p)+(fail?"-fail":"-cancel")))<<QString(p)<<fail;}
++    void reasoningOnly(){
++        QFETCH(QString,protocol);QFETCH(bool,failure);Server server;server.protocol=protocol;auto chunks=round(protocol);server.replies={{QList<QByteArray>{chunks.first()},!failure}};
++        AgentEngine engine;engine.setProvider(server.provider());QSignalSpy done(&engine,&AgentEngine::finished);
++        if(!failure)connect(&engine,&AgentEngine::displayChanged,&engine,[&]{const auto rows=assistantRows(engine.displayMessages());if(engine.isBusy()&&!rows.isEmpty()&&!rows.last().toObject()["parts"].toArray().isEmpty())engine.cancel();});
++        engine.submit("Q");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,4000);QCOMPARE(engine.messages().size(),2);const auto message=engine.messages().last().toObject();QVERIFY(AgentPresentation::isUiOnly(message));QVERIFY(!message.contains("ade_native"));
++        const auto rows=engine.displayMessages();const auto parts=rows.last().toObject()["parts"].toArray();QCOMPARE(parts[0].toObject()["type"].toString(),"reasoning");QCOMPARE(parts[0].toObject()["text"].toString(),"Think");QCOMPARE(parts[0].toObject()["state"].toString(),failure?"error":"canceled");
++        QCOMPARE(AgentEngine::displayHistory(engine.messages()),rows);const auto wire=ProviderProtocol::prepare(server.provider(),engine.messages(),"",{}).body;QVERIFY(!QJsonDocument(wire).toJson().contains("Think"));
++    }
++    void wireUnchanged_data(){protocols();}
++    void wireUnchanged(){
++        QFETCH(QString,protocol);Server server;server.protocol=protocol;QJsonArray messages{QJsonObject{{"role","user"},{"content","Q"}},textMessage("REAL")};auto decorated=messages;
++        AgentPresentation display;display.begin();display.text("text","REAL");display.finish();auto message=messages.last().toObject();message["metadata"]=QJsonObject{{"attachments",QJsonArray{QJsonObject{{"path","att/blob"}}}},{"fileReads",QJsonArray{QJsonObject{{"snapshotId","fake"}}}}};
++        decorated[1]=AgentPresentation::withMetadata(message,display.metadata());messages[1]=message;
++        QCOMPARE(ProviderProtocol::prepare(server.provider(),decorated,"system",tools()).body,ProviderProtocol::prepare(server.provider(),messages,"system",tools()).body);
++        display.begin();display.text("reasoning","PRIVATE_PARTIAL");display.finish("canceled");auto ui=AgentPresentation::withMetadata(textMessage(""),display.metadata(true));QVERIFY(AgentPresentation::isUiOnly(ui));
++        auto added=messages;added.append(ui);QCOMPARE(ProviderProtocol::prepare(server.provider(),added,"system",{}).body,ProviderProtocol::prepare(server.provider(),messages,"system",{}).body);
++        for(const auto& key:{"content","tool_calls","ade_native","reasoning_content"}){auto malformed=ui;if(QString(key)=="content")malformed[key]="REAL";else malformed[key]=QJsonArray{};QVERIFY(!AgentPresentation::isUiOnly(malformed));}
++        auto actualContent=ui;actualContent["content"]="CANNOT_HIDE_REAL_CONTENT";QVERIFY(QJsonDocument(ProviderProtocol::prepare(server.provider(),QJsonArray{actualContent},"",{}).body).toJson().contains("CANNOT_HIDE_REAL_CONTENT"));
++        auto malformed=ui;auto meta=malformed["metadata"].toObject();meta["attachments"]=QJsonArray{QJsonObject{{"path","att/a"}}};malformed["metadata"]=meta;QVERIFY(!AgentPresentation::isUiOnly(malformed));
++    }
++    void reusedIdsAndLegacy(){
++        const QJsonObject assistant{{"role","assistant"},{"content",""},{"tool_calls",QJsonArray{call()}}};const QJsonObject result{{"role","tool"},{"tool_call_id","same-call"},{"content","ONE"}};
++        auto second=result;second["content"]="TWO";const QJsonArray history{assistant,result,assistant,second};const auto rows=AgentEngine::displayHistory(history);QCOMPARE(rows.size(),2);
++        QVERIFY(rows[0].toObject()["id"]!=rows[1].toObject()["id"]);QCOMPARE(findTool(QJsonArray{rows[0]})["output"].toString(),"ONE");QCOMPARE(findTool(QJsonArray{rows[1]})["output"].toString(),"TWO");QCOMPARE(AgentEngine::displayHistory(history),rows);
++        const auto thought=AgentEngine::displayHistory(QJsonArray{QJsonObject{{"role","assistant"},{"content","Text"},{"reasoning_content","Thought"}}});QCOMPARE(partTypes(thought[0].toObject()),QStringList({"reasoning","text"}));QVERIFY(!thought[0].toObject()["parts"].toArray()[0].toObject().contains("durationMs"));
++    }
++    void malformedDisplayCannotHideCanonicalContent(){
++        AgentPresentation display;display.begin();display.text("text","FORGED");display.finish();const auto message=AgentPresentation::withMetadata(textMessage("REAL"),display.metadata());
++        const auto rows=AgentEngine::displayHistory(QJsonArray{message});QCOMPARE(rows[0].toObject()["parts"].toArray()[0].toObject()["text"].toString(),"REAL");
++        auto valid=AgentPresentation::withMetadata(textMessage("FORGED"),display.metadata());const auto repeated=AgentEngine::displayHistory(QJsonArray{valid,valid});QVERIFY(repeated[0].toObject()["id"]!=repeated[1].toObject()["id"]);
++        auto invalid=display.metadata();auto parts=invalid["parts"].toArray();auto part=parts[0].toObject();part["state"]="unknown";parts[0]=part;invalid["parts"]=parts;
++        const auto fallback=AgentEngine::displayHistory(QJsonArray{AgentPresentation::withMetadata(textMessage("FORGED"),invalid)});QCOMPARE(fallback[0].toObject()["parts"].toArray()[0].toObject()["state"].toString(),"done");
++        const QJsonObject metadata{{"attachments",QJsonArray{QJsonObject{{"path","att/a"}}}},{"fileReads",QJsonArray{QJsonObject{{"snapshotId","snapshot"}}}},{"pathReferences",QJsonObject{{"att/a",QJsonObject{{"hash","fixture"}}}}}};
++        auto withContext=textMessage("FORGED");withContext["metadata"]=metadata;const auto preserved=AgentPresentation::withMetadata(withContext,display.metadata())["metadata"].toObject();for(auto it=metadata.begin();it!=metadata.end();++it)QCOMPARE(preserved[it.key()],it.value());
++    }
++    void uiOnlyCannotHideOtherReplayFields_data(){QTest::addColumn<QString>("field");for(const auto& field:{"function_call","refusal","audio"})QTest::newRow(field)<<QString(field);}
++    void uiOnlyCannotHideOtherReplayFields(){
++        QFETCH(QString,field);Server server;AgentPresentation display;display.begin();display.text("reasoning","partial");display.finish("canceled");auto message=AgentPresentation::withMetadata(textMessage(""),display.metadata(true));
++        if(field=="function_call")message[field]=QJsonObject{{"name","legacy"},{"arguments","{\"marker\":\"REPLAY_PAYLOAD\"}"}};
++        else if(field=="audio")message[field]=QJsonObject{{"id","REPLAY_PAYLOAD"}};
++        else message[field]="REPLAY_PAYLOAD";
++        const auto wire=ProviderProtocol::prepare(server.provider(),QJsonArray{message},"",{}).body;QVERIFY(QJsonDocument(wire).toJson().contains("REPLAY_PAYLOAD"));QVERIFY(!AgentPresentation::isUiOnly(message));
++    }
++    void savedIdsCannotCollideWithLegacyIds(){
++        const auto legacy=textMessage("LEGACY_VISIBLE");const auto id=AgentEngine::displayHistory(QJsonArray{legacy})[0].toObject()["id"].toString();AgentPresentation display;display.begin();display.text("text","SAVED_VISIBLE");display.finish();auto metadata=display.metadata();metadata["id"]=id;
++        const auto saved=AgentPresentation::withMetadata(textMessage("SAVED_VISIBLE"),metadata);const auto rows=AgentEngine::displayHistory(QJsonArray{saved,legacy});QCOMPARE(rows.size(),2);QVERIFY(rows[0].toObject()["id"]!=rows[1].toObject()["id"]);QCOMPARE(rows[1].toObject()["parts"].toArray()[0].toObject()["text"].toString(),"LEGACY_VISIBLE");
++    }
++    void emptyPartFloodIsBounded(){
++        Server server;server.protocol="responses";QByteArray body;for(int i=0;i<=20000;++i)body+=::event({{"type","response.content_part.added"},{"output_index",i/20000},{"content_index",i%20000},{"part",QJsonObject{{"type","output_text"},{"text",""}}}});
++        server.replies={{QList<QByteArray>{body}}};AgentEngine engine;engine.setProvider(server.provider());QSignalSpy errors(&engine,&AgentEngine::failed);engine.submit("Q");QTRY_COMPARE_WITH_TIMEOUT(errors.size(),1,10000);QVERIFY(errors[0][0].toString().contains("presentation"));
++        const auto rows=assistantRows(engine.displayMessages());QVERIFY(!rows.isEmpty());QVERIFY(rows.last().toObject()["parts"].toArray().size()<=20000);
++    }
++    void allPartKindsShareOneRuntimeBound(){
++        AgentPresentation display;display.begin();for(int i=0;i<AgentPresentation::MaximumParts;++i){if(i%3==0)display.text("text","x",QString::number(i));else if(i%3==1)display.tool(i,QString::number(i),"fixture","{}");else display.error("fixture");}
++        QVERIFY(!display.limitExceeded());display.text("reasoning","overflow","extra");display.tool(30000,"extra","fixture","{}");display.error("overflow");QVERIFY(display.limitExceeded());QCOMPARE(display.row(false)["parts"].toArray().size(),AgentPresentation::MaximumParts);
++    }
++    void durationIsMeasuredAndFreezes(){
++        AgentPresentation display;display.begin();display.text("reasoning","Thought");QTest::qWait(25);const auto live=display.row(true)["parts"].toArray()[0].toObject()["durationMs"].toDouble();QVERIFY(live>=20);
++        display.finish();const auto frozen=display.metadata();QTest::qWait(25);QCOMPARE(display.metadata(),frozen);QVERIFY(frozen["parts"].toArray()[0].toObject()["durationMs"].toDouble()>=live);
++    }
++    void emptyNativePartStarts_data(){QTest::addColumn<QString>("protocol");QTest::newRow("anthropic")<<QString("anthropic");QTest::newRow("responses")<<QString("responses");}
++    void emptyNativePartStarts(){
++        QFETCH(QString,protocol);Server server;server.protocol=protocol;auto chunks=round(protocol);if(protocol=="anthropic"){
++            chunks.removeFirst();chunks.prepend(::event({{"type","content_block_delta"},{"index",0},{"delta",QJsonObject{{"type","thinking_delta"},{"thinking","Think"}}}}));
++            chunks.prepend(::event({{"type","content_block_start"},{"index",0},{"content_block",QJsonObject{{"type","thinking"},{"thinking",""},{"signature","SIGNED_FIXTURE"}}}}));
++        }else chunks.prepend(::event({{"type","response.reasoning_summary_part.added"},{"output_index",0},{"summary_index",0},{"part",QJsonObject{{"type","summary_text"},{"text",""}}}}));
++        server.replies={{chunks}};AgentEngine engine;engine.setProvider(server.provider());engine.setExternalTools(tools());engine.setAlwaysAllow(true);QSignalSpy done(&engine,&AgentEngine::finished);QString partId;bool emptyStart=false;
++        connect(&engine,&AgentEngine::displayChanged,&engine,[&]{const auto rows=assistantRows(engine.displayMessages());if(rows.isEmpty())return;const auto parts=rows[0].toObject()["parts"].toArray();if(parts.isEmpty()||parts[0].toObject()["type"]!="reasoning")return;const auto part=parts[0].toObject();if(partId.isEmpty())partId=part["id"].toString();QCOMPARE(part["id"].toString(),partId);if(part["text"]==""&&part["state"]=="streaming")emptyStart=true;});
++        connect(&engine,&AgentEngine::externalToolRequested,&engine,[&](const QString& id){engine.completeExternalTool(id,"OK",false);});engine.submit("Q");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,4000);QVERIFY(emptyStart);QCOMPARE(assistantRows(engine.displayMessages())[0].toObject()["parts"].toArray()[0].toObject()["id"].toString(),partId);
++    }
++    void observedToolOrderSurvivesRetention(){
++        AgentPresentation display;display.begin();display.tool(7,"second","inspectFixture","{}");display.tool(2,"first","inspectFixture","{}");display.finish();auto first=call("first","{}"),second=call("second","{}");
++        const QJsonObject message{{"role","assistant"},{"content",""},{"tool_calls",QJsonArray{first,second}}};const auto saved=AgentPresentation::withMetadata(message,display.metadata());const auto rows=AgentEngine::displayHistory(QJsonArray{saved});
++        QCOMPARE(rows[0].toObject()["id"],display.metadata()["id"]);QCOMPARE(rows[0].toObject()["parts"].toArray()[0].toObject()["toolCallId"].toString(),"second");
++    }
++    void runningOutputIsBoundedAndReplaced_data(){QTest::addColumn<bool>("unicode");QTest::newRow("ascii")<<false;QTest::newRow("unicode")<<true;}
++    void runningOutputIsBoundedAndReplaced(){
++        QFETCH(bool,unicode);
++        Server server;server.replies={{round("openai")}};AgentEngine engine;engine.setProvider(server.provider());engine.setExternalTools(tools());engine.setAlwaysAllow(true);QSignalSpy done(&engine,&AgentEngine::finished);QString token;
++        connect(&engine,&AgentEngine::externalToolRequested,&engine,[&](const QString& id){token=id;});engine.submit("Q");QTRY_VERIFY_WITH_TIMEOUT(!token.isEmpty(),3000);
++        const auto beforeWire=ProviderProtocol::prepare(server.provider(),engine.messages(),"same",tools()).body;
++        QVERIFY(!engine.appendExternalToolOutput("wrong-token","REJECT"));QVERIFY(engine.appendExternalToolOutput(token,"prefix fake-"));QVERIFY(engine.appendExternalToolOutput(token,"token-only suffix"));
++        auto tool=findTool(engine.displayMessages());QCOMPARE(tool["state"].toString(),"running");QCOMPARE(tool["output"].toString(),"prefix [REDACTED] suffix");
++        QCOMPARE(ProviderProtocol::prepare(server.provider(),engine.messages(),"same",tools()).body,beforeWire);
++        QVERIFY(engine.appendExternalToolOutput(token,QString(100000,unicode?QChar(0x03bb):QChar('x'))));tool=findTool(engine.displayMessages());QVERIFY(tool["output"].toString().toUtf8().size()<=65536);QVERIFY(!tool["output"].toString().contains(QChar::ReplacementCharacter));QVERIFY(tool["output"].toString().endsWith("[Output truncated at 64 KiB.]"));QVERIFY(!engine.appendExternalToolOutput(token,"MORE"));
++        engine.completeExternalTool(token,"FINAL_RESULT",false);QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,4000);QCOMPARE(findTool(engine.displayMessages())["output"].toString(),"FINAL_RESULT");QVERIFY(!engine.appendExternalToolOutput(token,"STALE"));
++    }
++    void outputObserver_data(){QTest::addColumn<QString>("action");for(const auto& action:{"cancel","replace","destroy"})QTest::newRow(action)<<QString(action);}
++    void outputObserver(){
++        QFETCH(QString,action);Server server;server.replies={{round("openai")}};auto* engine=new AgentEngine;QPointer<AgentEngine> safe(engine);engine->setProvider(server.provider());engine->setExternalTools(tools());engine->setAlwaysAllow(true);QString token;
++        connect(engine,&AgentEngine::externalToolRequested,this,[&](const QString& id){token=id;});engine->submit("Q");QTRY_VERIFY_WITH_TIMEOUT(!token.isEmpty(),3000);bool acted=false;
++        connect(engine,&AgentEngine::displayChanged,this,[&]{if(acted||!safe||findTool(safe->displayMessages())["output"]!="LIVE")return;acted=true;if(action=="destroy"){delete safe;return;}safe->cancel();if(action=="replace")safe->submit("Next");});
++        QVERIFY(engine->appendExternalToolOutput(token,"LIVE"));QVERIFY(acted);if(safe){QVERIFY(!safe->appendExternalToolOutput(token,"STALE"));QTRY_VERIFY_WITH_TIMEOUT(!safe->isBusy(),4000);delete safe;}
++    }
++    void observer_data(){QTest::addColumn<QString>("action");QTest::addColumn<QString>("phase");QTest::addColumn<QString>("protocol");for(const auto& action:{"cancel","replace","destroy"})for(const auto& phase:{"accepted","round","stream","running"})for(const auto& protocol:{"openai","anthropic","google","responses"})QTest::newRow(qPrintable(QString(action)+"-"+phase+"-"+protocol))<<QString(action)<<QString(phase)<<QString(protocol);}
++    void observer(){
++        QFETCH(QString,action);QFETCH(QString,phase);QFETCH(QString,protocol);Server server;server.protocol=protocol;server.replies={{round(protocol)}};auto* engine=new AgentEngine;QPointer<AgentEngine> safe(engine);engine->setProvider(server.provider());engine->setExternalTools(tools());engine->setAlwaysAllow(true);bool acted=false;int toolRequests=0;
++        connect(engine,&AgentEngine::externalToolRequested,this,[&]{++toolRequests;});
++        connect(engine,&AgentEngine::displayChanged,this,[&]{if(acted||!safe||!safe->isBusy())return;const auto rows=assistantRows(safe->displayMessages());bool ready=phase=="accepted"&&rows.isEmpty();
++            if(!rows.isEmpty()){const auto parts=rows.last().toObject()["parts"].toArray();ready|=phase=="round"&&parts.isEmpty();ready|=phase=="stream"&&!parts.isEmpty();ready|=phase=="running"&&findTool(safe->displayMessages())["state"]=="running";}
++            if(!ready)return;
++            acted=true;if(action=="destroy"){delete safe;return;}safe->cancel();if(action=="replace"){server.replies.clear();auto p=server.provider();p.id="replacement";safe->setProvider(p);safe->submit("Replacement");}});
++        engine->submit("Q");QTRY_VERIFY_WITH_TIMEOUT(acted,4000);if(safe)QTRY_VERIFY_WITH_TIMEOUT(!safe->isBusy(),4000);QTest::qWait(80);QCOMPARE(toolRequests,0);if(safe){if(action=="replace")QCOMPARE(safe->messages().last().toObject()["content"].toString(),"Final");delete safe;}
++    }
++    void acceptedCancelDoesNotRepeatPreviousRound(){
++        Server server;AgentEngine engine;engine.setProvider(server.provider());QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("First");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,2000);const auto prior=engine.messages();
++        bool canceled=false;connect(&engine,&AgentEngine::displayChanged,&engine,[&]{if(!canceled&&engine.isBusy()){canceled=true;engine.cancel();}});QVERIFY(engine.submitWithAttachments("Second",{}));QCOMPARE(engine.messages().size(),prior.size()+1);QCOMPARE(engine.messages()[1],prior[1]);QCOMPARE(server.requests.size(),1);
++    }
++};
++QTEST_GUILESS_MAIN(PresentationTest)
++#include "test_presentation.moc"

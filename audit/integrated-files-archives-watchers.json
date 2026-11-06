@@ -1,0 +1,383 @@
+{
+  "recordedUtc": "2026-11-05T13:28:20.491113+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "suiteCount": 35,
+  "latestFailures": 0,
+  "skipped": 0,
+  "elapsedSecondsAsReportedInJUnit": 375.0,
+  "report": "test-results\\integrated-files-archives-watchers-streams-fixed.xml",
+  "detailedResults": [
+    {
+      "suite": "native_raw_enumeration_races",
+      "passedIncludingLifecycle": 13,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1674
+    },
+    {
+      "suite": "native_git_watcher",
+      "passedIncludingLifecycle": 24,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 22931
+    },
+    {
+      "suite": "native_git_watcher_ui",
+      "passedIncludingLifecycle": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 20782
+    },
+    {
+      "suite": "native_file_tools_races",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 712
+    },
+    {
+      "suite": "native_archive_transformer",
+      "passedIncludingLifecycle": 37,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 40
+    },
+    {
+      "suite": "native_file_tools",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 47
+    },
+    {
+      "suite": "native_attachment_mount",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 619
+    },
+    {
+      "suite": "native_file_transformer",
+      "passedIncludingLifecycle": 32,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3
+    },
+    {
+      "suite": "native_worktree_settings",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 40413
+    },
+    {
+      "suite": "native_git_host",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 50571
+    },
+    {
+      "suite": "native_sandbox_apps",
+      "passedIncludingLifecycle": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2063
+    },
+    {
+      "suite": "native_runtime_apps",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 6171
+    },
+    {
+      "suite": "native_git",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 99670
+    },
+    {
+      "suite": "native_git_ui",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 50185
+    },
+    {
+      "suite": "native_app_resources",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 79
+    },
+    {
+      "suite": "native_mini_apps",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3398
+    },
+    {
+      "suite": "native_attachments",
+      "passedIncludingLifecycle": 23,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 941
+    },
+    {
+      "suite": "native_plugins",
+      "passedIncludingLifecycle": 20,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 966
+    },
+    {
+      "suite": "native_sandbox_network",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5167
+    },
+    {
+      "suite": "native_downloads",
+      "passedIncludingLifecycle": 10,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8136
+    },
+    {
+      "suite": "native_settings_audit",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 324
+    },
+    {
+      "suite": "native_network",
+      "passedIncludingLifecycle": 19,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2002
+    },
+    {
+      "suite": "native_terminal",
+      "passedIncludingLifecycle": 17,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2810
+    },
+    {
+      "suite": "native_engine_observers",
+      "passedIncludingLifecycle": 56,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8400
+    },
+    {
+      "suite": "native_core",
+      "passedIncludingLifecycle": 48,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 7909
+    },
+    {
+      "suite": "native_context",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 168
+    },
+    {
+      "suite": "native_ui",
+      "passedIncludingLifecycle": 11,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1506
+    },
+    {
+      "suite": "native_ui_audit",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2889
+    },
+    {
+      "suite": "native_editor",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1116
+    },
+    {
+      "suite": "native_sandbox",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4545
+    },
+    {
+      "suite": "native_runtime",
+      "passedIncludingLifecycle": 10,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5014
+    },
+    {
+      "suite": "native_fonts",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 279
+    },
+    {
+      "suite": "native_browser",
+      "passedIncludingLifecycle": 14,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5544
+    },
+    {
+      "suite": "native_settings",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 277
+    },
+    {
+      "suite": "native_browser_tools",
+      "passedIncludingLifecycle": 24,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 15473
+    }
+  ],
+  "executable": "out/files-archives-watchers-checkpoint/ADE.exe",
+  "versionSmoke": "ADE 0.1.0",
+  "binaryDependencies": [
+    {
+      "file": "ADE.exe",
+      "bytes": 77060989,
+      "sha256": "8A41D8162F298A36D9DE3721241DE36A51AC70423130ECA4260CA51CEFEBD89B",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    },
+    {
+      "file": "ADE-sandbox-worker.exe",
+      "bytes": 19775944,
+      "sha256": "036424EC5D5426C149D443715F6B6261ADA4F277D504F782BA0453293D0B8377",
+      "imports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    },
+    {
+      "file": "WebView2Loader.dll",
+      "bytes": 194912,
+      "sha256": "D3FCE90BDEECB08596E377DEA6A316354DD8949E32FF09B89D51BE00C14E21B6",
+      "imports": [
+        "KERNEL32.dll"
+      ],
+      "forbiddenRuntimeImports": []
+    }
+  ],
+  "coveredChanges": [
+    "Structured read/ls and bounded ZIP/ZIP64/TAR/TGZ listings",
+    "Read-only raw att/ sandbox mount",
+    "Same-handle directory enumeration and cancellation/lifetime regressions",
+    "Shared Git metadata watchers with physical-root recovery",
+    "Tool and provider-stream observer cancellation, replacement and destruction guards"
+  ],
+  "progression": [
+    "Initial 31/33 integration exposed watcher and UI quiescence failures.",
+    "Next 33/34 run isolated actual Windows root disappearance defect.",
+    "Root-identity recovery fix passed 34/34 full integration.",
+    "Response observer guards passed 35/35 once; a subsequent focused run exposed synchronous Qt reply destruction.",
+    "Queued reply callbacks fixed that reproduced crash; focused suites and eight targeted repeats passed before this final 35/35 run."
+  ],
+  "limits": [
+    "Full feature and visual parity remain unfinished.",
+    "Local fixtures only; older live-provider results were not rerun on this binary.",
+    "No paired upstream runtime comparison in this checkpoint.",
+    "Structured tool read source reinjection and snapshots are still staged, not part of this binary.",
+    "Read-only att mount currently supplies raw file APIs; remaining virtual mounts and rich formatted types are incomplete.",
+    "Browser uses WebView2Loader.dll and installed Edge Evergreen; Git and shells remain external.",
+    "This is an internal development snapshot, not a complete release distribution/toolchain source bundle."
+  ]
+}

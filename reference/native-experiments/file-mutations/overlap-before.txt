@@ -1,0 +1,10 @@
+********* Start testing of MutationTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MutationTests::initTestCase()
+FAIL!  : MutationTests::multiEditCountsNonOverlappingOccurrences() Compared values are not the same
+   Actual   (result.output["result"].toObject()["editsApplied"]): QJsonValue(double, 3)
+   Expected (2)                                                 : 2
+D:/age/ADE/private/file-mutations-stage/tests/test_file_mutations.cpp(33) : failure location
+PASS   : MutationTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 25ms
+********* Finished testing of MutationTests *********

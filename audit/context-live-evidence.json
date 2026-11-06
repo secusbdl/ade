@@ -1,0 +1,15 @@
+{
+  "recordedUtc": "2026-11-05T09:29:08.1862879Z",
+  "scope": "Native workspace AGENTS.md injection plus discovered skill and referenced file via readContext",
+  "provider": "deepseek",
+  "actualModel": "deepseek-v4-pro",
+  "elapsedMs": 8665,
+  "response": "CONTEXT_ROOT_58392:CONTEXT_REFERENCE_92471",
+  "exactExpectedResult": true,
+  "toolCalls": 3,
+  "rejectedReads": 1,
+  "behavior": "First absolute-path request was rejected; model corrected to enabled virtual paths and read SKILL.md plus refs/marker.txt. Only three original fixture files remain.",
+  "nativeExeSha256": "2F9232A5D971A3872883895F81D7B602491547818309401733774338F2F134AB",
+  "workerSha256": "28B26EFBC238B7FB3F0D7675FFF5DF2EF2803AFB5D04ACC68A61B64A1CEE36DF",
+  "limitations": "Native integration evidence only, not a paired upstream comparison or full skill lifecycle parity."
+}

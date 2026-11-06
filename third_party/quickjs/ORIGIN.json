@@ -1,0 +1,16 @@
+{
+  "project": "QuickJS-NG",
+  "repository": "https://github.com/quickjs-ng/quickjs",
+  "version": "v0.18.0",
+  "commit": "d7215b0ad3fc2c562e8317fd9bca058fd4863804",
+  "release": "https://github.com/quickjs-ng/quickjs/releases/tag/v0.18.0",
+  "source_archive": "https://api.github.com/repos/quickjs-ng/quickjs/zipball/v0.18.0",
+  "source_archive_sha256": "48538ddb3b541a857fc6b809efd583d02eb38ef75f0c50d0f7e4e466ed353a5a",
+  "archive_root": "quickjs-ng-quickjs-d7215b0",
+  "retrieved_on": "2026-11-05",
+  "license": "MIT; reproduced verbatim in LICENSE and individual source headers",
+  "source_modifications": "None. ORIGIN.json is ADE provenance metadata.",
+  "compiled_sources": ["dtoa.c", "libregexp.c", "libunicode.c", "quickjs.c"],
+  "excluded_runtime": "quickjs-libc.c and its unrestricted OS/stdio/process facilities are not linked. Node.js is not used.",
+  "host": "../../src/sandbox/worker_main.cpp provides a bounded native QtCore worker and explicitly implemented broker APIs."
+}

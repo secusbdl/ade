@@ -1,0 +1,68 @@
+import {
+  type ExecuteSandboxJsToolInput,
+  executeSandboxJsToolInputSchema,
+} from '@shared/karton-contracts/ui/agent/tools/types';
+import { tool } from 'ai';
+import { rethrowCappedToolOutputError } from '../../utils';
+import { capToolOutput } from '../../utils';
+import type { SandboxService } from '@/services/sandbox';
+
+export const DESCRIPTION = `Execute JavaScript in your persistent, sandboxed Node.js VM context.
+`;
+
+export const executeSandboxJs = (
+  sandboxService: SandboxService,
+  agentInstanceId: string,
+) => {
+  return tool({
+    description: DESCRIPTION,
+    inputSchema: executeSandboxJsToolInputSchema,
+    strict: false,
+    execute: async (params, options) => {
+      const { toolCallId } = options as { toolCallId: string };
+      sandboxService.setAgentToolCallId(agentInstanceId, toolCallId);
+      try {
+        const result = await executeSandboxJsToolExecute(
+          params,
+          agentInstanceId,
+          sandboxService,
+        );
+        const fileWriteCount =
+          sandboxService.getAndClearFileWriteCount(agentInstanceId);
+        if (fileWriteCount > 0)
+          return { ...result, _hasFileWrites: true as const };
+
+        return result;
+      } finally {
+        sandboxService.clearPendingOutputs(agentInstanceId, toolCallId);
+        sandboxService.clearAgentToolCallId(agentInstanceId);
+      }
+    },
+  });
+};
+
+async function executeSandboxJsToolExecute(
+  params: ExecuteSandboxJsToolInput,
+  agentInstanceId: string,
+  sandboxService: SandboxService,
+) {
+  try {
+    const { value, outputs } = await sandboxService.execute(
+      agentInstanceId,
+      params.script,
+    );
+
+    const parts: string[] = [...outputs];
+    if (value !== undefined && value !== null) {
+      parts.push(typeof value === 'string' ? value : JSON.stringify(value));
+    }
+    const scriptResult = parts.join('\n');
+
+    return {
+      message: 'Successfully executed sandbox JavaScript',
+      result: capToolOutput(scriptResult),
+    };
+  } catch (error) {
+    rethrowCappedToolOutputError(error);
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "state": "FROZEN_VERIFIED_PRIVATE_PATCH",
+  "frozenUtc": "2026-11-06T10:24:57.545786+00:00",
+  "productionEdited": false,
+  "sharedBuildUsed": false,
+  "patch": "migration.patch",
+  "manifest": "migration-manifest.json",
+  "sourceContract": "audit/workbench-layout-contract.json",
+  "files": [
+    {
+      "path": "src/ui/ChatSurface.h",
+      "state": "new",
+      "sha256": "4f5a7f9acc25730bb90b83eea8bb31526e7a24e32ed63fe6f28cd2681d6876f9",
+      "baselineSha256": null
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "state": "modified",
+      "sha256": "f20b381957c372d7aef204bcfec4828cb2846ea06d914a0f750548964058dc9a",
+      "baselineSha256": "c9c0d5cf8ab5e0526ee10b17f3251b04fca3f2955b2732b40834d19f2ec89b2a"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "state": "modified",
+      "sha256": "f6a320dd906af74569d5913f7dcf226df21a151b2c77fa48d3edf7d604e5f392",
+      "baselineSha256": "8f61698c341a53b89d4e657f0145f6e082fe789465cbf34b1487b8ebd52a2e10"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "state": "modified",
+      "sha256": "f7d9700d547b12b564ef165547d717194c3f4d918d26de59f1390f10845bb2dd",
+      "baselineSha256": "79f4ef1652332d1de33b80368998fc255f85878bd8a9eddf3d4138f4dcc62f10"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "state": "modified",
+      "sha256": "0039406edec68c98afe1811694f930775c9adad6a9f051e5e0a635c7764a7bc0",
+      "baselineSha256": "4b72948b197fb52cc4e78ba9d9251414660e7adca9f748348f28f15e3fab1553"
+    },
+    {
+      "path": "src/ui/MainWindowApps.cpp",
+      "state": "modified",
+      "sha256": "ee36a36c60dc24b4778c5fda2995033e12f4b346dc0ebe7443c59968a3f72e71",
+      "baselineSha256": "4efdd611a82c043955f49b56920402cf9f8439a35e63b5eaa2edb44bc29a5178"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "state": "modified",
+      "sha256": "a8f0c1460aa0970fe978cba92499d39f00821f6c03818d4e77297b569fcd2079",
+      "baselineSha256": "d0e1f64882c492ebe5fa755620551496d1f3cf59e2555dfb80c9da5516f8d944"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "state": "new",
+      "sha256": "c48ca51509f0ce58caa3bce019d166601383f86cd307eb4611765b23477f2280",
+      "baselineSha256": null
+    },
+    {
+      "path": "src/ui/SidebarSplitter.h",
+      "state": "modified",
+      "sha256": "1eccd326588c29ccfd62425fcb8aedd61f76483007740a96936fe24899847ea9",
+      "baselineSha256": "10c2e526a15b732764e28e9c1a58b4deb5fd05ebda01ee91b6faaf0e8d558355"
+    },
+    {
+      "path": "src/ui/WorkbenchSplitter.h",
+      "state": "new",
+      "sha256": "37cde70f2898a7d922fa9453d432eb358d9cecbb69c28abeef4184898b399f42",
+      "baselineSha256": null
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "state": "new",
+      "sha256": "de8ca3b0e10c022082ffb4371b8d5db46e69a79d41edfa9675350f6390b97a9e",
+      "baselineSha256": null
+    },
+    {
+      "path": "tests/test_workbench_helpers.cpp",
+      "state": "new",
+      "sha256": "de0a3cc7257d1ee676c69be6482aff3a5da9b3229bd7ccf010db2b32d6457882",
+      "baselineSha256": null
+    },
+    {
+      "path": "tests/render_workbench_layout.cpp",
+      "state": "new",
+      "sha256": "829b3db6d943d4ae5021a069b4277896728238b65eb63d1239c9813467d49c64",
+      "baselineSha256": null
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "state": "modified",
+      "sha256": "3690a9144d0d5d7fd7c4a86f4154147a35eba3d68a5cca9748337b2a108a3197",
+      "baselineSha256": "90ac1dabd5a1a281b22e980b69ee4f981ca56e14bdb8d230edfecf7b01e14e5e"
+    },
+    {
+      "path": "tests/test_ui_audit.cpp",
+      "state": "modified",
+      "sha256": "2efeea65c9b57046e5f4f94791fdb542c448ff315ca1f6a0fe1bda0719a8d4c8",
+      "baselineSha256": "c1b9254f59100ac5aded6407fba021267c849778e1eff8ada90d9459dcdfee50"
+    }
+  ],
+  "verification": [
+    {
+      "suite": "test_workbench_layout",
+      "passed": 34,
+      "failed": 0,
+      "milliseconds": 6362,
+      "log": "audit/test_workbench_layout-final.txt",
+      "platform": "offscreen"
+    },
+    {
+      "suite": "test_workbench_helpers",
+      "passed": 4,
+      "failed": 0,
+      "milliseconds": 23,
+      "log": "audit/test_workbench_helpers-final.txt",
+      "platform": "offscreen"
+    },
+    {
+      "suite": "test_main_chrome",
+      "passed": 17,
+      "failed": 0,
+      "milliseconds": 3501,
+      "log": "audit/test_main_chrome-final.txt",
+      "platform": "offscreen"
+    },
+    {
+      "suite": "test_transcript",
+      "passed": 33,
+      "failed": 0,
+      "milliseconds": 2510,
+      "log": "audit/test_transcript-final.txt",
+      "platform": "offscreen"
+    },
+    {
+      "suite": "test_transcript_ui",
+      "passed": 4,
+      "failed": 0,
+      "milliseconds": 1950,
+      "log": "audit/test_transcript_ui-final.txt",
+      "platform": "offscreen"
+    },
+    {
+      "suite": "test_ui_audit",
+      "passed": 17,
+      "failed": 0,
+      "milliseconds": 5095,
+      "log": "audit/test_ui_audit-final.txt",
+      "platform": "windows"
+    },
+    {
+      "suite": "test_conversations",
+      "passed": 26,
+      "failed": 0,
+      "milliseconds": 13105,
+      "log": "audit/test_conversations-final.txt",
+      "platform": "offscreen"
+    }
+  ],
+  "reproducedBeforeEvidence": [
+    {
+      "file": "audit/observed-defects-before.txt",
+      "result": "Three failures: automatic initial browser; light transcript #eff4fa background instead of #fdfdfd; ws1 prefix visible. Dark background and w1/hex controls passed."
+    },
+    {
+      "file": "audit/sidebar-reentry-before.txt",
+      "result": "Actual0xc0000005 after hidden resize and delete-on-collapsedChanged callback."
+    },
+    {
+      "file": "audit/layout-strengthened.txt",
+      "result": "Fullscreen resize re-exposed filetree; fixed with transient fullscreen geometry state."
+    },
+    {
+      "file": "audit/short-window-draft-before.txt",
+      "result": "Long draft editor extended beyond250px window. ChatSurface now supplies available composer height; text preserved and scrollable."
+    }
+  ],
+  "visualEvidence": {
+    "directory": "audit/renders",
+    "generated": 14,
+    "inspectedRepresentative": [
+      "empty-light.png",
+      "empty-dark.png",
+      "history-light.png",
+      "compact-light.png",
+      "content-dark.png (initial offscreen browser error; final version uses actual editor)",
+      "content-compact-dark.png",
+      "files-light.png",
+      "files-compact-light.png"
+    ],
+    "note": "Standalone native Qt hidden renders; browser fixture tests use temporary profiles. These are not proof of pixel-identical upstream rendering."
+  },
+  "integration": [
+    "Apply only migration.patch source/test changes; do not copy private CMake, copied dependencies or fullsrc. Parent owns current sidebar integration and ade_ui extraction.",
+    "MainWindow.cpp overlaps parent sidebar work. Keep parent controller/refreshAgents/lastMessageAt/session lifecycle hooks; merge only chat/footer/content initialization, explicit reveal, fullscreen geometry and preference sizing hunks.",
+    "MainWindowGit.cpp changes only showGit() -> revealContent(); retain parent sidebar/shared-service hooks.",
+    "New QWidget helpers are picked up by existing UI glob. MainWindowWorkbench.cpp holds new integration methods. Composer gains only wrapped-placeholder measurement and optional height limit; standalone maximum stays256px.",
+    "Add test_workbench_layout and test_workbench_helpers targets linked ade_ui+Qt6::Test+QOffscreenIntegrationPlugin and import plugin; CTest environment QT_QPA_PLATFORM=offscreen, QT_QPA_FONTDIR=C:/Windows/Fonts. New tests have no live-service requirement. Terminal fixture is cmd.exe /D /Q in a temporary workspace.",
+    "Optional render_workbench_layout target links ade_ui+Qt6::Test+offscreen plugin; argv1 selects output directory.",
+    "test_main_chrome migrations make content opening explicit and keep wrap fixture long enough at768px. Offscreen keyboard test sets active QApplication window deterministically. No production focus forcing added.",
+    "test_ui_audit activation-revocation fixture now explicitly opens a background browser to ensure a second tab activation. Run this existing suite with native Windows platform because it exercises real local WebView2 apps.",
+    "Parent tests/test_ui.cpp browserPreferencesAndDownloadsReachNativeHost must click openBrowserButton before finding BrowserWidget; retain parent four corrected tests and cap256 checks. That existing test then still expects two tabs after history open.",
+    "tests/test_git_host.cpp openFiles helper and tests/render_workbench.cpp must use toggleFileTreeButton (or contentFileTreeButton when content exists) instead of old accessibleName Workspace files. Files is now a separate pane, never a content tab.",
+    "No AgentEngine or ConversationView public API changes. Context-rich inline approval signal and its root stale-ID validation are unchanged."
+  ],
+  "limits": [
+    "No per-agent content-tab visibility/filtering/persistence; existing native tabs remain window-scoped.",
+    "No recent-workspace suggestion journal or source dismissal behavior.",
+    "Filetree is real read-only QFileSystemModel with editor opening, but source multi-workspace picker, Files/Diff tab, search UI, Git diff decorations and preview behavior are not supplied by this slice.",
+    "Side chat, source watcher/local-server popovers, exact divider/icon/hover animation geometry and source workspace chooser menu are not implemented here.",
+    "Existing workspace dropdown text includes a missing-font chevron in rendered fixture; this is recorded rather than claimed pixel identical.",
+    "No virtualized transcript or new markdown capabilities; existing transcript contract limits remain."
+  ],
+  "knownTestEnvironmentNotes": [
+    "Offscreen platform cannot initialize WebView2; real app lifecycle fixture was rerun natively and passed17/17.",
+    "Native WebView2 may temporarily retain temporary profile files after Qt process teardown; no existing user profile was used.",
+    "Qt6.11 marks QApplication::setActiveWindow deprecated; it is used only by the offscreen shortcut fixture for deterministic focus.",
+    "No new remote provider/network calls or credentials were used."
+  ],
+  "runtimeState": "All test processes completed; no persistent server started."
+}

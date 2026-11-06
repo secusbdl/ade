@@ -1,0 +1,860 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-06",
+  "status": "Curated source and opt-in experiments prepared; all55 suites have passing coverage via54 initial passes plus the repaired browser suite. Final clean export/build/scan and GitHub Desktop push remain pending.",
+  "sourceSnapshotPlan": {
+    "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+    "destination": "reference/stagewise",
+    "allowlistPrefixes": [
+      "apps/browser/src/",
+      "apps/browser/bundled/",
+      "packages/agent-core/",
+      "packages/agent-shell/",
+      "packages/karton/",
+      "packages/stage-ui/",
+      "packages/tailwindcss-color-modifiers/",
+      "packages/typescript-config/",
+      "locales/",
+      "agent/",
+      "scripts/"
+    ],
+    "allowlistRootFiles": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "CONTRIBUTING.md",
+      "CONTRIBUTORS.md",
+      "LICENSE",
+      "README.md",
+      "SECURITY.md",
+      "THIRD-PARTY-NOTICES.md",
+      "VERSIONING.md",
+      "biome.jsonc",
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "skills-lock.json",
+      "tsconfig.json",
+      "turbo.json"
+    ],
+    "allowedTextExtensions": [
+      ".cjs",
+      ".css",
+      ".cts",
+      ".html",
+      ".js",
+      ".json",
+      ".jsonc",
+      ".jsx",
+      ".md",
+      ".mdx",
+      ".mjs",
+      ".mts",
+      ".ps1",
+      ".sh",
+      ".sql",
+      ".toml",
+      ".ts",
+      ".tsx",
+      ".yaml",
+      ".yml"
+    ],
+    "excludedPrefixes": [
+      "apps/browser/src/ui/assets/",
+      "apps/browser/src/ui/components/provider-logos/",
+      "apps/browser/src/ui/components/icons/",
+      "packages/stage-ui/src/stories/assets/"
+    ],
+    "excludedFiles": [
+      "apps/browser/src/ui/components/ide-logo.tsx",
+      "apps/browser/src/ui/components/ui/logo-with-text.tsx",
+      "apps/browser/src/ui/components/ui/logo.tsx",
+      "apps/browser/src/ui/screens/main/_components/globe-plus-icon.tsx",
+      "apps/browser/src/ui/screens/main/terminal-panel/_components/window-plus-icon.tsx",
+      "packages/stage-ui/src/components/logo-combo.tsx",
+      "packages/stage-ui/src/components/logo-text.tsx",
+      "packages/stage-ui/src/components/logo.tsx"
+    ],
+    "inventoryContractPaths": 102,
+    "missingContractPaths": [],
+    "nucleoGeometryMatches": [],
+    "selectedBytes": 10798194,
+    "limitations": [
+      "Curated text source preserves code/contracts and original imports; it is not a rebuilt runnable upstream distribution.",
+      "Media and icon imports may intentionally be unresolved. No node_modules or upstream executable is included.",
+      "Symbols/service names may reference trademarks for identification; no logo payload is intentionally included.",
+      "Preserved source is separate from native implementation status."
+    ],
+    "copied": true,
+    "manifest": "reference/stagewise/REFERENCE_MANIFEST.json",
+    "byteIdentityVerifiedFiles": 1400,
+    "byteSource": "Pinned Git blobs; 1399 working-tree files had CRLF conversion, so checkout bytes were not used.",
+    "upstreamSecretPatternCandidates": {
+      "providerToken": 0,
+      "privateKey": 0,
+      "jwt": 0,
+      "credentialUrlFixture": [
+        "apps/browser/src/shared/coding-plans.test.ts"
+      ]
+    },
+    "selectedFilesCount": 1400,
+    "omittedFilesCount": 739,
+    "omittedReasonCounts": {
+      "binary_media_or_outside_reference_allowlist": 531,
+      "logo_brand_or_uncleared_glyph_component": 27,
+      "restricted_icon_package": 181
+    },
+    "exactSelectionAndHashes": "reference/stagewise/REFERENCE_MANIFEST.json"
+  },
+  "nativeExperiments": {
+    "exports": [
+      {
+        "name": "file-mutations",
+        "files": 17,
+        "bytes": 108307,
+        "manifest": "reference/native-experiments/file-mutations/EXPERIMENT_MANIFEST.json",
+        "savedPassed": 40
+      },
+      {
+        "name": "git-usage",
+        "files": 16,
+        "bytes": 78341,
+        "manifest": "reference/native-experiments/git-usage/EXPERIMENT_MANIFEST.json",
+        "savedPassed": 30
+      }
+    ],
+    "newTestsRun": true,
+    "secretPatternCandidates": {
+      "providerToken": [],
+      "privateKey": [],
+      "jwt": []
+    },
+    "optionalRootBuild": {
+      "cmake": "reference/native-experiments/CMakeLists.txt",
+      "rootOption": "ADE_BUILD_EXPERIMENTS (default OFF); scripts/build.ps1 -Experiments",
+      "libraries": [
+        "ade_experimental_file_mutations",
+        "ade_experimental_git_usage"
+      ],
+      "testTargets": [
+        "test_reference_file_mutations",
+        "test_reference_git_usage"
+      ],
+      "tests": [
+        "reference_file_mutations",
+        "reference_git_usage"
+      ],
+      "timeoutSeconds": 90,
+      "reports": "${CMAKE_BINARY_DIR}/Testing/reference_*.txt",
+      "linkedIntoADE": false,
+      "runStatus": "Root built both optional libraries/tests in current build-next;40 and30 cases pass. They are not linked into ADE.",
+      "results": [
+        {
+          "suite": "reference_file_mutations",
+          "report": "audit/reference-integration-details/suites/reference_file_mutations.txt",
+          "reportSha256": "824e3d6171f109d3dbd13d7f130ca5566a9a36336703db406aa51eb7a3f95da7",
+          "available": true,
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_file_mutations.txt"
+        },
+        {
+          "suite": "reference_git_usage",
+          "report": "audit/reference-integration-details/suites/reference_git_usage.txt",
+          "reportSha256": "2794e480f28ea362f6b8e4cf1bf12a27126a0ed17abef580f6742fe0f927f723",
+          "available": true,
+          "passed": 30,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_git_usage.txt"
+        }
+      ]
+    },
+    "runOwner": "Root integrated build; this audit observes reports without starting another build."
+  },
+  "nativeHeadReviewed": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+  "target": "secusbdl/ade",
+  "networkActions": "Read-only repository/account checks and requested GitHub Desktop readiness inspection performed. No source commit/push, existing-repository visibility change, credential scraping or app-wide permission change. Browser repository preparation preceded observing an empty public target; this audit does not attribute its creation to a confirmed submit action.",
+  "allowedChangesPerformed": [
+    "New audit/reference-readiness.json and publication-review.json",
+    "New reference/stagewise exact curated pinned source",
+    "New narrow reference/native-experiments exports",
+    "Original5 integration text monograms + provenance + NOTICE paragraph",
+    "reference/.gitattributes disables text normalization for exact source bytes"
+  ],
+  "historyScan": {
+    "scope": "All7 reachable commits of the current local repository, not merely HEAD; unique blobs read through git cat-file. No real api_keys/profile files opened or copied.",
+    "trackedFilesAtStart": 858,
+    "reachableUniqueBlobs": 1008,
+    "reachableTextBlobs": 958,
+    "reachableBinaryBlobs": 50,
+    "reachableBlobBytes": 22025027,
+    "highConfidenceProviderTokenMatches": 0,
+    "privateKeyMatches": 0,
+    "jwtMatches": 0,
+    "genericCandidatePaths": [
+      "tests/test_core.cpp",
+      "tests/test_git_host.cpp",
+      "tests/test_network.cpp",
+      "tests/test_plugins.cpp",
+      "tests/test_runtime.cpp",
+      "tests/test_transcript_ui.cpp",
+      "tests/test_git.cpp",
+      "tests/test_settings.cpp"
+    ],
+    "candidateDisposition": "Static synthetic fixture values and credential-bearing example URLs, verified in local test context; matched values were not emitted.",
+    "privateStateFilenameCandidates": [],
+    "trackedBuildPrivateUpstreamOutputPaths": [],
+    "limits": [
+      "Pattern scan is not proof of no secrets or a replacement for final export scanning.",
+      "No known-real-key matching was performed; scripts/check-secrets.py requires a real key file and was intentionally not run by this audit.",
+      "Binary images are not covered by text token patterns; six upstream screenshots were visually inspected, not every raster re-reviewed in this pass.",
+      "Unreachable Git objects/reflogs were not scanned; fresh publication must not copy .git from development repository."
+    ],
+    "scopeNote": "Historical scan counts apply to the recorded development tree/history only. This refresh does not claim a new exact-export secret scan; repeat P6 on the final publication tree."
+  },
+  "sourceReferenceScan": {
+    "exactPinnedFiles": 1400,
+    "highConfidenceTokenPrivateKeyJwtMatches": 0,
+    "credentialUrlFixture": "reference/stagewise/apps/browser/src/shared/coding-plans.test.ts",
+    "quotedLongCredentialCandidates": "20 occurrences in public pinned source: test fixtures and one Codex SDK constructor sentinel; createCodexChatGptFetch replaces Authorization with runtime auth at lines21-35. No user auth file was read.",
+    "geometryCheck": "No selected source long SVG path string matched excluded Nucleo implementation geometry. Pure unclear icon components and all logo payload directories were still excluded conservatively.",
+    "upstreamTreeClean": true,
+    "packageSourceComparison": "168 icon-package implementation files compared by exact hash against tracked ADE files; no exact copies found. This is not a proof against transformed/derived artwork.",
+    "snapshotManifestSha256": "993e67f689f4061d899c95a9a6c24464f836ad5c83f272a4092397c5eef6e261"
+  },
+  "freshPublication": {
+    "strategy": "Parent-approved new fresh tree/repository at D:/age/ADE/out/publish-ade-reference, excluding all audit raster images and development history/runtime data. Existing out/publish-ade scaffold is preserved without overwrite; no rewrite of development history.",
+    "definiteExcludedPaths": [
+      "audit/reference-images/account-google.png",
+      "audit/reference-images/account-subscription.png",
+      "audit/reference-images/browsing.png",
+      "audit/reference-images/plugins.png",
+      "audit/reference-images/providers.png",
+      "audit/reference-images/workbench.png"
+    ],
+    "recommendedAdditionalExclusion": "Confirmed by parent: exclude all audit raster images. Keep generator source/measurements/text evidence.",
+    "trackedRasterPathsForReview": [
+      "audit/authoring-previews-settings-renders/workbench-dark.png",
+      "audit/authoring-previews-settings-renders/workbench-light.png",
+      "audit/authoring-previews-settings-renders/worktree-settings-integrated-dark.png",
+      "audit/authoring-previews-settings-renders/worktree-settings-integrated-light.png",
+      "audit/editor-theme-dark.png",
+      "audit/editor-theme-light.png",
+      "audit/git-panel-dark.png",
+      "audit/git-panel-light.png",
+      "audit/main-chrome/intermediate-scroll-regression/dark.png",
+      "audit/main-chrome/intermediate-scroll-regression/light.png",
+      "audit/main-chrome/intermediate-scroll-regression/narrow.png",
+      "audit/main-chrome/renders/collapsed.png",
+      "audit/main-chrome/renders/dark.png",
+      "audit/main-chrome/renders/light.png",
+      "audit/main-chrome/renders/long-input.png",
+      "audit/main-chrome/renders/narrow.png",
+      "audit/main-chrome/renders/zoom130.png",
+      "audit/native-editor-preview.png",
+      "audit/native-terminal-dark-preview.png",
+      "audit/native-terminal-preview.png",
+      "audit/reference-images/account-google.png",
+      "audit/reference-images/account-subscription.png",
+      "audit/reference-images/browsing.png",
+      "audit/reference-images/plugins.png",
+      "audit/reference-images/providers.png",
+      "audit/reference-images/workbench.png",
+      "audit/settings-preview/browsing.png",
+      "audit/settings-preview/clear-data.png",
+      "audit/settings-preview/models-providers.png",
+      "audit/settings-preview/plugins-dark.png",
+      "audit/settings-preview/plugins-narrow.png",
+      "audit/settings-preview/plugins.png",
+      "audit/settings-preview/skills-context.png",
+      "audit/transcript-preview/transcript-dark-narrow.png",
+      "audit/transcript-preview/transcript-dark.png",
+      "audit/transcript-preview/transcript-light-thinking.png",
+      "audit/transcript-preview/transcript-light.png",
+      "audit/workbench-preview/workbench-dark.png",
+      "audit/workbench-preview/workbench-light.png",
+      "audit/worktree-settings-dark.png",
+      "audit/worktree-settings-light.png"
+    ],
+    "neverCopy": [
+      ".git from development",
+      "private/",
+      "upstream/",
+      "out/ build or runtime contents",
+      "build/",
+      "build-next/",
+      "test-results/",
+      "api_keys* or dotenv credentials",
+      "provider/profile/session/credential stores",
+      "unapproved screenshot or reference asset payloads"
+    ],
+    "retain": [
+      "src/",
+      "tests/",
+      "scripts/",
+      "CMakeLists.txt and portable preset",
+      "LICENSE and NOTICE",
+      "approved original assets/fonts with licenses",
+      "third_party source/header/official loader and licenses",
+      "reference/ curated snapshot and experimental manifests",
+      "selected audit JSON/text/fixture generator source"
+    ],
+    "oldHistory": "Original logos and reference screenshots remain reachable in local development history. They must not be included by mirroring/pushing that history.",
+    "githubState": {
+      "repository": "https://github.com/secusbdl/ade",
+      "repositoryId": 1448153514,
+      "observedVisibility": "public",
+      "observedContent": "empty before publication",
+      "authenticatedAccount": "secusbdl",
+      "requestedPublicationApp": "GitHub Desktop",
+      "desktopReady": true,
+      "repositoryAddedToDesktop": false,
+      "pushPerformed": false,
+      "nextAction": "Wait for parent final tested export path and commit, then add out/publish-ade-reference and push through the requested app without visibility changes.",
+      "connectorScope": "Account/repository metadata was readable but integration installation access differed; Desktop is the user-requested publication route. No permission changes made."
+    },
+    "excludedRasterManifest": [
+      {
+        "path": "audit/authoring-previews-settings-renders/workbench-dark.png",
+        "bytes": 97695,
+        "sha256": "a1aef74b0de0c38cc43692bf3c77e8d7165faa0f0b79d4e756ffa97404e755aa",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/authoring-previews-settings-renders/workbench-light.png",
+        "bytes": 97125,
+        "sha256": "a098e1abd1b37cb8fa90f1085606b2594eea6050f245e1a05cf4f7b49390e815",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/authoring-previews-settings-renders/worktree-settings-integrated-dark.png",
+        "bytes": 124813,
+        "sha256": "3867eff3a19d60136af09601c84cddd0ecf2dc49b668230dfd9c3842519e3f93",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/authoring-previews-settings-renders/worktree-settings-integrated-light.png",
+        "bytes": 122560,
+        "sha256": "0619ac8c992a3ce360163457b104e78b176cda3e3d7e7b6fb083c073421dac4e",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/editor-theme-dark.png",
+        "bytes": 35139,
+        "sha256": "80218f12d0f02a7f84c0ec225011a0356968f479249fa0cc2fce07fa93124c77",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/editor-theme-light.png",
+        "bytes": 34920,
+        "sha256": "183a34b472e73832371bc21ea685daed619c488e460f868ac1c2842780a18d26",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/git-panel-dark.png",
+        "bytes": 35364,
+        "sha256": "bec10f3a7c43690a409e04248ed17e0db9750e34c228617ed2e487317907d218",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/git-panel-light.png",
+        "bytes": 34229,
+        "sha256": "643abba64e00659d64b589a2d1a0fd76a44bfd93d62abbc1b9069edd78fb0efa",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/intermediate-scroll-regression/dark.png",
+        "bytes": 60636,
+        "sha256": "aa2b9de44048936da64ca7811106f9808b4a56dda81bca3c30cadf03bef2cb65",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/intermediate-scroll-regression/light.png",
+        "bytes": 60727,
+        "sha256": "5f41e6e937b4360cdd9d6e43d19c4b695d614eb8be6b41d607e0e3c2a8ac2015",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/intermediate-scroll-regression/narrow.png",
+        "bytes": 55969,
+        "sha256": "5cbd12bbd1ebb2dc0e0457b3000493fac71998b6184331a1fab1516456411bb9",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/collapsed.png",
+        "bytes": 45858,
+        "sha256": "746f0c9dfbd449f7c959867b86633579064a98b156c77ea14e5c2d9f63728835",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/dark.png",
+        "bytes": 74393,
+        "sha256": "b7df0d9060c49f58afe4f2efc5087f39c3340819cf0ba2ab91dd9f5aa71e2412",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/light.png",
+        "bytes": 74200,
+        "sha256": "76da79bfed8fcfe7ab5646976df7424e3558ff7503e4633f2159b597fea0be50",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/long-input.png",
+        "bytes": 109824,
+        "sha256": "f130047bc91483f4b53bd99129cff8c1ee82ce555fad784f9bc2c3cc1170a67c",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/narrow.png",
+        "bytes": 63914,
+        "sha256": "ceffeb05e9e5d91409985dc5b55da69ee3de3f58fe1a280849ebc83386100ca4",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/main-chrome/renders/zoom130.png",
+        "bytes": 106630,
+        "sha256": "a64fe0e9a1357f5eefefd83cacaf9fc6b6005f98ee42870079f24713d89a7b3d",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/native-editor-preview.png",
+        "bytes": 61377,
+        "sha256": "68f380d4333a81c91b86fed5c5868263febbcc77611847e86f52de6533211fd4",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/native-terminal-dark-preview.png",
+        "bytes": 14323,
+        "sha256": "5f43b2b94161ecd14b2c8aac74fdd17f5f92091abaa8da992823746b0d55e999",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/native-terminal-preview.png",
+        "bytes": 14255,
+        "sha256": "600c197bc33ddc6301901b63610ac81586900f78ae991d09dccbaddf40df004a",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/account-google.png",
+        "bytes": 372744,
+        "sha256": "572534ec43708bd83d0785ff11796e91301499411485e002ece94d477b731db5",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/account-subscription.png",
+        "bytes": 373146,
+        "sha256": "c2af091d358b3a4e3264ecebc05c6892dac55f0b7497adcd8ee4a583d4af9917",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/browsing.png",
+        "bytes": 458648,
+        "sha256": "162933d12dc8ea694c33c4ff616355a62a01d4b4d9ac2e51de73612280150c1d",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/plugins.png",
+        "bytes": 432149,
+        "sha256": "098c778fe7f9b0a852174867d3da49d12aded66c068e152c8ba6cf8e50047ad7",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/providers.png",
+        "bytes": 472269,
+        "sha256": "e5bd2ad0d9d8142962f942356cc5db7a420806a2f4ee340ad46eaffbc3ef4d1d",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/reference-images/workbench.png",
+        "bytes": 573447,
+        "sha256": "72a79e68f45412461300a8ee33f163c475d1e25f7b143dace8ca4f40eaa85f84",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/browsing.png",
+        "bytes": 102838,
+        "sha256": "417b055f798863542cfaf7d8b53c868173f2108977cc029e5b4461f55af91606",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/clear-data.png",
+        "bytes": 74041,
+        "sha256": "2ee9fa3dd4dc90c7e26106578792e56f27354ea88df24b2d52a4aaaba35bacc4",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/models-providers.png",
+        "bytes": 119387,
+        "sha256": "35cf7194528a5acbaa81af703d40f62dc4389104dd987a3fdc98e2f1bc5791b0",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/plugins-dark.png",
+        "bytes": 100431,
+        "sha256": "3fa71207975e7ee3a529f986176481fdea78025021e3c3f5bd01071ed51ca4de",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/plugins-narrow.png",
+        "bytes": 98879,
+        "sha256": "89e50738d11586ae39df30ea102182cdd945a67015bd82d7b8b999831c53c678",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/plugins.png",
+        "bytes": 101615,
+        "sha256": "54733a06aeb077b60a0ea33ca7715add2e09fed3f4ff94855889ca183e8e1665",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/settings-preview/skills-context.png",
+        "bytes": 113725,
+        "sha256": "9ca6b66df06ee23bf4d8a2baa25d80116f6e4210f60e02081b6edc9bf61ee53f",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/transcript-preview/transcript-dark-narrow.png",
+        "bytes": 45115,
+        "sha256": "05f0676a7e7e9e3e2e6bf8cfc484d1f54587dd55e918e295a263d998936cf7d1",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/transcript-preview/transcript-dark.png",
+        "bytes": 52641,
+        "sha256": "ec3d9f93aa9c694136f78872bcbf559cd08f0e8a7c9b1d012f24478ccb909c40",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/transcript-preview/transcript-light-thinking.png",
+        "bytes": 18852,
+        "sha256": "607bb06bc7adc6afb9fe71a008bc96e8e391c76bce910eb1d4df9925cf4d78c0",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/transcript-preview/transcript-light.png",
+        "bytes": 51938,
+        "sha256": "b32f9edf284c0bdcdecaf6ef1d773c70bc4a97823b3bf351725793914d1ca032",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/workbench-preview/workbench-dark.png",
+        "bytes": 97839,
+        "sha256": "c6978e2bb0ad44a268a9ee9f7c2b839ec686af326718b04c42c90df37595d311",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/workbench-preview/workbench-light.png",
+        "bytes": 97245,
+        "sha256": "f992e4bfddb3ea514f9573a63e200383b750680bce669a6f2a22060a80cb6d07",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/worktree-settings-dark.png",
+        "bytes": 75736,
+        "sha256": "d4348bcd56a2f064bf846a709afc130f166764a430babac435dcb3f66f6ae571",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      },
+      {
+        "path": "audit/worktree-settings-light.png",
+        "bytes": 74880,
+        "sha256": "1d42fe3b821a13e7084032a1647b1f6fb7844a85f3bb2143760b258e729f752f",
+        "reason": "Historical visual evidence retained locally; excluded from public source export to avoid upstream/third-party marks and desktop privacy ambiguity."
+      }
+    ],
+    "exportPath": "out/publish-ade-reference",
+    "preservedExistingScaffold": "out/publish-ade"
+  },
+  "licensesAndProvenance": [
+    {
+      "component": "ADE/application derivative",
+      "files": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "status": "AGPL-3.0 application licensing and source attribution retained; reuse in another ADE app must assess copied/adapted code obligations rather than assume MIT.",
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/LICENSE",
+      "limits": "Ordinary private modification, source conveyance, binary conveyance and modified network access have different requirements. This is a technical publication review, not a blanket legal clearance."
+    },
+    {
+      "component": "Upstream package distinctions",
+      "files": [
+        "reference/stagewise/packages/agent-core/package.json",
+        "reference/stagewise/packages/agent-shell/package.json",
+        "reference/stagewise/packages/karton/LICENSE.md"
+      ],
+      "status": "agent-core/agent-shell package declarations say MIT but no local LICENSE exists at this pin; karton has MIT text. Whole browser application/reference includes AGPL-covered code. Preserve package metadata; do not claim everything is MIT or overwrite per-package terms."
+    },
+    {
+      "component": "Restricted icons and trademarks",
+      "files": [
+        "reference/stagewise/packages/icons/LICENSE"
+      ],
+      "status": "All icon implementations excluded from source snapshot. ADE drawn icons remain independent. Five service-logo source SVGs replaced with original neutral text monograms.",
+      "historicalRisk": "Old logos/screenshots remain in local development Git history; use fresh curated publication."
+    },
+    {
+      "component": "Fonts",
+      "files": [
+        "assets/fonts/Geist-OFL.txt",
+        "assets/fonts/RobotoMono-OFL.txt",
+        "assets/fonts/provenance.json"
+      ],
+      "status": "Original TTFs and OFL notices/provenance retained. Source copying and font use preserve font-specific conditions."
+    },
+    {
+      "component": "QuickJS-NG, libvterm and toml++",
+      "files": [
+        "third_party/quickjs/LICENSE",
+        "third_party/quickjs/ORIGIN.json",
+        "src/terminal/vendor/libvterm-0.3.3/LICENSE",
+        "src/terminal/vendor/provenance.json",
+        "src/terminal/vendor/libvterm-hardening.patch",
+        "src/git/vendor/tomlplusplus-3.4.0/LICENSE",
+        "src/git/vendor/tomlplusplus-3.4.0/provenance.json"
+      ],
+      "status": "MIT license texts, pinned origins and local libvterm patch retained."
+    },
+    {
+      "component": "WebView2 SDK/loader",
+      "files": [
+        "third_party/webview2/LICENSE.txt",
+        "third_party/webview2/ORIGIN.json",
+        "third_party/webview2/Microsoft.Web.WebView2.nuspec"
+      ],
+      "status": "Package retains its redistribution terms; only tracked non-source binary is official loader DLL. Evergreen Runtime is external and not bundled.",
+      "source": "https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution"
+    },
+    {
+      "component": "Qt/OpenSSL/compiler runtime and zlib",
+      "files": [
+        "NOTICE",
+        "audit/toolchain.json",
+        "src/attachments/archive/ZLIB-NOTICE.txt"
+      ],
+      "status": "Source repo references installed Qt/OpenSSL; no Qt or OpenSSL source/binary bundle included. Binary release needs exact dependency licenses/notices, corresponding source/relink material and build configuration appropriate to chosen licenses.",
+      "source": "https://www.qt.io/development/open-source-lgpl-obligations",
+      "binaryReleaseGate": "Do not treat statically linked Qt as removing distribution obligations; a native-source repository alone is not a complete reviewed binary-release compliance bundle."
+    },
+    {
+      "component": "Bundled plugin resources",
+      "files": [
+        "assets/plugins/LICENSE",
+        "assets/plugins/PROVENANCE.json"
+      ],
+      "status": "Packaged original hashes verified, with documented Figma textContent safety patch. Service logos are no longer used as SVG assets.",
+      "limits": "Plugin instructions can request unavailable APIs; preserved instructions are not proof the runtime implements them."
+    },
+    {
+      "component": "Pinned upstream third-party notice",
+      "files": [
+        "reference/stagewise/THIRD-PARTY-NOTICES.md"
+      ],
+      "status": "Preserved unchanged. Referenced class-variance-autority license file is absent from the upstream pin. Dependency not vendored in curated source; original dependency notices must be resolved if actually rebuilding upstream."
+    }
+  ],
+  "buildReadiness": {
+    "verifiedPlatform": "Windows x64, static Qt6.11.2 / GCC16.2, native CMake/Ninja; external Evergreen Runtime, Git and shell remain.",
+    "atReviewedHead": "Historical committed base had hard-coded development paths; the reviewed uncommitted integrated source now has parameterized paths and shared ade_ui. Native manifest records canonical LF source bytes.",
+    "workingTreeRemediation": "Parent verified ConfigureOnly with spaces and built the integrated native source plus opt-in experiments on the existing Windows static Qt/GCC toolchain. Current55-suite passing coverage combines54 initial passes and one repaired24-case browser suite; no single all-green55-suite execution is claimed.",
+    "missingForBinaryRelease": [
+      "Document exact Qt/OpenSSL source acquisition/configuration and licenses, static link/relink/source obligations.",
+      "Verify a clean exported checkout builds and tests without ignored source/build data.",
+      "Document WebView2 runtime detection and deploy ADE.exe + ADE-sandbox-worker.exe + loader and notices.",
+      "Retain final exported-source hashes and passing coverage with explicit run aggregation; verify the exported checkout before publication. Clean-machine provisioning and binary-release obligations remain separate."
+    ],
+    "notBlockingLabeledSourceReference": [
+      "No installer/updater/signature is required merely to publish an honestly labeled partial source reference.",
+      "No live provider credential is needed for local fixture tests."
+    ]
+  },
+  "finitePublicationGates": [
+    {
+      "id": "P1",
+      "criterion": "Fresh publication tree contains no development Git history or ignored runtime/profile/key data.",
+      "status": "root_export_pending"
+    },
+    {
+      "id": "P2",
+      "criterion": "Exclude six upstream screenshots and resolve all other raster/old service-mark screenshots; monogram assets have original provenance.",
+      "status": "original_monograms_and_parent_approved_all_raster_exclusion_ready"
+    },
+    {
+      "id": "P3",
+      "criterion": "Curated snapshot exact bytes, hash manifest, all102 inventory source paths, license notices and no restricted payloads.",
+      "status": "verified"
+    },
+    {
+      "id": "P4",
+      "criterion": "Experimental33 archived source/contract/evidence files remain labeled unintegrated; separate optional native libraries/tests build with repository Qt dependencies and no production hooks.",
+      "status": "verified_optional_libraries_built_tests40_and30_pass_unlinked_from_ADE"
+    },
+    {
+      "id": "P5",
+      "criterion": "Correct README/build portability and freeze a passing native checkpoint; preserve honest limitations.",
+      "status": "native_build_and_55_suite_passing_coverage_verified_final_export_build_pending"
+    },
+    {
+      "id": "P6",
+      "criterion": "Final scan operates on exact export, including all intended new files and manifests; review candidates without printing values.",
+      "status": "must_repeat_after_export"
+    },
+    {
+      "id": "P7",
+      "criterion": "Parent verifies repository identity/authentication and pushes only approved source branch/tree.",
+      "status": "target_public_empty_desktop_authenticated_waiting_final_export_no_push"
+    }
+  ],
+  "remainingLimits": [
+    "This pass does not certify all third-party legal rights or every binary-image pixel.",
+    "Full native Stagewise parity is not established. Source preservation covers the declared allowlist and does not implement or rebuild omitted assets/dependencies.",
+    "This audit does not start new test runs. Current parent-owned evidence combines54 initial passing suites and the repaired browser suite; it does not establish one all-green55-suite run or universal zero defects.",
+    "Exact final export has not yet been scanned/pushed. No real API-key file, profile credential store or live user data was opened."
+  ],
+  "monogramManifest": [
+    {
+      "path": "assets/plugin-icons/figma.svg",
+      "sha256": "075dea2275d629b051642637c72068f58ce61ca3aa13094581678c58d56ca7f9"
+    },
+    {
+      "path": "assets/plugin-icons/github.svg",
+      "sha256": "d94e6f1759f5feea561ac15ce671e3edf9e9c2e2af437c9f50cc5ee442190533"
+    },
+    {
+      "path": "assets/plugin-icons/posthog.svg",
+      "sha256": "3cfadfcdd3bc7d71148c0fbd0bb55077b477db903eb06e1d53d257c0d51f6930"
+    },
+    {
+      "path": "assets/plugin-icons/supabase.svg",
+      "sha256": "0870cb0c8d03e416e9de601ca935a3afa0f3ae6cb160f8cf5918dc5bbfd78ce5"
+    },
+    {
+      "path": "assets/plugin-icons/vercel.svg",
+      "sha256": "800110ee3e15bcc83e468dcb9d1f233f2d9f4596d141453c3354a3ef2b376d06"
+    }
+  ],
+  "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+  "currentIntegratedCheckpoint": {
+    "status": "all_55_suites_have_passing_coverage_from_initial_run_plus_repaired_suite",
+    "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+    "sourceBaseCommit": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+    "sourceState": "Uncommitted integrated working tree; native source hashes below identify reviewed bytes, not a new committed release.",
+    "total": 55,
+    "passed": 55,
+    "failed": [],
+    "ctestSkippedSuites": 0,
+    "caseSkipScope": "native_transcript_link_ui passes 11 cases and skips its real-WebView case under offscreen; native_transcript_tabs_real runs that focused native Windows fixture and passes 3 cases including init/cleanup. Suite success is not a no-skipped-case claim.",
+    "finalEvidenceOwner": "Parent-owned audit/reference-integration.json retains initial full-run evidence, repaired browser-suite/focused evidence and exact source hashes. Final export build/scan and push remain pending.",
+    "fullParityClaim": false,
+    "retainedFirstFullRun": "audit/reference-integration-details/first-full-run.xml",
+    "integrationAudit": "audit/reference-integration.json",
+    "firstFullRun": {
+      "total": 55,
+      "passed": 54,
+      "failed": [
+        "native_browser_tools"
+      ],
+      "report": "audit/reference-integration-details/first-full-run.xml",
+      "reportSha256": "59bb9c98ec4228de145c6c67376950dcab575c3158f4afc1a0656a575c1ae3ae"
+    },
+    "aggregation": "Coverage union:54 passing suites from the initial full55-suite run plus the repaired native_browser_tools suite passing24 cases. This is not one all-green55-suite execution. Only the browser test fixture changed after the first full run; no production source changed for this repair.",
+    "finalBrowserValidation": {
+      "productionSourceChanged": false,
+      "changedFile": "tests/test_browser_tools.cpp",
+      "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+      "fullSuite": {
+        "suite": "native_browser_tools",
+        "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+        "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Full suite"
+      },
+      "focusedRepeats": [
+        {
+          "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+          "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+          "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+          "reportHashBasis": "canonical_git_text_LF",
+          "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "scope": "Focused regression including init/cleanup"
+        },
+        {
+          "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+          "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+          "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+          "reportHashBasis": "canonical_git_text_LF",
+          "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "scope": "Focused regression including init/cleanup"
+        }
+      ],
+      "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+    },
+    "coverageReport": "audit/reference-integration.json"
+  },
+  "nativeSourceManifest": {
+    "audit": "audit/reference-readiness.json",
+    "field": "sourceManifest",
+    "entries": 76,
+    "hashBasis": "canonical_git_text_LF except explicit -text exact_preserved_bytes",
+    "manifestSha256": "65e48d4d05179b00db93da6bd0408b7bd44e863a0e21e81abf410902ab81a317"
+  },
+  "packagedBuildObservation": {
+    "report": "audit/reference-integration.json",
+    "path": "out/reference-checkpoint/ADE.exe",
+    "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0",
+    "scope": "Parent-built local native test package, not a signed/public binary release. Final exported source build on current toolchain remains parent-owned; clean-machine provisioning is not demonstrated."
+  },
+  "browserFixtureRepair": {
+    "productionSourceChanged": false,
+    "changedFile": "tests/test_browser_tools.cpp",
+    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+    "fullSuite": {
+      "suite": "native_browser_tools",
+      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+      "reportHashBasis": "canonical_git_text_LF",
+      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Full suite"
+    },
+    "focusedRepeats": [
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      },
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      }
+    ],
+    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+  }
+}

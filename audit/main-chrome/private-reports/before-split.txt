@@ -1,0 +1,12 @@
+********* Start testing of MainChromeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MainChromeTest::initTestCase()
+QWARN  : MainChromeTest::freshSplitPrefersContent() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : MainChromeTest::freshSplitPrefersContent() This plugin does not support setting window masks
+FAIL!  : MainChromeTest::freshSplitPrefersContent() 'ratio>0.66&&ratio<0.74' returned FALSE. (0.402905)
+D:/age/ADE/private/main-ui-stage/tests/test_main_chrome.cpp(35) : failure location
+QWARN  : MainChromeTest::freshSplitPrefersContent() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : MainChromeTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 98ms
+********* Finished testing of MainChromeTest *********

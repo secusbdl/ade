@@ -1,0 +1,10 @@
+********* Start testing of ReadLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ReadLifecycleTest::initTestCase()
+FAIL!  : ReadLifecycleTest::failedClonePreservesDestinationLease() 'FileReadSnapshotStore::read(target,original,&restored,&error)' returned FALSE. (Read snapshot lease was revoked.)
+D:/age/ADE/private/read-lifecycle-stage/tests/test_read_lifecycle.cpp(81) : failure location
+FAIL!  : ReadLifecycleTest::emptySourceCannotCloneIntoPopulatedDestination() '!store.cloneAgent("empty-source","target",&error)' returned FALSE. ()
+D:/age/ADE/private/read-lifecycle-stage/tests/test_read_lifecycle.cpp(86) : failure location
+PASS   : ReadLifecycleTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 16ms
+********* Finished testing of ReadLifecycleTest *********

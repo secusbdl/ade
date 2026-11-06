@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UiAuditTest" timestamp="2026&#x002D;11&#x002D;05T17:25:10" hostname="VOID" tests="17" failures="0" errors="0" skipped="0" time="6.482">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UiAuditTest" time="0.000"/>
+  <testcase name="blockedDraftRestoreStillUpdatesComposerHeight" classname="UiAuditTest" time="0.056"/>
+  <testcase name="newDraftRetainsInheritedModelAfterRestart" classname="UiAuditTest" time="0.402">
+    <system-err>
+      <![CDATA[QFont::setPointSize: Point size <= 0 (-1), must be greater than 0]]>
+    </system-err>
+  </testcase>
+  <testcase name="unmatchedModelSearchCannotSendPreviousSelection" classname="UiAuditTest" time="0.219"/>
+  <testcase name="malformedCredentialRecordCannotBeOverwritten" classname="UiAuditTest" time="0.003"/>
+  <testcase name="failedDraftSavePreventsSilentWindowClose" classname="UiAuditTest" time="0.052"/>
+  <testcase name="attachmentDraftsStayWithChatAndSurviveRestart" classname="UiAuditTest" time="0.152"/>
+  <testcase name="clipboardAndDropMimeBecomeAttachments" classname="UiAuditTest" time="0.000"/>
+  <testcase name="invalidAttachmentDraftStorageIsPreserved" classname="UiAuditTest" time="0.003"/>
+  <testcase name="failedSendSaveKeepsDraftAndDoesNotRequestProvider" classname="UiAuditTest" time="0.212"/>
+  <testcase name="attachmentOnlyMessageReachesProviderAndKeepsReferences" classname="UiAuditTest" time="0.219"/>
+  <testcase name="missingAttachmentKeepsDraftWithoutSending" classname="UiAuditTest" time="0.203"/>
+  <testcase name="changingWorkspacePreservesSelectedDraftFile" classname="UiAuditTest" time="0.528"/>
+  <testcase name="applicationStylePreservesCodeFontAndZoom" classname="UiAuditTest" time="0.013"/>
+  <testcase name="appThemeAndManualClosureFollowNativeWindow" classname="UiAuditTest" time="1.467">
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-tDIOQS" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="liveAppWindowTeardownPreservesOwner" classname="UiAuditTest" time="2.946">
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-RRCOvn" most likely due to the presence of read-only files.]]>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-oZXrWB" most likely due to the presence of read-only files.]]>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-cjhadH" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="UiAuditTest" time="0.000"/>
+</testsuite>

@@ -1,0 +1,217 @@
+{
+  "status": "Source-grounded private planning only; no production implementation or parity claim.",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "authority_note": "Browser ToolboxService binds makeUniversalTools to DiffHistoryService and forwards undoToolCalls. The separate thin-host createUniversalToolbox undo stub is not the browser contract.",
+  "tools": [
+    {
+      "name": "copy",
+      "input": {
+        "input_path": "required string",
+        "output_path": "required string",
+        "move": "required boolean; no schema default"
+      },
+      "semantics": [
+        "move is a flag on copy, not a separate model tool",
+        "Source requires read for copy or delete for move; destination requires create",
+        "Missing source errors; file into directory uses source basename; parent directories are created",
+        "Directory copy merges children into the specified destination directory, overwrites colliding files and preserves unrelated destination entries; directory into an existing file errors",
+        "File move tries rename then copy+unlink fallback; directory move copies recursively then removes source",
+        "Destination changes are tracked for copy and move; source deletions are additionally tracked only for move",
+        "Directory operations use one batch to retain all destination/source records; _diff is null. Single-file result has message and destination text _diff when tracked"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/types/tools.ts",
+          "line": 275,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L275"
+        },
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 544,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L544"
+        }
+      ],
+      "native_now": "Absent"
+    },
+    {
+      "name": "delete",
+      "input": {
+        "path": "required string"
+      },
+      "semantics": [
+        "Requires delete permission; missing target errors",
+        "File removes one path and records before to missing",
+        "Directory captures each descendant file, removes tree, then registers all child deletions in a batch; result _diff is null",
+        "The current upstream journal tracks file states, not empty directory topology; empty directory restoration is not established by this implementation"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/types/tools.ts",
+          "line": 236,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L236"
+        },
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 475,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L475"
+        }
+      ],
+      "native_now": "Absent"
+    },
+    {
+      "name": "write",
+      "input": {
+        "path": "required string",
+        "content": "required string"
+      },
+      "semantics": [
+        "Requires write permission, creates parents and replaces contents",
+        "Runs stripCodeFence before writing; leading and trailing fences are removed using the exact pinned helper",
+        "Message distinguishes created/updated; more than 4000 JS characters adds an incremental-edit warning",
+        "Captures before/after and registers attributed history; text result may carry _diff"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/types/tools.ts",
+          "line": 4,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L4"
+        },
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 112,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L112"
+        },
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 396,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L396"
+        }
+      ],
+      "native_now": "Atomic UTF-8 write, creates parents, 4 MiB bound; does not strip fences or return upstream structured result; fileChanged lacks existence/provenance and is not a persistent journal"
+    },
+    {
+      "name": "multiEdit",
+      "input": {
+        "path": "required string",
+        "edits": "array, minimum 1; old_string/new_string required strings, replace_all optional bool"
+      },
+      "semantics": [
+        "Existing file required; sequential edits see previous results",
+        "Unmatched edits are skipped, not errors; replace_all counts all non-overlapping occurrences, otherwise replaces first occurrence",
+        "Writes only when editsApplied is positive; returns message plus result.editsApplied, including successful zero-edits result",
+        "Schema accepts empty old_string, but pinned split/index behavior is inconsistent for zero/one/multiple UTF-16 code units; treat as an explicit compatibility edge, not an ordinary replacement contract"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/types/tools.ts",
+          "line": 197,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L197"
+        },
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 423,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L423"
+        }
+      ],
+      "native_now": "Sequential first/all replacements exist, but unmatched edit aborts the whole operation; empty pattern rejected; strict UTF-8/BOM/newline preservation and 4 MiB byte cap; no structured editsApplied/history"
+    },
+    {
+      "name": "mkdir",
+      "semantics": [
+        "Requires create permission; recursively creates parents; existing directory succeeds with already-exists message; existing file errors",
+        "No diff-history capture in the pinned implementation"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 375,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L375"
+        }
+      ],
+      "native_now": "Implemented with different response text; raw sandbox mkdir has separate Node-style semantics"
+    },
+    {
+      "name": "undoToolCalls",
+      "exposure": "Host/browser API; not a model tool",
+      "semantics": [
+        "Agent-filter tool-call reasons, group affected paths, choose state immediately before earliest selected operation for each file",
+        "Append copied operations from initial baseline through target; restore missing/text/external bytes and recreate parents",
+        "Undo to an initial baseline adds user-save closure; refresh hydrated agent state",
+        "Archive finalizes pending baselines but history remains undoable",
+        "Legacy spec describes redo/hunk acceptance; current product note removes per-hunk accept/reject UI and current service exposes no public redo method"
+      ],
+      "source": [
+        {
+          "path": "packages/agent-core/src/services/diff-history/index.ts",
+          "line": 1262,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1262"
+        },
+        {
+          "path": "packages/agent-core/src/services/diff-history/utils/db.ts",
+          "line": 904,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/utils/db.ts#L904"
+        },
+        {
+          "path": "packages/agent-core/src/services/diff-history/index.ts",
+          "line": 1197,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1197"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 706,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L706"
+        }
+      ],
+      "native_now": "Only editor-local Qt undo/redo and Git diffs exist; no agent tool-call history/undo"
+    }
+  ],
+  "mounts": {
+    "source": [
+      {
+        "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+        "line": 20,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L20"
+      },
+      {
+        "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+        "line": 55,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L55"
+      },
+      {
+        "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+        "line": 110,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L110"
+      }
+    ],
+    "rules": "Input is mount-prefixed, backslashes normalize; permissions read/write/create/delete. apps/plans/logs and workspace mounts are writable; att/memory/shells/plugins plus browser global skill mounts are read-only. Static mounts take precedence. Source lexical checks are not a substitute for native final-handle validation.",
+    "native_scope": "ws1/w1/workspace and fixed per-agent apps are available; sandbox att is read-only. Other mounts and stable simultaneous workspaces remain explicit gaps. Native unprefixed workspace compatibility and apps without workspace already exist and must not regress."
+  },
+  "history": {
+    "source": [
+      {
+        "path": "packages/agent-core/src/services/toolbox/utils.ts",
+        "line": 248,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/utils.ts#L248"
+      },
+      {
+        "path": "packages/agent-core/src/services/diff-history/index.ts",
+        "line": 678,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L678"
+      },
+      {
+        "path": "packages/agent-core/src/services/diff-history/index.ts",
+        "line": 746,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L746"
+      },
+      {
+        "path": "packages/agent-core/src/services/diff-history/schema.sql",
+        "line": 1,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/schema.sql#L1"
+      }
+    ],
+    "model": "Content-addressed snapshots + append-only operations with path, baseline/edit, nullable snapshot_oid, reason and contributor. Missing is null, distinct from empty bytes. Text <= 2 MiB is inline/delta-capable; binary or larger captures use external blob storage.",
+    "behavior": "registerSingleEdit and batch suppress watcher feedback for 500 ms and emit text-written/closed hooks. Directory batches bypass the 50 single-edit fanout limit; batch cap 10000 can still drop tracking after mutation. Gitignored/denylisted files are skipped. Internal apps/plans/logs records are hidden from agent-visible diff summaries.",
+    "caveats": "The pinned code catches history-registration failures after filesystem mutation; batch writes are sequential despite comments describing coherent/atomic tracking. Native undo must not silently promise recovery after omitted records, failed persistence, ignored content or cap truncation."
+  },
+  "license": "Retain root AGPL LICENSE/NOTICE and pinned attribution for adapted contracts. agent-core package.json declares MIT; do not infer that all repository assets are MIT. No icons, trademarks or unrelated assets copied."
+}

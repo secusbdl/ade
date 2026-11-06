@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "status": "Focused conversation lifecycle implementation verified; full checkpoint integration remains a separate parent check",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": {
+    "productionOwner": "root",
+    "testOwner": "qt_port_review",
+    "testSource": "tests/test_conversations.cpp",
+    "productionFiles": [
+      "src/ui/MainWindowConversations.cpp",
+      "src/ui/MainWindow.cpp",
+      "src/ui/MainWindow.h",
+      "src/ui/MainWindowGit.cpp",
+      "src/ui/SettingsPage.cpp",
+      "src/ui/SettingsPage.h",
+      "src/ui/SessionStore.cpp",
+      "src/ui/SessionStore.h",
+      "src/core/AgentEngine.cpp",
+      "src/core/AgentEngine.h"
+    ],
+    "execution": "Hidden offscreen real MainWindow widgets, menu action object names and dialog buttons. Temporary profiles and temporary Git repositories only. A loopback held HTTP fixture is the only provider used; no live credentials or services."
+  },
+  "sourceContracts": [
+    {
+      "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+      "lines": [
+        1397,
+        1454,
+        1517,
+        1538,
+        1559,
+        1609
+      ],
+      "contract": "Fork active/persisted chat state and source approval mode; archive stops/unloads the agent and preserves persisted history and attachment blobs; permanent deletion removes owned persisted context.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L1397"
+    },
+    {
+      "path": "packages/agent-core/src/services/agent-manager/startup-policy.ts",
+      "lines": [
+        15,
+        33
+      ],
+      "contract": "The host resolves a previous active chat first; failure or absence falls through to default startup behavior.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/startup-policy.ts#L15"
+    },
+    {
+      "path": "apps/browser/src/ui/screens/settings/sections/archived-agents-section.tsx",
+      "lines": [
+        20,
+        129,
+        161,
+        216,
+        231,
+        257
+      ],
+      "contract": "Archived rows show title/date/workspace, per-row delete and Unarchive actions, a confirmation dialog, 25-row increments and a 250 ms debounced search.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/archived-agents-section.tsx#L20"
+    },
+    {
+      "path": "packages/agent-core/src/services/agent-persistence/db.ts",
+      "lines": [
+        233,
+        238
+      ],
+      "contract": "Archived records are ordered by archive timestamp, then last activity. Native legacy records without archivedAt use updated as an explicit compatibility fallback.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-persistence/db.ts#L233"
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/index.tsx",
+      "lines": [
+        95,
+        107
+      ],
+      "contract": "Ordinary new chats inherit the current chat's stored approval mode.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/index.tsx#L95"
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx",
+      "lines": [
+        880,
+        892
+      ],
+      "contract": "The sidebar new-chat action passes the open chat's approval mode; a missing value leaves the backend default.",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx#L880"
+    },
+    {
+      "path": "packages/agent-core/src/services/agent-persistence/db.ts",
+      "lines": [
+        676,
+        687
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-persistence/db.ts#L676",
+      "contract": "setAgentArchived writes the current time when archiving and null when unarchiving; missing agent IDs fail. Native persists archivedAt as milliseconds and retains zero as a legacy fallback marker."
+    }
+  ],
+  "verifiedBehavior": [
+    "Forked history, uploaded blobs and captured file-read snapshots remain usable after the source conversation is permanently deleted. Destination attachment snapshots are separately read and compared before deletion.",
+    "Fork clears unsent draft text/attachments, keeps source state independent and preserves the source approval policy even when another chat is selected.",
+    "Archiving a busy chat cancels the held provider request, persists history and archive time, revokes the old read lease, unloads engine/host and retains attachment bytes and snapshot storage.",
+    "Restoring clears archivedAt and makes the row active without implicitly activating a host/workspace until selected.",
+    "Cancellation of permanent deletion preserves session bytes and owned files. Confirmation removes the selected chat and its owned file context; another chat remains selected.",
+    "The Delete menu action is disabled while busy, and a confirmation opened before the agent becomes busy is rechecked and refused.",
+    "Archive row actions target their bound conversation ID even when a different row is selected. Archive sorting, legacy timestamp fallback, stable equal ties, 25/50/53 pagination and debounced search are checked.",
+    "Concurrent persisted session changes block new, rename, fork, archive, delete, restore and selection changes without overwriting external bytes or losing the current draft/selection.",
+    "Loaded live workspace owners remain mounted across ordinary chat switches and are released on archive. Unselected stored history alone is not a live mount. A source host hydrated by a background fork is represented in live ownership.",
+    "The last selected nonarchived chat and its draft are restored at restart; an archived saved selection falls back to an active chat.",
+    "Ask/Always allow are persisted per chat, restored on selection/restart, copied from the source on fork, inherited by ordinary new chats and rolled back when saving a selector change conflicts. Legacy omitted values default to Ask.",
+    "A rejected malformed inherited tool history preserves the raw draft whitespace, draft attachment references, prior history and rejection message. UI/durable/reopened drafts agree and no provider request is sent."
+  ],
+  "concreteFindings": [
+    {
+      "finding": "selectConversation ignored a failed previous-draft save, changed selection and cleared the error",
+      "resolution": "Root preserves current ID/composer, restores the list highlight and returns before publishing the destination",
+      "evidence": "failedSelectionSaveKeepsDraftVisible"
+    },
+    {
+      "finding": "A background fork could hydrate a nonarchived source host without registering a live workspace owner",
+      "resolution": "Root registers nonarchived source hydration in engineFor and refreshes Git context",
+      "evidence": "backgroundForkDoesNotLeaveAnUntrackedSourceHost"
+    },
+    {
+      "finding": "Sending into malformed inherited history cleared and persisted the draft before the engine rejected the submission",
+      "beforeEvidence": "audit/conversations/rejected-draft-before.txt",
+      "beforeResult": "All three data rows failed: visible, durable and reopened draft text were empty; both rows with attachments also lost their draft references",
+      "resolution": "AgentEngine returns explicit message acceptance. MainWindow restores the prior raw draft and references only for a rejected submission whose owner/history still match; an accepted turn is not undone merely because it later fails or is synchronously cancelled",
+      "afterEvidence": "rejectedInheritedHistoryPreservesDraftAndAttachments: text-whitespace, text-and-attachment, attachment-only-whitespace"
+    }
+  ],
+  "validation": {
+    "platform": "Windows 11, Qt 6.11.2 static, MinGW GCC 16.2.0",
+    "conversationSuite": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 18898,
+      "log": "audit/conversations/after.txt",
+      "originalLog": "build-next/Testing/native_conversations.txt"
+    },
+    "relatedFocusedLogsRead": [
+      {
+        "suite": "native_history_recovery",
+        "passed": 28,
+        "failed": 0,
+        "durationMs": 1340,
+        "log": "audit/conversations/history-recovery-related.txt",
+        "skipped": 0,
+        "originalLog": "build-next/Testing/native_history_recovery.txt"
+      },
+      {
+        "suite": "native_engine_observers",
+        "passed": 56,
+        "failed": 0,
+        "durationMs": 8290,
+        "log": "audit/conversations/engine-observers-related.txt",
+        "skipped": 0,
+        "originalLog": "build-next/Testing/native_engine_observers.txt"
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passed": 25,
+        "failed": 0,
+        "durationMs": 510,
+        "log": "audit/conversations/session-cleanup-related.txt",
+        "skipped": 0,
+        "originalLog": "build-next/Testing/native_session_cleanup.txt"
+      }
+    ],
+    "ownership": "Parent built and ran targets. qt_port_review authored the fixtures and original audit; license_review checked the recorded suite counts/source references and preserved immutable report copies. license_review did not build or run these targets during this audit handoff.",
+    "helperWarnings": "Two misleading-indentation warnings in test menu helpers were corrected. Offscreen platform capability warnings are expected and are retained in the logs."
+  },
+  "explicitLimits": [
+    "Passing focused fixtures establish these scenarios, not universal zero defects or full Stagewise parity.",
+    "Native approval policy currently represents Ask and Always allow. Upstream Smart mode is not implemented by this bool slice.",
+    "Conversation still stores one workspace. The private usage journal and destructive worktree cleanup remain outside this integration; usageKnown remains false.",
+    "Fork tests cover persisted/idle/background source history, not every in-flight streaming boundary, side-chat promotion or complete branch UI semantics.",
+    "Cleanup retry/root locking and corrupt metadata behavior have separate SessionStore fixtures; these MainWindow tests do not simulate power loss, disk-full or every simultaneous external writer race.",
+    "Attachment-reference preservation is verified through stored metadata, actual owned blob bytes and restart. This suite does not establish pixel-level attachment-chip appearance.",
+    "Archive layout uses native widgets. Screenshot parity is reviewed separately; hidden lifecycle fixtures are not a visual parity claim.",
+    "The broader full checkpoint suite and live packaged executable validation are parent-owned follow-up checks.",
+    "Child-agent/side-chat lifecycle, multi-workspace chat state and paired live upstream/native interaction are not completed or validated by this slice. The existing bool approval adapter does not implement upstream Smart approval semantics."
+  ],
+  "auditCompletedBy": "license_review; preserved and completed qt_port_review audit",
+  "auditCompletedAtUtc": "2026-11-05T14:29:51.3728668Z",
+  "evidenceSha256": {
+    "audit/conversations/rejected-draft-before.txt": "ac65cfff29bbb6842ec6de90dd3d5497d2cc8f7c5e6e02e6bec078148057a4e4",
+    "audit/conversations/after.txt": "193b2005a0a869bdb97541eaaf784782d324b950a924834b563059b274b8491c",
+    "audit/conversations/history-recovery-related.txt": "b3f3f6c8f9a921c737661b7a1c8c8ec90f228f8eb2801214dd7e42babcb371b8",
+    "audit/conversations/engine-observers-related.txt": "faf1c26616e292f602f8d2cab843cce4c87dac3698a1b5be942a6e84cab1e78f",
+    "audit/conversations/session-cleanup-related.txt": "d7737f627b5cec74acde6e93c7c1229905735c688a2b93d39be1c5f4ae7221b9"
+  },
+  "reviewedSourceSha256": {
+    "src/ui/MainWindowConversations.cpp": "0cf2df76a645a19e17783b15ec518da60c2786696ebd792f60ca1eaf24806727",
+    "src/ui/MainWindow.cpp": "03ef3e2c4fece21f1d8d37107529789156f1da170d61aeb6bcea8a9f0d7a249f",
+    "src/ui/MainWindow.h": "6efa21359e98e870a5fe87d13c8071c2916bbcf630b5e5c4fbd815bb7dc6c4f4",
+    "src/ui/MainWindowGit.cpp": "d0e1f64882c492ebe5fa755620551496d1f3cf59e2555dfb80c9da5516f8d944",
+    "src/ui/SettingsPage.cpp": "61a5d776dd8073f7e290b14b322601d90b273141d9e618842db5d09589282ee9",
+    "src/ui/SettingsPage.h": "b33fa20c3f059a69086685c53ae8c491a3a005834e7e5d54b4e9376f63e0b1db",
+    "src/ui/SessionStore.cpp": "575b7060536e025423e6db30c5a22a73724a2a523bea5edc2a720a58d5c6d8dc",
+    "src/ui/SessionStore.h": "2c5bedacf3121d93d256169e2c8d01e656228db81a5a1cdcc69a794afbde8c97",
+    "src/core/AgentEngine.cpp": "3cd79e873c969370678151b2ee78aacb4cd449aca0c8c0151b9dc0ba127017d4",
+    "src/core/AgentEngine.h": "52e373cdf640c923b7c4a11666ed8e2bfb6f6340ebeeffc200f3efec5576e216",
+    "tests/test_conversations.cpp": "d6ef78643f77ed260d66bd0d85ad38ee31408fae3a46a14ac649e396185f5a4b"
+  }
+}

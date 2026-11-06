@@ -1,0 +1,45 @@
+{
+  "status": "Migrated from isolated staging after component verification; root owns host integration and integrated test results",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Per-repository setup settings only. No usage journal, cleanup prompt or metadata watcher implementation in this slice.",
+  "primary_sources": ["upstream/stagewise/apps/browser/src/backend/services/worktree-setup-settings.ts", "upstream/stagewise/apps/browser/src/ui/screens/settings/sections/agent-settings.worktree-setup.tsx", "upstream/stagewise/apps/browser/src/shared/worktree-setup.ts"],
+  "native_components": {
+    "WorktreeSettingsController": "QObject borrowing the existing GitService, owned by the host beyond any rebuilt Settings pane; owns separate repository/variant drafts, request IDs, revision handling and guarded mutation lifecycle.",
+    "WorktreeSettingsPane": "Native QWidget view with repository and Shell/PowerShell selection, actual script paths, source templates, Save/Reset/Ctrl+S, Codex fallback notice, copyable environment variables, managed-worktree search and confirmed Settings-policy removal.",
+    "GitService": "Shared per-common-directory serialization; setup writes accept a currently trusted anchor and derive/revalidate its main root. Caller does not grant arbitrary main-path trust.",
+    "SetupScriptText": "Bounded strict UTF-8 decoder/encoder independent of QtWidgets; preserves BOM and reconciles existing delimiters outside the changed range, reusing prior delimiters within the replaced range. Unsupported bytes remain untouched."
+  },
+  "integration_contract": {
+    "ownership": "Root owns WorktreeSettingsController(sharedGitService, parent). Construct/recreate WorktreeSettingsPane(controller, parent) as needed. Destroy controller before GitPanel/shared service during host shutdown.",
+    "guard": "Set controller.setMutationGuard using the same host busy-agent/setup/terminal/editor policy as GitPanel. No guard means mutation controls remain disabled. SaveSetupScript guard targets main root and should close only related setup-script editors.",
+    "signals": ["mutationStarted(path,operation)", "mutationFinished(path,operation,success)", "worktreeRemovalStarted(path)", "worktreeRemovalFinished(path,success)"],
+    "removal": "Retain existing shared GitService worktreeRemoved forwarding as the single successful-removal notification. Settings cannot force removal and backend rechecks mounted/dirty/main/detached/managed policy.",
+    "close": "Host blocks close during controller mutation and asks Discard/Cancel for unsaved drafts. View destruction alone preserves drafts and operation completion because the controller survives.",
+    "theme": "Call pane.setDarkTheme(bool); pane CodeEditor object name is worktreeSetupEditor.",
+    "build": "Nested ade_git and ade_git_ui CMake targets include the new files. New test_worktree_settings links ade_git_ui and Qt6::Test and imports QOffscreenIntegrationPlugin. Root CMake was not modified by this agent."
+  },
+  "safety_and_state": [
+    "Expected revisions distinguish missing files from existing empty files; external creation/edit/deletion conflicts preserve both disk bytes and drafts.",
+    "Malformed UTF-8 is reported per script variant without hiding the repository or blocking its other valid variant.",
+    "Windows reads verify the opened handle's final path and actual byte count; save temporary handles are checked under the main root. Cancellation is checked during reads and before commit.",
+    "Read results started before successful saves cannot overwrite newer baselines; edits made while saving remain unsaved drafts after the submitted version commits.",
+    "Guard reentry cannot start a second mutation; observer deletion paths use guarded/captured state.",
+    "Typing does not rebuild the unrelated worktree tree or reset code-editor undo history.",
+    "Controller destruction cancels its own requests only, never shared-service cancelAll."
+  ],
+  "verification": {
+    "component": {"log": "audit/worktree-settings-tests.txt", "passed": 15, "failed": 0, "skipped": 0, "elapsed_ms": 38307},
+    "full_backend_before_final_io_hardening": {"log": "audit/worktree-settings-backend-tests.txt", "passed": 20, "failed": 0, "skipped": 0, "elapsed_ms": 99428},
+    "relevant_backend_after_final_io_hardening": {"log": "audit/worktree-settings-backend-final.txt", "passed": 5, "failed": 0, "skipped": 0, "elapsed_ms": 15512},
+    "display_refinement": {"log": "audit/worktree-settings-display-tests.txt", "passed_including_init_cleanup": 3, "failed": 0, "skipped": 0, "elapsed_ms": 2009, "widths_tested": [768, 420], "behavior": "Content-sized first columns each capped at 20% of the viewport; Status retains at least 40%; all column values have tooltips. 768px light/dark renders show complete Usage unknown and dirty/mounted status explanations."},
+    "renders_inspected": ["audit/worktree-settings-light.png", "audit/worktree-settings-dark.png"],
+    "render_context": "Hidden offscreen 768px fixture using actual source AppStyle/AppFonts, a temporary Git repository, populated PowerShell/Codex scripts and clean/dirty/mounted managed rows.",
+    "authority": "All Git mutations occurred in dedicated temporary fixture repositories. No user repository or active desktop app was changed by tests/renders."
+  },
+  "remaining_limits": [
+    "Revision comparison is optimistic against external noncooperating writers, not a filesystem-wide atomic compare-and-swap guarantee.",
+    "Windows handle containment is implemented; POSIX setup IO uses canonical-path checks and has not been runtime-tested here.",
+    "Drafts persist across view recreation within the application process, not across application restart.",
+    "Current historical usage remains unknown for cleanup. This slice does not claim multimount, cleanup or watcher parity."
+  ]
+}

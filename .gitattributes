@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.png binary
+*.ttf binary
+*.dll binary
+# Preserve exact upstream bytes used by the provenance records.
+LICENSE -text
+third_party/** -text
+src/terminal/vendor/** -text
+src/git/vendor/** -text
+assets/fonts/** -text
+assets/plugins/** -text
+assets/plugin-icons/** -text

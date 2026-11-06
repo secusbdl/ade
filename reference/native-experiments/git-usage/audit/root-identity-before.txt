@@ -1,0 +1,8 @@
+********* Start testing of UsageTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UsageTests::initTestCase()
+FAIL!  : UsageTests::recreatedRootWithSameAdministrativeDirectoryIsANewInstance() 'fresh.instanceToken!=old.instanceToken' returned FALSE. ()
+D:/age/ADE/private/git-usage-stage/tests/test_git_usage.cpp(88) : failure location
+PASS   : UsageTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 489ms
+********* Finished testing of UsageTests *********

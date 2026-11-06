@@ -1,0 +1,62 @@
+[
+    {
+        "chatWidth": 378,
+        "contentWidth": 881,
+        "inputHeight": 46,
+        "sidebarWidth": 277,
+        "stopHidden": true,
+        "variant": "light",
+        "windowHeight": 940,
+        "windowWidth": 1540
+    },
+    {
+        "chatWidth": 378,
+        "contentWidth": 881,
+        "inputHeight": 46,
+        "sidebarWidth": 277,
+        "stopHidden": true,
+        "variant": "dark",
+        "windowHeight": 940,
+        "windowWidth": 1540
+    },
+    {
+        "chatWidth": 240,
+        "contentWidth": 540,
+        "inputHeight": 65,
+        "sidebarWidth": 176,
+        "stopHidden": true,
+        "variant": "narrow",
+        "windowHeight": 600,
+        "windowWidth": 960
+    },
+    {
+        "chatWidth": 312,
+        "contentWidth": 415,
+        "inputHeight": 82,
+        "sidebarWidth": 229,
+        "stopHidden": true,
+        "variant": "zoom130",
+        "windowHeight": 600,
+        "windowWidth": 960
+    },
+    {
+        "chatWidth": 461,
+        "contentWidth": 1075,
+        "inputHeight": 27,
+        "sidebarWidth": 0,
+        "stopHidden": true,
+        "variant": "collapsed",
+        "windowHeight": 940,
+        "windowWidth": 1540
+    },
+    {
+        "chatWidth": 378,
+        "contentWidth": 881,
+        "inputHeight": 256,
+        "sidebarWidth": 277,
+        "stopHidden": true,
+        "variant": "long-input",
+        "windowHeight": 940,
+        "windowWidth": 1540
+    }
+]

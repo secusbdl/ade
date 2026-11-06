@@ -1,0 +1,22 @@
+{
+  "status":"Approved interface, private implementation in progress; no production edit.",
+  "api":["QJsonArray AgentEngine::displayMessages() const","static QJsonArray AgentEngine::displayHistory(const QJsonArray& history)","signal displayChanged()"],
+  "row":{"id":"stable string","role":"user or assistant","provisional":"bool; one current round at most","parts":"ordered array","attachments":"optional existing metadata.attachments refs, unchanged"},
+  "parts":{
+    "text":{"id":"stable string","type":"text","text":"string","state":"streaming|done|error|canceled"},
+    "reasoning":{"id":"stable string","type":"reasoning","text":"string","state":"streaming|done|error|canceled","durationMs":"optional measured milliseconds; omit legacy unknown"},
+    "tool":{"id":"stable string","type":"tool","toolCallId":"provider call ID, scoped to assistant batch","name":"tool name","inputText":"partial or complete raw JSON string","input":"optional parsed object","state":"input-streaming|input-available|approval-requested|running|output-available|output-error|output-denied|canceled","output":"optional result string","errorText":"optional error/denial/cancellation diagnostic"},
+    "error":{"id":"stable string","type":"error","text":"string","errorText":"string","state":"error|canceled"}
+  },
+  "invariants":[
+    "One assistant row per provider round, with stable IDs across provisional retention. Tool result messages merge into the corresponding batch-local tool part instead of creating duplicate rows.",
+    "displayHistory and displayMessages are pure projections; neither mutates input messages or source caller values.",
+    "New UI data is persisted as versioned metadata.display, never inside ade_native. Existing attachments/fileReads metadata remains preserved.",
+    "Old histories derive deterministic stable keys and best available ordered parts from canonical/native values; missing timing is not invented.",
+    "displayChanged fires after coherent state changes, with QObject lifetime/generation barriers. UI owns16ms coalescing and disclosure state.",
+    "Reasoning-only failed/canceled partial may persist as explicitly versioned UI-only empty assistant row without native signatures. Provider omission requires marker AND empty canonical text AND no tool calls/native payload/attachments; malformed marker cannot hide real content.",
+    "Failure/cancel replacement/destruction callbacks must retain the current production queued reply/preparer/history acceptance guards."
+  ],
+  "sourceAudit":"audit/transcript-parity-contract.json",
+  "validationPlan":["All four provider protocols, ordered multi-round text/reason/tool streams and partial input fragments","Stable IDs and no duplicate provisional after retention, restart projection, reused call IDs in separate batches","Approval/running/result/error/denied/canceled states and measured reasoning duration","Reasoning-only interrupted persistence and strict UI-only wire omission","Provider request equivalence with UI metadata for all four protocols; signed/native objects unchanged","Cancellation/replacement/destruction from displayChanged plus existing observer suites"]
+}

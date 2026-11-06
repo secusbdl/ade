@@ -1,0 +1,118 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "engine": "QuickJS-NG v0.18.0; native C, statically linked",
+  "implementation": [
+    "src/sandbox/SandboxHost.h",
+    "src/sandbox/SandboxHost.cpp",
+    "src/sandbox/worker_main.cpp",
+    "src/sandbox/network_bootstrap.h"
+  ],
+  "contract": {
+    "tool": "executeSandboxJs",
+    "input": [
+      "explanation",
+      "script"
+    ],
+    "execution": "Script body runs in an async IIFE within a persistent globalThis realm. Per-agent runtimes are isolated. One active call per agent. Native QtCore worker subprocess; no Node or browser page JS application shell.",
+    "result": "JSON object with message and result; result joins API.output values followed by a non-null/undefined return value. Strings remain strings; other values use JSON serialization. Console is diagnostic and excluded from model tool output.",
+    "errors": "completed(id, output, true), with structured message/error and partial output. Ordinary JS errors preserve globals; cancellation, deadline and native allocation exhaustion reset the affected context.",
+    "CDP": "API.sendCDP(tabId,method,params) returns a promise resolved with parsed raw protocol JSON or rejected with broker error. Correlated UUIDs prevent late replies from settling reused external IDs.",
+    "files": "fsPromises.readFile/writeFile, fs.promises, callback fs.readFile/writeFile and require('fs'/'fs/promises') use native parent ToolExecutor. ws1/ and w1/ aliases map to the configured workspace. No direct JS OS access; ToolExecutor canonicalizes and rejects outside paths, binary/invalid UTF8 reads, and truncation. Text and BOM/newline bytes are preserved. Unsupported encodings/options/operations reject explicitly.",
+    "attachments": "API.createAttachment(originalFileName, Buffer or base64 string) stores a bounded file with safe unique name in the configured native artifact directory, signals the actual path/mime, and returns canonical filename, matching upstream return shape. Parent attachment notification precedes tool result completion; link/junction artifact roots reject. Idle behavior audit: audit/sandbox-idle-attachments.json.",
+    "host_helpers": [
+      "setTimeout/clearTimeout",
+      "setInterval/clearInterval",
+      "setImmediate/clearImmediate",
+      "queueMicrotask",
+      "basic Buffer UTF8/base64/latin1",
+      "basic TextEncoder/TextDecoder",
+      "atob/btoa",
+      "restricted process compatibility shim",
+      "console"
+    ],
+    "broker_lifetime": "Script-body requests must be awaited; its unfinished broker requests are canceled when the originating call finishes. Persistent CDP/app subscriptions and independent idle event/timer requests survive with host-issued generation checks, bounded event queues and a 45-second broker deadline. See audit/mini-apps-native.json.",
+    "network": "Buffered HTTP(S) fetch, Headers, Request, Response and AbortController/Signal are implemented through the parent NetworkBroker. Text/binary bodies, text/json/arrayBuffer/bytes consumption, clone/bodyUsed, HTTP errors, redirects and per-request cancellation are covered by loopback tests. Full Web API parity is not claimed. See audit/sandbox-network.json.",
+    "credentials": "API.getCredential returns host-authorized opaque placeholder fields or null. Real credential values stay in the parent broker; host-derived execution agent IDs gate lookup and substitution. Context reset signals invalidate handles after cancellation, deadline/memory reset, idle realm failure, explicit reset or worker exit.",
+    "mini_apps": "API.openApp/closeApp/sendMessage/onMessage and persistent API.onCDPEvent are implemented through native hosts, with per-agent origin/profile/tab ownership checks. Supplied Figma recipe passes a controlled local end-to-end fixture; no real Figma service validation. See audit/mini-apps-native.json."
+  },
+  "bounds": {
+    "synchronous_default_ms": 30000,
+    "inactivity_default_ms": 45000,
+    "hard_default_ms": 180000,
+    "root_integration_hard_ms": 110000,
+    "memory_default_bytes_per_context": 67108864,
+    "memory_mechanism": "Custom QuickJS allocator tracks actual engine allocation bytes and retains exhaustion state even when allocating an Error fails. Stack limit 1 MiB. Native buffers/frame/result sizes independently bounded.",
+    "maximum_contexts_per_worker": 32,
+    "maximum_pending_RPC_per_context": 128,
+    "maximum_timers_per_context": 128,
+    "maximum_script_characters": 262144,
+    "maximum_result_characters": 65536,
+    "maximum_output_messages": 1024,
+    "maximum_console_characters_per_call": 65536,
+    "maximum_console_messages_per_call": 1024,
+    "maximum_attachment_bytes": 16777216,
+    "maximum_IPC_frame_bytes": 33554432,
+    "cancel": "Reader thread sets an atomic cancellation flag while JS runs; the QuickJS interrupt hook exits synchronous loops. Parent watchdog kills an unresponsive native worker."
+  },
+  "privacy_boundary": "The worker receives a whitelisted OS environment, not provider API keys, tokens or proxy secrets. Page calls receive only explicitly supplied CDP parameters. Network/credential operations are parent-broker IPC; no direct worker sockets or unrestricted quickjs-libc OS modules are linked. The parent substitutes only host-authorized opaque credentials at allowed destinations and rejects known secret reflection. This is application-level isolation, not an OS security sandbox guarantee.",
+  "verification": {
+    "suite": "tests/test_sandbox.cpp",
+    "result": "22 passed, 0 failed, 0 skipped (including init/cleanup), after persistent events and attachment regressions.",
+    "logs": [
+      "test-results/sandbox-app-tests.txt",
+      "test-results/sandbox-app-tests.xml"
+    ],
+    "full_native_runtime_integration": "tests/test_runtime.cpp passed through CTest native_runtime in 4.83s (four cases plus init/cleanup). Real local HTTP provider SSE drives AgentEngine and AgentToolHost through the native worker into real WebView2/CDP, UTF8 files and screenshot attachment; separate cases cover CDP failure/model continuation, shared-browser host isolation/cancellation, and host teardown while CDP is pending. Log: test-results/runtime-tests.txt.",
+    "build_recipe": "audit/sandbox-probe/CMakeLists.txt",
+    "binary": "audit/sandbox-probe-build/ADE-sandbox-worker.exe",
+    "coverage": [
+      "real native subprocess startup and static-runtime operation",
+      "persistent async globals and isolated agents",
+      "return/output/console separation",
+      "timers and promise jobs",
+      "parallel CDP correlation, rejection and invalid JSON",
+      "real ToolExecutor UTF8 byte-preserving read/write and path rejection",
+      "binary/incomplete UTF8 write rejection",
+      "attachment bytes and canonical names",
+      "synchronous cancellation and context reset",
+      "late broker response suppression",
+      "sync/inactivity/hard time limits and heartbeat",
+      "memory exhaustion and recovery",
+      "oversized broker JSON allocation failure without worker crash",
+      "bounded output and message count",
+      "duplicate busy calls",
+      "destruction during infinite execution",
+      "missing worker executable",
+      "reentrant deletion from completion/output/CDP/start-failure callbacks"
+    ]
+  },
+  "concrete_fixes": [
+    "QuickJS memory exhaustion could reject with null, obscuring the failure and retaining an exhausted context; bounded allocator now classifies and resets it.",
+    "Interrupted async continuations could lose their synchronous-deadline reason after the native call returned; sticky interruption classification preserves reason and resets context.",
+    "QString::fromUtf8 removed initial BOM at JS/native string boundaries; explicit stateless decoding now preserves BOM. Regression compares actual EFBBBF bytes.",
+    "Streaming UTF8 decoders could buffer incomplete trailing sequences without immediate error; whole-buffer validation uses Stateless and rejects data loss.",
+    "Direct host deletion from callbacks could leave exit/watchdog handlers accessing a destroyed instance; signal boundaries now guard lifetime and tests delete immediately.",
+    "Empty API.output/console messages could evade a character-only bound; independent message-count bounds stop unbounded streams.",
+    "Canceling a tool now synchronously invalidates its context and stops outstanding native broker requests; waiting for worker cancel acknowledgment previously left a real fetch running briefly.",
+    "Context generation UUIDs and bounded event queues prevent late callbacks from reaching replacement agents and stop unbounded idle event backlogs.",
+    "Attachment artifact roots reject existing links/junctions, and notifications occur before RPC result delivery.",
+    "Attachments created by persistent callbacks are attributed to an active same-agent/context tool when one exists; true idle writes remain successful without attaching to a later or foreign-agent tool."
+  ],
+  "remaining_upstream_gaps": [
+    "Complete Node builtin compatibility (crypto/events/path/querystring/stream/string_decoder/url/util/zlib/assert); Buffer and text helper APIs are a documented subset.",
+    "Full Web API compatibility including URL/URLSearchParams, Blob, FormData, readable/writable streams and streaming response bodies; current fetch is bounded and buffered. Browser cookies and non-omit request credentials are explicitly unsupported.",
+    "General mounted filesystem APIs, multiple mounts, permission matrix and attachment/log/shell mounts; current file helper scope is workspace UTF8 read/write.",
+    "Output overflow is an explicit error rather than upstream capToolOutput truncation. Cancellation/deadline resets state deliberately; exact upstream post-timeout persistence is not claimed.",
+    "HTTPS importModule with bundled-module caching.",
+    "Script-body unawaited broker promises are canceled on return; independent idle listeners/background requests persist. Full async-local event continuation ownership is not claimed.",
+    "Mini-app writable apps/ mount and arbitrary remote-resource HTML support remain incomplete; see audit/mini-apps-native.json."
+  ],
+  "sources": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts",
+    "https://github.com/quickjs-ng/quickjs/releases/tag/v0.18.0",
+    "https://quickjs-ng.github.io/quickjs/developer-guide/intro/",
+    "third_party/quickjs/ORIGIN.json"
+  ]
+}

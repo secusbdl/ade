@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="MainChromeTest" timestamp="2026&#x002D;11&#x002D;05T17:28:18" hostname="VOID" tests="17" failures="0" errors="0" skipped="0" time="2.675">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="MainChromeTest" time="0.000"/>
+  <testcase name="repeatedShownWindowTeardownPreservesStyleObservers" classname="MainChromeTest" time="0.921">
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="sidebarReallyCollapses" classname="MainChromeTest" time="0.109">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="freshSplitPrefersContent" classname="MainChromeTest" time="0.093">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="idleStopAndEmptySendReflectState" classname="MainChromeTest" time="0.090">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="persistedSidebarAndZoomPreserveCollapsedState" classname="MainChromeTest" time="0.354">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="restoredInnerSplitIsNotReplacedByFreshDefault" classname="MainChromeTest" time="0.174">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="sidebarHalfWindowLimitPreservesPreferredWidth" classname="MainChromeTest" time="0.102">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="narrowSelectorsRemainInsideComposer(70)" classname="MainChromeTest" time="0.133">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="narrowSelectorsRemainInsideComposer(100)" classname="MainChromeTest" time="0.135">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="narrowSelectorsRemainInsideComposer(130)" classname="MainChromeTest" time="0.140">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="keyboardCanReopenAndFocusSearch" classname="MainChromeTest" time="0.111">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="busyStopIsVisibleAndEscapeCancels" classname="MainChromeTest" time="0.219">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="composerGrowsForWrappedTextAndCaps" classname="MainChromeTest" time="0.002">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="shortWrappedDraftHasNoScrollbars" classname="MainChromeTest" time="0.087">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="enterAndShiftEnterPreserveInputContract" classname="MainChromeTest" time="0.001">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="MainChromeTest" time="0.000"/>
+</testsuite>

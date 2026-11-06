@@ -1,0 +1,41 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "implementation": ["src/browser/BrowserToolBridge.h", "src/browser/BrowserToolBridge.cpp"],
+  "tools": {
+    "getBrowserTabs": "ADE-native discovery of registered tabs with stable IDs, URL/title/ready state, and active tab.",
+    "sendCDP": "ADE-native tool exposing the upstream API.sendCDP capability directly, returning raw CDP JSON. It is not an upstream standalone tool name.",
+    "readConsoleLogs": "Upstream argument names and shape: id, filter, limit, levels, delayMs. Captures Runtime console events, exceptions and Log entries; newest first; clears on navigation."
+  },
+  "scope": [
+    "Runtime.evaluate for synchronous or promise-returning page JavaScript and DOM inspection",
+    "DOM.getDocument and other supported CDP DOM methods",
+    "Page.navigate, Page.getNavigationHistory and Page.navigateToHistoryEntry",
+    "Page.captureScreenshot returns raw base64 image data",
+    "Correlated concurrent CDP requests; results may arrive out of order",
+    "Timeout/cancel/duplicate-ID/closed-tab handling suppresses stale completions",
+    "BrowserWidget profile directory can be selected before initialization; separate profiles do not share page storage"
+  ],
+  "verification": {
+    "browser_tools": "24 passed, 0 failed, 0 skipped; 15206 ms (includes permissions, clearing and downloads)",
+    "browser_component": "14 passed, 0 failed, 0 skipped after integration changes; 5716 ms",
+    "tests": ["tests/test_browser_tools.cpp", "tests/test_browser.cpp"],
+    "logs": ["test-results/browser-tool-tests.txt", "test-results/browser-tool-tests.xml", "test-results/browser-tests.txt"],
+    "fixture": "Local loopback HTTP pages; no live provider credentials or external web pages."
+  },
+  "limits": [
+    "This is an intermediate native browser bridge, not complete Stagewise toolbox parity.",
+    "This bridge does not advertise or accept executeSandboxJs. The separate native QuickJS SandboxHost implements a tested subset and delegates API.sendCDP here; see audit/sandbox-native.json.",
+    "Raw screenshots are not automatically converted into multimodal model attachments by this bridge.",
+    "Cancellation stops awaiting a response; it cannot reverse or guarantee termination of an already issued page action.",
+    "Responses are limited to 2 MiB, retained console history to 1000 entries, and each retained console message to 16384 characters.",
+    "Console capture starts at tab registration; no claim is made to recover logs from before registration."
+  ],
+  "credential_boundary": "BrowserToolBridge receives only explicit tool arguments and BrowserWidget references. It has no ProviderConfig, CredentialStore, API key, or provider-request access. Browser profiles are separately selectable through setProfileDirectory.",
+  "upstream_sources": [
+    "apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts",
+    "apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts",
+    "apps/browser/src/shared/karton-contracts/ui/agent/tools/types.ts",
+    "apps/browser/src/backend/env-domains/sandbox-domain-adapter.prompt.md"
+  ]
+}

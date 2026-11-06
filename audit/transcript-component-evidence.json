@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "status": "Private component source frozen; root integration and full native checkpoint verification are pending.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "contractAudit": "audit/transcript-parity-contract.json",
+  "sourceDirectory": "private/transcript-view-stage/src",
+  "api": {
+    "class": "ade::ConversationView : QWidget",
+    "methods": [
+      "setConversation(const QString &id,const QJsonArray &projectedMessages,bool busy)",
+      "clear()",
+      "QString toPlainText() const",
+      "QString conversationId() const",
+      "bool followsOutput() const",
+      "scrollToBottom()"
+    ],
+    "signals": [
+      "linkActivated(QUrl url)",
+      "approvalDecided(QString conversationId,QString messageId,QString partId,QString toolCallId,bool allowed)"
+    ],
+    "input": "AgentEngine::displayMessages() or static displayHistory(rawHistory), per native_core's approved presentation schema. No provider/native replay parsing in the view.",
+    "approvalBoundary": "The view captures conversation epoch and full message/part/tool identity, checks the current rendered approval state, disables both buttons before emitting and rejects retired controls. Host MUST validate those identities and approval-requested state against a fresh Engine projection before approveTool; coalesced rendering can lag Engine state.",
+    "linkBoundary": "Only http, https, path, tab and color links emit. No automatic navigation. Root must dispatch internal schemes through its scoped handlers. Attachment chips have no pretend open action.",
+    "fonts": "Host supplies Geist14px body at100% and scales it once. Card headers and CodeEditor use12px baseline derived from body scale; code uses existing Roboto Mono.",
+    "inspection": "toPlainText provides deterministic content inspection including hidden disclosure bodies, source Markdown/code and attachment names. It is not a serialization format or a clipboard action."
+  },
+  "files": [
+    {
+      "source": "private/transcript-view-stage/src/ConversationView.h",
+      "destination": "src/ui/ConversationView.h",
+      "sha256": "104975CC14E6C648005C512B03780C293BEA537B1EABB57D99B0259BB2F0D484"
+    },
+    {
+      "source": "private/transcript-view-stage/src/ConversationView.cpp",
+      "destination": "src/ui/ConversationView.cpp",
+      "sha256": "8F61698C341A53B89D4E657F0145F6E082FE789465CBF34B1487B8EBD52A2E10"
+    },
+    {
+      "source": "private/transcript-view-stage/src/MarkdownParts.h",
+      "destination": "src/ui/MarkdownParts.h",
+      "sha256": "4E8C6713DAD851114D6C3C68CE4DDFDFE19BF75FC0AE0CB394179F7EC9F7C09B"
+    },
+    {
+      "source": "private/transcript-view-stage/src/MarkdownParts.cpp",
+      "destination": "src/ui/MarkdownParts.cpp",
+      "sha256": "F3AEB059727E5DFD91B06332385FFBD9072B23972D3F75AE8EBD7FF9FE49DA71"
+    },
+    {
+      "source": "private/transcript-view-stage/tests/test_transcript.cpp",
+      "destination": "tests/test_transcript.cpp",
+      "sha256": "7ECA3DD078E84746AE0A38C9B6038695BA734C5F27018F5A01CF20ED5CB125A3"
+    }
+  ],
+  "cmake": {
+    "application": "The root UI_SOURCES glob includes the four new src/ui files; existing ade_editor supplies CodeEditor. Do not compile CodeEditor.cpp twice in the production application.",
+    "minimalTestSources": [
+      "tests/test_transcript.cpp",
+      "src/ui/ConversationView.cpp",
+      "src/ui/ConversationView.h",
+      "src/ui/MarkdownParts.cpp",
+      "src/ui/MarkdownParts.h",
+      "src/ui/AppFonts.cpp",
+      "resources.qrc"
+    ],
+    "links": [
+      "ade_editor",
+      "Qt6::Widgets",
+      "Qt6::Test"
+    ],
+    "includes": [
+      "src",
+      "src/ui"
+    ],
+    "plugin": "qt_import_plugins(test_transcript INCLUDE Qt6::QOffscreenIntegrationPlugin)",
+    "testCommand": "test_transcript -o <build>/Testing/native_transcript.txt,txt",
+    "note": "The test sets QT_QPA_PLATFORM=offscreen before QApplication. Root owns migrating the three older QTextBrowser lookups to ConversationView."
+  },
+  "implemented": [
+    "Stable projected message/part widgets; unchanged documents are retained rather than rebuilding a whole transcript.",
+    "Ordered text/reasoning/tool content and provisional-to-retained widget identity.",
+    "Reasoning starts visible even with empty initial text; measured duration labels; manual expansion/collapse retained per chat/part.",
+    "Consecutive exploration groups, compact successful/active/error read labels with mount-prefix stripping and attachment filename lookup.",
+    "Read→READY contract: previous read remains a non-collapsible 'Read probe.txt' row with drawn eye icon, no disclosure arrow and no generic result body.",
+    "Explicit generic tool preparation/running/approval/success/error/denied/canceled labels; inline call-bound approval controls.",
+    "Native Markdown segments and stable unfinished fenced-code cards; exact original code copying, including Unicode/NBSP/tabs, only after that text part settles.",
+    "Native code syntax via existing CodeEditor; light/dark code surfaces, readable dark gutter/links, header elision and tooltips.",
+    "Right-aligned user bubble and wrapped attachment filename chips.",
+    "100px outer follow policy, immediate wheel-up disable, scroll-end near-bottom enable, anchor restoration and jump-to-bottom; separate compact-card20px following.",
+    "Per-chat disclosure and scroll restoration; frame generation guards and deletion-safe scrollbar callbacks.",
+    "5000ms unchanged busy snapshot stalled hint.",
+    "Raw HTML disabled. Custom document denies resource loading and global provider fallback; replacement image-object handler paints alt-text placeholders without Qt's direct file fallback."
+  ],
+  "verification": {
+    "result": "33 passed,0 failed,2.339 seconds, including init/cleanup and six tool-state data rows.",
+    "toolchain": "Windows11,Qt6.11.2 static,MinGW GCC16.2,offscreen Qt platform",
+    "logs": [
+      "private/transcript-view-stage/component-tests.txt",
+      "private/transcript-view-stage/component-tests.xml"
+    ],
+    "beforeEvidence": [
+      {
+        "file": "private/transcript-view-stage/initial-tests.txt",
+        "finding": "Reasoning failed to collapse after later text; dynamic code palette stayed light. Both fixed and regressed."
+      },
+      {
+        "file": "private/transcript-view-stage/scroll-reentrancy-before.txt",
+        "finding": "Actual access violation0xc0000005 when valueChanged observer deleted the view during a deferred scroll callback. QPointer and owner/epoch guards now pass deletion and chat-switch cases."
+      },
+      {
+        "file": "private/transcript-view-stage/resource-denial-before.txt",
+        "finding": "An actual existing temporary PNG was loaded despite QTextBrowser-level denial. A document override alone was also insufficient because the image handler separately reads a filename. Final fixture uses a default-document positive control and proves the transcript denies the same file."
+      }
+    ],
+    "targetedCases": [
+      "orderedPartsRetainWidgetsAndSelection",
+      "reasoningDefaultsAndManualState",
+      "codeCopyPreservesBytesAndStreamingState",
+      "unfinishedFenceStaysCode",
+      "noImplicitImagesOrUnsafeLinks",
+      "toolStates",
+      "inlineApprovalIsOneDecisionForExactCall",
+      "approvalCallbackMayDeleteView",
+      "scrollIntentAnchorAndJump",
+      "conversationSwitchRestoresDisclosure",
+      "provisionalRetentionDoesNotDuplicate",
+      "removedRowsAreDestroyed",
+      "attachmentChipsAndPlainText",
+      "themeChangesCodePalette",
+      "largeHistoryRetainsUnchangedDocuments",
+      "replacementOfAdjacentFenceKinds",
+      "changedPartRetainsSelectedText",
+      "scrollEndNearBottomRestartsFollowing",
+      "scrollStateSurvivesChatSwitch",
+      "scrollObserverCanDeleteView",
+      "scrollObserverCanSwitchConversation",
+      "fontScaleIsAppliedOnce",
+      "emptyReasoningHeaderAppearsBeforeText",
+      "completedReadBeforeReadyIsCompact",
+      "queuedApprovalKeepsOriginalIdentity",
+      "retiredApprovalCannotEmitAgain"
+    ],
+    "peerReview": "license_review identified the scrollbar callback reentrancy boundary; reproduced and fixed. Parent paired live session identified compact read rendering; reproduced as a component fixture and implemented.",
+    "noClaim": "Component tests do not establish full Stagewise parity, whole-app integration correctness, universal resource safety or zero defects."
+  },
+  "visuals": [
+    {
+      "file": "private/transcript-view-stage/transcript-light.png",
+      "size": [
+        768,
+        950
+      ],
+      "observed": "User bubble/chip, collapsed exploration, Markdown/code, readable error header and inline approval."
+    },
+    {
+      "file": "private/transcript-view-stage/transcript-dark.png",
+      "size": [
+        768,
+        950
+      ],
+      "observed": "Readable code gutter, code strings/keywords and link foreground on dark surface."
+    },
+    {
+      "file": "private/transcript-view-stage/transcript-dark-narrow.png",
+      "size": [
+        380,
+        950
+      ],
+      "observed": "Wrapped prose and user bubble, header elision, approval controls fit. Code retains horizontal scrolling."
+    },
+    {
+      "file": "private/transcript-view-stage/transcript-light-thinking.png",
+      "size": [
+        768,
+        600
+      ],
+      "observed": "Expanded exploration/thinking with body and compact active read filename row."
+    }
+  ],
+  "resourceEvidence": [
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/6.11/src/gui/text/qtextdocument.cpp",
+      "lines": "2000-2017,2117-2188",
+      "finding": "Document resources can invoke fallback providers; default loading can read local files after a parent returns no resource."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/6.11/src/gui/text/qtextimagehandler.cpp",
+      "lines": "52-110",
+      "finding": "The built-in image object handler can separately fall back to reading its filename after an empty resource. The native component replaces this handler."
+    }
+  ],
+  "deliberateDifferences": [
+    "Manual collapse remains respected for a part's lifetime; this is a small usability correction to upstream hook dependency transitions, not a claim of identical hook bugs.",
+    "Resource images are non-loading alt-text placeholders pending an explicit trusted attachment resolver.",
+    "Basic tools other than read use generic native cards; the engine metadata is preserved for later dedicated renderers."
+  ],
+  "remainingGaps": [
+    "QScrollArea is not virtualized;160 unchanged documents were tested, but large-history memory/latency limits and full upstream virtualization parity remain open.",
+    "Qt Markdown is not Streamdown. Full math/Mermaid, all tables/controls, partial path/color/tab preprocessing, image open/download, rich attachment mentions and inline-code font/token parity require more work.",
+    "Native syntax highlighting uses existing CodeEditor, not Shiki's full language coverage or worker debounce strategy.",
+    "Detailed tool-specific cards, read skill/log/memory aliases, exploration statistics wording, shell-session cancel UI, Smart allow, custom diffs and turn-file summaries are incomplete.",
+    "User-message editing, checkpoint restore, structured runtime error retry/provider actions and their associated operation safeguards are not implemented in this component.",
+    "Pulse/shimmer animation and exact between-step/loading presentation remain gaps; active and stalled states currently use text labels.",
+    "Internal link dispatch and actual trusted image resolution are host work; no fake action is exposed.",
+    "Shared Engine/view integration, live streamed provider comparisons, and full application light/dark/zoom renders remain root validation tasks."
+  ]
+}

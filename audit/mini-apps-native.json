@@ -1,0 +1,114 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "implementation": [
+    "src/apps/AppResourceStore.cpp",
+    "src/apps/MiniAppPage.cpp",
+    "src/apps/MiniAppHost.cpp",
+    "src/browser/WebViewAppOptions.h",
+    "src/browser/browserwidget.cpp",
+    "src/browser/BrowserToolBridge.cpp",
+    "src/sandbox/SandboxHost.cpp",
+    "src/sandbox/worker_main.cpp"
+  ],
+  "architecture": "Native Qt widgets and C++ hosts; custom-scheme WebView2 renders the plugin HTML inside a small compatibility iframe wrapper. The product application shell and JavaScript worker are native Qt/C++ plus statically linked QuickJS, without Electron or Node.",
+  "contract": {
+    "apps": "API.openApp(appId,{pluginId?,title?,target:tab,setActive?}) resolves {tabId}. Opening the active same app refreshes/reuses it. closeApp closes the active app. sendMessage targets only that agent's active matching app/plugin. onMessage returns unsubscribe and persists across tool calls.",
+    "cdp": "API.onCDPEvent(tabId,event,callback) returns unsubscribe; listeners remain alive after the setup IIFE returns. Real CDP events can update globalThis and invoke API.sendMessage while no tool is running. Tab teardown ends its CDP subscriptions.",
+    "events": "Native-issued context generation UUIDs bind all listeners and background RPCs. Reset/cancel invalidates the generation and removes subscriptions, broker calls, apps and credential handles before late replies can settle new work. Other agents remain active. Ordinary callback exceptions are logged; infinite idle callbacks reset the affected context.",
+    "app_resources": "app://plugins/<plugin>/<app>/... and app://agents/<agent>/<app>/... use one host-authorized root per view, GET/HEAD only. Exact identity and decoded path validation reject traversal, foreign roots, Windows device/ADS syntax, encoded separators and oversized/missing assets. Windows opens and validates the final canonical file handle, then reads that same handle to avoid junction/path races.",
+    "messages": "The compatibility wrapper accepts only its exact iframe window and expected app origin. The native receiver checks WebView2-provided Source equals its nonce-scoped ade-app://preview URL, plus the per-navigation nonce and channel. Direct iframe chrome.webview messages cannot impersonate the parent. Delivery uses JSON, never interpolated user code.",
+    "profiles": "Separate WebView2 profile paths per agent/plugin/app protect cookies and local storage despite shared app://plugins scheme origin. Host-only adeOwnerAgentId protects CDP and tab discovery; regular browser tabs remain shared.",
+    "resource_policy": "Mini-app CSP permits local inline/self scripts and styles, local/data/blob images and local fonts, with same-origin connect only. Child frames, forms, top-level external navigation and native browser permissions/downloads are blocked. This is narrower than arbitrary upstream HTML/network behavior and is documented as a compatibility gap.",
+    "bounds": {
+      "asset_bytes": 16777216,
+      "message_bytes": 131072,
+      "queued_app_messages": 64,
+      "queued_app_bytes": 1048576,
+      "open_previews_per_agent": 16,
+      "listeners_per_worker_context": 64,
+      "listeners_per_host": 128,
+      "queued_events_per_listener": 64,
+      "queued_event_bytes": 1048576,
+      "one_event_bytes": 262144,
+      "idle_callback_sync_ms": 1000,
+      "idle_broker_deadline_ms": 45000,
+      "iframe_ready_deadline_ms": 20000,
+      "unbound_tab_deadline_ms": 10000
+    }
+  },
+  "proof": [
+    {
+      "suite": "tests/test_app_resources.cpp",
+      "result": "6 passed, 0 failed",
+      "log": "test-results/app-resource-tests.txt",
+      "scope": "Traversal, exact identities, HEAD/MIME/size limits and an actual NTFS junction pointing outside the root."
+    },
+    {
+      "suite": "tests/test_mini_apps.cpp",
+      "result": "6 passed, 0 failed",
+      "log": "test-results/mini-app-tests.txt",
+      "scope": "Real custom scheme iframe message queue/ACK, profile-localStorage isolation, foreign app/file requests, native-source spoof rejection, native tab refresh/close/cancel/destruction."
+    },
+    {
+      "suite": "tests/test_sandbox.cpp",
+      "result": "22 passed, 0 failed, 4.285 seconds",
+      "log": "test-results/sandbox-app-tests.txt",
+      "scope": "Persistent idle events, background sends, unsubscribe, throw/infinite loop behavior, bounded queue, agent/generation isolation, synchronous cancellation and artifact junction/signal-order regressions. Idle attachments preserve writes and associate metadata only with an active same-agent/context tool."
+    },
+    {
+      "suite": "tests/test_sandbox_apps.cpp",
+      "result": "4 passed, 0 failed, 2.087 seconds",
+      "log": "test-results/sandbox-app-integration.txt",
+      "scope": "Pinned Figma selection recipe using real local HTTP fixture, WebView2 CDP binding events, idle QuickJS callback, actual packaged iframe DOM/ACK and malicious custom-data literal-text regression. Independent negative foreign-agent tab/CDP checks."
+    },
+    {
+      "suite": "tests/test_sandbox_network.cpp",
+      "result": "12 passed, 0 failed",
+      "log": "test-results/sandbox-app-network-baseline.txt",
+      "scope": "Existing network/credential behavior preserved after persistent event/context changes."
+    },
+    {
+      "suite": "tests/test_browser_tools.cpp",
+      "result": "24 passed, 0 failed",
+      "log": "test-results/browser-miniapp-baseline.txt",
+      "scope": "Existing CDP/log/permissions/data-clear/download behavior preserved after custom scheme additions."
+    }
+  ],
+  "figma": {
+    "fixture": "tests/test_sandbox_apps.cpp",
+    "package": "assets/plugins/figma",
+    "provenance": "assets/plugins/PROVENANCE.json",
+    "exact_path": "Local figma.currentPage.selection mutation -> Runtime.bindingCalled -> API.onCDPEvent idle callback -> API.sendMessage -> packaged Figma badge DOM -> iframe ACK -> next sandbox IIFE. Unsubscribe and close stop later selection updates.",
+    "packaged_fix": "Custom data is rendered with createElement/pre.textContent/replaceChildren instead of innerHTML. Fixture confirms <img onerror> text is literal with no created image or executed injected variable.",
+    "inspection": "Packaged app runs as an out-of-process iframe. Test attaches to its CDP target with Target.attachToTarget and Target.sendMessageToTarget; page-level executionContextId is not a valid way to inspect that frame.",
+    "service_limit": "No actual Figma account/service was accessed. The real Figma web page exposing the recipe's figma.currentPage API is not established by this controlled fixture.",
+    "package_status": "Activated in PluginCatalog and qrc after the recipe fixture passed; materialized nested resource extraction and hashes verified by the separate plugin suite."
+  },
+  "concrete_fixes": [
+    "Custom scheme registration initially used a NuGet SDK version for TargetCompatibleBrowserVersion and WebView2 environment creation failed 0x80070002; corrected to the runtime product version.",
+    "Source-only app messaging checks were insufficient for shared browser registry access; agent-scoped tab discovery and CDP dispatch now enforce native owner identity.",
+    "Old-generation late event/RPC delivery cannot settle a replacement agent context.",
+    "Artifact signals are emitted before RPC success so root attachment adoption precedes tool result completion."
+  ],
+  "known_gaps": [
+    "Writable apps/ authoring is now covered by audit/app-authoring-native.json; full Node filesystem APIs and additional mounts remain incomplete.",
+    "Arbitrary remote scripts/resources and embedded frames are intentionally outside current mini-app CSP; supplied Figma app uses local assets.",
+    "Full upstream Node/Web API compatibility and HTTPS importModule remain incomplete.",
+    "Async continuation ownership for event callbacks overlapping active calls is not a complete AsyncLocalStorage equivalent; tested recipe uses synchronous event callback with a fire-and-forget app send.",
+    "Profile data for apps is separated from ordinary browser clearing; any app-specific data management UI is a separate feature."
+  ],
+  "sources": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/app-protocol.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/index.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/pages/lib/iframe-app-bridge.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/pages/routes/preview/$appId.tsx",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/figma/SKILL.md",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/figma/apps/figma-app/index.html",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2environmentoptions4",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2customschemeregistration",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2webmessagereceivedeventargs",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2_22"
+  ]
+}

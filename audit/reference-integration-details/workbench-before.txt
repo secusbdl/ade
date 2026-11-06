@@ -1,0 +1,37 @@
+********* Start testing of WorkbenchLayoutTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkbenchLayoutTest::initTestCase()
+QWARN  : WorkbenchLayoutTest::freshChatHasNoContent() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : WorkbenchLayoutTest::freshChatHasNoContent() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::freshChatHasNoContent() This plugin does not support setting window masks
+FAIL!  : WorkbenchLayoutTest::freshChatHasNoContent() Compared values are not the same
+   Actual   (tabs(window)->count()): 1
+   Expected (0)                    : 0
+D:/age/ADE/private/workbench-layout-stage/tests/test_workbench_layout.cpp(42) : failure location
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light) This plugin does not support setting window masks
+FAIL!  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light) Compared values are not the same
+   Actual   (image.pixelColor(point)): #ffeff4fa
+   Expected (expected)               : #fffdfdfd
+D:/age/ADE/private/workbench-layout-stage/tests/test_workbench_layout.cpp(74) : failure location
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark) This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark)
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(ws1/probe.txt) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(ws1/probe.txt) This plugin does not support setting window masks
+FAIL!  : WorkbenchLayoutTest::compactReadMountLabels(ws1/probe.txt) 'found' returned FALSE. (Compact label did not strip ws1/probe.txt)
+D:/age/ADE/private/workbench-layout-stage/tests/test_workbench_layout.cpp(78) : failure location
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(w1/probe.txt) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(w1/probe.txt) This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::compactReadMountLabels(w1/probe.txt)
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(w123abcf/probe.txt) This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::compactReadMountLabels(w123abcf/probe.txt) This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::compactReadMountLabels(w123abcf/probe.txt)
+PASS   : WorkbenchLayoutTest::cleanupTestCase()
+Totals: 5 passed, 3 failed, 0 skipped, 0 blacklisted, 1002ms
+********* Finished testing of WorkbenchLayoutTest *********

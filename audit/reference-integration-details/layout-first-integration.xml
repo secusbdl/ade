@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="10"
+	failures="2"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="72"
+	timestamp="2026-11-06T12:28:52"
+	>
+	<testcase name="native_workbench_layout" classname="native_workbench_layout" time="6.77748" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workbench_helpers" classname="native_workbench_helpers" time="0.136198" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sidebar_model" classname="native_sidebar_model" time="0.0327413" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sidebar_navigation" classname="native_sidebar_navigation" time="3.96414" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_main_chrome" classname="native_main_chrome" time="2.66337" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_host" classname="native_git_host" time="49.1963" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui" classname="native_ui" time="1.50853" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui_audit" classname="native_ui_audit" time="4.97247" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="reference_file_mutations" classname="reference_file_mutations" time="1.7222" status="run">
+		<properties>
+			<property name="cmake_labels" value="experimental;reference"/>
+		</properties>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="reference_git_usage" classname="reference_git_usage" time="1.81375" status="run">
+		<properties>
+			<property name="cmake_labels" value="experimental;reference"/>
+		</properties>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,44 @@
+{
+  "component": "libvterm",
+  "version": "0.3.3 + ADE bounded-input patch",
+  "upstream": "https://www.leonerd.org.uk/code/libvterm/",
+  "archive_url": "https://www.leonerd.org.uk/code/libvterm/libvterm-0.3.3.tar.gz",
+  "archive_sha256": "09156f43dd2128bd347cbeebe50d9a571d32c64e0cf18d211197946aff7226e0",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2008 Paul Evans <leonerd@leonerd.org.uk>",
+  "license_path": "libvterm-0.3.3/LICENSE",
+  "modifications": [
+    {
+      "path": "src/vterm_internal.h",
+      "original_sha256": "d283425a4bc343d351f858dfd32840320f25701fbbca06eb44d0d2040bf6e7e9",
+      "patched_sha256": "ad315d803445de3bff9e7886075fb87c4825f7bd381dfd4badf6b699ba4c386c"
+    },
+    {
+      "path": "src/parser.c",
+      "original_sha256": "237220e912ab95795f78c013d6734b88080b00595010dab87d11980c24d025af",
+      "patched_sha256": "b0d42f1857fa0cd32cafc949df9914adf135e8e7b0e353479e03fc25bb79a6b8"
+    },
+    {
+      "path": "src/state.c",
+      "original_sha256": "8f6504f091a91194fa4e972a142d586fb96bd8e7a15b6d26747323f1fe48ff38",
+      "patched_sha256": "665ff065d4436232f0abee1432aff45109417b3d3c95d81a4affbfe630e6116b"
+    }
+  ],
+  "patch": "libvterm-hardening.patch",
+  "patch_reason": [
+    "Original CSI parsing writes beyond fixed16-argument array for a long semicolon sequence. Overlong CSI now enters discard-until-final state.",
+    "Saturate CSI/OSC numeric parameters below31-bit reserved flag/missing bits, avoiding signed Windows long overflow.",
+    "Avoid null-pointer subtraction and fragment dispatch before an OSC/DCS string body starts.",
+    "Initialize unknown cursor-shape reply fallback.",
+    "Ignore REP before a printable glyph: its zero-width repeat loop otherwise never advances.",
+    "Bound retained combining characters across chunks to the screen cell capacity instead of unbounded buffer growth."
+  ],
+  "validation_scope": "Targeted native regression coverage; not a complete security proof or exhaustive standards conformance audit.",
+  "runtime": "C99 compiled into static ade_vterm library; no external DLL or interpreter",
+  "related_primary_sources": [
+    "https://learn.microsoft.com/en-us/windows/console/creating-a-pseudoconsole-session",
+    "https://learn.microsoft.com/en-us/windows/console/createpseudoconsole",
+    "https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects",
+    "https://github.com/microsoft/node-pty/blob/main/src/win/conpty.cc"
+  ]
+}

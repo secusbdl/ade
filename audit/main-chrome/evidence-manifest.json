@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "status": "private source frozen; ready for parent migration and integrated verification",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "productionEdited": false,
+  "sharedBuildUsed": false,
+  "toolchain": {
+    "qt": "6.11.2 static",
+    "compiler": "MinGW GCC16.2.0",
+    "platform": "Windows11",
+    "buildDirectory": "private/main-ui-stage/build"
+  },
+  "changes": [
+    "Persisted outer splitter with true zero collapse, accessible reopen, logical176..672 bounds and half-window cap,18% reset, zoom preservation.",
+    "Fresh content70% split only; restored splitter remains authoritative.",
+    "Composer wrapping selector column plus32px right action rail; compact wrapping input capped256px; draft and attachment behavior preserved.",
+    "IdleStop hidden, emptySend disabled, busyStop cancels, Ctrl+B toggle and Ctrl+K reopen/focus search.",
+    "Elided sidebar titles with complete tooltips and no horizontal scrolling.",
+    "Preserve QObject destroyed observers; stop managers, destroy MiniAppPage owners before ordinary BrowserWidget children while MainWindow members live."
+  ],
+  "files": [
+    {
+      "path": "src/ui/AppStyle.cpp",
+      "baselineSha256": "57874602d940fa4968738fa745660db62e9d78437715fbe7206f5c1e11a25742",
+      "stagedSha256": "16435e011bf1fe41485a1cabb1ef3cdca4db8301fb4a04ae1e1fc18083fac751"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "baselineSha256": "6f93040e8b1588d4094c204a9966a9fb2e0aee72e1949f029459999684ef7aa1",
+      "stagedSha256": "c9c0d5cf8ab5e0526ee10b17f3251b04fca3f2955b2732b40834d19f2ec89b2a"
+    },
+    {
+      "path": "src/ui/FlowLayout.h",
+      "baselineSha256": null,
+      "stagedSha256": "9fc46c92336b48b591e2ed5e5d1dacd5a93b7e89b6bc14a42fa2a1d45f57c2b3"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "baselineSha256": "03ef3e2c4fece21f1d8d37107529789156f1da170d61aeb6bcea8a9f0d7a249f",
+      "stagedSha256": "065596880e93d48a4ecd7c352353ab479934ee0b673b02918613fbeb975ac1ed"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "baselineSha256": "6efa21359e98e870a5fe87d13c8071c2916bbcf630b5e5c4fbd815bb7dc6c4f4",
+      "stagedSha256": "458d03eea54c99f79a41a9ed27aee00095406fffea640d4744ce5d13e71dd092"
+    },
+    {
+      "path": "src/ui/SidebarSplitter.h",
+      "baselineSha256": null,
+      "stagedSha256": "10c2e526a15b732764e28e9c1a58b4deb5fd05ebda01ee91b6faaf0e8d558355"
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "baselineSha256": null,
+      "stagedSha256": "77e72a7eafb3f525f5627843fc8dfdf9c46dd1bba774cede273f2c6b1ad21df4"
+    },
+    {
+      "path": "tests/test_ui_audit.cpp",
+      "baselineSha256": "87b96f146caf49c0314a3f642394494445309bd250dc393be2250ea8f7530dbc",
+      "stagedSha256": "72eeec1ec11ff3558e4b1711ed648c63c56a23cbde6e4b8c5a7f529022c112d6"
+    }
+  ],
+  "tests": {
+    "chrome": {
+      "passed": 17,
+      "failed": 0,
+      "durationMs": 2675,
+      "report": "evidence/chrome-final.txt"
+    },
+    "ui": {
+      "passed": 17,
+      "failed": 0,
+      "durationMs": 6482,
+      "report": "evidence/ui-final.txt"
+    },
+    "conversations": {
+      "passed": 26,
+      "failed": 0,
+      "durationMs": 16203,
+      "report": "evidence/conversations-final.txt"
+    },
+    "browser": {
+      "passed": 14,
+      "failed": 0,
+      "durationMs": 7765,
+      "report": "evidence/browser-after.txt"
+    }
+  },
+  "regressions": [
+    {
+      "issue": "Wildcard BrowserWidget disconnect removes Qt stylesheet destroyed hook, producing access violation on subsequent styled MainWindow construction.",
+      "before": "evidence/before-teardown-traced.txt",
+      "stack": "evidence/before-teardown-symbolized.json",
+      "exitCode": "0xc0000005",
+      "resolvedStack": [
+        "updateObjects(QList<QObject const*> const&)+0xe9",
+        "QStyleSheetStyle::repolish(QApplication*)+0x422",
+        "ade::MainWindow::applyPreferences()+0xa59",
+        "ade::MainWindow::MainWindow(QString,QWidget*)+0x766",
+        "MainChromeTest::repeatedShownWindowTeardownPreservesStyleObservers()+0xd6"
+      ],
+      "after": "chrome repeated six shown-window close cycles; UI three actual live app owner/browser destruction cycles"
+    },
+    {
+      "issue": "Baseline sidebar toggle retains185px; content default40.29%; idleStopvisible; composermax220 rather than256.",
+      "before": [
+        "evidence/before.txt",
+        "evidence/before-split.txt",
+        "evidence/before-idle.txt",
+        "evidence/before-input.txt"
+      ],
+      "after": "evidence/chrome-final.txt"
+    },
+    {
+      "issue": "Intermediate private direct descendant-browser teardown double-deleted MiniAppPage-owned browser. Broader existing UI fixture exposed heap corruption; owner-first deletion fixed it before handoff.",
+      "before": "evidence/ui-after.txt",
+      "observedExitCode": "0xc0000374",
+      "after": "evidence/ui-final.txt"
+    },
+    {
+      "issue": "Visual inspection caught short wrapping draft scrollbars in first private layout. Explicit horizontal-scroll policy fixes short text clipping.",
+      "before": "evidence/render-before-scroll-fix/",
+      "after": "shortWrappedDraftHasNoScrollbars plus final PNGs"
+    }
+  ],
+  "intentionalExistingTestChanges": [
+    "Composer max220 assertion becomes256.",
+    "Successful attachment-only send waits for Stop hidden and verifies emptySenddisabled, preserving provider payload/reference checks."
+  ],
+  "renders": {
+    "generator": "tests/render_main_chrome.cpp",
+    "platform": "Windows native, WA_DontShowOnScreen; waits for actual embedded browser ready; no external URL/provider",
+    "files": [
+      "renders/light.png",
+      "renders/dark.png",
+      "renders/narrow.png",
+      "renders/zoom130.png",
+      "renders/collapsed.png",
+      "renders/long-input.png"
+    ],
+    "measurements": "renders/measurements.json",
+    "inspection": "All variants inspected. QWidget grab validates native chrome; it is not a compositor capture of embedded WebView pixels. Windows display DPR1.5, widget geometry remains logical."
+  },
+  "sourceReferences": {
+    "sidebarConfig": {
+      "path": "apps/browser/src/ui/screens/main/_components/sidebar-panel-config.ts",
+      "lines": [
+        1,
+        7
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/_components/sidebar-panel-config.ts#L1"
+    },
+    "sidebar": {
+      "path": "apps/browser/src/ui/screens/main/sidebar/index.tsx",
+      "lines": [
+        43,
+        106
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/index.tsx#L43"
+    },
+    "sidebarCollapse": {
+      "path": "apps/browser/src/ui/screens/main/_components/sidebar-collapsed-context.tsx",
+      "lines": [
+        11,
+        65
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/_components/sidebar-collapsed-context.tsx#L11"
+    },
+    "rootLayout": {
+      "path": "apps/browser/src/ui/screens/main/index.tsx",
+      "lines": [
+        54,
+        150,
+        305,
+        404
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/index.tsx#L54"
+    },
+    "panelFooter": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/panel-footer.tsx",
+      "lines": [
+        819,
+        866,
+        1911,
+        2009
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/panel-footer.tsx#L819"
+    },
+    "chatInput": {
+      "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-input.tsx",
+      "lines": [
+        410,
+        418,
+        472,
+        488,
+        810,
+        917,
+        947,
+        1042
+      ],
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-input.tsx#L410"
+    }
+  },
+  "integration": {
+    "patch": "main-ui.patch",
+    "lifetimeOnlyAlternative": "window-lifetime-only.patch (alternative subset; do not apply twice)",
+    "cmake": "integration-cmake.txt",
+    "seam": "Current QTextBrowser conversationView retained. Parent will rebase typed ConversationView separately. No hidden compatibility child."
+  },
+  "limits": [
+    "This is a bounded native chrome slice, not complete Stagewise visual/behavior parity.",
+    "Full command center, real age/workspace grouping, pinning, queue/pending-question/Smart approval, context selection and content-hide/file-tree panes remain separate work.",
+    "Centered max768 footer/empty-state suggestions and complete titlebar/nav/tab styling remain gaps.",
+    "Very long model names still exceed a narrow editable combo; complete label remains available by tooltip/search/popup. Controls no longer overlap or get squeezed by permission row.",
+    "WebView runtime processes can retain temporary profile files briefly after native destruction; some Qt temporary-dir warnings occur. Test directories are unique and no user profile is touched.",
+    "No live provider credentials, real websites, full restart of packaged application or full integrated suite exercised here."
+  ]
+}

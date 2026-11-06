@@ -1,0 +1,46 @@
+# Structured file transformer evidence
+
+Date: 2026-11-05. Reference: Stagewise 1.31.1, commit `17a0123a0e896885465df36169457199d5225eb5`. This is an incremental native implementation, not a full attachment-parity claim. No real user files, provider requests, credentials, remote documents, or external service actions were used.
+
+## Attribution and dependencies
+
+`src/attachments/FileTransformer.{h,cpp}`, `FileLanguageEntries.inc` and `FileBinaryExtensions.inc` adapt the algorithms and tables from `upstream/stagewise/packages/agent-core/src/file-read-transformer`. Source files and hashes are listed in `structured-file-transformer-provenance.json`. The pinned repository's AGPLv3 license remains in the root `LICENSE`; the upstream checkout and notices are unchanged. No third-party implementation or new runtime dependency was downloaded or added. The pure module uses C++20 and QtCore; tests add QtTest.
+
+## Exported API and integration
+
+`FileTransformer::readParams` parses the current `read` tool's optional one-based inclusive line/page ranges and preview flag. `listParams` parses the current `ls` depth, default zero. The pinned ls schema permits nonnegative fractional depth, so the value type is `std::optional<double>`, while line/page values must be positive integers. Parsing failure does not modify the output parameter. Unrelated keys are ignored, as in the pinned Zod object parsing. Tool name `readFile` is historical: migration v006 renames it to `read`.
+
+`fromBytes(bytes, descriptor, params, limits, cancelled)` and `fromDirectory(manifest, descriptor, params, limits, cancelled)` are pure synchronous transforms. They neither resolve paths nor open files, run commands, or access credentials. The caller owns captured bytes, directory manifests and cancellation-flag lifetime. A directory manifest must be collected by an independently scoped, bounded host reader; this module does not grant traversal authority.
+
+`FileTransformResult` provides canonical text/image parts, string-valued metadata, normalized requested parameters, optional effective parameters, preview promotion, truncation, supported/error status and `coverageKnown`. A hard body cut or failure sets `coverageKnown=false`; hard cuts clear line/page/depth claims. Callers must check this before treating `delivered()` as coverage. `wrappedParts` adds source-style file/dir metadata and preview/content envelopes without mutating input parts. It preserves existing image parts verbatim.
+
+Root integration defines `ade_file_transformer` with QtCore, links `ade_attachments` to it, and registers `tests/test_file_transformer.cpp` as `native_file_transformer`. The standalone module avoids a core/attachments dependency cycle. The current `read`/`ls` ToolExecutor is not changed by this slice; its integration remains separate from the pure API.
+
+`AttachmentPipeline::prepare` now uses the module for UTF-8 text, Markdown, SVG and binary placeholders. Workspace references request preview; uploaded `att/` references request full content. Existing image encoding/model adaptation remains separate, dispatched for the source's eight raster extensions. Unknown or differently named image files no longer get an accidental image decoder merely from byte sniffing. PDF/archive/RAW/disk transforms explicitly remain unavailable.
+
+`AttachmentStore::read` gains an optional trailing `QDateTime *modified`. On Windows, modification time comes from the same validated opened handle used for byte reads. Capture stores `metadata.pathMetadata[path] = {size, modified}` beside attachments/pathReferences. Preparation validates the captured byte length and canonical UTC timestamp. History without this new field remains readable and omits unknown modification time. It does not substitute the current source or LRU snapshot file's timestamp. Root/other-agent changes forward this metadata through AgentEngine's attachment submit/completion seams and UI/smoke/runtime callers. Snapshot/hash authorization, same-handle scope, byte bounds and original message history remain intact.
+
+## Source behavior covered
+
+- Numbering uses `N|text`; CRLF carriage returns and a trailing empty line remain present. UTF-16 character counts match ordinary JavaScript string length. Full and range reads use the source 40,000-character soft budget, counting each line plus one newline; the first selected line is always included before the independent hard bound.
+- Small previews promote to full when captured bytes are at most 6,144 and decoded line count at most 150. Promotion occurs before extension dispatch and preserves explicit ranges while clearing preview.
+- Source language metadata includes the 57 pinned extension mappings; known-binary fallback includes the 83 pinned extensions. Office formats remain explicit binary placeholders rather than invented document extraction.
+- Markdown preview contains ATX headings and section ranges plus the first 15 numbered lines. Fenced-code headings are included and Setext headings ignored, as in the source. Full/range Markdown and all SVG content remain text. The section-span algorithm uses a linear stack for the same ordinary heading boundaries instead of the source's quadratic nested scan.
+- Directory formatting uses directories first, per-level visible caps 20/10/5 and 200 total entries. Internal transform default depth is 2; current `ls` parser default is 0; preview forces 0. Metadata depth is requested depth plus one, including the pinned fractional-depth behavior. The source's generic `truncated at 200 entries` notice also appears after a per-level cap.
+- Wrappers merge opening/closing text into first/last text parts, preserve media parts, and report effective ranges. Names and file contents remain untrusted context, never tool authorization.
+
+## Native bounds and declared differences
+
+Default input bound is 64 MiB, 100,000 text lines, 10,000 manifest nodes and depth 32. The text body is capped at 65,536 UTF-16 characters. Limits are validated; bounded custom values are accepted. Cancellation is checked around text transforms and throughout Markdown/manifest traversal. The module is synchronous, not a promise of immediate preemption during a bounded Qt decode/sort.
+
+`maxOutputChars` caps the inner text body, including binary/deferred-format placeholder bodies. XML envelopes add the descriptor (maximum 4,096 characters per path/name) and generated metadata. Thus it is not a cap on the final complete envelope or an entire multi-attachment request. Errors are bounded fixed messages, separately identified by `error`. Hard cuts preserve surrogate boundaries and explicitly mark partial coverage. A one-character custom bound yields only a partial truncation marker, with coverage still unknown.
+
+Intentional deviations: strict whole-buffer UTF-8 validation and NUL detection replace the source's first-8-KiB NUL/round-trip-length heuristic; metadata wrapper values are escaped; newline/tab/backslash directory names are escaped for inert display. Directory collation uses a fixed en-US Qt collator; accented/case ordering has not been paired against every reference runtime locale. Qt's Unicode regex whitespace behavior is not claimed byte-identical to every JavaScript edge case. Metadata field ordering follows QJsonObject, not source object insertion order.
+
+There is no AST outline yet; source code previews use numbered text. PDF/archives/RAW/ISO/DMG, special textclip/DOM element treatment, directory-reference persistence and UI, persistent transformed/encoded caches, model-derived read budgets, and advanced media viewer behavior remain gaps tracked in `attachment-transform-plan.md`. Source binary placeholders mention the sandbox `fs.readFile` API; actual raw binary broker delivery is owned by the separate apps/binary integration and is not established by these transform fixtures. Existing raster decoding/encoding bounds and codec gaps remain unchanged apart from source extension dispatch.
+
+## Verification
+
+Production-path independent MinGW-static build: `private/structured-read-stage/build/test_file_transformer.exe`; **32 passed, 0 failed**, `test-results/file-transformer-tests.{txt,xml}`. Covers current parameter schemas, invalid atomic parses, CRLF/empty/range/EOF behavior, soft budget, six promotion boundaries, Markdown quirks, SVG, BOM/Unicode/invalid UTF-8, binary/advanced dispatch, directory ordering/depth/caps, malformed manifests, metadata escaping, media preservation, cancellation and hard/body/envelope bounds. Long-path binary-placeholder cap bypass was found in read-only review and fixed before handoff.
+
+Production attachment pipeline independent build: `private/attachments-probe-build/test_attachments.exe`; **23 passed, 0 failed**, `test-results/attachments-tests.{txt,xml}`. This includes actual capture/prepare metadata and content, JSON round trip plus fork after source deletion, legacy metadata omission, six malformed-metadata cases, immutable history, signed/tool pairing, four native provider serialization/engine fixture paths, cancellation and model fallback. All network fixtures are local fake providers. These pass counts apply to their tested scope; no universal defect-free or full-parity claim follows.

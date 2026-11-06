@@ -1,0 +1,29 @@
+********* Start testing of UiAuditTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UiAuditTest::initTestCase()
+PASS   : UiAuditTest::blockedDraftRestoreStillUpdatesComposerHeight()
+QWARN  : UiAuditTest::newDraftRetainsInheritedModelAfterRestart() QFont::setPointSize: Point size <= 0 (-1), must be greater than 0
+PASS   : UiAuditTest::newDraftRetainsInheritedModelAfterRestart()
+PASS   : UiAuditTest::unmatchedModelSearchCannotSendPreviousSelection()
+PASS   : UiAuditTest::malformedCredentialRecordCannotBeOverwritten()
+PASS   : UiAuditTest::failedDraftSavePreventsSilentWindowClose()
+FAIL!  : UiAuditTest::attachmentDraftsStayWithChatAndSurviveRestart() Compared values are not the same
+   Actual   (window.currentSessionId()): "c61e0305-9da5-4c3f-a06a-b73c0f1029c9"
+   Expected (firstId)                  : "c65f2f52-9325-40db-b36d-3ead8e80ae8a"
+D:/age/ADE/tests/test_ui_audit.cpp(138) : failure location
+PASS   : UiAuditTest::clipboardAndDropMimeBecomeAttachments()
+PASS   : UiAuditTest::invalidAttachmentDraftStorageIsPreserved()
+PASS   : UiAuditTest::failedSendSaveKeepsDraftAndDoesNotRequestProvider()
+PASS   : UiAuditTest::attachmentOnlyMessageReachesProviderAndKeepsReferences()
+PASS   : UiAuditTest::missingAttachmentKeepsDraftWithoutSending()
+PASS   : UiAuditTest::changingWorkspacePreservesSelectedDraftFile()
+PASS   : UiAuditTest::applicationStylePreservesCodeFontAndZoom()
+QWARN  : UiAuditTest::appThemeAndManualClosureFollowNativeWindow() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-mOsmYM" most likely due to the presence of read-only files.
+PASS   : UiAuditTest::appThemeAndManualClosureFollowNativeWindow()
+QWARN  : UiAuditTest::liveAppWindowTeardownPreservesOwner() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-TQyUzJ" most likely due to the presence of read-only files.
+QWARN  : UiAuditTest::liveAppWindowTeardownPreservesOwner() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-mXErOn" most likely due to the presence of read-only files.
+QWARN  : UiAuditTest::liveAppWindowTeardownPreservesOwner() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_ui_audit-lPKahd" most likely due to the presence of read-only files.
+PASS   : UiAuditTest::liveAppWindowTeardownPreservesOwner()
+PASS   : UiAuditTest::cleanupTestCase()
+Totals: 16 passed, 1 failed, 0 skipped, 0 blacklisted, 4820ms
+********* Finished testing of UiAuditTest *********

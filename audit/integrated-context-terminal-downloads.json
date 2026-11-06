@@ -1,0 +1,27 @@
+{
+  "recordedUtc": "2026-11-05T09:29:20.2900459Z",
+  "suiteCount": 14,
+  "failures": 0,
+  "elapsedSeconds": 50.85,
+  "report": "test-results/integrated-context-terminal-downloads.xml",
+  "executable": "out/context-live/ADE.exe",
+  "sha256": "2F9232A5D971A3872883895F81D7B602491547818309401733774338F2F134AB",
+  "scope": [
+    "native_core",
+    "native_context",
+    "native_ui",
+    "native_ui_audit",
+    "native_editor",
+    "native_sandbox",
+    "native_runtime",
+    "native_fonts",
+    "native_browser",
+    "native_settings",
+    "native_browser_tools",
+    "native_terminal",
+    "native_downloads",
+    "native_settings_audit"
+  ],
+  "excluded": "NetworkBroker is under separate component verification and is not integrated into this application checkpoint.",
+  "fullParity": false
+}

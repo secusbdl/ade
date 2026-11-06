@@ -1,0 +1,68 @@
+{
+  "status": "Planned tests only; none of these new mutation fixtures have been executed.",
+  "environment": "Native QtTest, temporary owned local files/SQLite, no provider or external network, test-local deterministic OS boundary/failure injection. Shared production build remains untouched.",
+  "cases": [
+    {
+      "group": "source write/multiEdit semantics",
+      "checks": [
+        "Fence stripping exact opening/closing/trailing-newline cases and 4000-character threshold",
+        "Sequential dependent edits, first/all occurrence counts, unmatched middle edit skipped, all-unmatched successful zero result",
+        "Empty old_string documented decision; nonempty repeated Unicode/CRLF/BOM text preserved",
+        "Missing target, directory target, invalid UTF-8 and byte limits produce explicit outcomes without partial writes"
+      ]
+    },
+    {
+      "group": "single-file operations",
+      "checks": [
+        "Copy missing source error; file into existing directory basename; overwrite destination captures old bytes; source unchanged on copy",
+        "Move records destination creation/overwrite plus source deletion; forced cross-volume-style fallback does not delete source before verified destination",
+        "Delete missing/empty/text/binary file; undo restores existence and exact bytes",
+        "Case-only rename, same-file/hardlink self-copy and source/destination alias identity checks"
+      ]
+    },
+    {
+      "group": "directory operations",
+      "checks": [
+        "Merge into existing destination preserving unrelated files; overwrite conflicts recover old bytes",
+        "Nested move/delete undo restores all source files and removes only created destination files",
+        "More than 50 files tracks complete batch; move 60 files has 120 per-file deltas",
+        "Empty directories and nested topology survive undo; directory-to-file rejects",
+        "Preflight batch/byte/depth limit leaves source and destination unchanged; no post-mutation record dropping"
+      ]
+    },
+    {
+      "group": "scope and isolation",
+      "checks": [
+        "ws1 to apps and apps to ws1; apps-only operation without workspace",
+        "Read-only att can be copy source only once supported; move/delete/write/read-only destination all reject",
+        "Two agents with same paths/provider tool IDs remain isolated; shared workspace operations retain contributor attribution",
+        "Queued mutation/undo binds original mount, never replacement ws1; canonical same-root reuse works",
+        "Retarget junction before open, after validation and before rename/delete; child links and ancestor replacements cannot touch outside fixture",
+        "Mount root/ADS/device/UNC/traversal and hardlink policy explicit"
+      ]
+    },
+    {
+      "group": "journal and recovery",
+      "checks": [
+        "Missing and empty snapshots distinct; binary and > 2 MiB files roundtrip by digest",
+        "SQLite/blob write failure before commit leaves filesystem unchanged; failure at each later step yields recoverable ledger with no false success",
+        "Crash/restart between prepare/apply/commit boundaries; verify complete rollback or explicit conflict/recovery-required state",
+        "Canceled queued work creates no records/effects; cancel while copying rolls back only owned changes; late callback cannot finish replacement same-ID call",
+        "Observer deletes host or cancels during commit notification; no UAF and no lost completed journal",
+        "Undo earliest selected call state, including multiple agents and finalized archive history; unsupported old mount fails explicitly",
+        "External edit after mutation or during rollback is preserved with conflict result",
+        "No cache eviction deletes undo-reachable snapshots; corrupt/truncated blob detected before restoration"
+      ]
+    },
+    {
+      "group": "transport and read-lifecycle integration",
+      "checks": [
+        "Actual AgentEngine model tool dispatch returns exact structured result and associates journal nonce with original call",
+        "Formatted read snapshot remains unchanged after later write/undo; fresh read sees new version",
+        "Raw sandbox writeFile preserves literal code fences and binary bytes",
+        "AgentToolHost file RPC cancel/reset/destruction and journal completion have one ownership decision",
+        "Native edit summary hides internal apps paths according to source while retaining their undo records"
+      ]
+    }
+  ]
+}

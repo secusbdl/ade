@@ -1,0 +1,19 @@
+********* Start testing of UiAuditTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UiAuditTest::initTestCase()
+FAIL!  : UiAuditTest::blockedDraftRestoreStillUpdatesComposerHeight() 'input.height()<=220' returned FALSE. ()
+D:/age/ADE/private/main-ui-stage/tests/test_ui_audit.cpp(70) : failure location
+QWARN  : UiAuditTest::newDraftRetainsInheritedModelAfterRestart() QFont::setPointSize: Point size <= 0 (-1), must be greater than 0
+PASS   : UiAuditTest::newDraftRetainsInheritedModelAfterRestart()
+PASS   : UiAuditTest::unmatchedModelSearchCannotSendPreviousSelection()
+PASS   : UiAuditTest::malformedCredentialRecordCannotBeOverwritten()
+PASS   : UiAuditTest::failedDraftSavePreventsSilentWindowClose()
+PASS   : UiAuditTest::attachmentDraftsStayWithChatAndSurviveRestart()
+PASS   : UiAuditTest::clipboardAndDropMimeBecomeAttachments()
+PASS   : UiAuditTest::invalidAttachmentDraftStorageIsPreserved()
+PASS   : UiAuditTest::failedSendSaveKeepsDraftAndDoesNotRequestProvider()
+FAIL!  : UiAuditTest::attachmentOnlyMessageReachesProviderAndKeepsReferences() 'window.findChild<QToolButton*>("sendButton")->isEnabled()' returned FALSE. ()
+D:/age/ADE/private/main-ui-stage/tests/test_ui_audit.cpp(193) : failure location
+PASS   : UiAuditTest::missingAttachmentKeepsDraftWithoutSending()
+PASS   : UiAuditTest::changingWorkspacePreservesSelectedDraftFile()
+PASS   : UiAuditTest::applicationStylePreservesCodeFontAndZoom()

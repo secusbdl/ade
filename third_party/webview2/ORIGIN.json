@@ -1,0 +1,16 @@
+{
+  "package": "Microsoft.Web.WebView2",
+  "version": "1.0.4314.35",
+  "source": "https://api.nuget.org/v3-flatcontainer/microsoft.web.webview2/1.0.4314.35/microsoft.web.webview2.1.0.4314.35.nupkg",
+  "package_sha256": "90778deb1b77e36292828b4b5833c9255c27533f40e0ddd55891ae718944edc4",
+  "retained_files": {
+    "include/WebView2.h": "build/native/include/WebView2.h",
+    "x64/WebView2Loader.dll": "build/native/x64/WebView2Loader.dll",
+    "LICENSE.txt": "LICENSE.txt",
+    "Microsoft.Web.WebView2.nuspec": "Microsoft.Web.WebView2.nuspec"
+  },
+  "loader_authenticode": "Valid signature; Microsoft Corporation",
+  "header_modified": false,
+  "runtime_included": false,
+  "retrieved_on": "2026-11-05"
+}

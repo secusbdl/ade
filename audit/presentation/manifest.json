@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "productionBaselineCommit": "dcacf3989f762c314261cc7613e7d32142d87b8c",
+  "files": [
+    {
+      "path": "src/core/AgentEngine.h",
+      "baseline_sha256": "7c856295424c61b81451567ee858561d2a47564f0b8b966c0ef720ed48f987b2",
+      "staged_sha256": "e14af9cb9c994996aeb0565d6b6eac21d4362ca5cf1c0aaa809c74ce645305ce"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "baseline_sha256": "b73dc23b4d99c2bd5abd0dfe561fbfbaf4e2f2c8375c6594d97b1c4012e4ee5c",
+      "staged_sha256": "56512082e02253b933b28bd5c6a2cd5eac76b24b5512cd6a3dd4b715b7a63432"
+    },
+    {
+      "path": "src/core/ProviderProtocol.cpp",
+      "baseline_sha256": "ef990d011e38660bc6126bf0fb4146d7e76a76ea17bef08cc46dee3a590a78d2",
+      "staged_sha256": "7700406b90ee5783205a6aaeb2088d7d66fa89fe010e0f8ee9af74ec9a63deb7"
+    },
+    {
+      "path": "src/core/AgentPresentation.h",
+      "baseline_sha256": null,
+      "staged_sha256": "f1e9947686c0e0e00a78f799113bd4a8c0db4a78c5ba37bc7c87d5120a73e245"
+    },
+    {
+      "path": "src/core/AgentPresentation.cpp",
+      "baseline_sha256": null,
+      "staged_sha256": "376a17ad5bcc16ca7fed30544f08bdef0e545b44e91ce62fe37952dc60c1b5ab"
+    },
+    {
+      "path": "tests/test_presentation.cpp",
+      "baseline_sha256": null,
+      "staged_sha256": "1a67f707ac43bc5ab7540cee92755a08ac9c0daab8ac07bbee5d2f02b9292bc9"
+    }
+  ],
+  "testBinarySha256": "f496cf9e85d5ba76e50cf7833b2ea540256ec7569c400a306c3f93250b93d72b",
+  "patchSha256": "55d566923609caaf96961265d76b7d0f6eeca2e0836c405275cb7925cea37b14"
+}

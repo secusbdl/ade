@@ -1,0 +1,79 @@
+{
+  "recordedUtc": "2026-11-05T15:29:49.795817+00:00",
+  "scope": "Two explicit ranged reads, fork, removal of generated input files, graceful process restart, cached-context retrieval without tools. Not full application parity.",
+  "upstream": {
+    "version": "1.31.1",
+    "commit": "17a0123a0e896885465df36169457199d5225eb5"
+  },
+  "native": {
+    "checkpoint": "ac99672",
+    "path": "out/read-context-conversations-checkpoint/ADE.exe",
+    "sha256": "ef2a1d6e80640269b65bb2e29a2565e9eb5bc285b57ea505a9bed84d1ba068af"
+  },
+  "matchedConfiguration": {
+    "model": "deepseek-v4-pro",
+    "reasoningEffort": "high",
+    "thinkingMode": "No explicit thinking object (OpenAI-compatible reasoning_effort=high path)",
+    "endpoint": "https://api.deepseek.com/v1",
+    "credential": "Same authorized DEEPSEEK_API_KEY entry, separate named providers, no credential in evidence",
+    "approvalMode": "alwaysAllow",
+    "inputs": "Identical prompts except application-specific workspace mount prefix; generated input bytes identical"
+  },
+  "requests": {
+    "userTurnsPerApp": 3,
+    "mainProviderRoundsPerApp": 5,
+    "referenceProviderSetup": "Additional credential validation generation and model discovery before fixture; not counted as agent rounds",
+    "perTurnTimeoutSeconds": 90,
+    "unexpectedToolCalls": 0
+  },
+  "steps": [
+    "Read line 2 only; READY",
+    "Read line 4 only; READY",
+    "Fork through each actual UI",
+    "Confirm copied histories match source and contain none of the fixture values",
+    "Close both idle apps gracefully",
+    "Verify fixture hash and delete only the two generated probe.txt files",
+    "Restart both processes and verify fork selection",
+    "Ask for earlier values with no tools"
+  ],
+  "passed": {
+    "sameNormalizedReadArguments": true,
+    "bothCapturedOriginalSha256": true,
+    "forkHistoriesEqualToSourcesBeforeContinuation": true,
+    "sourcesUnchangedAfterForkContinuation": true,
+    "filesAbsentAtFinalRequest": true,
+    "bothReturnedValuesInOrderWithoutTools": true
+  },
+  "fixtureSha256": "e3b388118185d73f03883491db4f119f7d217dda75f0dd6a674554a37e9e2de4",
+  "normalizedReads": [
+    {
+      "path": "workspace/probe.txt",
+      "start_line": 2,
+      "end_line": 2,
+      "preview": false
+    },
+    {
+      "path": "workspace/probe.txt",
+      "start_line": 4,
+      "end_line": 4,
+      "preview": false
+    }
+  ],
+  "referenceFinalText": "VALUE_TWO_7ea62c, VALUE_FOUR_289b5d",
+  "nativeFinalText": "VALUE_TWO_7ea62c VALUE_FOUR_289b5d",
+  "identicalFinalText": false,
+  "remainingDifferences": [
+    "Model-generated separator differs: reference comma+space, native space. No deterministic text identity claimed.",
+    "Baseline native transcript prints a generic tool result; reference shows compact Read probe.txt. Ordered native tool cards are being integrated separately.",
+    "Reference latest-user spacer positions the last turn near the top; baseline native transcript displays the full short history.",
+    "Baseline native composer height, rail, sidebar and browser-tab layout still differ.",
+    "Reference and native system prompts/tool catalogs are not identical; this narrow successful workflow does not establish full reasoning or tool parity.",
+    "This fixture emitted no visible reasoning part in the reference; live reasoning-stream equality remains untested.",
+    "Live output alone does not prove excluded file lines were never supplied; exact range exclusion is covered separately by local protocol fixtures."
+  ],
+  "evidence": [
+    "audit/paired-read-context/before-restart.json",
+    "audit/paired-read-context/after-restart.json"
+  ],
+  "privacy": "Only newly created test chats exported; reference envState and other user chats excluded."
+}

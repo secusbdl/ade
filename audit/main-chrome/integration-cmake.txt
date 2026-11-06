@@ -1,0 +1,8 @@
+qt_add_executable(test_main_chrome tests/test_main_chrome.cpp resources.qrc ${UI_SOURCES})
+target_include_directories(test_main_chrome PRIVATE src)
+target_link_libraries(test_main_chrome PRIVATE ade_host ade_editor ade_terminal ade_plugins ade_git_ui Qt6::Svg Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_main_chrome INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_main_chrome PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_main_chrome COMMAND test_main_chrome -o "${CMAKE_BINARY_DIR}/Testing/native_main_chrome.txt,txt")
+# test_ui_audit already exists. Its staged diff adds a live-app teardown fixture.
+# New UI headers are picked up by existing CONFIGURE_DEPENDS UI_SOURCES glob.

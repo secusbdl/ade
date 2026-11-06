@@ -1,0 +1,10 @@
+********* Start testing of StreamObserverTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : StreamObserverTest::initTestCase()
+FAIL!  : StreamObserverTest::cancellation(openai-json-text-replace) Compared values are not the same
+   Actual   (observed)                                                : "FIRST"
+   Expected (replacement?QString("FIRSTREPLACEMENT"):QString("FIRST")): "FIRSTREPLACEMENT"
+D:/age/ADE/private/stream-observer-stage/test_stream_observers.cpp(166) : failure location
+PASS   : StreamObserverTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 176ms
+********* Finished testing of StreamObserverTest *********

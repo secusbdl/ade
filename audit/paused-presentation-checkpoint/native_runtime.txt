@@ -1,0 +1,21 @@
+********* Start testing of RuntimeTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : RuntimeTests::initTestCase()
+PASS   : RuntimeTests::contextReadIsScopedAndReachesProvider()
+PASS   : RuntimeTests::nativeNetworkBrokerKeepsCredentialOutOfWorkerOutput()
+PASS   : RuntimeTests::cancelPendingSandboxFetchSettlesTheBroker()
+QWARN  : RuntimeTests::providerToSandboxToBrowserToFilesAndAttachment() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-NezBwj" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::providerToSandboxToBrowserToFilesAndAttachment()
+FAIL!  : RuntimeTests::userAttachmentIsPreparedAndPersistedAsReference() Compared values are not the same
+   Actual   (saved["metadata"].toObject()): QJsonObject({"attachments":[{"originalFileName":"user-context.txt","path":"att/user-conte_edb611a804a042d690fb183bb7301a01.txt"}],"display":{"id":"05b281f1-c676-4857-896e-879e56391ff2","parts":[{"id":"05b281f1-c676-4857-896e-879e56391ff2/0","state":"done","text":"","type":"text"}],"version":1},"pathMetadata":{"att/user-conte_edb611a804a042d690fb183bb7301a01.txt":{"modified":"2026-11-05T16:01:17.636Z","size":27}},"pathReferences":{"att/user-conte_edb611a804a042d690fb183bb7301a01.txt":"3bb8afa1066771a49b6e7961947bab0107b9d614835ae9bcf5296cbd2c2e35fd"}})
+   Expected (metadata)                    : QJsonObject({"attachments":[{"originalFileName":"user-context.txt","path":"att/user-conte_edb611a804a042d690fb183bb7301a01.txt"}],"pathMetadata":{"att/user-conte_edb611a804a042d690fb183bb7301a01.txt":{"modified":"2026-11-05T16:01:17.636Z","size":27}},"pathReferences":{"att/user-conte_edb611a804a042d690fb183bb7301a01.txt":"3bb8afa1066771a49b6e7961947bab0107b9d614835ae9bcf5296cbd2c2e35fd"}})
+D:/age/ADE/tests/test_runtime.cpp(217) : failure location
+QWARN  : RuntimeTests::realCdpFailureReturnsToolErrorAndModelContinues() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-tkXKaS" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::realCdpFailureReturnsToolErrorAndModelContinues()
+QWARN  : RuntimeTests::twoHostsShareBrowserWithCancellationIsolation() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-KBWMYH" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::twoHostsShareBrowserWithCancellationIsolation()
+QWARN  : RuntimeTests::destroyingOneHostCancelsOnlyItsBrokerRequests() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-qsUvuw" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::destroyingOneHostCancelsOnlyItsBrokerRequests()
+PASS   : RuntimeTests::cleanupTestCase()
+Totals: 9 passed, 1 failed, 0 skipped, 0 blacklisted, 6632ms
+********* Finished testing of RuntimeTests *********

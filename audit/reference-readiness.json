@@ -1,0 +1,3187 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-06",
+  "purpose": "Critical reference architecture for another ADE app; preservation and implementation are separate. Not a complete port/parity certificate.",
+  "nativeHead": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+  "inventory": {
+    "path": "audit/upstream-feature-inventory.json",
+    "sha256": "03ef48e438fdb459a77c5fbbe9d14fb939daf4994ae81b2ee04e3a0f9ad379e1",
+    "rows": 701,
+    "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+    "version": "1.31.1",
+    "categories": {
+      "account": 2,
+      "agent_command": 33,
+      "agents": 12,
+      "browser": 10,
+      "bundled_plugin": 8,
+      "contract_operation": 236,
+      "distribution": 3,
+      "editor": 5,
+      "git": 2,
+      "integration": 5,
+      "page_route": 4,
+      "persistence": 4,
+      "plugin": 5,
+      "procedure": 203,
+      "provider": 26,
+      "providers": 3,
+      "settings": 14,
+      "settings_detail": 19,
+      "shell": 8,
+      "shortcut": 71,
+      "terminal": 4,
+      "tool": 18,
+      "workspace": 6
+    },
+    "scope": "All701 rows remain in scope. Their original native_status fields are initial baseline values. This map does not promote236 UI contracts or203 procedures to implemented."
+  },
+  "evidencePolicy": [
+    "Current source plus named tests and retained dated results support implemented claims.",
+    "Historical audits are superseded only for scopes verified by later evidence.",
+    "Local fixtures are not live-service interoperability or universal zero-defect evidence."
+  ],
+  "savedCheckpoint": {
+    "report": "audit/paused-presentation-checkpoint/integration.xml",
+    "passed": 41,
+    "total": 45,
+    "failed": [
+      "native_attachments",
+      "native_runtime",
+      "native_ui",
+      "native_editor"
+    ],
+    "lastAllGreen": "ac99672:40/40, before new presentation/formatted-att work",
+    "activeWork": "Historical four failing suites have been repaired or clarified and now pass; see resumedFailureReview. Current aggregate has a different browser-tools failure.",
+    "status": "historical_superseded_by_currentIntegratedCheckpoint"
+  },
+  "architecture": {
+    "modelFlow": "Composer -> AgentEngine -> ProviderProtocol/QNetworkAccessManager -> canonical history plus AgentPresentation -> ConversationView.",
+    "tools": "Builtins -> ToolExecutor; opaque external requests -> per-chat AgentToolHost -> SandboxHost/BrowserToolBridge/NetworkBroker/MiniAppHost.",
+    "worker": "Out-of-process native QuickJS with bounded correlated JSON IPC; host retains filesystem/browser/credential authority.",
+    "context": "AttachmentStore original bytes + per-agent FileReadSnapshotStore leases -> AttachmentPipeline transient provider requests from persisted references.",
+    "persistence": "Revision-locked atomic SessionStore JSON with durable cleanup markers; DPAPI provider storage; per-agent app/attachment/read roots.",
+    "browser": "Native Qt/COM loader and installed Evergreen; shared ordinary browser registry and agent-owned mini-app views.",
+    "terminalGit": "ConPTY/libvterm and installed Git/shell under user OS permissions.",
+    "reuseTargets": [
+      "ade_core",
+      "ade_file_transformer",
+      "ade_attachments",
+      "ade_network",
+      "ade_plugins",
+      "ade_host",
+      "ade_editor",
+      "ade_terminal",
+      "ade_git_ui",
+      "ade_ui"
+    ],
+    "limits": "Windows-specific CMake; MainWindow remains orchestration layer. No stable versioned SDK yet. Preserve ownership/cancel/mount/persistence boundaries when copying components."
+  },
+  "criticalCapabilities": [
+    {
+      "id": "engine",
+      "title": "Native provider engine and cancellation",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "agents.stream",
+        "providers.routing",
+        "providers.credentials"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts#L1",
+          "sha256": "cc00db8e5a490a83793980c9b2fabc67b468755717f1c74c4404adfd53ce6248",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/agents/model-provider.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/model-provider.ts#L1",
+          "sha256": "d9cec251da406c4eb9de7a25ff7352e26d68590781d36b366d1e218980958676",
+          "localReference": "reference/stagewise/apps/browser/src/backend/agents/model-provider.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/credentials",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/credentials#L1",
+          "sha256": null
+        }
+      ],
+      "nativeSources": [
+        "src/core/AgentEngine.cpp",
+        "src/core/ProviderProtocol.cpp",
+        "src/core/ProviderStore.cpp",
+        "src/core/ModelFallback.h"
+      ],
+      "retainedEvidence": [
+        "audit/engine-stream-observers.json",
+        "audit/engine-tool-callbacks.json",
+        "audit/presentation-native.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_core",
+          "passed": true,
+          "totals": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8752ms",
+          "report": "audit/paused-presentation-checkpoint/native_core.txt"
+        },
+        {
+          "suite": "native_engine_observers",
+          "passed": true,
+          "totals": "Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 8265ms",
+          "report": "audit/paused-presentation-checkpoint/native_engine_observers.txt"
+        },
+        {
+          "suite": "native_presentation",
+          "passed": true,
+          "totals": "Totals: 89 passed, 0 failed, 0 skipped, 0 blacklisted, 16692ms",
+          "report": "audit/paused-presentation-checkpoint/native_presentation.txt"
+        }
+      ],
+      "implemented": [
+        "Four native wire adapters (OpenAI chat/Responses, Anthropic, Google), SSE, tools, fallback, opaque external dispatch IDs and cancellation guards.",
+        "DPAPI profile credentials and redacted output; canonical native replay separated from display."
+      ],
+      "remainingGaps": [
+        "Four protocols do not imply every one of the 26 provider types, reasoning parameters or subscription authentication.",
+        "Complete upstream queue, compression/accounting and external agent semantics remain separate."
+      ],
+      "referenceAcceptance": [
+        "Local protocol fixtures must retain native signatures/attachments and reject late canceled callbacks.",
+        "Provider support list distinguishes implemented adapters from configured endpoints and untested live services."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_core",
+          "report": "audit/reference-integration-details/suites/native_core.txt",
+          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
+          "available": true,
+          "passed": 48,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_core.txt"
+        },
+        {
+          "suite": "native_engine_observers",
+          "report": "audit/reference-integration-details/suites/native_engine_observers.txt",
+          "reportSha256": "c086f7e4a9006f616b2a598e2d9318381b7a77bb11bac9842cdf001426ce7613",
+          "available": true,
+          "passed": 56,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_engine_observers.txt"
+        },
+        {
+          "suite": "native_presentation",
+          "report": "audit/reference-integration-details/suites/native_presentation.txt",
+          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
+          "available": true,
+          "passed": 89,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "conversations",
+      "title": "Chat persistence, fork, archive and deletion",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "agents.lifecycle",
+        "persistence.agents",
+        "persistence.restore",
+        "agents.history-edit"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L1",
+          "sha256": "608f10239dca4da536e2a93eda485dd0aabf6e69f13bb7a84a8bd6d97fc29fa5",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/agent-persistence",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-persistence#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/utils/paths.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/utils/paths.ts#L1",
+          "sha256": "067f9f19bdf39e1a2fda8071ada586d75d2ad63011b4b2d6fdd31072e296e3b1",
+          "localReference": "reference/stagewise/apps/browser/src/backend/utils/paths.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/history.ts#L1",
+          "sha256": "ab319972c098bc0c45cc08a0769b6018e8b80f5db1885ae94de5a2542c2a8295",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/ui/SessionStore.cpp",
+        "src/ui/MainWindowConversations.cpp",
+        "src/runtime/AgentToolHost.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/conversations-native.json",
+        "audit/session-cleanup-native.json",
+        "audit/history-recovery-native.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_conversations",
+          "passed": true,
+          "totals": "Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 18543ms",
+          "report": "audit/paused-presentation-checkpoint/native_conversations.txt"
+        },
+        {
+          "suite": "native_session_cleanup",
+          "passed": true,
+          "totals": "Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 512ms",
+          "report": "audit/paused-presentation-checkpoint/native_session_cleanup.txt"
+        },
+        {
+          "suite": "native_history_recovery",
+          "passed": true,
+          "totals": "Totals: 28 passed, 0 failed, 0 skipped, 0 blacklisted, 1157ms",
+          "report": "audit/paused-presentation-checkpoint/native_history_recovery.txt"
+        },
+        {
+          "suite": "native_runtime_apps",
+          "passed": true,
+          "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 6494ms",
+          "report": "audit/paused-presentation-checkpoint/native_runtime_apps.txt"
+        }
+      ],
+      "implemented": [
+        "Create/select/rename/archive/restore/fork/delete, exact drafts and attachment references, last-selection restart, per-chat approval.",
+        "Revision-locked atomic JSON persistence and durable cleanup markers; invalid roots/concurrent saves fail closed.",
+        "Inherited unfinished tool calls normalized without execution; file context cloned independently."
+      ],
+      "remainingGaps": [
+        "Side chats, queued-message editing, revert/replace/retry with tool undo, attention/unread and full mid-stream fork/checkpoints incomplete.",
+        "Native JSON is not an upstream SQLite migration implementation."
+      ],
+      "referenceAcceptance": [
+        "Temporary fixtures cover restart, conflicting writes, partial cleanup retry and failure atomicity.",
+        "Reuse must preserve clone-before-persist rollback and durable removal before owned-file cleanup."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_conversations",
+          "report": "audit/reference-integration-details/suites/native_conversations.txt",
+          "reportSha256": "af883162f0264457890e79fd29952004ffd8e3abe1aa1a56d6aa114efa23c67f",
+          "available": true,
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_conversations.txt"
+        },
+        {
+          "suite": "native_session_cleanup",
+          "report": "audit/reference-integration-details/suites/native_session_cleanup.txt",
+          "reportSha256": "0d7e46378cfca5c9ecda33d9c2e1c5fbc5d4f1c87025c39743c454397aab6ad3",
+          "available": true,
+          "passed": 25,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_session_cleanup.txt"
+        },
+        {
+          "suite": "native_history_recovery",
+          "report": "audit/reference-integration-details/suites/native_history_recovery.txt",
+          "reportSha256": "2bd55c1d1588c50127a29ca7463e23c983315832a03e1f0bf563a416793299c1",
+          "available": true,
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_history_recovery.txt"
+        },
+        {
+          "suite": "native_runtime_apps",
+          "report": "audit/reference-integration-details/suites/native_runtime_apps.txt",
+          "reportSha256": "0e13fa42625d90dd93adaf5391181bda8af497ca836955e1310233565d0812ce",
+          "available": true,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_runtime_apps.txt"
+        },
+        {
+          "suite": "native_sidebar_model",
+          "report": "audit/reference-integration-details/suites/native_sidebar_model.txt",
+          "reportSha256": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e",
+          "available": true,
+          "passed": 19,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sidebar_model.txt"
+        },
+        {
+          "suite": "native_sidebar_navigation",
+          "report": "audit/reference-integration-details/suites/native_sidebar_navigation.txt",
+          "reportSha256": "de4e24d893c0bc07d902885cf4569a753576683fe4ccbdef884091f4188b5130",
+          "available": true,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sidebar_navigation.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "approval",
+      "title": "Approvals and structured questions",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "agents.approvals",
+        "agents.questions",
+        "terminal.smart-approval"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts#L1",
+          "sha256": "20e71c2bdbf64e8da336949e95fa6c973cb2b3fe47eaa0ebb4b0e4487581ffee",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts#L1",
+          "sha256": "86540bb592363ffc91b9e88d22faa1cfd52ea76e7b55edac20ac63cfee1e4c54",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts#L1",
+          "sha256": "8564a108be16b9e2d06e86bb13b520e9e5b67d8db9c838ad239863fb7eb763af",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/AgentEngine.cpp",
+        "src/ui/ConversationView.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/conversations-native.json",
+        "audit/presentation-native.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_presentation",
+          "passed": true,
+          "totals": "Totals: 89 passed, 0 failed, 0 skipped, 0 blacklisted, 16692ms",
+          "report": "audit/paused-presentation-checkpoint/native_presentation.txt"
+        },
+        {
+          "suite": "native_transcript_ui",
+          "passed": true,
+          "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 2321ms",
+          "report": "audit/paused-presentation-checkpoint/native_transcript_ui.txt"
+        },
+        {
+          "suite": "native_conversations",
+          "passed": true,
+          "totals": "Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 18543ms",
+          "report": "audit/paused-presentation-checkpoint/native_conversations.txt"
+        }
+      ],
+      "implemented": [
+        "Ask and Always allow, persisted per-chat bool and inline per-call approval with reentrant decision guards."
+      ],
+      "remainingGaps": [
+        "Smart approval and askUserQuestions forms/interruption are not implemented.",
+        "Native runCommand uses user OS privileges, not filesystem sandboxing."
+      ],
+      "referenceAcceptance": [
+        "Never map missing Smart mode to automatic approval.",
+        "Test deny/cancel/destruction at dispatch boundaries; disclose unsupported user-question contracts."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_presentation",
+          "report": "audit/reference-integration-details/suites/native_presentation.txt",
+          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
+          "available": true,
+          "passed": 89,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+        },
+        {
+          "suite": "native_transcript_ui",
+          "report": "audit/reference-integration-details/suites/native_transcript_ui.txt",
+          "reportSha256": "2e4a1a6896d1278ff74f102449d72e478ddb4563771c63c1fc1cdc01eff29be5",
+          "available": true,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript_ui.txt"
+        },
+        {
+          "suite": "native_conversations",
+          "report": "audit/reference-integration-details/suites/native_conversations.txt",
+          "reportSha256": "af883162f0264457890e79fd29952004ffd8e3abe1aa1a56d6aa114efa23c67f",
+          "available": true,
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_conversations.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "read-context",
+      "title": "Formatted reads and versioned context",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "tool.read",
+        "tool.ls",
+        "persistence.caches",
+        "agents.attachments"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 630,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L630",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/file-read-cache",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/file-read-cache#L1",
+          "sha256": null
+        },
+        {
+          "path": "packages/agent-core/src/services/attachments/service.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/attachments/service.ts#L1",
+          "sha256": "646d10da82cec7b1d24ac9b010b49d3d3e445021ed85ba2317211452f6c2e299",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/attachments/service.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/ToolExecutor.cpp",
+        "src/attachments/FileReadSnapshotStore.cpp",
+        "src/attachments/AttachmentPipeline.cpp",
+        "src/runtime/AttachmentFileBroker.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/read-lifecycle-native.json",
+        "audit/formatted-att-native.json",
+        "audit/structured-file-tools.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_read_lifecycle",
+          "passed": true,
+          "totals": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 454ms",
+          "report": "audit/paused-presentation-checkpoint/native_read_lifecycle.txt"
+        },
+        {
+          "suite": "native_read_runtime",
+          "passed": true,
+          "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2161ms",
+          "report": "audit/paused-presentation-checkpoint/native_read_runtime.txt"
+        },
+        {
+          "suite": "native_formatted_att",
+          "passed": true,
+          "totals": "Totals: 33 passed, 0 failed, 0 skipped, 0 blacklisted, 2775ms",
+          "report": "audit/paused-presentation-checkpoint/native_formatted_att.txt"
+        },
+        {
+          "suite": "native_file_tools",
+          "passed": true,
+          "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 50ms",
+          "report": "audit/paused-presentation-checkpoint/native_file_tools.txt"
+        },
+        {
+          "suite": "native_archive_transformer",
+          "passed": true,
+          "totals": "Totals: 37 passed, 0 failed, 0 skipped, 0 blacklisted, 41ms",
+          "report": "audit/paused-presentation-checkpoint/native_archive_transformer.txt"
+        }
+      ],
+      "implemented": [
+        "Exact captured originals with per-call ranges/hash metadata, compact saved tool acknowledgements, later request reinjection and independent fork.",
+        "Text/Markdown/directory/ZIP/ZIP64/TAR/TGZ preview without archive extraction; workspace/apps/read-only att sources."
+      ],
+      "remainingGaps": [
+        "PDF/Office/rich-media transforms remain unsupported or placeholders.",
+        "Immutable snapshot retention and ls injection deliberately extend/correct pinned cache behavior."
+      ],
+      "referenceAcceptance": [
+        "Publish acknowledgement/reference metadata and range/version examples.",
+        "Deleted/replaced originals must retain expected historical bytes or explicit unavailable state, without raw file payloads in saved history."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_read_lifecycle",
+          "report": "audit/reference-integration-details/suites/native_read_lifecycle.txt",
+          "reportSha256": "caeb4d572a8ceca8f5e04e396404157d1e27d7f2ad42f702818108b78ed17fe9",
+          "available": true,
+          "passed": 21,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_read_lifecycle.txt"
+        },
+        {
+          "suite": "native_read_runtime",
+          "report": "audit/reference-integration-details/suites/native_read_runtime.txt",
+          "reportSha256": "3c2f4a9f5e4d62340e42fa5b18d5e76ff0f623ca7e12a72df1bc75eb98847d40",
+          "available": true,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_read_runtime.txt"
+        },
+        {
+          "suite": "native_formatted_att",
+          "report": "audit/reference-integration-details/suites/native_formatted_att.txt",
+          "reportSha256": "09c97d70ed90e0122cd09183d9ed71c3609d7f787c7584977e8878bd7924e0aa",
+          "available": true,
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_formatted_att.txt"
+        },
+        {
+          "suite": "native_file_tools",
+          "report": "audit/reference-integration-details/suites/native_file_tools.txt",
+          "reportSha256": "85101f3739fbcf4a9a9bbe4571168e21d2a3d825999de78b61b0cd3ee9831ab7",
+          "available": true,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_file_tools.txt"
+        },
+        {
+          "suite": "native_archive_transformer",
+          "report": "audit/reference-integration-details/suites/native_archive_transformer.txt",
+          "reportSha256": "4423cd01c2a027d01de990e1746fb31901347ecb6a844a96f621e4543e90e41c",
+          "available": true,
+          "passed": 37,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_archive_transformer.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "filesystem",
+      "title": "Scoped mounts, raw bytes and search",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "tool.glob",
+        "tool.grepSearch",
+        "workspace.mounts",
+        "workspace.search"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 633,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L633",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/mount-manager/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/index.ts#L1",
+          "sha256": "4a44c1cf10f46af4b1f4c86171427bb815497cde877ef191e8021748ae023b6f",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/mount-manager/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/mount-manager/path-fuzzy-search.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/path-fuzzy-search.ts#L1",
+          "sha256": "482e68da2a0abd96e549774cce7fc8a1abea03e00a233d068adf9d22c1def136",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/mount-manager/path-fuzzy-search.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/ScopedDirectory.cpp",
+        "src/core/ToolExecutor.cpp",
+        "src/runtime/AttachmentFileBroker.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/scoped-directory-enumeration.json",
+        "audit/attachment-mount-native.json",
+        "audit/directory-scope-regression.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_raw_enumeration_races",
+          "passed": true,
+          "totals": "Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 1911ms",
+          "report": "audit/paused-presentation-checkpoint/native_raw_enumeration_races.txt"
+        },
+        {
+          "suite": "native_file_tools_races",
+          "passed": true,
+          "totals": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 742ms",
+          "report": "audit/paused-presentation-checkpoint/native_file_tools_races.txt"
+        },
+        {
+          "suite": "native_attachment_mount",
+          "passed": true,
+          "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 662ms",
+          "report": "audit/paused-presentation-checkpoint/native_attachment_mount.txt"
+        }
+      ],
+      "implemented": [
+        "Retained validated Windows directory handles, bounded traversal/no child-link following, same-handle binary/text capture.",
+        "One ws1/w1 workspace, host-owned per-chat apps and read-only att; unsupported reserved mounts fail explicitly."
+      ],
+      "remainingGaps": [
+        "Multiple workspace mounts/permissions and logs/shells/memory mounts absent.",
+        "Non-Windows fallback does not have tested Windows handle-pinning guarantees."
+      ],
+      "referenceAcceptance": [
+        "Document size/depth/node bounds and exact versus partial-result semantics.",
+        "Retain deterministic alias-retarget, held-worker cancellation/replacement and cross-chat denial tests."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_raw_enumeration_races",
+          "report": "audit/reference-integration-details/suites/native_raw_enumeration_races.txt",
+          "reportSha256": "eb52fdd5d8be474287ff7773d80afd6d66e6e1cd2247507e10f511a7d782afcb",
+          "available": true,
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_raw_enumeration_races.txt"
+        },
+        {
+          "suite": "native_file_tools_races",
+          "report": "audit/reference-integration-details/suites/native_file_tools_races.txt",
+          "reportSha256": "1233edc279d530628c5a551af53dbf74caae1179a6861ac7c08d467051c65f49",
+          "available": true,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_file_tools_races.txt"
+        },
+        {
+          "suite": "native_attachment_mount",
+          "report": "audit/reference-integration-details/suites/native_attachment_mount.txt",
+          "reportSha256": "38fd0017eacbb6beca9098a92fb23976c6a4a3f5804ab97d3af938378d13c9e5",
+          "available": true,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_attachment_mount.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "mutations",
+      "title": "Write, multiEdit and durable undo gap",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "tool.write",
+        "tool.multiEdit",
+        "tool.mkdir",
+        "tool.copy",
+        "tool.delete",
+        "editor.undo"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 629,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L629",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/services/diff-history/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1",
+          "sha256": "d3901573f58e35e6387c3c5c2e258378fb83e2a7ecb3dd08017cfd1960f9c3f9",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/diff-history/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/ToolExecutor.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/structured-file-tools.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_core",
+          "passed": true,
+          "totals": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8752ms",
+          "report": "audit/paused-presentation-checkpoint/native_core.txt"
+        }
+      ],
+      "implemented": [
+        "Atomic UTF-8 write, sequential exact multiEdit, mkdir and before/after fileChanged bytes."
+      ],
+      "remainingGaps": [
+        "Copy/delete/move and durable diff-history/undo are not production integrated.",
+        "Current writes are not a durable mutation journal or interprocess compare-and-swap.",
+        "The 40-case single-file journal prototype is now preserved and optionally buildable under reference/native-experiments/file-mutations. Recursive, production tool/host/UI/clone/delete integration remains pending."
+      ],
+      "referenceAcceptance": [
+        "Complete editing-reference claims require scoped journal-first operations, preserved preimages, conflict-safe undo and crash-boundary fixtures.",
+        "Until integrated, document unsupported destructive/undo operations; do not substitute irreversible shortcuts."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_core",
+          "report": "audit/reference-integration-details/suites/native_core.txt",
+          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
+          "available": true,
+          "passed": 48,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_core.txt"
+        },
+        {
+          "suite": "reference_file_mutations",
+          "report": "audit/reference-integration-details/suites/reference_file_mutations.txt",
+          "reportSha256": "824e3d6171f109d3dbd13d7f130ca5566a9a36336703db406aa51eb7a3f95da7",
+          "available": true,
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_file_mutations.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "sandbox",
+      "title": "Persistent native JavaScript worker",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "tool.executeSandboxJs",
+        "browser.sandbox"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 649,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L649",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/sandbox",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox#L1",
+          "sha256": null
+        }
+      ],
+      "nativeSources": [
+        "src/sandbox/SandboxHost.cpp",
+        "src/sandbox/worker_main.cpp",
+        "src/sandbox/network_bootstrap.h",
+        "src/runtime/AgentToolHost.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/sandbox-native.json",
+        "audit/sandbox-network.json",
+        "audit/sandbox-idle-attachments.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_sandbox",
+          "passed": true,
+          "totals": "Totals: 27 passed, 0 failed, 0 skipped, 0 blacklisted, 5701ms",
+          "report": "audit/paused-presentation-checkpoint/native_sandbox.txt"
+        },
+        {
+          "suite": "native_sandbox_network",
+          "passed": true,
+          "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 5421ms",
+          "report": "audit/paused-presentation-checkpoint/native_sandbox_network.txt"
+        },
+        {
+          "suite": "native_runtime",
+          "passed": false,
+          "totals": "Totals: 9 passed, 1 failed, 0 skipped, 0 blacklisted, 6632ms",
+          "report": "audit/paused-presentation-checkpoint/native_runtime.txt"
+        }
+      ],
+      "implemented": [
+        "Separate native QuickJS worker, persistent per-agent realms, async output/return/timers, bounded correlated RPC and reset on deadline/cancellation.",
+        "fs Buffer/text subset, bounded fetch, host-held credential handles, CDP and persistent app/CDP listeners."
+      ],
+      "remainingGaps": [
+        "No complete Node builtins, importModule, sync fs, streams, Blob/FormData/URL helpers; unsupported calls reject.",
+        "Full AsyncLocalStorage ownership and upstream post-timeout state retention not claimed."
+      ],
+      "referenceAcceptance": [
+        "Publish exact globals/signatures/limits and reset semantics.",
+        "Crash, cancel, overload and idle callbacks settle once without stale actions or secret expansion into worker IPC."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_sandbox",
+          "report": "audit/reference-integration-details/suites/native_sandbox.txt",
+          "reportSha256": "c0bdbbba83d45e23de7fad49967b0b2c852545521896efeaacde3ac35d0f482f",
+          "available": true,
+          "passed": 27,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sandbox.txt"
+        },
+        {
+          "suite": "native_sandbox_network",
+          "report": "audit/reference-integration-details/suites/native_sandbox_network.txt",
+          "reportSha256": "b145d486390b98a76176ba493e334fe0b755d00d89f933ef642259227f13426c",
+          "available": true,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sandbox_network.txt"
+        },
+        {
+          "suite": "native_runtime",
+          "report": "audit/reference-integration-details/suites/native_runtime.txt",
+          "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
+          "available": true,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_runtime.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "context",
+      "title": "Instructions, skills and utility models",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "workspace.instructions",
+        "workspace.skills",
+        "agents.context",
+        "agents.titles",
+        "agents.compression"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts#L1",
+          "sha256": "fb41863e4bbaf2c17934d7e1d21a541bae9b2fd1e3cac8d6fc6f73127194a91c",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/global-skills.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/global-skills.ts#L1",
+          "sha256": "bab6ba7bb3f778dd010f33ecd00ad9d744bfb8759299d200dc7264b185a968df",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/global-skills.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/env/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/env/index.ts#L1",
+          "sha256": "75488d36825acd14f0e0faab0ccad01c57fcf9760d3b5dea93617a9aae256f4f",
+          "localReference": "reference/stagewise/packages/agent-core/src/env/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/title-generation/index.ts#L1",
+          "sha256": "b66dbe64695d9106d083303d6104ba46da7921903cc3a3f8f66acbfade2af9f2",
+          "localReference": "reference/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "packages/agent-core/src/agents/shared/history-compression/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/history-compression/index.ts#L1",
+          "sha256": "d3eeddb5ae777ca551b8e7cc94568873f587e8e4e56f71c02fb7fdcf8adc6b78",
+          "localReference": "reference/stagewise/packages/agent-core/src/agents/shared/history-compression/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/ContextLoader.cpp",
+        "src/core/UtilityService.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/context-loader-evidence.md",
+        "audit/context-live-evidence.json",
+        "audit/utility-live-evidence.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_context",
+          "passed": true,
+          "totals": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 254ms",
+          "report": "audit/paused-presentation-checkpoint/native_context.txt"
+        },
+        {
+          "suite": "native_core",
+          "passed": true,
+          "totals": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8752ms",
+          "report": "audit/paused-presentation-checkpoint/native_core.txt"
+        },
+        {
+          "suite": "native_ui_audit",
+          "passed": true,
+          "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 8423ms",
+          "report": "audit/paused-presentation-checkpoint/native_ui_audit.txt"
+        }
+      ],
+      "implemented": [
+        "Bounded scoped AGENTS and skill discovery/context injection; native title/compression utility calls and settings consumers."
+      ],
+      "remainingGaps": [
+        "Complete memory/plans/environment domains, skill install/update, slash commands and automatic context accounting incomplete."
+      ],
+      "referenceAcceptance": [
+        "Fixture instructions/skills must reach intended requests and refresh after workspace changes without stale scope.",
+        "Missing/disabled/oversized context has explicit bounded behavior."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_context",
+          "report": "audit/reference-integration-details/suites/native_context.txt",
+          "reportSha256": "a9557e10287063c47dd8ff553aa219f8c0c757985adfc504b0375d496666f427",
+          "available": true,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_context.txt"
+        },
+        {
+          "suite": "native_core",
+          "report": "audit/reference-integration-details/suites/native_core.txt",
+          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
+          "available": true,
+          "passed": 48,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_core.txt"
+        },
+        {
+          "suite": "native_ui_audit",
+          "report": "audit/reference-integration-details/suites/native_ui_audit.txt",
+          "reportSha256": "0838a6db4b97d0e6809f2a4d5cb38c9e7d3ba7ebb9ea1182d4b6760ff5547a39",
+          "available": true,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_ui_audit.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "attachments",
+      "title": "Original attachments and model preparation",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "agents.attachments"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/attachments/service.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/attachments/service.ts#L1",
+          "sha256": "646d10da82cec7b1d24ac9b010b49d3d3e445021ed85ba2317211452f6c2e299",
+          "localReference": "reference/stagewise/packages/agent-core/src/services/attachments/service.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/attachments/AttachmentStore.cpp",
+        "src/attachments/AttachmentPipeline.cpp",
+        "src/attachments/FileTransformer.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/attachments-native-evidence.md",
+        "audit/attachment-model-capabilities.json",
+        "audit/attachments-live-evidence.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_attachments",
+          "passed": false,
+          "totals": "Totals: 17 passed, 6 failed, 0 skipped, 0 blacklisted, 872ms",
+          "report": "audit/paused-presentation-checkpoint/native_attachments.txt"
+        },
+        {
+          "suite": "native_formatted_att",
+          "passed": true,
+          "totals": "Totals: 33 passed, 0 failed, 0 skipped, 0 blacklisted, 2775ms",
+          "report": "audit/paused-presentation-checkpoint/native_formatted_att.txt"
+        },
+        {
+          "suite": "native_file_transformer",
+          "passed": true,
+          "totals": "Totals: 32 passed, 0 failed, 0 skipped, 0 blacklisted, 4ms",
+          "report": "audit/paused-presentation-checkpoint/native_file_transformer.txt"
+        }
+      ],
+      "implemented": [
+        "Original captured bytes and metadata, model-aware text/images, per-chat blob authority and draft/clone persistence.",
+        "Resumed assertions preserve every original attachment metadata field/byte, independently validate versioned display metadata and exclude UI metadata from all four actual provider wires."
+      ],
+      "remainingGaps": [
+        "Full PDF/audio/video and every provider image transformation remain incomplete."
+      ],
+      "referenceAcceptance": [
+        "Resolve failures while retaining exact wire payload/native fields and original byte assertions.",
+        "No cross-chat/junction read escapes or raw secrets in persisted evidence."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_attachments",
+          "report": "audit/reference-integration-details/suites/native_attachments.txt",
+          "reportSha256": "363bd111638a2a7b9624511498e66e5f33500072d882d00e9e4eab109d805288",
+          "available": true,
+          "passed": 23,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_attachments.txt"
+        },
+        {
+          "suite": "native_formatted_att",
+          "report": "audit/reference-integration-details/suites/native_formatted_att.txt",
+          "reportSha256": "09c97d70ed90e0122cd09183d9ed71c3609d7f787c7584977e8878bd7924e0aa",
+          "available": true,
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_formatted_att.txt"
+        },
+        {
+          "suite": "native_file_transformer",
+          "report": "audit/reference-integration-details/suites/native_file_transformer.txt",
+          "reportSha256": "786805dffe1b274e04d0a2d1ba6ed5fff1565ccbff9b05982357dc49e88616a6",
+          "available": true,
+          "passed": 32,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_file_transformer.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "browser",
+      "title": "Embedded browser, scripts and CDP",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "browser.tabs",
+        "browser.cdp",
+        "browser.dom",
+        "browser.toolbar",
+        "tool.readConsoleLogs"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts#L1",
+          "sha256": "e2ff8b6e14ee120060c8368ac77153cebc4a7f43df2219d1a30d24edf6f29132",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/window-layout/selected-element-tracker/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/selected-element-tracker/index.ts#L1",
+          "sha256": "f32f796f6f6e32f919d3cf68b857020fd503ecec7b0b3c51b12a293498c4e154",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/window-layout/selected-element-tracker/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/web-content-preload",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/web-content-preload#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 652,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L652",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/browser/BrowserWidget.cpp",
+        "src/browser/BrowserToolBridge.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/browser-regressions.json",
+        "audit/browser-tool-bridge.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_browser",
+          "passed": true,
+          "totals": "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 7172ms",
+          "report": "audit/paused-presentation-checkpoint/native_browser.txt"
+        },
+        {
+          "suite": "native_browser_tools",
+          "passed": true,
+          "totals": "Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 18226ms",
+          "report": "audit/paused-presentation-checkpoint/native_browser_tools.txt"
+        }
+      ],
+      "implemented": [
+        "Real WebView2 navigation/history/title/loading, JS, CDP/events, console and PNG screenshots with stable IDs and agent ownership."
+      ],
+      "remainingGaps": [
+        "Selected-element overlays, full developer toolbar/device emulation, complete tab restoration and browser auth/certificate behavior incomplete.",
+        "Canceling a CDP waiter cannot undo an issued page action."
+      ],
+      "referenceAcceptance": [
+        "Loopback tests cover early destruction, two views, resize, navigate errors, console/script/CDP and wrong-agent filtering.",
+        "Document shared ordinary views versus owned mini-app views and external runtime dependency."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_browser",
+          "report": "audit/reference-integration-details/suites/native_browser.txt",
+          "reportSha256": "1f3b3241b98a598d13ccb9698772a8ba304a56a80677b84887509271ed77a1ca",
+          "available": true,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_browser.txt"
+        },
+        {
+          "suite": "native_browser_tools",
+          "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+          "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+          "reportHashBasis": "canonical_git_text_LF",
+          "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+          "passed": 24,
+          "failed": 0,
+          "skipped": 0,
+          "scope": "Full suite"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "browser-data",
+      "title": "Browser permissions, history and downloads",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "browser.permissions",
+        "browser.history",
+        "browser.authentication",
+        "browser.omnibox"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/window-layout/tab-permission-handler",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/tab-permission-handler#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/history",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/history#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/window-layout/tab-authentication-handler/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/tab-authentication-handler/index.ts#L1",
+          "sha256": "c43ffc7541883038cac060a7dc8c857c144bab77fa3b13f29f18f4c4f1767b3d",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/window-layout/tab-authentication-handler/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/omnibox-suggestions.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/omnibox-suggestions.ts#L1",
+          "sha256": "c89ffecffd97d79f272a8cc2b388bf02fba539767e5aeb3b06f10e2c140e81b3",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/omnibox-suggestions.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/browser/BrowserWidget.cpp",
+        "src/ui/DownloadsPage.cpp",
+        "src/ui/SettingsPage.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/browser-permissions.json",
+        "audit/browser-data-downloads.json",
+        "audit/downloads-page.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_browser",
+          "passed": true,
+          "totals": "Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 7172ms",
+          "report": "audit/paused-presentation-checkpoint/native_browser.txt"
+        },
+        {
+          "suite": "native_downloads",
+          "passed": true,
+          "totals": "Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 8556ms",
+          "report": "audit/paused-presentation-checkpoint/native_downloads.txt"
+        },
+        {
+          "suite": "native_settings",
+          "passed": true,
+          "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 461ms",
+          "report": "audit/paused-presentation-checkpoint/native_settings.txt"
+        }
+      ],
+      "implemented": [
+        "Explicit defaults/site exceptions and host permission prompts; browsing-data clearing/history consumers.",
+        "Download destination choice, progress, pause/resume/cancel/open/folder and persisted completed/interrupted records."
+      ],
+      "remainingGaps": [
+        "USB/HID/Bluetooth/serial/display-capture choosers and authentication/certificates incomplete.",
+        "Cross-restart download resume/ETA and complete history/clearing categories/time-range parity absent."
+      ],
+      "referenceAcceptance": [
+        "Use only loopback privacy tests, no auto-approved real site.",
+        "Failure preserves appropriate records/files; unsupported settings must not imply enforcement."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_browser",
+          "report": "audit/reference-integration-details/suites/native_browser.txt",
+          "reportSha256": "1f3b3241b98a598d13ccb9698772a8ba304a56a80677b84887509271ed77a1ca",
+          "available": true,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_browser.txt"
+        },
+        {
+          "suite": "native_downloads",
+          "report": "audit/reference-integration-details/suites/native_downloads.txt",
+          "reportSha256": "c1dd7fbd510823e19a6acfabd59521419c87b9bfff284f5a90b942f898c1664d",
+          "available": true,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_downloads.txt"
+        },
+        {
+          "suite": "native_settings",
+          "report": "audit/reference-integration-details/suites/native_settings.txt",
+          "reportSha256": "f0f40e82c42a357c6f7a4fa0c82508fa99603b74319f21bae5fb422586d095a8",
+          "available": true,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_settings.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "apps",
+      "title": "Agent-authored apps and messaging",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "browser.protocols",
+        "bundled_plugin.mini-apps",
+        "plugin.figma"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/app-protocol.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/app-protocol.ts#L1",
+          "sha256": "d9ba1f79759556b0ce808b7d3b47d50af2b2743085eb2b070dbc5ed0a18bf44e",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/app-protocol.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/bundled/plugins/mini-apps/metadata.json",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/mini-apps/metadata.json#L1",
+          "sha256": "c57f88c35a821dbccc0903e97677478e41e101432fbdc3136bd81b251ec8c825",
+          "localReference": "reference/stagewise/apps/browser/bundled/plugins/mini-apps/metadata.json",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx#L1",
+          "sha256": "019486ecb7c44ad7c6f39a8bd5e448d74ac38a516906b320f6c9800cc8165605",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/shared/plugins.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/plugins.ts#L1",
+          "sha256": "618b4804385bdcb69b8918020e7474a4883f9a413ed2e20fbe20a3338bf27bb7",
+          "localReference": "reference/stagewise/apps/browser/src/shared/plugins.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/apps/MiniAppHost.cpp",
+        "src/apps/MiniAppPage.cpp",
+        "src/apps/AppResourceStore.cpp",
+        "src/runtime/AgentToolHost.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/app-authoring-native.json",
+        "audit/mini-apps-native.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_app_resources",
+          "passed": true,
+          "totals": "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 66ms",
+          "report": "audit/paused-presentation-checkpoint/native_app_resources.txt"
+        },
+        {
+          "suite": "native_mini_apps",
+          "passed": true,
+          "totals": "Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 3484ms",
+          "report": "audit/paused-presentation-checkpoint/native_mini_apps.txt"
+        },
+        {
+          "suite": "native_sandbox_apps",
+          "passed": true,
+          "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 2098ms",
+          "report": "audit/paused-presentation-checkpoint/native_sandbox_apps.txt"
+        },
+        {
+          "suite": "native_runtime_apps",
+          "passed": true,
+          "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 6494ms",
+          "report": "audit/paused-presentation-checkpoint/native_runtime_apps.txt"
+        }
+      ],
+      "implemented": [
+        "Workspace-independent apps mount, local binary assets, scoped resource serving, host messages, theme and synchronous logical close.",
+        "Packaged Figma recipe runs with controlled fake selection; custom data rendered as text with documented patch."
+      ],
+      "remainingGaps": [
+        "CSP excludes arbitrary remote scripts/resources/iframes; not every upstream app runs.",
+        "No actual Figma account/service validation; complete overlapping idle continuation and app storage-management UI incomplete."
+      ],
+      "referenceAcceptance": [
+        "Publish origin/agent/resource isolation and listener lifecycle contracts.",
+        "Author/reload/close/reset with idle callbacks; wrong origin/chat and injected markup cannot acquire authority."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_app_resources",
+          "report": "audit/reference-integration-details/suites/native_app_resources.txt",
+          "reportSha256": "3a77d47af55b9c69137e3a4904da4b7f64aeebad44d73af195209e00d9a64c5c",
+          "available": true,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_app_resources.txt"
+        },
+        {
+          "suite": "native_mini_apps",
+          "report": "audit/reference-integration-details/suites/native_mini_apps.txt",
+          "reportSha256": "1c83b8d5cd7d6bd66415ea70474094e1dccb53cb470e05bc2f73b4904e7ab3a5",
+          "available": true,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_mini_apps.txt"
+        },
+        {
+          "suite": "native_sandbox_apps",
+          "report": "audit/reference-integration-details/suites/native_sandbox_apps.txt",
+          "reportSha256": "0e210374489c36ad2c1a63791e82c88473302126d467c1b539f11d328cda7c29",
+          "available": true,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sandbox_apps.txt"
+        },
+        {
+          "suite": "native_runtime_apps",
+          "report": "audit/reference-integration-details/suites/native_runtime_apps.txt",
+          "reportSha256": "0e13fa42625d90dd93adaf5391181bda8af497ca836955e1310233565d0812ce",
+          "available": true,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_runtime_apps.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "network-plugins",
+      "title": "Credentials and packaged integration skills",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "integration.plugins",
+        "plugin.github",
+        "plugin.posthog",
+        "plugin.supabase",
+        "plugin.vercel",
+        "bundled_plugin.remotion"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx#L1",
+          "sha256": "019486ecb7c44ad7c6f39a8bd5e448d74ac38a516906b320f6c9800cc8165605",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/shared/plugins.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/plugins.ts#L1",
+          "sha256": "618b4804385bdcb69b8918020e7474a4883f9a413ed2e20fbe20a3338bf27bb7",
+          "localReference": "reference/stagewise/apps/browser/src/shared/plugins.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/bundled/plugins/remotion/metadata.json",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/remotion/metadata.json#L1",
+          "sha256": "c77c5fc15a969b537566c9e8ea4137010206d3ae9c019798fc60bea5401dc1e7",
+          "localReference": "reference/stagewise/apps/browser/bundled/plugins/remotion/metadata.json",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/network/NetworkBroker.cpp",
+        "src/plugins/PluginCatalog.cpp",
+        "assets/plugins/PROVENANCE.json"
+      ],
+      "retainedEvidence": [
+        "audit/network-broker-evidence.md",
+        "audit/plugin-catalog-evidence.md"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_network",
+          "passed": true,
+          "totals": "Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 1885ms",
+          "report": "audit/paused-presentation-checkpoint/native_network.txt"
+        },
+        {
+          "suite": "native_plugins",
+          "passed": true,
+          "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 1070ms",
+          "report": "audit/paused-presentation-checkpoint/native_plugins.txt"
+        },
+        {
+          "suite": "native_runtime",
+          "passed": false,
+          "totals": "Totals: 9 passed, 1 failed, 0 skipped, 0 blacklisted, 6632ms",
+          "report": "audit/paused-presentation-checkpoint/native_runtime.txt"
+        }
+      ],
+      "implemented": [
+        "Five packaged service skill sets, integrity checks, per-agent allowlists and host-only credential expansion; bounded fetch/manual credential redirects."
+      ],
+      "remainingGaps": [
+        "Plugin installation/update ecosystem, OAuth and arbitrary plugin runtime incomplete.",
+        "Remotion and all bundled tools do not become compatible by enabling a preference; local tests are not live API validation."
+      ],
+      "referenceAcceptance": [
+        "Disabled/revoked credentials cancel owned calls; no cross-agent/origin or worker secret leakage.",
+        "List actual runtime dependencies and unsupported operations per plugin."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_network",
+          "report": "audit/reference-integration-details/suites/native_network.txt",
+          "reportSha256": "e3fac4aa370809410057a009fe4aa52fdcfd4771d4042c54b756b6063375c53f",
+          "available": true,
+          "passed": 19,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_network.txt"
+        },
+        {
+          "suite": "native_plugins",
+          "report": "audit/reference-integration-details/suites/native_plugins.txt",
+          "reportSha256": "de61f9b58116d0a1a6fc1274cf9d83bc962fda0b6a4e8d90ccf05a695205b05a",
+          "available": true,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_plugins.txt"
+        },
+        {
+          "suite": "native_runtime",
+          "report": "audit/reference-integration-details/suites/native_runtime.txt",
+          "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
+          "available": true,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_runtime.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "terminal",
+      "title": "Interactive terminal and shell tool gap",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "terminal.interactive",
+        "terminal.shell-engine",
+        "terminal.servers",
+        "tool.createShellSession",
+        "tool.createWatcherSession",
+        "tool.executeShellCommand"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/terminal",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/terminal#L1",
+          "sha256": null
+        },
+        {
+          "path": "packages/agent-shell/src/engine/session-manager.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts#L1",
+          "sha256": "943450a88765c2f6ee19eb4f0e10ae01016db669b395acd2770c4aeda9f20a85",
+          "localReference": "reference/stagewise/packages/agent-shell/src/engine/session-manager.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/local-ports-scanner.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/local-ports-scanner.ts#L1",
+          "sha256": "a63c173c4fcb5c9c1e2e9946a698d86216124e31f760d2c0ac8492d32741ef0a",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/local-ports-scanner.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 662,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L662",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/terminal/ConPtyProcess.cpp",
+        "src/terminal/TerminalWidget.cpp",
+        "src/core/ToolExecutor.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/terminal-implementation.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_terminal",
+          "passed": true,
+          "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 3105ms",
+          "report": "audit/paused-presentation-checkpoint/native_terminal.txt"
+        },
+        {
+          "suite": "native_core",
+          "passed": true,
+          "totals": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8752ms",
+          "report": "audit/paused-presentation-checkpoint/native_core.txt"
+        }
+      ],
+      "implemented": [
+        "Native Windows ConPTY terminal/libvterm rendering, input/resize/process lifecycle and bounded approved runCommand."
+      ],
+      "remainingGaps": [
+        "runCommand is not upstream persistent shell-session/watcher/executeShellCommand semantics.",
+        "Local server discovery, Smart classification and complete VT/IME/selection/session restoration parity remain gaps."
+      ],
+      "referenceAcceptance": [
+        "Publish OS shell/ConPTY dependencies and privilege boundary.",
+        "Real disposable shell tests cover input/resize/exit/cancel; do not claim xterm equivalence."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_terminal",
+          "report": "audit/reference-integration-details/suites/native_terminal.txt",
+          "reportSha256": "cd823f7ee9bfd4b501d562a6569e544be5e8d5023a163f2844c5104fc5bc5b43",
+          "available": true,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_terminal.txt"
+        },
+        {
+          "suite": "native_core",
+          "report": "audit/reference-integration-details/suites/native_core.txt",
+          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
+          "available": true,
+          "passed": 48,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_core.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "editor",
+      "title": "Native editor, file tree and previews",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "workspace.tree",
+        "workspace.file-backend",
+        "editor.controller",
+        "editor.diff",
+        "editor.media",
+        "editor.markdown"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/screens/main/file-tree/file-tree-sidebar.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/file-tree/file-tree-sidebar.tsx#L1",
+          "sha256": "fb52c9f1d36151909f554d97e711ff8e0ef8cd8eaea1063bae8dadae3ecfdf7b",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-tree-sidebar.tsx",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/file-tree",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/file-tree#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts#L1",
+          "sha256": "f250fdf0ed4d6d571c48959a5baaff64f554ca06a4313afc5d82209819a42629",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/ui/screens/main/file-tree/file-tree-diff-view.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/file-tree/file-tree-diff-view.tsx#L1",
+          "sha256": "b9d912f12da9e989bdb37a0ca0a3fcd8243bd56ba1bf9ff60556f803e8da2a04",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-tree-diff-view.tsx",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/ui/components/file-preview",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/components/file-preview#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/ui/components/markdown-editor",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/components/markdown-editor#L1",
+          "sha256": null
+        }
+      ],
+      "nativeSources": [
+        "src/editor/CodeEditor.cpp",
+        "src/editor/EditorWidget.cpp",
+        "src/editor/TextFile.cpp",
+        "src/ui/MainWindow.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/editor-implementation.json",
+        "audit/editor-theme-parity.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_editor",
+          "passed": false,
+          "totals": "Totals: 26 passed, 1 failed, 0 skipped, 0 blacklisted, 1527ms",
+          "report": "audit/paused-presentation-checkpoint/native_editor.txt"
+        },
+        {
+          "suite": "native_ui_audit",
+          "passed": true,
+          "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 8423ms",
+          "report": "audit/paused-presentation-checkpoint/native_ui_audit.txt"
+        }
+      ],
+      "implemented": [
+        "Lexical editor, find/replace, line numbers, encoding/BOM/EOL preservation, atomic save/external-change conflicts and native file tabs/Git preview."
+      ],
+      "remainingGaps": [
+        "The original UTF16 save denial did not recur in 30 focused and 10 full repeated runs; its external cause is unresolved. Controlled non-delete-sharing Windows handle tests verify safe denial and success after handle release; no speculative production workaround was introduced.",
+        "LSP, semantic completion/diagnostics, advanced cursors/folding/actions, full Monaco diff/Markdown/media behavior remain incomplete.",
+        "Optimistic save check is not an external-writer compare-and-swap."
+      ],
+      "referenceAcceptance": [
+        "Resolve actual saved failure and preserve exact encoding/EOL/undo/conflict tests.",
+        "Document edit versus preview capabilities and file limits."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_editor",
+          "report": "audit/reference-integration-details/suites/native_editor.txt",
+          "reportSha256": "20a073a3abf3fd999bea39ea82399b8b298841aa26a05cace9cce75e3acf233b",
+          "available": true,
+          "passed": 29,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_editor.txt"
+        },
+        {
+          "suite": "native_ui_audit",
+          "report": "audit/reference-integration-details/suites/native_ui_audit.txt",
+          "reportSha256": "0838a6db4b97d0e6809f2a4d5cb38c9e7d3ba7ebb9ea1182d4b6760ff5547a39",
+          "available": true,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_ui_audit.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "git",
+      "title": "Git/worktree lifecycle and watchers",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "git.workflows",
+        "git.worktrees"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L1",
+          "sha256": "b6af9bfa60907a601eedf09baafda9a84d49a23ae033d8ca88c57d1240ebeb8d",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/git/index.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/worktree-setup-settings.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/worktree-setup-settings.ts#L1",
+          "sha256": "b15dc5eaa833997b39da887686954350da62e48af7895dc54a74b95de77e7d90",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/worktree-setup-settings.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/git/GitService.cpp",
+        "src/git/GitRepositoryWatcher.cpp",
+        "src/git/WorktreeSetupRunner.cpp",
+        "src/ui/MainWindowGit.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/git-implementation.json",
+        "audit/git-host-regressions.json",
+        "audit/git-watcher-implementation.json",
+        "audit/worktree-settings-implementation.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_git",
+          "passed": true,
+          "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 112315ms",
+          "report": "audit/paused-presentation-checkpoint/native_git.txt"
+        },
+        {
+          "suite": "native_git_ui",
+          "passed": true,
+          "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 64779ms",
+          "report": "audit/paused-presentation-checkpoint/native_git_ui.txt"
+        },
+        {
+          "suite": "native_git_host",
+          "passed": true,
+          "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 48505ms",
+          "report": "audit/paused-presentation-checkpoint/native_git_host.txt"
+        },
+        {
+          "suite": "native_git_watcher",
+          "passed": true,
+          "totals": "Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 23841ms",
+          "report": "audit/paused-presentation-checkpoint/native_git_watcher.txt"
+        },
+        {
+          "suite": "native_git_watcher_ui",
+          "passed": true,
+          "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 22119ms",
+          "report": "audit/paused-presentation-checkpoint/native_git_watcher_ui.txt"
+        },
+        {
+          "suite": "native_worktree_settings",
+          "passed": true,
+          "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 42841ms",
+          "report": "audit/paused-presentation-checkpoint/native_worktree_settings.txt"
+        }
+      ],
+      "implemented": [
+        "System-Git status/branches/diff/worktree actions, setup settings/scripts, metadata topology watch, host editor/agent/terminal guards."
+      ],
+      "remainingGaps": [
+        "Usage journal/cleanup recommendations/snooze are preserved in the optionally buildable reference/native-experiments/git-usage prototype; production integration remains absent and usageKnown stays false where unknown.",
+        "Not a complete general Git UI; external hooks/config/credential helpers remain effective."
+      ],
+      "referenceAcceptance": [
+        "Temporary repos cover create/switch/remove, dirty guards, setup failures, aliases and Git-directory relocation.",
+        "Destructive cleanup cannot assume unknown usage is safe."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_git",
+          "report": "audit/reference-integration-details/suites/native_git.txt",
+          "reportSha256": "792ac8fe1e9ed38deb04d9af0f4014146a9a2110fa946ff0b6b9e0820c4295fb",
+          "available": true,
+          "passed": 20,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_git.txt"
+        },
+        {
+          "suite": "native_git_ui",
+          "report": "audit/reference-integration-details/suites/native_git_ui.txt",
+          "reportSha256": "951c4906d26523a911e96349efb4f68439891e03f5f8ba05226ab1cfa518724e",
+          "available": true,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_git_ui.txt"
+        },
+        {
+          "suite": "native_git_host",
+          "report": "audit/reference-integration-details/suites/native_git_host.txt",
+          "reportSha256": "d7e673fd190a5f3cf8f9c3d32cc49262e489bef50c219c38a64ad33c7a449c44",
+          "available": true,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_git_host.txt"
+        },
+        {
+          "suite": "native_git_watcher",
+          "report": "audit/reference-integration-details/suites/native_git_watcher.txt",
+          "reportSha256": "6e4624646c72838318346d00663e87036127add526c7aad6e4bdcc7896132f27",
+          "available": true,
+          "passed": 24,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_git_watcher.txt"
+        },
+        {
+          "suite": "native_git_watcher_ui",
+          "report": "audit/reference-integration-details/suites/native_git_watcher_ui.txt",
+          "reportSha256": "3b23fd4b870b432d1460bfebb0f674817142bee93a42947cdba4e0176a60c3d4",
+          "available": true,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_git_watcher_ui.txt"
+        },
+        {
+          "suite": "native_worktree_settings",
+          "report": "audit/reference-integration-details/suites/native_worktree_settings.txt",
+          "reportSha256": "d1ba9ca3ac882d58ba4bda7b3db59a445e5db2cec3cd1ca467effa9fb7e92412",
+          "available": true,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_worktree_settings.txt"
+        },
+        {
+          "suite": "reference_git_usage",
+          "report": "audit/reference-integration-details/suites/reference_git_usage.txt",
+          "reportSha256": "2794e480f28ea362f6b8e4cf1bf12a27126a0ed17abef580f6742fe0f927f723",
+          "available": true,
+          "passed": 30,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_git_usage.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "presentation",
+      "title": "Ordered transcript and workspace chrome",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "shell.layout",
+        "agents.composer",
+        "agents.sidebar"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/screens/main/index.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/index.tsx#L1",
+          "sha256": "e0bdb364fdfca5931ee1194c025864f7eda5488c4b9d1393de37de306ca533b7",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/main/index.tsx",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/ui/screens/main/sidebar/index.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/sidebar/index.tsx#L1",
+          "sha256": "683b936f65fa3b8005a190a82cc2474d2950ed4115a55da408d188a145843c55",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/main/sidebar/index.tsx",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/core/AgentPresentation.cpp",
+        "src/ui/ConversationView.cpp",
+        "src/ui/MarkdownParts.cpp",
+        "src/ui/Composer.h",
+        "src/ui/SidebarSplitter.h",
+        "src/ui/SidebarModel.cpp",
+        "src/ui/SidebarNavigation.cpp",
+        "src/ui/WorkbenchSplitter.h",
+        "src/ui/ChatSurface.h",
+        "src/ui/ChevronToolButton.h",
+        "src/ui/MainWindowWorkbench.cpp",
+        "src/ui/MainWindowLinks.cpp",
+        "src/links/TranscriptLinkResolver.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/presentation-native.json",
+        "audit/transcript-component-evidence.json",
+        "audit/main-chrome-native.json",
+        "audit/sidebar-navigation-native.json",
+        "audit/reference-integration-details/workbench-contract.json",
+        "audit/reference-integration-details/workbench-before.txt",
+        "audit/reference-integration-details/short-draft-before.txt",
+        "audit/reference-integration-details/links-handoff.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_presentation",
+          "passed": true,
+          "totals": "Totals: 89 passed, 0 failed, 0 skipped, 0 blacklisted, 16692ms",
+          "report": "audit/paused-presentation-checkpoint/native_presentation.txt"
+        },
+        {
+          "suite": "native_transcript",
+          "passed": true,
+          "totals": "Totals: 33 passed, 0 failed, 0 skipped, 0 blacklisted, 2423ms",
+          "report": "audit/paused-presentation-checkpoint/native_transcript.txt"
+        },
+        {
+          "suite": "native_transcript_ui",
+          "passed": true,
+          "totals": "Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 2321ms",
+          "report": "audit/paused-presentation-checkpoint/native_transcript_ui.txt"
+        },
+        {
+          "suite": "native_main_chrome",
+          "passed": true,
+          "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 2712ms",
+          "report": "audit/paused-presentation-checkpoint/native_main_chrome.txt"
+        }
+      ],
+      "implemented": [
+        "Stable ordered text/reasoning/tool display, bounded redacted previews and inline native approvals.",
+        "Native Markdown/code and a compact growing composer with a scale-adjusted 256px maximum and available-height adaptation.",
+        "Integrated age/workspace grouping, global persisted pins and context pin/reorder; service/topology invalidation and current-selection behavior have shared fixture coverage.",
+        "Integrated persisted content/file-tree split state, explicit browser/terminal/file-tree controls, chat-only view, centered 768px footer/history and responsive 350x250 native workbench.",
+        "Typed transcript file/attachment/tab/color/external links with per-chat leases, same-handle file capture and current-mount provenance. Only host-observed new rows acquire workspace/apps authority; restarted/forked rows do not silently gain it. Closed ordinary tabs reopen only from host-captured HTTP(S) URLs; mini-app/cross-chat targets fail closed."
+      ],
+      "remainingGaps": [
+        "Sidebar drag/drop, worktree pagination, attention/unread and full multi-workspace grouping are incomplete.",
+        "Window-scoped content tabs do not implement complete per-agent visibility/restoration; source recent-workspace suggestions, side chats, watcher/local-server popovers and full file-tree search/diff behavior remain absent.",
+        "Typed link authority is not persisted across restart; shell links and rich binary/image/PDF/archive previews remain unsupported.",
+        "Rich slash/@ composer, command center, trusted inline images, math/Mermaid, full tool cards/checkpoints and virtualization remain incomplete.",
+        "No exact pixel/DPI parity claim. Native sizing adaptations are explicit in the retained workbench contract."
+      ],
+      "referenceAcceptance": [
+        "Projection must preserve canonical replay and reject forged uiOnly suppression.",
+        "Narrow/zoom/restart and observer-deletion tests plus synthetic light/dark renders verify real geometry/state."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_presentation",
+          "report": "audit/reference-integration-details/suites/native_presentation.txt",
+          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
+          "available": true,
+          "passed": 89,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+        },
+        {
+          "suite": "native_transcript",
+          "report": "audit/reference-integration-details/suites/native_transcript.txt",
+          "reportSha256": "79bd3e485cd436c3adfac65cf100fed4bf6ccaa3aed7ef55263f2515e6a6de7c",
+          "available": true,
+          "passed": 33,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript.txt"
+        },
+        {
+          "suite": "native_transcript_ui",
+          "report": "audit/reference-integration-details/suites/native_transcript_ui.txt",
+          "reportSha256": "2e4a1a6896d1278ff74f102449d72e478ddb4563771c63c1fc1cdc01eff29be5",
+          "available": true,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript_ui.txt"
+        },
+        {
+          "suite": "native_main_chrome",
+          "report": "audit/reference-integration-details/suites/native_main_chrome.txt",
+          "reportSha256": "21f24366d7575a1916f9701c41056ec079a768b85c03808ecd14e1c65a14069f",
+          "available": true,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_main_chrome.txt"
+        },
+        {
+          "suite": "native_sidebar_model",
+          "report": "audit/reference-integration-details/suites/native_sidebar_model.txt",
+          "reportSha256": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e",
+          "available": true,
+          "passed": 19,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sidebar_model.txt"
+        },
+        {
+          "suite": "native_sidebar_navigation",
+          "report": "audit/reference-integration-details/suites/native_sidebar_navigation.txt",
+          "reportSha256": "de4e24d893c0bc07d902885cf4569a753576683fe4ccbdef884091f4188b5130",
+          "available": true,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_sidebar_navigation.txt"
+        },
+        {
+          "suite": "native_workbench_layout",
+          "report": "audit/reference-integration-details/suites/native_workbench_layout.txt",
+          "reportSha256": "8299f22eb362fa114ca531c43992e320002ae267be34d321a507d6b7af16ae90",
+          "available": true,
+          "passed": 34,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_workbench_layout.txt"
+        },
+        {
+          "suite": "native_workbench_helpers",
+          "report": "audit/reference-integration-details/suites/native_workbench_helpers.txt",
+          "reportSha256": "4b52c66593d2ea0f3ad7bacdaf123586ff166f33aaa27e703a55a92d2db96341",
+          "available": true,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_workbench_helpers.txt"
+        },
+        {
+          "suite": "native_chevron",
+          "report": "audit/reference-integration-details/suites/native_chevron.txt",
+          "reportSha256": "5d6b74e3d5d27c1ecd8a311e17da0d9141688de1eb1de44dbe978ee9807c9e51",
+          "available": true,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_chevron.txt"
+        },
+        {
+          "suite": "native_transcript_links",
+          "report": "audit/reference-integration-details/suites/native_transcript_links.txt",
+          "reportSha256": "4b27c5f86e79f1e989dcc70524a355231d99aa408eb48e28e4ed0a9d233f44bc",
+          "available": true,
+          "passed": 39,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript_links.txt"
+        },
+        {
+          "suite": "native_transcript_link_ui",
+          "report": "audit/reference-integration-details/suites/native_transcript_link_ui.txt",
+          "reportSha256": "913dfbba7e57c91a180adab62a6c431fb71818f4e4e87878b7773863c438854b",
+          "available": true,
+          "passed": 11,
+          "failed": 0,
+          "skipped": 1,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript_link_ui.txt"
+        },
+        {
+          "suite": "native_transcript_tabs_real",
+          "report": "audit/reference-integration-details/suites/native_transcript_tabs_real.txt",
+          "reportSha256": "be3f864b676e3fc88b5961ecc45e3be102eb08594645f1b36d092b416bceeac3",
+          "available": true,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_transcript_tabs_real.txt"
+        },
+        {
+          "suite": "native_ui",
+          "report": "audit/reference-integration-details/suites/native_ui.txt",
+          "reportSha256": "1ddaaca35e38c6006a9f23ccb170dba26c8fd934c6ec1046083fd30b3809ff1e",
+          "available": true,
+          "passed": 11,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_ui.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "settings",
+      "title": "Preferences, appearance and hosted account gaps",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "persistence.preferences",
+        "account.auth",
+        "account.usage"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/preferences.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/preferences.ts#L1",
+          "sha256": "5ef2c93056587e194b86ad5c14ce2f1ae831301aa48ead28bd43c7e02389d688",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/preferences.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/account-section.tsx#L1",
+          "sha256": "a9fae0e46aa77303c75f4255df7af8559434203a8955c0823c37ade8c17792fe",
+          "localReference": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "src/ui/SettingsPage.cpp",
+        "src/ui/AppStyle.cpp"
+      ],
+      "retainedEvidence": [
+        "audit/settings-context-audit.json",
+        "audit/settings-runtime-gaps.json"
+      ],
+      "savedCheckpointTests": [
+        {
+          "suite": "native_settings",
+          "passed": true,
+          "totals": "Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 461ms",
+          "report": "audit/paused-presentation-checkpoint/native_settings.txt"
+        },
+        {
+          "suite": "native_settings_audit",
+          "passed": true,
+          "totals": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 343ms",
+          "report": "audit/paused-presentation-checkpoint/native_settings_audit.txt"
+        }
+      ],
+      "implemented": [
+        "Typed versioned preferences, conflict-safe saves, provider/model configuration, theme/fonts, permissions, archives and plugin controls."
+      ],
+      "remainingGaps": [
+        "Stored preference is not proof of every runtime consumer; older gap audit is superseded only by later module evidence.",
+        "Stagewise hosted account/subscription/billing, notification packs, full onboarding/language/telemetry/update behavior incomplete."
+      ],
+      "referenceAcceptance": [
+        "Every active visible control has an implemented consumer or explicit unavailable state.",
+        "Keep hosted service contracts separate from local BYOK provider support."
+      ],
+      "currentIntegratedTests": [
+        {
+          "suite": "native_settings",
+          "report": "audit/reference-integration-details/suites/native_settings.txt",
+          "reportSha256": "f0f40e82c42a357c6f7a4fa0c82508fa99603b74319f21bae5fb422586d095a8",
+          "available": true,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_settings.txt"
+        },
+        {
+          "suite": "native_settings_audit",
+          "report": "audit/reference-integration-details/suites/native_settings_audit.txt",
+          "reportSha256": "a78d9f743ffe1c02064b61f3a4e93977a5d7b3ec08ea0c05e73f5021d6811cfc",
+          "available": true,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/native_settings_audit.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "external",
+      "title": "Research, ACP and developer integrations",
+      "status": "not_implemented_or_not_verified",
+      "inventoryIds": [
+        "providers.acp",
+        "integration.devtool-api",
+        "integration.deep-links",
+        "integration.research",
+        "integration.log-ingest",
+        "tool.listLibraryDocs",
+        "tool.searchInLibraryDocs",
+        "tool.getLintingDiagnostics"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/agents/acp",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/acp#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/dev-tool-api",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/dev-tool-api#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/uri-handler.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/uri-handler.ts#L1",
+          "sha256": "3dd3434cbb7bf268ff7860855e1e1429c75d87643b95d9768e58303e6894f8e3",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/uri-handler.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/research",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/research#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/log-ingest",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/log-ingest#L1",
+          "sha256": null
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 639,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L639",
+          "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [],
+      "retainedEvidence": [],
+      "savedCheckpointTests": [],
+      "implemented": [],
+      "remainingGaps": [
+        "No completed native evidence for ACP external agents, library-doc research, lint diagnostics, development API, custom URI or log ingestion parity."
+      ],
+      "referenceAcceptance": [
+        "Pin exact API contracts and mark unsupported endpoints; never fabricate successful outputs.",
+        "Use controlled local adapter fixtures before live authentication/service claims."
+      ],
+      "currentIntegratedTests": [],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    },
+    {
+      "id": "distribution",
+      "title": "Build, dependencies and release scope",
+      "status": "implemented_with_limits",
+      "inventoryIds": [
+        "distribution.updates",
+        "distribution.packaging",
+        "distribution.telemetry"
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/auto-update.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auto-update.ts#L1",
+          "sha256": "f76c8d9d470fd6b2bcd3e76cdae0a333998f92137419b03282ec803ed5d62cdd",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/auto-update.ts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/forge.config.mts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/forge.config.mts#L1",
+          "sha256": "9608e15071ed5e9a0f4ba2f862d6108f171ac27b9b1967efa564219ee0a1f276",
+          "localReference": "reference/stagewise/apps/browser/forge.config.mts",
+          "hashBasis": "pinned_git_blob"
+        },
+        {
+          "path": "apps/browser/src/backend/services/telemetry.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/telemetry.ts#L1",
+          "sha256": "fbd8c82b116fb703e624bc77d701ee324829832d0f309264537bf0606c58764d",
+          "localReference": "reference/stagewise/apps/browser/src/backend/services/telemetry.ts",
+          "hashBasis": "pinned_git_blob"
+        }
+      ],
+      "nativeSources": [
+        "CMakeLists.txt",
+        "CMakePresets.json",
+        "scripts/build.ps1"
+      ],
+      "retainedEvidence": [
+        "audit/toolchain.json",
+        "audit/paused-native-port-2026-11-05.json"
+      ],
+      "savedCheckpointTests": [],
+      "implemented": [
+        "Windows x64 Qt/static MinGW native app and QuickJS worker; external WebView2Loader/Evergreen and installed Git/shell dependencies.",
+        "Configurable Qt/compiler/CMake paths, a shared ade_ui target, and optional ADE_BUILD_EXPERIMENTS=OFF by default; ConfigureOnly was verified in a path containing spaces and integrated builds succeeded on the existing toolchain."
+      ],
+      "remainingGaps": [
+        "No clean-machine toolchain bootstrap/CI or signed updater/installer is demonstrated; Linux/macOS native ports are unverified.",
+        "Static Qt does not mean a dependency-free single executable. WebView2 runtime/loader, system Git/shell and binary distribution license obligations remain.",
+        "Final exact exported-tree build and source scan remain publication gates; current55-suite passing coverage is assembled from the first full run plus repaired browser-suite evidence."
+      ],
+      "referenceAcceptance": [
+        "Clean checkout build/test recipe, required runtime checks and third-party/source materials must be reproducible before binary release."
+      ],
+      "workingTreeRemediation": "Root parameterized paths and verified ConfigureOnly in a spaced path; shared ade_ui/ADE/sidebar build successful. Final export and all-suite run pending.",
+      "currentIntegratedTests": [
+        {
+          "suite": "reference_file_mutations",
+          "report": "audit/reference-integration-details/suites/reference_file_mutations.txt",
+          "reportSha256": "824e3d6171f109d3dbd13d7f130ca5566a9a36336703db406aa51eb7a3f95da7",
+          "available": true,
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_file_mutations.txt"
+        },
+        {
+          "suite": "reference_git_usage",
+          "report": "audit/reference-integration-details/suites/reference_git_usage.txt",
+          "reportSha256": "2794e480f28ea362f6b8e4cf1bf12a27126a0ed17abef580f6742fe0f927f723",
+          "available": true,
+          "passed": 30,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "originalLocalReport": "build-next/Testing/reference_git_usage.txt"
+        }
+      ],
+      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+    }
+  ],
+  "privateStageHandoff": {
+    "sidebar": "Integrated in production working tree; shared model19/navigation9 cases pass. Historical before failures and contract retained in audit/sidebar-navigation-native.json and audit/reference-integration-details.",
+    "workbench": "Integrated in production working tree; layout34/helpers4/chevron9 cases pass. Historical private handoff is preserved as provenance, not current integration status.",
+    "mutations": "Preserved optional experimental library/test; current root build passes40 cases. Not linked into ADE and no production mutation adapter.",
+    "gitUsage": "Preserved optional experimental library/test; current root build passes30 cases. Not linked into ADE and no production cleanup UI.",
+    "typedLinks": "Integrated in production working tree; resolver39, UI11 plus one offscreen skip, and separate native-Windows closed-tab fixture3 pass. No durable restart authority or rich media preview claim."
+  },
+  "finiteReferenceAcceptance": [
+    {
+      "id": "R1",
+      "criterion": "A frozen source commit has retained passing coverage for every configured suite, with exact hashes and explicit run aggregation/before-after evidence; commit/export identity remains parent-owned.",
+      "state": "55_suite_passing_coverage_from_54_initial_plus_1_repaired_final_commit_pending"
+    },
+    {
+      "id": "R2",
+      "criterion": "All701 original contracts remain pinned; this implemented/partial/unsupported critical map accompanies native code.",
+      "state": "prepared"
+    },
+    {
+      "id": "R3",
+      "criterion": "A curated upstream text-source snapshot and manifest preserve important contracts without restricted assets; it is clearly separated from native implementation.",
+      "state": "curated_source_copied_and_hash_verified"
+    },
+    {
+      "id": "R4",
+      "criterion": "Fresh-machine source build and local fixture walkthrough work without ignored private/out/upstream files or real keys.",
+      "state": "not_demonstrated"
+    },
+    {
+      "id": "R5",
+      "criterion": "Walkthrough covers scoped read/write, browser CDP, authored app, attachment, fork/restart and cancellation; preserve negative isolation tests.",
+      "state": "component_fixtures_exist_cohesive_reference_walkthrough_pending"
+    },
+    {
+      "id": "R6",
+      "criterion": "Durable mutation/undo, shell-session, multi-mount, editor and authentication gaps remain explicit until separately implemented.",
+      "state": "documented_no_parity_claim"
+    },
+    {
+      "id": "R7",
+      "criterion": "Publication blockers and final export/history secret/assets review are resolved before push; binary release has additional dependency-license/build gates.",
+      "state": "desktop_authenticated_export_final_scan_and_push_pending"
+    }
+  ],
+  "fullParityScope": "Reference publication need not wait for every feature if clearly labeled partial; it does not cancel the remaining full native implementation goal.",
+  "sourceManifest": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "31ebe8ec56385d6240048652cf7698e67533c1e516e999a17784d1344f6fb285",
+      "bytes": 33484,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "CMakePresets.json",
+      "sha256": "2a5df27305000419ff194b093f8a1ce8b55775aee4d83d3097e4f0de469fc154",
+      "bytes": 873,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "assets/plugins/PROVENANCE.json",
+      "sha256": "7c9e124b4f8738a5cf87c52bcff1692fce68a90547474b23896704f14bd47ea8",
+      "bytes": 2340,
+      "hashBasis": "exact_preserved_bytes"
+    },
+    {
+      "path": "reference/native-experiments/CMakeLists.txt",
+      "sha256": "a95bc0d0313c732339b81a959df9a6af0c468a15b4dbab2a01b470ca87ee3630",
+      "bytes": 2074,
+      "hashBasis": "exact_preserved_bytes"
+    },
+    {
+      "path": "scripts/build.ps1",
+      "sha256": "69bf87cb7cddfcb0d4938d048813941a0a153d13474b7bcc77275c503e10b459",
+      "bytes": 3572,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/apps/AppResourceStore.cpp",
+      "sha256": "c2b5a40488460fb13be02b2304b33b03fd572c8627024450306a34a30b5b01a8",
+      "bytes": 7525,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/apps/MiniAppHost.cpp",
+      "sha256": "8c080dceecc0fcbf686760728c563caec34f75d1a7fa871d9d701f9a9810bb0e",
+      "bytes": 9665,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/apps/MiniAppPage.cpp",
+      "sha256": "8eb00ed7c61e69e20a1957cb234b737f446b6cf7663b9a0219b2dd8d6c5ccd25",
+      "bytes": 7073,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/AttachmentPipeline.cpp",
+      "sha256": "1ecb0da983fad569e156f86e1e0567891948e8480f43b6d80d1196536137eef7",
+      "bytes": 16235,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/AttachmentStore.cpp",
+      "sha256": "60f784a31c02c0faf7bf871c6f21f1c5175b50fa202b83309d925eeeddd14822",
+      "bytes": 20193,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/FileReadSnapshotStore.cpp",
+      "sha256": "d02a7c5a6cf0335a5607fb8cb8b8cdc8701018f3198460f46d0d5c8f031b976b",
+      "bytes": 19451,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/FileTransformer.cpp",
+      "sha256": "d5c7a83c64d09efb748f246e4371acbad5c5a26eb64c33ca823d8e44b2b7ec89",
+      "bytes": 21140,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserToolBridge.cpp",
+      "sha256": "0e45b8d539f9549f5710ae99eb3686eb069b7ffe0f01324f1498b4641fed0926",
+      "bytes": 22033,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserWidget.cpp",
+      "sha256": "da0dc0ffc89addf340b4fb34a06f203705cf4069bdbf9befc2751b2c5722bd18",
+      "bytes": 62632,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "sha256": "56512082e02253b933b28bd5c6a2cd5eac76b24b5512cd6a3dd4b715b7a63432",
+      "bytes": 56995,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentPresentation.cpp",
+      "sha256": "376a17ad5bcc16ca7fed30544f08bdef0e545b44e91ce62fe37952dc60c1b5ab",
+      "bytes": 15059,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ContextLoader.cpp",
+      "sha256": "a589eb488cfb662764f9f0afca4d020126b5e9e47633f1d57e1672a3d95a20db",
+      "bytes": 19683,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ModelFallback.h",
+      "sha256": "b3403a706633f2a6663a831e081e3fddf8066cacbc544e12962c757939b3c248",
+      "bytes": 1592,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ProviderProtocol.cpp",
+      "sha256": "671fa015bcb8d5721dc8d9601491e28738ac705dd6d2d374a7727ad995308efc",
+      "bytes": 14751,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "sha256": "c313038bdf1393566b15cee923e25412c4e31057546d4644b317bfa8c5cbbeb3",
+      "bytes": 10774,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ScopedDirectory.cpp",
+      "sha256": "d8d5b19e52c3b2e2d053d4c0c900d4ad68a0f1da20467af3f1cbc02fab721689",
+      "bytes": 6585,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256": "5da22a4d0b801a633d257d6a49df906b56b20e98c7fb723a0fc0fa0b726ee34f",
+      "bytes": 40534,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/UtilityService.cpp",
+      "sha256": "ee87548098d1c2e9fe943775e376d01209691a50c6e4166dd74c19ad98632eb5",
+      "bytes": 14662,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/editor/CodeEditor.cpp",
+      "sha256": "ffb5fd5c6f933feca62351ff385dd10a2a9caa5df93da4fe3b895b0912226c45",
+      "bytes": 13888,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/editor/EditorWidget.cpp",
+      "sha256": "187fc843011015fa995125032472798b06ddb481aabc5ee5f087ebe05bb17b95",
+      "bytes": 13669,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/editor/TextFile.cpp",
+      "sha256": "c85f86f639a63f65e3b4f7612c0f53a208b9cab80661e1cd48aef3984b708f49",
+      "bytes": 8650,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitRepositoryWatcher.cpp",
+      "sha256": "39915e05d4cfcbadecdcf40b3d0bf3b37d3466ff7cea1f84af2dc56244ee5494",
+      "bytes": 20880,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "sha256": "8af45461a7b5decb8c31e9b0e11e6eaf0cd4fc8a26d8e42feaf26bde2b288055",
+      "bytes": 46162,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeSetupRunner.cpp",
+      "sha256": "1ac31ce259136e9299b41f9a9a4a925a02a9ef756fab85163dd1d0b7b1414c17",
+      "bytes": 7487,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.cpp",
+      "sha256": "78b21bf3eda201fb8140776b3bcec966f6d11237e90fd80c35eeaf45ea07d56f",
+      "bytes": 18658,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.h",
+      "sha256": "676480d875a4ba62cb9657b31940b0706f0c7c2c80e6057eb174f891c714c4e1",
+      "bytes": 2532,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/network/NetworkBroker.cpp",
+      "sha256": "9ebc26d015ffc8e549a26f5cf78597d3cffc417bb4e01439fdd39fdd8302ddef",
+      "bytes": 26452,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/plugins/PluginCatalog.cpp",
+      "sha256": "92793bcdc3567ca99aa9d1858d829b98121eda71f9b6bb3bf40247c07bea8c2f",
+      "bytes": 15169,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256": "2a5edebb61e11da5346b50ad869ad53d97cdd29d6288717dea31b9c00692d87e",
+      "bytes": 16654,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "e7f974acaeb2ae71cf0e24639b18a22d7e91bac6057553a03d5a2bfd423ba158",
+      "bytes": 2688,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AttachmentFileBroker.cpp",
+      "sha256": "c64081a80013e62f894ff1716b361e5615da233ec63c4556ab2b1c4c97e161d0",
+      "bytes": 7811,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.cpp",
+      "sha256": "6972a0e0b5188501f9f0ba26db7c18d67d1bcfb56e3ffd054b1836ecc9444e7a",
+      "bytes": 30414,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/network_bootstrap.h",
+      "sha256": "4884237c21f7a4007edfe1b4009c76dbffcc9d451df5da15e308a44be08820d8",
+      "bytes": 14163,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/worker_main.cpp",
+      "sha256": "9a719557e424a50fb7c84fd30bfd86c27a8dfc2a34012f2a743bcbb7f15bb33f",
+      "bytes": 48394,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/ConPtyProcess.cpp",
+      "sha256": "6add614d9f3d27123a793a8cc0f0d7f09271805628c242a6195119c09899d51d",
+      "bytes": 13174,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalWidget.cpp",
+      "sha256": "9105824e9c2356fc0a663012b826e9de1fc48b950bd58d234bebabbcf77882bd",
+      "bytes": 12065,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/AppStyle.cpp",
+      "sha256": "ab83d3e1898ab0687f9de743c3d47301c5dbb34389138d0c891e76a483fd5457",
+      "bytes": 3013,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ChatSurface.h",
+      "sha256": "1260ce6753116084f78ea05062ad99b5f258c5640ac3149ee543fa3739d1d046",
+      "bytes": 4280,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ChevronToolButton.h",
+      "sha256": "c2e726163d4dfacc7f8dd2b0e8c46a6c4054d0aefc88d09ac6d32cd5512ac512",
+      "bytes": 2662,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "sha256": "0fc9339645e34e105cb0f482601b37dce714403dea5aa26392eff428bf42a788",
+      "bytes": 3744,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "sha256": "b55e1d74e13497b60105ee631bedebfc2982c66eb3d46011f2e813575f2fa824",
+      "bytes": 33113,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.h",
+      "sha256": "43d2163d092f051191d2c21144885a806450ee85ac7fa414d3d9bed58792374e",
+      "bytes": 1171,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/DownloadsPage.cpp",
+      "sha256": "01a856c72eb39f0cae3490e0108f1c3667ca32456fe2131e86616837ad740f8e",
+      "bytes": 20019,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "01585c8dda089e1d3e3b6587663822740d74c1ba501c566134bae9fb156d3191",
+      "bytes": 65215,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "57c9d6379634e9e5b60185c31c7818d6605183827a04846b5ef78321dc821bef",
+      "bytes": 6147,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "ac1f966111430060bd6ca42ac2c5b012d2ec654719261f53f30b70a694075724",
+      "bytes": 11099,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "sha256": "6fd03acc7045d0d21772db165491c88baf2433bb083586c360a9b5ab4273b595",
+      "bytes": 9617,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "sha256": "5abfefef43aa6fad5a5e437a233b83f261d1719baca24e099ad64c398ac1aac7",
+      "bytes": 8179,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256": "96a59786c7f38ea7019c5d06d83ee937140a1c131d8b9d374e10390071447b2c",
+      "bytes": 6044,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MarkdownParts.cpp",
+      "sha256": "f3aeb059727e5dfd91b06332385ffbd9072b23972d3f75ae8ebd7ff9fe49da71",
+      "bytes": 14676,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256": "5b9bb835959c165e38976581ea4047b64b381c443aafdcf1d52598de633b4879",
+      "bytes": 13212,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "sha256": "39d85383bfbced72ac8d016526c016293d18f042fdfbd42ea219ee8e177b438a",
+      "bytes": 1646,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "sha256": "03e7cd1cc705070ded8cbfd8e583a2cae76f168ac99cddf71a00ec4f7463de28",
+      "bytes": 84166,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarModel.cpp",
+      "sha256": "2f4399e0fd885291cecbc946e4ec94a3edd478c3d6ee536e48df1cc571a6b51a",
+      "bytes": 8535,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarModel.h",
+      "sha256": "07c24ba5662e44554da0d7437040fe1b8442098d13e20323c86684a015c87daf",
+      "bytes": 1421,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.cpp",
+      "sha256": "b083f47461722f4303624938c4bfe7f3b9eb99dca4c018bcc292a711cd5a45b1",
+      "bytes": 16375,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.h",
+      "sha256": "6253e985b7f39102c69bd17de98f818e320a889c935adf1b2fcb8e8716994c53",
+      "bytes": 2185,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarSplitter.h",
+      "sha256": "c321d425a00650ab9c8634d27fd862b00e2f3d96ae7d8eaba4ca583b1ada824a",
+      "bytes": 5059,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/WorkbenchSplitter.h",
+      "sha256": "81e6b7859fd1fdd638eaffbcdfda95e50c776bfbd5dbf49ed3fdcc151692e273",
+      "bytes": 7463,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_attachments.cpp",
+      "sha256": "e9f06d3aa3584f10d223c850ebb315ca7dcca860adf5cdfd5ddf5fdcff024c5a",
+      "bytes": 29692,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_tools.cpp",
+      "sha256": "148c2df7480f2531c51cf8230c79daf4066aec8b7bce6b141a5a6f9213822d29",
+      "bytes": 38389,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_chevron.cpp",
+      "sha256": "f01a3daa1a44dbd176a5bd52eac4ebae0d0d4c2c3de8c655a99c8e886755e2c9",
+      "bytes": 4325,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_editor.cpp",
+      "sha256": "406bfd8e4682d2f4a86bf77e7662d3ade8417146a1fc7d6245e9d66ad7a47bd8",
+      "bytes": 19021,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_runtime.cpp",
+      "sha256": "68e50f5e4299eae8be3c78e98e1034f153a1b55a93655e60cb46b4fafe1a15c0",
+      "bytes": 21999,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_sidebar_model.cpp",
+      "sha256": "8d8e6915b2bbb1b8c9d33e1bbb3a7d3aec03393a624824c2cf3d8ab5b8e2fcff",
+      "bytes": 7020,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_sidebar_navigation.cpp",
+      "sha256": "e6ec99cb25b75e5f9d778260e085b8316f26a3b72b00df5ed7fa61fb5aa4a5f9",
+      "bytes": 10496,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "9a66b05cdec18ce1c1e6943ebf6398966c03422a280fd03dede1f399adeb185d",
+      "bytes": 20467,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_links.cpp",
+      "sha256": "ea72e4a6bd3dd8ec4d3e90bd95a9fb7b0316783790d6eff90256615cccc35672",
+      "bytes": 12754,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_ui.cpp",
+      "sha256": "3ba0b3fc9346264cd95885610a2c652682845ea3ad3fd57c020833e21b79472c",
+      "bytes": 14517,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workbench_helpers.cpp",
+      "sha256": "109e44ec683a1d410f5ed947a9b54ffc6dabb6c4b07b8e9c84e2a353f0c13f4d",
+      "bytes": 1999,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "sha256": "925ef52401577f57ab3825d5a58d9cff4157ef62dea72db82068154e9d71b829",
+      "bytes": 20192,
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "sourceReference": {
+    "manifest": "reference/stagewise/REFERENCE_MANIFEST.json",
+    "files": 1400,
+    "bytes": 10798194,
+    "preservesAll102InventorySourcePaths": true,
+    "nativeImplementationClaim": false
+  },
+  "experimentalReference": [
+    "reference/native-experiments/file-mutations/EXPERIMENT_MANIFEST.json",
+    "reference/native-experiments/git-usage/EXPERIMENT_MANIFEST.json"
+  ],
+  "workingTreeUpdates": {
+    "sidebar": "Integrated: age/workspace groups, persisted pins, last-message fallback and service/topology retirement; shared19/9 pass.",
+    "workbench": "Integrated: responsive content/sidebar/file-tree controls, centered compact composer/history, preserved draft and split state; layout34/helpers4/chevron9 pass.",
+    "typedLinks": "Integrated scoped resolver and host UI routing;39/11+1skip/nativeWindows3 pass.",
+    "build": "Parameterized paths/shared ade_ui; optional source experiments actually built and tested40/30. Clean-machine/bootstrap and final export verification remain separate.",
+    "publication": "Public empty secusbdl/ade exists. GitHub Desktop is signed in as secusbdl; no source push performed. Final new export destination is out/publish-ade-reference; existing out/publish-ade scaffold is preserved."
+  },
+  "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+  "currentIntegratedCheckpoint": {
+    "status": "all_55_suites_have_passing_coverage_from_initial_run_plus_repaired_suite",
+    "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+    "sourceBaseCommit": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+    "sourceState": "Uncommitted integrated working tree; native source hashes below identify reviewed bytes, not a new committed release.",
+    "total": 55,
+    "passed": 55,
+    "failed": [],
+    "ctestSkippedSuites": 0,
+    "caseSkipScope": "native_transcript_link_ui passes 11 cases and skips its real-WebView case under offscreen; native_transcript_tabs_real runs that focused native Windows fixture and passes 3 cases including init/cleanup. Suite success is not a no-skipped-case claim.",
+    "finalEvidenceOwner": "Parent-owned audit/reference-integration.json retains initial full-run evidence, repaired browser-suite/focused evidence and exact source hashes. Final export build/scan and push remain pending.",
+    "fullParityClaim": false,
+    "retainedFirstFullRun": "audit/reference-integration-details/first-full-run.xml",
+    "integrationAudit": "audit/reference-integration.json",
+    "firstFullRun": {
+      "total": 55,
+      "passed": 54,
+      "failed": [
+        "native_browser_tools"
+      ],
+      "report": "audit/reference-integration-details/first-full-run.xml",
+      "reportSha256": "59bb9c98ec4228de145c6c67376950dcab575c3158f4afc1a0656a575c1ae3ae"
+    },
+    "aggregation": "Coverage union:54 passing suites from the initial full55-suite run plus the repaired native_browser_tools suite passing24 cases. This is not one all-green55-suite execution. Only the browser test fixture changed after the first full run; no production source changed for this repair.",
+    "finalBrowserValidation": {
+      "productionSourceChanged": false,
+      "changedFile": "tests/test_browser_tools.cpp",
+      "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+      "fullSuite": {
+        "suite": "native_browser_tools",
+        "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+        "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Full suite"
+      },
+      "focusedRepeats": [
+        {
+          "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+          "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+          "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+          "reportHashBasis": "canonical_git_text_LF",
+          "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "scope": "Focused regression including init/cleanup"
+        },
+        {
+          "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+          "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+          "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+          "reportHashBasis": "canonical_git_text_LF",
+          "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "scope": "Focused regression including init/cleanup"
+        }
+      ],
+      "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+    },
+    "coverageReport": "audit/reference-integration.json"
+  },
+  "resumedFailureReview": {
+    "report": "audit/reference-integration-details/resumed-failure-review.json",
+    "productionSourceChangedForFourFailureReview": false,
+    "results": {
+      "native_attachments": {
+        "suite": "native_attachments",
+        "report": "audit/reference-integration-details/suites/native_attachments.txt",
+        "reportSha256": "363bd111638a2a7b9624511498e66e5f33500072d882d00e9e4eab109d805288",
+        "available": true,
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_attachments.txt"
+      },
+      "native_runtime": {
+        "suite": "native_runtime",
+        "report": "audit/reference-integration-details/suites/native_runtime.txt",
+        "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
+        "available": true,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_runtime.txt"
+      },
+      "native_ui": {
+        "suite": "native_ui",
+        "report": "audit/reference-integration-details/suites/native_ui.txt",
+        "reportSha256": "1ddaaca35e38c6006a9f23ccb170dba26c8fd934c6ec1046083fd30b3809ff1e",
+        "available": true,
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_ui.txt"
+      },
+      "native_editor": {
+        "suite": "native_editor",
+        "report": "audit/reference-integration-details/suites/native_editor.txt",
+        "reportSha256": "20a073a3abf3fd999bea39ea82399b8b298841aa26a05cace9cce75e3acf233b",
+        "available": true,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_editor.txt"
+      }
+    },
+    "scope": "Assertions were updated to compare exact captured metadata separately from versioned display metadata; composer enforces the source cap. Editor old cause remains unproven; controlled sharing-denial regression demonstrates correct failure semantics."
+  },
+  "sourceManifestPolicy": "Native Git text hashes use canonical LF bytes (CRLF -> LF) for the planned fresh export. Files marked -text, including reference sources, retain exact byte hashes. Working tree base commit alone does not identify this integrated state.",
+  "packagedBuildObservation": {
+    "report": "audit/reference-integration.json",
+    "path": "out/reference-checkpoint/ADE.exe",
+    "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0",
+    "scope": "Parent-built local native test package, not a signed/public binary release. Final exported source build on current toolchain remains parent-owned; clean-machine provisioning is not demonstrated."
+  },
+  "browserFixtureRepair": {
+    "productionSourceChanged": false,
+    "changedFile": "tests/test_browser_tools.cpp",
+    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+    "fullSuite": {
+      "suite": "native_browser_tools",
+      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+      "reportHashBasis": "canonical_git_text_LF",
+      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Full suite"
+    },
+    "focusedRepeats": [
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      },
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      }
+    ],
+    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+  }
+}

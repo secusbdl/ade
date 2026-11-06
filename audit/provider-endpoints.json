@@ -1,0 +1,869 @@
+{
+  "baseline_sha": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Metadata extracted from pinned Stagewise source; no credentials read and no network calls made.",
+  "credential_labels": {
+    "PORTKEY": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    },
+    "YOU": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    },
+    "SAKANA": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    },
+    "THEROUTER": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    },
+    "ZAI": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "z-ai-api",
+      "base_url": "https://api.z.ai/api/paas/v4",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 619,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L619"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "glm-4.5-flash",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 71,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L71"
+      }
+    },
+    "GEMINI": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "google-api",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 587,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L587"
+      },
+      "api_spec": "google",
+      "upstream_validation_model": "gemini-2.0-flash",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 77,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L77"
+      }
+    },
+    "XAI": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "x-ai-api",
+      "base_url": "https://api.x.ai/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 707,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L707"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "grok-3-mini",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 75,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L75"
+      }
+    },
+    "OPENAI": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "openai-api",
+      "base_url": "https://api.openai.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 579,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L579"
+      },
+      "api_spec": "openai-responses",
+      "upstream_validation_model": "gpt-4o-mini",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 76,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L76"
+      }
+    },
+    "DEEPSEEK": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "deepseek-api",
+      "base_url": "https://api.deepseek.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 611,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L611"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "deepseek-chat",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 68,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L68"
+      }
+    },
+    "PERPLEXITY": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    },
+    "MINIMAX": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "minimax-api",
+      "base_url": "https://api.minimax.io/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 629,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L629"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "minimax-m2.7",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 72,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L72"
+      }
+    },
+    "MOONSHOT": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "moonshotai-api",
+      "base_url": "https://api.moonshot.ai/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 595,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L595"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "kimi-k2.6",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 69,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L69"
+      }
+    },
+    "QWEN": {
+      "status": "upstream_source_confirmed_not_account_verified",
+      "provider_type": "alibaba-api",
+      "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 603,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L603"
+      },
+      "api_spec": "openai-chat-completions",
+      "upstream_validation_model": "qwen-turbo",
+      "default_model": null,
+      "model_note": "Validation probe model is not the default chat model and its current availability has not been checked.",
+      "validation_source": {
+        "path": "apps/browser/src/backend/agents/providers/official-api.ts",
+        "line": 70,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L70"
+      }
+    },
+    "NVIDIA": {
+      "status": "not_configured",
+      "reason": "No direct upstream provider endpoint found; do not infer destination from credential label.",
+      "base_url": null
+    }
+  },
+  "upstream_endpoints": {
+    "stagewise": {
+      "base_url": "https://llm.stagewise.io",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 518,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L518"
+      }
+    },
+    "anthropic-api": {
+      "base_url": "https://api.anthropic.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 571,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L571"
+      }
+    },
+    "openai-api": {
+      "base_url": "https://api.openai.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 579,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L579"
+      }
+    },
+    "google-api": {
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 587,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L587"
+      }
+    },
+    "moonshotai-api": {
+      "base_url": "https://api.moonshot.ai/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 595,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L595"
+      }
+    },
+    "alibaba-api": {
+      "base_url": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 603,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L603"
+      }
+    },
+    "deepseek-api": {
+      "base_url": "https://api.deepseek.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 611,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L611"
+      }
+    },
+    "z-ai-api": {
+      "base_url": "https://api.z.ai/api/paas/v4",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 619,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L619"
+      }
+    },
+    "minimax-api": {
+      "base_url": "https://api.minimax.io/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 629,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L629"
+      }
+    },
+    "xiaomi-mimo-api": {
+      "base_url": "https://api.xiaomimimo.com/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 637,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L637"
+      }
+    },
+    "mistral-api": {
+      "base_url": "https://api.mistral.ai/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 645,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L645"
+      }
+    },
+    "ollama": {
+      "base_url": "http://localhost:11434",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 691,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L691"
+      }
+    },
+    "openrouter": {
+      "base_url": "https://openrouter.ai/api/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 699,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L699"
+      }
+    },
+    "x-ai-api": {
+      "base_url": "https://api.x.ai/v1",
+      "source": {
+        "path": "apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+        "line": 707,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/shared-types.ts#L707"
+      }
+    }
+  },
+  "coding_plans": [
+    {
+      "id": "glm-coding-plan",
+      "provider": "z-ai",
+      "displayName": "GLM Coding Plan",
+      "baseUrl": "https://api.z.ai/api/coding/paas/v4",
+      "validationBaseUrl": "https://api.z.ai/api/coding/paas/v4",
+      "validationModelId": "glm-5.2",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 54,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L54"
+      }
+    },
+    {
+      "id": "kimi-plan",
+      "provider": "moonshotai",
+      "displayName": "Kimi",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 71,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L71"
+      }
+    },
+    {
+      "id": "qwen-plan",
+      "provider": "alibaba",
+      "displayName": "Qwen Coding Plan",
+      "baseUrl": "https://coding-intl.dashscope.aliyuncs.com/v1",
+      "validationBaseUrl": "https://coding-intl.dashscope.aliyuncs.com/v1",
+      "validationModelId": "qwen3.7-plus",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 82,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L82"
+      }
+    },
+    {
+      "id": "qwen-token-plan",
+      "provider": "alibaba",
+      "displayName": "Qwen Token Plan",
+      "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+      "validationBaseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+      "validationModelId": "qwen3.7-plus",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 114,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L114"
+      }
+    },
+    {
+      "id": "minimax-plan",
+      "provider": "minimax",
+      "displayName": "MiniMax Token Plan",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 151,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L151"
+      }
+    },
+    {
+      "id": "mimo-plan",
+      "provider": "xiaomi-mimo",
+      "displayName": "Xiaomi MiMo",
+      "baseUrl": "https://token-plan-cn.xiaomimimo.com/v1",
+      "validationBaseUrl": "https://token-plan-cn.xiaomimimo.com/v1",
+      "validationModelId": "mimo-v2.5",
+      "source": {
+        "path": "apps/browser/src/shared/coding-plans.ts",
+        "line": 166,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/coding-plans.ts#L166"
+      }
+    }
+  ],
+  "catalog_models": [
+    {
+      "id": "claude-opus-5.5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 156,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L156"
+      }
+    },
+    {
+      "id": "claude-sonnet-5.5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 197,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L197"
+      }
+    },
+    {
+      "id": "claude-opus-5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 237,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L237"
+      }
+    },
+    {
+      "id": "claude-fable-5.1",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 278,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L278"
+      }
+    },
+    {
+      "id": "claude-fable-5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 319,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L319"
+      }
+    },
+    {
+      "id": "claude-opus-4.8",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 360,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L360"
+      }
+    },
+    {
+      "id": "claude-opus-4.7",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 401,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L401"
+      }
+    },
+    {
+      "id": "claude-opus-4.6",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 442,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L442"
+      }
+    },
+    {
+      "id": "gpt-6.1-sol",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 483,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L483"
+      }
+    },
+    {
+      "id": "gpt-6-astra",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 528,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L528"
+      }
+    },
+    {
+      "id": "gpt-6-sol",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 573,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L573"
+      }
+    },
+    {
+      "id": "gpt-6-luna",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 618,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L618"
+      }
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 663,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L663"
+      }
+    },
+    {
+      "id": "gpt-5.6-terra",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 706,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L706"
+      }
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 749,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L749"
+      }
+    },
+    {
+      "id": "gpt-5.5",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 792,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L792"
+      }
+    },
+    {
+      "id": "gpt-5.4",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 835,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L835"
+      }
+    },
+    {
+      "id": "gemini-3.1-pro-preview",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 878,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L878"
+      }
+    },
+    {
+      "id": "gpt-5.3-codex",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 918,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L918"
+      }
+    },
+    {
+      "id": "claude-sonnet-5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 961,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L961"
+      }
+    },
+    {
+      "id": "claude-sonnet-4.6",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 999,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L999"
+      }
+    },
+    {
+      "id": "kimi-k3",
+      "provider": "moonshotai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1038,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1038"
+      }
+    },
+    {
+      "id": "kimi-k2.7-code",
+      "provider": "moonshotai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1079,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1079"
+      }
+    },
+    {
+      "id": "kimi-k2.6",
+      "provider": "moonshotai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1120,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1120"
+      }
+    },
+    {
+      "id": "kimi-k2.5",
+      "provider": "moonshotai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1161,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1161"
+      }
+    },
+    {
+      "id": "gpt-5.3-chat",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1202,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1202"
+      }
+    },
+    {
+      "id": "gpt-5.4-mini",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1244,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1244"
+      }
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1287,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1287"
+      }
+    },
+    {
+      "id": "gemini-3.5-flash-lite",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1327,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1327"
+      }
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1367,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1367"
+      }
+    },
+    {
+      "id": "gemini-3-flash-preview",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1407,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1407"
+      }
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "provider": "anthropic",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1447,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1447"
+      }
+    },
+    {
+      "id": "gemini-3.1-flash-lite",
+      "provider": "google",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1485,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1485"
+      }
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "provider": "openai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1525,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1525"
+      }
+    },
+    {
+      "id": "qwen3-32b",
+      "provider": "alibaba",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1568,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1568"
+      }
+    },
+    {
+      "id": "qwen3-coder-30b-a3b-instruct",
+      "provider": "alibaba",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1606,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1606"
+      }
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "provider": "deepseek",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1644,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1644"
+      }
+    },
+    {
+      "id": "deepseek-v4.1-flash",
+      "provider": "deepseek",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1686,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1686"
+      }
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "provider": "deepseek",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1727,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1727"
+      }
+    },
+    {
+      "id": "glm-5.3",
+      "provider": "z-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1768,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1768"
+      }
+    },
+    {
+      "id": "glm-5.2",
+      "provider": "z-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1810,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1810"
+      }
+    },
+    {
+      "id": "glm-5.1",
+      "provider": "z-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1856,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1856"
+      }
+    },
+    {
+      "id": "glm-5v-turbo",
+      "provider": "z-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1896,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1896"
+      }
+    },
+    {
+      "id": "minimax-m3",
+      "provider": "minimax",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1946,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1946"
+      }
+    },
+    {
+      "id": "minimax-m2.7",
+      "provider": "minimax",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 1985,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L1985"
+      }
+    },
+    {
+      "id": "MiniMax-M2",
+      "provider": "minimax",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2023,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2023"
+      }
+    },
+    {
+      "id": "mimo-v2.5-pro",
+      "provider": "xiaomi-mimo",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2061,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2061"
+      }
+    },
+    {
+      "id": "mimo-v2.5",
+      "provider": "xiaomi-mimo",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2099,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2099"
+      }
+    },
+    {
+      "id": "mistral-large-2512",
+      "provider": "mistral",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2138,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2138"
+      }
+    },
+    {
+      "id": "mistral-medium-3-5",
+      "provider": "mistral",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2172,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2172"
+      }
+    },
+    {
+      "id": "mistral-small-2603",
+      "provider": "mistral",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2216,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2216"
+      }
+    },
+    {
+      "id": "codestral-2508",
+      "provider": "mistral",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2260,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2260"
+      }
+    },
+    {
+      "id": "grok-4.7",
+      "provider": "x-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2294,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2294"
+      }
+    },
+    {
+      "id": "grok-4.5",
+      "provider": "x-ai",
+      "source": {
+        "path": "apps/browser/src/shared/available-models.ts",
+        "line": 2338,
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/available-models.ts#L2338"
+      }
+    }
+  ],
+  "notes": [
+    "Never send a provider key to another host to test compatibility.",
+    "QWEN and ZAI subscription-plan tokens have distinct endpoints; a key label alone does not prove which account product it belongs to.",
+    "Discovery/catalog model IDs require availability verification before use; a validation model is not a default model."
+  ]
+}

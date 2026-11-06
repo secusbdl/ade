@@ -1,0 +1,29 @@
+{
+  "recordedUtc": "2026-11-05T10:38:28.2114882Z",
+  "scope": "Native attachment import, snapshot, model preparation and real provider delivery. No external tools called. Not paired upstream parity.",
+  "nativeExeSha256": "A09A58F4D6CDC2ECA92221961DC457FCFD1D51AD24A6CE6F8FB37CC23B6FA6A0",
+  "workerSha256": "739068D9C40F45533A09866EC8D557D53243CA310C51FD5B2CEF0AABAC6E5DCE",
+  "text": {
+    "provider": "deepseek",
+    "model": "deepseek-v4-pro",
+    "success": true,
+    "response": "1|ATTACHMENT_TEXT_94725",
+    "expectedMarkerObserved": true,
+    "exactRawContentReply": false,
+    "note": "The model retained the supplied 1| source-line prefix in its answer.",
+    "elapsedMs": 2908,
+    "tools": 0,
+    "report": "test-results/native-attachment-text-live.json"
+  },
+  "image": {
+    "provider": "gemini",
+    "model": "gemini-3.1-flash-lite",
+    "success": true,
+    "response": "red, green, blue",
+    "expectedResult": true,
+    "elapsedMs": 1343,
+    "tools": 0,
+    "report": "test-results/native-attachment-image-live.json"
+  },
+  "limits": "One small text file and one 300x100 PNG color fixture. Does not verify advanced formats, every provider or all vision models."
+}

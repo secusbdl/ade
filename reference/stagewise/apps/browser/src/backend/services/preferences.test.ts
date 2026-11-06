@@ -1,0 +1,1184 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { defaultUserPreferences } from '@shared/karton-contracts/ui/shared-types';
+import { PreferencesService } from './preferences';
+import { CODING_PLANS } from '@shared/coding-plans';
+
+vi.hoisted(() => {
+  vi.stubGlobal('__APP_BASE_NAME__', 'stagewise-test');
+  vi.stubGlobal('__APP_NAME__', 'stagewise-test');
+  vi.stubGlobal('__APP_BUNDLE_ID__', 'io.stagewise.test');
+  vi.stubGlobal('__APP_VERSION__', '0.0.0-test');
+  vi.stubGlobal('__APP_PLATFORM__', 'darwin');
+  vi.stubGlobal('__APP_AUTHOR__', 'stagewise');
+  vi.stubGlobal('__APP_COPYRIGHT__', 'stagewise');
+  vi.stubGlobal('__APP_HOMEPAGE__', 'https://ade.stagewise.io');
+  vi.stubGlobal('__APP_ARCH__', 'arm64');
+});
+
+const electronMock = vi.hoisted(() => ({
+  encryptString: vi.fn((value: string) => Buffer.from(`encrypted:${value}`)),
+  decryptString: vi.fn((buffer: Buffer) =>
+    buffer.toString('utf-8').replace(/^encrypted:/, ''),
+  ),
+  isEncryptionAvailable: vi.fn(() => true),
+}));
+
+vi.mock('electron', () => ({
+  safeStorage: electronMock,
+}));
+
+const persistedDataMock = vi.hoisted(() => ({
+  readPersistedData: vi.fn(),
+  writePersistedData: vi.fn(),
+}));
+
+vi.mock('../utils/persisted-data', () => persistedDataMock);
+
+const validationMock = vi.hoisted(() => ({
+  validateApiKeys: vi.fn(),
+  validateCodingPlanApiKey: vi.fn(),
+}));
+
+vi.mock('../utils/validate-api-keys', () => validationMock);
+
+const logger = {
+  debug: vi.fn(),
+  error: vi.fn(),
+  warn: vi.fn(),
+  info: vi.fn(),
+};
+
+function cloneDefaultPreferences() {
+  return structuredClone(defaultUserPreferences);
+}
+
+async function createServiceWithPreferences(
+  preferences = cloneDefaultPreferences(),
+) {
+  persistedDataMock.readPersistedData.mockResolvedValueOnce(preferences);
+  const service = await PreferencesService.create(logger as any);
+  return service;
+}
+
+describe('PreferencesService provider instance names', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+  });
+
+  it('numbers implicitly named provider instances and reuses available suffixes', async () => {
+    const service = await createServiceWithPreferences();
+
+    const first = await service.addProviderInstance({
+      typeId: 'openai-api',
+      config: {},
+    });
+    const second = await service.addProviderInstance({
+      typeId: 'openai-api',
+      config: {},
+    });
+    const third = await service.addProviderInstance({
+      typeId: 'openai-api',
+      config: {},
+    });
+
+    expect(first).toMatchObject({ success: true });
+    expect(second).toMatchObject({ success: true });
+    expect(third).toMatchObject({ success: true });
+    expect(
+      service.get().providerInstances.map((instance) => instance.name),
+    ).toEqual([
+      'Stagewise Inference',
+      'OpenAI API',
+      'OpenAI API (2)',
+      'OpenAI API (3)',
+    ]);
+
+    await service.removeProviderInstance(
+      (second as { instanceId: string }).instanceId,
+    );
+    await service.addProviderInstance({ typeId: 'openai-api', config: {} });
+
+    expect(
+      service
+        .get()
+        .providerInstances.filter(
+          (instance) => instance.typeId === 'openai-api',
+        )
+        .map((instance) => instance.name),
+    ).toEqual(['OpenAI API', 'OpenAI API (3)', 'OpenAI API (2)']);
+  });
+
+  it('preserves explicit provider instance names', async () => {
+    const service = await createServiceWithPreferences();
+
+    const result = await service.addProviderInstance({
+      typeId: 'openai-api',
+      name: 'Production OpenAI',
+      config: {},
+    });
+
+    expect(result).toMatchObject({ success: true });
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        typeId: 'openai-api',
+        name: 'Production OpenAI',
+      }),
+    );
+  });
+});
+
+describe('PreferencesService local agent providers', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+  });
+
+  it.each([
+    ['codex', 'Codex'],
+    ['codex-stagewise', 'Codex (Stagewise)'],
+    ['claude-code', 'Claude Code'],
+    ['opencode', 'OpenCode'],
+  ] as const)('rejects a second %s instance', async (typeId, displayName) => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerInstances.push({
+      id: `${typeId}-existing`,
+      typeId,
+      name: displayName,
+      config: {},
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [],
+    });
+    const service = await createServiceWithPreferences(preferences);
+
+    await expect(
+      service.addProviderInstance({ typeId, config: {} }),
+    ).resolves.toEqual({
+      success: false,
+      error: `${displayName} is already connected.`,
+    });
+    expect(
+      service
+        .get()
+        .providerInstances.filter((instance) => instance.typeId === typeId),
+    ).toHaveLength(1);
+  });
+
+  it('serializes concurrent local-agent additions', async () => {
+    const service = await createServiceWithPreferences();
+    vi.spyOn(service, 'getLocalAgentAvailability').mockResolvedValue({
+      installed: true,
+    });
+
+    const results = await Promise.all([
+      service.addProviderInstance({ typeId: 'claude-code', config: {} }),
+      service.addProviderInstance({ typeId: 'claude-code', config: {} }),
+    ]);
+    expect(results.map(({ success }) => success).sort()).toEqual([false, true]);
+    expect(
+      service
+        .get()
+        .providerInstances.filter(({ typeId }) => typeId === 'claude-code'),
+    ).toHaveLength(1);
+  });
+});
+
+describe('PreferencesService provider instance deletion', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+  });
+
+  it('removes dependent custom models and thinking overrides atomically', async () => {
+    const preferences = cloneDefaultPreferences();
+    const result = await createServiceWithPreferences(preferences);
+    const added = await result.addProviderInstance({
+      typeId: 'custom-openai-chat',
+      config: { baseUrl: 'https://example.com/v1' },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+    await result.update([
+      {
+        op: 'add',
+        path: ['customModels', 0],
+        value: {
+          modelId: 'custom-model',
+          displayName: 'Custom Model',
+          providerInstanceId: instanceId,
+        },
+      },
+      {
+        op: 'add',
+        path: ['agent', 'modelThinkingOverrides', instanceId],
+        value: { 'custom-model': { enabled: true } },
+      },
+    ]);
+
+    await result.removeProviderInstance(instanceId);
+
+    expect(result.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({ id: instanceId }),
+    );
+    expect(result.get().customModels).toEqual([]);
+    expect(result.get().agent.modelThinkingOverrides).not.toHaveProperty(
+      instanceId,
+    );
+  });
+
+  it('clears the legacy coding-plan link when deleting its instance', async () => {
+    const preferences = cloneDefaultPreferences();
+    const planId = 'glm-coding-plan';
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      connectedCodingPlanId: planId,
+    };
+    preferences.providerInstances.push({
+      id: `coding-plan:${planId}`,
+      typeId: 'coding-plan',
+      name: CODING_PLANS[planId].displayName,
+      config: { planId },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [],
+    });
+    const service = await createServiceWithPreferences(preferences);
+
+    await service.removeProviderInstance(`coding-plan:${planId}`);
+
+    expect(
+      service.get().providerConfigs['z-ai'].connectedCodingPlanId,
+    ).toBeUndefined();
+
+    const reloaded = await createServiceWithPreferences(service.get());
+    expect(reloaded.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({ id: `coding-plan:${planId}` }),
+    );
+  });
+
+  it('keeps unrelated preference records when deleting an instance', async () => {
+    const service = await createServiceWithPreferences();
+    const first = await service.addProviderInstance({
+      typeId: 'openai-api',
+      config: {},
+    });
+    const second = await service.addProviderInstance({
+      typeId: 'anthropic-api',
+      config: {},
+    });
+
+    await service.removeProviderInstance(
+      (first as { instanceId: string }).instanceId,
+    );
+
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: (second as { instanceId: string }).instanceId,
+      }),
+    );
+  });
+
+  it('rejects deletion of the built-in Stagewise instance', async () => {
+    const service = await createServiceWithPreferences();
+
+    await expect(
+      service.removeProviderInstance('stagewise-default'),
+    ).rejects.toThrow('cannot be removed');
+  });
+});
+
+describe('PreferencesService provider instance type replacements', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+  });
+
+  it('atomically replaces the provider type and drops incompatible config fields', async () => {
+    const service = await createServiceWithPreferences();
+    const added = await service.addProviderInstance({
+      typeId: 'custom-openai-chat',
+      config: {
+        baseUrl: 'https://example.com/v1',
+        encryptedApiKey: 'encrypted-api-key',
+      },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+
+    await service.updateProviderInstance(
+      instanceId,
+      { region: 'us-east-1' },
+      'Bedrock endpoint',
+      'bedrock',
+    );
+
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: instanceId,
+        typeId: 'bedrock',
+        name: 'Bedrock endpoint',
+        config: {
+          region: 'us-east-1',
+          awsAuthMode: 'access-keys',
+        },
+      }),
+    );
+  });
+
+  it('clears credentials when a replacement crosses credential domains', async () => {
+    const service = await createServiceWithPreferences();
+    const added = await service.addProviderInstance({
+      typeId: 'azure',
+      config: {
+        baseUrl: 'https://azure.example.com',
+        encryptedApiKey: 'azure-key',
+      },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+
+    await service.updateProviderInstance(
+      instanceId,
+      { region: 'us-east-1' },
+      undefined,
+      'bedrock',
+    );
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId),
+    ).toMatchObject({
+      typeId: 'bedrock',
+      config: { region: 'us-east-1', awsAuthMode: 'access-keys' },
+    });
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId)
+        ?.config,
+    ).not.toHaveProperty('encryptedApiKey');
+
+    await service.updateProviderInstance(
+      instanceId,
+      { baseUrl: 'https://azure.example.com' },
+      undefined,
+      'azure',
+    );
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId),
+    ).toMatchObject({
+      typeId: 'azure',
+      config: { baseUrl: 'https://azure.example.com' },
+    });
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId)
+        ?.config,
+    ).not.toHaveProperty('encryptedApiKey');
+  });
+
+  it('clears Bedrock credentials when replacing it with Azure', async () => {
+    const service = await createServiceWithPreferences();
+    const added = await service.addProviderInstance({
+      typeId: 'bedrock',
+      config: {
+        region: 'us-east-1',
+        encryptedApiKey: 'aws-access-key',
+        encryptedSecretKey: 'aws-secret-key',
+      },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+
+    await service.updateProviderInstance(
+      instanceId,
+      { baseUrl: 'https://azure.example.com' },
+      undefined,
+      'azure',
+    );
+
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId),
+    ).toMatchObject({
+      typeId: 'azure',
+      config: { baseUrl: 'https://azure.example.com' },
+    });
+  });
+
+  it('retains credentials for same-type edits', async () => {
+    const service = await createServiceWithPreferences();
+    const added = await service.addProviderInstance({
+      typeId: 'azure',
+      config: {
+        baseUrl: 'https://azure.example.com',
+        encryptedApiKey: 'azure-key',
+      },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+
+    await service.updateProviderInstance(instanceId, {
+      baseUrl: 'https://updated.azure.example.com',
+    });
+
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === instanceId),
+    ).toMatchObject({
+      typeId: 'azure',
+      config: {
+        baseUrl: 'https://updated.azure.example.com',
+        encryptedApiKey: 'azure-key',
+      },
+    });
+  });
+
+  it('clears credentials when replacement types share a credential shape', async () => {
+    const service = await createServiceWithPreferences();
+    const added = await service.addProviderInstance({
+      typeId: 'custom-openai-chat',
+      config: {
+        baseUrl: 'https://example.com/v1',
+        encryptedApiKey: 'encrypted-api-key',
+      },
+    });
+    const instanceId = (added as { instanceId: string }).instanceId;
+
+    await service.updateProviderInstance(
+      instanceId,
+      { baseUrl: 'https://anthropic.example.com' },
+      undefined,
+      'custom-anthropic',
+    );
+
+    const replacement = service
+      .get()
+      .providerInstances.find((instance) => instance.id === instanceId);
+    expect(replacement).toMatchObject({
+      typeId: 'custom-anthropic',
+      config: { baseUrl: 'https://anthropic.example.com' },
+    });
+    expect(replacement?.config).not.toHaveProperty('encryptedApiKey');
+  });
+});
+
+describe('PreferencesService legacy provider migration', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+  });
+
+  it('migrates official keys, custom endpoints and models, disabled models, and every coding plan idempotently', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs.openai = {
+      ...preferences.providerConfigs.openai,
+      mode: 'official',
+      encryptedApiKey: 'openai-key',
+    };
+    preferences.providerConfigs.anthropic = {
+      ...preferences.providerConfigs.anthropic,
+      mode: 'custom',
+      customProviderId: 'custom-anthropic',
+    };
+    preferences.customEndpoints = [
+      {
+        id: 'custom-anthropic',
+        name: 'Custom Anthropic',
+        apiSpec: 'anthropic',
+        baseUrl: 'https://anthropic.example.com',
+        encryptedApiKey: 'custom-key',
+        awsAuthMode: 'access-keys',
+      },
+    ];
+    preferences.customModels = [
+      {
+        modelId: 'custom-model',
+        displayName: 'Custom Model',
+        description: '',
+        contextWindowSize: 128_000,
+        endpointId: 'custom-anthropic',
+        thinkingEnabled: false,
+        capabilities: {
+          inputModalities: {
+            text: true,
+            audio: false,
+            image: false,
+            video: false,
+            file: false,
+          },
+          outputModalities: {
+            text: true,
+            audio: false,
+            image: false,
+            video: false,
+            file: false,
+          },
+          toolCalling: true,
+        },
+        providerOptions: {},
+        headers: {},
+      },
+    ];
+    for (const plan of Object.values(CODING_PLANS)) {
+      preferences.providerConfigs[plan.provider] = {
+        ...preferences.providerConfigs[plan.provider],
+        mode: 'official',
+        connectedCodingPlanId: plan.id,
+        encryptedApiKey: `${plan.id}-key`,
+      };
+    }
+
+    const service = await createServiceWithPreferences(preferences);
+    const instances = service.get().providerInstances;
+
+    expect(instances).toContainEqual(
+      expect.objectContaining({
+        id: 'stagewise-default',
+        disabledModelIds: [],
+      }),
+    );
+    expect(instances).toContainEqual(
+      expect.objectContaining({
+        id: 'openai-api-default',
+        typeId: 'openai-api',
+        config: expect.objectContaining({ encryptedApiKey: 'openai-key' }),
+      }),
+    );
+    expect(instances).toContainEqual(
+      expect.objectContaining({
+        id: 'custom-anthropic',
+        typeId: 'custom-anthropic',
+        config: expect.objectContaining({
+          baseUrl: 'https://anthropic.example.com',
+        }),
+      }),
+    );
+    expect(service.get().customModels).toContainEqual(
+      expect.objectContaining({
+        modelId: 'custom-model',
+        providerInstanceId: 'custom-anthropic',
+        endpointId: undefined,
+      }),
+    );
+    // The legacy shape stores one connected plan per vendor, so the last
+    // configured Alibaba plan is the only Qwen plan it can represent.
+    for (const config of Object.values(preferences.providerConfigs)) {
+      if (!config.connectedCodingPlanId) continue;
+      expect(
+        instances.filter(
+          (instance) =>
+            instance.typeId === 'coding-plan' &&
+            instance.config.planId === config.connectedCodingPlanId,
+        ),
+      ).toHaveLength(1);
+    }
+
+    persistedDataMock.readPersistedData.mockResolvedValueOnce(service.get());
+    const repeated = await PreferencesService.create(logger as any);
+    expect(repeated.get().providerInstances).toHaveLength(instances.length);
+    expect(persistedDataMock.writePersistedData).toHaveBeenCalledTimes(1);
+  });
+
+  it('retains the vendor for custom models migrated from Stagewise routing', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs.openai = {
+      ...preferences.providerConfigs.openai,
+      mode: 'stagewise',
+    };
+    preferences.customModels = [
+      {
+        modelId: 'legacy-stagewise-custom',
+        displayName: 'Legacy Stagewise custom model',
+        description: '',
+        contextWindowSize: 128_000,
+        endpointId: 'openai',
+        thinkingEnabled: false,
+        capabilities: {
+          inputModalities: {
+            text: true,
+            audio: false,
+            image: false,
+            video: false,
+            file: false,
+          },
+          outputModalities: {
+            text: true,
+            audio: false,
+            image: false,
+            video: false,
+            file: false,
+          },
+          toolCalling: true,
+        },
+        providerOptions: {},
+        headers: {},
+      },
+    ];
+
+    const service = await createServiceWithPreferences(preferences);
+
+    expect(service.get().customModels).toContainEqual(
+      expect.objectContaining({
+        modelId: 'legacy-stagewise-custom',
+        providerInstanceId: 'stagewise-default',
+        endpointId: 'openai',
+      }),
+    );
+  });
+
+  it('preserves the legacy Chat Completions protocol for OpenAI custom base URLs', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs.openai = {
+      ...preferences.providerConfigs.openai,
+      mode: 'custom',
+      customBaseUrl: 'https://openai-compatible.example/v1',
+      encryptedApiKey: 'openai-compatible-key',
+    };
+
+    const service = await createServiceWithPreferences(preferences);
+
+    expect(service.get().customEndpoints).toContainEqual(
+      expect.objectContaining({
+        name: 'Migrated openai endpoint',
+        apiSpec: 'openai-chat-completions',
+        baseUrl: 'https://openai-compatible.example/v1',
+      }),
+    );
+  });
+
+  it('migrates OpenAI-compatible custom base URLs with their protocol API spec', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs.moonshotai = {
+      ...preferences.providerConfigs.moonshotai,
+      mode: 'custom',
+      customBaseUrl: 'https://moonshot.example/v1',
+      encryptedApiKey: 'moonshot-key',
+    };
+
+    const service = await createServiceWithPreferences(preferences);
+
+    expect(service.get().customEndpoints).toContainEqual(
+      expect.objectContaining({
+        name: 'Migrated moonshotai endpoint',
+        apiSpec: 'openai-chat-completions',
+        baseUrl: 'https://moonshot.example/v1',
+      }),
+    );
+  });
+
+  it('migrates stale Qwen discovery to the dedicated Coding Plan endpoint', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerInstances = [
+      {
+        id: 'legacy-qwen',
+        typeId: 'coding-plan',
+        name: 'Qwen Coding Plan',
+        config: {
+          encryptedApiKey: 'legacy-key',
+          planId: 'qwen-plan',
+          baseUrl: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1',
+        },
+        enabledModelIds: [],
+        disabledModelIds: [],
+        discoveredModels: [
+          { modelId: 'qwen3-32b', displayName: 'Stale DashScope model' },
+        ],
+      },
+    ];
+
+    const service = await createServiceWithPreferences(preferences);
+    const instance = service
+      .get()
+      .providerInstances.find((candidate) => candidate.id === 'legacy-qwen');
+
+    expect(instance?.config).toMatchObject({
+      baseUrl: 'https://coding-intl.dashscope.aliyuncs.com/v1',
+    });
+    expect(instance?.discoveredModels?.map((model) => model.modelId)).toContain(
+      'qwen3.7-plus',
+    );
+    expect(
+      instance?.discoveredModels?.map((model) => model.modelId),
+    ).not.toContain('qwen3-32b');
+  });
+
+  it('reconciles a legacy coding plan when provider instances already exist', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerInstances = [
+      {
+        id: 'stagewise-default',
+        typeId: 'stagewise',
+        name: 'Stagewise Inference',
+        config: {},
+        enabledModelIds: [],
+        disabledModelIds: [],
+        discoveredModels: [],
+      },
+    ];
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'legacy-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+
+    const service = await createServiceWithPreferences(preferences);
+
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: 'coding-plan:glm-coding-plan',
+        config: expect.objectContaining({ planId: 'glm-coding-plan' }),
+      }),
+    );
+  });
+});
+
+describe('PreferencesService coding plan connection state', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    persistedDataMock.writePersistedData.mockResolvedValue(undefined);
+    validationMock.validateApiKeys.mockResolvedValue({
+      anthropic: null,
+      openai: null,
+      google: null,
+      moonshotai: null,
+      alibaba: null,
+      deepseek: null,
+      'z-ai': { success: true },
+      minimax: null,
+    });
+    validationMock.validateCodingPlanApiKey.mockResolvedValue({
+      success: true,
+    });
+  });
+
+  it('connectCodingPlan delegates to an instance-backed coding-plan connection', async () => {
+    const service = await createServiceWithPreferences();
+
+    const result = await service.connectCodingPlan(
+      'glm-coding-plan',
+      'glm-key',
+    );
+
+    expect(result).toEqual({ success: true });
+    expect(validationMock.validateCodingPlanApiKey).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'glm-coding-plan',
+        baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+        validationBaseUrl: 'https://api.z.ai/api/coding/paas/v4',
+        validationModelId: 'glm-5.2',
+      }),
+      'glm-key',
+      'https://api.z.ai/api/coding/paas/v4',
+    );
+    expect(validationMock.validateApiKeys).not.toHaveBeenCalled();
+
+    const instance = service
+      .get()
+      .providerInstances.find(
+        (candidate) =>
+          candidate.typeId === 'coding-plan' &&
+          candidate.config.planId === 'glm-coding-plan',
+      );
+    expect(instance).toMatchObject({
+      typeId: 'coding-plan',
+      name: 'GLM Coding Plan',
+      config: {
+        baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+        encryptedApiKey: Buffer.from('encrypted:glm-key').toString('base64'),
+        planId: 'glm-coding-plan',
+      },
+    });
+    expect(instance?.id).toMatch(/^coding-plan-/);
+    expect(service.get().providerConfigs['z-ai']).toEqual(
+      defaultUserPreferences.providerConfigs['z-ai'],
+    );
+  });
+
+  it.each([
+    [
+      'qwen-plan',
+      'Qwen Coding Plan',
+      'https://coding-intl.dashscope.aliyuncs.com/v1',
+    ],
+    [
+      'qwen-token-plan',
+      'Qwen Token Plan',
+      'https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1',
+    ],
+  ] as const)('connects %s with its dedicated endpoint', async (planId, displayName, baseUrl) => {
+    const service = await createServiceWithPreferences();
+
+    const result = await service.connectCodingPlan(planId, 'qwen-plan-key');
+
+    expect(result).toEqual({ success: true });
+    expect(validationMock.validateCodingPlanApiKey).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: planId,
+        baseUrl,
+        validationBaseUrl: baseUrl,
+        validationModelId: 'qwen3.7-plus',
+      }),
+      'qwen-plan-key',
+      baseUrl,
+    );
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        typeId: 'coding-plan',
+        name: displayName,
+        config: expect.objectContaining({ planId, baseUrl }),
+      }),
+    );
+  });
+
+  it('normalizes and validates a custom Token Plan endpoint', async () => {
+    const service = await createServiceWithPreferences();
+
+    const result = await service.addProviderInstance({
+      typeId: 'coding-plan',
+      config: {
+        planId: 'qwen-token-plan',
+        baseUrl: ' https://token-plan.eu.example.com/compatible-mode/v1/ ',
+      },
+      validateApiKey: 'token-key',
+    });
+
+    expect(result).toMatchObject({ success: true });
+    expect(validationMock.validateCodingPlanApiKey).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'qwen-token-plan' }),
+      'token-key',
+      'https://token-plan.eu.example.com/compatible-mode/v1',
+    );
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        config: expect.objectContaining({
+          planId: 'qwen-token-plan',
+          baseUrl: 'https://token-plan.eu.example.com/compatible-mode/v1',
+        }),
+      }),
+    );
+  });
+
+  it('normalizes coding-plan endpoints when updating an instance', async () => {
+    const service = await createServiceWithPreferences();
+    const result = await service.addProviderInstance({
+      typeId: 'coding-plan',
+      config: { planId: 'qwen-token-plan' },
+      validateApiKey: 'token-key',
+    });
+    if (!result.success) throw new Error(result.error);
+
+    await service.updateProviderInstance(result.instanceId, {
+      baseUrl: ' https://token-plan.eu.example.com/v1/ ',
+    });
+
+    expect(
+      service
+        .get()
+        .providerInstances.find((instance) => instance.id === result.instanceId)
+        ?.config,
+    ).toMatchObject({ baseUrl: 'https://token-plan.eu.example.com/v1' });
+  });
+
+  it('rejects invalid coding-plan endpoints when updating an instance', async () => {
+    const service = await createServiceWithPreferences();
+    const result = await service.addProviderInstance({
+      typeId: 'coding-plan',
+      config: { planId: 'qwen-token-plan' },
+      validateApiKey: 'token-key',
+    });
+    if (!result.success) throw new Error(result.error);
+
+    await expect(
+      service.updateProviderInstance(result.instanceId, {
+        baseUrl: 'http://token-plan.example.com/v1',
+      }),
+    ).rejects.toThrow('The API endpoint must use HTTPS.');
+  });
+
+  it('rejects an invalid custom plan endpoint before credential validation', async () => {
+    const service = await createServiceWithPreferences();
+
+    const result = await service.addProviderInstance({
+      typeId: 'coding-plan',
+      config: {
+        planId: 'qwen-token-plan',
+        baseUrl: 'http://token-plan.example.com/v1',
+      },
+      validateApiKey: 'token-key',
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: 'The API endpoint must use HTTPS.',
+    });
+    expect(validationMock.validateCodingPlanApiKey).not.toHaveBeenCalled();
+  });
+
+  it('does not mutate preferences when coding-plan validation fails', async () => {
+    validationMock.validateCodingPlanApiKey.mockResolvedValueOnce({
+      success: false,
+      error: 'invalid key',
+    });
+    const service = await createServiceWithPreferences();
+    // The migration during initialize() writes once; clear it so the
+    // assertion below verifies that the failed connectCodingPlan does
+    // not trigger an additional write.
+    persistedDataMock.writePersistedData.mockClear();
+
+    const result = await service.connectCodingPlan(
+      'glm-coding-plan',
+      'bad-key',
+    );
+
+    expect(result).toEqual({ success: false, error: 'invalid key' });
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({
+        typeId: 'coding-plan',
+        config: expect.objectContaining({ planId: 'glm-coding-plan' }),
+      }),
+    );
+    expect(persistedDataMock.writePersistedData).not.toHaveBeenCalled();
+  });
+
+  it('migrates legacy coding-plan connections after provider instances exist', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerInstances = [
+      {
+        id: 'stagewise-default',
+        typeId: 'stagewise',
+        name: 'Stagewise Inference',
+        config: {},
+        enabledModelIds: [],
+        disabledModelIds: [],
+        discoveredModels: [],
+      },
+    ];
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'legacy-encrypted-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+
+    const service = await createServiceWithPreferences(preferences);
+
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: 'coding-plan:glm-coding-plan',
+        typeId: 'coding-plan',
+        config: expect.objectContaining({
+          encryptedApiKey: 'legacy-encrypted-key',
+          planId: 'glm-coding-plan',
+          baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+        }),
+      }),
+    );
+  });
+
+  it('connectProvider clears stale coding-plan routing state', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'old-encrypted-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+    const service = await createServiceWithPreferences(preferences);
+
+    const result = await service.connectProvider('z-ai', 'normal-zai-key');
+
+    expect(result).toEqual({ success: true });
+    expect(validationMock.validateApiKeys).toHaveBeenCalledWith({
+      'z-ai': 'normal-zai-key',
+    });
+    expect(service.get().providerConfigs['z-ai']).toMatchObject({
+      mode: 'official',
+      encryptedApiKey: Buffer.from('encrypted:normal-zai-key').toString(
+        'base64',
+      ),
+      connectedCodingPlanId: undefined,
+    });
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: 'z-ai-api-default',
+        typeId: 'z-ai-api',
+        config: expect.objectContaining({
+          encryptedApiKey: Buffer.from('encrypted:normal-zai-key').toString(
+            'base64',
+          ),
+        }),
+      }),
+    );
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({
+        typeId: 'coding-plan',
+        config: expect.objectContaining({ planId: 'glm-coding-plan' }),
+      }),
+    );
+  });
+
+  it('setProviderApiKey clears stale coding-plan routing state', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'old-encrypted-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+    const service = await createServiceWithPreferences(preferences);
+
+    await service.setProviderApiKey('z-ai', 'manual-key');
+
+    expect(service.get().providerConfigs['z-ai']).toMatchObject({
+      mode: 'official',
+      encryptedApiKey: Buffer.from('encrypted:manual-key').toString('base64'),
+      connectedCodingPlanId: undefined,
+    });
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: 'z-ai-api-default',
+        typeId: 'z-ai-api',
+        config: expect.objectContaining({
+          encryptedApiKey: Buffer.from('encrypted:manual-key').toString(
+            'base64',
+          ),
+        }),
+      }),
+    );
+  });
+
+  it('disconnectProvider clears stale coding-plan routing state', async () => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'old-encrypted-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+    const service = await createServiceWithPreferences(preferences);
+
+    await service.disconnectProvider('z-ai');
+
+    expect(service.get().providerConfigs['z-ai']).toMatchObject({
+      mode: 'stagewise',
+      encryptedApiKey: undefined,
+      connectedCodingPlanId: undefined,
+    });
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({ id: 'z-ai-api-default' }),
+    );
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({
+        typeId: 'coding-plan',
+        config: expect.objectContaining({ planId: 'glm-coding-plan' }),
+      }),
+    );
+  });
+
+  it('clears only canonical legacy routing instances', async () => {
+    const service = await createServiceWithPreferences();
+    const alternate = await service.addProviderInstance({
+      typeId: 'openai-api',
+      name: 'Alternate OpenAI',
+      config: { encryptedApiKey: 'alternate-key' },
+    });
+
+    await service.setProviderApiKey('openai', 'legacy-key');
+    await service.clearProviderApiKey('openai');
+
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: (alternate as { instanceId: string }).instanceId,
+        name: 'Alternate OpenAI',
+      }),
+    );
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({ id: 'openai-api-default' }),
+    );
+  });
+
+  it.each([
+    [
+      'setProviderApiKey',
+      (service: PreferencesService) =>
+        service.setProviderApiKey('z-ai', 'manual-key'),
+    ],
+    [
+      'clearProviderApiKey',
+      (service: PreferencesService) => service.clearProviderApiKey('z-ai'),
+    ],
+    [
+      'disconnectProvider',
+      (service: PreferencesService) => service.disconnectProvider('z-ai'),
+    ],
+  ])('%s removes only its linked legacy coding plan', async (_operation, runOperation) => {
+    const preferences = cloneDefaultPreferences();
+    preferences.providerConfigs['z-ai'] = {
+      ...preferences.providerConfigs['z-ai'],
+      mode: 'official',
+      encryptedApiKey: 'legacy-key',
+      connectedCodingPlanId: 'glm-coding-plan',
+    };
+    const service = await createServiceWithPreferences(preferences);
+    const independentPlan = await service.addProviderInstance({
+      typeId: 'coding-plan',
+      name: 'Independent GLM plan',
+      config: {
+        planId: 'glm-coding-plan',
+        baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+      },
+    });
+
+    await runOperation(service);
+
+    expect(service.get().providerInstances).not.toContainEqual(
+      expect.objectContaining({ id: 'coding-plan:glm-coding-plan' }),
+    );
+    expect(service.get().providerInstances).toContainEqual(
+      expect.objectContaining({
+        id: (independentPlan as { instanceId: string }).instanceId,
+        name: 'Independent GLM plan',
+      }),
+    );
+  });
+
+  it.each([
+    [
+      'clearProviderApiKey',
+      (service: PreferencesService) => service.clearProviderApiKey('openai'),
+    ],
+    [
+      'disconnectProvider',
+      (service: PreferencesService) => service.disconnectProvider('openai'),
+    ],
+  ])('%s removes dependent canonical-instance records', async (_operation, runOperation) => {
+    const service = await createServiceWithPreferences();
+    await service.setProviderApiKey('openai', 'legacy-key');
+    await service.update([
+      {
+        op: 'add',
+        path: ['customModels', 0],
+        value: {
+          modelId: 'legacy-custom-model',
+          displayName: 'Legacy custom model',
+          providerInstanceId: 'openai-api-default',
+        },
+      },
+      {
+        op: 'add',
+        path: ['agent', 'modelThinkingOverrides', 'openai-api-default'],
+        value: { 'legacy-custom-model': { enabled: true } },
+      },
+    ]);
+
+    await runOperation(service);
+
+    expect(service.get().customModels).toEqual([]);
+    expect(service.get().agent.modelThinkingOverrides).not.toHaveProperty(
+      'openai-api-default',
+    );
+  });
+});

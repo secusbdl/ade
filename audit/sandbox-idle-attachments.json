@@ -1,0 +1,38 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "findings": [
+    {
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L377",
+      "finding": "createAttachment accepts calls without checking for an active execution, sends native write IPC and resolves the canonical filename."
+    },
+    {
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/index.ts#L431",
+      "finding": "Parent always writes the artifact. It adds a pending preview/model attachment only when agentToolCallIds has a current tool for that agent and Karton is available."
+    },
+    {
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts#L24",
+      "finding": "Current tool ID is set before script execution and cleared in finally after clearPendingOutputs. Idle callbacks after that point do not populate a future-tool queue."
+    },
+    {
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L789",
+      "finding": "Worker create-attachment-result appends to per-agent collection only if one exists, then resolves filename in all successful cases. Collection is reset per execution and deleted on completion."
+    },
+    {
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/index.ts#L809",
+      "finding": "drainPendingAttachments drains already-associated tool attachment previews after a step; it is not a general persistent idle-attachment queue."
+    }
+  ],
+  "conclusion": "Preserve successful idle writes and filename return without silently attaching them to an unrelated future model step. When an event callback creates an attachment while a tool for the same agent/context is active, associate it with that active tool, as upstream does. Native UI may report idle-created artifacts separately. Do not retain forever an empty-tool-ID attachment/error bucket.",
+  "status": "Implemented and verified: SandboxHost attributes event-origin writes only to the current same-agent/context tool, while true idle writes keep empty tool identity and successful filename return. Root AgentToolHost owns ignoring empty-ID metadata buckets.",
+  "regression": {
+    "suite": "tests/test_sandbox.cpp::idleAttachmentsPersistAndEventsUseOnlyTheActiveSameAgentTool",
+    "before": "test-results/sandbox-idle-attachments-before-fix.txt: failed with empty active-event attachment ID",
+    "after": "test-results/sandbox-app-tests.txt: 22 passed, 0 failed, 4.285 seconds",
+    "coverage": [
+      "Idle bytes and filename persisted successfully",
+      "Callback during same-agent active tool uses that tool ID",
+      "Another agent active call cannot receive idle agent attachment metadata"
+    ]
+  }
+}

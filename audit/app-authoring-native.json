@@ -1,0 +1,45 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Host-owned apps/ authoring in the native Qt application and isolated QuickJS worker, available without a connected workspace.",
+  "contract": {
+    "root": "AgentToolHost prepares the SHA-256-named directory returned by MiniAppHost::agentAppsDirectory(), rejects linked ancestors, and binds that same canonical root into native AgentEngine tools, its sandbox ToolExecutor, SandboxHost and AttachmentPipeline. MiniAppHost's directory is locked after binding so later preview configuration cannot silently change only one consumer. Each chat receives a separate root.",
+    "workspace": "Unprefixed paths still use the workspace; ws1/w1 aliases retain existing behavior. Changing or disconnecting the workspace preserves the apps attachment/file mount while the prior persistent realm is reset by the existing host lifecycle. Commands still require a workspace.",
+    "native_tools": "read, write, multiEdit, ls, mkdir, glob and grepSearch accept apps/ paths. Glob/search also accept mount_prefix=apps. The engine advertises these file tools without a workspace when an apps root is configured, while omitting runCommand. Native write keeps its existing parent-directory creation behavior.",
+    "sandbox_fs": "fsPromises and node:fs/promises expose readFile, writeFile, mkdir and readdir; corresponding node:fs callbacks are supported. readFile without encoding returns exact Buffer bytes. Explicit UTF-8 is strict and preserves BOM/newline bytes. writeFile accepts strings, Buffer, Uint8Array and ArrayBuffer, requires an existing parent, and uses an atomic save. mkdir supports recursive and returns the first created absolute directory for a recursive creation, undefined when it already existed. readdir supports recursive string entries. Unsupported flags, encodings and other methods fail explicitly.",
+    "binary_bounds": "Read and write bytes are limited to 4 MiB. Native binary results bypass the ordinary 64 Ki-character display truncation; host IPC transfers exact base64. Encoded length is checked before decoding and decoded length is checked before writing. UTF-8 text reads remain bounded to 64 Ki characters and fail instead of truncating. Directory results reject over 4096 returned entries, 10000 examined entries, depth 8, or 64 Ki characters.",
+    "reads": "On Windows, file and search reads open the file, resolve and validate that same handle against the selected mount, then read from that handle with an actual cumulative byte bound. Search reads use a 512 KiB per-file and 8 MiB aggregate bound. Outside static junction targets are rejected for reads, writes, enumeration and search.",
+    "app_lifecycle": "API.openApp previews newly authored index.html plus relative CSS/JavaScript/image assets. Reopening the active app retains its tab and refreshes content. MiniAppHost::closeTab revokes logical ownership synchronously; ownsPage(instanceId,page) lets native UI callbacks distinguish a logically closed but not yet deleted widget.",
+    "attachment_metadata": "AgentEngine submitWithAttachments and completeExternalToolWithAttachments accept an optional trailing pathMetadata object and persist it beside attachments/pathReferences. AgentToolHost forwards AttachmentPipeline's captured per-path size/modified metadata. Existing callers omitting metadata retain their prior message shape."
+  },
+  "evidence": {
+    "sandbox": {"report": "test-results/sandbox-app-authoring.txt", "junit": "test-results/sandbox-app-authoring.xml", "passed": 27, "failed": 0},
+    "actual_runtime": {"report": "test-results/runtime-app-authoring.txt", "junit": "test-results/runtime-app-authoring.xml", "passed": 15, "failed": 0},
+    "core": {"report": "test-results/core-app-authoring.txt", "junit": "test-results/core-app-authoring.xml", "passed": 41, "failed": 0},
+    "runtime_fixtures": [
+      "Actual AgentEngine with a loopback-only provider requests mkdir/write/multiEdit/read/ls/glob/grepSearch without a workspace. All seven native calls succeed in the same root later read by the actual QuickJS worker and captured by AttachmentPipeline.",
+      "QuickJS creates HTML, sibling CSS and JS, and a binary PNG; actual WebView2 reports the expected CSS color and natural image width. Edited JS is observed after API.openApp refreshes the same instance.",
+      "Two AgentToolHost instances cannot read each other's apps files. App files and captured references survive connect/disconnect of the separate workspace.",
+      "Canceling after the actual host queues a binary write prevents disk mutation and emits no fileChanged. Previous workspace remap and synchronous destruction regressions remain green.",
+      "A 200000-byte worker round trip is byte-identical. A native exact 4 MiB read is not truncated. Larger reads, invalid base64 and an excessive encoded body reject without replacing the existing file.",
+      "Windows junction fixtures point to a separate temporary directory; reads and writes are denied and list/search do not expose its contents. No real websites, provider credentials, or external Figma account were used."
+    ],
+    "standalone_builds": ["audit/sandbox-probe-build", "audit/runtime-apps-probe-build"],
+    "scope_limit": "These are standalone suite results, not a claim that the parent integrated build has completed. WebView2 profile files may remain briefly locked during temporary-directory teardown, producing recorded Qt warnings. Static junction fixtures and handle-scoped reads were tested; no concurrent filesystem path-swap stress result is claimed."
+  },
+  "remaining_parity_gaps": [
+    "Full Node fs methods, sync APIs, streams, file descriptors, arbitrary flags/encodings, permissions and complete Node error-code compatibility are not implemented.",
+    "Read-only att/ sandbox reads and listing were subsequently added and verified in audit/attachment-mount-native.json. plugins/, logs/, memory/, shells/ and multiple stable workspace mounts still need typed broker integration.",
+    "Native bounded filesystem behavior differs from unbounded upstream Node operations and deliberately rejects oversized results rather than silently truncating.",
+    "importModule and additional Node/Web API builtins remain incomplete. Native app CSP remains local-resource-only in this slice and was not widened.",
+    "Actual Figma service/account behavior remains outside the controlled bundled-app fixture evidence."
+  ],
+  "sources": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/mini-apps/SKILL.md",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/mini-apps/references/examples.md",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/ipc.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/javascript-sandbox/references/examples.md"
+  ]
+}

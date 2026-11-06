@@ -1,0 +1,23 @@
+[New Thread 47680.0x2f14]
+[New Thread 47680.0x97ac]
+[New Thread 47680.0x6408]
+[New Thread 47680.0xa388]
+[New Thread 47680.0x3240]
+[Thread 47680.0x3240 exited with code 0]
+
+Thread 1 received signal SIGSEGV, Segmentation fault.
+0x00007ff7254b42f0 in QTabBar::insertTab(int, QIcon const&, QString const&) ()
+#0  0x00007ff7254b42f0 in QTabBar::insertTab(int, QIcon const&, QString const&) ()
+#1  0x00007ff72480524f in QTabWidget::insertTab(int, QWidget*, QIcon const&, QString const&) ()
+#2  0x00007ff72480516d in QTabWidget::addTab(QWidget*, QIcon const&, QString const&) ()
+#3  0x00007ff72516e9c7 in ade::MainWindow::addBrowserTab (this=0x1d1190, url=...) at D:/age/ADE/private/transcript-links-stage/src/ui/MainWindow.cpp:530
+warning: could not convert 'QMainWindow' from the host encoding (CP65001) to UTF-32.
+This normally should not happen, please file a bug report.
+#4  0x00007ff72517d951 in ade::MainWindow::routeTranscriptLink (this=0x1d1190, id=..., rowId=..., partId=..., url=...) at D:/age/ADE/private/transcript-links-stage/src/ui/MainWindowLinks.cpp:78
+#5  0x00007ff725c9f4f5 in QtPrivate::FunctorCall<std::integer_sequence<unsigned long long, 0ull, 1ull, 2ull, 3ull>, QtPrivate::List<QString, QString, QString, QUrl>, void, void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&)>::call(void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&), ade::MainWindow*, void**)::{lambda()#1}::operator()() const (__closure=0x5feac0) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs_impl.h:128
+#6  0x00007ff7255e7e74 in QtPrivate::FunctorCallBase::call_internal<void, QtPrivate::FunctorCall<std::integer_sequence<unsigned long long, 0ull, 1ull, 2ull, 3ull>, QtPrivate::List<QString, QString, QString, QUrl>, void, void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&)>::call(void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&), ade::MainWindow*, void**)::{lambda()#1}>(void**, QtPrivate::FunctorCall<std::integer_sequence<unsigned long long, 0ull, 1ull, 2ull, 3ull>, QtPrivate::List<QString, QString, QString, QUrl>, void, void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&)>::call(void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&), ade::MainWindow*, void**)::{lambda()#1}&&) (args=0x5fecd0, fn=...) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs_impl.h:66
+#7  0x00007ff7255c4869 in QtPrivate::FunctorCall<std::integer_sequence<unsigned long long, 0ull, 1ull, 2ull, 3ull>, QtPrivate::List<QString, QString, QString, QUrl>, void, void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&)>::call (f=(void (ade::MainWindow::*)(ade::MainWindow * const, const QString &, const QString &, const QString &, const QUrl &)) 0x7ff72517c7d0 <ade::MainWindow::routeTranscriptLink(QString const&, QString const&, QString const&, QUrl const&)>, o=0x1d1190, arg=0x5fecd0) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs_impl.h:127
+#8  0x00007ff7255e504c in QtPrivate::FunctionPointer<void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&)>::call<QtPrivate::List<QString, QString, QString, QUrl>, void> (f=(void (ade::MainWindow::*)(ade::MainWindow * const, const QString &, const QString &, const QString &, const QUrl &)) 0x7ff72517c7d0 <ade::MainWindow::routeTranscriptLink(QString const&, QString const&, QString const&, QUrl const&)>, o=0x1d1190, arg=0x5fecd0) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs_impl.h:175
+#9  0x00007ff7255ef7d0 in QtPrivate::QCallableObject<void (ade::MainWindow::*)(QString const&, QString const&, QString const&, QUrl const&), QtPrivate::List<QString, QString, QString, QUrl>, void>::impl (which=1, this_=0x3d59f10, r=0x1d1190, a=0x5fecd0, ret=0x0) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs_impl.h:546
+#10 0x00007ff72457c5eb in void doActivate<false>(QObject*, int, void**) ()
+#11 0x00007ff7248680cd in QMetaObject::activate<void, QString, QString, QString, QUrl> (sender=0x39d96c0, mo=0x7ff7268d51e0 <ade::ConversationView::staticMetaObject>, local_signal_index=1, ret=0x0) at C:/Qt/6.11.2-mingw64-static/include/QtCore/qobjectdefs.h:320

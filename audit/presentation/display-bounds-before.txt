@@ -1,0 +1,10 @@
+********* Start testing of PresentationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PresentationTest::initTestCase()
+FAIL!  : PresentationTest::savedIdsCannotCollideWithLegacyIds() 'rows[0].toObject()["id"]!=rows[1].toObject()["id"]' returned FALSE. ()
+D:/age/ADE/private/presentation-stage/tests/test_presentation.cpp(177) : failure location
+FAIL!  : PresentationTest::emptyPartFloodIsBounded() 'errors[0][0].toString().contains("presentation")' returned FALSE. ()
+D:/age/ADE/private/presentation-stage/tests/test_presentation.cpp(181) : failure location
+PASS   : PresentationTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 361ms
+********* Finished testing of PresentationTest *********

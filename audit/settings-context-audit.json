@@ -1,0 +1,47 @@
+{
+  "scope": "SettingsPage Skills & Context, ContextPreferences, MainWindow context injection; targeted validation/model-edit audit",
+  "baseline": "Stagewise17a0123a0e896885465df36169457199d5225eb5",
+  "upstream_references": [
+    "upstream/stagewise/apps/browser/src/ui/screens/settings/sections/skills-context-section.tsx:69",
+    "upstream/stagewise/apps/browser/src/ui/screens/settings/sections/skills-context-section.tsx:296",
+    "upstream/stagewise/apps/browser/src/backend/services/toolbox/index.ts:1157"
+  ],
+  "regression_source": "tests/test_settings_audit.cpp",
+  "before": "audit/settings-audit-before.txt",
+  "after": "audit/settings-audit-tests.txt",
+  "before_result": "10 passed,5 failed",
+  "after_result": "15 passed,0 failed,0 skipped;staticQt6.11.2,GCC16.2,Windows11;319ms",
+  "fixed": [
+    {
+      "issue": "Workspace AGENTS and disabled skill choices leaked into unrelated workspaces.",
+      "change": "skillOptions.workspaceSettings indexed by normalized canonical filesystem workspace; path dots remain literal JSON keys. Windows paths case-fold after native final-path resolution."
+    },
+    {
+      "issue": "Disabling a global skill wrote the workspace-disabled name list and suppressed workspace overrides.",
+      "change": "Global toggle writes disabledGlobalSkills; workspace name override remains enabled. Explicit re-enable lifts both effective global/workspace suppressions."
+    },
+    {
+      "issue": "Failed saves left Respect AGENTS, custom-directory and optional-global-directory controls showing values that runtime did not use.",
+      "change": "Checkbox rollback uses QSignalBlocker, while failed/stale/corrupt storage remains untouched. Successful directory toggles refresh the discovered list."
+    },
+    {
+      "issue": "Nested preset model lists bypassed validation.",
+      "owner": "root",
+      "verified": "Seven malformed array/entry/override cases reject without replacing prior file."
+    },
+    {
+      "issue": "Editing missing-provider preset silently selected another provider.",
+      "owner": "root",
+      "verified": "Unavailable saved choice is preserved; fixture detects any implicit provider substitution."
+    }
+  ],
+  "legacy_migration": "Legacy unscoped respectAgentsMd/disabledSkills remain effective until an explicit workspace-specific edit. The edit copies their current effective values into the connected workspace record and removes the legacy unscoped fields atomically. Existing nondefault unscoped records cannot reveal their original workspace.",
+  "inspection_notes": [
+    "MainWindow configures ContextLoader on every send from SettingsPage.preferences and active conversation workspace; disabled skills are filtered before slash invocation lookup.",
+    "Changing a context setting affects subsequent sends; previously sent instruction text is still in existing conversation/provider history.",
+    "Built-in/plugin skill directories are not yet assigned by ContextPreferences or host; plugin enablement UI explicitly discloses pending runtime integration.",
+    "Slash invocation currently parses first whitespace-delimited token; valid skill names containing spaces are not invocable by typed /name.",
+    "Settings reload uses fallback defaults while preserving invalid files; test evidence covers failed writes but does not establish process-concurrent CAS locking."
+  ],
+  "source_freeze": "ContextPreferences.cpp/.h, buildSkills and skillOptions validation/default, test_settings_audit frozen for parent integrated build."
+}

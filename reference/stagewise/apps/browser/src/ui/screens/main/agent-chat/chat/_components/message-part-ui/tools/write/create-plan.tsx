@@ -1,0 +1,275 @@
+import type { WritePart } from '.';
+import {
+  IconClipboardContentOutline18,
+  IconXmarkOutline18,
+} from '@stagewise/icons';
+import {
+  parsePlanContent,
+  type PlanTask,
+  type TaskGroup,
+} from '@stagewise/agent-core/plans';
+import { getBaseName } from '@shared/path-utils';
+import { stripMountPrefix } from '@ui/utils';
+import { HotkeyActions } from '@shared/hotkeys';
+import { useKartonProcedure } from '@ui/hooks/use-karton';
+import { useKartonState } from '@ui/hooks/use-karton';
+import { memo, useMemo, useCallback } from 'react';
+import { Button } from '@stagewise/stage-ui/components/button';
+import { Checkbox } from '@stagewise/stage-ui/components/checkbox';
+import { cn } from '@ui/utils';
+import { IconClipboardOutline18 } from '@stagewise/icons';
+import { usePlanPhase } from '@ui/hooks/use-plan-phase';
+import { useSendImplement } from '@ui/hooks/use-send-implement';
+import { HotkeyCombo } from '@ui/components/hotkey-combo';
+import { useCmdEnterTarget } from '@ui/hooks/use-cmd-enter-target';
+import { CmdEnterPriority } from '@ui/utils/cmd-enter-registry';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@stagewise/stage-ui/components/tooltip';
+import { useContentCollapsed } from '@ui/screens/main/_components/content-collapsed-context';
+
+/**
+ * Dedicated tool-part UI for plan file creation / update.
+ * Replaces the generic write diff view when the target path
+ * is inside `plans/`.
+ *
+ * Streaming and error states are handled here without any
+ * Karton subscriptions. The settled card is a separate component
+ * that only mounts once the tool completes, avoiding unnecessary
+ * re-renders during streaming.
+ */
+export const CreatePlanToolPart = memo(
+  function CreatePlanToolPart({ part }: { part: WritePart }) {
+    const streaming =
+      part.state === 'input-streaming' || part.state === 'input-available';
+    const isError = part.state === 'output-error';
+
+    // Streaming state — plain shimmer label
+    if (streaming) {
+      return (
+        <div className="flex h-6 w-full items-center gap-1 font-medium text-muted-foreground">
+          <IconClipboardOutline18 className="size-3 shrink-0 text-primary-foreground" />
+          <span className="shimmer-text-primary text-xs">Creating plan…</span>
+        </div>
+      );
+    }
+
+    // Error state — matches standard tool error style (muted inline text)
+    if (isError) {
+      const errorText = part.errorText ?? 'Failed to create plan';
+      return (
+        <div className="flex max-w-full cursor-default items-center gap-1 text-muted-foreground text-xs hover:text-foreground">
+          <IconXmarkOutline18 className="size-3 shrink-0" />
+          <Tooltip>
+            <TooltipTrigger>
+              <span className="min-w-0 truncate text-xs">{errorText}</span>
+            </TooltipTrigger>
+            <TooltipContent>{errorText}</TooltipContent>
+          </Tooltip>
+        </div>
+      );
+    }
+
+    // Success — delegate to settled card (subscribes to Karton only when needed)
+    return <CreatePlanSettledCard part={part} />;
+  },
+  (prev, next) => {
+    // During streaming, only part.state matters (shimmer label is static)
+    if (
+      prev.part.state === next.part.state &&
+      (next.part.state === 'input-streaming' ||
+        next.part.state === 'input-available')
+    ) {
+      return true;
+    }
+    // Once settled, use default identity check
+    return prev.part === next.part;
+  },
+);
+
+/**
+ * Settled (success) card for a completed plan write.
+ * Extracted so Karton subscriptions only run after streaming finishes.
+ */
+function CreatePlanSettledCard({ part }: { part: WritePart }) {
+  const relativePath = part.input?.path ?? '';
+
+  // Plan lifecycle phase — controls whether footer buttons are shown
+  const phase = usePlanPhase(relativePath || null);
+
+  // Parse plan content from the tool input (static, used as fallback)
+  const parsed = useMemo(() => {
+    if (!part.input?.content) return null;
+    return parsePlanContent(part.input.content);
+  }, [part.input?.content]);
+
+  // Extract filename from the relative path (e.g. "plans/my-plan.md" → "my-plan.md")
+  const filename = useMemo(
+    () => getBaseName(stripMountPrefix(relativePath)),
+    [relativePath],
+  );
+
+  // Live plan data from global plans (updates when file changes on disk)
+  const globalPlans = useKartonState((s) => s.plans);
+
+  const livePlan = useMemo(() => {
+    if (!filename) return null;
+    return globalPlans.find((p) => p.filename === filename) ?? null;
+  }, [filename, globalPlans]);
+
+  // Prefer live task groups over static parsed content
+  const taskGroups: TaskGroup[] = useMemo(
+    () => livePlan?.taskGroups ?? parsed?.taskGroups ?? [],
+    [livePlan, parsed],
+  );
+  const planName = livePlan?.name ?? parsed?.name;
+  const planDescription = parsed?.description;
+
+  // Navigation: open plan in a tab
+  const createTab = useKartonProcedure((p) => p.browser.createTab);
+  const switchTab = useKartonProcedure((p) => p.browser.switchTab);
+  const goToUrl = useKartonProcedure((p) => p.browser.goto);
+  const tabs = useKartonState((s) => s.contentTabs.tabs);
+
+  // Expand the content panel if it's collapsed so the plan tab is visible
+  const { collapsed: contentCollapsed, setCollapsed: setContentCollapsed } =
+    useContentCollapsed();
+
+  // Implement: send a synthetic /implement message to the agent
+  const handleImplement = useSendImplement();
+
+  const { setRef: implementRef, isWinner: implementIsWinner } =
+    useCmdEnterTarget({
+      id: `create-plan-implement-${part.toolCallId}`,
+      priority: CmdEnterPriority.CREATE_PLAN,
+      action: handleImplement,
+      enabled: phase === 'just-created',
+    });
+
+  const handleOpenPlan = useCallback(() => {
+    if (contentCollapsed) setContentCollapsed(false);
+
+    const baseUrl = `stagewise://internal/plan/${encodeURIComponent(filename)}`;
+    const existingTab = Object.values(tabs).find((tab) =>
+      tab.url.startsWith(baseUrl),
+    );
+    if (existingTab) {
+      void switchTab(existingTab.id);
+      void goToUrl(baseUrl, existingTab.id);
+    } else {
+      void createTab(baseUrl, true);
+    }
+  }, [
+    filename,
+    tabs,
+    switchTab,
+    goToUrl,
+    createTab,
+    contentCollapsed,
+    setContentCollapsed,
+  ]);
+
+  return (
+    <div className="mt-6 w-full overflow-hidden rounded-lg border border-border-subtle bg-background shadow-xs dark:border-border dark:bg-surface-1">
+      {/* Body: title + description + tasks */}
+      <div className="px-3 pt-2.5 pb-2">
+        {/* Plan title */}
+        {planName && (
+          <div className="flex items-center gap-2 pb-2">
+            <IconClipboardContentOutline18 className="size-3 shrink-0 text-muted-foreground" />
+            <h3 className="font-semibold text-foreground text-sm">
+              {planName}
+            </h3>
+          </div>
+        )}
+
+        {/* Description */}
+        {planDescription && (
+          <div className="scroll-fade-y scroll-fade-4 scrollbar-subtle mb-2.5 max-h-[3.5rem] overflow-y-auto pr-1">
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              {planDescription}
+            </p>
+          </div>
+        )}
+
+        {/* Task preview — grouped, scrollable with fade */}
+        {taskGroups.length > 0 && (
+          <div className="scroll-fade-y scroll-fade-4 scrollbar-subtle max-h-40 overflow-y-auto rounded-md">
+            {taskGroups.map((group, gi) => (
+              <div key={`${gi}-${group.label}`}>
+                {group.label && (
+                  <div className="shrink-0 px-1 pt-1 pb-0.5 text-subtle-foreground text-xs">
+                    {group.label}
+                  </div>
+                )}
+                {group.tasks.map((task, ti) => (
+                  <TaskPreviewRow
+                    key={`${gi}-${ti}-${task.text}`}
+                    task={task}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer: always show View Plan; Implement only when just created */}
+      <div className="flex items-center justify-end gap-1 border-border/30 px-1.5 py-1.5 dark:border-border/70">
+        <Button variant="ghost" size="xs" onClick={handleOpenPlan}>
+          Open Plan
+        </Button>
+        {phase === 'just-created' && (
+          <Button
+            ref={implementRef}
+            variant="primary"
+            size="xs"
+            className="pr-1"
+            onClick={handleImplement}
+          >
+            <span className="flex items-center gap-1.5">
+              <span>Implement</span>
+              {implementIsWinner && (
+                <HotkeyCombo
+                  action={HotkeyActions.CMD_ENTER}
+                  size="xs"
+                  variant="solid"
+                  className="ml-0.5"
+                />
+              )}
+            </span>
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TaskPreviewRow({ task }: { task: PlanTask }) {
+  return (
+    <div className="flex items-start gap-1.5 py-0.5 text-xs">
+      <div className="flex size-5 shrink-0 items-center justify-center">
+        <Checkbox
+          size="2xs"
+          checked={task.completed}
+          disabled
+          className={cn(
+            'pointer-events-none',
+            task.completed ? 'opacity-40' : 'opacity-65',
+            'dark:bg-surface-2',
+          )}
+        />
+      </div>
+      <span
+        className={cn(
+          'min-w-0 text-foreground leading-5',
+          task.completed && 'text-subtle-foreground line-through',
+        )}
+      >
+        {task.text}
+      </span>
+    </div>
+  );
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="BeforeTest" timestamp="2026&#x002D;11&#x002D;05T17:22:00" hostname="VOID" tests="6" failures="4" errors="0" skipped="0" time="0.461">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="BeforeTest" time="0.000"/>
+  <testcase name="reasoningOnlyCancellation(openai)" classname="BeforeTest" time="0.129">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2]]>
+    </failure>
+  </testcase>
+  <testcase name="reasoningOnlyCancellation(anthropic)" classname="BeforeTest" time="0.075">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2]]>
+    </failure>
+  </testcase>
+  <testcase name="reasoningOnlyCancellation(google)" classname="BeforeTest" time="0.128">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2]]>
+    </failure>
+  </testcase>
+  <testcase name="reasoningOnlyCancellation(responses)" classname="BeforeTest" time="0.126">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (engine.messages().size()): 1
+   Expected (2)                       : 2]]>
+    </failure>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="BeforeTest" time="0.000"/>
+</testsuite>

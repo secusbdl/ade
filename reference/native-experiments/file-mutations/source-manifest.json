@@ -1,0 +1,88 @@
+{
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sources": [
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "sha256": "28e0a8b1c599aa419273a868c03c9d4f6ff63090d4f6c46288b56c7b8d25525b",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts"
+    },
+    {
+      "path": "packages/agent-core/src/types/tools.ts",
+      "sha256": "dc0a83c6880d53ce97277c834a77e4a844fa0d601174774a9c4e8f1dc347f20d",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "sha256": "0bfe185a4efd4cdd66d500b3a44fb0364558e40ad77f7bc4f89e5045929206f2",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/types.ts",
+      "sha256": "386f01bf00385b948bc5847280cc45c249ec1324ad8b4157a7a33b94ffb9621b",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/types.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/utils.ts",
+      "sha256": "ee4f66c62f785736f9ec01ad4159fec1c69fd2f7ce7bdeaded223eb50530212c",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/utils.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.test.ts",
+      "sha256": "d2ccbfec1b4516354eefefdace99da514029dd085e7f38db6ee334d70f6c3a02",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.test.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/index.ts",
+      "sha256": "a871de8a7e58abaa7eeccdf04c41da0d2650ce99aaff21a97594e3afb18b041e",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/utils/db.ts",
+      "sha256": "ac66e6f906654eef5d5cdd75480add36cea79cad1fc60148c7857327f58096dc",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/utils/db.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/schema.sql",
+      "sha256": "8179a8061e40a687c03dd930a32ed5cb7947af39c32fac866f64553aaa9d08a5",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/schema.sql"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/spec.md",
+      "sha256": "200ff6cdbf691794165fec3db22f3448d53659e656698542dff7fb1fa179ff27",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/spec.md"
+    },
+    {
+      "path": "packages/agent-core/src/types/diff-history.ts",
+      "sha256": "945fd75dd2d82768e7067ce25c49320fcafe7b300f357c73ff00753c86b30b50",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/diff-history.ts"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/index.ts",
+      "sha256": "f3e621153d4e606eb58430fab2d262efc6968c7fceb8b28905c14f8454577936",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/agent-manager/universal-toolbox.ts",
+      "sha256": "2c64b4d04c6b6cc96b0291d25774d26c1bd49d1b3709864059476d9306554419",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/universal-toolbox.ts"
+    }
+  ],
+  "native_baseline": [
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256": "8e02b0bd224fa8f92e01be430fbb702efdb222de9ed7a08c228c453cb9ef6c1d"
+    },
+    {
+      "path": "src/core/ToolExecutor.h",
+      "sha256": "31b93f383cdffecfe4f00e5382749d2857c478a862eaf59549d335f19e3c8c0f"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256": "b6a06484d1f2ebbbb8d5b1442cea5d1aef6f2ba3826880687462e9cc70b55546"
+    },
+    {
+      "path": "src/core/ScopedDirectory.cpp",
+      "sha256": "c26ea590e8d2f5bcdc0abff4127e0b818e0c59373d5f04f3b37df4cd93074c34"
+    }
+  ]
+}

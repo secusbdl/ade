@@ -1,0 +1,69 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "source_contract": "Browser toolbox getSandboxMounts maps att to attachments.agentBlobDir(agentId); sandbox/ipc.ts defines READ_ONLY_PERMISSIONS as read and list. Native agent-core path-resolution.ts also reserves att as a read-only static mount.",
+  "implementation": [
+    "src/runtime/AttachmentFileBroker.cpp",
+    "src/runtime/AttachmentFileBroker.h",
+    "src/runtime/AgentToolHost.cpp",
+    "src/sandbox/SandboxHost.cpp",
+    "tests/test_attachment_mount.cpp"
+  ],
+  "behavior": {
+    "root": "One broker is permanently bound to one host-selected chat ID and data directory. AttachmentStore::agentDirectory supplies dataDir/attachments/<agentId>, shared by imported originals and API.createAttachment. The separate attachment-snapshots/<agentId> directory is not mounted.",
+    "read": "Sandbox fsPromises/node:fs readFile on att/<blob> returns exact Buffer bytes by default or bounded strict UTF-8 when requested. AttachmentStore validates the final opened Windows file handle and reads from that same handle. Empty files, BOM and newline bytes are preserved; binary bytes are never passed through a text conversion.",
+    "list": "fsPromises/node:fs readdir accepts att or att/ and lists the flat owned blob namespace from a validated pinned Windows directory handle. Recursive produces the same flat entries. Captured names are checked without reopening paths; unexpected directories/links or invalid names are rejected. Same-handle enumeration prevents alias-retarget mixing but is not an atomic snapshot of mutable directory contents.",
+    "permissions": "fs writeFile and mkdir to att are rejected before the ordinary file executor receives them. The broker independently rejects every operation except readFile, readBytes and readDirectory, and rejects a foreign agent identity. Traversal, invalid blob names, Windows device/ADS syntax, missing files and junction roots fail through AttachmentStore validation.",
+    "lifecycle": "Requests run through a zero-delay queued dispatch and unique generation. Cancellation removes ownership before completion, obsolete callbacks cannot finish a reused ID, and cancelAll tolerates destruction from a completion observer. AgentToolHost cancels these requests on context reset, workspace reset and teardown. Valid generated attachments remain readable immediately by their returned att filename.",
+    "invalid_storage": "A failed owned-root validation disables the SandboxHost artifact directory explicitly. API.createAttachment then errors instead of using its standalone default global artifact path."
+  },
+  "limits": {
+    "binary_bytes": 4194304,
+    "utf8_characters": 65536,
+    "directory_characters": 65536,
+    "returned_entries": 4096,
+    "pending_requests": 128
+  },
+  "verification": {
+    "new_suite": {
+      "passed": 10,
+      "failed": 0,
+      "report": "test-results/attachment-mount-stage.txt",
+      "junit": "test-results/attachment-mount-stage.xml"
+    },
+    "copied_regressions": {
+      "sandbox_passed": 27,
+      "runtime_apps_passed": 15,
+      "reports": [
+        "private/attachment-mount-stage/audit/existing-sandbox-tests.txt",
+        "private/attachment-mount-stage/audit/existing-runtime-apps-tests.txt"
+      ]
+    },
+    "scope": "Independent native static Qt stage built from copied sources before migration. Fixtures use temporary files, two actual AgentToolHost instances and the actual native QuickJS worker; no live provider or external website. Parent integrated results are recorded separately.",
+    "cases": [
+      "Original bytes differ from a stored history snapshot and raw att reads still return originals",
+      "API-generated binary attachment immediately reads back",
+      "att bytes copied into apps without a workspace",
+      "UTF-8/BOM/empty files and explicit oversized errors",
+      "Writes/mkdir/escapes/ADS/device paths denied",
+      "Two chats with the same blob filename read distinct bytes",
+      "Queued cancellation and ignored late reply",
+      "Reused request IDs and broker deletion during cancelAll",
+      "Invalid owned root cannot fall back to global artifact storage",
+      "Nested junction and replaced attachment root fail closed"
+    ],
+    "directory_containment_followup": "audit/scoped-directory-enumeration.json"
+  },
+  "remaining_gaps": [
+    "Native model formatted read/ls routing for att is separate from this sandbox bridge",
+    "Files above the binary/text bounds require future chunked or streaming APIs",
+    "Full Node fs methods, sync calls, encodings, flags and error-code parity remain incomplete",
+    "Additional sandbox mounts such as plugins/logs/memory/shells and stable multiple workspaces are not implemented"
+  ],
+  "sources": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/ipc.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/attachments/service.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts"
+  ]
+}

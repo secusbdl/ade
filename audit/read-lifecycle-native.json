@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-05",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "Migrated after checkpoint 163a0c4; focused shared integration passed11/11 suites (9 initial passes and2 corrected contract-fixture reruns).",
+  "source": {
+    "currentToolNames": [
+      "read",
+      "ls"
+    ],
+    "migration": "packages/agent-core/src/services/agent-persistence/migrations/v006-rename-readfile-to-read.ts",
+    "readAcknowledgment": "packages/agent-core/src/services/toolbox/universal-tools.ts:330 returns only File opened and loaded into context.; ls at360 returns undefined after existence check.",
+    "capture": "agents/base-agent.ts:3063-3118 hashes successful tool-read paths and sandbox-created attachments after the step; pathReferences is one path->hash map on the assistant message.",
+    "perCall": "file-read-transformer/path-references.ts:129 extracts each successful tool-read separately, forwarding start_line/end_line/start_page/end_page/preview. Failed/pending calls omitted.",
+    "conversion": "agents/shared/message-conversion.ts:325 injects user references before original content; :376-420 emits read and generated-attachment contents in a consolidated synthetic user message after assistant/tool conversion.",
+    "dedup": "file-read-transformer/coverage.ts: SeenFilesTracker contains only path+hash; explicit reads bypass dedup but record seen; mentions/generated attachments dedup within the current conversion window. No range coverage union is used in this pinned version.",
+    "cache": "services/file-read-cache/index.ts: app-wide SQLite LRU500 of serialized post-transform result; key raw-content hash + original extension + normalized read params + maxReadChars/maxPreviewLines. No raw-original snapshot archive.",
+    "historical": "file-read-transformer/index.ts:404 fast expected-hash transform-cache probe before stat/read, then matching-current-hash transform or old-expected-hash cached transform, else version-unavailable placeholder. Preview promotion can miss old full-key fast lookup after source deletion; native should not reproduce that loss.",
+    "directories": "hash.ts:111 hashes sorted relativePath:size (d for directory) for depth0+1, ignores mtime; directory transformer can render deeper than this hash. Thus this hash is not an immutable complete tree identity.",
+    "lsOmission": "Both extractors accept only tool-read. No ls extractor or equivalent injection found in pinned source. Native ls reference injection is an explicit correction/extension, not identical upstream behavior."
+  },
+  "implementation": {
+    "capture": "Only explicit model formatted read/ls captures exact opened bytes or typed directory manifests once; raw sandbox reads stay separate.",
+    "storage": "Value-only, per-agent mutex/epoch lease; Windows physical identity and storage handles; bounded original snapshots in read-context-v1. No QObject worker callback.",
+    "history": "Compact tool result metadata fileReads/pathReferences/pathMetadata; no bytes or base64 in saved session history. Per-call input hash and original params checked during preparation.",
+    "conversion": "Each explicit read reinjected with its own original ranges/version, then marked seen; mentions/generated attachments dedup. Synthetic user context follows the complete tool-result block. Provider IDs and native protocol parts retained.",
+    "copy": "Busy-source cloning supported without canceling or mutating source history. Fresh unowned destination only; SessionStore conflict rolls back only newly owned target.",
+    "delete": "Durable session removal precedes cleanup. Host becomes terminal, cancels and revokes before deleting read/ordinary attachment context. Archive keeps context."
+  },
+  "publicApi": {
+    "cloneFileContext": "bool cloneFileContext(const QString& targetAgentId, QString* error=nullptr); synchronous, busy source supported, fresh unowned target only. Clone is not a history-normalization operation.",
+    "removeFileContext": "bool removeFileContext(QString* error=nullptr); terminal host before cancellation/reset, retryable cleanup, no SessionStore/apps/workspace deletion. Failure details in error.",
+    "creationSequence": "Capture source history/settings on GUI thread, clone fresh UUID context, persist new session. On save failure roll back only that fresh target using FileReadSnapshotStore::removeAgent and AttachmentStore::removeAgent without constructing a host.",
+    "deletionSequence": "Persist session removal before invoking removeFileContext. Surface cleanup errors and keep retry record. Archive never calls removal.",
+    "pendingTools": "Parent owns copied/restored history normalization per upstream base-agent.ts845-860 before next user submission."
+  },
+  "build": {
+    "FileReadCapture": "Header-only QtCore values; can be listed on ade_file_transformer. Core already links this target; no core->ade_attachments dependency.",
+    "FileReadSnapshotStore": "Compile in ade_attachments (existing glob); uses AttachmentStore plus ade_core ScopedDirectory. No new dependency or runtime.",
+    "test_read_lifecycle": "Link ade_attachments and Qt6::Test; QCoreApplication fixture, no display/worker/real credentials needed.",
+    "test_read_runtime": "Link ade_host and Qt6::Test plus src/ui/SessionStore.cpp, or existing target providing SessionStore. Needs normal WebView2Loader/ADE-sandbox-worker distribution beside exe for host parity; fixtures use localhost fake provider credentials and do not launch real external service calls.",
+    "signalCompatibility": "ToolExecutor completed has optional trailing QJsonObject metadata. Existing typed 3-argument slots compile and ignore it; update only Engine consumer to record metadata atomically."
+  },
+  "fixtures": {
+    "lifecycle": {
+      "passed": 21,
+      "failed": 0,
+      "milliseconds": 499,
+      "report": "read-lifecycle/lifecycle-tests.txt"
+    },
+    "runtime": {
+      "passed": 15,
+      "failed": 0,
+      "milliseconds": 2221,
+      "report": "read-lifecycle/runtime-tests.txt",
+      "scope": "Actual local fake-provider Engine/Host requests for4protocols, ranges/versions/image/directory, session clone/delete/conflict, held cancellation, owned/populated destination rejection, busy-copy boundaries."
+    }
+  },
+  "reproducedFixes": [
+    {
+      "name": "Stale lease revokes replacement; Windows case alias splits physical realm",
+      "failures": 2,
+      "evidence": "read-lifecycle/lease-before.txt"
+    },
+    {
+      "name": "Pipeline lease accepted across chat identity",
+      "failures": 1,
+      "evidence": "read-lifecycle/lease-identity-before.txt"
+    },
+    {
+      "name": "Failed clone revoked target; empty source skipped populated target",
+      "failures": 2,
+      "evidence": "read-lifecycle/clone-before.txt"
+    },
+    {
+      "name": "Ordinary attachment clone accepted populated target when source directory absent",
+      "failures": 1,
+      "evidence": "read-lifecycle/attachment-clone-before.txt"
+    }
+  ],
+  "limits": [
+    "500-entry/512 MiB read context eviction remains bounded, not indefinite retention.",
+    "Directory manifests are immutable bounded observations, not atomic multi-directory snapshots.",
+    "Formatted att/ remains pending; raw att/ broker unaffected.",
+    "No persistent transformed-result cache or new PDF/Office/RAW/ISO/AST transformations.",
+    "No imported archive trust expansion, remote requests, real tokens or workspace mutations beyond temporary fixtures.",
+    "General clone filesystem behavior versus adversarial external cache changes is not claimed atomic."
+  ],
+  "remaining": [
+    "Parent UI fork/archive/delete and pending copied/restored tool normalization are separate integration work.",
+    "Persistent transformed-result cache, imported context bundle validation and prune policy remain incomplete.",
+    "Standalone probe CMake paths already include src and the QtCore transformer; no probe cycle/dependency changes needed."
+  ],
+  "claim": "Fixture evidence establishes only the documented tested scope; no universal correctness or full Stagewise parity claim.",
+  "sharedIntegration": {
+    "suites": [
+      {
+        "report": "read-lifecycle/shared-native_read_lifecycle.txt",
+        "suite": "native_read_lifecycle",
+        "summary": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 498ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_read_runtime.txt",
+        "suite": "native_read_runtime",
+        "summary": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2241ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_core.txt",
+        "suite": "native_core",
+        "summary": "Totals: 48 passed, 0 failed, 0 skipped, 0 blacklisted, 8171ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_runtime_apps.txt",
+        "suite": "native_runtime_apps",
+        "summary": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 6086ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_engine_observers.txt",
+        "suite": "native_engine_observers",
+        "summary": "Totals: 56 passed, 0 failed, 0 skipped, 0 blacklisted, 8784ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_file_tools.txt",
+        "suite": "native_file_tools",
+        "summary": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 46ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_file_tools_races.txt",
+        "suite": "native_file_tools_races",
+        "summary": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 737ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_raw_enumeration_races.txt",
+        "suite": "native_raw_enumeration_races",
+        "summary": "Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 1620ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_attachment_mount.txt",
+        "suite": "native_attachment_mount",
+        "summary": "Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 565ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_attachments.txt",
+        "suite": "native_attachments",
+        "summary": "Totals: 23 passed, 0 failed, 0 skipped, 0 blacklisted, 963ms"
+      },
+      {
+        "report": "read-lifecycle/shared-native_runtime.txt",
+        "suite": "native_runtime",
+        "summary": "Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 4988ms"
+      }
+    ],
+    "initialFailures": "Two stale fixture contracts only: raw ToolExecutor completion arity3 became4, and host formatted read/ls switched inline bodies to compact reference acknowledgments. Fixtures now assert empty raw metadata and exact transformed provider-request contents.",
+    "initialReports": [
+      "read-lifecycle/core-signal-contract-before.txt",
+      "read-lifecycle/runtime-apps-contract-before.txt"
+    ],
+    "remaining": "Parent owns next MainWindow/session cleanup lifecycle and pending inherited-tool normalization; full application integration is separate."
+  }
+}

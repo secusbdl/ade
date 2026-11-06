@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-05",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "Production AgentEngine.cpp patched and frozen; isolated native fixture validation passed, parent owns shared integration.",
+  "sources": {
+    "submission": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts:845-860 calls denyAllNonTerminalToolPartsInHistory before appending a new user message.",
+    "stateTransition": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts:29-81 walks all historical assistant tool parts, preserves terminal states, denies pending approvals and marks other nonterminal parts interrupted."
+  },
+  "nativePolicy": [
+    "Only idle submit paths are changed. Existing busy-submit behavior remains.",
+    "Validate a local candidate history after provider/attachment submission validation and before publishing the new user message.",
+    "Pair completed tool results within each preceding assistant tool-call batch using exact case-sensitive IDs. Empty result strings are completed.",
+    "Preserve original assistant values, completed result values and metadata. Native signed blocks remain byte-equivalent JSON values.",
+    "Insert one bare role:tool Error result for every unresolved canonical call before its next non-tool boundary or history end. Never dispatch inherited calls, ask approval, or attach copied media metadata to synthesized errors.",
+    "IDs reused in separate assistant batches remain valid. Same-batch duplicate IDs, duplicate/unmatched results, malformed call identity/function fields and known-native ID/name/count mismatches reject atomically without appending a user or contacting the provider.",
+    "Google native calls without IDs associate by ordered function names; generated canonical IDs are retained without rewriting native parts.",
+    "The source engine and input QJsonArray stay unchanged when a fork target recovers its copied history. Partial argument strings remain unchanged."
+  ],
+  "files": [
+    "src/core/AgentEngine.cpp",
+    "tests/test_history_recovery.cpp"
+  ],
+  "unchangedInterfaces": "AgentEngine.h unchanged; queued reply identity/generation callbacks and all existing observer guards retained.",
+  "fixtures": {
+    "before": {
+      "passed": 3,
+      "failed": 25,
+      "report": "history-recovery/before.txt"
+    },
+    "fixed": {
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1228,
+      "report": "history-recovery/fixed.txt",
+      "junit": "history-recovery/fixed.xml"
+    },
+    "scope": [
+      "Actual loopback provider requests for OpenAI chat, Responses, Anthropic Messages and Google, plus Google without native IDs.",
+      "Native reasoning/signature-bearing fixture fields preserved; completed empty output and metadata preserved; exactly one interruption output per missing call; second submit does not duplicate it.",
+      "Repeated call IDs across different historical batches, missing earlier-batch calls, malformed duplicates/orphans/native mismatches and invalid configuration atomic rejection.",
+      "An actual source engine waiting for tool approval remains busy and unchanged while its copied target recovers; neither executes an inherited workspace write.",
+      "Partial arguments preserved, and direct busyChanged cancellation after recovery retains paired history with no request or tool dispatch."
+    ]
+  },
+  "review": [
+    {
+      "reviewer": "license_review",
+      "scope": "Read-only association, exact IDs, empty output, candidate publication and native ID/order mapping; no additional concrete defect found; no independent test rerun."
+    },
+    {
+      "reviewer": "qt_port_review",
+      "scope": "Read-only candidate atomicity, batch closure, duplicate/orphan rejection and signed/native preservation; no concrete blocker; no independent runtime or fuzz test."
+    }
+  ],
+  "buildStanza": [
+    "qt_add_executable(test_history_recovery tests/test_history_recovery.cpp)",
+    "target_link_libraries(test_history_recovery PRIVATE ade_core Qt6::Test)",
+    "set_target_properties(test_history_recovery PROPERTIES WIN32_EXECUTABLE FALSE)",
+    "add_test(NAME native_history_recovery COMMAND test_history_recovery -o \"${CMAKE_BINARY_DIR}/Testing/native_history_recovery.txt,txt\")",
+    "set_tests_properties(native_history_recovery PROPERTIES TIMEOUT 45)"
+  ],
+  "limits": [
+    "Fake provider fixtures establish serialized association/order and lifecycle behavior; they do not validate real provider cryptographic signatures or prove acceptance of every interrupted partial-argument payload.",
+    "Malformed ambiguous history is preserved and rejected, not silently repaired by inventing IDs or rewriting signed content. No interactive history repair UI is added.",
+    "Native history does not persist Stagewise approval-part state taxonomy; every missing native result receives the requested interruption error rather than reconstructing an approval-denial state.",
+    "Known native call ID/name/count mappings are validated; canonical/native argument semantic equivalence and unknown native-protocol payloads are outside this targeted recovery check.",
+    "Recovery changes the target engine only; parent owns SessionStore persistence and fork/archive/delete UI integration.",
+    "Passing this corpus is not a universal correctness or complete Stagewise parity guarantee."
+  ]
+}

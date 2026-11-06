@@ -1,0 +1,44 @@
+{
+  "scope": "AgentEngine synchronous tool callbacks and completion transitions",
+  "before": {
+    "report": "private/engine-observer-stage/tool-started-before.txt",
+    "probeSha256": "352E18CE02B4498ED16B42CAF59E1E419DAAAF7EAAE04A582144FF282D02370A",
+    "result": "FAIL: cancelling inside toolStarted still wrote after-cancel.txt in a dedicated temporary workspace."
+  },
+  "fix": [
+    "Copy pending tool values before emitting toolStarted; check guarded owner, dispatch generation and active turn before dispatch.",
+    "Advance and persist the completed tool before toolFinished observers run; callback cancellation cannot duplicate the current result.",
+    "Cancellation/failure retire the turn and settle the complete protocol block before callbacks can start a replacement. Guard subsequent notifications against destruction/replacement.",
+    "Guard submission and completion notification boundaries and external timeout cancellation against synchronous owner destruction or a replacement turn."
+  ],
+  "verification": {
+    "report": "test-results/engine-observers-fixed.xml",
+    "textReport": "test-results/engine-observers-fixed.txt",
+    "executableSha256": "F98A52F2348A83D4A7CCAC7EDCE49F42672B5FD1D258FBE55A2DDFC0502D6374",
+    "passedIncludingLifecycle": 8,
+    "failed": 0,
+    "skipped": 0,
+    "cases": [
+      "cancel at toolStarted",
+      "replacement after toolStarted cancellation",
+      "cancel at toolFinished without duplicate result",
+      "replacement after toolFinished cancellation",
+      "destroy at toolStarted then protect object storage PAGE_NOACCESS",
+      "destroy at toolFinished then protect object storage PAGE_NOACCESS"
+    ]
+  },
+  "limits": [
+    "Dedicated localhost provider and temporary write paths only.",
+    "These tests cover named tool and completion callback boundaries, not every streaming callback or universal QObject lifetime safety.",
+    "The full integration is tracked separately from the passing core suite."
+  ],
+  "integration": {
+    "coreReport": "test-results/files-archives-watchers-initial-details/native_core.txt",
+    "passedIncludingLifecycle": 48,
+    "failed": 0,
+    "skipped": 0,
+    "additionalInvariant": "Cancellation after the first of two tool results settles the entire old protocol block exactly once before a replacement request.",
+    "executableSha256": "F598F2B6018813195B372A0DBF94A1981CABA238C3DDE1D200E10F8F8C59C444",
+    "wholeRun": "33 of 34 suites passed; a separate Git root-disappearance notification defect is being corrected."
+  }
+}

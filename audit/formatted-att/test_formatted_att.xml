@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="FormattedAttTest" timestamp="2026&#x002D;11&#x002D;05T16:40:31" hostname="VOID" tests="33" failures="0" errors="0" skipped="0" time="2.692">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="FormattedAttTest" time="0.000"/>
+  <testcase name="formattedReadReinjectsAfterDeletion(openai)" classname="FormattedAttTest" time="0.178"/>
+  <testcase name="formattedReadReinjectsAfterDeletion(responses)" classname="FormattedAttTest" time="0.126"/>
+  <testcase name="formattedReadReinjectsAfterDeletion(anthropic)" classname="FormattedAttTest" time="0.190"/>
+  <testcase name="formattedReadReinjectsAfterDeletion(google)" classname="FormattedAttTest" time="0.170"/>
+  <testcase name="directoryManifestSurvivesDeleteAndClone" classname="FormattedAttTest" time="0.329"/>
+  <testcase name="binaryArchiveAndImageUseExistingTransforms(zip)" classname="FormattedAttTest" time="0.178"/>
+  <testcase name="binaryArchiveAndImageUseExistingTransforms(jar)" classname="FormattedAttTest" time="0.204"/>
+  <testcase name="binaryArchiveAndImageUseExistingTransforms(war)" classname="FormattedAttTest" time="0.201"/>
+  <testcase name="binaryArchiveAndImageUseExistingTransforms(tar)" classname="FormattedAttTest" time="0.196"/>
+  <testcase name="binaryArchiveAndImageUseExistingTransforms(tgz)" classname="FormattedAttTest" time="0.244"/>
+  <testcase name="readerIdentityIsFixedAndNoWorkspaceIsRequired" classname="FormattedAttTest" time="0.009"/>
+  <testcase name="attOnlyDefinitionsDoNotGrantWorkspaceOrAppMutation" classname="FormattedAttTest" time="0.132"/>
+  <testcase name="forkedFileHistoryUsesClonedSnapshotNotAnotherChatsBlob" classname="FormattedAttTest" time="0.265"/>
+  <testcase name="invalidPathsAndMutations(att/../second/secret.txt)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att//secret.txt)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att/second/secret.txt)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att/a:stream)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att/NUL)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att/../../read&#x002D;context&#x002D;v1/x)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(att\secret.txt)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(ls&#x002D;file)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(write)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="invalidPathsAndMutations(mkdir)" classname="FormattedAttTest" time="0.002"/>
+  <testcase name="invalidPathsAndMutations(raw&#x002D;unavailable&#x002D;here)" classname="FormattedAttTest" time="0.002"/>
+  <testcase name="listingRefusesUnexpectedEntries(subdirectory)" classname="FormattedAttTest" time="0.002"/>
+  <testcase name="listingRefusesUnexpectedEntries(invalid&#x002D;name)" classname="FormattedAttTest" time="0.003"/>
+  <testcase name="cancellationDoesNotPublishIntoReusedId" classname="FormattedAttTest" time="0.130"/>
+  <testcase name="removedLeaseRejectsAValueReaderStillRunning" classname="FormattedAttTest" time="0.006"/>
+  <testcase name="persistedAttNamespaceRemainsFlat" classname="FormattedAttTest" time="0.005"/>
+  <testcase name="exactBoundsAndEmptyBytes" classname="FormattedAttTest" time="0.008"/>
+  <testcase name="junctionsAndRootReplacementFailClosed" classname="FormattedAttTest" time="0.082"/>
+  <testcase name="cleanupTestCase" classname="FormattedAttTest" time="0.000"/>
+</testsuite>

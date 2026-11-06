@@ -1,0 +1,10 @@
+********* Start testing of SidebarNavigationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SidebarNavigationTest::initTestCase()
+QWARN  : SidebarNavigationTest::removedGitServiceDropsCachedLabels() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : SidebarNavigationTest::removedGitServiceDropsCachedLabels() '!groups(&list).contains("Root (main)")' returned FALSE. ()
+D:/age/ADE/private/sidebar-navigation-stage/tests/test_sidebar_navigation.cpp(67) : failure location
+PASS   : SidebarNavigationTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 847ms
+********* Finished testing of SidebarNavigationTest *********

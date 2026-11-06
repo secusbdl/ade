@@ -1,0 +1,18 @@
+<RCC>
+  <qresource prefix="/plugin-icons">
+    <file alias="figma.svg">assets/plugin-icons/figma.svg</file>
+    <file alias="github.svg">assets/plugin-icons/github.svg</file>
+    <file alias="posthog.svg">assets/plugin-icons/posthog.svg</file>
+    <file alias="supabase.svg">assets/plugin-icons/supabase.svg</file>
+    <file alias="vercel.svg">assets/plugin-icons/vercel.svg</file>
+  </qresource>
+  <qresource prefix="/fonts">
+    <file alias="Geist-Variable.ttf">assets/fonts/Geist-Variable.ttf</file>
+    <file alias="Geist-Italic-Variable.ttf">assets/fonts/Geist-Italic-Variable.ttf</file>
+    <file alias="RobotoMono-Variable.ttf">assets/fonts/RobotoMono-Variable.ttf</file>
+    <file alias="RobotoMono-Italic-Variable.ttf">assets/fonts/RobotoMono-Italic-Variable.ttf</file>
+    <file alias="Geist-OFL.txt">assets/fonts/Geist-OFL.txt</file>
+    <file alias="RobotoMono-OFL.txt">assets/fonts/RobotoMono-OFL.txt</file>
+    <file alias="provenance.json">assets/fonts/provenance.json</file>
+  </qresource>
+</RCC>

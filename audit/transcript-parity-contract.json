@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "scope": "Read-only source audit for native transcript replacement; no production changes or new transcript runtime verification in this audit.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstreamUrl": "https://github.com/stagewise-io/stagewise/tree/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat",
+  "reviewedNativeState": "MainWindow still uses one QTextBrowser, transcriptHtml, m_streams and m_toolEvents. Root is designing a separate ConversationView; findings describe the pre-replacement implementation.",
+  "evidenceType": "Source-inspected contracts and source-inspected gaps. Existing tests are noted separately; this is not a visual or exact-parity certification.",
+  "contracts": [
+    {
+      "id": "ordered-parts",
+      "behavior": "Assistant messages render ordered text, reasoning, tool and file parts. Consecutive reasoning and tools classified for exploration presentation are grouped; step-start is skipped. Original part indices are preserved for timing metadata. Stable message/group/type keys prevent settled content from being recreated on every stream update.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 102
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 363
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 394
+        }
+      ]
+    },
+    {
+      "id": "reasoning",
+      "behavior": "ThinkingPart initially expands when streaming or last. Streaming automatically expands it. When no longer last it collapses unless manually expanded. The hook records manual expansion separately; its exact dependency transitions are narrower than the comment 'always respect manual collapse', so a native implementation must test transitions rather than infer a blanket collapse policy. Header is Thinking... while streaming, Thought for Ns when done with nonzero measured duration, otherwise Thought. Duration is rounded milliseconds/1000 from per-part metadata. Body uses streaming Markdown at 75% opacity; an optional cap is 96px.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/thinking.tsx",
+          "line": 24
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/shared/use-tool-auto-expand.ts",
+          "line": 20
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 140
+        }
+      ]
+    },
+    {
+      "id": "exploration-groups",
+      "behavior": "Exploration presentation includes reasoning, glob, grepSearch, read, ls, searchInLibraryDocs, listLibraryDocs, executeSandboxJs, readConsoleLogs and getLintingDiagnostics. This list is a UI grouping rule, not an authorization or security classification. Headers summarize completed operations and show the active operation. Single parts may render inline. Groups cap content at 240px, or 384px when a child is manually expanded.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/exploring.tsx",
+          "line": 79
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/exploring.tsx",
+          "line": 234
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/exploring.tsx",
+          "line": 670
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/exploring.tsx",
+          "line": 694
+        }
+      ]
+    },
+    {
+      "id": "tool-cards-and-states",
+      "behavior": "Dedicated renderers distinguish inputs streaming, inputs available, approval requested/responded, output denied, output available and output error where the tool supports those states. Compact completed rows use the tool icon and finished label; errors use an X, truncated diagnostic and tooltip. Shell cards include command/explanation/output, inline approve/deny, session cancellation, and Smart allow through the actual policy API. Generic unavailable tool names use a fallback. Native code must not expose Smart allow, cancel or file restore controls until their operations exist.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/shared/tool-part-ui-not-collapsible.tsx",
+          "line": 1
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/execute-shell-command.tsx",
+          "line": 83
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/shared/shell-tool-approval.tsx",
+          "line": 51
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/unknown.tsx",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "write-diffs",
+      "behavior": "Write/multi-edit rendering can show streamed partial code, completed before/after diffs, addition/deletion counts and open/reveal actions. Completed mutating calls can be summarized by a turn-file-edits component, with individual parts initially collapsed. Error output is not a successful diff. File restoration is a separate backed action requiring actual checkpoint data.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 300
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 415
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/write/generic-write.tsx",
+          "line": 1
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/shared/diff-preview.tsx",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "assistant-markdown",
+      "behavior": "TextPart sends the full current part text directly to Streamdown with isStreaming. The wrapper selects streaming/static mode, light-plus/dark-plus highlighting, KaTeX math, custom code/cards/tables/links/images and Mermaid rendering. It preprocesses incomplete trailing path/color/tab attachment links and balanced color URLs. Do not infer the complete dependency Markdown algorithm from wrapper options alone.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/text.tsx",
+          "line": 10
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 253
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 309
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 1019
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 1100
+        }
+      ]
+    },
+    {
+      "id": "streaming-code",
+      "behavior": "Streaming code highlighting runs through a worker with 100ms debounce for up to 1000 characters and 800ms above that threshold. Mounted/version checks discard stale worker results. Escaped plain text is available before highlighting; worker failure is nonfatal. Copy control appears only once the code block is no longer streaming, copies the original code and shows confirmation for 2000ms.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/ui/streaming-code-block.tsx",
+          "line": 87
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/ui/streaming-code-block.tsx",
+          "line": 114
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 350
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 460
+        }
+      ]
+    },
+    {
+      "id": "no-active-typewriter-evidence",
+      "behavior": "An adaptive useTypeWriterText hook exists, but repository search of apps/browser/src found only its definition and no consumer. Active TextPart renders Streamdown directly. An added character-reveal delay would therefore be a native design choice, not a verified upstream behavior.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/hooks/use-type-writer-text.tsx",
+          "line": 29
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/text.tsx",
+          "line": 10
+        }
+      ],
+      "verification": "rg -n 'useTypeWriter|useTypewriter|use-type-writer' upstream/stagewise/apps/browser/src returned only the hook definition."
+    },
+    {
+      "id": "user-message",
+      "behavior": "User text is converted from Markdown to a rich read-only input representation and enriched with attachment metadata. It appears in a right-aligned bordered rounded bubble. When idle and the message has an ID, it can enter editing; Escape cancels. Only one edit is active, attachment identities are preserved, and editing messages with subsequent file changes can require confirmation. Native plain escaped text does not match this behavior.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 152
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 183
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 484
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 687
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 739
+        }
+      ]
+    },
+    {
+      "id": "message-actions-and-links",
+      "behavior": "The inspected assistant component exposes Restore checkpoint for non-last messages and confirmation when needed; no generic full-assistant copy button was found there. Code blocks and runtime diagnostics have verified copy actions. Custom path/color/tab links resolve attachments, ordinary links open the browser, and Alt-click can create a content tab. Images have open/download actions. These are distinct dispatch paths, not arbitrary navigation of every href.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 447
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 483
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-runtime-error.tsx",
+          "line": 618
+        }
+      ]
+    },
+    {
+      "id": "scroll-and-layout",
+      "behavior": "Chat history is virtualized with react-virtuoso, stable message IDs, 400px viewport expansion above/below, and an initial position near the last two messages. Chat follows output initially. Upward wheel immediately disables following; upward scroll beyond 100px from bottom disables it; scroll-end within 100px enables it. Send and explicit jump-to-bottom force following. The jump button is visible while away from bottom. A measured spacer leaves room below the latest user message. Inner expanded tool cards use their own 20px threshold and do not initialize at bottom.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 199
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 277
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 1311
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/hooks/use-auto-scroll.ts",
+          "line": 14
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/hooks/use-auto-scroll.ts",
+          "line": 76
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/shared/tool-part-ui.tsx",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "working-stalled-error",
+      "behavior": "The last working unfinished message can show Still on it… after 5000ms without part changes. Between-step indicators avoid duplicate activity hints after settled text/reasoning or trailing exploration groups. Runtime errors render structured cards with provider/auth-specific actions, diagnostic copy and guarded retry paths, rather than only a transient status-label string.",
+      "sources": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-stalled-stream.tsx",
+          "line": 4
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 438
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-utils.ts",
+          "line": 55
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-runtime-error.tsx",
+          "line": 75
+        }
+      ]
+    }
+  ],
+  "nativeGaps": [
+    {
+      "priority": 1,
+      "id": "live-ordering",
+      "finding": "All live text across model/tool rounds is concatenated into m_streams[id], while all tool events render before that string. The stored session history is refreshed only at overall finished. This cannot preserve live text -> tool -> text chronology or distinct assistant rounds.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 253
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 267
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 273
+        }
+      ],
+      "status": "Source-proven data/model limitation; no dedicated rendering regression yet."
+    },
+    {
+      "priority": 1,
+      "id": "missing-reasoning",
+      "finding": "The engine emits reasoningDelta for all four protocol families but MainWindow does not subscribe, and transcriptHtml ignores reasoning_content and ade_native blocks. Reasoning is invisible both live and after reload. Pure reasoning-only terminal partial responses are also excluded by retainPartialResponse's text/tool guard.",
+      "evidence": [
+        {
+          "path": "src/core/AgentEngine.h",
+          "line": 60
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 359
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 432
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 477
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 566
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 664
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 240
+        }
+      ],
+      "status": "Source-proven; backend display retention needed as well as widgets."
+    },
+    {
+      "priority": 1,
+      "id": "tool-identity-and-false-success",
+      "finding": "Persisted tool records all display a checkmark and generic Tool result, including errors/denials; output is silently cut to 3000 characters. Live toolStarted ignores call ID/arguments; toolFinished discards output/error from transcript state. No call-linked approval/running/error cards exist.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 246
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 268
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 269
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 748
+        }
+      ],
+      "status": "Source-proven. Join each result to its toolCallId; display truncation explicitly and retain full inspectable content under bounds."
+    },
+    {
+      "priority": 2,
+      "id": "whole-document-rebuild",
+      "finding": "Every render calls setHtml for the entire transcript. The 40ms timer coalesces only text updates; host/tool events render immediately. Collapse state, stable row identity and selection are absent. Preserving an absolute scrollbar value is not an anchor strategy when earlier content reflows.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 257
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 265
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 267
+        }
+      ],
+      "status": "Source-proven architecture; performance and selection impact need measured tests."
+    },
+    {
+      "priority": 2,
+      "id": "markdown-and-attachments",
+      "finding": "Assistant Markdown uses QTextDocument's generic Markdown conversion. User content is escaped plain text. Attachments are only names. No custom code copy/highlight cards, math, Mermaid, partial attachment links, rich user mentions, image preview or source-specific link router exists.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 68
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 244
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 248
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 157
+        }
+      ],
+      "status": "Source-inspected feature gaps; richer Markdown parity must be tracked separately from a first native component."
+    },
+    {
+      "priority": 2,
+      "id": "scroll-policy",
+      "finding": "Native follow policy is only distance<70 before replacement. It has no explicit upward-wheel intent, jump-to-bottom, measured latest-user spacer, per-chat anchor/follow state or history virtualization.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 257
+        }
+      ],
+      "status": "Source-proven control differences; add actual scrolling/layout tests."
+    },
+    {
+      "priority": 2,
+      "id": "actions-and-errors",
+      "finding": "Approval is a generic modal Yes/No box with JSON arguments. Runtime failures are status-label text. No inline approval, diagnostic card/retry, last-part stalled hint, user-message editing or checkpoint restoration UI is present.",
+      "evidence": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 270
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 272
+        }
+      ],
+      "status": "Source-inspected gaps; actions require real backend operations before exposing controls."
+    }
+  ],
+  "proposedNativeContract": {
+    "status": "Recommendation, not implemented by this audit.",
+    "view": "ConversationView QWidget with stable per-message and per-part native rows. Rich text documents belong to individual content parts; code, reasoning, tool, error and attachment cards have their own controls. A simple QScrollArea can establish a first component but is not equivalent to upstream virtualization for large histories.",
+    "displaySnapshot": "Read-only AgentEngine display snapshot containing retained messages plus at most one provisional assistant response when not already retained. Stable conversation/turn/message/part keys and a revision identify incremental changes. Join tool results by call ID; never concatenate separate rounds.",
+    "ordering": "Prefer ordered display parts derived from provider-native blocks where present. For generic OpenAI deltas, retain segment order as events arrive if reasoning/text interleaving must be exact. Do not rewrite or expose signed provider replay blobs as display metadata.",
+    "state": "Explicit per-part streaming/done state and per-tool input-streaming, approval, running, available, denied, error/cancelled state. Capture real monotonic start/end times if displaying durations; do not invent timing for imported history. Overall working/stalled/error status remains separate.",
+    "notification": "One displayChanged signal on text/reasoning/tool-argument fragments, new round, retained response, approval/result/cancel/failure transitions. Consumer coalesces roughly one frame, proposed 16ms, and reads the current snapshot; terminal transitions must not be lost by throttling.",
+    "stateIsolation": "Keep collapse and scroll state keyed by conversation and stable part ID. Handle owner deletion, chat switching, archive, fork and delayed timers using guarded ownership/generation. Preserve provider message replay independently.",
+    "unsupportedFeatures": "Mark remaining code/Markdown/math/Mermaid/diff/checkpoint/editing parity explicitly. Never show an action as working until its operation and failure path are wired."
+  },
+  "existingTestCoupling": [
+    {
+      "source": {
+        "path": "tests/test_ui.cpp",
+        "line": 141
+      },
+      "assertion": "QTextBrowser named conversationView contains Native UI response after local provider completion."
+    },
+    {
+      "source": {
+        "path": "tests/test_ui_audit.cpp",
+        "line": 173
+      },
+      "assertion": "Failed save does not expose Keep this unsaved prompt in the transcript."
+    },
+    {
+      "source": {
+        "path": "tests/test_ui_audit.cpp",
+        "line": 202
+      },
+      "assertion": "Attachment-only transcript contains notes.txt."
+    }
+  ],
+  "testMigration": "Replace these three direct QTextBrowser lookups with ConversationView::toPlainText or a stable public transcript inspection API. Keep objectName conversationView on the real component. Do not add hidden compatibility QTextBrowser widgets.",
+  "requiredRegressionCoverage": [
+    "Ordered reasoning -> text -> tool -> text across multiple rounds, plus provider-native interleaving and stable call IDs.",
+    "Tool argument fragments before dispatch; approval requested/responded; denied, cancelled, failed and successful output without false success icons.",
+    "Provider reasoning live and persisted reload, with signed native replay unchanged; terminal partial reasoning retained for display.",
+    "Split Unicode and Markdown chunks, unclosed fences, changing partial links, code escaping, exact copied code and copy state after completion.",
+    "Reasoning auto-expand while streaming/last, auto-collapse after next part, manual expansion retained, explicit chosen manual-collapse semantics.",
+    "Live component updates do not reset unrelated expanded cards or selected text; switching/archive/delete drops stale scheduled updates.",
+    "Upward wheel and scrollbar stop following; content growth preserves an anchor; send/jump re-enables follow; collapsed/expanded cards respect inner scroll.",
+    "No duplicate provisional response after retention, no duplicate optimistic user after acceptance, and rejection keeps draft/history boundary.",
+    "Large-history row count/memory/reflow measurements and bounded latency, independently of correct small-fixture rendering.",
+    "Light/dark, 768px narrow content, font scaling and long code/path/error strings rendered and visually inspected.",
+    "Real action tests for file/path/tab links, approval, retry, copy and eventual checkpoint/edit, with unsupported actions absent."
+  ],
+  "limits": [
+    "This audit reads pinned source; it does not run the Electron upstream renderer or establish screenshot pixel equality.",
+    "No upstream third-party dependency source was reverse engineered here. Declared browser dependencies include streamdown ^2.5.0, @streamdown/math ^1.0.2, react-virtuoso ^4.18.7 and shiki 3.21.0; wrapper behavior is the verified boundary.",
+    "The current history schema lacks stable UI message/part identities and typed terminal tool-state metadata. Legacy imports may need conservative derived display state; content prefixes are not authoritative structured error metadata.",
+    "A single native message component is necessary but insufficient for full transcript parity, especially rich user attachments/editing, mathematical/diagram rendering, virtualized history and checkpoint diffs."
+  ]
+}

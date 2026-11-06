@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-05",
+  "sourceBaseline": "17a0123a0e896885465df36169457199d5225eb5",
+  "implementationFiles": [
+    "src/editor/TextFile.h",
+    "src/editor/TextFile.cpp",
+    "src/editor/CodeEditor.h",
+    "src/editor/CodeEditor.cpp",
+    "src/editor/EditorWidget.h",
+    "src/editor/EditorWidget.cpp",
+    "tests/test_editor.cpp"
+  ],
+  "upstreamEvidence": [
+    {
+      "path": "apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx",
+      "lines": [
+        482,
+        960,
+        1510
+      ],
+      "behavior": "Roboto Mono, base 12px at100% code zoom, no minimap, no wrap, line highlight; upstream line height1.5 and 6px scrollbars."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts",
+      "lines": [
+        101,
+        150,
+        239
+      ],
+      "behavior": "Shared dirty/save/undo/redo, clean disk reconciliation versus dirty external conflict, explicit force save/reload."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/file-tree/file-tab-unsaved-edits.ts",
+      "lines": [
+        1
+      ],
+      "behavior": "Unsaved tab registry save/discard callbacks."
+    },
+    {
+      "path": "apps/browser/src/backend/services/file-tree/index.ts",
+      "lines": [
+        287,
+        348
+      ],
+      "behavior": "Upstream UTF-8 preview (max2MiB) and UTF-8 write with expected-mtime conflict guard; native UTF16/EOL preservation is an intentional data-safety improvement."
+    }
+  ],
+  "implemented": [
+    "QPlainTextEdit-derived code editor and visible line-number gutter",
+    "Roboto Mono12px base, local50–200% zoom shortcuts",
+    "Basic lexical syntax highlighting selected by filename; no LSP claims",
+    "Find/replace with case/whole-word/regex options and single-action undo",
+    "Toolbar undo/redo/save; cursor/encoding/EOL/language/zoom status",
+    "UTF8 with/without BOM, UTF16LE/BE with BOM; original BOM, trailing newline, LF/CRLF/CR/mixed/Unicode line delimiters retained",
+    "NBSP retained via QTextDocument::toRawText instead of lossy toPlainText",
+    "Delimiter metadata follows partial undo/redo",
+    "Invalid encoding/UTF32/NUL payloads rejected without replacing open buffer",
+    "QSaveFile atomic commit with content-byte optimistic conflict check, not mtime only",
+    "External watcher adopts clean changes; dirty conflict retains buffer with explicit reload/overwrite/recreate",
+    "Save errors and missing directories preserve unsaved edits",
+    "Save/Discard/Cancel close contract for MainWindow integration"
+  ],
+  "contract": {
+    "open": "bool openFile(const QString&,QString* error=nullptr)",
+    "save": "bool save(QString* error=nullptr,bool force=false)",
+    "close": "bool requestClose(CloseChoice choice=CloseChoice::Ask)",
+    "other": [
+      "filePath()",
+      "isModified()",
+      "hasExternalChange()",
+      "editor()",
+      "reloadFromDisk(QString* error=nullptr,bool discardEdits=false)",
+      "checkExternalChanges()"
+    ],
+    "signals": [
+      "modifiedChanged(bool)",
+      "fileSaved(QString)",
+      "externalChangeChanged(bool)",
+      "errorOccurred(QString)"
+    ]
+  },
+  "verification": {
+    "environment": "Qt6.11.2 static, GCC16.2, Windows11, native windows QPA",
+    "results": "26 QtTest passes, 0 failures, 0 skips (includes12 encoding/EOL rows and init/cleanup); audit/editor-tests.txt",
+    "visual": "audit/native-editor-preview.png rendered without showing a window or interacting with the user's app. It precedes a final13px→12px source-backed font-size correction.",
+    "fixesFoundByAudit": [
+      "Lone UTF16 surrogate decoder acceptance now explicitly rejected",
+      "Partial undo of a minority newline previously lost its delimiter metadata; regression added",
+      "QTextDocument regex find requires explicit case flag; find/replace match case now covered",
+      "Indent insertion at column0 must not copy indentation after cursor",
+      "Line-number gutter geometry now grows when document crosses digit counts"
+    ]
+  },
+  "limits": [
+    "This is an initial native source editor, not full Monaco parity.",
+    "No language server, semantic diagnostics/completion, multi-cursor, folding, code actions, rich Markdown/SVG preview, image/media preview or editable diff view implemented here.",
+    "Syntax coloring is lexical and covers only a basic set of common constructs; complex embedded/multiline language grammars remain.",
+    "Default QTextDocument line metrics and native scrollbars do not yet reproduce upstream18px line height/6px scrollbar styling exactly.",
+    "File-size limit20MiB; large-file performance not benchmarked.",
+    "No arbitrary legacy encoding detection or UTF32 editing.",
+    "Atomic commit prevents partial writes; content check is optimistic and does not provide interprocess compare-and-swap against an external writer racing between check and commit.",
+    "Current CodeEditor text extraction/reconciliation hashes source text to track line metadata; performance for sustained edits of large documents needs profiling.",
+    "Full upstream visual parity and integration closure tests remain with parent integrated build."
+  ]
+}

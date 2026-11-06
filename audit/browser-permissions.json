@@ -1,0 +1,50 @@
+{
+  "verified_on": "2026-11-05",
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "implementation": "src/browser/browserwidget.h and browserwidget.cpp",
+  "contract": {
+    "defaults": "setPermissionDefaults accepts canonical permission keys and ask/allow/block or upstream numeric Ask=0,Allow=1,Block=2. Aliases camera->media,location->geolocation,clipboard->clipboard-read support the native Settings UI.",
+    "origins": "Exact normalized HTTP(S) origin; scheme, host and non-default port match. No wildcard/subdomain matching. Invalid/opaque origins and unknown runtime permission kinds deny.",
+    "exceptions": "Upstream shape {permissionType:{origin:{setting:0|1|2,lastModified?:number}}} is accepted; simple native string/numeric values remain supported. Runtime policy uses setting; persistence metadata belongs to Settings.",
+    "precedence": "Origin exception wins over configured global default, then upstream defaults (fullscreen/midi Allow; other configurable permissions Ask).",
+    "callbacks": "permissionRequested(id,origin,key,userInitiated), resolvePermission(id,bool), permissionRequestFinished(id,allowed). Asynchronous COM deferrals avoid nested native prompt calls inside WebView callbacks.",
+    "lifecycle": "Pending requests expire after30s by default, deny on navigation/destruction, and ignore stale replies. Changing a pending request's effective policy to Allow/Block resolves it immediately. Maximum32 outstanding prompts.",
+    "persistence": "SavesInProfile=false on WebView2 args ensures the browser cannot silently retain a native decision and bypass the application's current policy. Native preferences remain the source of truth.",
+    "fullscreen": "WebView2 has no fullscreen permission kind. Element fullscreen changes are observed; Block or denied Ask exits element fullscreen, and only Allow emits fullscreenChanged(true) for the native window. This is native-window gating, not a claim that DOM fullscreen begins only after approval."
+  },
+  "runtime_mappings": {
+    "camera_and_microphone": "media",
+    "geolocation": "geolocation",
+    "notifications": "notifications",
+    "clipboard_read": "clipboard-read",
+    "multiple_automatic_downloads": "downloads",
+    "MIDI_system_exclusive": "midi",
+    "persistent_storage": "storage-access",
+    "autoplay": "autoplay",
+    "local_fonts": "local-fonts",
+    "window_management": "window-management",
+    "other_sensors": "sensors",
+    "file_read_write": "file-read-write"
+  },
+  "verification": {
+    "suite": "tests/test_browser_tools.cpp",
+    "scope": "Real WebView2 loopback fixture requests only; no access to real sites or physical media/location devices.",
+    "permission_cases": ["exact origin/default/alias precedence and invalid inputs", "Notification.requestPermission Block", "same-origin exception Allow", "Ask -> native callback -> deny", "timeout", "navigation cancels pending request", "late answer ignored", "policy update settles pending prompt", "browser deleted inside permission callback"],
+    "fullscreen_case": "Actual requestFullscreen through controlled CDP userGesture; Block, Ask/Deny, Allow and exit signals all pass.",
+    "latest_suite_result": "24 passed,0 failed,0 skipped in15206ms including browser bridge/data/download cases; browser lifecycle14/14 also passed.",
+    "logs": ["test-results/browser-tool-tests.txt", "test-results/browser-fullscreen-tests.txt"]
+  },
+  "limits": [
+    "Physical camera/microphone/location/device acquisition is not exercised by automation.",
+    "Electron's Bluetooth/HID/serial/USB/device chooser and display-capture selection APIs have no equivalent implemented here; storing their preference values does not establish enforcement/chooser parity.",
+    "Native per-origin preference persistence/editor UI belongs to Settings/MainWindow; BrowserWidget accepts a validated snapshot.",
+    "Clipboard-read policy does not claim to govern user-initiated clipboard-write APIs."
+  ],
+  "sources": [
+    "upstream/stagewise/apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+    "upstream/stagewise/apps/browser/src/backend/services/preferences.ts",
+    "upstream/stagewise/apps/browser/src/backend/services/window-layout/tab-permission-handler/session-registry.ts",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2permissionrequestedeventargs",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2permissionrequestedeventargs3"
+  ]
+}

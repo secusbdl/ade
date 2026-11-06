@@ -1,0 +1,720 @@
+import { describe, expect, it } from 'vitest';
+import {
+  defaultUserPreferences,
+  type ProviderInstance,
+} from './karton-contracts/ui/shared-types';
+import {
+  findInstanceForVendor,
+  getInstanceDisabledModelIds,
+  toggleInstanceDisabledModelId,
+  findModelSelectorEntry,
+  getInstanceModelCount,
+  getInstanceThinkingDefaultOptions,
+  getSelectableModelEntries,
+  getSelectableUtilityModelEntries,
+  getVendorInstanceId,
+  getVendorMode,
+  isStagewiseInferenceAvailable,
+  isStagewiseRoutedSelection,
+  resolveModelThinkingOverride,
+  vendorHasApiKey,
+  withoutStagewiseInference,
+} from './provider-instance-helpers';
+import { getSupportedThinkingOptions } from './model-thinking-capabilities';
+
+const openrouterInstance: ProviderInstance = {
+  id: 'openrouter-default',
+  typeId: 'openrouter',
+  name: 'OpenRouter',
+  config: {},
+  enabledModelIds: [],
+  disabledModelIds: [],
+  discoveredModels: [],
+};
+
+const anthropicInstance: ProviderInstance = {
+  id: 'anthropic-default',
+  typeId: 'anthropic-api',
+  name: 'Anthropic API',
+  config: {},
+  enabledModelIds: [],
+  disabledModelIds: [],
+  discoveredModels: [
+    {
+      modelId: 'claude-opus-4-8',
+      displayName: 'Claude Opus 4.8',
+    },
+  ],
+};
+
+const ollamaInstance: ProviderInstance = {
+  id: 'ollama-local',
+  typeId: 'ollama',
+  name: 'Ollama',
+  config: { baseUrl: 'http://localhost:11434' },
+  enabledModelIds: [],
+  disabledModelIds: [],
+  discoveredModels: [],
+};
+
+const codexStagewiseInstance: ProviderInstance = {
+  id: 'codex-stagewise-default',
+  typeId: 'codex-stagewise',
+  name: 'Codex (Stagewise)',
+  config: {},
+  enabledModelIds: [],
+  disabledModelIds: [],
+  discoveredModels: [],
+};
+
+const stagewiseInstance: ProviderInstance = {
+  id: 'stagewise-default',
+  typeId: 'stagewise',
+  name: 'Stagewise Inference',
+  config: {},
+  enabledModelIds: [],
+  disabledModelIds: [],
+  discoveredModels: [],
+};
+
+describe('getInstanceThinkingDefaultOptions', () => {
+  it('uses the OpenAI-compatible official route for OpenRouter', () => {
+    expect(getInstanceThinkingDefaultOptions(openrouterInstance)).toEqual({
+      providerMode: 'official',
+      modelProvider: 'openai',
+      thinkingProvider: 'openai-compatible',
+    });
+  });
+
+  it('uses OpenAI-compatible thinking capabilities for OpenRouter', () => {
+    expect(
+      getSupportedThinkingOptions(
+        'gpt-5.5',
+        getInstanceThinkingDefaultOptions(openrouterInstance),
+      ).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high']);
+  });
+
+  it('uses the OpenAI-compatible official route for Ollama', () => {
+    const route = getInstanceThinkingDefaultOptions(ollamaInstance);
+
+    expect(route).toEqual({
+      providerMode: 'official',
+      modelProvider: 'openai',
+      thinkingProvider: 'openai-compatible',
+    });
+    expect(
+      getSupportedThinkingOptions('gpt-5.5', route).map(
+        (option) => option.value,
+      ),
+    ).toEqual(['low', 'medium', 'high']);
+  });
+
+  it('uses native OpenAI thinking options for Codex models', () => {
+    expect(getInstanceThinkingDefaultOptions(codexStagewiseInstance)).toEqual({
+      providerMode: 'official',
+      modelProvider: 'openai',
+    });
+  });
+});
+
+describe('resolveModelThinkingOverride', () => {
+  it('keeps overrides isolated to their provider instance', () => {
+    const preferences = createPreferences();
+    preferences.agent.modelThinkingOverrides = {
+      'stagewise-default': {
+        shared: { enabled: true, value: 'high' },
+      },
+    };
+    preferences.providerInstances = [
+      {
+        ...codexStagewiseInstance,
+        id: 'external-instance',
+        discoveredModels: [
+          {
+            modelId: 'shared',
+            displayName: 'Shared',
+            defaultThinkingEffort: 'medium',
+          },
+        ],
+      },
+    ];
+
+    expect(
+      resolveModelThinkingOverride(preferences, 'external-instance', 'shared'),
+    ).toEqual({ enabled: true, value: 'medium' });
+  });
+});
+
+function createPreferences() {
+  return structuredClone(defaultUserPreferences);
+}
+
+function createVendorApiInstance(): ProviderInstance {
+  return {
+    id: 'z-ai-api-default',
+    typeId: 'z-ai-api',
+    name: 'Z.AI API',
+    config: { encryptedApiKey: 'encrypted-key' },
+    enabledModelIds: [],
+    disabledModelIds: [],
+    discoveredModels: [],
+  };
+}
+
+describe('discovered model catalog matching', () => {
+  it('excludes external agent models from utility selectors', () => {
+    const external: ProviderInstance = {
+      id: 'codex-default',
+      typeId: 'codex',
+      name: 'Codex',
+      config: {},
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [{ modelId: 'gpt', displayName: 'GPT' }],
+    };
+
+    const entries = getSelectableUtilityModelEntries({
+      providerInstances: [
+        external,
+        {
+          ...codexStagewiseInstance,
+          discoveredModels: [{ modelId: 'gpt', displayName: 'GPT' }],
+        },
+      ],
+      customModels: [],
+    });
+
+    expect(entries.some((entry) => entry.instanceId === external.id)).toBe(
+      false,
+    );
+    expect(
+      entries.some((entry) => entry.instanceId === codexStagewiseInstance.id),
+    ).toBe(true);
+  });
+
+  it('deduplicates native Anthropic discovery IDs against dotted catalog IDs', () => {
+    const prefs = { providerInstances: [anthropicInstance], customModels: [] };
+
+    expect(
+      getSelectableModelEntries(prefs).filter(
+        (entry) => entry.modelId === 'claude-opus-4-8',
+      ),
+    ).toHaveLength(0);
+    expect(
+      getSelectableModelEntries(prefs).filter(
+        (entry) => entry.modelId === 'claude-opus-4.8',
+      ),
+    ).toHaveLength(1);
+    expect(getInstanceModelCount(anthropicInstance)).toBe(
+      getSelectableModelEntries(prefs).length,
+    );
+  });
+
+  it('resolves persisted native Anthropic IDs to their catalog entry', () => {
+    const prefs = { providerInstances: [anthropicInstance], customModels: [] };
+
+    expect(
+      findModelSelectorEntry(prefs, anthropicInstance.id, 'claude-opus-4-8')
+        ?.modelId,
+    ).toBe('claude-opus-4.8');
+  });
+
+  it('prefers an instance-owned custom model over a discovered duplicate', () => {
+    const instance: ProviderInstance = {
+      id: 'custom-instance',
+      typeId: 'custom-openai-chat',
+      name: 'Custom OpenAI',
+      config: { baseUrl: 'https://example.com/v1' },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [
+        { modelId: 'duplicate-model', displayName: 'Discovered duplicate' },
+      ],
+    };
+    const prefs = {
+      providerInstances: [instance],
+      customModels: [
+        {
+          modelId: 'duplicate-model',
+          displayName: 'Configured custom model',
+          description: 'Configured description',
+          contextWindowSize: 64_000,
+          thinkingEnabled: false,
+          capabilities: {
+            inputModalities: {
+              text: true,
+              audio: false,
+              image: false,
+              video: false,
+              file: false,
+            },
+            outputModalities: {
+              text: true,
+              audio: false,
+              image: false,
+              video: false,
+              file: false,
+            },
+            toolCalling: true,
+          },
+          providerOptions: {},
+          headers: {},
+          providerInstanceId: instance.id,
+        },
+      ],
+    };
+
+    const entries = getSelectableModelEntries(prefs).filter(
+      (entry) => entry.modelId === 'duplicate-model',
+    );
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({
+      displayName: 'Configured custom model',
+      description: 'Configured description',
+      contextWindowRaw: 64_000,
+    });
+  });
+
+  it('deduplicates custom and discovered model IDs case-insensitively', () => {
+    const instance: ProviderInstance = {
+      id: 'custom-instance',
+      typeId: 'custom-openai-chat',
+      name: 'Custom OpenAI',
+      config: { baseUrl: 'https://example.com/v1' },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [
+        { modelId: 'GPT-4', displayName: 'Discovered duplicate' },
+      ],
+    };
+    const prefs = {
+      providerInstances: [instance],
+      customModels: [
+        {
+          modelId: 'gpt-4',
+          displayName: 'Configured custom model',
+          description: 'Configured description',
+          contextWindowSize: 64_000,
+          thinkingEnabled: false,
+          capabilities: {
+            inputModalities: {
+              text: true,
+              audio: false,
+              image: false,
+              video: false,
+              file: false,
+            },
+            outputModalities: {
+              text: true,
+              audio: false,
+              image: false,
+              video: false,
+              file: false,
+            },
+            toolCalling: true,
+          },
+          providerOptions: {},
+          headers: {},
+          providerInstanceId: instance.id,
+        },
+      ],
+    };
+
+    const entries = getSelectableModelEntries(prefs).filter(
+      (entry) => entry.modelId.toLowerCase() === 'gpt-4',
+    );
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({
+      modelId: 'gpt-4',
+      displayName: 'Configured custom model',
+    });
+    expect(getInstanceModelCount(instance, prefs)).toBe(entries.length);
+  });
+
+  it('keeps Qwen plan models instance-scoped and excludes stale catalog models', () => {
+    const codingPlan: ProviderInstance = {
+      id: 'qwen-coding',
+      typeId: 'coding-plan',
+      name: 'Qwen Coding Plan',
+      config: {
+        encryptedApiKey: 'coding-key',
+        planId: 'qwen-plan',
+      },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [
+        { modelId: 'qwen3.7-plus', displayName: 'Qwen 3.7 Plus' },
+        { modelId: 'qwen3.7-plus', displayName: 'Duplicate' },
+      ],
+    };
+    const tokenPlan: ProviderInstance = {
+      ...codingPlan,
+      id: 'qwen-token',
+      name: 'Qwen Token Plan',
+      config: {
+        encryptedApiKey: 'token-key',
+        planId: 'qwen-token-plan',
+      },
+      discoveredModels: [
+        { modelId: 'qwen3.7-plus', displayName: 'Qwen 3.7 Plus' },
+        { modelId: 'qwen3.8-max-preview', displayName: 'Qwen 3.8 Max' },
+        { modelId: 'qwen-new-model', displayName: 'Qwen New Model' },
+      ],
+    };
+
+    const entries = getSelectableModelEntries({
+      providerInstances: [codingPlan, tokenPlan],
+      customModels: [],
+    });
+
+    expect(
+      entries.filter(
+        (entry) =>
+          entry.instanceId === 'qwen-coding' &&
+          entry.modelId === 'qwen3.7-plus',
+      ),
+    ).toHaveLength(1);
+    expect(entries).toContainEqual(
+      expect.objectContaining({
+        instanceId: 'qwen-token',
+        modelId: 'qwen3.8-max-preview',
+      }),
+    );
+    expect(entries).toContainEqual(
+      expect.objectContaining({
+        instanceId: 'qwen-token',
+        modelId: 'qwen-new-model',
+      }),
+    );
+    expect(entries.some((entry) => entry.modelId === 'qwen3-32b')).toBe(false);
+    expect(getInstanceModelCount(codingPlan)).toBe(
+      entries.filter((entry) => entry.instanceId === codingPlan.id).length,
+    );
+  });
+
+  it('counts non-catalog discovered models for coding plans', () => {
+    const codingPlanInstance: ProviderInstance = {
+      id: 'coding-plan:glm-coding-plan',
+      typeId: 'coding-plan',
+      name: 'GLM Coding Plan',
+      config: {
+        encryptedApiKey: 'plan-key',
+        planId: 'glm-coding-plan',
+        baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+      },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [
+        { modelId: 'glm-5.2', displayName: 'GLM 5.2' },
+        { modelId: 'glm-unlisted', displayName: 'GLM Unlisted' },
+      ],
+    };
+    const prefs = { providerInstances: [codingPlanInstance], customModels: [] };
+
+    expect(getInstanceModelCount(codingPlanInstance)).toBe(
+      getSelectableModelEntries(prefs).length,
+    );
+  });
+});
+
+describe('vendor instance routing', () => {
+  it('prefers a concrete vendor API instance over stale stagewise state', () => {
+    const preferences = createPreferences();
+    const instance = createVendorApiInstance();
+    preferences.providerInstances = [instance];
+
+    expect(findInstanceForVendor(preferences, 'z-ai')).toBe(instance);
+    expect(getVendorInstanceId(preferences, 'z-ai')).toBe(instance.id);
+    expect(vendorHasApiKey(preferences, 'z-ai')).toBe(true);
+    expect(getVendorMode(preferences, 'z-ai')).toBe('official');
+  });
+
+  it('prefers a coding plan over an earlier vendor API instance', () => {
+    const preferences = createPreferences();
+    const apiInstance = createVendorApiInstance();
+    const planInstance: ProviderInstance = {
+      id: 'coding-plan:glm-coding-plan',
+      typeId: 'coding-plan',
+      name: 'GLM Coding Plan',
+      config: {
+        encryptedApiKey: 'plan-key',
+        planId: 'glm-coding-plan',
+        baseUrl: 'https://api.z.ai/api/coding/paas/v4',
+      },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [],
+    };
+    preferences.providerInstances = [apiInstance, planInstance];
+
+    expect(findInstanceForVendor(preferences, 'z-ai')).toBe(planInstance);
+    expect(getVendorInstanceId(preferences, 'z-ai')).toBe(planInstance.id);
+    expect(vendorHasApiKey(preferences, 'z-ai')).toBe(true);
+    expect(getVendorMode(preferences, 'z-ai')).toBe('official');
+  });
+
+  it('uses the legacy selected plan when a vendor has multiple plans', () => {
+    const preferences = createPreferences();
+    const codingPlan: ProviderInstance = {
+      id: 'qwen-coding',
+      typeId: 'coding-plan',
+      name: 'Qwen Coding Plan',
+      config: { encryptedApiKey: 'coding-key', planId: 'qwen-plan' },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [],
+    };
+    const tokenPlan: ProviderInstance = {
+      ...codingPlan,
+      id: 'qwen-token',
+      name: 'Qwen Token Plan',
+      config: { encryptedApiKey: 'token-key', planId: 'qwen-token-plan' },
+    };
+    preferences.providerConfigs.alibaba.connectedCodingPlanId =
+      'qwen-token-plan';
+    preferences.providerInstances = [codingPlan, tokenPlan];
+
+    expect(findInstanceForVendor(preferences, 'alibaba')).toBe(tokenPlan);
+  });
+
+  it('does not arbitrarily route a vendor with multiple unselected plans', () => {
+    const preferences = createPreferences();
+    preferences.providerInstances = [
+      {
+        id: 'qwen-coding',
+        typeId: 'coding-plan',
+        name: 'Qwen Coding Plan',
+        config: { encryptedApiKey: 'coding-key', planId: 'qwen-plan' },
+        enabledModelIds: [],
+        disabledModelIds: [],
+        discoveredModels: [],
+      },
+      {
+        id: 'qwen-token',
+        typeId: 'coding-plan',
+        name: 'Qwen Token Plan',
+        config: { encryptedApiKey: 'token-key', planId: 'qwen-token-plan' },
+        enabledModelIds: [],
+        disabledModelIds: [],
+        discoveredModels: [],
+      },
+    ];
+
+    expect(findInstanceForVendor(preferences, 'alibaba')).toBeUndefined();
+  });
+
+  it('uses the explicit custom-provider link for custom mode', () => {
+    const preferences = createPreferences();
+    const instance: ProviderInstance = {
+      id: 'z-ai-custom',
+      typeId: 'custom-openai-chat',
+      name: 'Z.AI Custom',
+      config: {
+        baseUrl: 'https://example.com/v1',
+        encryptedApiKey: 'custom-key',
+      },
+      enabledModelIds: [],
+      disabledModelIds: [],
+      discoveredModels: [],
+    };
+    preferences.providerConfigs['z-ai'] = {
+      mode: 'custom',
+      customProviderId: instance.id,
+    };
+    preferences.providerInstances = [instance];
+
+    expect(findInstanceForVendor(preferences, 'z-ai')).toBe(instance);
+    expect(getVendorInstanceId(preferences, 'z-ai')).toBe(instance.id);
+    expect(vendorHasApiKey(preferences, 'z-ai')).toBe(true);
+    expect(getVendorMode(preferences, 'z-ai')).toBe('custom');
+  });
+
+  it('falls back without a concrete instance', () => {
+    const preferences = createPreferences();
+
+    expect(findInstanceForVendor(preferences, 'z-ai')).toBeUndefined();
+    expect(getVendorInstanceId(preferences, 'z-ai')).toBeUndefined();
+    expect(vendorHasApiKey(preferences, 'z-ai')).toBe(false);
+    expect(getVendorMode(preferences, 'z-ai')).toBe('stagewise');
+  });
+});
+
+describe('native DeepSeek Flash matching', () => {
+  const instance: ProviderInstance = {
+    ...anthropicInstance,
+    id: 'deepseek-native',
+    typeId: 'deepseek-api',
+    name: 'DeepSeek',
+    discoveredModels: [
+      { modelId: 'deepseek-flash', displayName: 'Native Flash' },
+      { modelId: 'deepseek-v4.1-flash', displayName: 'Canonical Flash' },
+    ],
+  };
+
+  it('deduplicates discovery and resolves saved native IDs with catalog metadata', () => {
+    const prefs = { providerInstances: [instance], customModels: [] };
+    const entries = getSelectableModelEntries(prefs);
+    expect(
+      entries.filter((entry) => entry.modelId === 'deepseek-flash'),
+    ).toHaveLength(0);
+    expect(
+      entries.filter((entry) => entry.modelId === 'deepseek-v4.1-flash'),
+    ).toHaveLength(1);
+    const entry = findModelSelectorEntry(prefs, instance.id, 'deepseek-flash');
+    expect(entry?.catalogModel?.modelId).toBe('deepseek-v4.1-flash');
+    expect(entry?.catalogModel?.pricing).toBeDefined();
+    expect(entry?.thinkingEnabled).toBe(true);
+    expect(getInstanceModelCount(instance)).toBe(entries.length);
+    expect(instance.discoveredModels?.[0]?.modelId).toBe('deepseek-flash');
+  });
+
+  it.each([
+    'deepseek-flash',
+    'deepseek-v4.1-flash',
+  ])('preserves disabled choice stored as %s', (id) => {
+    const disabledInstance = { ...instance, disabledModelIds: [id] };
+    const prefs = { providerInstances: [disabledInstance], customModels: [] };
+    const entries = getSelectableModelEntries(prefs);
+    expect(
+      entries.some((entry) =>
+        ['deepseek-flash', 'deepseek-v4.1-flash'].includes(entry.modelId),
+      ),
+    ).toBe(false);
+    expect(getInstanceModelCount(disabledInstance)).toBe(entries.length);
+    expect(
+      findModelSelectorEntry(prefs, instance.id, id)?.catalogModel,
+    ).toBeDefined();
+    expect(disabledInstance.disabledModelIds).toEqual([id]);
+  });
+
+  it('shows saved native disabled choices and can re-enable the catalog card', () => {
+    const prefs = {
+      ...defaultUserPreferences,
+      providerInstances: [
+        {
+          ...instance,
+          disabledModelIds: [
+            'deepseek-flash',
+            'deepseek-v4.1-flash',
+            'deepseek-reasoner',
+          ],
+        },
+      ],
+    };
+    expect(getInstanceDisabledModelIds(prefs, instance.id)).toContain(
+      'deepseek-v4.1-flash',
+    );
+    expect(
+      toggleInstanceDisabledModelId(prefs, instance.id, 'deepseek-v4.1-flash'),
+    ).toEqual(['deepseek-reasoner']);
+    expect(prefs.providerInstances[0]?.disabledModelIds).toContain(
+      'deepseek-flash',
+    );
+  });
+
+  it('does not alias IDs on unrelated custom routes', () => {
+    const customInstance: ProviderInstance = {
+      ...instance,
+      typeId: 'custom-openai-chat',
+      config: { baseUrl: 'https://example.com/v1' },
+    };
+    expect(
+      getSelectableModelEntries({
+        providerInstances: [customInstance],
+        customModels: [],
+      }).map((entry) => entry.modelId),
+    ).toEqual(['deepseek-flash', 'deepseek-v4.1-flash']);
+  });
+});
+
+describe('Stagewise Inference visibility', () => {
+  it('is only available with an authenticated account', () => {
+    expect(isStagewiseInferenceAvailable('authenticated')).toBe(true);
+    // Optimistic while the backend is unreachable so signed-in users do
+    // not lose their models during a hiccup.
+    expect(isStagewiseInferenceAvailable('server_unreachable')).toBe(true);
+    expect(isStagewiseInferenceAvailable('unauthenticated')).toBe(false);
+    expect(isStagewiseInferenceAvailable('authentication_invalid')).toBe(false);
+    expect(isStagewiseInferenceAvailable(undefined)).toBe(false);
+  });
+
+  it('returns preferences unchanged when stagewise is available', () => {
+    const preferences = createPreferences();
+    const result = withoutStagewiseInference(preferences, true);
+    expect(result).toBe(preferences);
+  });
+
+  it('hides Stagewise Inference instances but keeps codex-stagewise while signed out', () => {
+    const preferences = createPreferences();
+    preferences.providerInstances = [
+      ...(preferences.providerInstances ?? []),
+      stagewiseInstance,
+      anthropicInstance,
+      codexStagewiseInstance,
+    ];
+
+    const result = withoutStagewiseInference(preferences, false);
+
+    // Only `stagewise` is hidden — `codex-stagewise` runs Codex for
+    // inference (the stagewise harness merely hosts it) and stays.
+    expect(
+      result.providerInstances?.map((instance) => instance.typeId),
+    ).toEqual(['anthropic-api', 'codex-stagewise']);
+    // The input preferences are not mutated.
+    expect(preferences.providerInstances?.map((i) => i.typeId)).toContain(
+      'stagewise',
+    );
+    // Stagewise models are no longer selectable via the filtered view.
+    expect(
+      getSelectableModelEntries(result).filter(
+        (entry) => entry.typeId === 'stagewise',
+      ),
+    ).toEqual([]);
+  });
+
+  it('identifies stored selections that route through Stagewise Inference', () => {
+    const preferences = createPreferences();
+    preferences.providerInstances = [
+      ...(preferences.providerInstances ?? []),
+      stagewiseInstance,
+      anthropicInstance,
+      codexStagewiseInstance,
+    ];
+
+    // Entries saved without an instance ID use the implicit
+    // `stagewise-default` route — even when another provider exposes
+    // the same model ID, they still route through Stagewise.
+    expect(isStagewiseRoutedSelection(preferences, undefined)).toBe(true);
+    expect(isStagewiseRoutedSelection(preferences, 'stagewise-default')).toBe(
+      true,
+    );
+    // Explicit non-stagewise instances (including codex-stagewise, which
+    // uses Codex for inference) are not Stagewise Inference routes.
+    expect(isStagewiseRoutedSelection(preferences, 'anthropic-default')).toBe(
+      false,
+    );
+    expect(
+      isStagewiseRoutedSelection(preferences, 'codex-stagewise-default'),
+    ).toBe(false);
+    // Unknown instance IDs are not Stagewise routes; callers fall back to
+    // a validity check against the filtered preferences for those.
+    expect(isStagewiseRoutedSelection(preferences, 'missing-instance')).toBe(
+      false,
+    );
+  });
+
+  it('treats implicit routes as Stagewise even without a seeded instance', () => {
+    const preferences = createPreferences();
+    preferences.providerInstances = [anthropicInstance];
+
+    // The implicit route falls back to Stagewise Inference by default,
+    // regardless of whether a `stagewise-default` instance is seeded.
+    expect(isStagewiseRoutedSelection(preferences, undefined)).toBe(true);
+    expect(isStagewiseRoutedSelection(preferences, 'stagewise-default')).toBe(
+      true,
+    );
+  });
+});

@@ -1,0 +1,57 @@
+Image base 00007ff772e10000; exception 00007ff773621349
+frame 00007ff774aa53ef
+frame 00007ffc050444d6
+frame 00007ffc05043c75
+frame 00007ffc050e5dee
+frame 00007ff773621349
+frame 00007ff773b373e2
+frame 00007ff7740752d9
+frame 00007ff7740926a6
+frame 00007ff7739c5d06
+frame 00007ff773cd130b
+frame 00007ff7737a0955
+frame 00007ff774306bc2
+frame 00007ff7748c71bd
+frame 00007ff7748c602b
+frame 00007ff7748c69fa
+frame 00007ff774301584
+frame 00007ff774301c63
+frame 00007ff774d87497
+frame 00007ff772e113ba
+frame 00007ff772e11080
+frame 00007ffc0360dda7
+frame 00007ffc04ffee4c
+A crash occurred in D:\age\ADE\private\main-ui-stage\build\bin\test_main_chrome_before.exe.
+While testing repeatedShownWindowTeardownPreservesStyleObservers
+Function time: 209ms Total time: 211ms
+
+Exception address: 0x00007ff773621349
+Exception code   : 0xc0000005
+
+Stack:
+#  1: Unable to obtain symbol
+#  2: UnhandledExceptionFilter() - 0x00007ffc0279f2f0
+#  3: strncpy() - 0x00007ffc050e8110
+#  4: _C_specific_handler() - 0x00007ffc050a4b00
+#  5: _chkstk() - 0x00007ffc050e6410
+#  6: RtlWow64GetCurrentMachine() - 0x00007ffc05043a10
+#  7: KiUserExceptionDispatcher() - 0x00007ffc050e5dc0
+#  8: Unable to obtain symbol
+#  9: Unable to obtain symbol
+# 10: Unable to obtain symbol
+# 11: Unable to obtain symbol
+# 12: Unable to obtain symbol
+# 13: Unable to obtain symbol
+# 14: Unable to obtain symbol
+# 15: Unable to obtain symbol
+# 16: Unable to obtain symbol
+# 17: Unable to obtain symbol
+# 18: Unable to obtain symbol
+# 19: Unable to obtain symbol
+# 20: Unable to obtain symbol
+# 21: Unable to obtain symbol
+# 22: Unable to obtain symbol
+# 23: Unable to obtain symbol
+# 24: BaseThreadInitThunk() - 0x00007ffc0360dd90
+# 25: RtlUserThreadStart() - 0x00007ffc04ffee20
+

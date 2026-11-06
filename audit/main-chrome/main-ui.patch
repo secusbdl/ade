@@ -1,0 +1,608 @@
+--- a/src/ui/AppStyle.cpp
++++ b/src/ui/AppStyle.cpp
+@@ -22,14 +22,14 @@
+         QPushButton#newAgentButton:hover { background:#e2e8ee; }
+         QToolButton { border:0; border-radius:5px; padding:3px; color:#6a6d72; }
+         QToolButton:hover { background:#e9edf2; }
+-        QToolButton#sendButton { background:#7193ff; border-radius:17px; }
++        QToolButton#sendButton { background:#7193ff; border-radius:16px; }
+         QToolButton#sendButton:hover { background:#4b75f8; }
+         QToolButton#sendButton:disabled { background:#c2cdf2; }
+-        QToolButton#stopButton:enabled { background:#ededed; border-radius:15px; }
++        QToolButton#stopButton:enabled { background:#ededed; border-radius:16px; }
+         QComboBox { border:0; background:transparent; padding:4px; color:#64676c; }
+         QComboBox::drop-down { border:0; width:16px; }
+         QComboBox QAbstractItemView { background:#fff; border:1px solid #ddd; padding:4px; }
+-        QWidget#composerBox { background:#fdfdfd; border:1px solid #e4e5e7; border-radius:9px; }
++        QWidget#composerBox { background:#fdfdfd; border:1px solid #e4e5e7; border-radius:6px; }
+         QWidget#composerBox QPlainTextEdit,QWidget#composerBox QToolButton,QWidget#composerBox QComboBox { border:0; }
+         QSplitter::handle { background:#e1e1e1; }
+         QTabWidget::pane { border:0; background:#fff; }
+--- a/src/ui/Composer.h
++++ b/src/ui/Composer.h
+@@ -5,6 +5,9 @@
+ #include <QMimeData>
+ #include <QImage>
+ #include <QUrl>
++#include <QAbstractTextDocumentLayout>
++#include <QTextBlock>
++#include <QTimer>
+ namespace ade {
+ class Composer : public QPlainTextEdit {
+     Q_OBJECT
+@@ -12,14 +15,17 @@
+     explicit Composer(QWidget* parent=nullptr) : QPlainTextEdit(parent) {
+         setObjectName("composerInput");
+         setPlaceholderText("Use / to plan and run commands. Use @ for context.");
+-        setFrameShape(QFrame::NoFrame); setMinimumHeight(74); setMaximumHeight(220);
++        setFrameShape(QFrame::NoFrame);document()->setDocumentMargin(0);setLineWrapMode(QPlainTextEdit::WidgetWidth);
++        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+         connect(document(),&QTextDocument::contentsChanged,this,[this]{updateHeight();});
+-        setFixedHeight(74);
++        setUiScale(1);
+     }
++    void setUiScale(double scale){m_scale=qBound(0.7,scale,1.3);auto face=font();face.setPixelSize(qRound(14*m_scale));setFont(face);updateHeight();}
+ signals:
+     void submitted();
+     void filesAttached(QStringList paths);
+     void imageAttached(QImage image);
++    void stopRequested();
+ protected:
+     bool canInsertFromMimeData(const QMimeData* source) const override {
+         return source->hasImage() || source->hasUrls() || QPlainTextEdit::canInsertFromMimeData(source);
+@@ -38,14 +44,25 @@
+     }
+     void resizeEvent(QResizeEvent* event) override {
+         QPlainTextEdit::resizeEvent(event);updateHeight();
++        if(!m_heightPending){m_heightPending=true;QTimer::singleShot(0,this,[this]{m_heightPending=false;updateHeight();});}
+     }
+     void keyPressEvent(QKeyEvent* event) override {
++        if(event->key()==Qt::Key_Escape){emit stopRequested();event->accept();return;}
+         if ((event->key()==Qt::Key_Return || event->key()==Qt::Key_Enter) && !(event->modifiers() & Qt::ShiftModifier)) {
+             emit submitted(); event->accept(); return;
+         }
+         QPlainTextEdit::keyPressEvent(event);
+     }
+ private:
+-    void updateHeight(){const int desired=qBound(74,qMax(1,document()->lineCount())*fontMetrics().lineSpacing()+14,220);if(height()!=desired)setFixedHeight(desired);}
++    void updateHeight(){
++        if(m_adjusting)return;
++        m_adjusting=true;
++        qreal content=0;const int maximum=qRound(256*m_scale);
++        for(auto block=document()->begin();block.isValid()&&content<maximum;block=block.next())content+=document()->documentLayout()->blockBoundingRect(block).height();
++        const int desired=qBound(fontMetrics().lineSpacing()+qRound(8*m_scale),qCeil(content)+qRound(8*m_scale),maximum);
++        if(height()!=desired)setFixedHeight(desired);
++        m_adjusting=false;
++    }
++    double m_scale=1;bool m_adjusting=false,m_heightPending=false;
+ };
+ }
+--- /dev/null
++++ b/src/ui/FlowLayout.h
+@@ -0,0 +1,34 @@
++#pragma once
++#include <QLayout>
++#include <QWidget>
++namespace ade {
++// The selectors remain ordinary keyboard-accessible Qt widgets, wrapping as a row.
++class FlowLayout final:public QLayout {
++public:
++    explicit FlowLayout(QWidget* parent=nullptr):QLayout(parent){setContentsMargins(0,0,0,0);setSpacing(8);}
++    ~FlowLayout()override{while(auto* item=takeAt(0))delete item;}
++    void addItem(QLayoutItem* item)override{m_items.append(item);}
++    int count()const override{return m_items.size();}
++    QLayoutItem* itemAt(int index)const override{return m_items.value(index);}
++    QLayoutItem* takeAt(int index)override{return index>=0&&index<m_items.size()?m_items.takeAt(index):nullptr;}
++    Qt::Orientations expandingDirections()const override{return {};}
++    bool hasHeightForWidth()const override{return true;}
++    int heightForWidth(int width)const override{return arrange({0,0,width,0},true);}
++    QSize minimumSize()const override{int height=0;for(auto* item:m_items)height=qMax(height,item->minimumSize().height());return {0,height};}
++    QSize sizeHint()const override{int width=0,height=0;for(auto* item:m_items){width+=item->sizeHint().width()+spacing();height=qMax(height,item->sizeHint().height());}return {qMax(0,width-spacing()),height};}
++    void setGeometry(const QRect& rect)override{QLayout::setGeometry(rect);arrange(rect,false);}
++private:
++    int arrange(const QRect& rect,bool measure)const{
++        int x=rect.x(),y=rect.y(),lineHeight=0;const int available=qMax(0,rect.width());
++        for(auto* item:m_items){
++            if(item->isEmpty())continue;
++            const auto hint=item->sizeHint();const int itemWidth=qMin(available,hint.width());
++            if(x>rect.x()&&x+itemWidth>rect.x()+available){x=rect.x();y+=lineHeight+spacing();lineHeight=0;}
++            if(!measure)item->setGeometry({x,y,itemWidth,hint.height()});
++            x+=itemWidth+spacing();lineHeight=qMax(lineHeight,hint.height());
++        }
++        return y-rect.y()+lineHeight;
++    }
++    QList<QLayoutItem*> m_items;
++};
++}
+--- a/src/ui/MainWindow.cpp
++++ b/src/ui/MainWindow.cpp
+@@ -50,6 +50,9 @@
+ #include <QStyleHints>
+ #include <QShortcut>
+ #include <QSplitter>
++#include "SidebarSplitter.h"
++#include "FlowLayout.h"
++#include "apps/MiniAppPage.h"
+ #include <QTabWidget>
+ #include <QTabBar>
+ #include <QTextBrowser>
+@@ -90,22 +93,29 @@
+     m_pages=new QStackedWidget;setCentralWidget(m_pages);
+     auto* central=new QWidget;central->setObjectName("appSurface");m_pages->addWidget(central);
+     auto* root=new QHBoxLayout(central);root->setContentsMargins(0,0,0,0);root->setSpacing(0);
+-    m_sidebar=new QWidget;m_sidebar->setObjectName("sidebar");m_sidebar->setFixedWidth(230);root->addWidget(m_sidebar);
++    m_sidebarSplitter=new SidebarSplitter(m_store.directory()+"/window.ini");root->addWidget(m_sidebarSplitter,1);
++    m_sidebar=new QWidget;m_sidebar->setObjectName("sidebar");m_sidebarSplitter->addWidget(m_sidebar);
+     auto* side=new QVBoxLayout(m_sidebar);side->setContentsMargins(10,12,10,12);side->setSpacing(10);
+-    auto* collapse=button("sidebar","Toggle sidebar");side->addWidget(collapse);side->addSpacing(18);
++    auto* collapse=button("sidebar","Toggle sidebar");collapse->setObjectName("sidebarToggleButton");side->addWidget(collapse);side->addSpacing(18);
+     auto* newAgent=new QPushButton(icon("new"),"New Agent");newAgent->setObjectName("newAgentButton");newAgent->setCursor(Qt::PointingHandCursor);newAgent->setMinimumHeight(36);side->addWidget(newAgent);
+     m_search=new QLineEdit;m_search->setObjectName("agentSearch");m_search->addAction(icon("search"),QLineEdit::LeadingPosition);m_search->setPlaceholderText("Search agents…       Ctrl K");side->addWidget(m_search);side->addSpacing(8);
+     auto* section=new QHBoxLayout;auto* agentsLabel=new QLabel("Agents");agentsLabel->setProperty("muted",true);section->addWidget(agentsLabel);section->addStretch();
+     auto* grouping=new QToolButton;grouping->setText("Group by Age ⌄");grouping->setAutoRaise(true);section->addWidget(grouping);side->addLayout(section);
+     auto* today=new QLabel("Today");today->setProperty("muted",true);side->addWidget(today);
+-    m_agents=new QListWidget;m_agents->setObjectName("agentList");m_agents->setContextMenuPolicy(Qt::CustomContextMenu);side->addWidget(m_agents,1);
++    m_agents=new QListWidget;m_agents->setObjectName("agentList");m_agents->setContextMenuPolicy(Qt::CustomContextMenu);m_agents->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);m_agents->setTextElideMode(Qt::ElideRight);side->addWidget(m_agents,1);
+     auto* bottom=new QHBoxLayout;bottom->addStretch();auto* settings=button("settings","Settings");settings->setObjectName("settingsButton");bottom->addWidget(settings);side->addLayout(bottom);
+-    m_splitter=new QSplitter(Qt::Horizontal);m_splitter->setObjectName("workspaceSplitter");m_splitter->setHandleWidth(2);root->addWidget(m_splitter,1);
+-    m_chat=new QWidget;m_chat->setObjectName("chatSurface");m_chat->setMinimumWidth(410);m_splitter->addWidget(m_chat);
+-    auto* chatLayout=new QVBoxLayout(m_chat);chatLayout->setContentsMargins(42,32,42,10);chatLayout->setSpacing(8);
++    m_splitter=new QSplitter(Qt::Horizontal);m_splitter->setObjectName("workspaceSplitter");m_splitter->setHandleWidth(2);m_sidebarSplitter->addWidget(m_splitter);
++    m_chat=new QWidget;m_chat->setObjectName("chatSurface");m_chat->setMinimumWidth(240);m_splitter->addWidget(m_chat);
++    auto* chatLayout=new QVBoxLayout(m_chat);chatLayout->setContentsMargins(12,32,12,8);chatLayout->setSpacing(8);
++    m_sidebarReopen=button("sidebar","Show sidebar");m_sidebarReopen->setObjectName("sidebarReopenButton");m_sidebarReopen->setVisible(m_sidebarSplitter->isCollapsed());chatLayout->addWidget(m_sidebarReopen,0,Qt::AlignLeft);
++    connect(m_sidebarReopen,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
++    connect(m_sidebarSplitter,&SidebarSplitter::collapsedChanged,m_sidebarReopen,&QWidget::setVisible);
+     m_transcript=new QTextBrowser;m_transcript->setObjectName("conversationView");m_transcript->setOpenLinks(false);m_transcript->setFrameShape(QFrame::NoFrame);m_transcript->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);chatLayout->addWidget(m_transcript,1);
+     m_status=new QLabel;m_status->setObjectName("sessionStatus");m_status->setWordWrap(true);m_status->setProperty("muted",true);chatLayout->addWidget(m_status);
+-    auto* composerBox=new QWidget;composerBox->setObjectName("composerBox");auto* compose=new QVBoxLayout(composerBox);compose->setContentsMargins(9,7,8,7);compose->setSpacing(4);
++    auto* composerBox=new QWidget;m_composerBox=composerBox;composerBox->setObjectName("composerBox");
++    auto* composerColumns=new QHBoxLayout(composerBox);composerColumns->setContentsMargins(8,8,8,8);composerColumns->setSpacing(4);
++    auto* inputColumn=new QWidget;inputColumn->setObjectName("composerEditorColumn");inputColumn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
++    auto* compose=new QVBoxLayout(inputColumn);compose->setContentsMargins(0,0,0,0);compose->setSpacing(4);composerColumns->addWidget(inputColumn,1);
+     m_attachments=new AttachmentStrip;compose->addWidget(m_attachments);
+     connect(m_attachments,&AttachmentStrip::removeRequested,this,[this](int index){
+         auto* session=current();if(!session||index<0||index>=session->draftAttachments.size())return;
+@@ -117,11 +127,12 @@
+     connect(m_composer,&Composer::filesAttached,this,&MainWindow::attachFiles);
+     connect(m_composer,&Composer::imageAttached,this,&MainWindow::attachImage);
+     auto* draftTimer=new QTimer(this);draftTimer->setSingleShot(true);draftTimer->setInterval(500);
+-    connect(m_composer,&QPlainTextEdit::textChanged,this,[this,draftTimer]{if(auto* s=current()){s->draft=m_composer->toPlainText();draftTimer->start();}});
++    connect(m_composer,&QPlainTextEdit::textChanged,this,[this,draftTimer]{if(auto* s=current()){s->draft=m_composer->toPlainText();draftTimer->start();}updateComposerState();});
+     connect(draftTimer,&QTimer::timeout,this,&MainWindow::saveSessions);
+-    auto* attachmentRow=new QHBoxLayout;attachmentRow->addStretch();auto* attach=button("attach","Attach files");attachmentRow->addWidget(attach);compose->addLayout(attachmentRow);
+-    auto* controls=new QHBoxLayout;controls->setSpacing(4);m_models=new QComboBox;m_models->setObjectName("modelSelector");m_models->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);m_models->setMinimumContentsLength(10);m_models->setMaximumWidth(270);controls->addWidget(m_models);
+-    m_permissions=new QComboBox;m_permissions->setObjectName("permissionSelector");m_permissions->addItem("Ask before changes",false);m_permissions->addItem("Always allow",true);controls->addWidget(m_permissions);controls->addStretch();
++    auto* controls=new QHBoxLayout;controls->setContentsMargins(0,0,0,0);controls->setSpacing(4);
++    auto* selectors=new QWidget;selectors->setObjectName("composerSelectors");selectors->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);auto* flow=new FlowLayout(selectors);
++    m_models=new QComboBox;m_models->setObjectName("modelSelector");m_models->setSizeAdjustPolicy(QComboBox::AdjustToContents);m_models->setMinimumWidth(0);m_models->setMaximumWidth(270);flow->addWidget(m_models);
++    m_permissions=new QComboBox;m_permissions->setObjectName("permissionSelector");m_permissions->addItem("Ask before changes",false);m_permissions->addItem("Always allow",true);flow->addWidget(m_permissions);controls->addWidget(selectors,1);
+     connect(m_permissions,&QComboBox::currentIndexChanged,this,[this]{
+         const auto* session=current();if(!session)return;
+         const bool previous=session->alwaysAllow;
+@@ -133,26 +144,31 @@
+     });
+     m_models->setEditable(true);m_models->setInsertPolicy(QComboBox::NoInsert);m_models->lineEdit()->setPlaceholderText("Search models…");
+     m_models->completer()->setCompletionMode(QCompleter::PopupCompletion);m_models->completer()->setFilterMode(Qt::MatchContains);m_models->completer()->setCaseSensitivity(Qt::CaseInsensitive);
++    connect(m_models,&QComboBox::currentIndexChanged,this,[this]{m_models->setToolTip(m_models->currentText());if(m_models->lineEdit())m_models->lineEdit()->setCursorPosition(0);});
+     connect(m_models,&QComboBox::activated,this,[this](int index){if(auto* s=current()){const auto selection=ModelSelection::fromJson(m_models->itemData(index).toJsonObject());s->providerId=selection.providerId;s->model=selection.modelId;s->presetId=selection.presetId;saveSessions();}});
+-    m_stop=button("stop","Stop agent");m_stop->setObjectName("stopButton");m_stop->setEnabled(false);controls->addWidget(m_stop);
+-    m_send=button("send","Send message");m_send->setObjectName("sendButton");m_send->setIcon(icon("send",Qt::white));m_send->setFixedSize(34,34);controls->addWidget(m_send);compose->addLayout(controls);chatLayout->addWidget(composerBox);
++    m_stop=button("stop","Stop agent");m_stop->setObjectName("stopButton");m_stop->setEnabled(false);m_stop->hide();m_stop->setFixedSize(32,32);controls->addWidget(m_stop,0,Qt::AlignBottom);compose->addLayout(controls);
++    auto* actions=new QWidget;actions->setObjectName("composerActions");actions->setFixedWidth(32);auto* rail=new QVBoxLayout(actions);rail->setContentsMargins(0,0,0,0);rail->setSpacing(4);rail->addStretch();
++    auto* attach=button("attach","Attach files");attach->setObjectName("attachFilesButton");attach->setFixedSize(32,32);rail->addWidget(attach);
++    m_send=button("send","Send message");m_send->setObjectName("sendButton");m_send->setIcon(icon("send",Qt::white));m_send->setFixedSize(32,32);rail->addWidget(m_send);composerColumns->addWidget(actions);
++    chatLayout->addWidget(composerBox);
+     m_workspace=new QToolButton;m_workspace->setObjectName("connectWorkspaceButton");m_workspace->setIcon(icon("folder"));m_workspace->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);m_workspace->setText("Connect workspace  +");m_workspace->setAutoRaise(true);chatLayout->addWidget(m_workspace,0,Qt::AlignLeft);
+-    m_tabs=new QTabWidget;m_tabs->setObjectName("contentTabs");m_tabs->setDocumentMode(true);m_tabs->setTabsClosable(true);m_tabs->setMovable(true);m_tabs->setMinimumWidth(300);m_splitter->addWidget(m_tabs);
++    m_tabs=new QTabWidget;m_tabs->setObjectName("contentTabs");m_tabs->setDocumentMode(true);m_tabs->setTabsClosable(true);m_tabs->setMovable(true);m_tabs->setMinimumWidth(240);m_splitter->addWidget(m_tabs);
+     auto* tabControls=new QWidget;auto* tc=new QHBoxLayout(tabControls);tc->setContentsMargins(0,0,4,0);tc->setSpacing(1);auto* plus=button("plus","New browser tab");auto* files=button("folder","Workspace files");auto* terminal=button("terminal","Open terminal");tc->addWidget(plus);tc->addWidget(terminal);tc->addWidget(files);m_tabs->setCornerWidget(tabControls);
+     m_fileModel=new QFileSystemModel(this);m_files=new QTreeView(this);m_files->hide();m_files->setObjectName("workspaceFiles");m_files->setModel(m_fileModel);m_files->setHeaderHidden(true);for(int col=1;col<4;++col)m_files->hideColumn(col);
+     m_downloads=new DownloadsPage(m_store.directory(),this);m_downloads->hide();
+     connect(m_downloads,&DownloadsPage::storageErrorOccurred,this,[this](const QString& error){m_status->setText(error);});
+     auto* downloads=button("download","Downloads (Ctrl+J)");tc->addWidget(downloads);connect(downloads,&QToolButton::clicked,this,&MainWindow::showDownloads);
+     initializeGit();auto* git=button("branch","Source control (Ctrl+Shift+G)");git->setObjectName("sourceControlButton");tc->addWidget(git);connect(git,&QToolButton::clicked,this,&MainWindow::showGit);
+-    addBrowserTab();m_splitter->setSizes({800,540});
++    addBrowserTab();m_splitter->setSizes({300,700});
+     connect(newAgent,&QPushButton::clicked,this,&MainWindow::newConversation);
+-    connect(collapse,&QToolButton::clicked,this,[this]{m_sidebar->setFixedWidth(m_sidebar->width()==230?185:230);});
++    connect(collapse,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
+     connect(settings,&QToolButton::clicked,this,&MainWindow::showSettings);
+     connect(m_search,&QLineEdit::textChanged,this,&MainWindow::refreshAgents);
+     connect(m_agents,&QListWidget::currentItemChanged,this,[this](QListWidgetItem* item){if(item)selectConversation(item->data(Qt::UserRole).toString());});
+     connect(m_agents,&QWidget::customContextMenuRequested,this,&MainWindow::showConversationMenu);
+     connect(m_send,&QToolButton::clicked,this,&MainWindow::send);connect(m_composer,&Composer::submitted,this,&MainWindow::send);
+     connect(m_stop,&QToolButton::clicked,this,[this]{if(m_engines.contains(m_currentId))m_engines[m_currentId]->cancel();});
++    connect(m_composer,&Composer::stopRequested,m_stop,&QToolButton::click);
+     connect(m_workspace,&QToolButton::clicked,this,&MainWindow::chooseWorkspace);
+     connect(m_transcript,&QTextBrowser::anchorClicked,this,&MainWindow::addBrowserTab);
+     connect(plus,&QToolButton::clicked,this,[this]{addBrowserTab();});
+@@ -171,7 +187,8 @@
+     connect(m_tabs,&QTabWidget::currentChanged,this,[this](int index){if(auto* page=m_tabs->widget(index)){if(m_fullscreenBrowser&&!page->isAncestorOf(m_fullscreenBrowser))setBrowserFullscreen(m_fullscreenBrowser,false);const auto id=page->property("browserTabId").toString();if(!id.isEmpty())m_browserBridge->setActiveTab(id);}});
+     connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
+     new QShortcut(QKeySequence("Ctrl+N"),this,[this]{newConversation();});
+-    new QShortcut(QKeySequence("Ctrl+K"),this,[this]{m_search->setFocus();m_search->selectAll();});
++    new QShortcut(QKeySequence("Ctrl+K"),this,[this]{m_sidebarSplitter->setCollapsed(false);m_search->setFocus();m_search->selectAll();});
++    new QShortcut(QKeySequence("Ctrl+B"),this,[this]{m_sidebarSplitter->toggle();if(m_sidebarSplitter->isCollapsed())m_sidebarReopen->setFocus();else m_search->setFocus();});
+     new QShortcut(QKeySequence("Ctrl+,"),this,[this]{showSettings();});
+     new QShortcut(QKeySequence("Ctrl+Shift+O"),this,[this]{chooseWorkspace();});
+     new QShortcut(QKeySequence("Ctrl+T"),this,[this]{addBrowserTab();});
+@@ -198,7 +215,7 @@
+ }
+ Conversation* MainWindow::find(const QString& id){for(auto& s:m_sessions)if(s.id==id)return &s;return nullptr;}
+ Conversation* MainWindow::current(){return find(m_currentId);}
+-void MainWindow::refreshAgents(){QSignalBlocker block(m_agents);m_agents->clear();const auto query=m_search->text().trimmed();for(const auto& s:m_sessions){if(s.archived!=m_agents->property("showArchived").toBool())continue;if(!query.isEmpty()&&!s.title.contains(query,Qt::CaseInsensitive))continue;auto* item=new QListWidgetItem(icon("agent",QColor(m_engines.contains(s.id)&&m_engines[s.id]->isBusy()?"#2eab83":"#009dda")),s.title,m_agents);item->setData(Qt::UserRole,s.id);item->setSizeHint(QSize(180,34));if(s.id==m_currentId)m_agents->setCurrentItem(item);}}
++void MainWindow::refreshAgents(){QSignalBlocker block(m_agents);m_agents->clear();const auto query=m_search->text().trimmed();for(const auto& s:m_sessions){if(s.archived!=m_agents->property("showArchived").toBool())continue;if(!query.isEmpty()&&!s.title.contains(query,Qt::CaseInsensitive))continue;auto* item=new QListWidgetItem(icon("agent",QColor(m_engines.contains(s.id)&&m_engines[s.id]->isBusy()?"#2eab83":"#009dda")),s.title,m_agents);item->setData(Qt::UserRole,s.id);item->setSizeHint(QSize(0,34));item->setToolTip(s.title);if(s.id==m_currentId)m_agents->setCurrentItem(item);}}
+ void MainWindow::refreshModels(){
+     const QSignalBlocker blocker(m_models);const auto previous=ModelSelection::fromJson(m_models->currentData().toJsonObject()).key();
+     m_models->clear();
+@@ -232,7 +249,7 @@
+     m_workspace->setText(s->workspace.isEmpty()?"Connect workspace  +":QFileInfo(s->workspace).fileName()+"  ⌄");m_workspace->setToolTip(s->workspace);
+     m_files->setModel(s->workspace.isEmpty()?nullptr:m_fileModel);
+     if(!s->workspace.isEmpty())m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));
+-    const bool busy=m_engines.contains(id)&&m_engines[id]->isBusy();m_send->setEnabled(!busy&&!s->archived);m_stop->setEnabled(busy);m_models->setEnabled(!busy&&!s->archived);m_permissions->setEnabled(!busy&&!s->archived);m_workspace->setEnabled(!busy&&!s->archived);m_composer->setReadOnly(s->archived);
++    const bool busy=m_engines.contains(id)&&m_engines[id]->isBusy();m_models->setEnabled(!busy&&!s->archived);m_permissions->setEnabled(!busy&&!s->archived);m_workspace->setEnabled(!busy&&!s->archived);m_composer->setReadOnly(s->archived);updateComposerState();
+     m_status->clear();renderConversation();refreshAgents();
+     if(!s->archived){QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("lastConversationId",id);}
+     updateGitContext();
+@@ -268,7 +285,7 @@
+     connect(engine,&AgentEngine::toolStarted,this,[this,id](const QString&,const QString& name,const QJsonObject&){m_toolEvents[id].append("› "+name);if(id==m_currentId){m_status->setText(name);renderConversation();}});
+     connect(engine,&AgentEngine::toolFinished,this,[this,id](const QString&,const QString&,bool error){if(id==m_currentId)m_status->setText(error?"Tool returned an error":"Working…");});
+     connect(engine,&AgentEngine::approvalRequired,this,[this,id,engine](const QString& toolId,const QString& name,const QJsonObject& args){auto* box=new QMessageBox(QMessageBox::Question,"Tool approval",name+"\n\n"+QString::fromUtf8(QJsonDocument(args).toJson(QJsonDocument::Indented)),QMessageBox::Yes|QMessageBox::No,this);box->setAttribute(Qt::WA_DeleteOnClose);box->setInformativeText("Agent: "+(find(id)?find(id)->title:id));connect(box,&QMessageBox::finished,engine,[engine,toolId](int result){engine->approveTool(toolId,result==QMessageBox::Yes);});box->open();});
+-    connect(engine,&AgentEngine::busyChanged,this,[this,id](bool busy){if(id==m_currentId){m_send->setEnabled(!busy);m_stop->setEnabled(busy);m_models->setEnabled(!busy);m_permissions->setEnabled(!busy);m_workspace->setEnabled(!busy);}refreshAgents();});
++    connect(engine,&AgentEngine::busyChanged,this,[this,id](bool busy){if(id==m_currentId){m_models->setEnabled(!busy);m_permissions->setEnabled(!busy);m_workspace->setEnabled(!busy);updateComposerState();}refreshAgents();});
+     connect(engine,&AgentEngine::failed,this,[this,id](const QString& error){if(id==m_currentId)m_status->setText(error);});
+     connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->updated=QDateTime::currentMSecsSinceEpoch();}if(engine->lastTurnSucceeded())generateTitle(id);m_streams.remove(id);m_toolEvents.remove(id);saveSessions();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
+     updateGitContext();
+@@ -334,7 +351,13 @@
+         if(!m_store.save(m_sessions,&recoveryError))conversationError(m_status->text()+"\nThe draft is retained here, but could not be saved: "+recoveryError);
+     }
+ }
+-void MainWindow::refreshAttachments(){if(m_attachments)m_attachments->setAttachments(current()?current()->draftAttachments:QJsonArray{});}
++void MainWindow::refreshAttachments(){if(m_attachments)m_attachments->setAttachments(current()?current()->draftAttachments:QJsonArray{});updateComposerState();}
++void MainWindow::updateComposerState(){
++    if(!m_send||!m_stop||!m_composer)return;
++    const auto* session=current();const bool busy=session&&m_engines.value(session->id)&&m_engines.value(session->id)->isBusy();
++    m_stop->setEnabled(busy);m_stop->setVisible(busy);
++    m_send->setEnabled(session&&!session->archived&&!busy&&(!m_composer->toPlainText().trimmed().isEmpty()||!session->draftAttachments.isEmpty()));
++}
+ void MainWindow::attachFiles(const QStringList& paths){
+     auto* session=current();if(!session||paths.isEmpty())return;
+     AttachmentStore store(m_store.directory());AttachmentMounts mounts;
+@@ -429,7 +452,13 @@
+     const QMap<QString,QString> accents={{"blue","#4778d7"},{"violet","#855ad2"},{"green","#348a67"},{"amber","#ac7a24"},{"neutral","#777f8c"}};
+     const auto accent=accents.value(m_settings->preference("personalization.theme").toString(),"#4778d7");
+     style.replace("#7193ff",accent).replace("#4b75f8",QColor(accent).darker(110).name());
+-    qApp->setStyleSheet(style);m_sidebar->setFixedWidth(qRound(230*scale));
++    qApp->setStyleSheet(style);m_sidebarSplitter->setUiScale(scale);
++    m_chat->setMinimumWidth(qRound(240*scale));m_tabs->setMinimumWidth(qRound(240*scale));
++    m_composer->setUiScale(scale);m_models->setMaximumWidth(qRound(270*scale));
++    for(const auto& name:{"sendButton","stopButton","attachFilesButton"})if(auto* action=findChild<QToolButton*>(name)){action->setFixedSize(qRound(32*scale),qRound(32*scale));action->setIconSize(QSize(qRound(16*scale),qRound(16*scale)));}
++    if(auto* rail=findChild<QWidget*>("composerActions")){rail->setFixedWidth(qRound(32*scale));rail->layout()->setSpacing(qRound(4*scale));}
++    m_composerBox->layout()->setContentsMargins(qRound(8*scale),qRound(8*scale),qRound(8*scale),qRound(8*scale));m_composerBox->layout()->setSpacing(qRound(4*scale));
++    if(auto* selectors=findChild<QWidget*>("composerSelectors"))selectors->layout()->setSpacing(qRound(8*scale));
+     for(auto* browser:findChildren<BrowserWidget*>())if(!browser->property("miniAppBrowser").toBool()&&browser->property("adeOwnerAgentId").toString().isEmpty()){browser->setPermissionDefaults(m_settings->preference("browsing.permissions").toObject());browser->setPermissionExceptions(m_settings->preference("browsing.permissionExceptions").toObject());}
+     for(auto* terminal:findChildren<TerminalWidget*>()){terminal->setDarkTheme(dark);terminal->setZoomPercent(m_settings->preference("personalization.uiZoom").toInt(100));}
+     for(auto* editor:findChildren<EditorWidget*>())editor->setDarkTheme(dark);
+@@ -518,11 +547,19 @@
+     // teardown signals must not access those members during QObject cleanup.
+     for(auto* child:findChildren<QObject*>())disconnect(child,nullptr,this,nullptr);
+     // Some browser connections are scoped to the tab page and capture the host.
+-    // Stop managers first, then disconnect those callbacks before tab teardown.
++    // Stop managers first, then tear tabs down while derived members live.
+     delete m_downloads;m_downloads=nullptr;
+     delete m_worktreeSettings;m_worktreeSettings=nullptr;
+     delete m_git;m_git=nullptr;delete m_worktreeSetup;m_worktreeSetup=nullptr;
+-    for(auto* browser:findChildren<BrowserWidget*>())disconnect(browser,nullptr,nullptr,nullptr);
++    // Keep QObject::destroyed observers intact (notably Qt's stylesheet cache).
++    // Tear browsers down now, while callbacks scoped to their pages can still
++    // safely reference MainWindow members; QObject base teardown is too late.
++    // MiniAppPage owns and explicitly destroys its browser; destroy the page
++    // first so its raw owned pointer cannot outlive a separately deleted child.
++    QList<QPointer<MiniAppPage>> apps;for(auto* app:findChildren<MiniAppPage*>())apps.append(app);
++    for(const auto& app:apps)if(app)delete app;
++    QList<QPointer<BrowserWidget>> browsers;for(auto* browser:findChildren<BrowserWidget*>())browsers.append(browser);
++    for(const auto& browser:browsers)if(browser)delete browser;
+ }
+ 
+ void MainWindow::showTerminal(){
+--- a/src/ui/MainWindow.h
++++ b/src/ui/MainWindow.h
+@@ -16,6 +16,7 @@
+ class AgentEngine; class AgentToolHost; class BrowserWidget; class BrowserToolBridge; class Composer; class SettingsPage; class UtilityService;
+ class DownloadsPage;
+ class AttachmentStrip;
++class SidebarSplitter;
+ class GitPanel;class WorktreeSetupRunner;class WorktreeSettingsController;enum class GitOperation;
+ class MainWindow : public QMainWindow {
+     Q_OBJECT
+@@ -60,6 +61,7 @@
+     void attachFiles(const QStringList& paths);
+     void attachImage(const QImage& image);
+     void refreshAttachments();
++    void updateComposerState();
+     void recordBrowserHistory(const QUrl& url,const QString& title);
+     void clearBrowsingData(const QJsonObject& options);
+     void finishBrowsingDataClear(bool success,const QString& error);
+@@ -73,6 +75,9 @@
+     QHash<QString,QStringList> m_toolEvents;
+     QString m_currentId;
+     QWidget *m_sidebar,*m_chat;
++    SidebarSplitter* m_sidebarSplitter=nullptr;
++    QToolButton* m_sidebarReopen=nullptr;
++    QWidget* m_composerBox=nullptr;
+     QListWidget* m_agents;QLineEdit* m_search;
+     QTextBrowser* m_transcript;Composer* m_composer;QComboBox *m_models,*m_permissions;
+     QToolButton *m_send,*m_stop,*m_workspace;
+--- /dev/null
++++ b/src/ui/SidebarSplitter.h
+@@ -0,0 +1,72 @@
++#pragma once
++#include <QMouseEvent>
++#include <QSettings>
++#include <QShowEvent>
++#include <QResizeEvent>
++#include <QSplitter>
++#include <QSplitterHandle>
++#include <functional>
++
++namespace ade {
++// Owns only chrome geometry. Conversation and browser lifetimes stay in MainWindow.
++class SidebarSplitter final:public QSplitter {
++    Q_OBJECT
++public:
++    explicit SidebarSplitter(QString settingsFile,QWidget* parent=nullptr)
++        :QSplitter(Qt::Horizontal,parent),m_settingsFile(std::move(settingsFile)){
++        setObjectName("sidebarSplitter");setHandleWidth(2);setChildrenCollapsible(false);
++        QSettings saved(m_settingsFile,QSettings::IniFormat);
++        m_collapsed=saved.value("sidebarCollapsed",false).toBool();
++        const double width=saved.value("sidebarWidth",0).toDouble();
++        if(qIsFinite(width)&&width>0)m_logicalWidth=qBound(176.0,width,672.0);
++        connect(this,&QSplitter::splitterMoved,this,[this]{
++            if(m_applying||!m_initialized||count()<2)return;
++            const auto current=sizes();const bool collapsed=current[0]==0;
++            if(!collapsed)m_logicalWidth=qBound(176.0,current[0]/m_scale,672.0);
++            const bool changed=m_collapsed!=collapsed;m_collapsed=collapsed;persist();
++            if(changed)emit collapsedChanged(m_collapsed);
++        });
++    }
++    bool isCollapsed()const{return m_collapsed;}
++    double logicalWidth()const{return m_logicalWidth;}
++    void setUiScale(double scale){
++        m_scale=qBound(0.7,scale,1.3);
++        if(count()<2)return;
++        setCollapsible(0,true);setStretchFactor(0,0);setStretchFactor(1,1);
++        if(m_initialized)applyWidth();
++    }
++public slots:
++    void toggle(){setCollapsed(!m_collapsed);}
++    void setCollapsed(bool collapsed){
++        if(m_collapsed==collapsed)return;
++        m_collapsed=collapsed;if(m_initialized)applyWidth();persist();emit collapsedChanged(collapsed);
++    }
++    void resetWidth(){m_logicalWidth=qBound(176.0,width()*0.18/m_scale,672.0);m_collapsed=false;applyWidth();persist();emit collapsedChanged(false);}
++signals:
++    void collapsedChanged(bool collapsed);
++protected:
++    class Handle final:public QSplitterHandle{
++    public:
++        Handle(QSplitter* owner,std::function<void()> reset):QSplitterHandle(Qt::Horizontal,owner),m_reset(std::move(reset)){}
++    protected:
++        void mouseDoubleClickEvent(QMouseEvent* event)override{if(event->button()==Qt::LeftButton){m_reset();event->accept();}else QSplitterHandle::mouseDoubleClickEvent(event);}
++    private:std::function<void()> m_reset;
++    };
++    QSplitterHandle* createHandle()override{return new Handle(this,[this]{resetWidth();});}
++    void showEvent(QShowEvent* event)override{
++        QSplitter::showEvent(event);
++        if(!m_initialized){m_initialized=true;if(m_logicalWidth<=0)m_logicalWidth=qBound(176.0,width()*0.18/m_scale,672.0);setUiScale(m_scale);}
++    }
++    void resizeEvent(QResizeEvent* event)override{QSplitter::resizeEvent(event);if(m_initialized)applyWidth();}
++private:
++    void applyWidth(){
++        if(count()<2)return;
++        widget(0)->setMinimumWidth(m_collapsed?0:qRound(176*m_scale));
++        widget(0)->setMaximumWidth(qMax(qRound(176*m_scale),qMin(qRound(672*m_scale),width()/2)));
++        m_applying=true;const int side=m_collapsed?0:qRound(qBound(176.0,m_logicalWidth,672.0)*m_scale);
++        setSizes({side,qMax(1,width()-handleWidth()-side)});m_applying=false;
++    }
++    void persist()const{QSettings saved(m_settingsFile,QSettings::IniFormat);saved.setValue("sidebarCollapsed",m_collapsed);if(m_logicalWidth>0)saved.setValue("sidebarWidth",m_logicalWidth);}
++    QString m_settingsFile;double m_scale=1,m_logicalWidth=0;bool m_collapsed=false,m_initialized=false,m_applying=false;
++};
++}
+--- /dev/null
++++ b/tests/test_main_chrome.cpp
+@@ -0,0 +1,130 @@
++#include "ui/MainWindow.h"
++#include "ui/Composer.h"
++#include "ui/AppStyle.h"
++#include "ui/SettingsPage.h"
++#include "ui/SessionStore.h"
++#include "core/AgentEngine.h"
++#include "core/ProviderStore.h"
++#include <QComboBox>
++#include <QDir>
++#include <QLineEdit>
++#include <QSettings>
++#include <QScrollBar>
++#include <QSignalSpy>
++#include <QSplitter>
++#include <QTemporaryDir>
++#include <QToolButton>
++#include <QTcpServer>
++#include <QTcpSocket>
++#include <QtTest>
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#include <cstdio>
++
++using namespace ade;
++namespace {
++bool seed(const QString& path){Conversation value;value.id="fixture";value.title="Fixture chat";value.draft="";return SessionStore(path).save({value});}
++void showHidden(MainWindow& window){window.setAttribute(Qt::WA_DontShowOnScreen);window.resize(1540,940);window.show();QCoreApplication::processEvents();}
++QToolButton* sidebarToggle(MainWindow& window){for(auto* button:window.findChildren<QToolButton*>())if(button->accessibleName()=="Toggle sidebar")return button;return nullptr;}
++}
++class MainChromeTest:public QObject{
++    Q_OBJECT
++private slots:
++    void repeatedShownWindowTeardownPreservesStyleObservers(){
++        for(int iteration=0;iteration<6;++iteration){
++            QTemporaryDir data;QVERIFY(seed(data.path()));
++            {MainWindow window(data.path());showHidden(window);auto* settings=window.findChild<SettingsPage*>();QVERIFY(settings);
++                QVERIFY(settings->setPreference("personalization.appearance",iteration%2?"light":"dark"));QCoreApplication::processEvents();QVERIFY(window.close());}
++            QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);QCoreApplication::processEvents();
++        }
++    }
++    void sidebarReallyCollapses(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
++        auto* sidebar=window.findChild<QWidget*>("sidebar");auto* toggle=sidebarToggle(window);QVERIFY(sidebar);QVERIFY(toggle);
++        toggle->click();QCoreApplication::processEvents();QCOMPARE(sidebar->width(),0);
++        auto* reopen=window.findChild<QToolButton*>("sidebarReopenButton");QVERIFY(reopen);QVERIFY(reopen->isVisible());QVERIFY(!reopen->accessibleName().isEmpty());
++        reopen->click();QCoreApplication::processEvents();QVERIFY(sidebar->width()>=176);QVERIFY(sidebar->width()<=672);
++    }
++    void freshSplitPrefersContent(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
++        auto* split=window.findChild<QSplitter*>("workspaceSplitter");QVERIFY(split);const auto sizes=split->sizes();QCOMPARE(sizes.size(),2);
++        const double ratio=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY2(ratio>0.66&&ratio<0.74,qPrintable(QString::number(ratio)));
++    }
++    void idleStopAndEmptySendReflectState(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
++        auto* stop=window.findChild<QToolButton*>("stopButton");auto* send=window.findChild<QToolButton*>("sendButton");auto* input=window.findChild<Composer*>();QVERIFY(stop&&send&&input);
++        QVERIFY(stop->isHidden());QVERIFY(!send->isEnabled());input->setPlainText("Ready");QVERIFY(send->isEnabled());input->clear();QVERIFY(!send->isEnabled());
++    }
++    void persistedSidebarAndZoomPreserveCollapsedState(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));
++        {MainWindow window(data.path());showHidden(window);auto* settings=window.findChild<SettingsPage*>();QVERIFY(settings->setPreference("personalization.uiZoom",130));
++            auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);shell->setSizes({416,window.width()-418});emit shell->splitterMoved(416,1);
++            sidebarToggle(window)->click();QCOMPARE(shell->sizes()[0],0);QVERIFY(window.close());}
++        QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
++        {MainWindow window(data.path());showHidden(window);auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);QCOMPARE(shell->sizes()[0],0);
++            auto* reopen=window.findChild<QToolButton*>("sidebarReopenButton");QVERIFY(reopen&&reopen->isVisible());reopen->click();QVERIFY(qAbs(shell->sizes()[0]-416)<=2);
++            auto* settings=window.findChild<SettingsPage*>();QVERIFY(settings->setPreference("personalization.uiZoom",70));QVERIFY(qAbs(shell->sizes()[0]-224)<=2);
++            sidebarToggle(window)->click();QCOMPARE(shell->sizes()[0],0);QVERIFY(settings->setPreference("personalization.uiZoom",100));QCOMPARE(shell->sizes()[0],0);reopen->click();QVERIFY(qAbs(shell->sizes()[0]-320)<=2);
++            QVERIFY(window.close());}
++    }
++    void restoredInnerSplitIsNotReplacedByFreshDefault(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));double expected=0;
++        {MainWindow window(data.path());showHidden(window);auto* split=window.findChild<QSplitter*>("workspaceSplitter");split->setSizes({650,350});const auto sizes=split->sizes();expected=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY(window.close());}
++        QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
++        MainWindow restored(data.path());showHidden(restored);const auto sizes=restored.findChild<QSplitter*>("workspaceSplitter")->sizes();const double actual=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY(qAbs(actual-expected)<0.015);
++    }
++    void sidebarHalfWindowLimitPreservesPreferredWidth(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));{QSettings saved(data.filePath("window.ini"),QSettings::IniFormat);saved.setValue("sidebarWidth",672);}
++        MainWindow window(data.path());showHidden(window);auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);QCOMPARE(shell->sizes()[0],672);
++        window.resize(960,600);QCoreApplication::processEvents();QVERIFY(shell->sizes()[0]<=shell->width()/2);
++        sidebarToggle(window)->click();QCOMPARE(shell->sizes()[0],0);window.findChild<QToolButton*>("sidebarReopenButton")->click();
++        window.resize(1540,940);QCoreApplication::processEvents();QCOMPARE(shell->sizes()[0],672);
++    }
++    void narrowSelectorsRemainInsideComposer_data(){QTest::addColumn<int>("zoom");for(int zoom:{70,100,130})QTest::newRow(qPrintable(QString::number(zoom)))<<zoom;}
++    void narrowSelectorsRemainInsideComposer(){
++        QFETCH(int,zoom);QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);auto* settings=window.findChild<SettingsPage*>();QVERIFY(settings->setPreference("personalization.uiZoom",zoom));window.resize(960,600);
++        auto* split=window.findChild<QSplitter*>("workspaceSplitter");split->setSizes({1,1000});auto* model=window.findChild<QComboBox*>("modelSelector");auto* permission=window.findChild<QComboBox*>("permissionSelector");
++        const QString label="Long provider / a-model-name-with-a-long-context-window";model->addItem(label);model->setCurrentIndex(model->count()-1);QCoreApplication::processEvents();
++        auto* box=window.findChild<QWidget*>("composerBox");auto* rail=window.findChild<QWidget*>("composerActions");auto* send=window.findChild<QToolButton*>("sendButton");QVERIFY(rail&&box&&send);
++        const QRect modelRect(model->mapTo(box,QPoint()),model->size()),permissionRect(permission->mapTo(box,QPoint()),permission->size()),railRect(rail->mapTo(box,QPoint()),rail->size());
++        QVERIFY2(box->rect().contains(modelRect),qPrintable(QString("box%1x%2 model%3,%4 %5x%6").arg(box->width()).arg(box->height()).arg(modelRect.x()).arg(modelRect.y()).arg(modelRect.width()).arg(modelRect.height())));
++        QVERIFY(box->rect().contains(permissionRect));QVERIFY(!modelRect.intersects(permissionRect));QVERIFY(!modelRect.intersects(railRect));QVERIFY(!permissionRect.intersects(railRect));
++        QCOMPARE(send->width(),qRound(32*zoom/100.0));QCOMPARE(rail->width(),send->width());QCOMPARE(model->toolTip(),label);QCOMPARE(model->lineEdit()->cursorPosition(),0);QVERIFY(model->width()>100);QCOMPARE(window.width(),960);
++    }
++    void keyboardCanReopenAndFocusSearch(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);window.activateWindow();auto* input=window.findChild<Composer*>();input->setFocus();QCoreApplication::processEvents();
++        QTest::keyClick(input,Qt::Key_B,Qt::ControlModifier);QCoreApplication::processEvents();auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);QCOMPARE(shell->sizes()[0],0);
++        QTest::keyClick(window.findChild<QToolButton*>("sidebarReopenButton"),Qt::Key_K,Qt::ControlModifier);QCoreApplication::processEvents();QVERIFY(shell->sizes()[0]>0);QVERIFY(window.findChild<QLineEdit*>("agentSearch")->hasFocus());
++    }
++    void busyStopIsVisibleAndEscapeCancels(){
++        QTemporaryDir data;QTcpServer provider;QVERIFY(provider.listen(QHostAddress::LocalHost));ProviderConfig config;config.id="local";config.name="Local fixture";config.model="fixture";config.baseUrl=QString("http://127.0.0.1:%1/v1").arg(provider.serverPort());config.apiKey="fixture-not-a-secret";QVERIFY(ProviderStore::save(data.filePath("providers.json"),{config}));
++        Conversation session;session.id="fixture";session.title="Local held request";session.providerId=config.id;session.model=config.model;QVERIFY(SessionStore(data.path()).save({session}));
++        MainWindow window(data.path());showHidden(window);window.submitPrompt("Hold locally");QTRY_VERIFY(provider.hasPendingConnections());auto* stop=window.findChild<QToolButton*>("stopButton");QVERIFY(stop->isVisible()&&stop->isEnabled());QVERIFY(!window.findChild<QToolButton*>("sendButton")->isEnabled());
++        auto* engine=window.findChild<AgentEngine*>();QVERIFY(engine&&engine->isBusy());QTest::keyClick(window.findChild<Composer*>(),Qt::Key_Escape);QVERIFY(!engine->isBusy());QVERIFY(stop->isHidden());
++    }
++    void composerGrowsForWrappedTextAndCaps(){
++        Composer composer;composer.setAttribute(Qt::WA_DontShowOnScreen);composer.resize(320,80);composer.show();QCoreApplication::processEvents();const auto empty=composer.height();
++        composer.setPlainText(QString("A wrapped sentence with spaces. ").repeated(14));QCoreApplication::processEvents();QVERIFY(composer.height()>empty);
++        composer.setPlainText(QString("Long line\n").repeated(120));QCoreApplication::processEvents();QCOMPARE(composer.height(),256);QCOMPARE(composer.toPlainText(),QString("Long line\n").repeated(120));
++        composer.clear();QCoreApplication::processEvents();QVERIFY(composer.height()<74);
++    }
++    void shortWrappedDraftHasNoScrollbars(){
++        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
++        auto* input=window.findChild<Composer*>();input->setPlainText("Refine the layout while preserving the saved workspace.");QCoreApplication::processEvents();
++        QVERIFY(input->height()>26);QCOMPARE(input->horizontalScrollBarPolicy(),Qt::ScrollBarAlwaysOff);
++        QTRY_COMPARE(input->verticalScrollBar()->maximum(),0);QVERIFY(!input->verticalScrollBar()->isVisible());
++    }
++    void enterAndShiftEnterPreserveInputContract(){
++        Composer composer;composer.setAttribute(Qt::WA_DontShowOnScreen);composer.show();QSignalSpy submitted(&composer,&Composer::submitted);
++        QTest::keyClicks(&composer,"one");QTest::keyClick(&composer,Qt::Key_Return,Qt::ShiftModifier);QTest::keyClicks(&composer,"two");QCOMPARE(composer.toPlainText(),QString("one\ntwo"));QCOMPARE(submitted.size(),0);
++        QTest::keyClick(&composer,Qt::Key_Return);QCOMPARE(submitted.size(),1);QCOMPARE(composer.toPlainText(),QString("one\ntwo"));
++    }
++};
++int main(int argc,char** argv){
++    if(qEnvironmentVariableIsSet("ADE_TRACE_CRASH"))AddVectoredExceptionHandler(1,[](EXCEPTION_POINTERS* exception)->LONG{
++        if(exception->ExceptionRecord->ExceptionCode==EXCEPTION_ACCESS_VIOLATION){std::fprintf(stderr,"Image base %p; exception %p\n",static_cast<void*>(GetModuleHandleW(nullptr)),exception->ExceptionRecord->ExceptionAddress);void* frames[32];const auto count=CaptureStackBackTrace(0,32,frames,nullptr);for(USHORT i=0;i<count;i++)std::fprintf(stderr,"frame %p\n",frames[i]);}
++        return EXCEPTION_CONTINUE_SEARCH;
++    });
++    qputenv("QT_QPA_PLATFORM","offscreen");QApplication app(argc,argv);initializeAppStyle(app);MainChromeTest tests;return QTest::qExec(&tests,argc,argv);
++}
++#include "test_main_chrome.moc"
+--- a/tests/test_ui_audit.cpp
++++ b/tests/test_ui_audit.cpp
+@@ -10,6 +10,7 @@
+ #include "attachments/AttachmentStore.h"
+ #include "runtime/AgentToolHost.h"
+ #include "browser/BrowserToolBridge.h"
++#include "browser/browserwidget.h"
+ 
+ #include <QtTest>
+ #include <QComboBox>
+@@ -54,6 +55,7 @@
+     void changingWorkspacePreservesSelectedDraftFile();
+     void applicationStylePreservesCodeFontAndZoom();
+     void appThemeAndManualClosureFollowNativeWindow();
++    void liveAppWindowTeardownPreservesOwner();
+ };
+ 
+ void UiAuditTest::blockedDraftRestoreStillUpdatesComposerHeight(){
+@@ -67,7 +69,7 @@
+     {
+         QSignalBlocker blocker(&input);input.setPlainText(QString("line\n").repeated(20));
+     }
+-    QTRY_VERIFY(input.height()>100);QVERIFY(input.height()<=220);
++    QTRY_VERIFY(input.height()>100);QVERIFY(input.height()<=256);
+ }
+ 
+ void UiAuditTest::newDraftRetainsInheritedModelAfterRestart(){
+@@ -190,7 +192,8 @@
+         });
+     });
+     MainWindow window(data.path());window.findChild<QToolButton*>("sendButton")->click();
+-    QTRY_VERIFY_WITH_TIMEOUT(!request.isEmpty(),5000);QTRY_VERIFY_WITH_TIMEOUT(window.findChild<QToolButton*>("sendButton")->isEnabled(),5000);
++    QTRY_VERIFY_WITH_TIMEOUT(!request.isEmpty(),5000);QTRY_VERIFY_WITH_TIMEOUT(window.findChild<QToolButton*>("stopButton")->isHidden(),5000);
++    QVERIFY(!window.findChild<QToolButton*>("sendButton")->isEnabled());
+     QVERIFY(QJsonDocument(request).toJson().contains("COMPOSER_ATTACHMENT_68294"));
+     const auto saved=SessionStore(data.path()).load().first();QCOMPARE(saved.messages.size(),2);QVERIFY(saved.draftAttachments.isEmpty());
+     QCOMPARE(saved.messages.first().toObject()["metadata"].toObject()["attachments"].toArray(),session.draftAttachments);
+@@ -288,5 +291,26 @@
+     QVERIFY(!revokeActivation);QVERIFY(!host->apps()->activePage());QCOMPARE(tabs->count(),tabsBefore);
+ }
+ 
++void UiAuditTest::liveAppWindowTeardownPreservesOwner(){
++    for(int iteration=0;iteration<3;++iteration){
++        QTemporaryDir data;auto p=provider("teardown-fixture");p.baseUrl="http://127.0.0.1:1/v1";
++        QVERIFY(ProviderStore::save(data.filePath("providers.json"),{p}));
++        Conversation session;session.id="teardown";session.title="App teardown";session.providerId=p.id;session.model=p.model;
++        session.draftAttachments={QJsonObject{{"path","att/missing-fixture.txt"}}};QVERIFY(SessionStore(data.path()).save({session}));
++        QPointer<MiniAppPage> page;QPointer<BrowserWidget> browser;
++        {
++            MainWindow window(data.path());window.setAttribute(Qt::WA_DontShowOnScreen);window.show();window.submitPrompt("Initialize local host");
++            auto* host=window.findChild<AgentToolHost*>();QVERIFY(host);
++            const auto root=QDir(host->apps()->agentAppsDirectory()).filePath("demo");QVERIFY(QDir().mkpath(root));
++            QFile file(root+"/index.html");QVERIFY(file.open(QIODevice::WriteOnly));file.write("<!doctype html><title>Owned fixture</title><p>Native teardown fixture</p>");file.close();
++            host->apps()->execute("open","open",{{"appId","demo"}});page=host->apps()->activePage();QVERIFY(page);browser=page->browser();QVERIFY(browser);
++            QTRY_VERIFY_WITH_TIMEOUT(page->isReady(),15000);
++            // Leave the actual app open. MainWindow must destroy the owner
++            // before its explicitly owned browser, retaining destroyed hooks.
++        }
++        QVERIFY(!page);QVERIFY(!browser);QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
++    }
++}
++
+ QTEST_MAIN(UiAuditTest)
+ #include "test_ui_audit.moc"

@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "verifiedDate": "2026-11-05",
+  "scope": "Official public documentation only. No credentials read and no account or inference requests performed by this audit.",
+  "defaultModelPolicy": "Examples are documentation examples, not confirmed account entitlements or recommended default model selections.",
+  "providers": [
+    {
+      "label": "NVIDIA",
+      "baseUrl": "https://integrate.api.nvidia.com/v1",
+      "protocol": "openai-chat-completions",
+      "requestPath": "/chat/completions",
+      "authentication": {
+        "header": "Authorization",
+        "format": "Bearer <NVIDIA API key>"
+      },
+      "modelDiscovery": {
+        "method": "GET",
+        "url": "https://integrate.api.nvidia.com/v1/models"
+      },
+      "defaultModel": null,
+      "ambiguity": "Hosted NVIDIA inference credentials and self-hosted NIM credentials are different configurations; select an available model from account discovery.",
+      "sources": [
+        "https://docs.api.nvidia.com/nim/reference/llm-apis",
+        "https://github.com/NVIDIA/OpenShell/blob/main/providers/nvidia.yaml"
+      ]
+    },
+    {
+      "label": "PERPLEXITY",
+      "baseUrl": "https://api.perplexity.ai/v1",
+      "protocol": "openai-responses",
+      "requestPath": "/responses",
+      "canonicalRequestPath": "/agent",
+      "authentication": {
+        "header": "Authorization",
+        "format": "Bearer <Perplexity API key>"
+      },
+      "modelDiscovery": {
+        "method": "GET",
+        "url": "https://api.perplexity.ai/v1/models"
+      },
+      "defaultModel": null,
+      "exampleModels": [
+        "openai/gpt-5.6-sol",
+        "openai/gpt-5.6-luna"
+      ],
+      "ambiguity": "Current official docs recommend Agent API. /v1/responses is an alias of /v1/agent. Sonar support ended September 27, 2026; do not infer current Chat Completions behavior from older integrations. Provider tools/defaults differ from OpenAI; use an explicit no-tools smoke request.",
+      "sources": [
+        "https://docs.perplexity.ai/docs/agent-api/openai-compatibility",
+        "https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/overview"
+      ]
+    },
+    {
+      "label": "YOU",
+      "baseUrl": "https://api.you.com/v1",
+      "protocol": "openai-chat-completions",
+      "requestPath": "/chat/completions",
+      "authentication": {
+        "header": "Authorization",
+        "format": "Bearer <YDC API key>"
+      },
+      "modelDiscovery": {
+        "method": "GET",
+        "url": "https://api.you.com/v1/models"
+      },
+      "defaultModel": null,
+      "ambiguity": "Endpoint is the You.com Inference Router. A label alone does not establish that a key has inference access rather than another You.com product. Discover accessible models first. Streaming includes a final usage event with empty choices before [DONE].",
+      "sources": [
+        "https://you.com/docs/guides/inference-router/quickstart"
+      ]
+    },
+    {
+      "label": "PORTKEY",
+      "baseUrl": "https://api.portkey.ai/v1",
+      "protocol": "openai-chat-completions",
+      "requestPath": "/chat/completions",
+      "authentication": {
+        "header": "x-portkey-api-key",
+        "format": "<Portkey API key>"
+      },
+      "routing": {
+        "requiresConfiguredProvider": true,
+        "options": [
+          "x-portkey-provider: @<configured-provider-slug> with model ID",
+          "model: @<configured-provider-slug>/<model-id>"
+        ]
+      },
+      "modelDiscovery": null,
+      "defaultModel": null,
+      "ambiguity": "Portkey is a gateway. The account-specific provider slug/configuration cannot be inferred from PORTKEY_API_KEY. Do not send the key directly to an upstream model provider or guess a route. Official OpenAI SDK examples also accept the gateway key as api_key; native direct HTTP should use the documented x-portkey-api-key header.",
+      "sources": [
+        "https://github.com/Portkey-AI/docs-core/blob/main/api-reference/inference-api/authentication.mdx",
+        "https://github.com/Portkey-AI/docs-core/blob/main/integrations/llms/x-ai.mdx"
+      ]
+    },
+    {
+      "label": "SAKANA",
+      "baseUrl": "https://api.sakana.ai/v1",
+      "protocol": "openai-chat-completions",
+      "requestPath": "/chat/completions",
+      "authentication": {
+        "header": "Authorization",
+        "format": "Bearer <Sakana API key>"
+      },
+      "modelDiscovery": {
+        "method": "GET",
+        "url": "https://api.sakana.ai/v1/models"
+      },
+      "defaultModel": null,
+      "exampleModels": [
+        "fugu"
+      ],
+      "ambiguity": "Official console supports Chat Completions, Responses and Anthropic Messages. Fugu subscription access and other model billing are product-specific; verify account discovery before selecting a model.",
+      "sources": [
+        "https://console.sakana.ai/get-started",
+        "https://console.sakana.ai/models"
+      ]
+    },
+    {
+      "label": "THEROUTER",
+      "baseUrl": "https://api.therouter.ai/v1",
+      "protocol": "openai-chat-completions",
+      "requestPath": "/chat/completions",
+      "authentication": {
+        "header": "Authorization",
+        "format": "Bearer <TheRouter API key>"
+      },
+      "modelDiscovery": {
+        "method": "GET",
+        "url": "https://api.therouter.ai/v1/models"
+      },
+      "defaultModel": null,
+      "exampleModels": [
+        "anthropic/claude-sonnet-4.5"
+      ],
+      "ambiguity": "Global endpoint is documented; legacy regional endpoint is retired. Model IDs are gateway-specific and model availability/account budget still require discovery or account configuration.",
+      "sources": [
+        "https://therouter.ai/docs/quickstart/",
+        "https://therouter.ai/docs/guides/overview/models/",
+        "https://therouter.ai/docs/api/reference/responses/overview/"
+      ]
+    }
+  ]
+}

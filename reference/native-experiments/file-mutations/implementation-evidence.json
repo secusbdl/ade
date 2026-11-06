@@ -1,0 +1,113 @@
+{
+  "status": "Private checkpoint ready for host-adapter design after the read-lifecycle migration; production sources unchanged.",
+  "verified_on": "2026-11-05",
+  "source_contracts": "contract-inventory.json",
+  "implemented": [
+    "Immutable per-agent FileMutationStore, host-bound ws1/apps/read-only att scopes",
+    "SQLite FULL/WAL durable before/after byte snapshots with missing distinct from empty; no undo-cache eviction",
+    "Single regular-file write, sequential multiEdit with unmatched skip and exact non-overlapping counts, copy/move/delete",
+    "Before-image staging with no-overwrite handle rename, conflict-aware rollback, agent-owned undo by mutation nonce",
+    "Restart recovery for prepared/applying/rolling_back/recovery_required and pending committed cleanup",
+    "Pinned absolute ancestor chain, file identities, reparse/hardlink refusal, original-mount identity checks",
+    "QLockFile serializes apply/undo/recovery for one journal owner, including separate process instances",
+    "Preflight UTF-8 replacement growth before each allocation; source non-overlapping match counts retained",
+    "Journal identities for reserved stage and rollback restore files before writing; partial stages and interrupted restores resume safely at tested boundaries"
+  ],
+  "limits": [
+    "Windows local-drive prototype only,4 MiB per file, existing parent directories, at most 2 changed paths; directories/recursive operations and parent creation not implemented",
+    "Host tool adapters, model definitions, UI, tool-call-group undo, contributor diffs, archive finalization and metadata preservation remain pending",
+    "Synchronous single-owner-thread QtSql API; not yet integrated into native worker/coordinator lifecycle",
+    "Temp fault callback is a private test seam, not a production authorization mechanism",
+    "No power-loss guarantee beyond SQLite FULL and FlushFileBuffers; actual abrupt process termination is tested",
+    "An exit between CREATE_NEW and its identity UPDATE can leave a reserved file with no durable identity; recovery fails closed with recovery_required instead of guessing ownership.",
+    "Per-file publication uses recoverable backup+publish renames, not a filesystem-wide atomic transaction or an expected-target compare-and-swap.",
+    "Raw sandbox mutation adapters, directory creation/copy-to-directory basename handling, recursive operations, full metadata/ACL retention, tool-call-group undo and diff UI remain pending.",
+    "History growth quota, schema migration/import/pruning, chat deletion/clone semantics and dedicated worker routing need implementation before production exposure."
+  ],
+  "api": {
+    "constructor": "FileMutationStore(dataDirectory,agentId)",
+    "open": "bool open(QString* error)",
+    "scope": "bool bindMount(prefix,root,writable,error); host supplies authority",
+    "execute": "Result execute(Request,const atomic_bool* cancelled=nullptr)",
+    "undo": "Result undo(agentId,originalNonce,undoNonce,cancelled)",
+    "recover": "QList<Result> recover(); owner-scoped",
+    "result": "success/recoveryRequired/mutationId/error/structured output; failed/conflicting operation never silently claims rollback success"
+  },
+  "tests": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "report": "mutation-tests.txt",
+    "junit": "mutation-tests.xml",
+    "actual_process_exit_rows": [
+      "after-prepare",
+      "after-stage-created",
+      "after-stage-chunk",
+      "after-backup",
+      "after-publish",
+      "after-commit",
+      "rollback-after-restore-created",
+      "rollback-after-restore-chunk",
+      "rollback-after-restore"
+    ],
+    "other_cases": [
+      "empty/binary missing-aware undo",
+      "both source and destination move rollback",
+      "external current-file conflict",
+      "foreign destination inserted between backup and publication",
+      "ancestor pin blocks replacement",
+      "junction and replaced-root refusal",
+      "read-only att source copy into apps without workspace",
+      "corrupt durable snapshot blocks later mutation and undo",
+      "agent/mount binding, duplicate nonce and cancellation",
+      "Another store cannot recover a currently prepared operation",
+      "A potential 1 GiB multiEdit expansion rejects under a 128 MiB process job limit without changing source",
+      "Partial staged write failure cleans only the identity-journaled owned file",
+      "Missing backup restores from durable bytes and survives repeated restore-process exits"
+    ],
+    "elapsed_ms": 1672
+  },
+  "reproduced_implementation_defects": [
+    {
+      "report": "first-run.txt",
+      "cause": "Qt6 QVariant::isNull does not identify a null contained QString, causing NOT NULL SQL insert failures; now normalize actual contained values."
+    },
+    {
+      "report": "second-run.txt",
+      "cause": "Documented relative FILE_RENAME_INFO.RootDirectory failed Windows87; absolute canonical destinations pass while all ancestors are retained."
+    },
+    {
+      "report": "overlap-before.txt",
+      "cause": "QString::count counts overlapping matches unlike source split semantics; explicit non-overlapping scan fixes editsApplied."
+    },
+    {
+      "report": "review-before.txt",
+      "cause": "Live-owner recovery changed prepared work to rolled_back; oversized replace attempted a large allocation before the cap. Both fixed and regressed."
+    },
+    {
+      "report": "recovery-before.txt",
+      "cause": "Partial reserved stage was not recognized for cleanup; published fallback restore had no durable identity and failed the next recovery. Both fixed."
+    },
+    {
+      "report": "restore-reopen-before.txt",
+      "cause": "Retry of an interrupted restore reopened its reserved stage without write access. Added GENERIC_WRITE for owned restore stages only."
+    }
+  ],
+  "independent_windows_probe": {
+    "source": "../git-usage-stage/rename-probe/probe.cpp",
+    "report": "../git-usage-stage/rename-probe/results.txt",
+    "result": "Ten relative directory-handle variants failed87; absolute-target controls succeeded. This independently corroborates actual platform behavior rather than documentation-only inference."
+  },
+  "sha256": {
+    "src/FileMutationStore.h": "8938c61c95563f66a9c7657c9e089c877d5d259129bc27c6270de9aa080bf85b",
+    "src/FileMutationStore.cpp": "7c213bcfce9accf7c0cdf7e9719f774c412d35b0ec109eea0317e7e8c400a3f9",
+    "tests/test_file_mutations.cpp": "4ad0dc3026ef13f59e1a890cf7ac2b172cabcf5fa2f7072f10cb1871de25908e",
+    "CMakeLists.txt": "6a5bcdaf54d02712248b7fc4b5c2ff72b2a1d15720c5a2dea64624dbc89f3d56"
+  },
+  "independent_review": {
+    "reviewer": "qt_port_review",
+    "scope": "Read-only transaction/crash/owner-lock and follow-up changed identity paths; no independent rerun of the final test suite.",
+    "final": "No additional concrete defect found in the changed lock/stage/restore paths. The CREATE_NEW-to-identity-UPDATE interruption gap remains explicit."
+  },
+  "static_imports": "imports.txt contains only Windows system DLLs; no Qt or MinGW runtime DLL imports."
+}

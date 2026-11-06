@@ -1,0 +1,65 @@
+[
+    {
+        "id": "a3d26ca0-853a-4098-881d-6d04b960b33d",
+        "parts": [
+            {
+                "id": "a3d26ca0-853a-4098-881d-6d04b960b33d/0",
+                "state": "done",
+                "text": "Question",
+                "type": "text"
+            }
+        ],
+        "provisional": false,
+        "role": "user"
+    },
+    {
+        "attachments": [
+            {
+                "path": "att/fake.txt"
+            }
+        ],
+        "id": "f15b777b-3b9a-410b-b1fb-2ff2e2039314",
+        "parts": [
+            {
+                "durationMs": 0,
+                "id": "f15b777b-3b9a-410b-b1fb-2ff2e2039314/0",
+                "state": "done",
+                "text": "Think",
+                "type": "reasoning"
+            },
+            {
+                "id": "f15b777b-3b9a-410b-b1fb-2ff2e2039314/1",
+                "state": "done",
+                "text": "Before",
+                "type": "text"
+            },
+            {
+                "id": "f15b777b-3b9a-410b-b1fb-2ff2e2039314/2",
+                "input": {
+                    "x": 1
+                },
+                "inputText": "{\"x\":1}",
+                "name": "inspectFixture",
+                "output": "OUTPUT",
+                "state": "output-available",
+                "toolCallId": "same-call",
+                "type": "tool"
+            }
+        ],
+        "provisional": false,
+        "role": "assistant"
+    },
+    {
+        "id": "4f7941ec-78be-4ac5-ad96-c06449981c7a",
+        "parts": [
+            {
+                "id": "4f7941ec-78be-4ac5-ad96-c06449981c7a/0",
+                "state": "done",
+                "text": "Final",
+                "type": "text"
+            }
+        ],
+        "provisional": false,
+        "role": "assistant"
+    }
+]

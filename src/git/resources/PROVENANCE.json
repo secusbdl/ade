@@ -1,0 +1,11 @@
+{
+  "project": "Stagewise",
+  "version": "1.31.1",
+  "commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "source": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/worktree-name-wordbank.ts",
+  "license": "AGPL-3.0-only (repository/browser license)",
+  "sourceSha256": "ec916b492b05f604e8d455b42fc10b507b22ffc1b56abdd3b50dc4a49b7de3b3",
+  "output": "worktree-words.json",
+  "outputSha256": "783e47b245b1d9f7ebfa75598e30eec468a458fff6bda520784af861922c9677",
+  "transformation": "Exact adjective and noun array values converted from TypeScript to JSON; 911 adjectives, 953 nouns. Runtime uses the pinned 20-random-attempt then exhaustive-fallback algorithm."
+}

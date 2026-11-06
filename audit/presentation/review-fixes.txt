@@ -1,0 +1,14 @@
+********* Start testing of PresentationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PresentationTest::initTestCase()
+PASS   : PresentationTest::savedIdsCannotCollideWithLegacyIds()
+PASS   : PresentationTest::emptyPartFloodIsBounded()
+PASS   : PresentationTest::allPartKindsShareOneRuntimeBound()
+PASS   : PresentationTest::uiOnlyCannotHideOtherReplayFields(function_call)
+PASS   : PresentationTest::uiOnlyCannotHideOtherReplayFields(refusal)
+PASS   : PresentationTest::uiOnlyCannotHideOtherReplayFields(audio)
+PASS   : PresentationTest::runningOutputIsBoundedAndReplaced(ascii)
+PASS   : PresentationTest::runningOutputIsBoundedAndReplaced(unicode)
+PASS   : PresentationTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 1138ms
+********* Finished testing of PresentationTest *********

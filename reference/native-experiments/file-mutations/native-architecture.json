@@ -1,0 +1,85 @@
+{
+  "status": "Proposal only; migrate only after checkpoint and read-lifecycle owner coordination.",
+  "first_slice": "Persistent byte-exact mutation journal plus scoped single-file write/multiEdit/copy/move/delete and host undo; recursive structural operations follow on the same journal, not a separate irreversible shortcut.",
+  "components": [
+    {
+      "name": "Immutable mutation context",
+      "fields": [
+        "profile identity",
+        "agent ID",
+        "internal dispatch nonce and generation",
+        "original model tool-call ID",
+        "tool name and normalized input hash",
+        "resolved mount identity/root and rights",
+        "cancellation token"
+      ],
+      "reason": "Never infer provenance from mutable current ToolExecutor state or reused provider IDs. Capture workspace identity before asynchronous work."
+    },
+    {
+      "name": "ScopedMutationPlan / native filesystem backend",
+      "responsibility": "Resolve both operands through one host-owned mount registry. Check source and destination rights independently; plan descendant paths/types through ScopedDirectory with bounded no-follow traversal. Hold validated parents and validate opened file identity. Stage bytes and capture missing/file/directory kinds explicitly.",
+      "windows_probe_required": "Use SetFileInformationByHandle for rename/delete on validated handles; FILE_RENAME_INFO documents a destination directory handle for relative names. Validate actual MinGW/NTFS behavior with fixture probes before selecting final commit primitive. New-file creation and directory creation need contained parent authority throughout; do not reuse resolve-close-QSaveFile path checks as a security guarantee."
+    },
+    {
+      "name": "FileMutationJournal",
+      "storage": "Profile-owned SQLite operations/mutations tables and content-addressed exact byte blobs outside ws/apps/att. One serialized native worker owns its DB connection. Record schema/provenance and directory topology. Missing/empty/binary are separate states. Share no agent-readable blob paths.",
+      "tables": [
+        "snapshots(hash,byte_size,storage_kind,payload_or_blob)",
+        "mutations(nonce,agent,tool_call_id,input_hash,mount_identity,state,error)",
+        "mutation_entries(nonce,ordinal,logical_path,canonical_identity,before_kind,before_hash,after_kind,after_hash,step_state)",
+        "append-only operations(index,path_identity,baseline_or_edit,snapshot_hash,reason,contributor,mutation_nonce)"
+      ],
+      "policy": "Persist complete before states and operation manifest before first destructive step. Never evict blobs reachable by undo history. Explicit disk/batch limits reject before mutation; do not copy upstream post-mutation history truncation."
+    },
+    {
+      "name": "Mutation coordinator",
+      "states": [
+        "prepared",
+        "applying",
+        "committed",
+        "rolling_back",
+        "rolled_back",
+        "recovery_required"
+      ],
+      "rules": [
+        "Single-file replacement is atomic where the tested native primitive permits; multi-file changes are recoverable, not claimed as a filesystem-wide atomic transaction",
+        "Preflight overlap, permissions, quota, types and complete snapshots before changes. Snapshot conflicting destination contents as well as move source contents",
+        "For cross-volume move, finish destination verification before source removal; all steps retain recovery records",
+        "On error/cancel before commit, roll back recorded changes only when current identity/content matches the expected staged state; report conflicts instead of overwriting unrelated concurrent edits",
+        "After commit, emit one owned result and observers only after journal durability; cancellation then cannot honestly claim no filesystem effect",
+        "At startup detect incomplete mutations and recover against recorded identities/hashes; never apply recorded paths to a remapped current ws1 root"
+      ]
+    },
+    {
+      "name": "Undo and diff projection",
+      "responsibility": "Select operations by agent plus dispatch/tool-call provenance; replay to the state before earliest selected call, including both move sides, overwritten targets and empty directories. Preserve original history and append undo/restore records. Keep native API/error for unavailable original mount rather than silently resolving a new workspace root.",
+      "compatibility": "Maintain upstream file summaries and internal-mount visibility filters separately from recovery retention. Ignored files still need recovery storage for a destructive operation advertised as undoable. Conflict handling and topology restoration are deliberate native improvements, disclosed in the parity ledger."
+    },
+    {
+      "name": "Tool transport/adapters",
+      "responsibility": "Expose upstream names and schemas: copy with required move boolean, delete, write, multiEdit. Return structured message/result/_diff data; preserve legacy fileChanged only as an observer bridge. Keep raw sandbox fs.writeFile/writeBytes byte-exact and free of code-fence stripping. Add native fs.copy/rename/unlink adapters only when their distinct Node contracts and journal attribution are implemented."
+    }
+  ],
+  "integration_order": [
+    "Finish/read-lifecycle migration and rebase ToolExecutor before editing the shared read dispatch path",
+    "Add independent native journal/recovery tests without changing model tool surface",
+    "Route write/multiEdit through journal; add exact source message/zero-match/fence fixtures and host undo",
+    "Add single-file copy/move/delete with structured results and original mount identity",
+    "Add recursive merge/move/delete with all-file records and topology/large binary streaming",
+    "Wire native history UI, message reversion, archive finalization and provenance-based edit summary; retain any unimplemented redo/contributor details as gaps"
+  ],
+  "read_lifecycle_boundary": "Read snapshots are immutable observations keyed to successful calls; mutation snapshots are durable recovery states. Reuse pure hashing/byte capture where sound, not lease/eviction policy. Do not attach raw sandbox reads or mutation before bytes to provider messages. A mutation invalidates live/editor caches only after commit; previous read captures remain immutable.",
+  "open_contract_edges": [
+    "Empty old_string acceptance versus pinned inconsistent JS behavior",
+    "Copy to same object, directory into its own subtree, ancestor/descendant overlaps, case-only rename, hardlinks and symlink/reparse nodes",
+    "Mount-root delete/move, permissions metadata and empty-directory topology",
+    "Explicit recovery byte/disk budgets and handling oversized binaries without silent truncation",
+    "Source parent creation/overwrites versus native no-follow authority constraints",
+    "Concurrent external edits and undo conflicts; no undocumented overwrite of user work"
+  ],
+  "official_windows_sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_rename_info",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_disposition_info"
+  ]
+}

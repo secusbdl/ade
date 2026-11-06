@@ -1,0 +1,39 @@
+{
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Native read/ls structured output, independent from raw sandbox fs operations",
+  "sourceReferences": [
+    "packages/agent-core/src/types/tools.ts",
+    "packages/agent-core/src/services/toolbox/universal-tools.ts",
+    "packages/agent-core/src/file-read-transformer/transformers/text.ts",
+    "packages/agent-core/src/file-read-transformer/transformers/directory.ts"
+  ],
+  "implementation": [
+    "read validates line/page/preview fields and returns wrapped metadata and line-numbered text/Markdown/archive previews through FileTransformer. CRLF bytes in selected lines follow the pinned source behavior.",
+    "ls validates nonnegative numeric depth, uses a typed directory manifest, includes hidden entries, preserves source tree display limits, and does not follow child directory links.",
+    "Formatted filesystem capture and transformation run in QtConcurrent jobs holding immutable roots/parameters and a shared cancellation flag. Completion is checked against request identity and generation.",
+    "Windows file contents and directory names are read through the same validated handle. Recursive directory capture uses validated canonical parent paths and validates each opened child handle.",
+    "Raw fs text/binary/list operations retain their existing separate transport. Reserved unimplemented mount prefixes cannot silently fall through to the workspace."
+  ],
+  "verification": {
+    "report": "test-results/structured-file-tools-final.xml",
+    "suites": [
+      "native_file_tools",
+      "native_file_tools_races"
+    ],
+    "failures": 0,
+    "elapsedSeconds": 0.82,
+    "cases": [
+      "Inclusive ranges, CRLF, preview promotion, Markdown outline, invalid type/range/depth rejection, directory depth including fractions and hidden names, budget/truncation envelope, raw binary preservation, apps without workspace, queued cancellation, reserved mount ambiguity",
+      "Deterministic junction retarget between final-path validation and enumeration; before/fixed reproduction",
+      "Held worker cancellation, same-ID replacement and destruction with protected prior object storage"
+    ]
+  },
+  "limits": [
+    "Tool output is currently stored inline in conversation history. The source uses compact acknowledgments and context reinjection from references; that lifecycle is a separate pending slice.",
+    "Formatted read is currently text-only transport; image/PDF/RAW/AST source transforms and formatted att/ routing remain incomplete.",
+    "The native host bounds file capture to 4 MiB, directory manifests to 10000 entries and depth 32; these are explicit native limits.",
+    "Cancellation immediately retires the result and checks the flag between bounded operations; it does not forcibly interrupt a currently blocking OS read.",
+    "Initial scope resolution still performs bounded path checks on the caller thread; this is not a claim that every filesystem operation is asynchronous.",
+    "Directory captures are not atomic filesystem-wide snapshots. POSIX branch has not been runtime-tested."
+  ]
+}

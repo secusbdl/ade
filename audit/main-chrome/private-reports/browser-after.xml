@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="BrowserTest" timestamp="2026&#x002D;11&#x002D;05T17:13:15" hostname="VOID" tests="14" failures="0" errors="0" skipped="0" time="7.765">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="BrowserTest" time="0.002"/>
+  <testcase name="screenshotBeforeReadyIsReported" classname="BrowserTest" time="0.001"/>
+  <testcase name="queuedNavigationAndDomAccess" classname="BrowserTest" time="0.876"/>
+  <testcase name="failedNavigationRecovers" classname="BrowserTest" time="0.897"/>
+  <testcase name="resizeAndScreenshot" classname="BrowserTest" time="0.539"/>
+  <testcase name="twoViewsRemainIndependent" classname="BrowserTest" time="0.432"/>
+  <testcase name="devToolsErrorAndSuccess" classname="BrowserTest" time="0.289"/>
+  <testcase name="readySignalDoesNotOverwriteNavigation" classname="BrowserTest" time="0.620"/>
+  <testcase name="popupStaysInPreview" classname="BrowserTest" time="0.787"/>
+  <testcase name="destroyDuringAsyncCreation" classname="BrowserTest" time="1.070"/>
+  <testcase name="destroyFromReadySignal" classname="BrowserTest" time="0.216"/>
+  <testcase name="destroyFromNavigationSignal" classname="BrowserTest" time="0.525"/>
+  <testcase name="destroyWithOutstandingOperations" classname="BrowserTest" time="1.506"/>
+  <testcase name="cleanupTestCase" classname="BrowserTest" time="0.000"/>
+</testsuite>

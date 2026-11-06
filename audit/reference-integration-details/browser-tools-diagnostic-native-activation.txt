@@ -1,0 +1,13 @@
+********* Start testing of BrowserToolsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserToolsTest::initTestCase()
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() runtime {"jsVersion":"15.7.11.4","product":"Edg/157.0.4341.42","protocolVersion":"1.3","revision":"@7b1486be4607d53d9f93841b7c776bc525ca74b7","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"}
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() native activation true visible true foreground true
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() native active false
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() block before {"result":{"type":"object","value":{"active":false,"enabled":true,"focus":true,"fullscreen":false,"visibility":"visible"}}} result {"result":{"type":"object","value":{"fulfilled":true}}} after {"result":{"type":"object","value":{"focus":true,"fullscreen":false,"visibility":"visible"}}} prompts 0 native 0
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() ask before {"result":{"type":"object","value":{"active":true,"enabled":true,"focus":true,"fullscreen":false,"visibility":"visible"}}} result {"result":{"type":"object","value":{"fulfilled":true}}} after {"result":{"type":"object","value":{"focus":true,"fullscreen":false,"visibility":"visible"}}} prompts 1 native 0
+QINFO  : BrowserToolsTest::fullscreenRuntimeDiagnostics() allow before {"result":{"type":"object","value":{"active":true,"enabled":true,"focus":true,"fullscreen":false,"visibility":"visible"}}} result {"result":{"type":"object","value":{"fulfilled":true}}} after {"result":{"type":"object","value":{"focus":true,"fullscreen":true,"visibility":"visible"}}} prompts 1 native 1
+PASS   : BrowserToolsTest::fullscreenRuntimeDiagnostics()
+PASS   : BrowserToolsTest::cleanupTestCase()
+Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 6357ms
+********* Finished testing of BrowserToolsTest *********

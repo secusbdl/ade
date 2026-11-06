@@ -1,0 +1,53 @@
+
+Thread 1 received signal SIGSEGV, Segmentation fault.
+0x00007ff63d14dc8a in void doActivate<false>(QObject*, int, void**) ()
+
+Thread 6 (Thread 56608.0x7890):
+#0  0x00007ffc050e1e74 in ntdll!ZwRemoveIoCompletion () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x00007ffc01506b1f in Tcpip6_WSHGetSockaddrType () from C:\WINDOWS\system32\mswsock.dll
+#2  0x00007ffc0360dda7 in KERNEL32!BaseThreadInitThunk () from C:\WINDOWS\System32\kernel32.dll
+#3  0x00007ffc04ffee4c in ntdll!RtlUserThreadStart () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#4  0x0000000000000000 in ?? ()
+
+Thread 4 (Thread 56608.0x8348):
+#0  0x00007ffc050e5a24 in ntdll!ZwWaitForWorkViaWorkerFactory () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x00007ffc04fa4d0e in ntdll!TpCallbackMayRunLong () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#2  0x00007ffc0360dda7 in KERNEL32!BaseThreadInitThunk () from C:\WINDOWS\System32\kernel32.dll
+#3  0x00007ffc04ffee4c in ntdll!RtlUserThreadStart () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#4  0x0000000000000000 in ?? ()
+
+Thread 3 (Thread 56608.0xd3a0):
+#0  0x00007ffc050e5a24 in ntdll!ZwWaitForWorkViaWorkerFactory () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x00007ffc04fa4d0e in ntdll!TpCallbackMayRunLong () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#2  0x00007ffc0360dda7 in KERNEL32!BaseThreadInitThunk () from C:\WINDOWS\System32\kernel32.dll
+#3  0x00007ffc04ffee4c in ntdll!RtlUserThreadStart () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#4  0x0000000000000000 in ?? ()
+
+Thread 2 (Thread 56608.0x2990):
+#0  0x00007ffc050e5a24 in ntdll!ZwWaitForWorkViaWorkerFactory () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x00007ffc04fa4d0e in ntdll!TpCallbackMayRunLong () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#2  0x00007ffc0360dda7 in KERNEL32!BaseThreadInitThunk () from C:\WINDOWS\System32\kernel32.dll
+#3  0x00007ffc04ffee4c in ntdll!RtlUserThreadStart () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#4  0x0000000000000000 in ?? ()
+
+Thread 1 (Thread 56608.0xd510):
+#0  0x00007ff63d14dc8a in void doActivate<false>(QObject*, int, void**) ()
+#1  0x00007ff63d2b4cdc in QNetworkReply::downloadProgress(long long, long long) ()
+#2  0x00007ff63d5668dc in QObject::event(QEvent*) ()
+#3  0x00007ff63d2f9691 in QCoreApplication::notifyInternal2(QObject*, QEvent*) ()
+#4  0x00007ff63d44b9fc in QCoreApplicationPrivate::sendPostedEvents(QObject*, int, QThreadData*) ()
+#5  0x00007ff63d41d9bd in QEventDispatcherWin32::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) ()
+#6  0x00007ff63d2f8d19 in QCoreApplication::processEvents(QFlags<QEventLoop::ProcessEventsFlag>, QDeadlineTimer) ()
+#7  0x00007ff63d552167 in QTest::qWait(std::chrono::duration<long long, std::ratio<1ll, 1000ll> >) ()
+#8  0x00007ff63d3c6569 in StreamObserverTest::deletion() ()
+#9  0x00007ff63d3aa08b in QMetaMethodInvoker::invokeImpl(QMetaMethod, void*, Qt::ConnectionType, long long, void const* const*, char const* const*, QtPrivate::QMetaTypeInterface const* const*) ()
+#10 0x00007ff63d2148a5 in QMetaMethod::invokeImpl(QMetaMethod, void*, Qt::ConnectionType, long long, void const* const*, char const* const*, QtPrivate::QMetaTypeInterface const* const*) ()
+#11 0x00007ff63d555fe2 in QTest::invokeTestMethodIfValid(QMetaMethod, QObject*) ()
+#12 0x00007ff63d6af41d in QTest::TestMethods::invokeTestOnData(int) const ()
+#13 0x00007ff63d6ae28b in QTest::TestMethods::invokeTest(int, QLatin1String, std::optional<QTest::WatchDog>&) const ()
+#14 0x00007ff63d6aed59 in QTest::TestMethods::invokeTests(QObject*) const ()
+#15 0x00007ff63d551884 in QTest::qRun() ()
+#16 0x00007ff63d551f63 in QTest::qExec(QObject*, int, char**) ()
+#17 0x00007ff63d938205 in main ()
+warning: could not convert 'main' from the host encoding (CP65001) to UTF-32.
+This normally should not happen, please file a bug report.

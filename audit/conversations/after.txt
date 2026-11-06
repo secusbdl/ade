@@ -1,0 +1,112 @@
+********* Start testing of ConversationsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ConversationsTest::initTestCase()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently()
+QWARN  : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost() This plugin does not support raise()
+QWARN  : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost()
+QWARN  : ConversationsTest::restoreDoesNotActivateUntilSelected() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::restoreDoesNotActivateUntilSelected()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support raise()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support raise()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support raise()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support raise()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused()
+QWARN  : ConversationsTest::archivedSearchPaginationAndSelection() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::archivedSearchPaginationAndSelection()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(new) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(new)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(rename)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(fork) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(fork) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(fork) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(fork)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(archive) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(archive) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(archive) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(archive)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(delete)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(restore) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(restore)
+QWARN  : ConversationsTest::failedSelectionSaveKeepsDraftVisible() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedSelectionSaveKeepsDraftVisible()
+QWARN  : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory() This plugin does not support raise()
+QWARN  : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support raise()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support raise()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost()
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace)
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment)
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace)
+QWARN  : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate()
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() This plugin does not support raise()
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::lastSelectedActiveChatSurvivesRestart()
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() This plugin does not support raise()
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart()
+QWARN  : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(ask-to-allow) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(ask-to-allow) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(ask-to-allow)
+QWARN  : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(allow-to-ask) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+QWARN  : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(allow-to-ask) QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(allow-to-ask)
+QWARN  : ConversationsTest::legacyApprovalPolicyDefaultsToAsk() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget
+PASS   : ConversationsTest::legacyApprovalPolicyDefaultsToAsk()
+PASS   : ConversationsTest::cleanupTestCase()
+Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 18898ms
+********* Finished testing of ConversationsTest *********

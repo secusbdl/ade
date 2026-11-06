@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="AttachmentMountTests" timestamp="2026&#x002D;11&#x002D;05T16:35:10" hostname="VOID" tests="15" failures="0" errors="0" skipped="0" time="0.611">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="AttachmentMountTests" time="0.000"/>
+  <testcase name="flatListingValidatesCapturedNames(normal)" classname="AttachmentMountTests" time="0.004"/>
+  <testcase name="flatListingValidatesCapturedNames(dotfile)" classname="AttachmentMountTests" time="0.003"/>
+  <testcase name="flatListingValidatesCapturedNames(space)" classname="AttachmentMountTests" time="0.003"/>
+  <testcase name="flatListingValidatesCapturedNames(unicode)" classname="AttachmentMountTests" time="0.003"/>
+  <testcase name="flatListingValidatesCapturedNames(directory)" classname="AttachmentMountTests" time="0.003"/>
+  <testcase name="noWorkspaceReadsOriginalAndGeneratedBytes" classname="AttachmentMountTests" time="0.082"/>
+  <testcase name="textAndEmptyFilesAreExactAndLargeReadsReject" classname="AttachmentMountTests" time="0.079"/>
+  <testcase name="mutationsAndEscapePathsNeverTouchBlobs" classname="AttachmentMountTests" time="0.053"/>
+  <testcase name="agentIdentityAndSnapshotsAreIsolated" classname="AttachmentMountTests" time="0.101"/>
+  <testcase name="cancellationBeforeQueuedReadAndLateRepliesIsolated" classname="AttachmentMountTests" time="0.091"/>
+  <testcase name="brokerCancellationGenerationAndReentrantDestruction" classname="AttachmentMountTests" time="0.027"/>
+  <testcase name="invalidOwnedRootCannotUseGlobalArtifactFallback" classname="AttachmentMountTests" time="0.034"/>
+  <testcase name="junctionsAndReplacedRootFailClosed" classname="AttachmentMountTests" time="0.126"/>
+  <testcase name="cleanupTestCase" classname="AttachmentMountTests" time="0.000"/>
+</testsuite>

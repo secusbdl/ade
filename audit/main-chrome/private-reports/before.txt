@@ -1,0 +1,11 @@
+********* Start testing of MainChromeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MainChromeTest::initTestCase()
+QWARN  : MainChromeTest::sidebarReallyCollapses() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : MainChromeTest::sidebarReallyCollapses() This plugin does not support setting window masks
+FAIL!  : MainChromeTest::sidebarReallyCollapses() Compared values are not the same
+   Actual   (sidebar->width()): 185
+   Expected (0)               : 0
+D:/age/ADE/private/main-ui-stage/tests/test_main_chrome.cpp(28) : failure location
+QWARN  : MainChromeTest::sidebarReallyCollapses() QObject::disconnect: wildcard call disconnects from destroyed signal of ade::BrowserWidget::browserWidget

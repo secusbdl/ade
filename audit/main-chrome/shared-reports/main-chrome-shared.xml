@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="28"
+	timestamp="2026-11-05T17:35:04"
+	>
+	<testcase name="native_main_chrome" classname="native_main_chrome" time="3.50009" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversations" classname="native_conversations" time="18.6554" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui_audit" classname="native_ui_audit" time="6.55302" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

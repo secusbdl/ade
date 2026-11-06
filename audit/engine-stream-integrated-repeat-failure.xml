@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="7"
+	timestamp="2026-11-05T15:17:00"
+	>
+	<testcase name="native_engine_observers" classname="native_engine_observers" time="7.4106" status="fail">
+		<failure message="SEGFAULT"/>
+		<properties/>
+		<system-out>A crash occurred in D:\age\ADE\build-next\test_engine_observers.exe.
+While testing deletion
+Function time: 1829ms Total time: 7122ms
+
+Exception address: 0x00007ff63d638010
+Exception code   : 0xc0000005
+
+Stack:
+#  1: Unable to obtain symbol
+#  2: UnhandledExceptionFilter() - 0x00007ffc0279f2f0
+#  3: strncpy() - 0x00007ffc050e8110
+#  4: _C_specific_handler() - 0x00007ffc050a4b00
+#  5: _chkstk() - 0x00007ffc050e6410
+#  6: RtlWow64GetCurrentMachine() - 0x00007ffc05043a10
+#  7: KiUserExceptionDispatcher() - 0x00007ffc050e5dc0
+#  8: Unable to obtain symbol
+#  9: Unable to obtain symbol
+# 10: Unable to obtain symbol
+# 11: Unable to obtain symbol
+# 12: Unable to obtain symbol
+# 13: Unable to obtain symbol
+# 14: Unable to obtain symbol
+# 15: Unable to obtain symbol
+# 16: Unable to obtain symbol
+# 17: Unable to obtain symbol
+# 18: Unable to obtain symbol
+# 19: Unable to obtain symbol
+# 20: Unable to obtain symbol
+# 21: Unable to obtain symbol
+# 22: Unable to obtain symbol
+# 23: Unable to obtain symbol
+# 24: Unable to obtain symbol
+# 25: Unable to obtain symbol
+# 26: Unable to obtain symbol
+# 27: Unable to obtain symbol
+# 28: BaseThreadInitThunk() - 0x00007ffc0360dd90
+# 29: RtlUserThreadStart() - 0x00007ffc04ffee20
+
+</system-out>
+	</testcase>
+</testsuite>

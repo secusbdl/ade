@@ -1,0 +1,68 @@
+{
+  "status": "passed",
+  "buildsRun": false,
+  "productionReferenceModified": false,
+  "checks": [
+    {
+      "case": "syntax prepare-publication.py",
+      "passed": true
+    },
+    {
+      "case": "syntax verify-reference.py",
+      "passed": true
+    },
+    {
+      "case": "preserved reference manifests",
+      "passed": true,
+      "result": {
+        "stagewise": {
+          "files": 1400,
+          "bytes": 10798194,
+          "errors": []
+        },
+        "file-mutations": {
+          "files": 17,
+          "bytes": 108307,
+          "errors": []
+        },
+        "git-usage": {
+          "files": 16,
+          "bytes": 78341,
+          "errors": []
+        }
+      }
+    },
+    {
+      "case": "minimal declared fixture accepted",
+      "passed": true
+    },
+    {
+      "case": "stagewise extra unlisted file rejected",
+      "passed": true,
+      "exitCode": 1,
+      "errors": [
+        "Unlisted reference file: nested/unlisted-state.json"
+      ]
+    },
+    {
+      "case": "file-mutations extra unlisted file rejected",
+      "passed": true,
+      "exitCode": 1,
+      "errors": [
+        "Unlisted reference file: nested/unlisted-state.json"
+      ]
+    },
+    {
+      "case": "git-usage extra unlisted file rejected",
+      "passed": true,
+      "exitCode": 1,
+      "errors": [
+        "Unlisted reference file: nested/unlisted-state.json"
+      ]
+    },
+    {
+      "case": "fixture accepted after scoped extra-file removal",
+      "passed": true
+    }
+  ]
+}

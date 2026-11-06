@@ -1,0 +1,11 @@
+********* Start testing of MutationTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MutationTests::initTestCase()
+FAIL!  : MutationTests::rollbackRestorationSurvivesAnotherProcessExit(rollback-after-restore-created) 'results.first().success' returned FALSE. (Cannot reset owned staging file)
+D:/age/ADE/private/file-mutations-stage/tests/test_file_mutations.cpp(111) : failure location
+FAIL!  : MutationTests::rollbackRestorationSurvivesAnotherProcessExit(rollback-after-restore-chunk) 'results.first().success' returned FALSE. (Cannot reset owned staging file)
+D:/age/ADE/private/file-mutations-stage/tests/test_file_mutations.cpp(111) : failure location
+PASS   : MutationTests::rollbackRestorationSurvivesAnotherProcessExit(rollback-after-restore)
+PASS   : MutationTests::cleanupTestCase()
+Totals: 3 passed, 2 failed, 0 skipped, 0 blacklisted, 354ms
+********* Finished testing of MutationTests *********

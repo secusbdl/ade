@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "status": "Private source frozen for parent migration; no production edit by this agent.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "api": [
+    "QJsonArray AgentEngine::displayMessages() const",
+    "static QJsonArray AgentEngine::displayHistory(const QJsonArray& history)",
+    "signal AgentEngine::displayChanged()",
+    "bool AgentEngine::appendExternalToolOutput(const QString& requestId, const QString& text)"
+  ],
+  "contract": "contract.json",
+  "exampleOrderedRows": "expected-ordered-schema.json",
+  "integration": {
+    "productionPatch": "migration.patch",
+    "hashes": "manifest.json",
+    "newCoreFiles": ["src/core/AgentPresentation.h", "src/core/AgentPresentation.cpp"],
+    "changedCoreFiles": ["src/core/AgentEngine.h", "src/core/AgentEngine.cpp", "src/core/ProviderProtocol.cpp"],
+    "newTest": "tests/test_presentation.cpp",
+    "cmake": ["add_executable(test_presentation tests/test_presentation.cpp)", "target_link_libraries(test_presentation PRIVATE ade_core Qt6::Test)", "add_test(NAME native_presentation COMMAND test_presentation)"],
+    "dependencies": "No new dependency; AgentPresentation uses QtCore. Reconfigure core glob for new files.",
+    "ui": "Use static displayHistory for unhosted persisted chats; displayMessages for hosted chats. Observe displayChanged and coalesce UI rendering. Feed AgentToolHost::output(requestId,text) into appendExternalToolOutput. Attachment announcements may use the same UI-only preview seam with a mounted reference; final attachment refs merge into the originating assistant row."
+  },
+  "sourceRationale": [
+    {"path":"upstream/stagewise/packages/agent-core/src/agents/base-agent.ts", "line":3253, "behavior":"UI stream is merged into ordered message parts independently of environment snapshots."},
+    {"path":"upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts", "line":26, "behavior":"Stable message IDs, ordered parts, settled-state preservation and per-part timing are tracked separately."},
+    {"path":"upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts", "line":92, "behavior":"Text/reasoning timing begins when a part first appears; native empty block-start fixtures cover the corresponding display boundary."},
+    {"path":"audit/transcript-parity-contract.json", "behavior":"Renderer grouping, disclosure/follow rules and remaining UI scope are separately audited."}
+  ],
+  "behavior": [
+    "Each provider round has one stable assistant row and ordered text/reasoning/tool parts. Provisional state becomes retained without duplicate rows or changed part IDs.",
+    "Existing attachments, path references, snapshots and native/signed payloads remain separate and preserved. Display metadata is not sent in any of the four provider protocols.",
+    "Tool output rows merge into their originating assistant batch using exact call IDs. Reused IDs in later batches remain independent.",
+    "Partial arguments, approval, running, success/error/denial/cancellation and bounded live output are exposed. Final canonical tool results replace live previews.",
+    "Display getters do not mutate canonical history. Legacy histories derive deterministic keys and best available parts; unknown timing is omitted.",
+    "A reasoning-only interrupted response that the previous native implementation discarded can now persist as an exact, versioned host-created UI-only envelope. It carries no fabricated native signature; only that strict empty envelope is omitted from requests. Real replay fields always prevent filtering.",
+    "Measured reasoning duration uses native part start when available, otherwise first observed reasoning content. End is explicit native part completion, transition to another part, or turn termination."
+  ],
+  "bounds": {"partsPerRound":20000,"liveToolOutputUtf8Bytes":65536,"liveOutputCut":"Complete UTF-8 codepoint boundary with truncation marker; later preview chunks ignored for the same token.","retainedLegacyDisplayParts":20000},
+  "evidence": {
+    "productionBefore": {"file":"reasoning-retention-before.txt", "result":"4/4 intended cases fail: canceled reasoning is absent from stored messages in each existing provider adapter; lifecycle totals 2 passed,4 failed."},
+    "stagedApprovalBefore": {"file":"approval-reentry-before.txt", "result":"Both allow/deny decisions inside displayChanged reproduce a stale approvalRequired notification."},
+    "stagedReplayBefore": {"file":"ui-marker-replay-before.txt", "result":"Three forged markers hid legacy function_call/refusal/audio replay payloads before strict envelope validation."},
+    "stagedBoundsBefore": {"file":"display-bounds-before.txt", "result":"Saved-vs-legacy ID collision and 20,001 empty starts both reproduce before fixes."},
+    "after": ["tests-final.txt", "tests-final.xml", "core-final.txt", "observers-final.txt", "history-final.txt", "review-fixes.txt"],
+    "scope": "Loopback fake providers and fake tokens only; no actual credentials, user files or live service requests. Independent private build only. Peer review is bounded source review, not an independent test run."
+  },
+  "limits": [
+    "This is the engine presentation layer, not an exact visual/rendering parity certification; root and qt_port_review own ConversationView and real UI integration.",
+    "Old OpenAI histories only retain aggregate reasoning/content, so original interleaving cannot be reconstructed when metadata/native part order never existed.",
+    "An entirely empty interrupted part has no meaningful retained canonical content; it remains an ephemeral display row. Reasoning-only nonempty partials are persisted. Pure pre-output errors remain signaled and ephemeral rather than fabricated provider history.",
+    "Current provisional provider output is exposed by displayMessages; canonical messages() still retains it at the existing completion/interruption boundary. Mid-stream durable checkpoint and fork capture semantics are a separate lifecycle extension.",
+    "At the hard presentation part cap, failure is emitted through failed(); no extra unbounded error part is appended.",
+    "Malformed canonical history is not repaired by the projector; existing submission recovery/validation remains authoritative. Source-native tool-specific rendering, Smart allow and actions not yet implemented remain explicit broader port gaps.",
+    "UI-only interrupted reasoning retention corrects a native data-loss gap. Identical wire behavior to Stagewise for every provider interruption is not claimed.",
+    "Known-key redaction is defense in depth, not a proof that arbitrary transformed secret output cannot leak."
+  ]
+}

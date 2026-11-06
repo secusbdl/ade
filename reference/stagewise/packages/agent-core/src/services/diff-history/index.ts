@@ -1,0 +1,1677 @@
+import { DisposableService } from '../shared/disposable';
+import { isBinaryFile } from 'isbinaryfile';
+import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql';
+import { type Client, createClient } from '@libsql/client';
+import * as schema from './schema';
+import {
+  createReadStream,
+  mkdir,
+  readFile,
+  stat,
+  unlink,
+  watch,
+  writeFile,
+  type FSWatcher,
+} from '../../fs';
+import { LRUMap } from './utils/lru-map';
+import type { AgentHost } from '../../host';
+import type { Logger } from '../../host/logger';
+import type { TelemetrySink } from '../../host/telemetry';
+import type { HostPaths } from '../../host/paths';
+import type { AgentStore, AgentSystemState } from '../../store';
+import { ensureToolboxEntry } from '../../store/ensure-toolbox-entry';
+import path from 'node:path';
+import {
+  HARDCODED_DENY_SEGMENTS,
+  loadWorkspaceIgnore,
+  pickOwningWorkspace,
+  type WorkspaceIgnoreMatcher,
+} from '../../workspace';
+import {
+  type FileDiff,
+  type ToolCallFileEdit,
+  MAX_DIFF_TEXT_FILE_SIZE,
+} from '../../types/diff-history';
+import {
+  getAllOperationsForAgentInstanceId,
+  getAllOperationsForAgentInstanceIdAndFilepath,
+  getEditedFilePathsForAgentInstanceId,
+  getAllPendingOperations,
+  getPendingOperationsForAgentInstanceId,
+  getPendingOperationsForAgentInstanceIdAndFilepath,
+  insertOperation,
+  copyContentToPath,
+  retrieveContentsForOids,
+  retrieveContentForOid,
+  copyOperationsUpToInitBaseline,
+  getUndoTargetForToolCallsByFilePath,
+  getOperationsForToolCalls,
+  storeFileContent,
+  storeLargeContent,
+  hasPendingEditsForFilepath,
+  getLatestOperationIdxPerFilepath,
+  getAgentInstanceIdsWithOperationsForFilepath,
+} from './utils/db';
+import {
+  buildContributorMap,
+  buildContributorMapIncremental,
+  type ContributorMapState,
+  type ContributorMaps,
+  createFileDiffsFromGenerations,
+  type OperationWithContent,
+  segmentFileOperationsIntoGenerations,
+} from './utils/diff';
+import type { Operation, OperationMeta } from './schema';
+import type { OperationWithExternal } from './utils/db';
+import { migrateDatabase } from '../../migrate-database';
+import { registry, schemaVersion } from './migrations';
+import initSql from './schema.sql?raw';
+
+export type AgentFileEdit = {
+  agentInstanceId: string;
+  path: string;
+  toolCallId: string;
+  /**
+   * Absolute path of the mounted workspace that owns `path`, when the
+   * caller already knows it. Used as the fast-path for the gitignore
+   * check in `registerAgentEdit`. Optional — when omitted, the service
+   * walks up against its known mount set.
+   */
+  workspaceRoot?: string | null;
+} & (
+  | {
+      isExternal: false;
+      contentBefore: string | null;
+      contentAfter: string | null;
+    }
+  | {
+      isExternal: true;
+      tempPathToBeforeContent: string | null;
+      tempPathToAfterContent: string | null;
+    }
+);
+
+/**
+ * Coarse category of a filesystem path used as the telemetry-safe
+ * replacement for the raw `first_dropped_path` we used to ship in the
+ * `diff-history-fanout-cap-hit` event. Categories are intentionally
+ * chunky so the payload cannot leak usernames, repo names, or
+ * directory structure while still providing useful analytics signal
+ * (e.g. "90% of cap hits happen under node_modules").
+ */
+export type FanoutPathCategory =
+  | 'node_modules'
+  | 'build-output'
+  | 'tooling-cache'
+  | 'dotfile'
+  | 'other';
+
+const FANOUT_BUILD_OUTPUT_SEGMENTS: ReadonlySet<string> = new Set([
+  'dist',
+  'build',
+  'out',
+  '.output',
+  '.next',
+  '.nuxt',
+  '.svelte-kit',
+  '.astro',
+]);
+
+const FANOUT_TOOLING_CACHE_SEGMENTS: ReadonlySet<string> = new Set([
+  '.turbo',
+  '.cache',
+  '.parcel-cache',
+  '.vite',
+  '.angular',
+  '.gradle',
+  'coverage',
+]);
+
+/**
+ * Maps an absolute filesystem path to a coarse category for telemetry.
+ *
+ * Precedence is top-down: a match in a higher row wins even if lower
+ * rows would also match. `node_modules` deliberately outranks
+ * `dotfile` so that e.g. `node_modules/.bin/foo` still reports as
+ * `node_modules`.
+ *
+ * Never returns the path itself — that is the whole point.
+ */
+export function categorizeFanoutPath(filepath: string): FanoutPathCategory {
+  const segments = filepath.split(path.sep);
+  if (segments.includes('node_modules')) return 'node_modules';
+  for (const seg of segments) {
+    if (FANOUT_BUILD_OUTPUT_SEGMENTS.has(seg)) return 'build-output';
+    if (FANOUT_TOOLING_CACHE_SEGMENTS.has(seg)) return 'tooling-cache';
+  }
+  const basename = segments[segments.length - 1] ?? '';
+  if (basename.startsWith('.')) return 'dotfile';
+  return 'other';
+}
+
+/**
+ * Dependencies required to construct a `DiffHistoryService`.
+ *
+ * Phase 5 removes the previous `KartonService` dependency; the service
+ * now owns its `toolbox[agentId].pendingFileDiffs` and
+ * `toolbox[agentId].editSummary` state directly in `AgentStore`. These fields
+ * remain internal to agent-core for checkpoint/undo and environment context.
+ */
+export interface DiffHistoryServiceDeps {
+  host: AgentHost;
+  store: AgentStore;
+  /**
+   * Optional at construction time to preserve the existing boot order:
+   * `DiffHistoryService` is built before `MountManagerService`, which
+   * provides the mount-paths resolver. Callers may omit it and inject
+   * later via `setMountPathsResolver`. Narrow compatibility seam —
+   * will collapse to constructor injection once `MountManagerService`
+   * moves into agent-core.
+   */
+  mountPathsResolver?: () => Set<string>;
+}
+
+export class DiffHistoryService extends DisposableService {
+  private readonly logger: Logger;
+  private readonly telemetry: TelemetrySink | undefined;
+  private readonly store: AgentStore;
+  private watcher: FSWatcher | null = null;
+  private filesIgnoredByWatcher: Set<string> = new Set();
+  private currentlyWatchedFiles: Set<string> = new Set();
+  private dbDriver: Client;
+  private db: LibSQLDatabase<typeof schema>;
+  private hydratedAgentInstanceIds = new Set<string>();
+  private blobsDir: string;
+  private unsubscribeStore: (() => void) | null = null;
+
+  /**
+   * Per-file diff output cache, keyed by `${agentId}::${filepath}::${mode}`.
+   * Entries self-invalidate via `latestIdx` comparison against the ops table
+   * (append-only, so a newer idx strictly means staleness). Cleared on agent
+   * removal (pruneRemovedAgentInstances) and teardown.
+   */
+  private fileDiffCache = new Map<
+    string,
+    { latestIdx: number; diff: FileDiff }
+  >();
+
+  /**
+   * Intermediate contributor-map state cache. Key format:
+   *   `${agentId}::${filepath}::${mode}::${firstOpIdx}`
+   *
+   * Value holds the `ContributorMapState` after processing all operations
+   * up to and including `latestOpIdx`. Subsequent calls can resume from
+   * this state and replay only operations whose `idx > latestOpIdx`,
+   * turning the ~O(N-history-length) `buildContributorMap` rebuild into
+   * an O(new_ops) extension.
+   *
+   * The `firstOpIdx` is part of the key so that pending-mode trimming
+   * (which can shift the starting baseline after an accept) does not
+   * reuse a stale state from the pre-trim sequence.
+   */
+  private contributorStateCache = new Map<
+    string,
+    { latestOpIdx: number; state: ContributorMapState }
+  >();
+
+  /**
+   * Decompressed snapshot content cache, keyed by OID (SHA-256 hash).
+   * OIDs are content-addressed and immutable — once stored, the mapping
+   * never changes, so no invalidation is needed. Cleared only on teardown
+   * to bound memory across the service lifetime.
+   */
+  private oidContentCache = new LRUMap<string, string>(4096);
+
+  /**
+   * Monotonically increasing counter bumped on every operations-table
+   * mutation. Used by `updateAgentDiffState` to skip DB queries when
+   * the table has not changed since the last computation for a given agent.
+   */
+  private _opsSeq = 0;
+
+  /**
+   * Per-agent snapshot of the last `updateAgentDiffState` result, keyed
+   * by `agentInstanceId`. Entries are valid while `opsSeq` matches
+   * `this._opsSeq`. Cleared on agent removal and teardown.
+   */
+  private _agentDiffSnapshot = new Map<
+    string,
+    {
+      opsSeq: number;
+      pendingFileDiffs: FileDiff[];
+      editSummary: FileDiff[];
+    }
+  >();
+
+  /**
+   * Maximum number of file edits a single tool call may register in the
+   * ops table. Edits past this threshold are dropped on the floor — the
+   * tool's on-disk write has already succeeded; we just refuse to track
+   * it so a single rogue tool call cannot flood the diff store with
+   * thousands of entries.
+   *
+   * 50 is comfortably above any realistic hand-authored multi-file edit
+   * and well below the ~hundreds-of-files threshold at which the pending
+   * diff computation becomes UI-blocking.
+   */
+  private readonly MAX_EDITS_PER_TOOL_CALL = 50;
+
+  /**
+   * Memory-safety cap on `_toolCallEditCounts` / `_toolCallTruncatedWarned`
+   * size. These maps are keyed by `toolCallId` and have no natural
+   * expiry (a tool call completes in seconds but we never know when
+   * its last edit arrived). Rather than wire GC plumbing for what are
+   * tiny integer entries, we reset both maps when the count map
+   * crosses this threshold. Worst case: a previously-capped tool call
+   * could register 50 more edits after a reset — acceptable, and
+   * exceedingly unlikely in practice because tool calls are short-lived.
+   */
+  private static readonly MAX_TRACKED_TOOL_CALLS = 10_000;
+
+  /**
+   * Hard upper bound applied by {@link registerAgentEditBatch}. Batch
+   * registration intentionally bypasses {@link MAX_EDITS_PER_TOOL_CALL}
+   * — the iterative cap is a runaway-detection mechanism for tools
+   * that call `registerAgentEdit` in a loop, but a single coherent
+   * multi-file operation (directory move/copy/remove) is bounded by
+   * user input and must be tracked atomically for `undoToolCalls` to
+   * restore the full delta. The batch cap is sized for the actual
+   * failure mode (OOM-on-payload, not rogue iteration) and well above
+   * any realistic project subtree.
+   */
+  private static readonly MAX_EDITS_PER_BATCH = 10_000;
+
+  /** Per-tool-call running count of registered edits. */
+  private _toolCallEditCounts = new Map<string, number>();
+
+  /**
+   * Tool-call IDs for which we have already emitted the one-shot
+   * "exceeded fan-out cap" warning. Prevents log/telemetry spam.
+   */
+  private _toolCallTruncatedWarned = new Set<string>();
+
+  /**
+   * Cache of `WorkspaceIgnoreMatcher` instances keyed by absolute
+   * workspace root. The matcher holds one `Ignore` instance per
+   * `.gitignore` file found under the workspace so the check honors
+   * git's nested-`.gitignore` semantics. Entries expire after
+   * `IGNORE_TTL_MS` so edits to any `.gitignore` in the tree are
+   * eventually picked up without the complexity of a dedicated
+   * per-file watcher.
+   */
+  private _ignoreCache = new Map<
+    string,
+    { matcher: WorkspaceIgnoreMatcher; expiresAt: number }
+  >();
+  private static readonly IGNORE_TTL_MS = 30_000;
+
+  /**
+   * Injected via `setMountPathsResolver` after construction (to avoid
+   * a circular dep with ToolboxService / MountManagerService at
+   * DiffHistoryService.create() time). Returns the current set of
+   * absolute workspace root paths. Used to resolve the owning workspace
+   * of a filepath when the caller did not provide it explicitly.
+   */
+  private _mountPathsResolver: (() => Set<string>) | null = null;
+
+  private cacheKey(
+    agentId: string,
+    filepath: string,
+    mode: 'pending' | 'summary',
+  ): string {
+    return `${agentId}::${filepath}::${mode}`;
+  }
+
+  /**
+   * Injected `HostPaths` (Phase 2 pilot — plans/phase-2-host-interface.md).
+   * Replaces the direct `@/utils/paths` imports this service used to
+   * reach for; keeps `DiffHistoryService` free of any Electron-coupled
+   * path resolution.
+   */
+  private readonly paths: HostPaths;
+
+  private constructor(deps: DiffHistoryServiceDeps) {
+    super();
+    this.logger = deps.host.logger;
+    this.telemetry = deps.host.telemetry;
+    this.store = deps.store;
+    this.paths = deps.host.paths;
+    this._mountPathsResolver = deps.mountPathsResolver ?? null;
+    const dbPath = this.paths.diffHistoryDbPath();
+    this.dbDriver = createClient({ url: `file:${dbPath}`, intMode: 'bigint' });
+    this.db = drizzle(this.dbDriver, { schema });
+    this.blobsDir = this.paths.diffHistoryBlobsDir();
+  }
+
+  public static async create(
+    deps: DiffHistoryServiceDeps,
+  ): Promise<DiffHistoryService> {
+    const instance = new DiffHistoryService(deps);
+    await instance.initialize();
+    deps.host.logger.debug('[DiffHistoryService] Created service');
+    return instance;
+  }
+  private async initialize(): Promise<void> {
+    // Run database migrations
+    try {
+      await migrateDatabase({
+        // `migrateDatabase` is generic over a meta-table-carrying schema;
+        // `DiffHistoryService`'s own schema layers the meta table via
+        // `registry` at migration time, so the structural mismatch here
+        // is load-bearing and intentional. Cast through `unknown` so we
+        // don't silently drop other Drizzle type parameters.
+        db: this.db as unknown as Parameters<typeof migrateDatabase>[0]['db'],
+        client: this.dbDriver,
+        registry,
+        initSql,
+        schemaVersion,
+      });
+      this.logDebug('Database migrated successfully');
+    } catch (error) {
+      this.logError('Failed to migrate database', error);
+      throw error;
+    }
+
+    const storeFileAndAddOperation = async (
+      path: string,
+      meta: OperationMeta,
+    ) => {
+      const stats = await stat(path);
+      let isExternal = false;
+      // If file is too large, do **not** create a buffer and store as external
+      if (stats.size > MAX_DIFF_TEXT_FILE_SIZE)
+        return await this.storeExternalFile(path, meta);
+
+      const fileContent = await readFile(path, 'utf8');
+      const bufferContent = Buffer.from(fileContent, 'utf8');
+      if (await isBinaryFile(bufferContent)) isExternal = true;
+
+      if (!isExternal)
+        await storeFileContent(this.db, path, bufferContent, meta);
+      else await this.storeExternalFile(path, meta);
+    };
+
+    this.watcher = watch([], {
+      persistent: true,
+      atomic: true,
+      ignoreInitial: true,
+      awaitWriteFinish: {
+        stabilityThreshold: 150,
+        pollInterval: 50,
+      },
+    })
+      .on('change', async (path) => {
+        if (this.filesIgnoredByWatcher.has(path)) return;
+        // NOTE: we deliberately do NOT re-run `shouldTrackFilepath`
+        // here. Every path in the watch set was approved by the
+        // gitignore guard at `registerAgentEdit` time, so a change
+        // to `.gitignore` after the fact (or a newly added nested
+        // mount) must not silently suppress the user-save op for a
+        // file that still has pending ops — doing so would leave
+        // a stale current snapshot that never self-heals and could
+        // clobber user changes on Accept.
+        try {
+          await storeFileAndAddOperation(path, {
+            operation: 'edit',
+            contributor: 'user',
+            reason: 'user-save',
+          });
+        } catch (error) {
+          this.logError(`Failed to read file: ${path}`, error);
+          return;
+        }
+        this.logDebug(`File changed: ${path}`);
+        this._opsSeq++;
+        await this.updateAgentsAffectedByFilepath(path);
+      })
+      .on('unlink', async (path) => {
+        // Same rationale as the `change` handler above: re-running
+        // the gitignore filter here would cause silent data loss
+        // for files that were legitimately tracked but later fell
+        // into an ignored path.
+        if (this.filesIgnoredByWatcher.has(path)) return;
+        await insertOperation(this.db, path, null, {
+          operation: 'edit',
+          contributor: 'user',
+          reason: 'user-save',
+        });
+        this.logDebug(`File unlinked: ${path}`);
+        this._opsSeq++;
+        await this.updateAgentsAffectedByFilepath(path);
+      });
+
+    // Phase 5 (D5): agent-instance lifecycle is observed via the
+    // `AgentStore` subscription instead of a Karton state-change
+    // callback. `agents.instances` is the same structural map as the
+    // Karton mirror, so hydrate/prune semantics are identical.
+    //
+    // The reaction is deferred via `queueMicrotask` because
+    // `hydrateNewAgentInstances` synchronously calls `writeFileDiffs`,
+    // which issues a `store.update()`. `AgentStore` subscribers run
+    // inside the triggering `update()`, and the store explicitly
+    // forbids nested updates (D18). Deferring the reaction to the
+    // next microtask lets the upstream update settle first.
+    // `hydratedAgentInstanceIds` makes the deferred hydrate idempotent,
+    // so coalescing multiple rapid instance-map changes into a single
+    // micro-task is safe.
+    let hydrateQueued = false;
+    this.unsubscribeStore = this.store.subscribe((next, previous) => {
+      if (next.agents.instances === previous.agents.instances) return;
+      if (hydrateQueued) return;
+      hydrateQueued = true;
+      queueMicrotask(() => {
+        hydrateQueued = false;
+        this.hydrateNewAgentInstances();
+        this.pruneRemovedAgentInstances();
+      });
+    });
+    // Hydrate any agent instances already present in the store. Safe
+    // to run synchronously here because `initialize()` is called
+    // outside any store-update cycle.
+    this.hydrateNewAgentInstances();
+  }
+
+  private hydrateNewAgentInstances(): void {
+    const currentIds = Object.keys(this.store.get().agents.instances);
+    for (const id of currentIds) {
+      if (this.hydratedAgentInstanceIds.has(id)) continue;
+      this.hydratedAgentInstanceIds.add(id);
+      // Seed an empty internal diff state synchronously. The asynchronous
+      // operations-table scan below replaces it with the hydrated values.
+      this.writeFileDiffs(id, { pendingFileDiffs: [], editSummary: [] });
+      this.updateAgentDiffState(id)
+        .then((result) => {
+          for (const diff of result.pendingFileDiffs) {
+            this.ensureWatched(diff.path);
+          }
+        })
+        .catch((error) => {
+          this.logError(
+            `Failed to hydrate diff state for agent instance ${id}`,
+            error,
+          );
+        });
+    }
+  }
+
+  /**
+   * Atomic writer for the pair of fields owned by this service in the
+   * `AgentStore`. Both fields are written inside a single
+   * `store.update()` so subscribers observe one post-recipe state per
+   * call, matching the D18 transactional guarantee that the bridge
+   * mirror relies on.
+   */
+  private writeFileDiffs(
+    agentInstanceId: string,
+    value: { pendingFileDiffs: FileDiff[]; editSummary: FileDiff[] },
+  ): void {
+    this.store.update((draft) => {
+      const entry = ensureToolboxEntry(
+        draft as AgentSystemState,
+        agentInstanceId,
+      );
+      entry.pendingFileDiffs = value.pendingFileDiffs;
+      entry.editSummary = value.editSummary;
+    });
+  }
+
+  private pruneRemovedAgentInstances(): void {
+    const currentIds = new Set(Object.keys(this.store.get().agents.instances));
+    for (const id of this.hydratedAgentInstanceIds) {
+      if (!currentIds.has(id)) {
+        this.hydratedAgentInstanceIds.delete(id);
+        // Drop cached FileDiff entries for the removed agent so memory does
+        // not grow unboundedly across the app session.
+        const prefix = `${id}::`;
+        for (const key of this.fileDiffCache.keys()) {
+          if (key.startsWith(prefix)) this.fileDiffCache.delete(key);
+        }
+        for (const key of this.contributorStateCache.keys()) {
+          if (key.startsWith(prefix)) this.contributorStateCache.delete(key);
+        }
+      }
+    }
+  }
+
+  /**
+   * Injects the resolver used to discover which absolute paths are
+   * currently mounted as agent workspaces. Called once from `main.ts`
+   * after both `DiffHistoryService` and `ToolboxService` (which owns
+   * the `MountManagerService`) have been constructed.
+   *
+   * Without a resolver the service still functions, but
+   * `shouldTrackFilepath` falls back to segment-only denylist matching
+   * for edits whose `workspaceRoot` was not explicitly passed in.
+   */
+  public setMountPathsResolver(fn: () => Set<string>): void {
+    this._mountPathsResolver = fn;
+  }
+
+  /**
+   * Longest-prefix match of `filepath` against the currently mounted
+   * workspace roots. Returns `null` when the resolver has not been
+   * wired, when no mount is registered, or when the path lies outside
+   * every mount. Longest match wins so nested mounts resolve to the
+   * innermost workspace (whose `.gitignore` is the relevant one).
+   */
+  private findWorkspaceRoot(filepath: string): string | null {
+    const mounts = this._mountPathsResolver?.();
+    if (!mounts || mounts.size === 0) return null;
+    // Single source of truth shared with `MountManagerService` so the
+    // two callers can't drift on path-boundary / longest-prefix /
+    // filesystem-root semantics.
+    return pickOwningWorkspace(filepath, mounts) ?? null;
+  }
+
+  /**
+   * TTL-cached `WorkspaceIgnoreMatcher` for a workspace root. The
+   * matcher scans every `.gitignore` file under the workspace once
+   * per TTL and answers git-accurate ignore queries for any file
+   * beneath the root. The cache TTL is low (30s) so `.gitignore`
+   * edits are eventually honored without the complexity of a
+   * dedicated watcher on every ignore file.
+   */
+  private async getCachedIgnore(
+    workspaceRoot: string,
+  ): Promise<WorkspaceIgnoreMatcher> {
+    const now = Date.now();
+    const hit = this._ignoreCache.get(workspaceRoot);
+    if (hit && hit.expiresAt > now) return hit.matcher;
+    const matcher = await loadWorkspaceIgnore(workspaceRoot);
+    this._ignoreCache.set(workspaceRoot, {
+      matcher,
+      expiresAt: now + DiffHistoryService.IGNORE_TTL_MS,
+    });
+    return matcher;
+  }
+
+  /**
+   * Decides whether a filepath should be tracked by diff-history.
+   *
+   * Three-phase check, cheapest-first:
+   *   1. Synchronous walk-up against `HARDCODED_DENY_SEGMENTS`. This
+   *      catches the pathological cases (`node_modules`, build dirs,
+   *      tooling caches) in microseconds with zero allocations, which
+   *      matters when a runaway tool fans out across thousands of
+   *      ignored paths. Segments in this list represent universally
+   *      non-committed output — no real project keeps them under
+   *      version control — so applying them unconditionally is safe.
+   *   2. Resolve the owning workspace (caller-provided hint, else
+   *      walk-up against the mounted set) and, if found, consult the
+   *      workspace's `.gitignore` (TTL-cached). When a workspace
+   *      resolves, its `.gitignore` is **authoritative**: negations
+   *      like `!dist/keep.ts` are honored and no further segment
+   *      check is applied after it.
+   *   3. Outside any mounted workspace with the segment check already
+   *      clean: allow the edit.
+   *
+   * Never throws — returns `true` on any unexpected error so we fail
+   * open (prefer tracking over silently dropping).
+   */
+  private async shouldTrackFilepath(
+    filepath: string,
+    workspaceRoot?: string | null,
+  ): Promise<boolean> {
+    try {
+      // Phase 1: synchronous segment denylist. Hot path for runaway
+      // node_modules fan-out; rejects in microseconds.
+      const segments = filepath.split(path.sep);
+      for (const seg of segments) {
+        if (HARDCODED_DENY_SEGMENTS.has(seg)) return false;
+      }
+
+      // Phase 2: authoritative per-workspace `.gitignore`, honoring
+      // nested `.gitignore` files at every level from the root down
+      // to the file's parent. The matcher internally walks layers
+      // and takes the deepest definitive verdict, so we do NOT fall
+      // through to any further segment check after this.
+      const root = workspaceRoot ?? this.findWorkspaceRoot(filepath);
+      if (root) {
+        const matcher = await this.getCachedIgnore(root);
+        return !matcher.ignores(filepath);
+      }
+
+      // Phase 3: no workspace found, segment check already passed.
+      return true;
+    } catch (error) {
+      // Never let an ignore-check failure block a real edit. Log and
+      // fall open so the edit is tracked as it would have been before.
+      this.logError(
+        `shouldTrackFilepath failed for ${filepath} — failing open`,
+        error,
+      );
+      return true;
+    }
+  }
+
+  /**
+   * Registers an agent edit in the diff-db and updates the diff karton state.
+   * **The caller is responsible for detecting binaries/ blobs and providing before/ after content accordingly.**
+   * Binary content will be provided as temporary paths to files - the caller is responsible for cleaning up the temporary
+   * files after the edit is registered.
+   *
+   * **To mark a deletion:**
+   * - set 'before*' to content and 'after*' to null
+   *
+   * **To mark a creation:**
+   * - set 'before*' to null and 'after*' to content
+   *
+   * **For regular file edits:**
+   * - set 'before*' to content and 'after*' to content
+   *
+   * Two defensive guards apply before any DB write:
+   *   1. `shouldTrackFilepath` drops edits in gitignored / denylisted paths.
+   *   2. A per-`toolCallId` counter caps fan-out at `MAX_EDITS_PER_TOOL_CALL`.
+   * Both are silent no-ops from the caller's perspective — the tool's
+   * on-disk write has already succeeded; we just refuse to store
+   * untrackable / runaway entries in the ops table.
+   *
+   * For multi-file operations that share one tool call (directory
+   * move/copy/remove), prefer {@link registerAgentEditBatch} — the
+   * per-toolCallId cap above is a runaway-detection mechanism for
+   * iterative tools, not a payload cap, and applying it to coherent
+   * directory operations causes partial undo on the tail entries.
+   *
+   * @param edit - The edit to register
+   * @returns void
+   */
+  public async registerAgentEdit(edit: AgentFileEdit) {
+    // Guard 1: gitignore / hardcoded-denylist filter.
+    if (!(await this.shouldTrackFilepath(edit.path, edit.workspaceRoot))) {
+      this.logDebug(`Skipping ignored path: ${edit.path}`);
+      return;
+    }
+
+    // Guard 2: per-tool-call fan-out cap. Single runaway tool call can
+    // otherwise flood the ops table with thousands of entries.
+    const prev = this._toolCallEditCounts.get(edit.toolCallId) ?? 0;
+    // Memory-safety reset: if we are about to track a brand-new tool
+    // call and the map has grown past the hard cap, drop both maps.
+    // See `MAX_TRACKED_TOOL_CALLS` JSDoc for the trade-off.
+    if (
+      prev === 0 &&
+      this._toolCallEditCounts.size >= DiffHistoryService.MAX_TRACKED_TOOL_CALLS
+    ) {
+      this._toolCallEditCounts.clear();
+      this._toolCallTruncatedWarned.clear();
+    }
+    const next = prev + 1;
+    this._toolCallEditCounts.set(edit.toolCallId, next);
+    if (next > this.MAX_EDITS_PER_TOOL_CALL) {
+      if (!this._toolCallTruncatedWarned.has(edit.toolCallId)) {
+        this._toolCallTruncatedWarned.add(edit.toolCallId);
+        this.logger.warn(
+          `[DiffHistory] Tool call ${edit.toolCallId} exceeded fan-out cap ` +
+            `(${this.MAX_EDITS_PER_TOOL_CALL} edits). Further edits in ` +
+            `this call are dropped from diff history; on-disk writes are unaffected.`,
+        );
+        this.telemetry?.capture('diff-history-fanout-cap-hit', {
+          tool_call_id: edit.toolCallId,
+          agent_instance_id: edit.agentInstanceId,
+          // Intentionally NOT `edit.path` — raw paths leak usernames
+          // and repo names into analytics. See `FanoutPathCategory`.
+          path_category: categorizeFanoutPath(edit.path),
+          cap: this.MAX_EDITS_PER_TOOL_CALL,
+        });
+      }
+      return;
+    }
+
+    await this._writeEditOp(edit);
+  }
+
+  /**
+   * Registers a coherent batch of agent edits that all share one tool
+   * call (e.g. every child file of a directory move/copy/remove).
+   * Bypasses the per-`toolCallId` fan-out cap enforced by
+   * {@link registerAgentEdit} — that cap targets iterative tools and
+   * applying it to a bounded directory operation truncates the tail,
+   * leaving `undoToolCalls` unable to restore the dropped files.
+   *
+   * Safety:
+   *   - {@link shouldTrackFilepath} is still applied per edit, so
+   *     gitignored / denylisted paths are skipped exactly as in the
+   *     iterative path.
+   *   - A separate hard upper bound (`MAX_EDITS_PER_BATCH`) protects
+   *     against pathological payloads. Edits beyond the bound are
+   *     dropped from the batch with a logged warning and telemetry
+   *     event; on-disk writes (which already happened) are unaffected.
+   *   - Batch registrations do NOT increment `_toolCallEditCounts`:
+   *     the iterative cap accounting stays independent so a mixed
+   *     pattern (batch + later iterative edits under the same id) keeps
+   *     each path's protection unimpaired.
+   *
+   * @param edits - The edits to register, all expected to share one tool call.
+   */
+  public async registerAgentEditBatch(
+    edits: ReadonlyArray<AgentFileEdit>,
+  ): Promise<void> {
+    if (edits.length === 0) return;
+
+    let processed = 0;
+    let truncatedWarned = false;
+    for (const edit of edits) {
+      if (processed >= DiffHistoryService.MAX_EDITS_PER_BATCH) {
+        if (!truncatedWarned) {
+          truncatedWarned = true;
+          this.logger.warn(
+            `[DiffHistory] Batch for tool call ${edit.toolCallId} exceeded ` +
+              `payload cap (${DiffHistoryService.MAX_EDITS_PER_BATCH} edits). ` +
+              `Further edits in this batch are dropped from diff history; ` +
+              `on-disk writes are unaffected.`,
+          );
+          this.telemetry?.capture('diff-history-batch-cap-hit', {
+            tool_call_id: edit.toolCallId,
+            agent_instance_id: edit.agentInstanceId,
+            // Intentionally NOT `edit.path` — see `FanoutPathCategory`.
+            path_category: categorizeFanoutPath(edit.path),
+            cap: DiffHistoryService.MAX_EDITS_PER_BATCH,
+            batch_size: edits.length,
+          });
+        }
+        break;
+      }
+      if (!(await this.shouldTrackFilepath(edit.path, edit.workspaceRoot))) {
+        this.logDebug(`Skipping ignored path: ${edit.path}`);
+        continue;
+      }
+      await this._writeEditOp(edit);
+      processed++;
+    }
+  }
+
+  /**
+   * Writes a single agent edit's baseline + edit ops into the diff DB.
+   * Shared body of {@link registerAgentEdit} and
+   * {@link registerAgentEditBatch}; does NOT apply the gitignore
+   * filter or any cap — callers must enforce both before invoking.
+   */
+  private async _writeEditOp(edit: AgentFileEdit): Promise<void> {
+    // If path is null, it's a newly created blob
+    const hasPendingEdits = edit.path
+      ? await hasPendingEditsForFilepath(this.db, edit.path)
+      : false;
+    const needsInitBaseline = !hasPendingEdits;
+    const initMeta = {
+      operation: 'baseline',
+      contributor: 'user',
+      reason: 'init',
+    } as const;
+    // If it's a blob and it's not pending (doesn't have an init baseline) and had content before,
+    // store the content before as an init baseline
+    if (needsInitBaseline && edit.isExternal && edit.tempPathToBeforeContent) {
+      const asyncIterableBuffer = createReadStream(
+        edit.tempPathToBeforeContent,
+      );
+      await storeLargeContent(
+        this.db,
+        this.blobsDir,
+        asyncIterableBuffer,
+        edit.path,
+        initMeta,
+      );
+    }
+    // If it's a file and it's not pending (doesn't have an init baseline) and had content before,
+    // store the content before as an init baseline
+    if (needsInitBaseline && !edit.isExternal && edit.contentBefore !== null) {
+      await storeFileContent(
+        this.db,
+        edit.path,
+        Buffer.from(edit.contentBefore, 'utf8'),
+        initMeta,
+      );
+    }
+    // If no baseline exists and no previous content, add an init baseline op with null oid to mark the file as new
+    if (
+      needsInitBaseline &&
+      ((edit.isExternal && edit.tempPathToBeforeContent == null) ||
+        (!edit.isExternal && edit.contentBefore == null))
+    ) {
+      await insertOperation(this.db, edit.path, null, initMeta);
+    }
+    // Tracking edit ops:
+    // If the file was deleted (external or not), add an edit op with null oid to mark the file as deleted
+    const editMeta = {
+      operation: 'edit',
+      contributor: `agent-${edit.agentInstanceId}`,
+      reason: `tool-${edit.toolCallId}`,
+    } as const;
+    if (
+      (edit.isExternal && edit.tempPathToAfterContent === null) ||
+      (!edit.isExternal && edit.contentAfter === null)
+    ) {
+      await insertOperation(this.db, edit.path, null, editMeta);
+    }
+    // If it's a blob and it's not deleted, store the new content as an edit op
+    if (edit.isExternal && edit.tempPathToAfterContent !== null) {
+      const asyncIterableBuffer = createReadStream(edit.tempPathToAfterContent);
+      await storeLargeContent(
+        this.db,
+        this.blobsDir,
+        asyncIterableBuffer,
+        edit.path,
+        editMeta,
+      );
+    }
+    // If it's a file and it's not deleted, store the new content as an edit op
+    if (!edit.isExternal && edit.contentAfter !== null) {
+      await storeFileContent(
+        this.db,
+        edit.path,
+        Buffer.from(edit.contentAfter, 'utf8'),
+        editMeta,
+      );
+    }
+
+    this._opsSeq++;
+    // Scoped update: only the editing agent is affected by its own tool call,
+    // and we know exactly which file changed — pass the hint so
+    // `updateAgentDiffState` can take the targeted-patch fast path.
+    await this.updateHydratedAgentState(edit.agentInstanceId, [edit.path]);
+    this.ensureWatched(edit.path);
+  }
+
+  /**
+   * Recomputes and publishes diff state for a single hydrated agent.
+   * No-op if the agent is not currently hydrated. Does not update the
+   * watcher — caller is responsible for that.
+   */
+  private async updateHydratedAgentState(
+    agentInstanceId: string,
+    changedFilepaths?: string[],
+  ): Promise<void> {
+    if (!this.hydratedAgentInstanceIds.has(agentInstanceId)) return;
+    await this.updateAgentDiffState(agentInstanceId, changedFilepaths);
+  }
+
+  /**
+   * Scoped update triggered by file-watcher events (user-save, unlink):
+   * looks up which hydrated agents have any operations for the given filepath
+   * and updates only those agents, then refreshes the watcher.
+   */
+  private async updateAgentsAffectedByFilepath(
+    filepath: string,
+  ): Promise<void> {
+    const affectedIds = await getAgentInstanceIdsWithOperationsForFilepath(
+      this.db,
+      filepath,
+    );
+    for (const id of affectedIds) {
+      if (this.hydratedAgentInstanceIds.has(id)) {
+        await this.updateHydratedAgentState(id, [filepath]);
+      }
+    }
+    // Unwatch if the user-save resolved all pending diffs for this file;
+    // otherwise the file stays watched (unwatchResolvedFiles is a no-op
+    // for files that still have pending operations).
+    await this.unwatchResolvedFiles([filepath]);
+  }
+
+  private async updateAllHydratedAgentStates(): Promise<void> {
+    for (const id of this.hydratedAgentInstanceIds)
+      await this.updateAgentDiffState(id);
+    await this.updateWatcher();
+  }
+
+  private async updateAgentDiffState(
+    agentInstanceId: string,
+    changedFilepaths?: string[],
+  ): Promise<{
+    pendingFileDiffs: FileDiff[];
+    editSummary: FileDiff[];
+  }> {
+    // Fast path: if the operations table has not changed since the last
+    // computation for this agent, replay the cached result without any
+    // DB queries (~0ms instead of ~80ms).
+    const snapshot = this._agentDiffSnapshot.get(agentInstanceId);
+    if (snapshot && snapshot.opsSeq === this._opsSeq) {
+      this.writeFileDiffs(agentInstanceId, {
+        pendingFileDiffs: snapshot.pendingFileDiffs,
+        editSummary: snapshot.editSummary,
+      });
+      return {
+        pendingFileDiffs: snapshot.pendingFileDiffs,
+        editSummary: snapshot.editSummary,
+      };
+    }
+
+    // Targeted-patch path: when the caller tells us exactly which files
+    // changed AND we have a prior snapshot to patch, we can skip the full
+    // ops-table scan and only query for the changed file(s). This is the
+    // hot path for tool edits (which always touch exactly one file).
+    if (changedFilepaths && changedFilepaths.length > 0 && snapshot) {
+      const nextPending = [...snapshot.pendingFileDiffs];
+      const nextSummary = [...snapshot.editSummary];
+
+      for (const filepath of changedFilepaths) {
+        // Internal paths (apps/, plans/, logs/) never enter agent-visible
+        // diff state.
+        if (this.isInternalFilepath(agentInstanceId, filepath)) {
+          // Still drop any lingering entry for this filepath in case the
+          // classification changed (extremely unlikely, but safe).
+          const dropIdxP = nextPending.findIndex((d) => d.path === filepath);
+          if (dropIdxP !== -1) nextPending.splice(dropIdxP, 1);
+          const dropIdxS = nextSummary.findIndex((d) => d.path === filepath);
+          if (dropIdxS !== -1) nextSummary.splice(dropIdxS, 1);
+          continue;
+        }
+
+        // Pending diff for the changed file.
+        const pendingOps =
+          await getPendingOperationsForAgentInstanceIdAndFilepath(
+            this.db,
+            agentInstanceId,
+            filepath,
+          );
+        const pendingDiffs = await this.getFileDiffForOperations(
+          agentInstanceId,
+          pendingOps,
+          'pending',
+        );
+        const newPending = pendingDiffs.find((d) => d.path === filepath);
+        const existingPendingIdx = nextPending.findIndex(
+          (d) => d.path === filepath,
+        );
+        if (existingPendingIdx !== -1)
+          nextPending.splice(existingPendingIdx, 1);
+        if (newPending) nextPending.push(newPending);
+
+        // Summary diff for the changed file.
+        const allOps = await getAllOperationsForAgentInstanceIdAndFilepath(
+          this.db,
+          agentInstanceId,
+          filepath,
+        );
+        const summaryDiffs = await this.getFileDiffForOperations(
+          agentInstanceId,
+          allOps,
+          'summary',
+        );
+        const newSummary = summaryDiffs.find((d) => d.path === filepath);
+        const existingSummaryIdx = nextSummary.findIndex(
+          (d) => d.path === filepath,
+        );
+        if (existingSummaryIdx !== -1)
+          nextSummary.splice(existingSummaryIdx, 1);
+        if (newSummary) nextSummary.push(newSummary);
+      }
+
+      this.writeFileDiffs(agentInstanceId, {
+        pendingFileDiffs: nextPending,
+        editSummary: nextSummary,
+      });
+
+      this._agentDiffSnapshot.set(agentInstanceId, {
+        opsSeq: this._opsSeq,
+        pendingFileDiffs: nextPending,
+        editSummary: nextSummary,
+      });
+
+      return { pendingFileDiffs: nextPending, editSummary: nextSummary };
+    }
+
+    // Full-recompute path: no snapshot to patch, or no filepath hint.
+    // Internal-path filtering (apps/, plans/, logs/) is handled inside
+    // getFileDiffForOperations so those paths never enter the output cache.
+    const pendingFileDiffs =
+      await this.getPendingFileDiffsForAgentInstanceId(agentInstanceId);
+    const editSummary =
+      await this.getEditSummaryForAgentInstanceId(agentInstanceId);
+    this.writeFileDiffs(agentInstanceId, {
+      pendingFileDiffs,
+      editSummary,
+    });
+
+    this._agentDiffSnapshot.set(agentInstanceId, {
+      opsSeq: this._opsSeq,
+      pendingFileDiffs,
+      editSummary,
+    });
+
+    return { pendingFileDiffs, editSummary };
+  }
+
+  /**
+   * Lightweight watcher update: ensures a single filepath is watched.
+   * Use on hot paths (registerAgentEdit, file-watcher events) where we
+   * already know the file has pending edits and just needs to be added
+   * to the watch set — avoids the expensive full-table scan.
+   */
+  private ensureWatched(filepath: string): void {
+    if (!this.currentlyWatchedFiles.has(filepath)) {
+      this.watcher?.add(filepath);
+      this.currentlyWatchedFiles.add(filepath);
+    }
+  }
+
+  /**
+   * Targeted unwatch: checks only the given filepaths for remaining pending
+   * operations and unwatches any that are fully resolved.
+   * Use instead of `updateWatcher()` when the set of affected files is known.
+   */
+  private async unwatchResolvedFiles(filepaths: string[]): Promise<void> {
+    for (const filepath of filepaths) {
+      if (!this.currentlyWatchedFiles.has(filepath)) continue;
+      const stillPending = await hasPendingEditsForFilepath(this.db, filepath);
+      if (!stillPending) {
+        this.watcher?.unwatch(filepath);
+        this.currentlyWatchedFiles.delete(filepath);
+      }
+    }
+  }
+
+  /**
+   * Full watcher reconciliation: queries all pending operations to build
+   * the authoritative watch set, adding new files and removing resolved ones.
+   * Use only on cold paths (finalization/undo) where files may need unwatching.
+   */
+  private async updateWatcher(): Promise<void> {
+    const pendingDiffs = await getAllPendingOperations(this.db);
+    const pendingSet = new Set(pendingDiffs.map((diff) => diff.filepath));
+    const needsToBeWatched = pendingDiffs
+      .filter((diff) => !this.currentlyWatchedFiles.has(diff.filepath))
+      .map((diff) => diff.filepath);
+    const needsToBeUnwatched = [...this.currentlyWatchedFiles].filter(
+      (path) => !pendingSet.has(path),
+    );
+    needsToBeWatched.forEach((path) => {
+      this.watcher?.add(path);
+      this.currentlyWatchedFiles.add(path);
+    });
+    needsToBeUnwatched.forEach((path) => {
+      this.watcher?.unwatch(path);
+      this.currentlyWatchedFiles.delete(path);
+    });
+  }
+
+  /**
+   * Return distinct filepaths that an agent has edited, excluding internal
+   * paths (apps/, plans/, logs/) to stay consistent with agent-visible diff
+   * state (see `computeFileDiffs` / targeted-patch path).
+   * Lightweight query — does not load operations or snapshots.
+   */
+  public async getEditedFilePathsForAgent(
+    agentInstanceId: string,
+  ): Promise<string[]> {
+    const all = await getEditedFilePathsForAgentInstanceId(
+      this.db,
+      agentInstanceId,
+    );
+    return all.filter((p) => !this.isInternalFilepath(agentInstanceId, p));
+  }
+
+  /**
+   * Compute the net changes made by a set of tool calls. Unlike the agent-wide
+   * edit summary, the baseline for every file is the state immediately before
+   * the first selected tool call and the current state is the final selected
+   * tool call's snapshot.
+   */
+  public async getFileEditsForToolCalls(
+    agentInstanceId: string,
+    toolCallIds: string[],
+  ): Promise<ToolCallFileEdit[]> {
+    const uniqueToolCallIds = [...new Set(toolCallIds)];
+    if (uniqueToolCallIds.length === 0) return [];
+
+    const toolOperations = await getOperationsForToolCalls(
+      this.db,
+      uniqueToolCallIds,
+      agentInstanceId,
+    );
+    if (toolOperations.length === 0) return [];
+
+    const visibleToolOperations = toolOperations.filter(
+      (operation) =>
+        !this.isInternalFilepath(agentInstanceId, operation.filepath),
+    );
+    if (visibleToolOperations.length === 0) return [];
+
+    const undoTargets = await getUndoTargetForToolCallsByFilePath(
+      this.db,
+      uniqueToolCallIds,
+      agentInstanceId,
+      visibleToolOperations,
+    );
+    const baselineOperations = Object.values(undoTargets).map(
+      (operation): OperationWithExternal => ({
+        ...operation,
+        operation: 'baseline',
+        contributor: 'user',
+        reason: 'init',
+      }),
+    );
+    const relevantOperations = [
+      ...baselineOperations,
+      ...visibleToolOperations,
+    ].sort((a, b) => Number(a.idx) - Number(b.idx));
+
+    const toolCallIdsByPath = new Map<string, string[]>();
+    for (const operation of visibleToolOperations) {
+      const ids = toolCallIdsByPath.get(operation.filepath) ?? [];
+      const toolCallId = operation.reason.slice(5);
+      if (!ids.includes(toolCallId)) ids.push(toolCallId);
+      toolCallIdsByPath.set(operation.filepath, ids);
+    }
+
+    // Turn summaries intentionally exclude operations outside this tool-call
+    // set, so they must not share incremental state with agent-wide summaries.
+    const diffs = await this.computeFileDiffsUncached(
+      null,
+      relevantOperations,
+      'summary',
+    );
+
+    return diffs.flatMap<ToolCallFileEdit>((diff) => {
+      const toolCallIds = toolCallIdsByPath.get(diff.path);
+      const hasChanges = diff.isExternal
+        ? diff.baselineOid !== diff.currentOid
+        : diff.lineChanges.some((change) => change.added || change.removed) ||
+          diff.baselineOid !== diff.currentOid;
+      if (!toolCallIds || !hasChanges) return [];
+
+      if (diff.isExternal) {
+        return [
+          {
+            path: diff.path,
+            added: 0,
+            removed: 0,
+            toolCallIds,
+            changeType: diff.changeType,
+          },
+        ];
+      }
+
+      let added = 0;
+      let removed = 0;
+      for (const change of diff.lineChanges) {
+        if (change.added) added += change.count ?? 0;
+        if (change.removed) removed += change.count ?? 0;
+      }
+      return [{ path: diff.path, added, removed, toolCallIds }];
+    });
+  }
+
+  /**
+   * Finalizes an agent's pending diffs before it is archived.
+   */
+  public async finalizePendingEditsForAgent(
+    agentInstanceId: string,
+  ): Promise<void> {
+    const pendingOperations = await getPendingOperationsForAgentInstanceId(
+      this.db,
+      agentInstanceId,
+    );
+    const latestEditOids = new Map<string, string | null>();
+    for (const operation of pendingOperations) {
+      if (
+        operation.operation === 'edit' &&
+        !this.isInternalFilepath(agentInstanceId, operation.filepath)
+      ) {
+        latestEditOids.set(operation.filepath, operation.snapshot_oid);
+      }
+    }
+    if (latestEditOids.size === 0) return;
+
+    this.logDebug(
+      `Finalizing ${latestEditOids.size} pending files for agent ${agentInstanceId}`,
+    );
+    const baselineMeta: OperationMeta = {
+      operation: 'baseline',
+      contributor: 'user',
+      reason: 'accept',
+    };
+    for (const [filepath, oid] of latestEditOids) {
+      await insertOperation(this.db, filepath, oid, baselineMeta);
+    }
+
+    this._opsSeq++;
+    const changedFilepaths = [...latestEditOids.keys()];
+    // A file may contain edits from multiple agents, so refresh every hydrated
+    // agent's cached view of the finalized paths.
+    for (const id of this.hydratedAgentInstanceIds) {
+      await this.updateAgentDiffState(id, changedFilepaths);
+    }
+    await this.unwatchResolvedFiles(changedFilepaths);
+  }
+
+  private async storeExternalFile(filePath: string, meta: OperationMeta) {
+    const asyncIterableBuffer = createReadStream(filePath);
+    const oid = await storeLargeContent(
+      this.db,
+      this.blobsDir,
+      asyncIterableBuffer,
+      filePath,
+      meta,
+    );
+    return oid;
+  }
+
+  /**
+   * Undoes the given tool calls by restoring files to the state BEFORE
+   * the earliest tool-call operation for each affected file.
+   *
+   * For each file affected by any of the tool calls:
+   * 1. Finds the operation immediately before the earliest tool-call
+   * 2. Copies operations from baseline up to that point
+   * 3. Writes the restored content to disk
+   * 4. If restored to an init baseline, adds a user-save edit to close the session
+   *
+   * @param toolCallIds - The tool call IDs to undo
+   * @returns void
+   */
+  public async undoToolCalls(
+    toolCallIds: string[],
+    agentInstanceId?: string,
+  ): Promise<void> {
+    const undoTargets = await getUndoTargetForToolCallsByFilePath(
+      this.db,
+      toolCallIds,
+      agentInstanceId,
+    );
+
+    for (const [filePath, targetOp] of Object.entries(undoTargets)) {
+      // Copy operations from init baseline up to the undo target
+      const copiedOp = await copyOperationsUpToInitBaseline(
+        this.db,
+        filePath,
+        targetOp.idx,
+      );
+
+      if (!copiedOp) {
+        this.logError(
+          `Failed to copy operations for ${filePath} - no init baseline found`,
+          null,
+        );
+        continue;
+      }
+
+      // Lock file to prevent watcher from treating this write as a user change
+      this.ignoreFileForWatcher(filePath);
+
+      try {
+        // Write the restored content to disk
+        if (copiedOp.snapshot_oid === null) {
+          await unlink(filePath);
+        } else {
+          // Recreate any parent directories the original tool call may
+          // have removed. Undoing a directory delete or the source side
+          // of a directory move targets nested paths whose ancestors
+          // were just `rm -rf`'d; a naked write here ENOENTs and the
+          // restore is silently lost.
+          await mkdir(path.dirname(filePath), { recursive: true });
+          if (copiedOp.isExternal) {
+            await copyContentToPath(
+              this.blobsDir,
+              copiedOp.snapshot_oid,
+              filePath,
+            );
+          } else {
+            const content = await retrieveContentForOid(
+              this.db,
+              copiedOp.snapshot_oid,
+            );
+            if (content) await writeFile(filePath, content, 'utf8');
+          }
+        }
+
+        // Handle init baseline edge case:
+        // If we restored to an init baseline, we need to add a user-save edit
+        // with the same snapshot_oid to close the session (make b_n == e_n)
+        // Otherwise it would appear as having pending edits.
+        if (targetOp.operation === 'baseline' && targetOp.reason === 'init')
+          await insertOperation(this.db, filePath, targetOp.snapshot_oid, {
+            operation: 'edit',
+            contributor: 'user',
+            reason: 'user-save',
+          });
+      } catch (error) {
+        this.logError(`Failed to undo tool calls for ${filePath}`, error);
+      } finally {
+        // Unlock after a small delay to allow chokidar to see and ignore the event
+        setTimeout(() => this.unignoreFileForWatcher(filePath), 500);
+      }
+    }
+
+    this._opsSeq++;
+    // Fan out to all hydrated agents — other agents may also have
+    // pending/edit-summary state for the same files that the undo touched.
+    // This mirrors the cross-agent invalidation when diffs are finalized.
+    if (agentInstanceId) {
+      const changedFiles = Object.keys(undoTargets);
+      for (const id of this.hydratedAgentInstanceIds) {
+        await this.updateHydratedAgentState(id, changedFiles);
+      }
+      await this.unwatchResolvedFiles(changedFiles);
+    } else {
+      await this.updateAllHydratedAgentStates();
+    }
+  }
+
+  private async getEditSummaryForAgentInstanceId(
+    agentInstanceId: string,
+  ): Promise<FileDiff[]> {
+    const allops = await getAllOperationsForAgentInstanceId(
+      this.db,
+      agentInstanceId,
+    );
+    return this.getFileDiffForOperations(agentInstanceId, allops, 'summary');
+  }
+
+  private async getPendingFileDiffsForAgentInstanceId(
+    agentInstanceId: string,
+  ): Promise<FileDiff[]> {
+    const pendingOps = await getPendingOperationsForAgentInstanceId(
+      this.db,
+      agentInstanceId,
+    );
+    return this.getFileDiffForOperations(
+      agentInstanceId,
+      pendingOps,
+      'pending',
+    );
+  }
+
+  /**
+   * Returns true if the given filepath is an internal path (apps/, plans/, logs/)
+   * that should not be included in agent-visible diff state.
+   */
+  private isInternalFilepath(
+    agentInstanceId: string,
+    filepath: string,
+  ): boolean {
+    const appsDir = this.paths.agentAppsDir(agentInstanceId);
+    const plansDir = this.paths.plansDir();
+    const logsDir = this.paths.logsDir();
+    return (
+      filepath.startsWith(appsDir + path.sep) ||
+      filepath.startsWith(plansDir + path.sep) ||
+      filepath.startsWith(logsDir + path.sep)
+    );
+  }
+
+  /**
+   * Trims operations for `pending` mode so each filepath starts at its latest
+   * baseline. Extracted from the old getFileDiffForOperations so both cached
+   * and uncached paths can share this logic.
+   */
+  private trimPendingOpsToLatestBaseline(
+    ops: OperationWithExternal[],
+  ): OperationWithExternal[] {
+    // Trim operations to start from the latest baseline per filepath.
+    // After a partial accept, the latest baseline is the accept baseline,
+    // not the init baseline. This ensures pending diffs show only
+    // changes since the last accept.
+    const latestBaselineIdx = new Map<string, number>();
+    for (let i = 0; i < ops.length; i++) {
+      // Safe: loop index bounded by `ops.length`. The explicit non-null
+      // assertion is load-bearing under `noUncheckedIndexedAccess`.
+      const op = ops[i]!;
+      if (op.operation === 'baseline') latestBaselineIdx.set(op.filepath, i);
+    }
+    if (latestBaselineIdx.size === 0) return ops;
+
+    const trimmed: OperationWithExternal[] = [];
+    for (let i = 0; i < ops.length; i++) {
+      const op = ops[i]!;
+      const startIdx = latestBaselineIdx.get(op.filepath);
+      if (startIdx !== undefined && i >= startIdx) trimmed.push(op);
+      else if (startIdx === undefined) trimmed.push(op);
+    }
+    return trimmed;
+  }
+
+  /**
+   * Runs the full diff-compute pipeline over the given operations with no
+   * internal-path filtering. Passing no agent skips the incremental cache,
+   * which is required for operation subsets and cross-agent computations.
+   */
+  private async computeFileDiffsUncached(
+    agentInstanceId: string | null,
+    operations: OperationWithExternal[],
+    mode: 'pending' | 'summary',
+  ): Promise<FileDiff[]> {
+    const ops =
+      mode === 'pending'
+        ? this.trimPendingOpsToLatestBaseline(operations)
+        : operations;
+
+    const nonExternalOps = ops.filter((op) => !op.isExternal);
+    const externalOps = ops
+      .filter((op) => op.isExternal)
+      .map((op) => ({
+        ...op,
+        snapshot_content: null,
+      }));
+    const nonExternalOpsWithContent =
+      await this.getOperationsWithContent(nonExternalOps);
+    const mergedOps = [...nonExternalOpsWithContent, ...externalOps].sort(
+      (a, b) => Number(a.idx) - Number(b.idx),
+    );
+    const generations = segmentFileOperationsIntoGenerations(mergedOps);
+
+    if (agentInstanceId === null) {
+      const contributorMap = buildContributorMap(generations);
+      return createFileDiffsFromGenerations(generations, contributorMap);
+    }
+
+    // Per-agent path: for each file, reuse the cached contributor-map
+    // state when its `firstOpIdx` matches and its `latestOpIdx` sits
+    // inside the current op range. Otherwise rebuild from scratch for
+    // that file and seed a fresh cache entry.
+    const contributorMap: Record<string, ContributorMaps> = {};
+    for (const fileId of Object.keys(generations)) {
+      const fileOps = generations[fileId]!;
+      if (fileOps.length === 0) {
+        contributorMap[fileId] = { lineMap: {}, removalMap: {} };
+        continue;
+      }
+      const first = fileOps[0]!;
+      const filepath = first.filepath;
+      const firstOpIdx = Number(first.idx);
+      const cacheKey = this.contributorStateCacheKey(
+        agentInstanceId,
+        filepath,
+        mode,
+        firstOpIdx,
+      );
+      const cached = this.contributorStateCache.get(cacheKey);
+
+      // Reuse only if the cached latestOpIdx corresponds to an op that
+      // is still present in the current op list (so the tail after it
+      // is an unambiguous extension, not a truncation).
+      const canReuse =
+        cached !== undefined &&
+        fileOps.some((op) => Number(op.idx) === cached.latestOpIdx);
+
+      let priorState: ContributorMapState | null = null;
+      let priorLatestIdx: number | null = null;
+      let opsToProcess: OperationWithContent[];
+      if (canReuse && cached !== undefined) {
+        // structuredClone gives us an independent copy the incremental
+        // function can mutate without disturbing the cache entry (we
+        // overwrite the cache with the new finalState below).
+        priorState = structuredClone(cached.state);
+        priorLatestIdx = cached.latestOpIdx;
+        opsToProcess = fileOps;
+      } else {
+        opsToProcess = fileOps;
+      }
+
+      const { maps, finalState, finalLatestOpIdx } =
+        buildContributorMapIncremental(
+          opsToProcess,
+          priorState,
+          priorLatestIdx,
+        );
+      contributorMap[fileId] = maps;
+      if (finalLatestOpIdx >= 0) {
+        this.contributorStateCache.set(cacheKey, {
+          latestOpIdx: finalLatestOpIdx,
+          state: finalState,
+        });
+      }
+    }
+
+    return createFileDiffsFromGenerations(generations, contributorMap);
+  }
+
+  private contributorStateCacheKey(
+    agentInstanceId: string,
+    filepath: string,
+    mode: 'pending' | 'summary',
+    firstOpIdx: number,
+  ): string {
+    return `${agentInstanceId}::${filepath}::${mode}::${firstOpIdx}`;
+  }
+
+  /**
+   * Per-agent, cache-aware diff computation.
+   *
+   * Skips recomputation for files whose latest operation idx has not advanced
+   * since the last cache write. Only the changed files are recomputed.
+   * Internal paths (apps/, plans/, logs/) are filtered before any computation
+   * and never enter the cache.
+   */
+  private async getFileDiffForOperations(
+    agentInstanceId: string,
+    operations: OperationWithExternal[],
+    mode: 'pending' | 'summary',
+  ): Promise<FileDiff[]> {
+    // 1. Pending-mode trim (before cache keying so trimmed ops match what
+    //    was cached last time).
+    const trimmed =
+      mode === 'pending'
+        ? this.trimPendingOpsToLatestBaseline(operations)
+        : operations;
+
+    // 2. Drop internal paths (apps/, plans/, logs/) here so they never get
+    //    computed or cached.
+    const visibleOps = trimmed.filter(
+      (op) => !this.isInternalFilepath(agentInstanceId, op.filepath),
+    );
+    if (visibleOps.length === 0) return [];
+
+    // 3. Partition ops by filepath and resolve cache state via the latest
+    //    idx query.
+    const opsByFilepath = new Map<string, OperationWithExternal[]>();
+    for (const op of visibleOps) {
+      const list = opsByFilepath.get(op.filepath) ?? [];
+      list.push(op);
+      opsByFilepath.set(op.filepath, list);
+    }
+    const filepaths = [...opsByFilepath.keys()];
+    const latestIdxMap = await getLatestOperationIdxPerFilepath(
+      this.db,
+      filepaths,
+    );
+
+    const cachedDiffs: FileDiff[] = [];
+    const uncachedOps: OperationWithExternal[] = [];
+    const uncachedFilepaths: string[] = [];
+    for (const [filepath, fileOps] of opsByFilepath.entries()) {
+      const latestIdx = latestIdxMap.get(filepath);
+      const key = this.cacheKey(agentInstanceId, filepath, mode);
+      const cached = this.fileDiffCache.get(key);
+      if (
+        latestIdx !== undefined &&
+        cached !== undefined &&
+        cached.latestIdx === latestIdx
+      ) {
+        cachedDiffs.push(cached.diff);
+      } else {
+        uncachedOps.push(...fileOps);
+        uncachedFilepaths.push(filepath);
+      }
+    }
+
+    // 4. Compute diffs for the uncached subset and store them.
+    if (uncachedOps.length === 0) return cachedDiffs;
+
+    const computed = await this.computeFileDiffsUncached(
+      agentInstanceId,
+      uncachedOps,
+      mode,
+    );
+
+    // Index computed diffs by path so we can associate them with their
+    // latestIdx for caching. createFileDiffsFromGenerations returns one diff
+    // per unique filepath in the input ops, so a Map by path is sufficient.
+    const computedByPath = new Map<string, FileDiff>();
+    for (const diff of computed) computedByPath.set(diff.path, diff);
+
+    for (const filepath of uncachedFilepaths) {
+      const diff = computedByPath.get(filepath);
+      const latestIdx = latestIdxMap.get(filepath);
+      if (diff && latestIdx !== undefined) {
+        this.fileDiffCache.set(this.cacheKey(agentInstanceId, filepath, mode), {
+          latestIdx,
+          diff,
+        });
+      }
+    }
+
+    return [...cachedDiffs, ...computed];
+  }
+
+  private async getOperationsWithContent(
+    operations: Operation[],
+  ): Promise<OperationWithContent[]> {
+    const allOids = operations
+      .map((op) => op.snapshot_oid)
+      .filter((oid): oid is string => !!oid);
+
+    // Partition into cached and uncached OIDs.
+    const uncachedOids: string[] = [];
+    for (const oid of allOids) {
+      if (!this.oidContentCache.has(oid)) uncachedOids.push(oid);
+    }
+
+    // Fetch only the uncached subset from the database.
+    if (uncachedOids.length > 0) {
+      const fetched = await retrieveContentsForOids(this.db, uncachedOids);
+      for (const [oid, buf] of fetched.entries()) {
+        this.oidContentCache.set(oid, buf.toString('utf-8'));
+      }
+    }
+
+    const o: OperationWithContent[] = [];
+    for (const op of operations) {
+      o.push({
+        ...op,
+        snapshot_content: this.oidContentCache.get(op.snapshot_oid ?? ''),
+      } as OperationWithContent);
+    }
+    return o;
+  }
+
+  protected async onTeardown(): Promise<void> {
+    this.unsubscribeStore?.();
+    this.unsubscribeStore = null;
+    await this.watcher?.close();
+    this.watcher = null;
+    this.dbDriver.close();
+    this.filesIgnoredByWatcher.clear();
+    this.fileDiffCache.clear();
+    this.contributorStateCache.clear();
+    this.oidContentCache.clear();
+    this._agentDiffSnapshot.clear();
+    this._toolCallEditCounts.clear();
+    this._toolCallTruncatedWarned.clear();
+    this._ignoreCache.clear();
+    this._mountPathsResolver = null;
+  }
+
+  public ignoreFileForWatcher(path: string): void {
+    this.filesIgnoredByWatcher.add(path);
+  }
+  public unignoreFileForWatcher(path: string): void {
+    this.filesIgnoredByWatcher.delete(path);
+  }
+
+  private logError(error: string, e: unknown) {
+    this.logger.error(`[DiffHistory] ${error}`, e);
+  }
+  private logDebug(debug: string) {
+    this.logger.debug(`[DiffHistory] ${debug}`);
+  }
+}

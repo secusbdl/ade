@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-06",
+  "purpose": "Native/source reference checkpoint for a future ADE application; not a full Stagewise parity certificate.",
+  "upstream": {
+    "version": "1.31.1",
+    "commit": "17a0123a0e896885465df36169457199d5225eb5",
+    "preservedFiles": 1400,
+    "preservedBytes": 10798194,
+    "completeFeatureInventoryRows": 701,
+    "inventoryReferencedPathsCovered": 102
+  },
+  "implementationAdded": [
+    "Native workspace/age groups, persistent ordered pins, asynchronous Git worktree projection and reentrant result retirement.",
+    "Centered empty-state composer and history layout, independent content/file tree controls, compact-size adaptation and drawn chevrons.",
+    "Conversation/row-scoped transcript links to verified workspace files, bounded read-only attachment previews, captured ordinary browser tabs and owned live mini-apps.",
+    "Browser opening owner-lifetime guards for registration and activation callbacks, with two reproduced use-after-destruction regressions.",
+    "Corrected obsolete attachment metadata, composer size and sidebar row assumptions in tests; meaningful locked-file editor failure/retry coverage.",
+    "Optional isolated mutation-journal and worktree-usage experiments; neither is linked into ADE.",
+    "Portable toolchain path parameters, shared compiled ade_ui and verified reference/export scripts."
+  ],
+  "validation": {
+    "build": "Full configured Release build completed; Qt6.11.2 static / GCC16.2 / OpenSSL3.5.8 static. Experiments enabled for testing.",
+    "firstFullRun": {
+      "suites": 55,
+      "passed": 54,
+      "failed": [
+        "native_browser_tools"
+      ],
+      "junit": "reference-integration-details/first-full-run.xml",
+      "failure": "reference-integration-details/browser-tools-first-full.txt"
+    },
+    "finalBrowserValidation": {
+      "status": "passed",
+      "report": "reference-integration-details/browser-tools-full-final.txt",
+      "passedQtTestRows": 24,
+      "failed": 0,
+      "skipped": 0,
+      "focusedRepeats": 2,
+      "focusedRowsEach": 3,
+      "change": "Test fixture only: explicit bounded native foreground and DOM focus before every fullscreen request. Block/Ask/Allow/exit assertions unchanged. No production browser change.",
+      "cause": "Chromium rejected the hidden/unfocused fixture before native permission policy ran; controlled foreground activation reproduced all expected outcomes."
+    },
+    "retainedSuiteLogs": "reference-integration-details/suites",
+    "sourceVerifier": "1400 upstream +17 mutation +16 git/usage preserved files match manifests.",
+    "optionalExperiments": "40 mutation and30 git/usage QtTest rows passed; app integration is not implied.",
+    "finalCoverage": {
+      "suites": 55,
+      "passed": 55,
+      "basis": "54 suites passed the full integration run; the sole failed suite passed after a test-only fullscreen fixture correction. The unaffected54 suites were not redundantly rerun.",
+      "qtTestPassedRowsIncludingInitCleanup": 1117,
+      "qtTestSkippedRows": 1,
+      "skipCoverage": "Offscreen transcript browser case is intentionally skipped and passes in separate native_transcript_tabs_real Windows suite."
+    }
+  },
+  "visualReview": {
+    "generatedRenders": 14,
+    "inspected": [
+      "empty-light",
+      "empty-dark",
+      "history-dark",
+      "compact-light",
+      "content-light",
+      "content-compact-dark",
+      "files-light",
+      "files-compact-dark"
+    ],
+    "result": "No new integrated layout regression found; native editor/tab styling remains distinct from upstream. Compact filetree title truncation is expected.",
+    "rasterPolicy": "Local rendered images retained in ignored test-results; source publication retains measurements/hashes only.",
+    "files": [
+      {
+        "path": "test-results/reference-workbench-render/compact-dark.png",
+        "bytes": 19981,
+        "sha256": "56f99056263923bc2e8dbe49d74593594cf021c3cea880ca4d1d9257f0e745bb"
+      },
+      {
+        "path": "test-results/reference-workbench-render/compact-light.png",
+        "bytes": 19622,
+        "sha256": "2cd5a4fe926d51cc3802ac6dfda2dc35b117bb570861ff04c9e7376823b585ad"
+      },
+      {
+        "path": "test-results/reference-workbench-render/content-compact-dark.png",
+        "bytes": 12120,
+        "sha256": "7aeef426b3adf81b5cf169d0e422e4ae578a4b8a87a50c697ceebc98e3b1d448"
+      },
+      {
+        "path": "test-results/reference-workbench-render/content-compact-light.png",
+        "bytes": 12025,
+        "sha256": "3dff00a68b96a88f6e779fca4907d817b5d4dd61ef7cb437f2ab839f66b6140c"
+      },
+      {
+        "path": "test-results/reference-workbench-render/content-dark.png",
+        "bytes": 45892,
+        "sha256": "790db6436e4a582b4283c21e5342bac3becec5c66b1822669a2d66082eede8b3"
+      },
+      {
+        "path": "test-results/reference-workbench-render/content-light.png",
+        "bytes": 45679,
+        "sha256": "c46b08ccab311a29058bb8bb2f20a89dd96624e8feefbf64b34e6f81d78368b4"
+      },
+      {
+        "path": "test-results/reference-workbench-render/empty-dark.png",
+        "bytes": 28750,
+        "sha256": "fa313e14bbd37340f5d06b213ac077bbc82d7e4a1643deac0297df8610b94bdb"
+      },
+      {
+        "path": "test-results/reference-workbench-render/empty-light.png",
+        "bytes": 28514,
+        "sha256": "5dde0e3dc51faa09249628d081c1beb01435a1f11bc074bdf09d1de4f43f2b7e"
+      },
+      {
+        "path": "test-results/reference-workbench-render/files-compact-dark.png",
+        "bytes": 22265,
+        "sha256": "ea8d3475be3f4edb654110a093567e4c6abfba6650d6773b8727c10b6a6eed2f"
+      },
+      {
+        "path": "test-results/reference-workbench-render/files-compact-light.png",
+        "bytes": 21771,
+        "sha256": "fe5a26cadc9431c70c1191f5cf4205d43939e2eb14a28dd34774ef1aab00d74a"
+      },
+      {
+        "path": "test-results/reference-workbench-render/files-dark.png",
+        "bytes": 38010,
+        "sha256": "6c4bdb419f92b9caa8761e46ab9944b48fa33b5c0fcabca9dc606b60b325a85a"
+      },
+      {
+        "path": "test-results/reference-workbench-render/files-light.png",
+        "bytes": 38017,
+        "sha256": "378dc342b322263eb9d306c26da7f19e1d1a32a665b2642046f374c4c219fdd0"
+      },
+      {
+        "path": "test-results/reference-workbench-render/history-dark.png",
+        "bytes": 35603,
+        "sha256": "4e6b9faec82090197134ad24478db9d88b44a1951cf64878b0425c7b75e53097"
+      },
+      {
+        "path": "test-results/reference-workbench-render/history-light.png",
+        "bytes": 35571,
+        "sha256": "18b0ca56b7fd992c0ffcd035e9e0a7e24b1ffd23c9403e820999284d8808df54"
+      }
+    ]
+  },
+  "packagedBuild": {
+    "createdUtc": "2026-11-06T11:09:53.964410+00:00",
+    "purpose": "Local internal testing build for the user; source-reference checkpoint, not a signed/public binary release.",
+    "files": [
+      {
+        "path": "ADE.exe",
+        "bytes": 78490452,
+        "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ],
+    "versionCheck": "ADE 0.1.0",
+    "dependencies": "Installed WebView2 Evergreen Runtime, Windows system libraries; Git and a system shell for corresponding tools. Qt, QuickJS and compiler runtime static.",
+    "limits": "Source preservation is not native parity; no provider keys or profiles included. See source audit/reference-readiness.json. Public binary release compliance bundle and installer remain unfinished."
+  },
+  "buildPortability": {
+    "script": "scripts/build.ps1 supports explicit dependency paths and restores PATH; ConfigureOnly verified with a build path containing spaces.",
+    "preset": "mingw-static preset verified with ADE_QT_PREFIX/ADE_TOOLCHAIN_DIRECTORY/ADE_OPENSSL_ROOT.",
+    "freshExportBuild": "Pending export validation on existing machine; clean-machine toolchain provisioning remains unverified."
+  },
+  "preservedExperimentalModules": {
+    "file-mutations": {
+      "files": 17,
+      "bytes": 108307
+    },
+    "git-usage": {
+      "files": 16,
+      "bytes": 78341
+    },
+    "applicationIntegration": false
+  },
+  "limits": [
+    "Passing local fixtures establishes tested behavior, not identical hidden model reasoning, provider output or full UI/tool parity.",
+    "One intentional offscreen WebView case skip is covered by a separate actual Windows WebView suite.",
+    "Transcript link provenance is runtime-only; old/forked/restarted rows fail closed instead of retargeting. Rich attachment preview formats remain incomplete.",
+    "Full multi-mount, queued/side agents, durable undo, shell session fidelity, selected-element browser tools, rich office/media transformations, advanced editor/LSP/diff, all subscription/OAuth/account flows and installer/updater remain gaps.",
+    "No new live-provider requests were used for this checkpoint. Historical paired DeepSeek evidence is scoped in its own audit.",
+    "Binary is an internal user test build; public binary release compliance/source/relink packaging and signing are not complete."
+  ],
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "31ebe8ec56385d6240048652cf7698e67533c1e516e999a17784d1344f6fb285",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "CMakePresets.json",
+      "sha256": "2a5df27305000419ff194b093f8a1ce8b55775aee4d83d3097e4f0de469fc154",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "scripts/build.ps1",
+      "sha256": "69bf87cb7cddfcb0d4938d048813941a0a153d13474b7bcc77275c503e10b459",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "scripts/prepare-publication.py",
+      "sha256": "17ac9187ccd4ab8d14b5b37d9ccc28a4cd9cfd4449c34caf221b8285f4fbef7a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "scripts/verify-reference.py",
+      "sha256": "82a8f6b0d1072fa492f60772ce9c2858c53e5d2eef0f56017551643e7b96fe30",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.cpp",
+      "sha256": "78b21bf3eda201fb8140776b3bcec966f6d11237e90fd80c35eeaf45ea07d56f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.h",
+      "sha256": "676480d875a4ba62cb9657b31940b0706f0c7c2c80e6057eb174f891c714c4e1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "e7f974acaeb2ae71cf0e24639b18a22d7e91bac6057553a03d5a2bfd423ba158",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ChatSurface.h",
+      "sha256": "1260ce6753116084f78ea05062ad99b5f258c5640ac3149ee543fa3739d1d046",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ChevronToolButton.h",
+      "sha256": "c2e726163d4dfacc7f8dd2b0e8c46a6c4054d0aefc88d09ac6d32cd5512ac512",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "sha256": "0fc9339645e34e105cb0f482601b37dce714403dea5aa26392eff428bf42a788",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "sha256": "b55e1d74e13497b60105ee631bedebfc2982c66eb3d46011f2e813575f2fa824",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.h",
+      "sha256": "43d2163d092f051191d2c21144885a806450ee85ac7fa414d3d9bed58792374e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "01585c8dda089e1d3e3b6587663822740d74c1ba501c566134bae9fb156d3191",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "57c9d6379634e9e5b60185c31c7818d6605183827a04846b5ef78321dc821bef",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowApps.cpp",
+      "sha256": "d53c562a02504d32df37720a070f03093a7194f6b886dddb77238746cd29b685",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "ac1f966111430060bd6ca42ac2c5b012d2ec654719261f53f30b70a694075724",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "sha256": "6fd03acc7045d0d21772db165491c88baf2433bb083586c360a9b5ab4273b595",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "sha256": "5abfefef43aa6fad5a5e437a233b83f261d1719baca24e099ad64c398ac1aac7",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256": "96a59786c7f38ea7019c5d06d83ee937140a1c131d8b9d374e10390071447b2c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256": "5b9bb835959c165e38976581ea4047b64b381c443aafdcf1d52598de633b4879",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "sha256": "39d85383bfbced72ac8d016526c016293d18f042fdfbd42ea219ee8e177b438a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "sha256": "03e7cd1cc705070ded8cbfd8e583a2cae76f168ac99cddf71a00ec4f7463de28",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarModel.cpp",
+      "sha256": "2f4399e0fd885291cecbc946e4ec94a3edd478c3d6ee536e48df1cc571a6b51a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarModel.h",
+      "sha256": "07c24ba5662e44554da0d7437040fe1b8442098d13e20323c86684a015c87daf",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.cpp",
+      "sha256": "b083f47461722f4303624938c4bfe7f3b9eb99dca4c018bcc292a711cd5a45b1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarNavigation.h",
+      "sha256": "6253e985b7f39102c69bd17de98f818e320a889c935adf1b2fcb8e8716994c53",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarSplitter.h",
+      "sha256": "c321d425a00650ab9c8634d27fd862b00e2f3d96ae7d8eaba4ca583b1ada824a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/WorkbenchSplitter.h",
+      "sha256": "81e6b7859fd1fdd638eaffbcdfda95e50c776bfbd5dbf49ed3fdcc151692e273",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/render_workbench.cpp",
+      "sha256": "c5fd55546ea8256098c415e74b2d33b6c117d06d59b63db9798f8720cc054d69",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/render_workbench_layout.cpp",
+      "sha256": "25656de742a0ffc37d0e5f58e2ab4dbadbe7c4bad4f3ad083738494197bca5d8",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_attachments.cpp",
+      "sha256": "e9f06d3aa3584f10d223c850ebb315ca7dcca860adf5cdfd5ddf5fdcff024c5a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_tools.cpp",
+      "sha256": "148c2df7480f2531c51cf8230c79daf4066aec8b7bce6b141a5a6f9213822d29",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_chevron.cpp",
+      "sha256": "f01a3daa1a44dbd176a5bd52eac4ebae0d0d4c2c3de8c655a99c8e886755e2c9",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_editor.cpp",
+      "sha256": "406bfd8e4682d2f4a86bf77e7662d3ade8417146a1fc7d6245e9d66ad7a47bd8",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_host.cpp",
+      "sha256": "bf3a60baf880206d7241ddd7e1910249656085e55bd13e16b16a6197f8025df5",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "sha256": "62736809d74532c9912be1d8f6e05cd7ff79303c845ea58a53f7485a96debcc0",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_runtime.cpp",
+      "sha256": "68e50f5e4299eae8be3c78e98e1034f153a1b55a93655e60cb46b4fafe1a15c0",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_sidebar_model.cpp",
+      "sha256": "8d8e6915b2bbb1b8c9d33e1bbb3a7d3aec03393a624824c2cf3d8ab5b8e2fcff",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_sidebar_navigation.cpp",
+      "sha256": "e6ec99cb25b75e5f9d778260e085b8316f26a3b72b00df5ed7fa61fb5aa4a5f9",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "9a66b05cdec18ce1c1e6943ebf6398966c03422a280fd03dede1f399adeb185d",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_links.cpp",
+      "sha256": "ea72e4a6bd3dd8ec4d3e90bd95a9fb7b0316783790d6eff90256615cccc35672",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_ui.cpp",
+      "sha256": "3ba0b3fc9346264cd95885610a2c652682845ea3ad3fd57c020833e21b79472c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_ui_audit.cpp",
+      "sha256": "628402670cb693aac67903c6f2dc50cdc30192ec080b7853df932d2cd8a7e943",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workbench_helpers.cpp",
+      "sha256": "109e44ec683a1d410f5ed947a9b54ffc6dabb6c4b07b8e9c84e2a353f0c13f4d",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "sha256": "925ef52401577f57ab3825d5a58d9cff4157ef62dea72db82068154e9d71b829",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ]
+}

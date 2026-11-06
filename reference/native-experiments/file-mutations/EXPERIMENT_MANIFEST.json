@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "status": "Experimental native reference only; not part of production targets or full-suite totals.",
+  "license": "Project AGPL-3.0, see ../../../LICENSE. Preserve source attribution and pinned contract references.",
+  "sourceUnmodified": true,
+  "originalStage": "private/file-mutations-stage",
+  "savedValidation": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "result": "mutation-tests.txt",
+    "newValidationRun": false
+  },
+  "scopeAndLimits": "Windows local-drive single-file prototype,4MiB/file and at most2 changed paths. Existing parents only; no recursive directory operations, host adapters, raw sandbox mutation integration, grouped tool undo, UI, clone/deletion lifecycle or production exposure. Process-exit boundaries tested, not power loss; unrecorded reserved identity window fails closed.",
+  "dependencies": [
+    "Qt6::Core",
+    "Qt6::Sql",
+    "Qt6::Test",
+    "Windows system APIs"
+  ],
+  "buildReference": "CMakeLists.stage.txt preserves the original standalone staged CMake byte-for-byte. ../CMakeLists.txt supplies explicit optional root targets via ADE_BUILD_EXPERIMENTS (default OFF). The libraries remain unlinked to ADE. Fresh exported-target validation is pending parent execution; earlier saved counts are not a new build claim.",
+  "supersededHistoricalDocuments": [
+    "review-handoff.json is an earlier planning/read-lifecycle review and its planned-only mutation status is obsolete. implementation-evidence.json and final mutation-tests40-case result are later authoritative evidence.",
+    "source-manifest.json hashes reflect the old upstream Windows working-tree capture; reference/stagewise/REFERENCE_MANIFEST.json provides exact pinned Git-blob hashes."
+  ],
+  "excluded": [
+    "build artifacts",
+    "runtime profile/data",
+    "Qt or other dependency copies",
+    "rename-probe",
+    "unrelated stage sources"
+  ],
+  "files": [
+    {
+      "path": "src/FileMutationStore.h",
+      "originalStagePath": "private/file-mutations-stage/src/FileMutationStore.h",
+      "bytes": 2240,
+      "sha256": "8938c61c95563f66a9c7657c9e089c877d5d259129bc27c6270de9aa080bf85b"
+    },
+    {
+      "path": "src/FileMutationStore.cpp",
+      "originalStagePath": "private/file-mutations-stage/src/FileMutationStore.cpp",
+      "bytes": 31347,
+      "sha256": "7c213bcfce9accf7c0cdf7e9719f774c412d35b0ec109eea0317e7e8c400a3f9"
+    },
+    {
+      "path": "tests/test_file_mutations.cpp",
+      "originalStagePath": "private/file-mutations-stage/tests/test_file_mutations.cpp",
+      "bytes": 20922,
+      "sha256": "4ad0dc3026ef13f59e1a890cf7ac2b172cabcf5fa2f7072f10cb1871de25908e"
+    },
+    {
+      "path": "CMakeLists.stage.txt",
+      "originalStagePath": "private/file-mutations-stage/CMakeLists.txt",
+      "bytes": 670,
+      "sha256": "6a5bcdaf54d02712248b7fc4b5c2ff72b2a1d15720c5a2dea64624dbc89f3d56"
+    },
+    {
+      "path": "contract-inventory.json",
+      "originalStagePath": "private/file-mutations-stage/contract-inventory.json",
+      "bytes": 13232,
+      "sha256": "8cd87901d3df94d445eea7a591e58e298776be0f6896176472f6b1b44a2a3b77"
+    },
+    {
+      "path": "fixture-plan.json",
+      "originalStagePath": "private/file-mutations-stage/fixture-plan.json",
+      "bytes": 4556,
+      "sha256": "ad6f7bcb0409f075067354e19c0051d7b1511aef65e8dd1ea0eb2e6fea4cf5bb"
+    },
+    {
+      "path": "native-architecture.json",
+      "originalStagePath": "private/file-mutations-stage/native-architecture.json",
+      "bytes": 7361,
+      "sha256": "f2129ab53894df8d73761f3789de97bcdb70cb2ecbc481dcf9ec579671002bb8"
+    },
+    {
+      "path": "integration-contract.json",
+      "originalStagePath": "private/file-mutations-stage/integration-contract.json",
+      "bytes": 3442,
+      "sha256": "fd72b7c0e462335fe681d90d0ce9929fd3ee2224d47ccc43a3563303dfa214a8"
+    },
+    {
+      "path": "implementation-evidence.json",
+      "originalStagePath": "private/file-mutations-stage/implementation-evidence.json",
+      "bytes": 7177,
+      "sha256": "7fdc7be50a5e09a215853a00ce082977e1ab0d611d2bf28fbf964f362fa43c25"
+    },
+    {
+      "path": "review-handoff.json",
+      "originalStagePath": "private/file-mutations-stage/review-handoff.json",
+      "bytes": 981,
+      "sha256": "42437065bff905c967b1f9674107d3002173370bf1584379da0ea472945e50ad"
+    },
+    {
+      "path": "source-manifest.json",
+      "originalStagePath": "private/file-mutations-stage/source-manifest.json",
+      "bytes": 5010,
+      "sha256": "4ae142344219e6467c7c4133b1ae412eb45977cf3d2c6cd3ed37e8748318135e"
+    },
+    {
+      "path": "mutation-tests.txt",
+      "originalStagePath": "private/file-mutations-stage/mutation-tests.txt",
+      "bytes": 2994,
+      "sha256": "7041fbbeff76e2487fdbd6d736dfbf9aded6035c47306e6cdf58187ab141ebe2"
+    },
+    {
+      "path": "mutation-tests.xml",
+      "originalStagePath": "private/file-mutations-stage/mutation-tests.xml",
+      "bytes": 4754,
+      "sha256": "4b40df30a134a2c34b461b220ee99f66c70e9899704f6a97cf62593ba7360286"
+    },
+    {
+      "path": "review-before.txt",
+      "originalStagePath": "private/file-mutations-stage/review-before.txt",
+      "bytes": 942,
+      "sha256": "b2b5a0919ec76eaf9c6dab78824a5037a81837f30b3b50a43ef07eecc7a61b79"
+    },
+    {
+      "path": "recovery-before.txt",
+      "originalStagePath": "private/file-mutations-stage/recovery-before.txt",
+      "bytes": 934,
+      "sha256": "ac3a6ae00761b55e2ee6e3b1e2bb2a89f17833cac22743ca58d1c0dcaa35d68b"
+    },
+    {
+      "path": "restore-reopen-before.txt",
+      "originalStagePath": "private/file-mutations-stage/restore-reopen-before.txt",
+      "bytes": 1017,
+      "sha256": "0a641c6c5e28b450da57454ed13c9f9fb80002414e040bff099e42286b1586e1"
+    },
+    {
+      "path": "overlap-before.txt",
+      "originalStagePath": "private/file-mutations-stage/overlap-before.txt",
+      "bytes": 728,
+      "sha256": "5c62c04fabea5e9a629fa07510648a760807e75a74d1ba953defc3f0d05a4a8d"
+    }
+  ]
+}

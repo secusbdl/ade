@@ -1,0 +1,36 @@
+{
+  "status": "Private tab follow-on frozen; apply after migration.patch",
+  "tests": {
+    "offscreen": "9 passed, 0 failed, 1 explicit real-WebView skip, 1806 ms",
+    "realWebViewWindows": "3 passed, 0 failed, 0 skipped, 1443 ms"
+  },
+  "evidence": [
+    "audit/tab-ui-offscreen.txt",
+    "audit/tab-ui-offscreen.xml",
+    "audit/tab-real-windows.txt",
+    "audit/tab-real-windows.xml",
+    "audit/tab-ui-final.txt"
+  ],
+  "files": [
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "57c9d6379634e9e5b60185c31c7818d6605183827a04846b5ef78321dc821bef"
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "sha256": "74d9f00ec38149c47644df3e2d967d6a782a695c9b96229415213d048d10cee5"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "8207a13f379866ed8366364b923bf1a7b0601f0a2edf45fd7e690120412f65b1"
+    }
+  ],
+  "limits": [
+    "Only host-authorized ordinary http(s) tab URLs are captured at turn start; mini-app URLs are never historical ordinary-tab fallbacks.",
+    "Owned live mini-app tabs may activate, but closed mini-app references reject.",
+    "Bindings and tab snapshots are runtime-only; preexisting/forked/restarted history remains unbound.",
+    "One whole-suite Windows attempt encountered OS clipboard COM 0x800401d0; clipboard checks use the isolated offscreen platform, real WebView runs separately. No production clipboard workaround introduced.",
+    "Real fixture used localhost only; hidden WebView teardown emitted a temporary-profile cleanup warning. No matching fixture browser/test processes remained after completion.",
+    "First handoff hashes describe first-frozen inputs; the three updated inputs are preserved under tab-baseline and superseded by this manifest."
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "exception": "0xc0000005",
+  "imageBase": "0x7ff772e10000",
+  "method": "MinGW nm sorted text symbols; PE preferred image base0x140000000 plus ASLR normalization",
+  "frames": [
+    {
+      "address": "0x7ff773621349",
+      "normalized": "0x140811349",
+      "symbol": "updateObjects(QList<QObject const*> const&)",
+      "offset": "0xe9"
+    },
+    {
+      "address": "0x7ff774aa53ef",
+      "normalized": "0x141c953ef",
+      "symbol": "main::{lambda(_EXCEPTION_POINTERS*)#1}::_FUN(_EXCEPTION_POINTERS*)",
+      "offset": "0x6f"
+    },
+    {
+      "address": "0x7ff773621349",
+      "normalized": "0x140811349",
+      "symbol": "updateObjects(QList<QObject const*> const&)",
+      "offset": "0xe9"
+    },
+    {
+      "address": "0x7ff773b373e2",
+      "normalized": "0x140d273e2",
+      "symbol": "QStyleSheetStyle::repolish(QApplication*)",
+      "offset": "0x422"
+    },
+    {
+      "address": "0x7ff7740752d9",
+      "normalized": "0x1412652d9",
+      "symbol": "ade::MainWindow::applyPreferences()",
+      "offset": "0xa59"
+    },
+    {
+      "address": "0x7ff7740926a6",
+      "normalized": "0x1412826a6",
+      "symbol": "ade::MainWindow::MainWindow(QString, QWidget*)",
+      "offset": "0x766"
+    },
+    {
+      "address": "0x7ff7739c5d06",
+      "normalized": "0x140bb5d06",
+      "symbol": "MainChromeTest::repeatedShownWindowTeardownPreservesStyleObservers() [clone .isra.0]",
+      "offset": "0xd6"
+    },
+    {
+      "address": "0x7ff773cd130b",
+      "normalized": "0x140ec130b",
+      "symbol": "QMetaMethodInvoker::invokeImpl(QMetaMethod, void*, Qt::ConnectionType, long long, void const* const*, char const* const*, QtPrivate::QMetaTypeInterface const* const*)",
+      "offset": "0xa7b"
+    },
+    {
+      "address": "0x7ff7737a0955",
+      "normalized": "0x140990955",
+      "symbol": "QMetaMethod::invokeImpl(QMetaMethod, void*, Qt::ConnectionType, long long, void const* const*, char const* const*, QtPrivate::QMetaTypeInterface const* const*)",
+      "offset": "0x85"
+    },
+    {
+      "address": "0x7ff774306bc2",
+      "normalized": "0x1414f6bc2",
+      "symbol": "QTest::invokeTestMethodIfValid(QMetaMethod, QObject*)",
+      "offset": "0x72"
+    },
+    {
+      "address": "0x7ff7748c71bd",
+      "normalized": "0x141ab71bd",
+      "symbol": "QTest::TestMethods::invokeTestOnData(int) const",
+      "offset": "0x3dd"
+    },
+    {
+      "address": "0x7ff7748c602b",
+      "normalized": "0x141ab602b",
+      "symbol": "QTest::TestMethods::invokeTest(int, QLatin1String, std::optional<QTest::WatchDog>&) const",
+      "offset": "0x5eb"
+    },
+    {
+      "address": "0x7ff7748c69fa",
+      "normalized": "0x141ab69fa",
+      "symbol": "QTest::TestMethods::invokeTests(QObject*) const",
+      "offset": "0x34a"
+    },
+    {
+      "address": "0x7ff774301584",
+      "normalized": "0x1414f1584",
+      "symbol": "QTest::qRun()",
+      "offset": "0x964"
+    },
+    {
+      "address": "0x7ff774301c63",
+      "normalized": "0x1414f1c63",
+      "symbol": "QTest::qExec(QObject*, int, char**)",
+      "offset": "0x13"
+    },
+    {
+      "address": "0x7ff774d87497",
+      "normalized": "0x141f77497",
+      "symbol": "main",
+      "offset": "0x97"
+    },
+    {
+      "address": "0x7ff772e113ba",
+      "normalized": "0x1400013ba",
+      "symbol": "__tmainCRTStartup",
+      "offset": "0x32c"
+    },
+    {
+      "address": "0x7ff772e11080",
+      "normalized": "0x140001080",
+      "symbol": ".l_start",
+      "offset": "0x12"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+********* Start testing of FileToolRaceTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : FileToolRaceTests::initTestCase()
+PASS   : FileToolRaceTests::aliasRetargetAfterValidationNeverExposesOtherDirectory(shallow-list)
+PASS   : FileToolRaceTests::aliasRetargetAfterValidationNeverExposesOtherDirectory(recursive-list)
+PASS   : FileToolRaceTests::aliasRetargetAfterValidationNeverExposesOtherDirectory(directory-read)
+PASS   : FileToolRaceTests::aliasRetargetAfterValidationNeverExposesOtherDirectory(directory-preview)
+PASS   : FileToolRaceTests::heldWorkerCancellationAndSameIdReplacement(cancel-only)
+PASS   : FileToolRaceTests::heldWorkerCancellationAndSameIdReplacement(same-id-replacement)
+PASS   : FileToolRaceTests::destroyedOwnerStorageCanBeProtectedWhileWorkerCompletes()
+PASS   : FileToolRaceTests::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 742ms
+********* Finished testing of FileToolRaceTests *********

@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "status": "private-frozen-ready-for-later-integration",
+  "productionMigration": false,
+  "productionCleanupEnabled": false,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "handoff": "HANDOFF.md",
+  "files": [
+    {
+      "stagedPath": "src/git/WorktreeUsage.h",
+      "productionPath": "src/git/WorktreeUsage.h",
+      "sha256": "cd7d5ead3e4e71be72b1aa31363d845e49a9189ad1beac1e459442a2cf62e626",
+      "bytes": 2471
+    },
+    {
+      "stagedPath": "src/git/WorktreeUsage.cpp",
+      "productionPath": "src/git/WorktreeUsage.cpp",
+      "sha256": "153b363f6557a6d4280244db8850dc67155be2becf0f9f3c81152400c85399f4",
+      "bytes": 7071
+    },
+    {
+      "stagedPath": "src/git/WorktreeUsageJournal.h",
+      "productionPath": "src/git/WorktreeUsageJournal.h",
+      "sha256": "bc7c5ecc6ab1ccfa04f9bce6b6b86088ecffa821fd365bdc932547f7ad5d748e",
+      "bytes": 1884
+    },
+    {
+      "stagedPath": "src/git/WorktreeUsageJournal.cpp",
+      "productionPath": "src/git/WorktreeUsageJournal.cpp",
+      "sha256": "e7136c267e1a1966c74763be1e4709262270ddbbfd54ce3be571b377ed167b5a",
+      "bytes": 13207
+    },
+    {
+      "stagedPath": "src/git/WorktreeUsageIdentity.h",
+      "productionPath": "src/git/WorktreeUsageIdentity.h",
+      "sha256": "58a9ab24495ec5505b58658ca1db30e00f86cf162e09dee401e7b8f9f2b710dc",
+      "bytes": 528
+    },
+    {
+      "stagedPath": "src/git/WorktreeUsageIdentity.cpp",
+      "productionPath": "src/git/WorktreeUsageIdentity.cpp",
+      "sha256": "3c369e840cfb0a2a79b5e26c78dc47095193603f3392cb56ef053d566a7095fa",
+      "bytes": 6975
+    },
+    {
+      "stagedPath": "tests/test_git_usage.cpp",
+      "productionPath": "tests/test_git_usage.cpp",
+      "sha256": "578659934a9db8ee2d6535bf8675140b5b9d06bc4355ec1768dcea526a6dbe42",
+      "bytes": 18320
+    }
+  ],
+  "dependencies": [
+    "Existing ade_git QtCore target",
+    "Windows FILE_ID_INFO physical identity; unsupported calls fail closed",
+    "Existing GitTypes.h, not the copied staged header"
+  ],
+  "excluded": [
+    "src/git/GitTypes.h",
+    "CMakeLists.txt",
+    "build/",
+    "rename-probe/"
+  ],
+  "validation": {
+    "testExecutable": "build/test_git_usage.exe",
+    "textLog": "audit/tests-final.txt",
+    "junitLog": "audit/tests-final.xml",
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 1871,
+    "platform": "Windows 11, Qt 6.11.2 static, GCC 16.2.0"
+  },
+  "integrationPrerequisites": [
+    "Stable persisted archive/delete/fork lifecycle and explicit live workspace owners",
+    "Serial journal owner and current durable session-history revision",
+    "Authorized async Git inspection with mount/context generation checks",
+    "Remain scope-incomplete until actual tracking coverage is established"
+  ],
+  "nextPhaseExcluded": [
+    "Automatic cleanup",
+    "Destructive candidate UI",
+    "Multi-workspace Conversation model",
+    "Power-loss or hostile concurrent-writer guarantees"
+  ]
+}

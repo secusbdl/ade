@@ -1,0 +1,17 @@
+********* Start testing of UiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UiTest::initTestCase()
+PASS   : UiTest::storeRoundTripAndInvalidFile()
+PASS   : UiTest::storeRejectsStaleOrCorruptOverwrite()
+QWARN  : UiTest::conversationSelectionPreservesWorkspaces() QFont::setPointSize: Point size <= 0 (-1), must be greater than 0
+PASS   : UiTest::conversationSelectionPreservesWorkspaces()
+PASS   : UiTest::draftsStayWithTheirConversations()
+PASS   : UiTest::selectionsKeepInstanceAndModelIdentity()
+PASS   : UiTest::encryptedProviderStoreRejectsStaleAndCorruptWrites()
+FAIL!  : UiTest::emptyComposerStaysCompact() 'composer.height()<=220' returned FALSE. ()
+D:/age/ADE/tests/test_ui.cpp(90) : failure location
+PASS   : UiTest::sendStreamsAndPersists()
+PASS   : UiTest::browserPreferencesAndDownloadsReachNativeHost()
+PASS   : UiTest::cleanupTestCase()
+Totals: 10 passed, 1 failed, 0 skipped, 0 blacklisted, 2351ms
+********* Finished testing of UiTest *********

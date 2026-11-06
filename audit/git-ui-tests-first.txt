@@ -1,0 +1,29 @@
+********* Start testing of GitUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitUiTest::initTestCase()
+QWARN  : GitUiTest::scopeAndDisabledActions() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+QWARN  : GitUiTest::scopeAndDisabledActions() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : GitUiTest::scopeAndDisabledActions()
+QWARN  : GitUiTest::stagedAndWorkingPreview() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+PASS   : GitUiTest::stagedAndWorkingPreview()
+QWARN  : GitUiTest::lateWorkspaceResponsesIgnored() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+PASS   : GitUiTest::lateWorkspaceResponsesIgnored()
+QWARN  : GitUiTest::createMountAndHostGuard() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+QWARN  : GitUiTest::createMountAndHostGuard() This plugin does not support propagateSizeHints()
+QWARN  : GitUiTest::createMountAndHostGuard() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::createMountAndHostGuard()
+QWARN  : GitUiTest::mainAndCheckedOutBranchesDisabled() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+QWARN  : GitUiTest::mainAndCheckedOutBranchesDisabled() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::mainAndCheckedOutBranchesDisabled()
+QWARN  : GitUiTest::explicitDirtyDeletion() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+QWARN  : GitUiTest::explicitDirtyDeletion() This plugin does not support propagateSizeHints()
+QWARN  : GitUiTest::explicitDirtyDeletion() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::explicitDirtyDeletion()
+QWARN  : GitUiTest::refreshUpdatesSelectedPreview() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+PASS   : GitUiTest::refreshUpdatesSelectedPreview()
+QWARN  : GitUiTest::renderNativePanel() QFont::setPointSizeF: Point size <= 0 (0.000000), must be greater than 0
+PASS   : GitUiTest::renderNativePanel()
+PASS   : GitUiTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 45986ms
+********* Finished testing of GitUiTest *********

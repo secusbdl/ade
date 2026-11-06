@@ -1,0 +1,14 @@
+********* Start testing of MutationTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MutationTests::initTestCase()
+FAIL!  : MutationTests::anotherLiveOwnerCannotRecoverPreparedWork() Compared values are not the same
+   Actual   (during)             : "rolled_back"
+   Expected (QString("prepared")): "prepared"
+D:/age/ADE/private/file-mutations-stage/tests/test_file_mutations.cpp(97) : failure location
+FAIL!  : MutationTests::multiEditExpansionRejectedBeforeLargeAllocation() Compared values are not the same
+   Actual   (child.exitCode()): 77
+   Expected (0)               : 0
+D:/age/ADE/private/file-mutations-stage/tests/test_file_mutations.cpp(100) : failure location
+PASS   : MutationTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 93ms
+********* Finished testing of MutationTests *********

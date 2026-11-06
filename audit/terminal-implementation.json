@@ -1,0 +1,102 @@
+{
+  "upstream_commit": "17a0123a0e896885465df36169457199d5225eb5",
+  "source_references": [
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/terminal/index.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/terminal-panel/_components/per-terminal-content.tsx",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/karton-contracts/ui/index.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts",
+    "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts"
+  ],
+  "separation": "This module implements user-controlled terminal tabs. Agent execution sessions remain a separate backend contract.",
+  "api": {
+    "include": "terminal/TerminalWidget.h",
+    "constructor": "TerminalWidget(QWidget *parent=nullptr)",
+    "start": "bool start(const QString &cwd, QString *error=nullptr, const QStringList &command={})",
+    "lifetime": "stop(), isRunning(), processId(); destruction kills only its owned Windows job/process tree",
+    "state": "workingDirectory(), terminalModel(), process(), selectedText()",
+    "appearance": "setDarkTheme(bool), setZoomPercent(int50..200), zoomPercent()",
+    "signals": [
+      "titleChanged(QString)",
+      "workingDirectoryChanged(QString)",
+      "exited(quint32)",
+      "errorOccurred(QString)"
+    ],
+    "build": [
+      "add_subdirectory(src/terminal)",
+      "target_link_libraries(ADE PRIVATE ade_terminal)",
+      "test_terminal.cpp links ade_terminal Qt6::Test; use a console test executable because it self-spawns native fixtures"
+    ],
+    "keyboard_routing": "Application Ctrl+W,Ctrl+T,Ctrl+Alt+T,Ctrl+Backquote,Ctrl+Alt+Left/Right,F11 shortcuts can reach parent; terminal claims other key chords."
+  },
+  "upstream_contracts": {
+    "createTerminal": "cwd plus optional agentInstanceId; default home/fallback directory",
+    "terminalInput": "raw input string to PTY",
+    "terminalResize": "cols/rows applied to PTY and headless screen",
+    "getTerminalSnapshot": "serialized screen+5000history with baseOffset/endOffset to prevent duplicate replay after remount",
+    "lifetime": "window-scoped terminal sessions survive agent/view switches; persisted tabs respawn a new shell on restart",
+    "metadata": [
+      "OSC0/1/2 titles",
+      "OSC7 CWD",
+      "OSC11 theme background reply",
+      "foreground process/metadata polling"
+    ],
+    "appearance": "Roboto Mono13px, normal/bold, lineHeight1, cursor blink;5000scrollback;theme ANSI palette from OKLCH",
+    "shortcuts": [
+      "Mod+Alt+T new terminal",
+      "Ctrl+Backquote focus/toggle terminal",
+      "terminal-specific zoom persisted globally"
+    ]
+  },
+  "implemented": [
+    "ConPTY real interactive console with independent reader/writer/monitor threads, UTF8 raw transport",
+    "4MiB bounded queued input/output; normal output backpressure rather than unbounded Qt signal queues",
+    "native process Job Object assigned before suspended child resumes; kill-on-close descendants",
+    "synchronous owned teardown with repeated I/O cancellation; generation guard prevents old exit/output callbacks affecting restarted session",
+    "VT screen/cursor/erase/movement/alternate screen/256 colors/truecolor/attributes/reflow via patched libvterm",
+    "5000history lines; native grid paint, scrollbar and mouse drag selection/copy; selection clears when history is evicted",
+    "keyboard/function/application-cursor/control keys;AltGr;IME committed text;Tab kept in terminal;focus/mouse protocols",
+    "bracketed clipboard paste emitted atomically;escape/control bytes filtered from paste payload",
+    "OSC fragmented title and local-file cwd;4096-byte metadata cap;OSC11 background response;no OSC52 host clipboard access",
+    "PowerShell/pwsh default shell with original-prompt wrapper to emit CWD;custom executable/argv API",
+    "Roboto Mono13px base,50..200% zoom, light/dark upstream OKLCH palette transformed to sRGB"
+  ],
+  "verified": {
+    "tests": "audit/terminal-tests.txt",
+    "result": "17 passed,0 failed,0 skipped",
+    "platform": "Windows11;staticQt6.11.2;GCC16.2MinGW",
+    "cases": [
+      "byte-splitUTF8 including supplementary emoji and combining characters",
+      "splitVT RGB/color/erase/alt-screen/cursor",
+      "5000history cap,resize,reflow,clear-history",
+      "Ctrl+C,arrowapplicationmode,DSR,OSC11,bracketpaste",
+      "fragmentedOSCtitle,Unicodecwd,100KiB OSC cap",
+      "overlong CSI10000args,10000-digitparameters,embeddedNUL,fragmentedinvalidsequence",
+      "actual ConPTY ASCII/Japanese/emoji input,Ctrl+C,resize93x31,exit17",
+      "actual parent+descendant job cleanup with retained process handles",
+      "missingexecutable/baddimensions/fallbackcwd/restart",
+      "20000-line liveoutput and immediate stop",
+      "nativewidgetinput/zoom/geometry",
+      "saturated4MiB input plus repeatedrestart rejects stale exit signals",
+      "realPowerShell promptOSC7 andUnicodecwdchange",
+      "Tab/AltGr andatomic escape-filtered bracketedpaste",
+      "empty REP safe before first glyph,10000 split combining marks bounded,global reversevideo"
+    ],
+    "visuals": [
+      "audit/native-terminal-preview.png",
+      "audit/native-terminal-dark-preview.png"
+    ],
+    "visual_method": "Widget rendered into QPixmap without showing/focusing a window; both previews inspected. Existing user ADE PID44036 untouched."
+  },
+  "remaining_gaps": [
+    "MainWindow terminal tabs, app-global shortcuts, terminal zoom persistence and tab/CWD restoration are root integration work pending this handoff.",
+    "No foreground-process tree/status polling or local-server ownership integration yet; processId and OSC metadata are exposed.",
+    "Native model persists while widget exists; no cross-process serialized VT snapshot/offset API needed for in-process view retention, but destroy/recreate snapshot persistence is not implemented.",
+    "libvterm is not xterm: uncommon advanced sequences, Unicode grapheme/ZWJ/BiDi shaping, double-width/double-height lines, blink/conceal/cursor behavior need broader application matrix.",
+    "Native selection is character-grid drag only; no word/triple-click selection, drag-autoscroll, or soft-wrap-aware clipboard joining.",
+    "IME committed input is supported; preedit overlay is not implemented.",
+    "5000-line scrollback reflow/selection behavior needs additional large real-application comparison; rasterization/native scrollbar not pixel-identical.",
+    "VT parser audited targeted bound/overflow cases only; further fuzz/security/conformance audit remains.",
+    "An output backlog over4MiB can be discarded only during forced/natural teardown to guarantee pipe drainage; ordinary running output applies backpressure.",
+    "Shell profile, job nesting, highDPI, and older Windows10 ConPTY variants not fully matrix-tested. Windows10v1809+ systemConPTY required."
+  ]
+}

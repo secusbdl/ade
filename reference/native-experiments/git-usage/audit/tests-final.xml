@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UsageTests" timestamp="2026&#x002D;11&#x002D;05T15:38:47" hostname="VOID" tests="30" failures="0" errors="0" skipped="0" time="1.871">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UsageTests" time="0.000"/>
+  <testcase name="exactAgeAndSnoozeBoundary" classname="UsageTests" time="0.000"/>
+  <testcase name="unknownNeverBecomesNeverUsed" classname="UsageTests" time="0.000"/>
+  <testcase name="newInstanceDoesNotInheritOldPathHistory" classname="UsageTests" time="0.000"/>
+  <testcase name="liveGuardsOverridePreviouslyEligible" classname="UsageTests" time="0.000"/>
+  <testcase name="unknownStorageScopeAndFutureTimeBlock" classname="UsageTests" time="0.000"/>
+  <testcase name="mountRegistrySupportsMultipleOwnersAndMounts" classname="UsageTests" time="0.000"/>
+  <testcase name="archivedHistoryIsNotAnImplicitMount" classname="UsageTests" time="0.000"/>
+  <testcase name="failedMountReplacementPreservesCurrent" classname="UsageTests" time="0.000"/>
+  <testcase name="staleMountedPathProtectsRecreatedInstance" classname="UsageTests" time="0.000"/>
+  <testcase name="asynchronousMountResultsCannotRestoreAnOldWorkspace" classname="UsageTests" time="0.000"/>
+  <testcase name="releasedAndRecreatedOwnerRejectsOldCompletion" classname="UsageTests" time="0.000"/>
+  <testcase name="journalRetainsReconnectedWorkspacesAndMaximumUse" classname="UsageTests" time="0.016"/>
+  <testcase name="journalImportsRemainUnknownAndPathReuseIsIsolated" classname="UsageTests" time="0.012"/>
+  <testcase name="verifiedNewInstanceUsesCreationProtection" classname="UsageTests" time="0.010"/>
+  <testcase name="cleanRestartPreservesUsageAndCrashStartsRecoveryFloor" classname="UsageTests" time="0.025"/>
+  <testcase name="changedOrUnknownHistoryRevisionStartsRecoveryFloor" classname="UsageTests" time="0.026"/>
+  <testcase name="journalLockBlocksSecondWriter" classname="UsageTests" time="0.009"/>
+  <testcase name="storageAliasRetargetCannotRedirectWrites" classname="UsageTests" time="0.085"/>
+  <testcase name="corruptAndOversizedStorageArePreserved(json)" classname="UsageTests" time="0.005"/>
+  <testcase name="corruptAndOversizedStorageArePreserved(oversize)" classname="UsageTests" time="0.008"/>
+  <testcase name="corruptAndOversizedStorageArePreserved(wrong&#x002D;schema)" classname="UsageTests" time="0.004"/>
+  <testcase name="duplicateIdentitiesAreRejected" classname="UsageTests" time="0.014"/>
+  <testcase name="externalConflictPreservesDiskAndMemory" classname="UsageTests" time="0.009"/>
+  <testcase name="cleanupHealthMustValidateTheCurrentJournalRevision" classname="UsageTests" time="0.010"/>
+  <testcase name="snoozesPruneOnlyAfterCompleteSuccessfulScan" classname="UsageTests" time="0.021"/>
+  <testcase name="physicalIdentitySurvivesCheckoutButChangesAfterRecreation" classname="UsageTests" time="0.694"/>
+  <testcase name="identityProbeRejectsChangedMetadataRelationships" classname="UsageTests" time="0.459"/>
+  <testcase name="recreatedRootWithSameAdministrativeDirectoryIsANewInstance" classname="UsageTests" time="0.460"/>
+  <testcase name="cleanupTestCase" classname="UsageTests" time="0.000"/>
+</testsuite>

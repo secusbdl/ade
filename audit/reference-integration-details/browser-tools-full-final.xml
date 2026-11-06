@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCase name="BrowserToolsTest">
+  <Environment>
+    <QtVersion>6.11.2</QtVersion>
+    <QtBuild>Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)</QtBuild>
+    <QTestVersion>6.11.2</QTestVersion>
+  </Environment>
+  <TestFunction name="initTestCase">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="1.4668"/>
+  </TestFunction>
+  <TestFunction name="definitionsAndStableTabs">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="24.6174"/>
+  </TestFunction>
+  <TestFunction name="domNavigationHistoryAndScreenshot">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="687.153"/>
+  </TestFunction>
+  <TestFunction name="outOfOrderResponsesAreCorrelated">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="386.581"/>
+  </TestFunction>
+  <TestFunction name="consoleCaptureFiltersDelayAndNavigation">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="526.537"/>
+  </TestFunction>
+  <TestFunction name="timeoutIgnoresLateCompletion">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="662.949"/>
+  </TestFunction>
+  <TestFunction name="cancellationAndDuplicateIdsSettleOnce">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="472.25"/>
+  </TestFunction>
+  <TestFunction name="closingTabSettlesPendingRead">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="770.87"/>
+  </TestFunction>
+  <TestFunction name="invalidArgumentsAndProtocolErrors">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="466.824"/>
+  </TestFunction>
+  <TestFunction name="profilesDoNotSharePageStorage">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="810.441"/>
+  </TestFunction>
+  <TestFunction name="bridgeCanBeDestroyedWithPendingProtocolRequest">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="675.657"/>
+  </TestFunction>
+  <TestFunction name="permissionDefaultsAndExactOriginExceptions">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="0.3748"/>
+  </TestFunction>
+  <TestFunction name="notificationDefaultsOverrideAndAskAreEnforced">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="567.046"/>
+  </TestFunction>
+  <TestFunction name="permissionTimeoutNavigationAndLateDecision">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="694.466"/>
+  </TestFunction>
+  <TestFunction name="changingPolicyResolvesOutstandingPermission">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="400.963"/>
+  </TestFunction>
+  <TestFunction name="browserCanBeDeletedDuringPermissionPrompt">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="396.281"/>
+  </TestFunction>
+  <TestFunction name="fullscreenPolicyGatesNativeWindowRequest">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="985.065"/>
+  </TestFunction>
+  <TestFunction name="clearSelectedProfileDataPreservesUnselectedTypes">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="767.298"/>
+  </TestFunction>
+  <TestFunction name="downloadSelectionPreservesExistingFilesAndSavesBytes">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="742.98"/>
+  </TestFunction>
+  <TestFunction name="downloadPauseResumeAndCancel">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="2425.72"/>
+  </TestFunction>
+  <TestFunction name="downloadDecisionTimeoutAndDestruction">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="1212.2"/>
+  </TestFunction>
+  <TestFunction name="downloadCanBeDestroyedWhileDestinationIsAccepted">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="674.664"/>
+  </TestFunction>
+  <TestFunction name="dataClearRejectsUnreadyAndDuplicateRequests">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="952.31"/>
+  </TestFunction>
+  <TestFunction name="cleanupTestCase">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="0.0547"/>
+  </TestFunction>
+  <Duration msecs="15306.9"/>
+</TestCase>

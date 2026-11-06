@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-05",
+  "stagewiseCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstreamCss": "apps/browser/src/shared/tailwind/browser-base.css",
+  "upstreamBodyFamilyAlias": "stagewise-builtin-geist",
+  "upstreamMonospaceFamily": "Roboto Mono",
+  "selection": "Geist Mono is imported upstream but is not the canonical --font-mono selection; do not replace Roboto Mono with it.",
+  "dependencyIdentity": "Font name tables identify Geist Version 1.600 and Roboto Mono Version 3.001. The repository pnpm geist@1.7.2 entry does not identify these manually vendored browser font assets.",
+  "fonts": [
+    {
+      "file": "Geist-Variable.ttf",
+      "family": "Geist",
+      "style": "Regular",
+      "version": "1.600",
+      "sha256": "995c579489b33cd28a6732d7aa7ca1b46c2faa832c18b4063933d7652c39932b",
+      "license": "OFL-1.1",
+      "licenseFile": "Geist-OFL.txt",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/449415077ee4ffc191b4e7e557cd35e88b1b98fd/fonts/Geist/variable/Geist%5Bwght%5D.ttf",
+      "publisherTag": "1.6.0",
+      "publisherCommit": "449415077ee4ffc191b4e7e557cd35e88b1b98fd",
+      "modified": false,
+      "stagewiseCounterpart": "apps/browser/assets/fonts/Geist/Geist[wght].woff2",
+      "stagewiseSha256": "7b52771a5d85404af36cfe5b0c47f7ca9afd459fd159cc4073a10b6355dd0441",
+      "unitsPerEm": 1000,
+      "weightRange": [
+        100,
+        900
+      ]
+    },
+    {
+      "file": "Geist-Italic-Variable.ttf",
+      "family": "Geist",
+      "style": "Italic",
+      "version": "1.600",
+      "sha256": "73eacb165c003de2159368f09dda4b2953683c3b455d8ff1afafe74b6d1b54df",
+      "license": "OFL-1.1",
+      "licenseFile": "Geist-OFL.txt",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/449415077ee4ffc191b4e7e557cd35e88b1b98fd/fonts/Geist/variable/Geist-Italic%5Bwght%5D.ttf",
+      "publisherTag": "1.6.0",
+      "publisherCommit": "449415077ee4ffc191b4e7e557cd35e88b1b98fd",
+      "modified": false,
+      "stagewiseCounterpart": "apps/browser/assets/fonts/Geist/Geist-Italic[wght].woff2",
+      "stagewiseSha256": "c13de9a3edf37dde72447b4bfdb01871eb9a30bc39286cd0fd139fdea5f88130",
+      "unitsPerEm": 1000,
+      "weightRange": [
+        100,
+        900
+      ]
+    },
+    {
+      "file": "RobotoMono-Variable.ttf",
+      "family": "Roboto Mono",
+      "style": "Regular",
+      "version": "3.001",
+      "sha256": "ffe6db2a820fad13df78365b4d471a5adb5d7530f409d462aa105a109586eb94",
+      "license": "OFL-1.1",
+      "licenseFile": "RobotoMono-OFL.txt",
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/assets/fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf",
+      "modified": false,
+      "byteIdenticalToStagewise": true,
+      "unitsPerEm": 2048,
+      "weightRange": [
+        100,
+        700
+      ]
+    },
+    {
+      "file": "RobotoMono-Italic-Variable.ttf",
+      "family": "Roboto Mono",
+      "style": "Italic",
+      "version": "3.001",
+      "sha256": "5f960ce95c4c0ef44fe76095901eb44b5e02e82cc38f0093741191f0732e453b",
+      "license": "OFL-1.1",
+      "licenseFile": "RobotoMono-OFL.txt",
+      "source": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/assets/fonts/RobotoMono/RobotoMono-Italic-VariableFont_wght.ttf",
+      "modified": false,
+      "byteIdenticalToStagewise": true,
+      "unitsPerEm": 2048,
+      "weightRange": [
+        100,
+        700
+      ]
+    }
+  ],
+  "licenses": [
+    {
+      "file": "Geist-OFL.txt",
+      "source": "https://raw.githubusercontent.com/vercel/geist-font/449415077ee4ffc191b4e7e557cd35e88b1b98fd/OFL.txt",
+      "sha256": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f"
+    },
+    {
+      "file": "RobotoMono-OFL.txt",
+      "source": "https://raw.githubusercontent.com/googlefonts/RobotoMono/e45fb408287175a9e8b6aef3aa617e3d20a50b1e/OFL.txt",
+      "sha256": "50ab8dd54680d3473f649c9db86fece88434d097c7834475c1c72d2f8c429215"
+    }
+  ],
+  "geistComparison": {
+    "method": "fontTools 4.63.0 compared publisher original TTFs with Stagewise WOFF2 assets. No font generation or glyph edits performed.",
+    "equal": [
+      "All regular glyph coordinates: 969 glyphs",
+      "All italic glyph coordinates: 970 glyphs",
+      "Glyph order and cmap",
+      "Every horizontal glyph metric",
+      "hhea, OS/2, GPOS, GDEF, HVAR, MVAR, fvar, gvar"
+    ],
+    "differences": [
+      "File-container/head checksum/timestamp representation",
+      "Normal face STAT metadata and two names for the static italic axis",
+      "GSUB optional ss10 lookup representation differs (two lookups versus combined representation); no screenshot-level byte/raster identity claimed"
+    ],
+    "scope": "The upstream stylesheet enables liga and calt, not ss10. Same design and default metrics do not establish pixel-identical Qt/Chromium rasterization."
+  },
+  "deployment": "All four TTFs and both complete OFL license texts are embedded via resources.qrc. Register using QFontDatabase after QApplication. Keep OS font merging for scripts not supplied by these Latin/Greek/Cyrillic-oriented fonts. AppFonts does not install fonts system-wide.",
+  "verification": {
+    "nativeQt": "Independent static Qt 6.11.2 / GCC 16.2.0 / Windows 11 build passed all four font cases (QtTest totals 6 passed, 0 failed, 0 skipped including init/cleanup).",
+    "platform": "windows",
+    "sourceFormatProbe": "On the actual Windows QPA plugin, QFontDatabase::addApplicationFont returned -1 for pinned upstream Geist WOFF2 and 0 for publisher original Geist TTF. This justifies embedding the original TTF counterpart.",
+    "unicode": "Tests verify installed Arabic fallback; no universal glyph coverage claim."
+  }
+}

@@ -1,0 +1,456 @@
+import { getAvailableModel } from './available-models';
+import { describe, expect, it } from 'vitest';
+import {
+  createThinkingProviderOptionsPatch,
+  getEffectiveThinkingSelection,
+  getSupportedThinkingOptions,
+  getThinkingProviderForRoute,
+  type ThinkingCapableModel,
+} from './model-thinking-capabilities';
+
+const openAiModel: ThinkingCapableModel = {
+  modelId: 'gpt-5.5',
+  officialProvider: 'openai',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'medium' } },
+    openai: { reasoningEffort: 'medium', reasoningSummary: 'auto' },
+  },
+};
+
+const googleProModel: ThinkingCapableModel = {
+  modelId: 'gemini-3.1-pro-preview',
+  officialProvider: 'google',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'medium' } },
+    google: {
+      thinkingConfig: { includeThoughts: true, thinkingLevel: 'high' },
+    },
+  },
+};
+
+const googleFlashModel: ThinkingCapableModel = {
+  modelId: 'gemini-3-flash-preview',
+  officialProvider: 'google',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'medium' } },
+    google: {
+      thinkingConfig: { includeThoughts: true, thinkingLevel: 'medium' },
+    },
+  },
+};
+
+const anthropicOpusModel: ThinkingCapableModel = {
+  modelId: 'claude-opus-4.8',
+  officialProvider: 'anthropic',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'medium' } },
+    anthropic: { thinking: { type: 'adaptive' }, effort: 'medium' },
+  },
+};
+
+const anthropicConservativeModel: ThinkingCapableModel = {
+  modelId: 'claude-opus-4.6',
+  officialProvider: 'anthropic',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'medium' } },
+    anthropic: { thinking: { type: 'adaptive' }, effort: 'medium' },
+  },
+};
+
+const glm52Model: ThinkingCapableModel = {
+  modelId: 'glm-5.2',
+  officialProvider: 'z-ai',
+  thinkingEnabled: true,
+  providerOptions: {
+    stagewise: { reasoning: { enabled: true, effort: 'xhigh' } },
+    openai: { reasoningEffort: 'xhigh' },
+  },
+};
+
+describe('model thinking capabilities', () => {
+  it('coerces unsupported OpenAI minimal away from provider options', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: openAiModel,
+        route: { providerMode: 'official', modelProvider: 'openai' },
+        override: { enabled: true, provider: 'openai', value: 'minimal' },
+      }),
+    ).toEqual({
+      openai: { reasoningEffort: 'medium', reasoningSummary: 'auto' },
+    });
+  });
+
+  it('emits OpenAI none when gpt-5.5 thinking is disabled', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: openAiModel,
+        route: { providerMode: 'official', modelProvider: 'openai' },
+        override: { enabled: false, provider: 'openai', value: 'high' },
+      }),
+    ).toEqual({
+      openai: { reasoningEffort: 'none', reasoningSummary: undefined },
+    });
+  });
+
+  it('emits OpenAI xhigh for gpt-5.5 extra high', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: openAiModel,
+        route: { providerMode: 'official', modelProvider: 'openai' },
+        override: { enabled: true, provider: 'openai', value: 'xhigh' },
+      }),
+    ).toEqual({
+      openai: { reasoningEffort: 'xhigh', reasoningSummary: 'auto' },
+    });
+  });
+
+  it('uses model-specific Google thinking option sets', () => {
+    expect(
+      getSupportedThinkingOptions(googleProModel, {
+        providerMode: 'official',
+        modelProvider: 'google',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high']);
+
+    expect(
+      getSupportedThinkingOptions(googleFlashModel, {
+        providerMode: 'official',
+        modelProvider: 'google',
+      }).map((option) => option.value),
+    ).toEqual(['minimal', 'low', 'medium', 'high']);
+  });
+
+  it('never emits Google xhigh', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: googleProModel,
+        route: { providerMode: 'official', modelProvider: 'google' },
+        override: { enabled: true, provider: 'google', value: 'xhigh' },
+      }),
+    ).toEqual({
+      google: {
+        thinkingConfig: { includeThoughts: true, thinkingLevel: 'high' },
+      },
+    });
+  });
+
+  it('filters Anthropic advanced values by model family', () => {
+    expect(
+      getSupportedThinkingOptions(anthropicOpusModel, {
+        providerMode: 'official',
+        modelProvider: 'anthropic',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high', 'xhigh', 'max']);
+
+    expect(
+      getSupportedThinkingOptions(anthropicConservativeModel, {
+        providerMode: 'official',
+        modelProvider: 'anthropic',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high', 'max']);
+  });
+
+  it('emits Anthropic max for supported adaptive models', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: anthropicOpusModel,
+        route: { providerMode: 'official', modelProvider: 'anthropic' },
+        override: { enabled: true, provider: 'anthropic', value: 'max' },
+      }),
+    ).toEqual({ anthropic: { thinking: { type: 'adaptive' }, effort: 'max' } });
+  });
+
+  it('uses Anthropic-native options for Stagewise-routed Claude models', () => {
+    expect(
+      getSupportedThinkingOptions(anthropicOpusModel, {
+        providerMode: 'stagewise',
+        modelProvider: 'anthropic',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high', 'xhigh', 'max']);
+  });
+
+  it('emits Anthropic patches for Stagewise-routed Claude overrides', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: anthropicOpusModel,
+        route: { providerMode: 'stagewise', modelProvider: 'anthropic' },
+        override: { enabled: true, provider: 'anthropic', value: 'max' },
+      }),
+    ).toEqual({ anthropic: { thinking: { type: 'adaptive' }, effort: 'max' } });
+  });
+
+  it('applies valid legacy Stagewise overrides in Stagewise provider-native mode', () => {
+    expect(
+      getEffectiveThinkingSelection(
+        anthropicOpusModel,
+        { enabled: true, provider: 'stagewise', value: 'high' },
+        { providerMode: 'stagewise', modelProvider: 'anthropic' },
+      ),
+    ).toMatchObject({ provider: 'anthropic', value: 'high' });
+  });
+
+  it('falls back for invalid legacy Stagewise overrides in provider-native mode', () => {
+    expect(
+      getEffectiveThinkingSelection(
+        anthropicOpusModel,
+        { enabled: true, provider: 'stagewise', value: 'minimal' },
+        { providerMode: 'stagewise', modelProvider: 'anthropic' },
+      ),
+    ).toMatchObject({ provider: 'anthropic', value: 'medium' });
+  });
+
+  it('uses conservative values for OpenAI-compatible providers', () => {
+    expect(
+      getSupportedThinkingOptions('kimi-k2-thinking', {
+        providerMode: 'official',
+        modelProvider: 'moonshotai',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high']);
+  });
+
+  it('exposes max-labeled xhigh reasoning for GLM 5.2 on OpenAI-compatible routes', () => {
+    const options = getSupportedThinkingOptions(glm52Model, {
+      providerMode: 'official',
+      modelProvider: 'z-ai',
+    });
+
+    expect(options.map((option) => option.value)).toEqual([
+      'low',
+      'medium',
+      'high',
+      'xhigh',
+    ]);
+    expect(options.at(-1)).toMatchObject({ value: 'xhigh', label: 'Max' });
+  });
+
+  it('emits OpenAI-compatible xhigh for GLM 5.2 max reasoning', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: glm52Model,
+        route: { providerMode: 'official', modelProvider: 'z-ai' },
+        override: {
+          enabled: true,
+          provider: 'openai-compatible',
+          value: 'xhigh',
+        },
+      }),
+    ).toEqual({ openai: { reasoningEffort: 'xhigh' } });
+  });
+
+  it('coerces legacy GLM 5.2 max overrides to OpenAI-compatible xhigh', () => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: glm52Model,
+        route: { providerMode: 'official', modelProvider: 'z-ai' },
+        override: {
+          enabled: true,
+          provider: 'openai-compatible',
+          value: 'max',
+        },
+      }),
+    ).toEqual({ openai: { reasoningEffort: 'xhigh' } });
+  });
+
+  it('uses OpenAI-compatible values for custom chat completions endpoints', () => {
+    expect(
+      getSupportedThinkingOptions('gpt-5.5', {
+        providerMode: 'custom',
+        modelProvider: 'openai',
+        customEndpointApiSpec: 'openai-chat-completions',
+      }).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high']);
+  });
+
+  it('uses protocol-safe options for unknown external routes', () => {
+    expect(
+      getThinkingProviderForRoute({
+        providerMode: 'official',
+      }),
+    ).toBe('openai-compatible');
+    expect(
+      getThinkingProviderForRoute({
+        providerMode: 'custom',
+      }),
+    ).toBe('openai-compatible');
+  });
+
+  it('recognises GPT-5.6 models as known GPT-5 reasoning models', () => {
+    // The regex must match version 6+ — not just 1-5.
+    // GPT-5.6 models should get the full GPT-5 option set (including 'none').
+    for (const id of [
+      'gpt-5.6',
+      'gpt-5.6-sol',
+      'gpt-5.6-terra',
+      'gpt-5.6-luna',
+    ]) {
+      expect(
+        getSupportedThinkingOptions(id, {
+          providerMode: 'official',
+          modelProvider: 'openai',
+        }).map((option) => option.value),
+      ).toEqual(['none', 'low', 'medium', 'high', 'xhigh']);
+    }
+  });
+
+  it('uses the supported GPT-6 reasoning effort ranges', () => {
+    for (const id of ['gpt-6-sol', 'gpt-6-luna']) {
+      expect(
+        getSupportedThinkingOptions(id, {
+          providerMode: 'official',
+          modelProvider: 'openai',
+        }).map((option) => option.value),
+      ).toEqual(['none', 'low', 'medium', 'high', 'xhigh', 'max']);
+    }
+
+    for (const id of ['gpt-6-astra', 'gpt-6.1-sol']) {
+      expect(
+        getSupportedThinkingOptions(id, {
+          providerMode: 'official',
+          modelProvider: 'openai',
+        }).map((option) => option.value),
+      ).toEqual(['low', 'medium', 'high', 'xhigh', 'max']);
+    }
+  });
+
+  it('uses reasoning efforts reported by a discovered runtime', () => {
+    const model: ThinkingCapableModel = {
+      modelId: 'gpt-5.6-sol',
+      providerOptions: {},
+      thinkingEnabled: true,
+      thinkingEfforts: ['low', 'medium', 'high', 'max', 'ultra'],
+      defaultThinkingEffort: 'high',
+    };
+
+    expect(
+      getSupportedThinkingOptions(model).map((option) => option.value),
+    ).toEqual(['low', 'medium', 'high', 'max', 'ultra']);
+    expect(getEffectiveThinkingSelection(model)?.value).toBe('high');
+  });
+});
+
+describe('current model reasoning contracts', () => {
+  it.each([
+    'claude-opus-5.5',
+    'claude-fable-5.1',
+    'gpt-6-astra',
+    'gpt-6.1-sol',
+    'glm-5.3',
+    'kimi-k3',
+  ])('keeps required thinking enabled for %s even with a saved off override', (id) => {
+    const model = getAvailableModel(id)!;
+    expect(
+      getEffectiveThinkingSelection(model, { enabled: false })?.enabled,
+    ).toBe(true);
+    const patch = createThinkingProviderOptionsPatch({
+      model,
+      override: { enabled: false },
+    });
+    expect(JSON.stringify(patch)).not.toContain('disabled');
+    expect(JSON.stringify(patch)).not.toContain('none');
+  });
+  it('does not offer unsupported minimal thinking for Gemini 3.8', () => {
+    expect(
+      getSupportedThinkingOptions(getAvailableModel('gemini-3.8-flash')!).map(
+        (o) => o.value,
+      ),
+    ).toEqual(['low', 'medium', 'high']);
+  });
+  it.each([
+    'gpt-6-astra',
+    'gpt-6.1-sol',
+  ])('offers the required GPT-6 effort range without off for %s', (id) => {
+    expect(
+      getSupportedThinkingOptions(getAvailableModel(id)!).map((o) => o.value),
+    ).toEqual(['low', 'medium', 'high', 'xhigh', 'max']);
+  });
+  it.each([
+    'glm-5.3',
+    'deepseek-v4.1-flash',
+    'kimi-k3',
+  ])('omits unsupported medium reasoning for %s', (id) => {
+    expect(
+      getSupportedThinkingOptions(getAvailableModel(id)!).map((o) => o.value),
+    ).toEqual(['low', 'high', id === 'deepseek-v4.1-flash' ? 'max' : 'xhigh']);
+  });
+});
+
+describe('compatible reasoning wire values', () => {
+  it.each([
+    ['deepseek/deepseek-v4.1-flash', 'max'],
+    ['deepseek-flash', 'max'],
+    ['z-ai/glm-5.3', 'xhigh'],
+    ['moonshotai/kimi-k3', 'xhigh'],
+  ])('constrains prefixed and native IDs for %s', (modelId, maxEffort) => {
+    const route = { thinkingProvider: 'openai-compatible' as const };
+    const options = getSupportedThinkingOptions(modelId, route);
+    expect(options.map((option) => option.value)).toEqual([
+      'low',
+      'high',
+      maxEffort,
+    ]);
+    expect(options.at(-1)?.label).toBe('Max');
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: { modelId, thinkingEnabled: true, providerOptions: {} },
+        route,
+        override: {
+          provider: 'openai-compatible',
+          enabled: true,
+          value: maxEffort,
+        },
+      }),
+    ).toEqual({ openai: { reasoningEffort: maxEffort } });
+  });
+
+  it('uses supported Kimi K3 defaults without an override', () => {
+    const model = getAvailableModel('kimi-k3')!;
+    expect(model.providerOptions).toMatchObject({
+      stagewise: { reasoning: { effort: 'high' } },
+      moonshotai: { effort: 'high' },
+    });
+    expect(getEffectiveThinkingSelection(model)?.value).toBe('high');
+  });
+});
+
+describe('discovered model reasoning defaults', () => {
+  it.each([
+    'deepseek/deepseek-v4.1-flash',
+    'deepseek-flash',
+    'z-ai/glm-5.3',
+    'moonshotai/kimi-k3',
+  ])('uses high by default for %s', (modelId) => {
+    const model = { modelId, thinkingEnabled: true, providerOptions: {} };
+    const route = { thinkingProvider: 'openai-compatible' as const };
+    expect(getEffectiveThinkingSelection(model, undefined, route)?.value).toBe(
+      'high',
+    );
+    expect(
+      createThinkingProviderOptionsPatch({
+        model,
+        route,
+        override: { enabled: true },
+      }),
+    ).toEqual({ openai: { reasoningEffort: 'high' } });
+    expect(
+      getEffectiveThinkingSelection(model, { value: 'low' }, route)?.value,
+    ).toBe('low');
+  });
+
+  it.each([
+    'kimi-k3',
+    'moonshotai/kimi-k3',
+  ])('keeps Kimi reasoning enabled on compatible routes for %s', (modelId) => {
+    expect(
+      createThinkingProviderOptionsPatch({
+        model: { modelId, thinkingEnabled: true, providerOptions: {} },
+        route: { thinkingProvider: 'openai-compatible' },
+        override: { enabled: false },
+      }),
+    ).toEqual({ openai: { reasoningEffort: 'high' } });
+  });
+});

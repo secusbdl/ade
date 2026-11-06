@@ -1,0 +1,97 @@
+{
+  "scope": "Windows Qt 6.11.2 static MinGW native AgentEngine response and setup callbacks",
+  "reproducedDefects": [
+    {
+      "trigger": "A textDelta observer cancels the current JSON response and immediately submits a replacement turn.",
+      "observed": "The old response continues through tool and completion state, interrupts the replacement, and no replacement text is delivered.",
+      "report": "audit/engine-stream-replacement-before.txt",
+      "exitCode": 1
+    },
+    {
+      "trigger": "A textDelta observer destroys the engine during an SSE response; fixture protects its former storage with PAGE_NOACCESS.",
+      "observed": "The original parser continues accessing destroyed engine state and terminates with Windows access violation 0xC0000005.",
+      "report": "audit/engine-stream-deletion-before.txt",
+      "exitCode": 3221225477
+    },
+    {
+      "trigger": "Destroy the engine during an SSE reasoning callback while its network backend is delivering a reply signal.",
+      "observed": "A first complete run passed, but a subsequent focused run crashed in QNetworkReply::downloadProgress/doActivate after synchronous manager destruction. The targeted Google SSE reasoning row then reproduced immediately.",
+      "report": "audit/engine-stream-integrated-repeat-failure.xml",
+      "trace": "audit/engine-stream-qt-reply-lifetime-trace.txt",
+      "exitCode": 3221225477
+    }
+  ],
+  "before": {
+    "engineSha256": "47ce2347ca79a2d121a64ca879a85caa3ac8ac1429d6ae9cd38e5761906cef76",
+    "fixtureExeSha256": "f36a77bbdba3a996b09f1b1af324ade7cadfe47b7b9783770f5eae19430155d5",
+    "fixture": "private/stream-observer-stage"
+  },
+  "fix": [
+    "Stop parsing buffered SSE events, terminal JSON, recursive native content blocks and subsequent tool calls after a callback changes turn generation, cancels the turn or destroys its owner.",
+    "Guard the finish callback against reply replacement while draining pending data.",
+    "Guard model-fallback publication before scheduling another request.",
+    "Keep a value copy of the message preparer and provider while calling it; abort the old request path after callback cancellation, replacement or destruction.",
+    "Deliver readyRead/finished to the engine with queued connections bound to the originating reply and turn generation. Engine observers run outside the network backend signal frame; stale queued signals cannot finish a replacement reply."
+  ],
+  "coverage": {
+    "streamRows": 48,
+    "setupRows": 6,
+    "streamDimensions": [
+      "OpenAI-compatible, Anthropic, Google and Responses",
+      "JSON and SSE",
+      "text and reasoning observers",
+      "cancel, immediate replacement and protected-storage destruction"
+    ],
+    "setupDimensions": [
+      "message preparer and model fallback observer",
+      "cancel, immediate replacement and protected-storage destruction"
+    ],
+    "assertions": [
+      "Only intended text is published",
+      "The replacement completes exactly once",
+      "Old buffered tool calls never write stale.txt",
+      "No extra request is sent",
+      "Destroyed-owner storage stays inaccessible"
+    ],
+    "privateResults": [
+      {
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7493,
+        "report": "private/stream-observer-stage/fixed.txt"
+      },
+      {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 719,
+        "report": "private/stream-observer-stage/setup-fixed.txt"
+      }
+    ],
+    "productionTest": "tests/test_engine_observers.cpp",
+    "integratedResult": {
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "report": "out/files-archives-watchers-checkpoint/test-details/native_engine_observers.txt"
+    },
+    "queuedReplyFix": {
+      "reports": [
+        "test-results/engine-stream-queued-reply-fixed.xml",
+        "private/stream-observer-stage/queued-reply-repeats.json"
+      ],
+      "focusedSuitesPassed": 2,
+      "observerCasesIncludingLifecycle": 56,
+      "coreCasesIncludingLifecycle": 48,
+      "targetedCrashRowRepeatsPassed": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "limits": [
+    "Local loopback HTTP fixtures only; no live model or upstream paired run.",
+    "Windows protected-storage checks establish the tested callback boundaries, not universal race or lifetime safety.",
+    "This work does not add missing provider protocols, authentication or complete feature parity."
+  ]
+}

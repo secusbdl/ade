@@ -1,0 +1,47 @@
+{
+  "state": "FROZEN",
+  "frozenUtc": "2026-11-06T10:43:31.562495+00:00",
+  "productionEdited": false,
+  "sharedBuildUsed": false,
+  "patch": "migration.patch",
+  "manifest": "manifest.json",
+  "scope": "Font-independent trailing chevrons for grouping and connected workspace buttons only.",
+  "behavior": [
+    "ChevronToolButton paints a small antialiased path with reserved suffix width; ordinary Qt label/icon/background/focus/click behavior retained.",
+    "Group by captions no longer contain U+2304. SidebarNavigation continues owning the same popup callbacks.",
+    "Connected workspace caption uses a drawn chevron. Disconnected/current-worktree-detach state hides it and retains existing Connect workspace + behavior."
+  ],
+  "verification": {
+    "testRowsPassed": 9,
+    "failed": 0,
+    "log": "audit/tests.txt",
+    "xml": "audit/tests.xml",
+    "renders": "audit/renders",
+    "testedZoomPercent": [
+      70,
+      100,
+      130
+    ],
+    "testedThemes": [
+      "light",
+      "dark"
+    ],
+    "inspected": [
+      "chevrons-light-100.png",
+      "chevrons-dark-100.png",
+      "chevrons-light-70.png",
+      "chevrons-dark-130.png"
+    ]
+  },
+  "integration": [
+    "Apply narrow patch; do not copy private CMake or baseline.",
+    "Root UI glob picks up the header. Existing grouping/workspace pointer types and callbacks are unchanged.",
+    "Optional test_chevron target links ade_ui and Qt6::Test/Qt6::QOffscreenIntegrationPlugin; import offscreen plugin. Test source includes ui/ChevronToolButton.h.",
+    "Root main source snapshots were copied before this patch; preserve any later merge/lifecycle fixes.",
+    "Only the isolated button fixture was compiled/rendered here. Parent integrated compile/tests remain required for edited MainWindow/SidebarNavigation wiring."
+  ],
+  "limits": [
+    "This is a minimal glyph-rendering correction, not a broader layout/menu implementation.",
+    "No new menu or activation path is introduced. No production file or shared build was changed."
+  ]
+}

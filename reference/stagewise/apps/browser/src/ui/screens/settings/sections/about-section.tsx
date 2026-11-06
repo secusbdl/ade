@@ -1,0 +1,586 @@
+import { useKartonState, useKartonProcedure } from '@ui/hooks/use-karton';
+import { cn } from '@stagewise/stage-ui/lib/utils';
+import { buttonVariants } from '@stagewise/stage-ui/components/button';
+import { Button } from '@stagewise/stage-ui/components/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogClose,
+  DialogHeader,
+} from '@stagewise/stage-ui/components/dialog';
+import { Input } from '@stagewise/stage-ui/components/input';
+import {
+  ExternalLinkIcon,
+  LoaderCircleIcon,
+  ScrollTextIcon,
+} from 'lucide-react';
+import { IconGithub } from '@stagewise/icons';
+import { IconRefreshAnticlockwiseOutline18 } from '@stagewise/icons';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { OverlayScrollbar } from '@stagewise/stage-ui/components/overlay-scrollbar';
+import agplLicenseText from '@assets/agpl-3.0-license.txt?raw';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@stagewise/stage-ui/components/tooltip';
+import { ReleaseNotes } from '@ui/components/release-notes';
+
+interface LicenseEntry {
+  name: string;
+  version: string;
+  license: string;
+  repository: string;
+  publisher: string;
+  licenseText: string;
+}
+
+function AppUpdateStatus() {
+  const autoUpdate = useKartonState((s) => s.autoUpdate);
+  const checkForUpdates = useKartonProcedure(
+    (p) => p.autoUpdate.checkForUpdates,
+  );
+  const quitAndInstall = useKartonProcedure(
+    (p) => p.autoUpdate.quitAndInstall.fire,
+  );
+
+  if (autoUpdate.status === 'unsupported') {
+    return null;
+  }
+
+  const renderButton = () => {
+    switch (autoUpdate.status) {
+      case 'checking':
+        return (
+          <Button variant="ghost" size="sm" className="px-0" disabled>
+            <IconRefreshAnticlockwiseOutline18 className="size-3 animate-spin" />
+            Checking for Updates
+          </Button>
+        );
+      case 'downloading':
+        return (
+          <Button variant="secondary" size="sm" disabled>
+            <LoaderCircleIcon className="size-3.5 animate-spin" />
+            Downloading Update...
+          </Button>
+        );
+      case 'not-available':
+        return (
+          <>
+            <span className="text-muted-foreground text-sm">Up to date</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="px-0"
+              onClick={() => checkForUpdates()}
+            >
+              <IconRefreshAnticlockwiseOutline18 className="size-3" />
+              Check Again
+            </Button>
+          </>
+        );
+      case 'ready':
+        return (
+          <Button size="sm" onClick={() => quitAndInstall()}>
+            Install Update & Restart
+          </Button>
+        );
+      case 'error':
+      case 'idle':
+      default:
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-0"
+            onClick={() => checkForUpdates()}
+          >
+            <IconRefreshAnticlockwiseOutline18 className="size-3" />
+            Check for Updates
+          </Button>
+        );
+    }
+  };
+
+  const updateInfo = autoUpdate.updateInfo;
+
+  return (
+    <div className="flex flex-col gap-3">
+      {updateInfo?.releaseName && (
+        <p className="text-muted-foreground text-sm">
+          Update {updateInfo.releaseName}{' '}
+          {autoUpdate.status === 'downloading'
+            ? 'is downloading'
+            : 'is ready to install'}
+        </p>
+      )}
+      {autoUpdate.status === 'error' && autoUpdate.errorMessage && (
+        <p className="text-error-foreground text-xs">
+          {autoUpdate.errorMessage}
+        </p>
+      )}
+      <div className="flex items-center gap-3">{renderButton()}</div>
+      {updateInfo?.releaseNotes && (
+        <div className="max-h-56 overflow-y-auto rounded-lg border border-derived-subtle bg-surface-1 p-3">
+          <ReleaseNotes className="text-xs">
+            {updateInfo.releaseNotes}
+          </ReleaseNotes>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LicenseTextDialog({
+  entry,
+  open,
+  onOpenChange,
+}: {
+  entry: LicenseEntry | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  if (!entry) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[80vh] max-w-2xl gap-4.5 overflow-hidden">
+        <DialogClose />
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3 pt-1">
+            {entry.name}@{entry.version}
+            <span className="rounded-md bg-surface-1 px-2 py-0.5 font-mono text-muted-foreground text-xs">
+              {entry.license}
+            </span>
+            {entry.repository && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <a
+                    href={entry.repository}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      buttonVariants({ variant: 'ghost', size: 'icon-md' }),
+                      'w-min p-0',
+                    )}
+                    aria-label="GitHub Repository"
+                  >
+                    <IconGithub className="size-4" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>{entry.repository}</TooltipContent>
+              </Tooltip>
+            )}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="scrollbar-subtle min-h-0 flex-1 overflow-y-auto rounded-lg bg-surface-1 p-4">
+          {entry.licenseText ? (
+            <pre className="whitespace-pre-wrap font-mono text-foreground text-xs leading-relaxed">
+              {entry.licenseText}
+            </pre>
+          ) : (
+            <p className="text-muted-foreground text-sm italic">
+              No license text available for this package.
+            </p>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function OpenSourceLicenses() {
+  const [licenses, setLicenses] = useState<LicenseEntry[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [search, setSearch] = useState('');
+  const [selectedEntry, setSelectedEntry] = useState<LicenseEntry | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const loadLicenses = useCallback(async () => {
+    if (licenses) {
+      setExpanded(true);
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await import('@pages/generated/licenses.json');
+      setLicenses(data.default as LicenseEntry[]);
+      setExpanded(true);
+    } catch {
+      console.error('Failed to load license data');
+    } finally {
+      setLoading(false);
+    }
+  }, [licenses]);
+
+  const filteredLicenses = useMemo(() => {
+    if (!licenses) return [];
+    if (!search.trim()) return licenses;
+    const q = search.toLowerCase();
+    return licenses.filter(
+      (e) =>
+        e.name.toLowerCase().includes(q) || e.license.toLowerCase().includes(q),
+    );
+  }, [licenses, search]);
+
+  const licenseSummary = useMemo(() => {
+    if (!licenses) return null;
+    const counts: Record<string, number> = {};
+    for (const entry of licenses) {
+      counts[entry.license] = (counts[entry.license] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+  }, [licenses]);
+
+  useEffect(() => {
+    if (expanded && listRef.current) {
+      listRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [expanded]);
+
+  const handleViewLicense = useCallback((entry: LicenseEntry) => {
+    setSelectedEntry(entry);
+    setDialogOpen(true);
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h3 className="font-medium text-base text-foreground">
+            Open Source Licenses
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            This software incorporates open source packages. View their licenses
+            below.
+          </p>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="shrink-0"
+          onClick={expanded ? () => setExpanded(false) : loadLicenses}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : expanded ? 'Collapse' : 'View All'}
+        </Button>
+      </div>
+
+      {expanded && licenses && (
+        <div ref={listRef} className="flex flex-col gap-3">
+          {licenseSummary && (
+            <div className="flex flex-wrap gap-2">
+              {licenseSummary.map(([license, count]) => (
+                <span
+                  key={license}
+                  className="rounded-md bg-surface-1 px-2 py-1 text-muted-foreground text-xs"
+                >
+                  {license}{' '}
+                  <span className="font-medium text-foreground">{count}</span>
+                </span>
+              ))}
+              <span className="rounded-md bg-surface-1 px-2 py-1 text-muted-foreground text-xs">
+                Total{' '}
+                <span className="font-medium text-foreground">
+                  {licenses.length}
+                </span>
+              </span>
+            </div>
+          )}
+
+          <Input
+            size="sm"
+            value={search}
+            onValueChange={(val) => setSearch(val as string)}
+            debounce={150}
+            placeholder="Search packages or licenses..."
+          />
+
+          <div className="scrollbar-subtle h-[400px] overflow-y-auto rounded-lg border border-border-subtle">
+            {filteredLicenses.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
+                No packages found matching &ldquo;{search}&rdquo;
+              </div>
+            ) : (
+              filteredLicenses.map((entry) => (
+                <div
+                  key={`${entry.name}@${entry.version}`}
+                  className="flex items-center justify-between border-border-subtle border-b px-4 py-2.5 last:border-b-0"
+                >
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate font-medium text-foreground text-sm">
+                        {entry.name}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {entry.version}
+                        {entry.publisher && ` · ${entry.publisher}`}
+                      </span>
+                    </div>
+                    <span className="shrink-0 rounded-md bg-surface-1 px-2 py-0.5 font-mono text-muted-foreground text-xs">
+                      {entry.license}
+                    </span>
+                  </div>
+                  <div className="ml-3 flex shrink-0 items-center gap-1">
+                    {entry.repository && (
+                      <a
+                        href={entry.repository}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          buttonVariants({
+                            variant: 'ghost',
+                            size: 'icon-xs',
+                          }),
+                        )}
+                        title="View repository"
+                      >
+                        <ExternalLinkIcon className="size-3.5" />
+                      </a>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon-xs"
+                      onClick={() => handleViewLicense(entry)}
+                      title="View license text"
+                    >
+                      <ScrollTextIcon className="size-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      <LicenseTextDialog
+        entry={selectedEntry}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
+    </div>
+  );
+}
+
+function AppDataManagement() {
+  const openFolder = useKartonProcedure((p) => p.appData.openFolder);
+  const resetAppData = useKartonProcedure((p) => p.appData.reset);
+
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-1">
+        <h3 className="font-medium text-base text-foreground">App Data</h3>
+        <p className="text-muted-foreground text-sm">
+          Open the data folder for troubleshooting or reset stagewise to a clean
+          setup.
+        </p>
+      </div>
+      <div className="flex shrink-0 items-center gap-2">
+        <Button variant="secondary" size="sm" onClick={() => openFolder()}>
+          Open Folder
+        </Button>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => {
+            if (
+              window.confirm(
+                'Delete all app data and restart? This cannot be undone. Your installation identifier will be retained.',
+              )
+            )
+              resetAppData();
+          }}
+        >
+          Delete App Data
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function AboutSection() {
+  const appInfo = useKartonState((s) => s.appInfo);
+  const [appLicenseOpen, setAppLicenseOpen] = useState(false);
+
+  return (
+    <div className="h-full w-full">
+      {/* Content */}
+      <OverlayScrollbar className="h-full" contentClassName="px-6 pt-24 pb-24">
+        <div className="mx-auto flex w-full max-w-3xl shrink-0 flex-col gap-8">
+          {/* Header */}
+          <div>
+            <h1 className="font-semibold text-foreground text-xl">About</h1>
+          </div>
+          {/* App Name Section */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-baseline gap-2">
+              <h2 className="font-bold text-3xl text-foreground leading-none">
+                stagewise
+              </h2>
+              <p className="relative bottom-[2px] text-lg text-subtle-foreground leading-none">
+                {appInfo.version}
+                {appInfo.name !== 'stagewise' && (
+                  <span>
+                    {' ('}
+                    {appInfo.name
+                      .replace(/^stagewise\s*/, '')
+                      .replace(/[()]/g, '')}
+                    {')'}
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <div className="mt-2">
+                <AppUpdateStatus />
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <hr className="border-border/30" />
+
+          {/* Details Section */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-y-3">
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Bundle ID
+                </span>
+                <span className="break-all text-foreground text-sm">
+                  {appInfo.bundleId}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Release Channel
+                </span>
+                <span className="text-foreground text-sm capitalize">
+                  {appInfo.releaseChannel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Platform
+                </span>
+                <span className="text-foreground text-sm capitalize">
+                  {appInfo.platform}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Architecture
+                </span>
+                <span className="text-foreground text-sm">{appInfo.arch}</span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Author
+                </span>
+                <span className="text-foreground text-sm">
+                  {appInfo.author}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Copyright
+                </span>
+                <span className="text-foreground text-sm">
+                  {appInfo.copyright}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  License
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-foreground text-sm">
+                    AGPL-3.0
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => {
+                      setAppLicenseOpen(true);
+                    }}
+                    title="View full license text"
+                  >
+                    <ScrollTextIcon className="size-3.5" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Homepage
+                </span>
+                <a
+                  href={appInfo.homepage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    buttonVariants({ variant: 'link', size: 'sm' }),
+                    'w-min p-0',
+                  )}
+                >
+                  {appInfo.homepage}
+                </a>
+              </div>
+
+              <div className="grid grid-cols-[140px_1fr] gap-x-4">
+                <span className="font-medium text-muted-foreground text-sm">
+                  Other Versions
+                </span>
+                <div className="text-foreground text-sm">
+                  {Object.entries(appInfo.otherVersions).map(([key, value]) => (
+                    <div key={key}>
+                      {key}: {value ?? 'N/A'}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <hr className="border-border/30" />
+
+          {/* App Data Management */}
+          <AppDataManagement />
+
+          {/* Divider */}
+          <hr className="border-border/30" />
+
+          {/* Open Source Licenses */}
+          <OpenSourceLicenses />
+        </div>
+      </OverlayScrollbar>
+
+      <LicenseTextDialog
+        entry={{
+          name: appInfo.name,
+          version: appInfo.version,
+          license: 'AGPL-3.0',
+          repository: 'https://github.com/stagewise/stagewise',
+          publisher: 'stagewise Inc.',
+          licenseText: agplLicenseText,
+        }}
+        open={appLicenseOpen}
+        onOpenChange={setAppLicenseOpen}
+      />
+    </div>
+  );
+}

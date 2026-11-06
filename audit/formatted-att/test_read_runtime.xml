@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ReadRuntimeTest" timestamp="2026&#x002D;11&#x002D;05T16:35:10" hostname="VOID" tests="15" failures="0" errors="0" skipped="0" time="2.098">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ReadRuntimeTest" time="0.000"/>
+  <testcase name="currentEngineAndHostPrepareCapturedRanges(openai)" classname="ReadRuntimeTest" time="0.136"/>
+  <testcase name="currentEngineAndHostPrepareCapturedRanges(responses)" classname="ReadRuntimeTest" time="0.180"/>
+  <testcase name="currentEngineAndHostPrepareCapturedRanges(anthropic)" classname="ReadRuntimeTest" time="0.127"/>
+  <testcase name="currentEngineAndHostPrepareCapturedRanges(google)" classname="ReadRuntimeTest" time="0.186"/>
+  <testcase name="samePathDifferentCallsCaptureEachVersion" classname="ReadRuntimeTest" time="0.179"/>
+  <testcase name="appsImageAndDirectoryProduceTransientParts" classname="ReadRuntimeTest" time="0.172"/>
+  <testcase name="sessionCloneRetainsReadsAndAttachmentsAfterSourceDeletion" classname="ReadRuntimeTest" time="0.237"/>
+  <testcase name="deleteDuringCaptureDoesNotRecreateStorage" classname="ReadRuntimeTest" time="0.187"/>
+  <testcase name="cloneRefusesAnOwnedDestinationWithoutChangingIt" classname="ReadRuntimeTest" time="0.010"/>
+  <testcase name="emptySourceCannotCloneOverUnownedAttachmentContext" classname="ReadRuntimeTest" time="0.009"/>
+  <testcase name="sessionConflictKeepsSourceAndRollsBackOnlyFreshClone" classname="ReadRuntimeTest" time="0.036"/>
+  <testcase name="busySourceCanClonePublishedToolContextWithoutCancellation" classname="ReadRuntimeTest" time="0.254"/>
+  <testcase name="busyUnpublishedCaptureDoesNotBlockOrAlterClonedHistory" classname="ReadRuntimeTest" time="0.380"/>
+  <testcase name="cleanupTestCase" classname="ReadRuntimeTest" time="0.000"/>
+</testsuite>

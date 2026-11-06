@@ -1,0 +1,73 @@
+{
+  "verified_on": "2026-11-05",
+  "platform": "Windows x64",
+  "qt": {
+    "version": "6.11.2",
+    "prefix": "C:/Qt/6.11.2-mingw64-static",
+    "qmake": "C:/Qt/6.11.2-mingw64-static/bin/qmake.exe",
+    "spec": "win32-g++",
+    "architecture": "x86_64",
+    "config": ["static", "static_runtime", "openssl", "release"],
+    "available_modules_verified": ["Core", "Gui", "Widgets", "Network", "Sql", "Svg", "Test", "Qml", "Quick"],
+    "additional_unverified_installation": "C:/Qt/6.11.2-mingw32-static"
+  },
+  "compiler": {
+    "cxx": "C:/mingw64/bin/g++.exe",
+    "c": "C:/mingw64/bin/gcc.exe",
+    "version": "16.2.0",
+    "target": "x86_64-w64-mingw32",
+    "distribution": "MinGW-W64 x86_64-ucrt-posix-seh, Brecht Sanders r1",
+    "path_warning": "Prepend C:/mingw64/bin; the inherited PATH resolves a different Strawberry GCC."
+  },
+  "build_tools": {
+    "cmake": "C:/mingw64/bin/cmake.exe",
+    "cmake_version": "4.4.2",
+    "ninja": "C:/mingw64/bin/ninja.exe",
+    "ninja_version": "1.13.2",
+    "make": "C:/mingw64/bin/mingw32-make.exe",
+    "objdump": "C:/mingw64/bin/objdump.exe"
+  },
+  "openssl": {
+    "version": "3.5.8",
+    "prefix": "C:/Qt/openssl-3.5.8-mingw64-static",
+    "crypto": "C:/Qt/openssl-3.5.8-mingw64-static/lib/libcrypto.a",
+    "cmake_options": ["-DOPENSSL_ROOT_DIR=C:/Qt/openssl-3.5.8-mingw64-static", "-DOPENSSL_USE_STATIC_LIBS=TRUE"]
+  },
+  "browser": {
+    "backend": "Native QWidget HWND hosting WebView2 Win32 COM",
+    "application_ui": "Native Qt Widgets; no HTML/JavaScript application shell",
+    "qt_webengine": "Not usable with the required toolchain: static builds and MinGW are not supported by Qt WebEngine.",
+    "runtime_path": "C:/Program Files (x86)/Microsoft/EdgeWebView/Application/156.0.4314.58",
+    "runtime_version": "156.0.4314.58",
+    "sdk_version": "1.0.4314.35",
+    "sdk_header": "third_party/webview2/include/WebView2.h",
+    "loader": "third_party/webview2/x64/WebView2Loader.dll",
+    "loader_bytes": 194912,
+    "static_scope": "Qt and MinGW C++ runtime link statically; Windows system libraries, WebView2Loader.dll, and the installed WebView2 browser runtime remain external.",
+    "static_loader_probe": "Microsoft's MSVC WebView2LoaderStatic.lib failed to link with this MinGW toolchain: duplicate IID symbols plus unresolved MSVC security-cookie/C++ ABI symbols. Full log: audit/browser-probe-build/static-loader-link.log",
+    "direct_runtime_export": "Microsoft documents CreateWebViewEnvironmentWithOptionsInternal as internal and subject to change/removal; use the supported loader API.",
+    "cef": "No CEF headers or runtime found in the checked Qt, ADE, existing IDE, reference, and local tool directories. This was not an exhaustive whole-drive search.",
+    "cmake": {
+      "sources": ["src/browser/browserwidget.cpp", "src/browser/browserwidget.h"],
+      "system_include": "third_party/webview2/include",
+      "link_libraries": ["Qt6::Widgets", "ole32"],
+      "deployment": "Copy third_party/webview2/x64/WebView2Loader.dll beside the executable and retain its license; require the Evergreen WebView2 Runtime."
+    }
+  },
+  "verification": {
+    "sdk_header_compilation": "PASS: unmodified header compiles with GCC 16.2, C++20",
+    "native_browser_probe": "PASS: page navigation, title event, DOM ExecuteScript, CDP Runtime.evaluate=42, CapturePreview PNG",
+    "probe_executable": "audit/browser-probe-build/ade-browser-probe.exe",
+    "probe_screenshot": "audit/browser-probe-build/browser-probe.png",
+    "probe_log": "audit/browser-probe-build/stderr.log",
+    "pe_imports": "objdump confirms no Qt DLLs or MinGW libstdc++/libgcc/libwinpthread DLLs in the probe executable imports. Windows system DLLs remain expected.",
+    "browser_regressions": "PASS: 14 passed, 0 failed, 0 skipped. tests/test_browser.cpp; detailed evidence audit/browser-regressions.json. Run via root build integration or audit/browser-probe/CMakeLists.txt."
+  },
+  "sources": [
+    "https://doc.qt.io/qt-6/qtwebengine-platform-notes.html",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/threading-model",
+    "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl",
+    "https://www.qt.io/development/open-source-lgpl-obligations"
+  ]
+}

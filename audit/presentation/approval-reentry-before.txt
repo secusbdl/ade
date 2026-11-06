@@ -1,0 +1,14 @@
+********* Start testing of PresentationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PresentationTest::initTestCase()
+FAIL!  : PresentationTest::displayObserverCanDecideApproval(allow) Compared values are not the same
+   Actual   (approvals.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/presentation-stage/tests/test_presentation.cpp(129) : failure location
+FAIL!  : PresentationTest::displayObserverCanDecideApproval(deny) Compared values are not the same
+   Actual   (approvals.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/presentation-stage/tests/test_presentation.cpp(129) : failure location
+PASS   : PresentationTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 514ms
+********* Finished testing of PresentationTest *********
