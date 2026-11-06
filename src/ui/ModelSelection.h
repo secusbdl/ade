@@ -15,7 +15,12 @@ struct ModelSelection {
     bool resolve(const QList<ProviderConfig> &providers, ProviderConfig *result) const;
 };
 QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &providers,
-    const QJsonObject &catalogs, const QJsonArray &presets);
+    const QJsonObject &catalogs, const QJsonArray &presets, bool includeDisabled=false);
+QString normalizedModelVisibilityId(const ProviderConfig& provider,const QString& modelId);
+bool isModelEnabled(const ProviderConfig& provider,const QString& modelId);
+QStringList setModelEnabled(const ProviderConfig& provider,const QString& modelId,bool enabled);
+QJsonArray enabledDiscoveredModels(const ProviderConfig& provider,const QJsonArray& models);
+QString discoveredDefaultModel(const ProviderConfig& provider,const QJsonArray& models,const QString& current);
 QJsonObject cleanModelCatalog(const ProviderConfig &provider, const QJsonArray &models);
 QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,const QJsonArray& entries,const QJsonObject& catalogs={});
 QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets,const QJsonObject& catalogs={});

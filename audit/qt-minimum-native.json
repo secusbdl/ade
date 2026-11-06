@@ -1,0 +1,15 @@
+{
+  "verifiedUtc": "2026-11-06T22:12:03.187092+00:00",
+  "change": "Declared minimum Qt corrected from6.8 to6.10; ProviderModelsFilter uses endFilterChange/Direction APIs introduced in6.10.",
+  "source": "https://doc.qt.io/qt-6/qsortfilterproxymodel.html#endFilterChange",
+  "verifiedToolchain": "Qt6.11.2 static MinGW",
+  "validation": "Full124 suite gate completed first. All-target reconfigure/build then succeeded with unchanged test/application executable bytes and unchanged CTest registration.",
+  "binaryFilesCompared": 133,
+  "binaryChanges": [],
+  "testRegistrationChanged": false,
+  "log": {
+    "path": "audit/parity-followup-configure/qt-minimum-build.txt",
+    "sha256CanonicalLf": "af2281cef6a4d0659243bfc80446bf3da55ec93a924da5cb2fca0522fa5381a2"
+  },
+  "limits": "Qt6.10 itself was not installed or tested; the recorded build uses6.11.2."
+}

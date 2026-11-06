@@ -1,0 +1,107 @@
+{
+  "verifiedUtc": "2026-11-06T22:12:28.354300+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "fullNativeParity": false,
+  "scope": "Main native HTTP chat system prompt, actual tool-definition selection, structured local context, and external CLI context boundary. This does not establish identical model reasoning or full Stagewise behavior.",
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/chat/system-prompt-builder/system-prompt-builder.ts",
+      "lines": "38-99",
+      "note": "Profile-specific intro/soul, filtered environment domains, output protocols/aliases and authority fragments."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/agent-core-bridge/host.ts",
+      "lines": "119-159",
+      "note": "Browser chat profile explicitly enables browser, shells, sandbox, activeApp, log ingest, workspace, AGENTS, skills, memory, plans and fileDiffs domains."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/chat/prompts/soul.md",
+      "lines": "18-20",
+      "note": "Use native filesystem tools first, return after shell/sandbox, and read before targeted multiEdit."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/chat/chat.ts",
+      "lines": "53-110",
+      "note": "Stop on plan write; combine baseline native tools with supplied host tools and filter unavailable null entries."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/chat/system-prompt-builder/output-style-defaults.ts",
+      "lines": "8-45",
+      "note": "Path/color link syntax and product aliases are prompt contracts, separate from rendering support."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+      "lines": "20-142",
+      "note": "Separate ACP instructions and context/resource representation; does not directly reuse native tool prompt."
+    }
+  ],
+  "tests": [
+    {
+      "path": "audit/system-prompt-native/native_agent_prompt.txt",
+      "sha256CanonicalLf": "df14b7b830643977d4d4416721de6e49ea05630645c7a375eca8ec60dbff0a81",
+      "passedIncludingLifecycle": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/system-prompt-native/native_external_context.txt",
+      "sha256CanonicalLf": "624c912d7fe10351af7865ca1b4fdbe48b7ef44d32c335aefe7d6aea76a354d1",
+      "passedIncludingLifecycle": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/system-prompt-native/native_context.txt",
+      "sha256CanonicalLf": "f8fb1fddf9c321d124ca17ed542271a1245a778f172ee76bf8b8d4608b40cdc3",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/system-prompt-native/native_opencode_engine.txt",
+      "sha256CanonicalLf": "7de0413d9e5dbbb45f444c62434116a4e95edc95fe955d540b6aa22c20325c3a",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/system-prompt-native/native_codex_engine.txt",
+      "sha256CanonicalLf": "f89029b54c26baa9314d2dbc4fba23d04a45f36f6e7f3bdef268128472024483",
+      "passedIncludingLifecycle": 13,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "remainingGaps": [
+    {
+      "priority": 1,
+      "gap": "Dynamic structured browser/active-app state and environment events are not assembled in the native main prompt like source profile domains.",
+      "native": "src/runtime/AgentToolHost.cpp:27 supplies shell manifest only; browser tools must be explicitly queried."
+    },
+    {
+      "priority": 1,
+      "gap": "Plans/memory/log-ingest environment contracts and stop-after-plan-write policy are not ported by this patch.",
+      "source": "chat.ts:53-70 and host.ts:142-159"
+    },
+    {
+      "priority": 2,
+      "gap": "Native typed transcript path/color/tab/app handlers do not imply that the model has source-equivalent output protocol/alias instructions. This patch does not add that table."
+    },
+    {
+      "priority": 2,
+      "gap": "The complete source soul/output style/host fragments are not copied wholesale; native authority policy intentionally keeps conversation instructions above file/skill content."
+    },
+    {
+      "priority": 2,
+      "gap": "External renderer carries respected project instructions and explicit invocations only. It does not supply ADE native credential/broker APIs, the entire skill catalog, or source ACP MCP question bridge."
+    },
+    {
+      "priority": 2,
+      "gap": "Source asks for parallel independent calls; native Engine tool execution is sequential. Prompt does not claim unsupported scheduling."
+    },
+    {
+      "priority": 3,
+      "gap": "Provider/model selection, model-specific defaults and differing runtime capabilities prevent a promise of identical reasoning or output."
+    }
+  ]
+}

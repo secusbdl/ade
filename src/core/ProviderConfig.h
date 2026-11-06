@@ -2,6 +2,8 @@
 
 #include <QJsonObject>
 #include <QString>
+#include <QStringList>
+#include <QJsonArray>
 
 namespace ade {
 
@@ -24,6 +26,10 @@ struct ProviderConfig {
     QString harnessExecutable{};
     // Picker provenance only; never authorizes a request or supplies credentials.
     QString templateId{};
+    // A chooser preference only; saved conversations/presets remain runnable.
+    QStringList disabledModelIds{};
+    bool isOpenCodeHarness() const { return kind == QStringLiteral("opencode"); }
+    bool isExternalHarness() const { return isCodexHarness() || isOpenCodeHarness(); }
     bool isCodexHarness() const { return kind == QStringLiteral("codex"); }
 
     QJsonObject publicJson() const {
@@ -31,16 +37,18 @@ struct ProviderConfig {
                 {"model", model}, {"protocol", protocol}, {"reasoningEffort", reasoningEffort},
                 {"thinkingMode", thinkingMode}, {"thinkingBudget", thinkingBudget},
                 {"maxOutputTokens", maxOutputTokens}, {"contextWindowTokens", contextWindowTokens},
-                {"kind", kind}, {"harnessExecutable", harnessExecutable}, {"templateId", templateId}};
+                {"kind", kind}, {"harnessExecutable", harnessExecutable}, {"templateId", templateId}, {"disabledModelIds", QJsonArray::fromStringList(disabledModelIds)}};
     }
     static ProviderConfig fromPublicJson(const QJsonObject &object) {
-        return {object["id"].toString(), object["name"].toString(),
+        ProviderConfig provider{object["id"].toString(), object["name"].toString(),
                 object["baseUrl"].toString(), {}, object["model"].toString(),
                 object["protocol"].toString(QStringLiteral("openai")),
                 object["reasoningEffort"].toString(), object["thinkingMode"].toString(),
                 object["thinkingBudget"].toInt(), object["maxOutputTokens"].toInt(),
                 object["contextWindowTokens"].toInt(), object["kind"].toString(QStringLiteral("api")),
                 object["harnessExecutable"].toString(), object["templateId"].toString()};
+        for(const auto& value:object.value("disabledModelIds").toArray())provider.disabledModelIds.append(value.toString());
+        return provider;
     }
 };
 

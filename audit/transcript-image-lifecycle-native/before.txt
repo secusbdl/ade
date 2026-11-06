@@ -1,0 +1,10 @@
+********* Start testing of TranscriptImageLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TranscriptImageLifecycleTest::initTestCase()
+FAIL!  : TranscriptImageLifecycleTest::retainedImageRequestsAgainAfterItsGroupAnchorDisappears() Compared values are not the same
+   Actual   (requests.size()): 1
+   Expected (2)              : 2
+D:/age/ADE/private/transcript-image-regroup-stage/tests/test_transcript_image_lifecycle.cpp(17) : failure location
+PASS   : TranscriptImageLifecycleTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 3575ms
+********* Finished testing of TranscriptImageLifecycleTest *********

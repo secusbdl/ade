@@ -1,0 +1,75 @@
+{
+  "verifiedUtc": "2026-11-06T22:12:28.354300+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "fullNativeParity": false,
+  "implementation": [
+    "Separate native provider Models dialog with search, enabled filter, individual and bulk visibility controls.",
+    "Exact provider-instance compare-and-save; hidden saved conversation and preset choices remain intact.",
+    "Full discovered catalogs retained; newly selected choices respect disabled IDs; explicit retained choices remain runnable.",
+    "Native main/side chat model lists refresh after durable preference change; synthetic key reimport preserves visibility."
+  ],
+  "tests": [
+    {
+      "path": "audit/provider-model-visibility-native/native_provider_model_visibility.txt",
+      "sha256CanonicalLf": "ccfaa23847c26d6fabd2a20a04e3bd0cce37f02cc4dc1725ea489765fd308ee1",
+      "passedIncludingLifecycle": 34,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/provider-model-visibility-native/native_provider_model_visibility_host.txt",
+      "sha256CanonicalLf": "0a63cae04a58c1d5e75464324d590da7a3e46d8536678b63068ab0fa484cc67f",
+      "passedIncludingLifecycle": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/provider-model-visibility-native/native_settings.txt",
+      "sha256CanonicalLf": "4b27647625bc3d017c514fec68de0c218b8acd3ca7f4f682cba3edd6a255be8d",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/provider-model-visibility-native/native_settings_audit.txt",
+      "sha256CanonicalLf": "31ee7d8abba90832d945bab28a7993aff9edf1b54e7e5a321c02fed534ae9d79",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "componentRenders": [
+    {
+      "name": "models-dark-350.png",
+      "sha256": "33decf347b5193f6b9d690e01a972d1a6fc169b41a6c3f450eb5337053358677",
+      "scope": "Synthetic component render saved privately; not final packaged GUI."
+    },
+    {
+      "name": "models-dark-620.png",
+      "sha256": "5b6b27a09d6cf2cd35b1a0bf2a1306ccf98059c3bff9a6145884a4e96898113a",
+      "scope": "Synthetic component render saved privately; not final packaged GUI."
+    },
+    {
+      "name": "models-light-350-save-conflict.png",
+      "sha256": "faa9e99593da5ee38f30721d9db56aa00a86471369ca852bd4b9f464ba5eb729",
+      "scope": "Synthetic component render saved privately; not final packaged GUI."
+    },
+    {
+      "name": "models-light-350.png",
+      "sha256": "cc96cd366d000315d09f8e7950782a304b0b834815099a3e31016ab18e099fad",
+      "scope": "Synthetic component render saved privately; not final packaged GUI."
+    },
+    {
+      "name": "models-light-620.png",
+      "sha256": "c900e4590d54940e6a39334a6219dfb97aa55b7c62e348b19b86d230e11e559b",
+      "scope": "Synthetic component render saved privately; not final packaged GUI."
+    }
+  ],
+  "limits": [
+    "Curated flagship auto-disable and built-in vendor model catalog are separate source features; this initial slice must not claim them implemented.",
+    "Self-hosted route-refresh pruning is distinct from a visibility toggle; preserve hidden IDs until that explicit source-backed path is implemented.",
+    "Native preset chooser retains existing preset behavior; source has additional Stagewise-account-dependent availability branching.",
+    "Separate native Models dialog implements visibility controls, not the full source model metadata/vendor-group/custom-model management page.",
+    "Passing native host fixtures do not establish complete Stagewise model-management UI parity."
+  ]
+}

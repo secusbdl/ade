@@ -950,7 +950,11 @@ void CoreTest::systemContextAndReadOnlySkillTool() {
         const auto system = request["messages"].toArray().first().toObject()["content"].toString();
         QVERIFY(system.contains("<local_workspace_context>\n" + context));
         QVERIFY(!system.contains("Must not replace"));
-        QVERIFY(system.contains("do not assume a Node.js server"));
+        QVERIFY(system.contains("readContext reads enabled local skills"));
+        // This host exposes readContext only. Sandbox guidance belongs to
+        // requests that actually provide executeSandboxJs.
+        QVERIFY(!system.contains("executeSandboxJs"));
+        QVERIFY(!system.contains("API.openApp"));
     }
     QVERIFY(engine.lastTurnSucceeded());
 }

@@ -18,11 +18,31 @@
 #endif
 
 namespace ade {
+QList<ProviderConfig> ProviderStore::mergeImported(const QList<ProviderConfig>& existing,
+                                                 const QList<ProviderConfig>& imported) {
+    auto result=existing;
+    for(auto provider:imported){
+        auto found=std::find_if(result.begin(),result.end(),[&](const ProviderConfig& value){return value.id==provider.id;});
+        if(found==result.end())result.append(std::move(provider));
+        else {provider.disabledModelIds=found->disabledModelIds;*found=std::move(provider);}
+    }
+    return result;
+}
 namespace {
 constexpr qint64 MaxConfigBytes = 4 * 1024 * 1024;
 bool validTemplateId(const QString& id) {
     static const QRegularExpression pattern(QStringLiteral("^[a-z0-9][a-z0-9-]{0,79}$"));
     return id.isEmpty() || pattern.match(id).hasMatch();
+}
+bool validDisabledModelIds(const QStringList& ids) {
+    if(ids.size()>10001)return false;
+    QSet<QString> seen;
+    for(const auto& id:ids){
+        if(id.isEmpty()||id.size()>512||seen.contains(id))return false;
+        for(const auto character:id)if(character.unicode()<32||character.unicode()==127)return false;
+        seen.insert(id);
+    }
+    return true;
 }
 QByteArray protect(const QByteArray &plain, bool encrypt, bool *ok) {
     *ok = false;
@@ -95,13 +115,19 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
                 return {};
             }
         }
+        if(object.contains("disabledModelIds")){
+            const auto disabled=object.value("disabledModelIds");
+            if(!disabled.isArray()||disabled.toArray().size()>10001){if(error)*error=QStringLiteral("Invalid disabled model list.");return {};}
+            for(const auto& value:disabled.toArray())if(!value.isString()){if(error)*error=QStringLiteral("Invalid disabled model identifier.");return {};}
+        }
         ProviderConfig provider = ProviderConfig::fromPublicJson(object);
+        if(!validDisabledModelIds(provider.disabledModelIds)){if(error)*error=QStringLiteral("Invalid disabled model list.");return {};}
         if (!validTemplateId(provider.templateId)) {
             if (error) *error = QStringLiteral("Invalid provider template identifier.");
             return {};
         }
-        if ((provider.kind != "api" && provider.kind != "codex")
-            || (provider.isCodexHarness() && (provider.protocol != "codex-app-server" || !provider.baseUrl.isEmpty()
+        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode")
+            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):QString("opencode-acp")) || !provider.baseUrl.isEmpty()
                 || !object["encryptedApiKey"].toString().isEmpty()))
             || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
             || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
@@ -139,12 +165,13 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
     QSet<QString> ids;
     qint64 approximateBytes = 0;
     for (const auto &provider : providers) {
+        if(!validDisabledModelIds(provider.disabledModelIds)){if(error)*error=QStringLiteral("Invalid disabled model list.");return false;}
         if (!validTemplateId(provider.templateId)) {
             if (error) *error = QStringLiteral("Invalid provider template identifier.");
             return false;
         }
-        if ((provider.kind != "api" && provider.kind != "codex")
-            || (provider.isCodexHarness() && (provider.protocol != "codex-app-server" || !provider.baseUrl.isEmpty() || !provider.apiKey.isEmpty()))
+        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode")
+            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):QString("opencode-acp")) || !provider.baseUrl.isEmpty() || !provider.apiKey.isEmpty()))
             || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
             || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
             if (error) *error = QStringLiteral("Invalid coding-agent provider configuration.");

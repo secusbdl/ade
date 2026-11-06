@@ -44,6 +44,7 @@ signals:
     void backRequested();
     void providersRequested();
     void providerEditRequested(const QString& providerId);
+    void providerVisibilityChanged();
     void addProviderRequested();
     void providerKeyImportRequested();
     void preferencesChanged();

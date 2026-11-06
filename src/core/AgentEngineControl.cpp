@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "harness/AcpHarnessSession.h"
 #include "QueuedMessages.h"
 #include <QJsonDocument>
 #include <QUuid>
@@ -249,6 +250,12 @@ bool AgentEngine::submitQuestionStep(const QString &token, int step,
   if (!m_busy || token.isEmpty() || token != m_questionToken)
     return false;
   QString error;
+  if(m_provider.isOpenCodeHarness()&&m_acp&&!m_harnessQuestionToken.isEmpty()) {
+    auto candidate=m_question;
+    if(candidate.submit(step,answers,&error)&&candidate.completed()&&!m_acp->validQuestionAnswer(m_harnessQuestionToken,candidate.result({})["answers"].toObject())) {
+      emit questionError(token,"The answers do not satisfy the coding agent's form constraints.");return false;
+    }
+  }
   if (!m_question.submit(step, answers, &error)) {
     emit questionError(token, error);
     return false;

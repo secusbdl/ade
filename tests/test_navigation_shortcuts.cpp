@@ -66,7 +66,7 @@ private slots:
         QCOMPARE(input->toPlainText(), draft);
         QCOMPARE(search->text(), QString());
     }
-    void agentNavigationFollowsSidebarAndKeepsDrafts() {
+    void numericAgentNavigationFollowsSidebarAndKeepsDrafts() {
         QTemporaryDir data; QVERIFY(seed(data.path())); MainWindow window(data.path()); activate(window);
         auto* input = window.findChild<Composer*>("composerInput"); QVERIFY(input);
         key(input, Qt::Key_1, Qt::ControlModifier);
@@ -74,13 +74,9 @@ private slots:
         input->setPlainText("Unsaved draft kept while switching");
         key(input, Qt::Key_2, Qt::ControlModifier);
         QCOMPARE(window.currentSessionId(), QString("agent3"));
-        key(input, Qt::Key_PageDown, Qt::ControlModifier);
-        QCOMPARE(window.currentSessionId(), QString("agent2"));
-        key(input, Qt::Key_PageUp, Qt::ControlModifier);
-        QCOMPARE(window.currentSessionId(), QString("agent3"));
         key(input, Qt::Key_9, Qt::ControlModifier);
         QCOMPARE(window.currentSessionId(), QString("agent0"));
-        key(input, Qt::Key_PageDown, Qt::ControlModifier);
+        key(input, Qt::Key_1, Qt::ControlModifier);
         QCOMPARE(window.currentSessionId(), QString("agent4"));
         QCOMPARE(input->toPlainText(), QString("Unsaved draft kept while switching"));
         QString error; const auto saved = SessionStore(data.path()).load(&error); QVERIFY2(error.isEmpty(), qPrintable(error));

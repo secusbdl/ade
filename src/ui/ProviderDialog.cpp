@@ -5,6 +5,8 @@
 #include "core/ProviderStore.h"
 #include "core/ProviderService.h"
 #include "harness/CodexAppServer.h"
+#include "harness/OpenCodeModelDiscovery.h"
+#include <QStandardPaths>
 #include <QDesktopServices>
 #include <QGroupBox>
 #include <QPointer>
@@ -35,6 +37,8 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     auto* add=new QPushButton("+ Add Provider");add->setObjectName("addProvider");left->addWidget(add);
     auto* addCodex=new QPushButton("+ Codex coding agent");addCodex->setObjectName("addCodexProvider");left->addWidget(addCodex);
     auto* import=new QPushButton("Import API key file…"); left->addWidget(import);
+    m_removeProvider=new QPushButton("Remove provider…");m_removeProvider->setObjectName("removeProvider");left->addWidget(m_removeProvider);
+    connect(m_removeProvider,&QPushButton::clicked,this,&ProviderDialog::removeSelectedProvider);
     auto* right=new QVBoxLayout; columns->addLayout(right,1); auto* form=new QFormLayout;m_form=form;right->addLayout(form);
     m_name=new QLineEdit;m_url=new QLineEdit;m_key=new QLineEdit;m_model=new QLineEdit;m_protocol=new QComboBox;
     m_name->setObjectName("providerName");m_url->setObjectName("providerBaseUrl");m_key->setObjectName("providerApiKey");m_model->setObjectName("providerModel");
@@ -45,8 +49,10 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     m_protocol->addItem("Anthropic Messages","anthropic");m_protocol->addItem("Google Gemini","google");
     m_protocol->addItem("Codex managed subscription","codex-app-server");
     if(auto* model=qobject_cast<QStandardItemModel*>(m_protocol->model()))model->item(m_protocol->count()-1)->setEnabled(false);
+    m_protocol->addItem("OpenCode coding agent","opencode-acp");
+    if(auto* model=qobject_cast<QStandardItemModel*>(m_protocol->model()))model->item(m_protocol->count()-1)->setEnabled(false);
     m_reasoning=new QComboBox;m_reasoning->addItem("Provider default",QString());for(const auto& effort:QStringList{"low","medium","high","xhigh","max","minimal","none"})m_reasoning->addItem(effort,effort);
-    m_thinking=new QComboBox;m_thinking->addItem("Provider default",QString());m_thinking->addItem("Enabled","enabled");m_thinking->addItem("Disabled","disabled");
+    m_thinking=new QComboBox;m_thinking->setObjectName("providerThinking");m_thinking->addItem("Provider default",QString());m_thinking->addItem("Enabled","enabled");m_thinking->addItem("Disabled","disabled");
     m_thinkingBudget=new QSpinBox;m_thinkingBudget->setRange(0,200000);m_thinkingBudget->setSpecialValueText("Provider default");
     m_maxTokens=new QSpinBox;m_maxTokens->setRange(0,200000);m_maxTokens->setSpecialValueText("Provider default");
     m_contextTokens=new QSpinBox;m_contextTokens->setObjectName("providerContextWindow");m_contextTokens->setRange(0,100000000);m_contextTokens->setSpecialValueText("Unknown / use discovered model limit");
@@ -56,14 +62,15 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     form->addRow("Model context limit",m_contextTokens);
     m_harnessGroup=new QGroupBox("Codex subscription");m_harnessGroup->setObjectName("codexConnectionGroup");
     auto* harnessLayout=new QVBoxLayout(m_harnessGroup);
-    auto* harnessHelp=new QLabel("Uses your installed Codex CLI and its ChatGPT sign-in. ADE does not collect your subscription token. This optional coding agent runs its own tools in the selected workspace.");harnessHelp->setWordWrap(true);harnessLayout->addWidget(harnessHelp);
+    m_harnessHelp=new QLabel("Uses your installed Codex CLI and its ChatGPT sign-in. ADE does not collect your subscription token. This optional coding agent runs its own tools in the selected workspace.");m_harnessHelp->setWordWrap(true);harnessLayout->addWidget(m_harnessHelp);
     m_executable=new QLineEdit;m_executable->setObjectName("codexExecutable");m_executable->setPlaceholderText("Find installed codex automatically");harnessLayout->addWidget(m_executable);
     auto* harnessButtons=new QHBoxLayout;m_connectHarness=new QPushButton("Connect ChatGPT subscription");m_connectHarness->setObjectName("connectCodexSubscription");m_cancelHarness=new QPushButton("Cancel sign-in");m_cancelHarness->setObjectName("cancelCodexSubscription");harnessButtons->addWidget(m_connectHarness);harnessButtons->addWidget(m_cancelHarness);harnessLayout->addLayout(harnessButtons);right->addWidget(m_harnessGroup);
     m_harness=new CodexAppServer(this);
-    connect(m_connectHarness,&QPushButton::clicked,this,[this]{beginHarnessConnection(true);});
+    connect(m_connectHarness,&QPushButton::clicked,this,[this]{if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else beginHarnessConnection(true);});
     connect(m_cancelHarness,&QPushButton::clicked,this,[this]{
         if(!m_harnessBusy)return;
         const QPointer<ProviderDialog> self(this);
+        if(currentConfig().isOpenCodeHarness()){cancelOperations();if(self)m_feedback->setText("OpenCode discovery canceled. CLI sign-in was not changed.");return;}
         m_harness->cancelLogin();if(!self)return;cancelOperations();
         if(self)m_feedback->setText("Sign-in canceled. Your existing Codex account was not signed out.");
     });
@@ -77,34 +84,39 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     connect(m_url,&QLineEdit::textChanged,this,[this]{updateTemplateHelp();});connect(m_protocol,&QComboBox::currentIndexChanged,this,[this]{updateTemplateHelp();});
     m_feedback=new QLabel;m_feedback->setTextFormat(Qt::PlainText);m_feedback->setWordWrap(true);right->addWidget(m_feedback);right->addStretch();
     auto* apply=new QPushButton("Apply provider");right->addWidget(apply,0,Qt::AlignRight);
-    auto* probeRow=new QHBoxLayout;auto* discover=new QPushButton("Fetch models");auto* validate=new QPushButton("Test connection");probeRow->addWidget(discover);probeRow->addWidget(validate);right->addLayout(probeRow);
-    connect(discover,&QPushButton::clicked,this,[this]{if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(false);});
-    connect(validate,&QPushButton::clicked,this,[this]{if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(true);});
+    auto* probeRow=new QHBoxLayout;auto* discover=new QPushButton("Fetch models");auto* validate=new QPushButton("Test connection");m_validateProvider=validate;discover->setObjectName("fetchProviderModels");validate->setObjectName("testProviderConnection");probeRow->addWidget(discover);probeRow->addWidget(validate);right->addLayout(probeRow);
+    connect(discover,&QPushButton::clicked,this,[this]{if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(false);});
+    connect(validate,&QPushButton::clicked,this,[this]{if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(true);});
     auto* buttons=new QDialogButtonBox(QDialogButtonBox::Save|QDialogButtonBox::Cancel);outer->addWidget(buttons);
-    m_operationControls={m_list,add,addCodex,import,apply,discover,validate,buttons->button(QDialogButtonBox::Save),m_name,m_model,m_reasoning,m_executable,m_keyHelp,m_planHelp};
+    m_operationControls={m_list,add,addCodex,import,apply,discover,validate,buttons->button(QDialogButtonBox::Save),m_name,m_model,m_reasoning,m_executable,m_keyHelp,m_planHelp,m_removeProvider};
+    m_selectedControls={m_name,m_model,m_reasoning,m_executable,apply,discover,validate,m_removeProvider};
     connect(buttons,&QDialogButtonBox::accepted,this,[this]{applyProvider();if(m_feedback->property("error").toBool())return;accept();});
     connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
     connect(apply,&QPushButton::clicked,this,&ProviderDialog::applyProvider);
     connect(import,&QPushButton::clicked,this,&ProviderDialog::importKeys);
     connect(add,&QPushButton::clicked,this,&ProviderDialog::startAddProvider);
-    connect(addCodex,&QPushButton::clicked,this,[this]{if(m_apiBusy||m_harnessBusy||m_closing||m_addPicker)return;const auto p=ProviderCatalog::instantiate("codex");m_providers.append(p);m_list->addItem(p.name);m_list->setCurrentRow(m_providers.size()-1);});
+    connect(addCodex,&QPushButton::clicked,this,[this]{if(m_apiBusy||m_harnessBusy||m_closing||m_addPicker||m_removePrompt)return;const auto p=ProviderCatalog::instantiate("codex");m_providers.append(p);m_list->addItem(p.name);m_list->setCurrentRow(m_providers.size()-1);});
     connect(m_list,&QListWidget::currentRowChanged,this,&ProviderDialog::selectProvider);
     for(const auto& p:m_providers)m_list->addItem(p.name);
     if(!m_providers.isEmpty())m_list->setCurrentRow(0);
-    else {m_harnessGroup->hide();updateTemplateHelp();}
+    else selectProvider(-1);
 }
 bool ProviderDialog::selectProviderId(const QString& providerId) {
-    if(providerId.isEmpty()||m_apiBusy||m_harnessBusy||m_closing||m_addPicker)return false;
+    if(providerId.isEmpty()||m_apiBusy||m_harnessBusy||m_closing||m_addPicker||m_removePrompt)return false;
     for(int row=0;row<m_providers.size();++row){
         if(m_providers[row].id!=providerId)continue;
-        const QPointer<ProviderDialog> self(this);
+        const QPointer<ProviderDialog> self(this);const bool blocked=m_list->signalsBlocked();
         m_list->setCurrentRow(row);
+        if(!self)return false;
+        // A model observer may request an explicit selection during an atomic
+        // list update. Honor that newer request even while list signals are blocked.
+        if(blocked&&m_list->currentRow()==row&&m_selected!=row)selectProvider(row);
         return self&&!m_closing&&m_selected>=0&&m_selected<m_providers.size()&&m_providers[m_selected].id==providerId;
     }
     return false;
 }
 void ProviderDialog::startAddProvider() {
-    if(m_apiBusy||m_harnessBusy||m_closing||m_addPicker)return;
+    if(m_apiBusy||m_harnessBusy||m_closing||m_addPicker||m_removePrompt)return;
     auto* picker=new AddProviderDialog(m_providers,this);picker->setAttribute(Qt::WA_DeleteOnClose);m_addPicker=picker;
     const auto epoch=m_operationEpoch;const QPointer<ProviderDialog> self(this);
     connect(picker,&QDialog::accepted,this,[this,self,picker,epoch]{
@@ -116,6 +128,41 @@ void ProviderDialog::startAddProvider() {
     connect(picker,&QDialog::finished,this,[this,picker]{if(m_addPicker==picker)m_addPicker.clear();});
     picker->open();
 }
+void ProviderDialog::removeSelectedProvider() {
+    if(m_closing||m_apiBusy||m_harnessBusy||m_addPicker||m_removePrompt||m_selected<0||m_selected>=m_providers.size())return;
+    const auto provider=m_providers[m_selected];const auto epoch=m_operationEpoch;
+    const QPointer<ProviderDialog> self(this);
+    auto* prompt=new QMessageBox(QMessageBox::Question,"Remove provider",
+        QString("Remove “%1” from ADE?\n\nThis change is applied when you save. Cancel in Models & Providers keeps the saved configuration.").arg(provider.name),
+        QMessageBox::Yes|QMessageBox::Cancel,this);
+    prompt->setObjectName("removeProviderConfirmation");prompt->setTextFormat(Qt::PlainText);
+    prompt->setInformativeText(provider.isExternalHarness()?QString("Your %1 sign-in and subscription remain unchanged.").arg(provider.isOpenCodeHarness()?"OpenCode":"Codex"):QString("This does not revoke the API key at its provider."));
+    prompt->setDefaultButton(QMessageBox::Cancel);prompt->button(QMessageBox::Yes)->setText("Remove provider");
+    prompt->setAttribute(Qt::WA_DeleteOnClose);m_removePrompt=prompt;
+    connect(prompt,&QDialog::finished,this,[this,self,prompt,epoch,id=provider.id](int result){
+        if(m_removePrompt!=prompt)return;
+        m_removePrompt.clear();
+        if(m_closing)return;
+        if(result!=QMessageBox::Yes||m_operationEpoch!=epoch||m_selected<0||m_selected>=m_providers.size()||m_providers[m_selected].id!=id){updateOperationControls();return;}
+        removeProviderDraft(id);
+    });
+    updateOperationControls();if(!self||m_removePrompt!=prompt)return;prompt->open();
+}
+void ProviderDialog::removeProviderDraft(const QString& providerId) {
+    if(m_selected<0||m_selected>=m_providers.size()||m_providers[m_selected].id!=providerId)return;
+    const QPointer<ProviderDialog> self(this);const int row=m_selected;const auto epoch=m_operationEpoch;
+    m_providers.removeAt(row);m_catalogs.remove(providerId);m_selected=-1;
+    const bool blocked=m_list->blockSignals(true);
+    auto* removed=m_list->takeItem(row);delete removed;
+    if(!self)return;
+    if(m_closing||m_operationEpoch!=epoch){m_list->blockSignals(blocked);return;}
+    const int next=m_providers.isEmpty()?-1:qMin(row,int(m_providers.size())-1);
+    m_list->setCurrentRow(next);if(!self)return;
+    m_list->blockSignals(blocked);
+    if(m_closing||m_operationEpoch!=epoch)return;
+    selectProvider(next);if(!self||m_operationEpoch!=epoch+1||m_selected!=next)return;
+    m_feedback->setProperty("error",false);m_feedback->setText("Provider removed from this draft. Save to apply, or Cancel to keep the saved configuration.");
+}
 void ProviderDialog::updateTemplateHelp() {
     if(!m_templateHelp)return;
     const auto p=currentConfig();const auto* entry=ProviderCatalog::find(p.templateId);
@@ -125,21 +172,52 @@ void ProviderDialog::updateTemplateHelp() {
 }
 void ProviderDialog::selectProvider(int row) {
     const QPointer<ProviderDialog> self(this);const auto expected=m_operationEpoch+1;cancelOperations();if(!self||m_operationEpoch!=expected)return;
-    m_selected=row;if(row<0||row>=m_providers.size())return;
+    m_selected=row;
+    if(row<0||row>=m_providers.size()){
+        m_selected=-1;
+        for(auto* edit:{m_name,m_url,m_key,m_model,m_executable}){edit->clear();if(!self||m_operationEpoch!=expected)return;}
+        m_harnessGroup->hide();m_feedback->setProperty("error",false);m_feedback->clear();
+        updateOperationControls();if(!self)return;updateTemplateHelp();return;
+    }
     const auto& p=m_providers[row];m_name->setText(p.name);m_url->setText(p.baseUrl);m_key->setText(p.apiKey);m_model->setText(p.model);
     auto i=m_protocol->findData(p.protocol);m_protocol->setCurrentIndex(qMax(0,i));m_feedback->clear();m_feedback->setProperty("error",false);
     m_reasoning->setCurrentIndex(qMax(0,m_reasoning->findData(p.reasoningEffort)));m_thinking->setCurrentIndex(qMax(0,m_thinking->findData(p.thinkingMode)));m_thinkingBudget->setValue(p.thinkingBudget);m_maxTokens->setValue(p.maxOutputTokens);
     m_contextTokens->setValue(p.contextWindowTokens);
-    m_executable->setText(p.harnessExecutable);m_harnessGroup->setVisible(p.isCodexHarness());
-    for(auto* edit:{m_url,m_key})edit->setEnabled(!p.isCodexHarness());
-    m_protocol->setEnabled(!p.isCodexHarness());m_thinking->setEnabled(!p.isCodexHarness());m_thinkingBudget->setEnabled(!p.isCodexHarness());m_maxTokens->setEnabled(!p.isCodexHarness());m_contextTokens->setEnabled(!p.isCodexHarness());
+    const bool openCode=p.isOpenCodeHarness();
+    m_harnessGroup->setTitle(openCode?"OpenCode coding agent":"Codex subscription");
+    m_harnessGroup->setObjectName(openCode?"openCodeConnectionGroup":"codexConnectionGroup");
+    m_harnessHelp->setText(openCode
+        ? "Uses your installed OpenCode CLI, its configured account and its own tools. Run opencode auth login in your terminal first if sign-in is needed. Fetching models checks CLI discovery; it does not verify account entitlement or send a model request."
+        : "Uses your installed Codex CLI and its ChatGPT sign-in. ADE does not collect your subscription token. This optional coding agent runs its own tools in the selected workspace.");
+    m_executable->setObjectName(openCode?"opencodeExecutable":"codexExecutable");
+    m_executable->setPlaceholderText(openCode?"Find installed opencode automatically":"Find installed codex automatically");
+    m_connectHarness->setObjectName(openCode?"connectOpenCode":"connectCodexSubscription");
+    m_connectHarness->setText(openCode?"Fetch OpenCode models":"Connect ChatGPT subscription");
+    m_cancelHarness->setObjectName(openCode?"cancelOpenCodeDiscovery":"cancelCodexSubscription");
+    m_cancelHarness->setText(openCode?"Cancel discovery":"Cancel sign-in");
+    m_validateProvider->setText(openCode?"Check CLI":"Test connection");
+    m_executable->setText(p.harnessExecutable);m_harnessGroup->setVisible(p.isExternalHarness());
+    for(auto* edit:{m_url,m_key})edit->setEnabled(!p.isExternalHarness());
+    m_protocol->setEnabled(!p.isExternalHarness());m_thinking->setEnabled(!p.isExternalHarness());m_thinkingBudget->setEnabled(!p.isExternalHarness());m_maxTokens->setEnabled(!p.isExternalHarness());m_contextTokens->setEnabled(!p.isExternalHarness());
     updateOperationControls();
-    for(QWidget* widget:QList<QWidget*>{m_url,m_key,m_protocol,m_thinking,m_thinkingBudget,m_maxTokens,m_contextTokens})m_form->setRowVisible(widget,!p.isCodexHarness());
+    for(QWidget* widget:QList<QWidget*>{m_url,m_key,m_protocol,m_thinking,m_thinkingBudget,m_maxTokens,m_contextTokens})m_form->setRowVisible(widget,!p.isExternalHarness());
+    m_form->setRowVisible(m_thinking, !p.isExternalHarness() || p.isOpenCodeHarness());
+    m_thinking->setToolTip(p.isOpenCodeHarness()?"OpenCode receives only options advertised by its current session. Disabled selects none/off/disabled when available; effort uses the selected reasoning level.":QString());
     updateTemplateHelp();
 }
 void ProviderDialog::applyProvider() {
-    m_feedback->setProperty("error",false);if(m_selected<0)return;
-    if(m_apiBusy||m_harnessBusy){m_feedback->setProperty("error",true);m_feedback->setText("Wait for the provider operation or cancel it before saving.");return;}
+    m_feedback->setProperty("error",false);
+    if(m_removePrompt||m_apiBusy||m_harnessBusy){m_feedback->setProperty("error",true);m_feedback->setText("Wait for the provider operation or cancel it before saving.");return;}
+    if(m_selected<0)return;
+    if(m_providers[m_selected].isOpenCodeHarness()){
+        const auto p=currentConfig();
+        const auto executable=QStandardPaths::findExecutable(p.harnessExecutable.isEmpty()?QStringLiteral("opencode"):p.harnessExecutable);
+        if(p.name.isEmpty()||p.model.isEmpty()||executable.isEmpty()){
+            m_feedback->setProperty("error",true);m_feedback->setText("Select an installed OpenCode executable and a model, or use default. Sign in with opencode auth login if needed.");return;
+        }
+        m_providers[m_selected]=p;m_list->item(m_selected)->setText(p.name);
+        m_feedback->setText("OpenCode configured. Save to use this coding agent; account access remains managed by its CLI.");return;
+    }
     if(m_providers[m_selected].isCodexHarness()){
         const auto p=currentConfig();
         if(p.name.isEmpty()||p.model.isEmpty()||CodexAppServer::findExecutable(p.harnessExecutable).isEmpty()) {m_feedback->setProperty("error",true);m_feedback->setText("Select an installed Codex executable and connect to choose an available model.");return;}
@@ -157,32 +235,36 @@ void ProviderDialog::applyProvider() {
     m_list->item(m_selected)->setText(p.name);m_feedback->setText("Provider configured. Save to store it on this computer.");
 }
 void ProviderDialog::importKeys() {
-    if(m_apiBusy||m_harnessBusy)return;
+    if(m_apiBusy||m_harnessBusy||m_removePrompt)return;
     const QPointer<ProviderDialog> self(this);const auto epoch=m_operationEpoch;
     const auto path=QFileDialog::getOpenFileName(this,"Import API keys",{},"Key files (*.md *.env *.txt);;All files (*)");if(!self||epoch!=m_operationEpoch||path.isEmpty())return;
     QString error;auto imported=ProviderStore::importKeyFile(path,&error);
-    for(auto& p:imported){bool found=false;for(auto& existing:m_providers){if(existing.id==p.id){existing=p;found=true;break;}}if(!found)m_providers.append(p);}
+    m_providers=ProviderStore::mergeImported(m_providers,imported);
     m_list->clear();for(const auto& p:m_providers)m_list->addItem(p.name);if(!m_providers.isEmpty())m_list->setCurrentRow(0);
     m_feedback->setText(QString("Imported %1 provider configurations. %2").arg(imported.size()).arg(error));
 }
 ProviderConfig ProviderDialog::currentConfig() const {
     ProviderConfig p;if(m_selected>=0&&m_selected<m_providers.size())p=m_providers[m_selected];
     p.name=m_name->text().trimmed();p.model=m_model->text().trimmed();p.reasoningEffort=m_reasoning->currentData().toString();
-    if(p.isCodexHarness()){p.baseUrl.clear();p.apiKey.clear();p.protocol="codex-app-server";p.harnessExecutable=m_executable->text().trimmed();p.thinkingMode.clear();p.thinkingBudget=0;p.maxOutputTokens=0;p.contextWindowTokens=0;}
+    if(p.isExternalHarness()){p.baseUrl.clear();p.apiKey.clear();p.protocol=p.isOpenCodeHarness()?"opencode-acp":"codex-app-server";p.harnessExecutable=m_executable->text().trimmed();p.thinkingMode=p.isOpenCodeHarness()?m_thinking->currentData().toString():QString();p.thinkingBudget=0;p.maxOutputTokens=0;p.contextWindowTokens=0;}
     else {p.baseUrl=m_url->text().trimmed();p.apiKey=m_key->text().trimmed();p.protocol=m_protocol->currentData().toString();p.thinkingMode=m_thinking->currentData().toString();p.thinkingBudget=m_thinkingBudget->value();p.maxOutputTokens=m_maxTokens->value();p.contextWindowTokens=m_contextTokens->value();}
     return p;
 }
 ProviderDialog::~ProviderDialog(){
     m_closing=true;++m_operationEpoch;m_apiBusy=false;m_harnessBusy=false;
+    if(m_openCodeDiscovery){m_openCodeDiscovery->disconnect();m_openCodeDiscovery->cancel();}
     if(m_service){m_service->disconnect();m_service->cancel();}
     if(m_harness){m_harness->disconnect();m_harness->stop();}
 }
-void ProviderDialog::done(int result){m_closing=true;const QPointer<ProviderDialog> self(this);if(m_addPicker)m_addPicker->reject();if(!self)return;cancelOperations();if(self)QDialog::done(result);if(self)m_closing=false;}
+void ProviderDialog::done(int result){m_closing=true;const QPointer<ProviderDialog> self(this);if(m_addPicker)m_addPicker->reject();if(!self)return;if(m_removePrompt)m_removePrompt->reject();if(!self)return;cancelOperations();if(self)QDialog::done(result);if(self)m_closing=false;}
 void ProviderDialog::updateOperationControls(){
-    const bool busy=m_apiBusy||m_harnessBusy;
-    const bool harness=m_selected>=0&&m_selected<m_providers.size()&&m_providers[m_selected].isCodexHarness();
+    const bool busy=m_apiBusy||m_harnessBusy||m_removePrompt;
+    const bool selected=m_selected>=0&&m_selected<m_providers.size();
+    const bool harness=m_selected>=0&&m_selected<m_providers.size()&&m_providers[m_selected].isExternalHarness();
     for(auto* control:m_operationControls)control->setEnabled(!busy);
-    for(QWidget* control:QList<QWidget*>{m_url,m_key,m_protocol,m_thinking,m_thinkingBudget,m_maxTokens,m_contextTokens})control->setEnabled(!busy&&!harness);
+    for(auto* control:m_selectedControls)control->setEnabled(!busy&&selected);
+    for(QWidget* control:QList<QWidget*>{m_url,m_key,m_protocol,m_thinking,m_thinkingBudget,m_maxTokens,m_contextTokens})control->setEnabled(!busy&&selected&&!harness);
+    if(selected && m_providers[m_selected].isOpenCodeHarness())m_thinking->setEnabled(!busy);
     m_connectHarness->setEnabled(!busy&&harness);m_cancelHarness->setEnabled(m_harnessBusy);
 }
 void ProviderDialog::cancelOperations(){
@@ -190,22 +272,25 @@ void ProviderDialog::cancelOperations(){
     const QPointer<ProviderDialog> self(this);const auto service=m_service;m_service=nullptr;
     if(service){disconnect(service,nullptr,this,nullptr);service->cancel();if(service)service->deleteLater();}
     if(!self||m_operationEpoch!=epoch)return;
+    const auto discovery=m_openCodeDiscovery;m_openCodeDiscovery=nullptr;
+    if(discovery){disconnect(discovery,nullptr,this,nullptr);discovery->cancel();if(discovery)discovery->deleteLater();}
+    if(!self||m_operationEpoch!=epoch)return;
     m_harness->stop();if(self&&m_operationEpoch==epoch)updateOperationControls();
 }
 void ProviderDialog::finishHarnessConnection(){cancelOperations();}
 void ProviderDialog::beginApiOperation(bool validation){
-    if(m_closing||m_apiBusy||m_harnessBusy||m_selected<0||currentConfig().isCodexHarness())return;
+    if(m_closing||m_removePrompt||m_apiBusy||m_harnessBusy||m_selected<0||currentConfig().isExternalHarness())return;
     const auto provider=currentConfig();m_discoveryProvider=provider;m_apiBusy=true;
     const auto epoch=++m_operationEpoch;const QPointer<ProviderDialog> self(this);
     auto* service=new ProviderService(this);m_service=service;
-    const auto valid=[self,service,epoch,provider]{return self&&self->m_service==service&&self->m_operationEpoch==epoch&&self->m_apiBusy&&self->m_selected>=0&&self->m_selected<self->m_providers.size()&&self->m_providers[self->m_selected].id==provider.id&&!self->m_providers[self->m_selected].isCodexHarness();};
+    const auto valid=[self,service,epoch,provider]{return self&&self->m_service==service&&self->m_operationEpoch==epoch&&self->m_apiBusy&&self->m_selected>=0&&self->m_selected<self->m_providers.size()&&self->m_providers[self->m_selected].id==provider.id&&!self->m_providers[self->m_selected].isExternalHarness();};
     connect(service,&ProviderService::discoveryFailed,this,[this,valid](const QString& error){if(!valid())return;m_feedback->setText(error);cancelOperations();});
     connect(service,&ProviderService::validationFinished,this,[this,valid](bool ok,const QString& detail){if(!valid())return;m_feedback->setText((ok?"Connection verified: ":"Connection failed: ")+detail);cancelOperations();});
     connect(service,&ProviderService::modelsReady,this,[this,self,valid,provider](const QJsonArray& models){
         if(!valid())return;
         m_catalogs[provider.id]=cleanModelCatalog(provider,models);
-        QStringList names,ids;for(const auto& value:models){const auto model=value.toObject();const auto id=model["id"].toString();if(id.isEmpty())continue;ids.append(id);names.append(model["name"].toString(id)+"  ["+id+"]");}
-        if(ids.isEmpty()){m_feedback->setText("The provider returned no selectable models.");cancelOperations();return;}
+        QStringList names,ids;for(const auto& value:enabledDiscoveredModels(provider,models)){const auto model=value.toObject();const auto id=model["id"].toString();if(id.isEmpty())continue;ids.append(id);names.append(model["name"].toString(id)+"  ["+id+"]");}
+        if(ids.isEmpty()){m_feedback->setText("No enabled models were returned. Enable models in Settings before choosing a new default.");cancelOperations();return;}
         bool ok=false;const auto selected=QInputDialog::getItem(this,"Available models","Select a default model",names,qMax(0,ids.indexOf(m_model->text())),false,&ok);
         if(!self||!valid())return;
         if(ok)m_model->setText(ids.value(names.indexOf(selected)));
@@ -215,8 +300,25 @@ void ProviderDialog::beginApiOperation(bool validation){
     updateOperationControls();if(!valid())return;
     if(validation)service->test(provider);else service->discover(provider);
 }
+void ProviderDialog::beginOpenCodeDiscovery(){
+    if(m_closing||m_removePrompt||m_apiBusy||m_harnessBusy||!currentConfig().isOpenCodeHarness())return;
+    const auto provider=currentConfig();m_discoveryProvider=provider;m_harnessBusy=true;
+    const auto epoch=++m_operationEpoch;const QPointer<ProviderDialog> self(this);
+    auto* discovery=new OpenCodeModelDiscovery(this);m_openCodeDiscovery=discovery;
+    const auto valid=[self,discovery,epoch,provider]{return self&&self->m_openCodeDiscovery==discovery&&self->m_operationEpoch==epoch&&self->m_harnessBusy&&self->m_selected>=0&&self->m_selected<self->m_providers.size()&&self->m_providers[self->m_selected].id==provider.id&&self->m_providers[self->m_selected].isOpenCodeHarness();};
+    connect(discovery,&OpenCodeModelDiscovery::completed,this,[this,valid,provider](const QJsonArray& models,const QString& error){
+        if(!valid())return;
+        if(!error.isEmpty()){m_feedback->setText(error);cancelOperations();return;}
+        m_catalogs[provider.id]=cleanModelCatalog(provider,models);
+        m_model->setText(discoveredDefaultModel(provider,models,m_model->text()));
+        if(!valid())return;
+        m_feedback->setText(QString("OpenCode CLI returned %1 model choices. Save to use them; this did not verify sign-in or account entitlement.").arg(models.size()));cancelOperations();
+    });
+    updateOperationControls();if(!valid())return;
+    m_feedback->setText("Fetching models from the installed OpenCode CLI…");discovery->start(provider.harnessExecutable);
+}
 void ProviderDialog::beginHarnessConnection(bool login){
-    if(m_closing||m_apiBusy||m_harnessBusy||!currentConfig().isCodexHarness())return;
+    if(m_closing||m_removePrompt||m_apiBusy||m_harnessBusy||!currentConfig().isCodexHarness())return;
     m_discoveryProvider=currentConfig();const auto provider=m_discoveryProvider;m_harnessLogin=login;m_harnessBusy=true;
     const auto epoch=++m_operationEpoch;const QPointer<ProviderDialog> self(this);
     const auto valid=[self,epoch,provider]{return self&&self->m_operationEpoch==epoch&&self->m_harnessBusy&&self->m_selected>=0&&self->m_selected<self->m_providers.size()&&self->m_providers[self->m_selected].id==provider.id&&self->m_providers[self->m_selected].isCodexHarness();};
@@ -239,8 +341,7 @@ void ProviderDialog::beginHarnessConnection(bool login){
     connect(m_harness,&CodexAppServer::modelsReady,this,[this,valid,provider](const QJsonArray& models){
         if(!valid())return;
         m_catalogs[provider.id]=cleanModelCatalog(provider,models);
-        QString selected;bool existing=false;for(const auto& value:models){const auto model=value.toObject();if(selected.isEmpty()||model["isDefault"].toBool())selected=model["id"].toString();if(model["id"].toString()==m_model->text())existing=true;}
-        if(!existing&&!selected.isEmpty())m_model->setText(selected);
+        m_model->setText(discoveredDefaultModel(provider,models,m_model->text()));
         if(!valid())return;
         m_feedback->setText(models.isEmpty()?"Codex returned no selectable models.":QString("ChatGPT subscription connected. Discovered %1 models; Save to use them in the model picker.").arg(models.size()));finishHarnessConnection();
     });

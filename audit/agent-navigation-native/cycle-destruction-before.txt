@@ -1,0 +1,12 @@
+********* Start testing of AgentCycleHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AgentCycleHostTest::initTestCase()
+QWARN  : AgentCycleHostTest::destructionRetiresGlobalFilterBeforeWidgets(idle) QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : AgentCycleHostTest::destructionRetiresGlobalFilterBeforeWidgets(idle) 'filterRetired' returned FALSE. ()
+D:/age/ADE/tests/test_agent_cycle_host.cpp(46) : failure location
+FAIL!  : AgentCycleHostTest::destructionRetiresGlobalFilterBeforeWidgets(preview-active) 'filterRetired' returned FALSE. ()
+D:/age/ADE/tests/test_agent_cycle_host.cpp(46) : failure location
+PASS   : AgentCycleHostTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 206ms
+********* Finished testing of AgentCycleHostTest *********

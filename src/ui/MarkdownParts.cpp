@@ -202,9 +202,11 @@ void TranscriptText::setSource(const QString &source,bool markdown) {
 bool TranscriptText::containsImage(const QUrl &url) const{return m_imageUrls.values().contains(url);}
 bool TranscriptText::setTrustedImage(const QUrl &url,const QImage &image){
     if(image.isNull()||!containsImage(url))return false;
+    const QPointer<TranscriptText> self(this);
     for(auto it=m_imageUrls.cbegin();it!=m_imageUrls.cend();++it)if(it.value()==url)m_imageHandler->setImage(it.key(),image);
     document()->setProperty("trustedImageCount",document()->property("trustedImageCount").toInt()+1);
-    const QPointer<TranscriptText> self(this);document()->markContentsDirty(0,document()->characterCount());
+    if(!self)return true;
+    document()->markContentsDirty(0,document()->characterCount());
     if(self){viewport()->update();measure();}return true;
 }
 QVariant TranscriptText::loadResource(int,const QUrl &) {setProperty("blockedResourceLoads",property("blockedResourceLoads").toInt()+1);return {};}

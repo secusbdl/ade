@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-11-06T21:19:20.904092+00:00",
+  "status": "native component, Engine, provider and real MainWindow fixtures plus bounded live read-only smoke",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "fullNativeParity": false,
+  "implementation": [
+    "Optional installed OpenCode native CLI with ACP v1; no Electron or Node sidecar in ADE.",
+    "Session identity, cwd physical identity, restart/resume, per-turn context, streamed text/tools, permission and native question ownership, queued turns and stop.",
+    "Separate Coding Agents provider form, executable selection and cancelable native model catalog discovery. API credentials remain external to this provider form.",
+    "Thinking-disabled only selects an advertised ACP off/none/disabled option. CLI validation does not claim account entitlement."
+  ],
+  "evidence": [
+    {
+      "path": "audit/opencode-harness-native/opencode-ui-integration.xml",
+      "sha256CanonicalLf": "739956631eb2c025ba48e6f2152b858936ac3a94b37268e6a8db44d1887412ce"
+    },
+    {
+      "path": "audit/opencode-harness-native/opencode-ui-integration-ctest.txt",
+      "sha256CanonicalLf": "358ca4c00f5d7b84208d93b3d082ec8765b4dfb392043013804239668185dae1"
+    },
+    {
+      "path": "audit/opencode-harness-native/opencode-ui-integration-build.txt",
+      "sha256CanonicalLf": "a6ad482143690c2f1a606cf8aa9e69481b28dc19fce0a5cc92ad72972e927193"
+    },
+    {
+      "path": "audit/opencode-harness-native/native_opencode_harness.txt",
+      "sha256CanonicalLf": "31f6e89923e8c846a4efa035517429bc90a82b5c8ef55af3f0a6ef67f96f1204"
+    },
+    {
+      "path": "audit/opencode-harness-native/native_opencode_engine.txt",
+      "sha256CanonicalLf": "3d8732453dc51056c61980a40e31794124776aba52dc1b608642947f266b49e1"
+    },
+    {
+      "path": "audit/opencode-harness-native/native_opencode_provider_ui.txt",
+      "sha256CanonicalLf": "572721b72609c44a6205b02d231cc2eab974ab6515181c41bb255007eb637e2a"
+    },
+    {
+      "path": "audit/opencode-harness-native/native_opencode_host.txt",
+      "sha256CanonicalLf": "73cd3776481591b81104b1e26998bef0b2ef566ca048268174d69aba33de8c88"
+    }
+  ],
+  "liveEvidence": {
+    "path": "audit/opencode-harness-native/live-read-only.json",
+    "sha256CanonicalLf": "5cb80072ec981d451966f670ecbffd1fb6a15f1b752da674551abb4057129f49"
+  },
+  "liveArtifactKeyScan": {
+    "filesScanned": 60,
+    "suppliedKeysChecked": 14,
+    "filesContainingSuppliedKeys": 0
+  },
+  "limits": [
+    "The live smoke uses a hidden native transcript, not automated main-window input.",
+    "Model catalog discovery plus one authorized DeepSeek-backed inference run do not verify all model providers or subscription plans.",
+    "Structured-question MCP fallback, generated-image tool results, specialized external diffs/mutation journaling and multiple external workspaces remain separate work.",
+    "Complete all-target regression and final package GUI are pending for this integration."
+  ]
+}

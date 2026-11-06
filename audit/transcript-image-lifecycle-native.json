@@ -1,0 +1,80 @@
+{
+  "verifiedUtc": "2026-11-06T22:12:28.354300+00:00",
+  "fullNativeParity": false,
+  "change": "Bind image deduplication and resource accounting to actual live text documents rather than raw row/part/url for the whole chat. Revalidate rebuilt recipients through unchanged host image signal.",
+  "regressionCases": [
+    "anchor removal",
+    "stale pending reply",
+    "same document deduplication",
+    "fenced-segment recreation",
+    "two documents sharing one raw part URL",
+    "32 live binding slots released",
+    "64MiB image accounting released",
+    "cross-chat isolation",
+    "delete and replace owner on request",
+    "delete and replace owner on image publication",
+    "positive raster and text pixels in light/dark620/350"
+  ],
+  "tests": [
+    {
+      "path": "audit/transcript-image-lifecycle-native/native_transcript_image_lifecycle.txt",
+      "sha256CanonicalLf": "43c9c0f0c8f86fe1a5bf60ceb208e9579973159c76ba63d296d4643cba474661",
+      "passedIncludingLifecycle": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-image-lifecycle-native/native_transcript_grouping.txt",
+      "sha256CanonicalLf": "b72300e2308134d40bdfda0b523d0ea0681685e38d64edd2fb82a54a9a283c43",
+      "passedIncludingLifecycle": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-image-lifecycle-native/native_transcript_rich.txt",
+      "sha256CanonicalLf": "4f69801280f8f21306b6ad4c9fe20d4ff5618e6699b6f68b005362c6288f5ef6",
+      "passedIncludingLifecycle": 13,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-image-lifecycle-native/native_transcript_link_ui.txt",
+      "sha256CanonicalLf": "f42087396f1561c8733bbbd3d20deccf618945da80babedd3904cd23244aead7",
+      "passedIncludingLifecycle": 14,
+      "failed": 0,
+      "skipped": 1
+    }
+  ],
+  "limits": [
+    "32 live document/URL bindings and64MiB accepted downscaled raster accounting per view. URL churn in the same retained document consumes bindings until that document is destroyed.",
+    "Fresh recipient is revalidated by the host; no automatic HTTP/file loading or cross-row trusted-byte cache introduced.",
+    "Early TranscriptText QPointer guard is covered by publication deletion/replacement tests; no separate pre-fix crash probe was run."
+  ],
+  "componentRenders": [
+    {
+      "name": "regrouped-image-dark-350.png",
+      "sha256": "65360fcfb30a49bd8ec0a48b2eb427cbd2584acfb6bd8b442431382a61caee88",
+      "scope": "Hidden offscreen component with bundled app fonts/style and MainWindow foreground colors; not a live desktop screenshot."
+    },
+    {
+      "name": "regrouped-image-dark-620.png",
+      "sha256": "11985269c7a58d9498f95ea6a167cc511917a3fde368c528f06ec471b051c050",
+      "scope": "Hidden offscreen component with bundled app fonts/style and MainWindow foreground colors; not a live desktop screenshot."
+    },
+    {
+      "name": "regrouped-image-light-350.png",
+      "sha256": "dd248f4bb1372992642e2d88aedcb4245650fa1febd88ebe53d5a13779969d6f",
+      "scope": "Hidden offscreen component with bundled app fonts/style and MainWindow foreground colors; not a live desktop screenshot."
+    },
+    {
+      "name": "regrouped-image-light-620.png",
+      "sha256": "37461331cc486ff9c7d97a35ba1ac5a5b79fc42473bebc3da0647d682dcf82a3",
+      "scope": "Hidden offscreen component with bundled app fonts/style and MainWindow foreground colors; not a live desktop screenshot."
+    }
+  ],
+  "reproducedBefore": {
+    "path": "audit/transcript-image-lifecycle-native/before.txt",
+    "sha256CanonicalLf": "57abf8b6c548c3bd19a3067ef153d9bca51da6a4aa5f3a1cd7fc36d1b5563201",
+    "assertion": "Expected second image request after group anchor removal; actual requests stayed1."
+  }
+}

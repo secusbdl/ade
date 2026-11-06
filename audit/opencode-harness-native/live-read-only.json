@@ -1,0 +1,61 @@
+{
+  "recordedUtc": "2026-11-06T21:19:20.904092+00:00",
+  "packageSha256": "5dc6d62fa9510f1902183c2d0db18bd70872847553e0dd09d8a94af51e2f23b6",
+  "cliSha256": "6f15c8f241f3df22375f174753193a71c488f6c0a6bbbae3f9fa34d112673b7b",
+  "cliVersion": "1.19.5",
+  "provider": "OpenCode with authorized DeepSeek API key in ephemeral process environment",
+  "requestedModel": "deepseek/deepseek-flash",
+  "actualModel": "deepseek/deepseek-flash",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "exactMarker": true,
+  "tools": [
+    "acp.read"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 6331,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 14,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "e09e255db7d5c8aa45f4c5fbfe4c9ee5008a5368072df2cc0863b262f083252d",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "2815582a21edfbac95ff44b8853f348e057ee31a33421a55e1436b29614cd8e5",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-text.png",
+        "sha256": "b90cbca7240374cd003b16a567bd1fc540da433a319ecf41242a9558d04e07d5",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-completed.png",
+        "sha256": "b98785efb06621a98c616e7555ba84adfe11032c8d26aaf222f1027a2533517a",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 2.751,
+    "meanSetConversationMs": 1.2612166666666667,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 6,
+    "textDeltas": 7,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "scope": "Actual ADE native ACP adapter and transcript with one bounded real-model request. Targeted integration build, not final full gate or full-window interaction.",
+  "existingCliCredentialsRead": false
+}

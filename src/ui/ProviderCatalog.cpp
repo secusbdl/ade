@@ -7,6 +7,7 @@ const QList<ProviderTemplate>& ProviderCatalog::all() {
     // Protocol source: providers/official-api.ts, shared.ts, coding-plan.ts,
     // openrouter.ts and ollama.ts. Native Ollama stores the resolved /v1 endpoint.
     static const QList<ProviderTemplate> entries{
+        {"opencode","Coding Agents","OpenCode","Use your installed OpenCode agent and its configured account.",{},"opencode-acp",{},"Install OpenCode and run opencode auth login if needed. Account credentials stay with the CLI.","opencode"},
         {"codex","Coding Agents","Codex","Use the installed Codex agent and your ChatGPT sign-in.",{},"codex-app-server",{},"Subscription credentials stay with the installed Codex CLI.","codex"},
         {"glm-coding-plan","Subscriptions & Plans","GLM Coding Plan","GLM models through a Z.ai subscription.","https://api.z.ai/api/coding/paas/v4","openai","https://z.ai/manage-apikey/apikey-list","Use your Z.ai Coding Plan key. This plan has a dedicated coding endpoint.","api","https://z.ai/subscribe"},
         {"kimi-plan","Subscriptions & Plans","Kimi","Kimi models through the Moonshot platform.","https://api.moonshot.ai/v1","openai","https://platform.moonshot.ai/console/api-keys","Create a key in the Moonshot Console. Select an available model after fetching models.","api","https://platform.moonshot.ai/pricing"},
@@ -41,6 +42,7 @@ ProviderConfig ProviderCatalog::instantiate(const QString& id) {
     ProviderConfig provider;provider.id=QUuid::createUuid().toString(QUuid::WithoutBraces);
     provider.name=entry->id=="custom"?QStringLiteral("Custom provider"):entry->name;
     provider.baseUrl=entry->baseUrl;provider.protocol=entry->protocol;provider.kind=entry->kind;provider.templateId=entry->id;
+    if(provider.isOpenCodeHarness())provider.model="default";
     return provider;
 }
 bool ProviderCatalog::matches(const ProviderConfig& p,const ProviderTemplate& e) {

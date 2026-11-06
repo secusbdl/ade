@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "AgentCycleController.h"
 #include "Composer.h"
 #include "WorkbenchSplitter.h"
 #include <QApplication>
@@ -18,6 +19,16 @@ void MainWindow::initializeNavigationShortcuts() {
         return m_pages->currentIndex() == 0 && !QApplication::activeModalWidget()
             && !QApplication::activePopupWidget();
     };
+    m_agentCycle = new AgentCycleController(this, m_agents, this);
+    m_agentCycle->setActivationGuard(enabled);
+    connect(m_agentCycle, &AgentCycleController::openRequested, this, [this, enabled](const QString& id) {
+        const auto* session = find(id);
+        if (!enabled() || !session || session->archived || !session->sideChatParentId.isEmpty()) return;
+        // selectConversation owns draft persistence and may refuse the switch.
+        // refreshAgentCycle observes only the actually selected conversation.
+        selectConversation(id);
+    });
+    if (!refreshAgentCycle()) return;
     const auto bind = [this, enabled](const QString& action, const QStringList& keys,
                                     std::function<void()> callback) {
         auto* shortcut = new QShortcut(this);
@@ -92,16 +103,11 @@ void MainWindow::initializeNavigationShortcuts() {
         }
         return ids;
     };
-    const auto cycleAgent = [this, visibleAgents](int direction) {
-        const auto ids = visibleAgents();
-        if (ids.isEmpty()) return;
-        const int current = ids.indexOf(m_currentId);
-        const int target = current < 0 ? (direction > 0 ? 0 : ids.size() - 1)
-            : (current + direction + ids.size()) % ids.size();
-        selectConversation(ids[target]);
+    const auto cycleAgent = [this](int direction) {
+        if (m_agentCycle) m_agentCycle->stepImmediately(direction);
     };
-    // The source's Ctrl+Tab preview/commit-on-release overlay is a separate
-    // unported behavior. Its immediate PageUp/PageDown aliases are implemented.
+    // The source uses the same visible MRU snapshot for both Page aliases and
+    // Ctrl+Tab; Page aliases commit immediately without waiting for key release.
     bind("next_agent", {"Ctrl+PgDown"}, [cycleAgent] { cycleAgent(1); });
     bind("prev_agent", {"Ctrl+PgUp"}, [cycleAgent] { cycleAgent(-1); });
     for (int index = 0; index < 9; ++index)
@@ -109,7 +115,22 @@ void MainWindow::initializeNavigationShortcuts() {
              {QString("Ctrl+%1").arg(index + 1)}, [this, visibleAgents, index] {
                  const auto ids = visibleAgents();
                  const int target = index == 8 ? ids.size() - 1 : index;
-                 if (target >= 0 && target < ids.size()) selectConversation(ids[target]);
+                 if (target >= 0 && target < ids.size()) {
+                     const QPointer<MainWindow> self(this);
+                     if (m_agentCycle) m_agentCycle->cancel();
+                     if (self) selectConversation(ids[target]);
+                 }
              });
+}
+bool MainWindow::refreshAgentCycle() {
+    if (!m_agentCycle) return true;
+    QStringList ids;
+    for (const auto& session : m_sessions)
+        if (!session.archived && session.sideChatParentId.isEmpty()) ids.append(session.id);
+    const QPointer<MainWindow> self(this);
+    m_agentCycle->setAvailableIds(ids);
+    if (!self) return false;
+    m_agentCycle->observeCurrent(m_currentId);
+    return !self.isNull();
 }
 } // namespace ade

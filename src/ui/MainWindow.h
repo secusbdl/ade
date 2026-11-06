@@ -24,6 +24,7 @@ class DownloadsPage;
 class AttachmentStrip;
 class SidebarSplitter;class SidebarNavigation;class WorkbenchSplitter;class ChatSurface;
 class ConversationView;
+class AgentCycleController;
 class GitPanel;class WorktreeSetupRunner;class WorktreeSettingsController;enum class GitOperation;
 class WorktreeCleanupController;
 class ComposerCompletionController;
@@ -111,6 +112,7 @@ private:
     QHash<QString,QPointer<ComposerCompletionController>> m_sideCompletionControllers;
     void initializeCommandCenter();
     void initializeNavigationShortcuts();
+    bool refreshAgentCycle();
     void openCommandCenter(const QString& mode="global",bool searchContents=false);
     QPointer<CommandCenterController> m_commandCenterController;
     void refreshCompletionContext();
@@ -152,6 +154,7 @@ private:
     QWidget* m_fileTreePanel=nullptr;
     SidebarSplitter* m_sidebarSplitter=nullptr;
     SidebarNavigation* m_sidebarNavigation=nullptr;
+    AgentCycleController* m_agentCycle=nullptr;
     QToolButton* m_sidebarReopen=nullptr;
     QWidget* m_composerBox=nullptr;
     QListWidget* m_agents;QLineEdit* m_search;

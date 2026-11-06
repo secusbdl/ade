@@ -459,8 +459,19 @@ class WorkbenchLayoutTest final : public QObject {
         auto* view = window.findChild<ConversationView*>();
         view->setConversation("fixture", readRows("ws1/probe.txt"), false);
         QTest::qWait(30);
-        auto* row = view->findChild<QWidget*>("message_ready-row");
+        // Consecutive assistant rounds share the first visual row, while
+        // each part keeps its original message identity.
+        auto* row = view->findChild<QWidget*>("message_read-row");
         QVERIFY(row);
+        QVERIFY(!view->findChild<QWidget*>("message_ready-row"));
+        bool readPart = false, readyPart = false;
+        for (auto* part : row->findChildren<QWidget*>()) {
+            readPart |= part->property("sourceMessageId").toString() == "read-row"
+                && part->property("partId").toString() == "read-part";
+            readyPart |= part->property("sourceMessageId").toString() == "ready-row"
+                && part->property("partId").toString() == "ready-part";
+        }
+        QVERIFY(readPart); QVERIFY(readyPart);
         auto* viewport = view->findChild<QScrollArea*>("transcriptScroll")->viewport();
         QVERIFY(row->width() <= 768);
         QVERIFY(qAbs(in(row, viewport).center().x() - viewport->rect().center().x()) < 3);

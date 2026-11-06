@@ -1,4 +1,6 @@
 #include "MainWindow.h"
+#include <QStandardItemModel>
+#include "AgentCycleController.h"
 #include "ChevronToolButton.h"
 #include "WorkbenchSplitter.h"
 #include "ChatSurface.h"
@@ -227,6 +229,11 @@ void MainWindow::buildUi() {
     connect(m_settings,&SettingsPage::providersRequested,this,[this]{showProviders();});
     connect(m_settings,&SettingsPage::addProviderRequested,this,[this]{showProviders(true);});
     connect(m_settings,&SettingsPage::providerEditRequested,this,[this](const QString& id){showProviders(false,id);});
+    connect(m_settings,&SettingsPage::providerVisibilityChanged,this,[this]{
+        QString error;const auto providers=m_providerRepository.load(&error);
+        if(!error.isEmpty()){m_settings->reportProviderImportResult(error,true);return;}
+        m_providers=providers;const QPointer<MainWindow> self(this);refreshModels();if(self)refreshSideChats();
+    });
     connect(m_settings,&SettingsPage::preferencesChanged,this,&MainWindow::applyPreferences);
     connect(qApp->styleHints(),&QStyleHints::colorSchemeChanged,this,[this]{
         if(m_settings->preference("personalization.appearance").toString()=="system")applyPreferences();
@@ -242,7 +249,7 @@ void MainWindow::buildUi() {
 Conversation* MainWindow::find(const QString& id){for(auto& s:m_sessions)if(s.id==id)return &s;return nullptr;}
 Conversation* MainWindow::current(){return find(m_currentId);}
 void MainWindow::refreshAgents(){
-    if(!m_sidebarNavigation)return;
+    if(!refreshAgentCycle()||!m_sidebarNavigation)return;
     QSet<QString> busy;
     for(auto it=m_engines.cbegin();it!=m_engines.cend();++it)
         if(it.value()&&it.value()->isBusy())busy.insert(it.key());
@@ -265,7 +272,14 @@ void MainWindow::restoreModelSelection(){
     // Old conversations keep their exact model even if the default/catalog changed.
     // A removed preset keeps that model but no longer supplies its overrides.
     ProviderConfig provider;saved.presetId.clear();
-    if(saved.resolve(m_providers,&provider)){saved.label=provider.name+" / "+saved.modelId;m_models->addItem(saved.label,saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
+    if(saved.resolve(m_providers,&provider)){
+        saved.label=provider.name+" / "+saved.modelId;m_models->addItem(saved.label,saved.toJson());const int index=m_models->count()-1;
+        if(!isModelEnabled(provider,saved.modelId)){
+            if(auto* model=qobject_cast<QStandardItemModel*>(m_models->model()))model->item(index)->setEnabled(false);
+            m_models->setItemData(index,"Hidden from new model choices. This conversation keeps its saved model.",Qt::ToolTipRole);
+        }
+        m_models->setCurrentIndex(index);
+    }
     else {m_models->addItem("Saved provider unavailable",saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
 }
 void MainWindow::selectConversation(const QString& id){
@@ -568,10 +582,7 @@ void MainWindow::importKeys(const QString& path){
     const auto imported=ProviderStore::importKeyFile(path,&error);
     if(imported.isEmpty()){report(error.isEmpty()?"No provider keys found.":error,true);return;}
     const auto notice=error;
-    for(const auto& p:imported){
-        auto it=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& a){return a.id==p.id;});
-        if(it==providers.end())providers.append(p);else *it=p;
-    }
+    providers=ProviderStore::mergeImported(providers,imported);
     if(!m_providerRepository.save(providers,&error)){report(error,true);return;}
     m_providers=providers;refreshModels();
     const QPointer<MainWindow> self(this);
@@ -684,6 +695,9 @@ void MainWindow::openFile(const QString& path){
     m_tabs->setCurrentIndex(m_tabs->addTab(editor,QFileInfo(path).fileName()));revealContent();
 }
 MainWindow::~MainWindow(){
+    // This application-wide filter invokes guards that read our page widgets.
+    // Retire it while those widgets are intact, before QObject deletes children.
+    auto* agentCycle = m_agentCycle;m_agentCycle = nullptr;delete agentCycle;
     m_browserSessionInitialized=false;if(m_browserSessionTimer)m_browserSessionTimer->stop();
     // Child destruction occurs after derived members are destroyed. Browser
     // teardown signals must not access those members during QObject cleanup.

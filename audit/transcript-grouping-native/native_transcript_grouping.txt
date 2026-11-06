@@ -1,0 +1,22 @@
+********* Start testing of GroupingTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GroupingTest::initTestCase()
+PASS   : GroupingTest::adjacentAssistantRowsShareFirstRow()
+PASS   : GroupingTest::groupingIsValueOnlyAndFiltersBeforeMerging()
+PASS   : GroupingTest::laterPartLinksRetainRawOwner()
+PASS   : GroupingTest::repeatedApprovalIdsRetainBatchOwner()
+PASS   : GroupingTest::explorationCanCrossBatchWithoutLosingIdentity()
+PASS   : GroupingTest::streamingAppendedRowKeepsEarlierDocuments()
+PASS   : GroupingTest::turnFilesRemainBoundToLastRawRow()
+PASS   : GroupingTest::staleSummaryCannotAttachToExtendedGroup()
+PASS   : GroupingTest::imageAndDeletionKeepExactOwner()
+PASS   : GroupingTest::userBoundaryKeepsSeparateGroups()
+PASS   : GroupingTest::sourceMetadataCannotRelabelPartAuthority()
+PASS   : GroupingTest::cachedSummaryMovesToNewLastRawRow()
+PASS   : GroupingTest::earlierApprovalStateUpdatesAfterGrouping()
+PASS   : GroupingTest::groupRoleReplacementRebuildsOnlyChangedRow()
+PASS   : GroupingTest::laterAssistantAttachmentRemainsVisible()
+PASS   : GroupingTest::groupedApprovalObserverMayDeleteView()
+PASS   : GroupingTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 82ms
+********* Finished testing of GroupingTest *********

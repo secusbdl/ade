@@ -28,12 +28,14 @@ struct ContextSkill {
     QString id, name, description, source, path, contentPath, pluginId;
     bool userInvocable = true, agentInvocable = true;
 };
+struct ContextInvokedSkill { QString id, path, content; };
 struct ContextSnapshot {
     QList<ContextInstruction> instructions;
     QList<ContextSkill> skills;
     QStringList warnings;
     QString prompt;
     QString fingerprint;
+    QList<ContextInvokedSkill> invokedSkills;
     QJsonObject manifest() const;
 };
 // Synchronous, bounded local-file discovery. This class executes no scripts or remote actions.
@@ -43,6 +45,9 @@ public:
     ContextSnapshot snapshot() const { return m_snapshot; }
     QString readFile(const QString &virtualPath, QString *error = nullptr) const;
     static QJsonArray toolDefinitions();
+    // For an external CLI's own tool runtime. No native mount/tool roster is
+    // advertised; explicit instructions/invoked bodies are preserved as data.
+    static QString externalHarnessContext(const ContextSnapshot& snapshot);
 private:
     struct Mount { QString virtualRoot, physicalRoot; };
     struct ExactFile { QString path, root; };

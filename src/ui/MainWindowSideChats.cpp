@@ -40,6 +40,13 @@ void MainWindow::refreshSideChats(){
 void MainWindow::refreshSideChat(const QString& id){
     const QPointer<SideChatPane> pane=m_sideChats.value(id);const auto* session=find(id);if(!pane||!session)return;const auto* engine=m_engines.value(id);const Conversation snapshot=*session;
     QJsonArray models;for(const auto& selection:availableModelSelections(m_providers,m_settings->preference("modelCatalogs").toObject(),m_settings->preference("modelPresets").toArray()))models.append(selection.toJson());
+    if(!snapshot.model.isEmpty()){
+        const ModelSelection saved{snapshot.providerId,snapshot.model,snapshot.presetId,{},{}};ProviderConfig provider;bool present=false;
+        for(const auto& value:models)if(ModelSelection::fromJson(value.toObject()).key()==saved.key()){present=true;break;}
+        if(!present&&saved.resolve(m_providers,&provider)&&!isModelEnabled(provider,snapshot.model)){
+            auto item=saved.toJson();item["label"]=provider.name+" / "+snapshot.model;item["selectable"]=false;models.append(item);
+        }
+    }
     const QPointer<MainWindow> self(this);const auto rows=engine?engine->displayMessages():AgentEngine::displayHistory(snapshot.messages);
     if(engine)updateTranscriptLinkRows(id,rows);
     pane->setState(snapshot,rows,engine&&engine->isBusy(),models,engine?engine->pendingQuestion():QJsonObject(),engine?engine->queuedMessages():snapshot.queuedMessages);

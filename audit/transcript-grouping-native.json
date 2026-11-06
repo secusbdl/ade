@@ -1,0 +1,93 @@
+{
+  "verifiedUtc": "2026-11-06T22:12:28.354300+00:00",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "fullNativeParity": false,
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+      "lines": "435-505",
+      "contract": "Filter user/assistant, concatenate consecutive assistant parts under first message ID, retain unchanged presentation objects."
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "lines": "updateTranscriptLinkRows / routeTranscriptLink",
+      "contract": "Raw source-row and part identity determine link provenance; visual first-row grouping cannot grant later-row authority."
+    },
+    {
+      "path": "src/ui/MainWindowTurnFiles.cpp",
+      "lines": "20-27",
+      "contract": "Host validates exact last raw assistant row and its mutation ID selection before journal/file actions."
+    },
+    {
+      "path": "src/ui/TurnFileEdits.cpp",
+      "lines": "selections",
+      "contract": "One turn summary aggregates mutations in raw order and is keyed to the last assistant row."
+    }
+  ],
+  "implementation": [
+    "Typed view-only TranscriptGroup/TranscriptPart; first visual ID and ordered parts; original source row is not read from metadata.",
+    "No edits to AgentEngine, AgentPresentation, provider replay or durable history; no blind metadata union. Aggregate typed visible attachment refs so later-round tool-created chips remain visible.",
+    "Links, images and approvals retain original raw row/part IDs even when IDs repeat in different rounds.",
+    "Turn-file requests/actions retain last raw row ID, mapped to the combined widget only for rendering; cache and host validation unchanged.",
+    "Part equality cache and itemAt layout checks preserve settled widgets/documents/selection and avoid quadratic layout searches while streaming."
+  ],
+  "tests": [
+    {
+      "path": "audit/transcript-grouping-native/native_transcript_grouping.txt",
+      "sha256CanonicalLf": "b72300e2308134d40bdfda0b523d0ea0681685e38d64edd2fb82a54a9a283c43",
+      "passedIncludingLifecycle": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-grouping-native/native_transcript.txt",
+      "sha256CanonicalLf": "e79c6568a97b20ea07578796a69663c610f68d9408b89a19851519ad6d3af76f",
+      "passedIncludingLifecycle": 35,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-grouping-native/native_turn_files.txt",
+      "sha256CanonicalLf": "ecbf62d337c6669d5df9c31710b6ba7bcbb5f4b90d7e300e95b0308840b3cced",
+      "passedIncludingLifecycle": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-grouping-native/native_turn_files_host.txt",
+      "sha256CanonicalLf": "cbc77d8b3048decc4e46828b7ee2222727c0a50ddbeb79e7840074ad72adf6ca",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "audit/transcript-grouping-native/native_transcript_link_ui.txt",
+      "sha256CanonicalLf": "f42087396f1561c8733bbbd3d20deccf618945da80babedd3904cd23244aead7",
+      "passedIncludingLifecycle": 14,
+      "failed": 0,
+      "skipped": 1
+    },
+    {
+      "path": "audit/transcript-grouping-native/native_transcript_tabs_real.txt",
+      "sha256CanonicalLf": "74eeb18e23648eac52c5fe952eebc2ea0929919a17a848b7bab340bbcaaf237c",
+      "passedIncludingLifecycle": 3,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "limits": [
+    "Full history traversal remains linear; no virtualization.",
+    "Synthetic component and actual native host/link tests do not establish identical generated reasoning or output.",
+    "Original source-row/part identity remains authoritative; visual grouping never merges provenance metadata."
+  ],
+  "reproducedBefore": [
+    {
+      "path": "audit/transcript-grouping-native/before.txt",
+      "sha256CanonicalLf": "37f2e7a808f6acc899c26410fb92f2076e6e8e763b27f73ba903ef588fd57c75"
+    },
+    {
+      "path": "audit/transcript-grouping-native/attachment-before.txt",
+      "sha256CanonicalLf": "89ee00a15c349af35fa6ed9285687cce9a66c8564b747a77e570f2c9eda8be6b"
+    }
+  ]
+}

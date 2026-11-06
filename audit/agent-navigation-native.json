@@ -1,0 +1,71 @@
+{
+  "verifiedUtc": "2026-11-06T21:16:56.601116+00:00",
+  "scope": "Pinned agent-cycle navigation and native window teardown",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "fullNativeParity": false,
+  "sourceReferences": [
+    "reference/stagewise/apps/browser/src/ui/screens/main/_components/global-hotkey-bindings.tsx",
+    "reference/stagewise/apps/browser/src/ui/hooks/use-open-chat.tsx"
+  ],
+  "repairs": [
+    {
+      "failure": "A global application event filter called the page guard after QStackedWidget layout destruction. Offscreen recovered-turn host crashed.",
+      "diagnosis": "Native debugger: QStackedLayout::currentIndex -> MainWindow shortcut guard -> AgentCycleController::allowed/eventFilter -> QApplication global event dispatch during child destruction.",
+      "change": "MainWindow retires the application-wide AgentCycleController before child-widget teardown.",
+      "regression": "Both idle and active-preview teardown failed before fix and passed after; each now destroys three real MainWindows and checks retirement before central widget destruction. Original recovered-turn host suite passes."
+    },
+    {
+      "failure": "Ctrl+PageDown chose sidebar agent1 instead of most recent agent0.",
+      "change": "Ctrl+PageUp/PageDown now step and immediately commit the same MRU snapshot as Ctrl+Tab, preserving numeric sidebar-index shortcuts.",
+      "regression": "Actual host verifies MRU forward/backward, immediate commit and both saved drafts; reproducer failed before fix."
+    }
+  ],
+  "focusedSuites": 3,
+  "failedSuites": 0,
+  "sourceHashes": {
+    "src/ui/MainWindow.cpp": "43dd03770be07a7df01e92003c63114b3f9e5501e402eb5407fa058b1c6a2c0c",
+    "src/ui/MainWindowShortcuts.cpp": "df43db2f03235c1de42dde9dbe67b758ec5f3fd66b43e72babef18f2de83518f",
+    "src/ui/AgentCycleController.cpp": "ce49028a441aa6a329041665bd182bbbcbf61582cd4f0d6a701bf749d7762a6f",
+    "src/ui/AgentCycleController.h": "bfded42ff75a667e5287892593739699ffef1bec6641139f03ccd7fac54e005d",
+    "tests/test_agent_cycle_host.cpp": "42ef0c6ee1078e0418d6894f3d63884e5d4d08e8a0bf42749677c5b296762a24",
+    "tests/test_navigation_shortcuts.cpp": "2c325cb0420b83c70f12290fcca2b9aaa59099a857380d2b4e3fa4522cca9cf9"
+  },
+  "evidence": [
+    {
+      "path": "audit/agent-navigation-native/cycle-alias-before.txt",
+      "sha256CanonicalLf": "11b600b596ebd36f20c0a8b11a8a5a5fa516308105dc18d67e83b5613e04805b"
+    },
+    {
+      "path": "audit/agent-navigation-native/cycle-destruction-before.txt",
+      "sha256CanonicalLf": "66472a25e99d1a5f129770a153b60efe8d3d4d8eb9046aae56dd80a512ae322d"
+    },
+    {
+      "path": "audit/agent-navigation-native/cycle-fixes.xml",
+      "sha256CanonicalLf": "60680ed1508d36cad5f77215d9dc274aa8489c1cc0894fe4d9a19688da57f7dd"
+    },
+    {
+      "path": "audit/agent-navigation-native/cycle-fixes-ctest.txt",
+      "sha256CanonicalLf": "eb8b9d4668ccc77fd2843619480c1b2df5501ce6a18d6157d16e2dc1220eec0c"
+    },
+    {
+      "path": "audit/agent-navigation-native/cycle-fixes-build.txt",
+      "sha256CanonicalLf": "8b587f4f525717e34d0272e814c2e820add059adbf7bb7381c99948d34a4f147"
+    },
+    {
+      "path": "audit/agent-navigation-native/native_agent_cycle_host.txt",
+      "sha256CanonicalLf": "5137d5daa59af30ad15202fbcd03010dce567af19a760476199323db13c59c15"
+    },
+    {
+      "path": "audit/agent-navigation-native/native_navigation_shortcuts.txt",
+      "sha256CanonicalLf": "587a78f7f87084259f1801d94273ee434518678ae57fc0007130ed74ee9dfac7"
+    },
+    {
+      "path": "audit/agent-navigation-native/native_turn_files_host.txt",
+      "sha256CanonicalLf": "b3dd895869947b11e2dae29eb903da24da5dc3779d1e626b19de97e1931990f2"
+    }
+  ],
+  "limitations": [
+    "This focused native host gate is not full-app or full-Stagewise parity verification.",
+    "The complete debugger transcript remains private; only the relevant symbol path is summarized here."
+  ]
+}

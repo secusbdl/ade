@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T21:57:46.286587+00:00",
+  "status": "passed_manual_native_candidate_checks",
+  "exeSha256": "7add60595c9f8879801d6512e4abbabd83b31edd5170b1395c3dc87aca309ab8",
+  "candidate": "out/parity-followup-gui-candidate/ADE.exe",
+  "method": "Computer Use skill, native Windows GUI; screenshot-backed actions and exact-process exit checks.",
+  "profile": "Fresh synthetic isolated providers, conversations and workspace; no user account state modified.",
+  "modelRequests": {
+    "realNetwork": false,
+    "fixturePrompts": 1,
+    "protocol": "Native ACP subprocess"
+  },
+  "idleClose": {
+    "pid": 57748,
+    "exitCode": 0,
+    "unsentDraftRestoredOnNextLaunch": true
+  },
+  "busyClose": {
+    "pid": 24984,
+    "exitCode": 0,
+    "ownedAcpChildPid": 41428,
+    "remainingObservedProcesses": [],
+    "clickToExitLatencyMeasured": false
+  },
+  "steps": [
+    {
+      "step": "01-main",
+      "observation": "Native main window with Settings visible and three restored fixture agents.",
+      "images": [
+        {
+          "name": "01-main.jpg",
+          "sha256": "8b19ba8e987d595f3c0a981d211c18cf42bb85d27ce3831a80e695484a5a67d2"
+        }
+      ]
+    },
+    {
+      "step": "02-settings",
+      "observation": "Models & Providers page with exact two provider cards, Models buttons and Import API key file entry.",
+      "images": [
+        {
+          "name": "02-settings.jpg",
+          "sha256": "2f622c5376fc59a53daef31449edf3ab36104a706af98f78058836190b54c3f2"
+        }
+      ]
+    },
+    {
+      "step": "03-model-controls",
+      "observation": "Provider-specific model dialog initially displays two enabled models.",
+      "images": [
+        {
+          "name": "03-model-controls-owned-1.jpg",
+          "sha256": "313c2cfc23ee713983aef6a48936f72923e3f376d758880d023feed25e78a2b2"
+        },
+        {
+          "name": "03-model-controls.jpg",
+          "sha256": "261e54b8f63cc84007685a7cc461f293a0beedc5c752589c9c83227a400b16d4"
+        }
+      ]
+    },
+    {
+      "step": "04-models-disabled",
+      "observation": "Disable all writes two disabled model IDs for only qa-opencode. Other provider and saved model IDs unchanged.",
+      "images": [
+        {
+          "name": "04-models-disabled-owned-1.jpg",
+          "sha256": "bc791f074aeb881ac1312fb70e70acd20c6b64c043644ff64a7228ea2627b802"
+        },
+        {
+          "name": "04-models-disabled.jpg",
+          "sha256": "86a5e55c4bb075ec9424a9e918064e6ba1f26f84b8d9b328a690315dd368443a"
+        }
+      ]
+    },
+    {
+      "step": "05-model-filter-persisted",
+      "observation": "Reopening retains zero enabled models; Model A search shows only that matching row.",
+      "images": [
+        {
+          "name": "05-model-filter-persisted-owned-1.jpg",
+          "sha256": "67ea581b90115375f571cf089323a48cb4e304b97a79a87e04b6739e54143920"
+        },
+        {
+          "name": "05-model-filter-persisted.jpg",
+          "sha256": "d02aaea0fbb0c544b9e67bbb5f33e448790e4a05b362c2f5f7f3463e960a6ad9"
+        }
+      ]
+    },
+    {
+      "step": "06-models-restored",
+      "observation": "Enable all restores both models while search remains filtered; saved file confirms no disabled IDs.",
+      "images": [
+        {
+          "name": "06-models-restored-owned-1.jpg",
+          "sha256": "87a00b55e614dcf58a3e152cc26948f86a9798f5f8fa22fc6fbc59c6da96b77b"
+        },
+        {
+          "name": "06-models-restored.jpg",
+          "sha256": "0f60ac60306ed52caad5a45a1e9ae75b6cbf530fecf06ad911144c1e4295aafa"
+        }
+      ]
+    },
+    {
+      "step": "07-opencode-editor",
+      "observation": "Existing OpenCode card opens correct provider/model, executable and native CLI controls.",
+      "images": [
+        {
+          "name": "07-opencode-editor-owned-1.jpg",
+          "sha256": "cb6217ffa6013e79a760e2ca691d1a04cb73dd5fb7449c13ef323d7a5a678a82"
+        },
+        {
+          "name": "07-opencode-editor.jpg",
+          "sha256": "614202bcf859c1e2b148ca4bab06b9a179d07171b40a2b4e232476d9d34469da"
+        }
+      ]
+    },
+    {
+      "step": "08-removal-cancel",
+      "observation": "Removal confirmation states CLI sign-in remains unchanged; Escape cancels and provider survives.",
+      "images": [
+        {
+          "name": "08-removal-cancel-owned-1.jpg",
+          "sha256": "47c6b999e65234eb05d4d2ddadb548b5fa217932f3553e0cbfdcb81802a046d6"
+        },
+        {
+          "name": "08-removal-cancel-owned-2.jpg",
+          "sha256": "f5731dc89ba921beb17afdabf31e2d0478a821cff421e6fcd57136f253730b5e"
+        },
+        {
+          "name": "08-removal-cancel.jpg",
+          "sha256": "f8d1c17a364787605d0302fddb055e9332c58741b81190bfcd645b1b9f04a581"
+        }
+      ]
+    },
+    {
+      "step": "09-provider-picker",
+      "observation": "Add Provider offers implemented OpenCode and Codex; picker/editor cancellation preserves both original provider records.",
+      "images": [
+        {
+          "name": "09-provider-picker-owned-1.jpg",
+          "sha256": "b2fec70b039786c0318ccfa0026ebdac1a1550ec7aab87d521a93e4318c41d19"
+        },
+        {
+          "name": "09-provider-picker-owned-2.jpg",
+          "sha256": "9684ecce9cbaebe59ee945df1e95346b378efd8d5669aca63eb1e8e93dc6a0a2"
+        },
+        {
+          "name": "09-provider-picker.jpg",
+          "sha256": "4e8657386aece5207bd2fc666939963e95537431adb29d9ffcfef451da8230fd"
+        }
+      ]
+    },
+    {
+      "step": "10-plugins",
+      "observation": "Settings displays Figma, GitHub, PostHog, Supabase and Vercel plugin cards.",
+      "images": [
+        {
+          "name": "10-plugins.jpg",
+          "sha256": "28c6024b2199bcd4c2f09a5792dbe851e17e673efca2b6665ae4254c1ab5b840"
+        }
+      ]
+    },
+    {
+      "step": "11-github-token-settings",
+      "observation": "GitHub detail page displays token save/check/remove controls; fresh profile has no token. No credential action submitted.",
+      "images": [
+        {
+          "name": "11-github-token-settings.jpg",
+          "sha256": "7efd930d23013ffb5e970bdb1dd5a792250d2a10d03bcb4604a81abc15a4ddfb"
+        }
+      ]
+    },
+    {
+      "step": "12-send-enabled-idle-close",
+      "observation": "Actual text entry enables Send. Windows titlebar X closes idle process57748 with exit0.",
+      "images": [
+        {
+          "name": "12-send-enabled-idle-close.jpg",
+          "sha256": "3ba63b2cbdba5b7dc244249f6e7ccf714962a9835e957edfc3296488e9beaf27"
+        }
+      ]
+    },
+    {
+      "step": "13-draft-restored",
+      "observation": "Relaunch restores exact unsent draft and enabled Send.",
+      "images": [
+        {
+          "name": "13-draft-restored.jpg",
+          "sha256": "a9ca82631987ec0c1fceac3638d735fc8013507c127ddb10625c484919ecd7ed"
+        }
+      ]
+    },
+    {
+      "step": "14-active-agent-before-close",
+      "observation": "Sending to held local ACP fixture displays streamed Thinking and Stop. Titlebar X closes process24984 with exit0; owned child41428 is absent afterward.",
+      "images": [
+        {
+          "name": "14-active-agent-before-close.jpg",
+          "sha256": "1456259dcf4102c2f4b59895f2088de7b526f0e0efb306d72a66748970ab3b56"
+        }
+      ]
+    }
+  ],
+  "screenshotsLocalOnly": true,
+  "gallery": "out/wake-up-review/index.html",
+  "limits": [
+    "This validates the identified candidate binary. A final package must have the identical SHA-256 before inheriting these checks.",
+    "The close test uses a held local ACP process, not a real model call. Separate live OpenCode/Codex/DeepSeek reports identify their own binaries.",
+    "UI automation initially had stale owned-dialog indexes and lost first composer focus; fresh screenshot coordinates/refocus completed the actions. No app defect is inferred from those input failures.",
+    "This does not establish full Stagewise parity or universal defect freedom."
+  ]
+}

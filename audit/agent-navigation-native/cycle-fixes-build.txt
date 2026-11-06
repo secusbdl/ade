@@ -1,0 +1,43 @@
+[0/2] Re-checking globbed directories...
+[1/16] Automatic MOC and UIC for target ade_ui
+[2/16] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AgentCycleController.cpp.obj
+[3/16] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[4/16] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShortcuts.cpp.obj
+[5/16] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[6/16] Linking CXX static library libade_ui.a
+[7/16] Automatic MOC and UIC for target test_agent_cycle_host
+[8/15] Automatic MOC and UIC for target test_navigation_shortcuts
+[9/14] Building CXX object CMakeFiles/test_agent_cycle_host.dir/tests/test_agent_cycle_host.cpp.obj
+D:/age/ADE/tests/test_agent_cycle_host.cpp: In function 'void {anonymous}::activate(ade::MainWindow&)':
+D:/age/ADE/tests/test_agent_cycle_host.cpp:19:128: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   19 | void activate(MainWindow& w) {w.setAttribute(Qt::WA_DontShowOnScreen);w.resize(1200,800);w.show();QApplication::setActiveWindow(&w);QApplication::processEvents();}
+      |                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_agent_cycle_host.cpp:6:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_agent_cycle_host.cpp: In member function 'void AgentCycleHostTest::previewKeepsActualDraftThenCommitPersistsAndRestartRestores()':
+D:/age/ADE/tests/test_agent_cycle_host.cpp:79:13: warning: this 'for' clause does not guard... [-Wmisleading-indentation]
+   79 |             for(const auto& row:saved)if(row.id==original){found=true;QCOMPARE(row.draft,QString("Unsent cycle draft"));}QVERIFY(found);
+      |             ^~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtesteventloop.h:8,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qsignalspy.h:10,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/QtTest:10,
+                 from D:/age/ADE/tests/test_agent_cycle_host.cpp:11:
+D:/age/ADE/tests/test_agent_cycle_host.cpp:79:122: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'for'
+   79 |             for(const auto& row:saved)if(row.id==original){found=true;QCOMPARE(row.draft,QString("Unsent cycle draft"));}QVERIFY(found);
+      |                                                                                                                          ^~~~~~~
+[10/14] Building CXX object CMakeFiles/test_navigation_shortcuts.dir/tests/test_navigation_shortcuts.cpp.obj
+D:/age/ADE/tests/test_navigation_shortcuts.cpp: In function 'void {anonymous}::activate(ade::MainWindow&)':
+D:/age/ADE/tests/test_navigation_shortcuts.cpp:46:34: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   46 |     QApplication::setActiveWindow(&window);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_navigation_shortcuts.cpp:10:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[11/14] Linking CXX executable bin\test_turn_files_host.exe
+[12/14] Linking CXX executable bin\test_navigation_shortcuts.exe
+[13/14] Linking CXX executable bin\test_agent_cycle_host.exe

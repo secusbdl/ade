@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="5"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="6"
+	timestamp="2026-11-06T23:17:02"
+	>
+	<testcase name="native_codex_provider_ui" classname="native_codex_provider_ui" time="0.431073" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_picker_window" classname="native_provider_picker_window" time="1.70842" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_removal_window" classname="native_provider_removal_window" time="0.755008" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_provider_ui" classname="native_opencode_provider_ui" time="0.705337" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_host" classname="native_opencode_host" time="3.14064" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

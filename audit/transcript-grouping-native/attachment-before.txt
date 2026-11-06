@@ -1,0 +1,10 @@
+********* Start testing of GroupingTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GroupingTest::initTestCase()
+QWARN  : GroupingTest::laterAssistantAttachmentRemainsVisible() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : GroupingTest::laterAssistantAttachmentRemainsVisible() 'chip' returned FALSE. ()
+D:/age/ADE/private/transcript-grouping-stage/tests/test_transcript_grouping.cpp(39) : failure location
+PASS   : GroupingTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 8ms
+********* Finished testing of GroupingTest *********

@@ -1,0 +1,22 @@
+********* Start testing of GitUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitUiTest::initTestCase()
+PASS   : GitUiTest::scopeAndDisabledActions()
+PASS   : GitUiTest::stagedAndWorkingPreview()
+PASS   : GitUiTest::lateWorkspaceResponsesIgnored()
+QWARN  : GitUiTest::createMountAndHostGuard() This plugin does not support propagateSizeHints()
+QWARN  : GitUiTest::createMountAndHostGuard() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::createMountAndHostGuard()
+QWARN  : GitUiTest::sameWorkspaceChatSwitchDoesNotMountLateResult() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::sameWorkspaceChatSwitchDoesNotMountLateResult()
+QWARN  : GitUiTest::mainAndCheckedOutBranchesDisabled() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::mainAndCheckedOutBranchesDisabled()
+QWARN  : GitUiTest::explicitDirtyDeletion() This plugin does not support propagateSizeHints()
+QWARN  : GitUiTest::explicitDirtyDeletion() This plugin does not support propagateSizeHints()
+PASS   : GitUiTest::explicitDirtyDeletion()
+PASS   : GitUiTest::refreshUpdatesSelectedPreview()
+PASS   : GitUiTest::renderNativePanel()
+PASS   : GitUiTest::explicitThemeReachesBothPreviews()
+PASS   : GitUiTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 57836ms
+********* Finished testing of GitUiTest *********

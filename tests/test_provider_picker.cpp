@@ -24,8 +24,19 @@ class ProviderPickerTest:public QObject {
  Q_OBJECT
 private slots:
  void catalogContainsOnlyImplementedRoutes(){
-    QSet<QString> ids;for(const auto& entry:ProviderCatalog::all()){QVERIFY(!ids.contains(entry.id));ids.insert(entry.id);QVERIFY(!entry.name.isEmpty());QVERIFY(ProviderCatalog::groups().contains(entry.group));auto p=ProviderCatalog::instantiate(entry.id);QVERIFY(!p.id.isEmpty());QVERIFY(p.apiKey.isEmpty());QVERIFY(p.model.isEmpty());QVERIFY(p.harnessExecutable.isEmpty());QVERIFY(p.isCodexHarness()||ProviderProtocol::supports(p));}
-    QCOMPARE(ids.size(),21);QVERIFY(!ids.contains("claude-code"));QVERIFY(!ids.contains("opencode"));QVERIFY(!ids.contains("codex-stagewise"));QVERIFY(ProviderCatalog::instantiate("missing").id.isEmpty());
+    QSet<QString> ids;
+    for(const auto& entry:ProviderCatalog::all()) {
+        QVERIFY(!ids.contains(entry.id));ids.insert(entry.id);
+        QVERIFY(!entry.name.isEmpty());QVERIFY(ProviderCatalog::groups().contains(entry.group));
+        const auto p=ProviderCatalog::instantiate(entry.id);
+        QVERIFY(!p.id.isEmpty());QVERIFY(p.apiKey.isEmpty());QVERIFY(p.harnessExecutable.isEmpty());
+        if(p.isOpenCodeHarness()) {
+            QCOMPARE(entry.id,QString("opencode"));QCOMPARE(p.model,QString("default"));
+            QCOMPARE(p.protocol,QString("opencode-acp"));QVERIFY(p.baseUrl.isEmpty());
+        } else QVERIFY(p.model.isEmpty());
+        QVERIFY(p.isCodexHarness()||p.isOpenCodeHarness()||ProviderProtocol::supports(p));
+    }
+    QCOMPARE(ids.size(),22);QVERIFY(!ids.contains("claude-code"));QVERIFY(ids.contains("opencode"));QVERIFY(!ids.contains("codex-stagewise"));QVERIFY(ProviderCatalog::instantiate("missing").id.isEmpty());
  }
  void requestWire_data(){QTest::addColumn<QString>("id");for(const auto& e:ProviderCatalog::all())if(e.kind=="api"&&e.id!="custom")QTest::newRow(qPrintable(e.id))<<e.id;}
  void requestWire(){

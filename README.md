@@ -61,13 +61,19 @@ identical model reasoning or output.
   the subsequent provider-picker, coding-agent, changed-files and transcript work,
   including failures found during integration and the final verified scope.
 
+- [`audit/parity-followup-integration.json`](audit/parity-followup-integration.json)
+  records the subsequent **124-suite checkpoint**: OpenCode ACP, provider removal
+  and model visibility, source-derived prompt/context updates, MRU agent cycling,
+  grouped assistant replies and image lifecycle repairs. Exact package and GUI
+  evidence are identified separately from earlier live-model runs.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
 | --- | --- | --- |
 | Agent engine | Four provider wire protocols, streaming, cancellation, fallback, durable message queue and typed multi-step questions | `src/core` |
-| Coding agents | Installed Codex app-server, CLI-managed sign-in, model discovery, session resume, streamed tools/approvals and isolated fallback conversation files | `src/harness`, `src/core/AgentEngineHarness.cpp`, `src/runtime/HarnessFileContext*` |
-| Transcript | Stable rows, incremental Markdown/code/tool cards, inline approval, trusted image and bounded file-diff presentation, per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
+| Coding agents | Installed Codex app-server and OpenCode ACP, CLI-managed accounts, model discovery, session resume, streamed tools/approvals/questions and isolated fallback conversation files | `src/harness`, `src/core/AgentEngineHarness.cpp`, `src/runtime/HarnessFileContext*` |
+| Transcript | Consecutive assistant grouping with raw provenance, incremental Markdown/code/tool cards, inline approval, document-owned trusted images, bounded file diffs and per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
 | Transcript links | Conversation-scoped file, attachment and browser links; persisted/forked provenance remains checked against current mount identity | `src/links`, `src/ui/MainWindowLinks.cpp` |
 | Conversations | Atomic persistence, drafts, fork, archive/restore, restart selection, durable deletion cleanup and isolated side-chat promotion/discard | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp`, `src/ui/MainWindowSideChats.cpp` |
 | Files and context | Scoped reads/search, immutable read snapshots and reinjection; journaled write/edit/copy/move/delete and conflict-aware undo/recovery | `src/core/ToolExecutor*`, `src/mutations`, `src/attachments`, `src/runtime` |
@@ -78,7 +84,7 @@ identical model reasoning or output.
 | Agent shells | Persistent PowerShell sessions, commands/stdin/polls, process-local watchers, per-chat logs and readonly `shells/` mount | `src/shell`, `src/runtime/AgentToolHost*` |
 | Git and worktrees | Branch/worktree actions, repository watches, setup settings/execution, durable usage tracking and explicitly reviewed cleanup with fresh identity/status checks | `src/git` |
 | Changed files | Repository status tree and current Git diff tabs; per-turn native file snapshots, conflict-aware undo and durable mutation settlement | `src/ui/WorkspaceChanges*`, `src/ui/GitDiffTab*`, `src/ui/TurnFileEdits*`, `src/mutations` |
-| Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, direct tab/agent/focus shortcuts and provider/plugin configuration | `src/ui` |
+| Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, direct tab/agent/focus shortcuts, MRU agent preview/commit and provider/plugin configuration | `src/ui` |
 | Network/integrations | Credential redaction, per-host authorization and packaged integration instructions | `src/network`, `src/plugins`, `assets/plugins` |
 
 On Windows, the Git/worktree service passes `-c core.longpaths=true` per command
@@ -284,7 +290,7 @@ sandbox Node/importModule APIs, transcript retry/edit/revert, source-equivalent
 automatic context compression and token accounting,
 smart shell approval and local-server discovery, complete upstream cleanup policy/UI,
 rich PDF/Office/audio/video previews, every provider/subscription authentication flow,
-plugin installation/OAuth, hosted accounts/billing, ACP/research integrations,
+plugin installation/OAuth, hosted accounts/billing, remaining ACP and research integrations,
 complete browser/session restoration, updater/installer and full visual parity.
 The journal has explicit size/scope bounds and preserves conflicting user edits;
 its crash fixtures do not establish universal power-loss durability. UI-only file

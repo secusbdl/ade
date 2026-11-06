@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="18"
+	timestamp="2026-11-06T23:15:11"
+	>
+	<testcase name="native_navigation_shortcuts" classname="native_navigation_shortcuts" time="1.70563" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_turn_files_host" classname="native_turn_files_host" time="15.1736" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_cycle_host" classname="native_agent_cycle_host" time="1.29564" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

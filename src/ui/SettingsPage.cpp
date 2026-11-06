@@ -1,4 +1,5 @@
 #include "SettingsPage.h"
+#include "ProviderModelsDialog.h"
 
 #include "SessionStore.h"
 #include "ModelSelection.h"
@@ -608,6 +609,13 @@ void SettingsPage::buildProviders(QVBoxLayout *layout) {
         card(layout,provider.name,provider.model.isEmpty()?"Choose a model":provider.model,&row);
         auto *edit = new QPushButton("›");
         edit->setAccessibleName("Configure "+provider.name);
+        auto* models=new QPushButton("Models");models->setObjectName("manageProviderModels_"+provider.id);models->setAccessibleName("Manage models for "+provider.name);row->addWidget(models);
+        connect(models,&QPushButton::clicked,this,[this,id=provider.id]{
+            auto* dialog=new ProviderModelsDialog(m_dataDir,id,preference("modelCatalogs").toObject().value(id).toObject(),this);
+            dialog->setAttribute(Qt::WA_DeleteOnClose);
+            connect(dialog,&ProviderModelsDialog::modelsChanged,this,[this]{emit providerVisibilityChanged();});
+            dialog->open();
+        });
         row->addWidget(edit);
         connect(edit,&QPushButton::clicked,this,[this,id=provider.id]{emit providerEditRequested(id);});
     }
@@ -651,7 +659,7 @@ void SettingsPage::editModelPreset(const QString &id) {
     auto* form=new QFormLayout(&dialog);auto* name=new QLineEdit(preset["name"].toString());name->setObjectName("presetName");
     auto* model=new QComboBox;model->setObjectName("presetModel");int selected=-1;
     for(const auto& choice:choices){model->addItem(choice.label,choice.toJson());if(choice.providerId==primary["providerInstanceId"].toString()&&choice.modelId==primary["modelId"].toString())selected=model->count()-1;}
-    if(existing>=0&&selected<0){ModelSelection saved{primary["providerInstanceId"].toString(),primary["modelId"].toString(),{},primary["modelId"].toString(),{}};ProviderConfig resolved;const bool available=saved.resolve(providers,&resolved);model->addItem((available?resolved.name:saved.providerId+" (unavailable)")+" / "+saved.modelId,saved.toJson());selected=model->count()-1;}
+    if(existing>=0&&selected<0){ModelSelection saved{primary["providerInstanceId"].toString(),primary["modelId"].toString(),{},primary["modelId"].toString(),{}};ProviderConfig resolved;const bool available=saved.resolve(providers,&resolved);model->addItem((available?resolved.name+(!isModelEnabled(resolved,saved.modelId)?" (disabled)":""):saved.providerId+" (unavailable)")+" / "+saved.modelId,saved.toJson());selected=model->count()-1;}
     model->setCurrentIndex(selected>=0?selected:0);model->setEditable(true);model->setInsertPolicy(QComboBox::NoInsert);model->completer()->setCompletionMode(QCompleter::PopupCompletion);model->completer()->setFilterMode(Qt::MatchContains);
     auto* reasoning=new QComboBox;reasoning->setObjectName("presetReasoning");reasoning->addItem("Use provider setting",QString());for(const auto& effort:QStringList{"minimal","low","medium","high","xhigh","max","none"})reasoning->addItem(effort,effort);
     auto* thinking=new QComboBox;thinking->addItem("Use provider setting",QString());thinking->addItem("Enabled","enabled");thinking->addItem("Disabled","disabled");

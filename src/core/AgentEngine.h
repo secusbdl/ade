@@ -19,6 +19,7 @@
 namespace ade {
 class UtilityService;
 class CodexHarnessSession;
+class AcpHarnessSession;
 
 class AgentEngine final : public QObject {
     Q_OBJECT
@@ -37,6 +38,7 @@ public:
     void setWorkspace(const QString &path);
     bool setAppsDirectory(const QString &path);
     void setSystemContext(const QString &context);
+    void setExternalHarnessContext(const QString& context);
     void setDynamicSystemContext(std::function<QString()> context);
     void submit(const QString &prompt);
     // True once the user message is accepted into history, even if that turn
@@ -131,6 +133,7 @@ private:
     void finishQuestion(const QString& reason);
     void requestModel();
     void requestHarness();
+    void requestAcpHarness(const QJsonArray& input,const QStringList& transcript);
     void stopHarness();
     void retainHarnessResponse();
     void consumeHarnessEvent(const QJsonObject& event);
@@ -162,6 +165,7 @@ private:
     QJsonObject currentUsageRecord() const;
 
     QPointer<CodexHarnessSession> m_harness;
+    QPointer<AcpHarnessSession> m_acp;
     QString m_harnessOwnerId,m_harnessFallbackWorkspace,m_harnessQuestionToken;
     QJsonObject m_harnessState,m_harnessUsage;
     QMap<QString,QString> m_harnessText,m_harnessReasoning,m_harnessApprovals;
@@ -177,6 +181,7 @@ private:
     bool m_usageComplete = false;
     QString m_presetId;
     QString m_systemContext;
+    QString m_externalHarnessContext;
     std::function<QString()> m_dynamicSystemContext;
     MessagePreparer m_messagePreparer;
     ModelFallback m_fallback;

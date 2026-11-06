@@ -1,0 +1,12 @@
+********* Start testing of AgentCycleHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AgentCycleHostTest::initTestCase()
+QWARN  : AgentCycleHostTest::pageAliasesFollowMruAndCommitImmediately() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : AgentCycleHostTest::pageAliasesFollowMruAndCommitImmediately() Compared values are not the same
+   Actual   (w.currentSessionId()): "agent1"
+   Expected (QString("agent0"))   : "agent0"
+D:/age/ADE/tests/test_agent_cycle_host.cpp(61) : failure location
+PASS   : AgentCycleHostTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 135ms
+********* Finished testing of AgentCycleHostTest *********

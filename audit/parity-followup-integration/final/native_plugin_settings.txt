@@ -1,0 +1,22 @@
+********* Start testing of PluginSettingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PluginSettingsTest::initTestCase()
+QWARN  : PluginSettingsTest::sourceMetadataAndExplicitCheck(github) QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : PluginSettingsTest::sourceMetadataAndExplicitCheck(github)
+PASS   : PluginSettingsTest::sourceMetadataAndExplicitCheck(supabase)
+PASS   : PluginSettingsTest::sourceMetadataAndExplicitCheck(figma)
+PASS   : PluginSettingsTest::sourceMetadataAndExplicitCheck(posthog)
+PASS   : PluginSettingsTest::sourceMetadataAndExplicitCheck(vercel)
+PASS   : PluginSettingsTest::replacementAndRemovalPreserveOtherPlugins()
+PASS   : PluginSettingsTest::externalCredentialChangePreservesDraftAndDisk()
+PASS   : PluginSettingsTest::corruptStorageCannotBeOverwritten()
+PASS   : PluginSettingsTest::tokenShapeRejectedWithoutPersisting()
+PASS   : PluginSettingsTest::editingNavigationAndExternalChangeRejectStaleChecks()
+PASS   : PluginSettingsTest::posthogRegionValidationRollbackAndCancellation()
+PASS   : PluginSettingsTest::enableFailureRollsBackWithoutRemovingToken()
+PASS   : PluginSettingsTest::mutationAndCancellationCallbacksMayDeletePage()
+PASS   : PluginSettingsTest::directProviderImportEntryEmitsRequest()
+PASS   : PluginSettingsTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 374ms
+********* Finished testing of PluginSettingsTest *********

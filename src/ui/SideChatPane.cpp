@@ -1,4 +1,5 @@
 #include "SideChatPane.h"
+#include <QStandardItemModel>
 #include "ContentControlsScrollArea.h"
 #include "ui/Composer.h"
 #include "ui/ConversationView.h"
@@ -43,7 +44,7 @@ void SideChatPane::setState(const Conversation& chat,const QJsonArray& rows,bool
     if(chat.id!=m_chatId)return;
     const QPointer<SideChatPane> self(this);m_busy=busy;m_available=!chat.archived;m_hasAttachments=!chat.draftAttachments.isEmpty();m_title->setText(chat.title);m_title->setToolTip(chat.title);m_transcript->setConversation(m_chatId,rows,busy);if(!self)return;
     if(m_composer->toPlainText()!=chat.draft){QSignalBlocker blocker(m_composer);m_composer->setPlainText(chat.draft);m_composer->moveCursor(QTextCursor::End);}m_attachments->setAttachments(chat.draftAttachments);if(!self)return;
-    {QSignalBlocker blocker(m_models);m_models->clear();int chosen=-1;for(const auto& value:models){const auto item=value.toObject();m_models->addItem(item["label"].toString(),item);if(item["providerInstanceId"]==chat.providerId&&item["modelId"]==chat.model&&item["presetId"].toString()==chat.presetId)chosen=m_models->count()-1;}if(chosen<0&&!chat.model.isEmpty()){m_models->addItem(chat.model+" (unavailable)",QJsonObject{{"providerInstanceId",chat.providerId},{"modelId",chat.model},{"presetId",chat.presetId}});chosen=m_models->count()-1;}m_models->setCurrentIndex(chosen);}
+    {QSignalBlocker blocker(m_models);m_models->clear();int chosen=-1;for(const auto& value:models){const auto item=value.toObject();m_models->addItem(item["label"].toString(),item);if(!item.value("selectable").toBool(true))if(auto* model=qobject_cast<QStandardItemModel*>(m_models->model()))model->item(m_models->count()-1)->setEnabled(false);if(item["providerInstanceId"]==chat.providerId&&item["modelId"]==chat.model&&item["presetId"].toString()==chat.presetId)chosen=m_models->count()-1;}if(chosen<0&&!chat.model.isEmpty()){m_models->addItem(chat.model+" (unavailable)",QJsonObject{{"providerInstanceId",chat.providerId},{"modelId",chat.model},{"presetId",chat.presetId}});chosen=m_models->count()-1;}m_models->setCurrentIndex(chosen);}
     {QSignalBlocker blocker(m_permissions);m_permissions->setCurrentIndex(chat.alwaysAllow?1:0);}m_models->setEnabled(!busy&&m_available);m_permissions->setEnabled(!busy&&m_available);m_promote->setEnabled(!busy&&m_available);
     m_questionToken=question["id"].toString();if(m_questionToken!=m_messageToken)m_messageToken.clear();m_questions->setQuestion(m_chatId,question);if(!self)return;m_queue->setQueue(m_chatId,queue,busy);if(!self)return;m_controls->setProperty("hasQueue",!queue.isEmpty());applyQuestionVisibility();if(self)updateActions();
 }

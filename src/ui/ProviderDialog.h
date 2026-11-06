@@ -7,10 +7,12 @@ class QComboBox;
 class QListWidget;
 class QLabel;
 class QPushButton;
+class QMessageBox;
 class QGroupBox;
 class QFormLayout;
 namespace ade {
 class CodexAppServer;
+class OpenCodeModelDiscovery;
 class ProviderService;
 class AddProviderDialog;
 class ProviderDialog : public QDialog {
@@ -27,20 +29,27 @@ protected:
     void done(int result) override;
 private:
     void selectProvider(int row);
+    void removeSelectedProvider();
+    void removeProviderDraft(const QString& providerId);
     void applyProvider();
     void importKeys();
     ProviderConfig currentConfig() const;
     void beginHarnessConnection(bool login);
+    void beginOpenCodeDiscovery();
     void finishHarnessConnection();
     void beginApiOperation(bool validation);
     void cancelOperations();
     void updateOperationControls();
     void updateTemplateHelp();
     QPointer<AddProviderDialog> m_addPicker;
+    QPointer<QMessageBox> m_removePrompt;
+    QPushButton* m_removeProvider=nullptr;
+    QList<QWidget*> m_selectedControls;
     QLabel* m_templateHelp=nullptr;
     QPushButton *m_keyHelp=nullptr,*m_planHelp=nullptr;
     QList<QWidget*> m_operationControls;
     QPointer<ProviderService> m_service;
+    QPointer<OpenCodeModelDiscovery> m_openCodeDiscovery;
     quint64 m_operationEpoch=0;
     bool m_apiBusy=false,m_closing=false;
     QList<ProviderConfig> m_providers;
@@ -54,6 +63,8 @@ private:
     int m_selected=-1;
     CodexAppServer* m_harness=nullptr;
     QGroupBox* m_harnessGroup=nullptr;
+    QLabel* m_harnessHelp=nullptr;
+    QPushButton* m_validateProvider=nullptr;
     QLineEdit* m_executable=nullptr;
     QPushButton *m_connectHarness=nullptr,*m_cancelHarness=nullptr;
     bool m_harnessLogin=false,m_harnessBusy=false;

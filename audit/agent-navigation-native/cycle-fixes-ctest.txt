@@ -1,0 +1,11 @@
+Test project D:/age/ADE/build-next
+    Start   8: native_navigation_shortcuts
+1/3 Test   #8: native_navigation_shortcuts ......   Passed    1.71 sec
+    Start  52: native_turn_files_host
+2/3 Test  #52: native_turn_files_host ...........   Passed   15.17 sec
+    Start 116: native_agent_cycle_host
+3/3 Test #116: native_agent_cycle_host ..........   Passed    1.30 sec
+
+100% tests passed out of 3
+
+Total Test time (real) =  18.18 sec

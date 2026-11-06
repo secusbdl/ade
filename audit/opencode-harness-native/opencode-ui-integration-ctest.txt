@@ -1,0 +1,15 @@
+Test project D:/age/ADE/build-next
+    Start   3: native_codex_provider_ui
+1/5 Test   #3: native_codex_provider_ui .........   Passed    0.43 sec
+    Start 107: native_provider_picker_window
+2/5 Test #107: native_provider_picker_window ....   Passed    1.71 sec
+    Start 112: native_provider_removal_window
+3/5 Test #112: native_provider_removal_window ...   Passed    0.76 sec
+    Start 117: native_opencode_provider_ui
+4/5 Test #117: native_opencode_provider_ui ......   Passed    0.71 sec
+    Start 118: native_opencode_host
+5/5 Test #118: native_opencode_host .............   Passed    3.14 sec
+
+100% tests passed out of 5
+
+Total Test time (real) =   6.75 sec

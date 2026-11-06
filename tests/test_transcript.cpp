@@ -28,7 +28,7 @@ void expose(ConversationView &view,int width=640,int height=480){view.resize(wid
 QWidget *part(ConversationView &view,QString id){for(auto *w:view.findChildren<QWidget*>())if(w->property("partId")==id)return w;return nullptr;}
 QToolButton *disclosure(ConversationView &view,QString id){auto *p=part(view,id);return p?p->findChild<QToolButton*>():nullptr;}
 QScrollBar *bar(ConversationView &view){return view.findChild<QScrollArea*>("transcriptScroll")->verticalScrollBar();}
-QJsonArray longHistory(){QJsonArray rows;for(int i=0;i<20;++i)rows.append(message("m"+QString::number(i),"assistant",{text("p"+QString::number(i),QString("Paragraph %1. ").arg(i)+QString("This is a long line of readable content. ").repeated(5))}));return rows;}
+QJsonArray longHistory(){QJsonArray rows;for(int i=0;i<20;++i)rows.append(message("m"+QString::number(i),"assistant",{text("p"+QString::number(i),QString("Paragraph %1. ").arg(i)+QString("This is a long line of readable content. ").repeated(10))}));return rows;}
 void wheelUp(ConversationView &view){auto *target=view.findChild<QScrollArea*>("transcriptScroll")->viewport();QWheelEvent event(QPointF(40,40),target->mapToGlobal(QPoint(40,40)),QPoint(),QPoint(0,120),Qt::NoButton,Qt::NoModifier,Qt::NoScrollPhase,false);QApplication::sendEvent(target,&event);}
 }
 

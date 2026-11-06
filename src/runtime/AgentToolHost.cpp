@@ -397,5 +397,12 @@ void AgentToolHost::runMutationAction(const QString& id,const QStringList& ids,b
     watcher->setFuture(QtConcurrent::run([journal,ids,id,canceled,recover]{return recover?journal.recover(canceled.get()):journal.undo(ids,id,canceled.get());}));
 }
 void AgentToolHost::cancelUndo(const QString& id){if(const auto canceled=m_undoRequests.value(id))canceled->store(true);}
-ContextSnapshot AgentToolHost::configureContext(const ContextOptions& options){auto snapshot=m_context.load(options);if(m_engine)m_engine->setSystemContext(snapshot.prompt);return snapshot;}
+ContextSnapshot AgentToolHost::configureContext(const ContextOptions& options) {
+    auto snapshot = m_context.load(options);
+    if (m_engine) {
+        m_engine->setSystemContext(snapshot.prompt);
+        m_engine->setExternalHarnessContext(ContextLoader::externalHarnessContext(snapshot));
+    }
+    return snapshot;
+}
 }

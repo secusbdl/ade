@@ -1,0 +1,48 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Using Qt bundled ZLIB.
+-- Using Qt bundled PCRE2.
+-- Using Qt bundled PNG.
+-- Using Qt bundled Harfbuzz.
+-- Using Qt bundled Freetype.
+-- Using Qt bundled Jpeg.
+-- Configuring done (0.9s)
+-- Generating done (3.2s)
+-- Build files have been written to: D:/age/ADE/build-next
+[0/4] Re-checking globbed directories...
+[1/68] Automatic MOC and UIC for target ade_file_transformer
+[2/66] Automatic MOC and UIC for target ade_harness
+[3/64] Automatic MOC and UIC for target ade_network
+[4/62] Automatic MOC and UIC for target ade_core
+[5/60] Automatic MOC and UIC for target ade_editor
+[6/58] Automatic MOC and UIC for target ade_attachments
+[7/56] Automatic MOC and UIC for target ADE-sandbox-worker
+[8/54] Automatic MOC and UIC for target ade_shell
+[9/52] Automatic MOC and UIC for target ade_plugins
+[10/50] Automatic MOC and UIC for target ade_transcript_links
+[11/48] Automatic MOC and UIC for target harness_fixture
+[12/46] Automatic MOC and UIC for target ade_host
+[13/44] Automatic MOC and UIC for target acp_fixture
+[14/42] Automatic MOC and UIC for target ade_ui
+[15/42] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[16/42] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderCatalog.cpp.obj
+[17/42] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[18/42] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderDialog.cpp.obj
+[19/42] Linking CXX static library libade_ui.a
+[20/42] Automatic MOC and UIC for target test_provider_picker_window
+[21/41] Automatic MOC and UIC for target test_codex_provider_ui
+[22/40] Automatic MOC and UIC for target test_provider_removal_window
+[23/39] Automatic MOC and UIC for target test_opencode_provider_ui
+[24/39] Automatic MOC and UIC for target test_opencode_host
+[25/39] Building CXX object CMakeFiles/test_codex_provider_ui.dir/tests/test_codex_provider_ui.cpp.obj
+[26/39] Building CXX object CMakeFiles/test_provider_picker_window.dir/tests/test_provider_picker_window.cpp.obj
+[27/39] Building CXX object CMakeFiles/test_opencode_provider_ui.dir/test_opencode_provider_ui_autogen/mocs_compilation.cpp.obj
+[28/39] Building CXX object CMakeFiles/test_provider_removal_window.dir/tests/test_provider_removal_window.cpp.obj
+[29/39] Building CXX object CMakeFiles/test_opencode_host.dir/test_opencode_host_autogen/mocs_compilation.cpp.obj
+[30/39] Building CXX object CMakeFiles/test_opencode_provider_ui.dir/tests/test_opencode_provider_ui.cpp.obj
+[31/39] Building CXX object CMakeFiles/test_opencode_host.dir/tests/test_opencode_host.cpp.obj
+[32/39] Linking CXX executable bin\test_codex_provider_ui.exe
+[33/39] Linking CXX executable bin\test_provider_picker_window.exe
+[34/39] Linking CXX executable bin\test_provider_removal_window.exe
+[35/39] Linking CXX executable bin\test_opencode_provider_ui.exe
+[36/39] Linking CXX executable bin\test_opencode_host.exe
