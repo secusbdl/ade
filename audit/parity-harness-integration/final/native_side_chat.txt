@@ -1,0 +1,23 @@
+********* Start testing of SideChatTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SideChatTest::initTestCase()
+PASS   : SideChatTest::independentDraftsAndScopedSend()
+PASS   : SideChatTest::stateDoesNotEmitPreferenceMutations()
+PASS   : SideChatTest::wrongChatStateIgnored()
+QWARN  : SideChatTest::imageCallbackCanDeletePane() This plugin does not support propagateSizeHints()
+QWARN  : SideChatTest::imageCallbackCanDeletePane() This plugin does not support propagateSizeHints()
+PASS   : SideChatTest::imageCallbackCanDeletePane()
+QWARN  : SideChatTest::compactComposerControls() This plugin does not support propagateSizeHints()
+PASS   : SideChatTest::compactComposerControls()
+QWARN  : SideChatTest::questionControlsUseAvailableSpaceAndRemainScrollable() This plugin does not support propagateSizeHints()
+QWARN  : SideChatTest::questionControlsUseAvailableSpaceAndRemainScrollable() This plugin does not support propagateSizeHints()
+QWARN  : SideChatTest::questionControlsUseAvailableSpaceAndRemainScrollable() This plugin does not support propagateSizeHints()
+PASS   : SideChatTest::questionControlsUseAvailableSpaceAndRemainScrollable()
+PASS   : SideChatTest::parentRoundTrip()
+PASS   : SideChatTest::invalidParentsPreserveBytes(missing)
+PASS   : SideChatTest::invalidParentsPreserveBytes(self)
+PASS   : SideChatTest::nestedAndCyclicParentsRejected()
+PASS   : SideChatTest::corruptPersistedParentDoesNotOverwrite()
+PASS   : SideChatTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 239ms
+********* Finished testing of SideChatTest *********

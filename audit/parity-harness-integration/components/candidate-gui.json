@@ -1,0 +1,158 @@
+{
+  "verifiedUtc": "2026-11-06T22:47:05.541052+00:00",
+  "status": "passed within stated candidate scope; full combined gate pending",
+  "candidate": {
+    "path": "out/harness-integration-candidate-1/ADE.exe",
+    "sha256": "ae2442744e4a68119d430dd5af53c5894c5af1680a2be19c565b35ca2e13a75d"
+  },
+  "focusedGate": {
+    "verifiedUtc": "2026-11-06T22:34:55.988336+00:00",
+    "registeredSuites": 139,
+    "selectedSuites": 43,
+    "passed": 43,
+    "failed": [],
+    "exitCode": 0,
+    "report": "private/next-harness-focused.xml",
+    "log": "private/next-harness-focused.txt"
+  },
+  "syntheticGui": {
+    "twoStepMcp": {
+      "answers": {
+        "answer": "First native answer",
+        "second": "Second native answer"
+      },
+      "cancelled": false,
+      "completed": true,
+      "completedSteps": 2
+    },
+    "claudeAnswers": {
+      "Choose one?": "Two",
+      "Choose several?": [
+        "One"
+      ]
+    },
+    "answersSurviveChatSwitch": true,
+    "approvalSurvivesToolOutput": true,
+    "explicitDenialReturned": true,
+    "titlebarCloseExitCode": 0,
+    "screenshots": 13
+  },
+  "realModelGui": {
+    "adapter": "Native OpenCode ACP + packaged ADE stdio MCP",
+    "cliVersion": "1.19.5",
+    "model": "deepseek/deepseek-flash",
+    "userPrompts": 1,
+    "finalReply": "ADE_LIVE_QUESTION_OK Cobalt blue",
+    "questionResult": {
+      "answers": {
+        "color": "Cobalt blue"
+      },
+      "cancelled": false,
+      "completed": true,
+      "completedSteps": 1
+    },
+    "workspaceUnchanged": true,
+    "titlebarCloseExitCode": 0,
+    "timedOut": false,
+    "screenshots": 5,
+    "limitations": "One real conversation. Provider request count and token latency were not measured. Both outer ACP and native question cards are displayed; this is a remaining presentation refinement."
+  },
+  "knownValueScan": {
+    "configuredValues": 14,
+    "privateFilesChecked": 7619,
+    "matches": []
+  },
+  "screenshots": [
+    {
+      "path": "private/harness-gui-54f7fed5/01-main.png",
+      "sha256": "c22f9e671ef8d4c3ae38fcb7e9785925621f6096caf3d766160d0e1b2c1c8181",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/02-send-enabled.png",
+      "sha256": "d99ea9ab1811e3305d38194a439121914a106fdacfbf1cb0c5f895b183b0ed5a",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/03-mcp-first-step.png",
+      "sha256": "f877a8f5df241ff4e31c1adbec9c7534e8e414a29191222f35dffbde78b56d9a",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/04-first-answer.png",
+      "sha256": "928b79b9bd7a0908fc81221a25ed9038d8a848b70fb29cffe97389af7b9d2319",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/05-second-answer.png",
+      "sha256": "b59656f79f9a5af7d02c3c06ee4d08949e604c37b49708c05810e6a1a8693a0b",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/06-mcp-completed.png",
+      "sha256": "d081d85ea87f88e3d824bf14866ec9d6722eff7b858716f5bdafb9bc75f01365",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/07-claude-question.png",
+      "sha256": "afba0f349d74da0aa7d5800855e0d6ceedb97e690c35653707783e27631bbe3f",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/08-claude-answers.png",
+      "sha256": "bb7bfc5b30cac923d961a120a100f84e674879c7d433750ca91111c62e216184",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/09-other-chat-no-question.png",
+      "sha256": "4b91071c775c5e35e1128f9d2d445ade1d99f27184282981024678857317b28e",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/10-claude-answers-restored.png",
+      "sha256": "82ddfd253b10c14ddcd3a5739ddb59110f65dc2178b6c93a5f488978cb4efa76",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/11-claude-completed.png",
+      "sha256": "9cfcab2845c58ef2feabf6b900f51ac2da5342c5b2bff6b172e1a272d90be423",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/12-approval-survives-live-output.png",
+      "sha256": "281be2df40ec026f0d110c599feed999aac210e57020fd9a76df45e9861374a9",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/harness-gui-54f7fed5/13-denial-completed.png",
+      "sha256": "dd7ec714839788832d60940c4405257982324d76e8f34f4a8f10de14e98a918e",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/parity-live/opencode-question-bfb858258c/01-prompt.png",
+      "sha256": "30a72edb1bdd706ea86041c2713e1c11408bd0aff953397b91e675ec9ea91f33",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/parity-live/opencode-question-bfb858258c/02-stream-start.png",
+      "sha256": "700e4bfd147dbe0c1424654bb7459794ccdc913a5a1a3390882bf9ce8df2bd4b",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/parity-live/opencode-question-bfb858258c/03-live-form.png",
+      "sha256": "6746565c5a448990c9df1a22b3839019bb882dcfde0b8696dff371072cc2e016",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/parity-live/opencode-question-bfb858258c/04-live-answer.png",
+      "sha256": "bb7f401064efa6cc1d4c3438bcd55f642627695fb1eb5a29ad87a9d885d842de",
+      "scope": "local-only"
+    },
+    {
+      "path": "private/parity-live/opencode-question-bfb858258c/05-live-result.png",
+      "sha256": "eddd51c975a10de90d71609857f3297ecdb3ca888aaa981c80c3f8999dab7ee2",
+      "scope": "local-only"
+    }
+  ],
+  "fullNativeParity": false
+}

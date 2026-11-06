@@ -260,9 +260,11 @@ void JsonRpcProcess::readOutput() {
           emit notification(method, object.value("params").toObject());
       } else {
         const auto id = object.value("id").toString();
-        if (!id.isEmpty() && m_deadlines.remove(id))
+        if (!id.isEmpty() && m_deadlines.remove(id)) {
+          m_pausedDeadlines.remove(id);
           emit response(id, object.value("result"),
                         object.value("error").toObject());
+        }
       }
       if (!self || generation != m_generation || !m_process)
         return;
@@ -279,7 +281,8 @@ void JsonRpcProcess::checkDeadlines() {
   QPointer<JsonRpcProcess> self(this);
   const auto ids = m_deadlines.keys();
   for (const auto &id : ids) {
-    if (!m_deadlines.contains(id) || m_deadlines.value(id) > now)
+    if (!m_deadlines.contains(id) || m_pausedDeadlines.contains(id) ||
+        m_deadlines.value(id) > now)
       continue;
     m_deadlines.remove(id);
     emit response(
@@ -289,10 +292,29 @@ void JsonRpcProcess::checkDeadlines() {
       return;
   }
 }
+bool JsonRpcProcess::suspendDeadline(const QString &id) {
+  if (!m_deadlines.contains(id))
+    return false;
+  if (!m_pausedDeadlines.contains(id))
+    m_pausedDeadlines.insert(
+        id, qMax<qint64>(1, m_deadlines.value(id) -
+                                QDateTime::currentMSecsSinceEpoch()));
+  return true;
+}
+bool JsonRpcProcess::resumeDeadline(const QString &id) {
+  const auto found = m_pausedDeadlines.find(id);
+  if (found == m_pausedDeadlines.end() || !m_deadlines.contains(id))
+    return false;
+  const auto remaining = *found;
+  m_pausedDeadlines.erase(found);
+  m_deadlines[id] = QDateTime::currentMSecsSinceEpoch() + remaining;
+  return true;
+}
 void JsonRpcProcess::stop() {
   ++m_generation;
   m_clock.stop();
   m_deadlines.clear();
+  m_pausedDeadlines.clear();
   m_input.clear();
   const auto process = m_process;
   m_process = nullptr;

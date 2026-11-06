@@ -24,13 +24,20 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     m_files.setFileMutationExecutor(m_mutations.executor());
     m_files.setShellReadSource(m_shellLogs->formattedSource());
     engine->setShellReadSource(m_shellLogs->formattedSource());
-    engine->setDynamicSystemContext([guard=QPointer<AgentToolHost>(this)]{return guard&&!guard->m_fileContextRemoved?guard->m_shells.manifest():QString{};});
+    engine->setDynamicSystemContext([guard=QPointer<AgentToolHost>(this)] {
+        if (!guard || guard->m_fileContextRemoved) return QString{};
+        const auto shellContext = guard->m_shells.manifest();
+        const auto browser = guard->m_browser;
+        if (!browser) return shellContext;
+        const auto browserContext = renderBrowserContext(browser->snapshotForAgent(guard->m_agentId));
+        return browserContext.isEmpty() ? shellContext : browserContext + "\n\n" + shellContext;
+    });
     engine->setFileMutationExecutor(m_mutations.executor());
     engine->setAttachmentReadSource(m_attachmentFiles.formattedSource());
     engine->setFileReadCommitter([lease=m_readLease](const FileReadCapture& capture,const std::atomic_bool* canceled,QString* error){return FileReadSnapshotStore::commit(lease,capture,canceled,error);});
     engine->setMessagePreparer([guard=QPointer<AgentToolHost>(this)](const QJsonArray& history,const ProviderConfig& provider,QString* error){
         if(!guard||guard->m_fileContextRemoved){if(error)*error="The file context host is unavailable or was removed.";return QJsonArray{};}
-        return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider.model),{},error);
+        return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),{},error);
     });
     const auto appsDirectory=m_apps.agentAppsDirectory();
     if(prepareAppDirectory(appsDirectory)&&m_files.setAppsDirectory(appsDirectory)){

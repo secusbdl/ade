@@ -255,6 +255,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "transcript.scroll",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "typed_images_and_source_derived_acp_presentation",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -274,6 +279,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "transcript.tools",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "approval_state_survives_tool_updates",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -402,6 +412,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.questions",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "native_owner_scoped_mcp_and_claude_forms",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -416,6 +431,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "providers.vendor_options",
           "assessment": "partial"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "atomic_discovery_and_visibility",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -430,6 +450,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "providers.cloud_external",
           "assessment": "missing"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "native_external_adapters_with_transport_limits",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -754,6 +779,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "navigation.side_chats",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "fresh_owned_tab_context_and_focus",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1820,6 +1850,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "providers.cloud_external",
           "assessment": "missing"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "native_claude_control_stream_and_host_forms",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1834,6 +1869,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "providers.cloud_external",
           "assessment": "missing"
+        },
+        {
+          "report": "audit/parity-harness-integration.json",
+          "capability": "native_acp_question_mcp_and_presentation",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -7741,6 +7781,14 @@
       "reviewState": "not_individually_reassessed",
       "reviews": [],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
+    }
+  ],
+  "integrationFollowups": [
+    {
+      "path": "audit/parity-harness-integration.json",
+      "sha256CanonicalLf": "135f690add1a79af8b90b505d52448cd77190131e8abf485001d9ded364c328c",
+      "linkedFeatureRows": 8,
+      "scope": "Incremental tested behaviors; historical domain reviews remain unchanged."
     }
   ]
 }

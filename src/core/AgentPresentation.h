@@ -20,6 +20,7 @@ public:
     bool hasKey(const QString& key) const { return m_keys.contains(key); }
     void tool(int index,const QString& callId,const QString& name,const QString& arguments);
     void closePart(const QString& key,const QString& state="done");
+    void setToolPresentation(const QString& callId,const QJsonObject& presentation);
     void toolState(const QString& callId,const QString& state);
     QString toolOutput(const QString& callId) const;
     bool setToolOutput(const QString& callId,const QString& output);

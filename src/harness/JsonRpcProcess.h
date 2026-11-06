@@ -22,6 +22,8 @@ public:
   bool respond(const QJsonValue &id, const QJsonValue &result);
   bool reject(const QJsonValue &id, int code, const QString &message);
   void stop();
+  bool suspendDeadline(const QString &requestId);
+  bool resumeDeadline(const QString &requestId);
   bool isRunning() const;
   static QProcessEnvironment managedEnvironment();
 signals:
@@ -39,6 +41,7 @@ private:
   QPointer<QProcess> m_process;
   QByteArray m_input;
   QMap<QString, qint64> m_deadlines;
+  QMap<QString, qint64> m_pausedDeadlines;
   QTimer m_clock;
   quint64 m_generation = 0;
   void *m_job = nullptr;

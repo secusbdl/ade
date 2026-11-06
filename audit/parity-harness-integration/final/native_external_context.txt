@@ -1,0 +1,11 @@
+********* Start testing of ExternalContextTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ExternalContextTest::initTestCase()
+PASS   : ExternalContextTest::preservedInstructionsAndExplicitSkillWithoutNativeRoster()
+PASS   : ExternalContextTest::disabledAndUnrespectedInstructionsAreNotReintroduced()
+PASS   : ExternalContextTest::markupAndExplicitCapabilityMentionsRemainData()
+PASS   : ExternalContextTest::boundedWholeEntriesDiscloseOmission()
+PASS   : ExternalContextTest::oversizedSnapshotValueIsOmittedBeforeEscaping()
+PASS   : ExternalContextTest::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 22ms
+********* Finished testing of ExternalContextTest *********

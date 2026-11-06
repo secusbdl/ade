@@ -1,0 +1,22 @@
+********* Start testing of ModelDiscoveryTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ModelDiscoveryTest::initTestCase()
+FAIL!  : ModelDiscoveryTest::incompletePaginationNeverPublishesCompleteInventory(missing-cursor) Compared values are not the same
+   Actual   (ready.count()): 1
+   Expected (0)            : 0
+D:/age/ADE/private/model-discovery-stage/tests/test_model_discovery.cpp(24) : failure location
+FAIL!  : ModelDiscoveryTest::incompletePaginationNeverPublishesCompleteInventory(typed-cursor) Compared values are not the same
+   Actual   (ready.count()): 1
+   Expected (0)            : 0
+D:/age/ADE/private/model-discovery-stage/tests/test_model_discovery.cpp(24) : failure location
+FAIL!  : ModelDiscoveryTest::incompletePaginationNeverPublishesCompleteInventory(typed-more) Compared values are not the same
+   Actual   (ready.count()): 1
+   Expected (0)            : 0
+D:/age/ADE/private/model-discovery-stage/tests/test_model_discovery.cpp(24) : failure location
+FAIL!  : ModelDiscoveryTest::incompletePaginationNeverPublishesCompleteInventory(typed-google-token) Compared values are not the same
+   Actual   (ready.count()): 1
+   Expected (0)            : 0
+D:/age/ADE/private/model-discovery-stage/tests/test_model_discovery.cpp(24) : failure location
+PASS   : ModelDiscoveryTest::cleanupTestCase()
+Totals: 2 passed, 4 failed, 0 skipped, 0 blacklisted, 414ms
+********* Finished testing of ModelDiscoveryTest *********

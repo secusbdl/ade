@@ -6,7 +6,9 @@
 #include <QJsonParseError>
 #include <QRegularExpression>
 #include <QTimer>
+#include <QThread>
 #include <QUuid>
+#include <algorithm>
 #include <cmath>
 #include <utility>
 
@@ -72,11 +74,14 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
     m_usedIds.insert(id);
     Tab tab;
     tab.browser = browser;
+    tab.url = browser->currentUrl().toString(QUrl::FullyEncoded);
     tab.connections.append(connect(browser, &QObject::destroyed, this, [this, id] { unregisterTab(id); }));
     tab.connections.append(connect(browser, &BrowserWidget::titleChanged, this, [this, id](const QString& title) {
         if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->title = title; emit tabsChanged(); }
     }));
-    tab.connections.append(connect(browser, &BrowserWidget::urlChanged, this, [this](const QUrl&) { emit tabsChanged(); }));
+    tab.connections.append(connect(browser, &BrowserWidget::urlChanged, this, [this, id](const QUrl& url) {
+        if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->url = url.toString(QUrl::FullyEncoded); emit tabsChanged(); }
+    }));
     tab.connections.append(connect(browser, &BrowserWidget::readyChanged, this, [this, id](bool ready) {
         if (ready) prepareConsole(id);
         emit tabsChanged();
@@ -96,7 +101,6 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
         }));
     m_tabs.insert(id, std::move(tab));
     m_order.append(id);
-    if (m_activeTabId.isEmpty()) m_activeTabId = id;
     prepareConsole(id);
     emit tabsChanged();
     return id;
@@ -107,7 +111,7 @@ void BrowserToolBridge::unregisterTab(const QString& tabId) {
     const auto tab = m_tabs.take(tabId);
     for (const auto& connection : tab.connections) disconnect(connection);
     m_order.removeAll(tabId);
-    if (m_activeTabId == tabId) m_activeTabId = m_order.isEmpty() ? QString() : m_order.first();
+    if (m_activeTabId == tabId) m_activeTabId.clear();
     const QPointer<BrowserToolBridge> self(this);
     const auto subscriptions=m_subscriptions.keys();for(const auto& id:subscriptions)if(m_subscriptions.value(id).tabId==tabId){m_subscriptions.remove(id);emit subscriptionEnded(id,QStringLiteral("Browser tab was closed."));if(!self)return;}
     const auto pendingIds = m_pending.keys();
@@ -119,8 +123,18 @@ void BrowserToolBridge::unregisterTab(const QString& tabId) {
 }
 
 bool BrowserToolBridge::setActiveTab(const QString& tabId) {
+    if (tabId.isEmpty()) {
+        if (!m_activeTabId.isEmpty()) { m_activeTabId.clear(); emit tabsChanged(); }
+        return true;
+    }
     if (!m_tabs.contains(tabId) || !m_tabs.value(tabId).browser) return false;
-    if (m_activeTabId != tabId) { m_activeTabId = tabId; emit tabsChanged(); }
+    quint64 order = 0;
+    for (const auto& tab : std::as_const(m_tabs)) order = qMax(order, tab.focusOrder);
+    auto& tab = m_tabs[tabId];
+    tab.focusOrder = order + 1;
+    tab.lastFocusedAt = QDateTime::currentMSecsSinceEpoch();
+    m_activeTabId = tabId;
+    emit tabsChanged();
     return true;
 }
 void BrowserToolBridge::setRequestTimeoutMs(int milliseconds) { m_timeoutMs = qBound(50, milliseconds, 120000); }
@@ -170,6 +184,27 @@ QJsonArray BrowserToolBridge::definitions() const {
 bool BrowserToolBridge::canAccessTab(const QString& tabId,const QString& agentId) const{
     const auto* browser=m_tabs.value(tabId).browser.data();if(!browser)return false;
     const QString owner=browser->property("adeOwnerAgentId").toString();return owner.isEmpty()||(!agentId.isEmpty()&&owner==agentId);
+}
+BrowserContextSnapshot BrowserToolBridge::snapshotForAgent(const QString& agentId) const {
+    BrowserContextSnapshot snapshot;
+    if (QThread::currentThread() != thread() || agentId.trimmed().isEmpty() ||
+        agentId.size() > 256 || agentId.contains(QChar::Null)) return snapshot;
+    snapshot.available = true;
+    if (canAccessTab(m_activeTabId, agentId)) snapshot.activeTabId = m_activeTabId;
+    for (const auto& id : m_order) {
+        if (!canAccessTab(id, agentId)) continue;
+        const auto& tab = m_tabs[id];
+        snapshot.tabs.append({id, tab.title, tab.url, tab.lastFocusedAt, tab.focusOrder});
+    }
+    // Stable ties preserve registration order, including never-focused tabs.
+    std::stable_sort(snapshot.tabs.begin(), snapshot.tabs.end(), [](const auto& a, const auto& b) {
+        return a.focusOrder > b.focusOrder;
+    });
+    if (snapshot.tabs.size() > BrowserContextMaxTabs) {
+        snapshot.omittedTabs = snapshot.tabs.size() - BrowserContextMaxTabs;
+        snapshot.tabs.resize(BrowserContextMaxTabs);
+    }
+    return snapshot;
 }
 QJsonObject BrowserToolBridge::tabsSnapshot(const QString& agentId) const {
     QJsonArray tabs;

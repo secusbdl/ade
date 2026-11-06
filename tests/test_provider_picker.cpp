@@ -33,10 +33,13 @@ private slots:
         if(p.isOpenCodeHarness()) {
             QCOMPARE(entry.id,QString("opencode"));QCOMPARE(p.model,QString("default"));
             QCOMPARE(p.protocol,QString("opencode-acp"));QVERIFY(p.baseUrl.isEmpty());
+        } else if(p.isClaudeHarness()) {
+            QCOMPARE(entry.id,QString("claude-code"));QCOMPARE(p.model,QString("default"));
+            QCOMPARE(p.protocol,QString("claude-control"));QVERIFY(p.baseUrl.isEmpty());
         } else QVERIFY(p.model.isEmpty());
-        QVERIFY(p.isCodexHarness()||p.isOpenCodeHarness()||ProviderProtocol::supports(p));
+        QVERIFY(p.isExternalHarness()||ProviderProtocol::supports(p));
     }
-    QCOMPARE(ids.size(),22);QVERIFY(!ids.contains("claude-code"));QVERIFY(ids.contains("opencode"));QVERIFY(!ids.contains("codex-stagewise"));QVERIFY(ProviderCatalog::instantiate("missing").id.isEmpty());
+    QCOMPARE(ids.size(),23);QVERIFY(ids.contains("claude-code"));QVERIFY(ids.contains("opencode"));QVERIFY(!ids.contains("codex-stagewise"));QVERIFY(ProviderCatalog::instantiate("missing").id.isEmpty());
  }
  void requestWire_data(){QTest::addColumn<QString>("id");for(const auto& e:ProviderCatalog::all())if(e.kind=="api"&&e.id!="custom")QTest::newRow(qPrintable(e.id))<<e.id;}
  void requestWire(){

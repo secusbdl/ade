@@ -1,0 +1,79 @@
+{
+  "status": "frozen_private_candidate_ready_for_root_integration",
+  "patch": "model-discovery.patch",
+  "manifest": "manifest.json",
+  "cmake": "CMAKE-HANDOFF.txt",
+  "tested": {
+    "suites": 7,
+    "qtRows": 160,
+    "failed": 0,
+    "skipped": 0,
+    "reports": "*-final.txt and *-final.xml",
+    "baseline": "48318e02cc2603350405d1067973011d3795ed7d",
+    "currentClaudeAwareOverlay": "All changed C++ translation units and MOC compile against current production declaration closure; build-current-merge-final.log. New Claude discovery branch persists the same bounded inventory without applying flagship filtering. Combined production/Claude runtime gate remains pending."
+  },
+  "behavior": [
+    "Discovery snapshot, instance/endpoint/protocol/kind/executable/template identity and disabled model IDs persist in one CAS provider write. API keys keep existing Windows DPAPI protection; inventory itself is configuration JSON, not an encryption claim.",
+    "Only recognized matching source API/OpenRouter templates receive the fixed pinned flagship defaults. Newly discovered nonflagships are hidden; prior choices and saved conversation/preset selections survive.",
+    "Durable snapshots supersede legacy Settings modelCatalogs. A matching legacy catalog migrates only when the provider dialog is explicitly saved. Endpoint changes invalidate the inventory with an incomplete marker that prevents legacy resurrection.",
+    "Complete discovery with zero enabled models can be saved with an empty API default. Models can then enable a choice and the actual composer can select it. Undiscovered/invalid/incomplete configurations do not receive that exception.",
+    "New complete pagination guard rejects has_more true without a usable cursor, has_more of the wrong type, and wrong-type Google nextPageToken; repeated-cursor and malformed-response checks remain existing tested behavior."
+  ],
+  "beforeEvidence": {
+    "path": "pagination-before.txt",
+    "xml": "pagination-before.xml",
+    "passed": 2,
+    "failed": 4,
+    "claim": "Actual unchanged ProviderService emitted modelsReady for incomplete/ill-typed pagination. All four reproduced cases now reject; added object-typed flag case also rejects."
+  },
+  "hostRegressions": [
+    "Manual enable followed by failed legacy Settings write, refresh and restart preserves enabled state and independent main/side-chat selections.",
+    "All-hidden first Save -> Models enable -> actual composer runnable model, without inference request.",
+    "Canceled discovery draft, exact-instance CAS conflict with visible Settings error, explicit legacy migration, and endpoint invalidation."
+  ],
+  "networkScope": "All fixtures use temporary profiles and localhost transport only. Host captured modelsReady results travel through the actual dialog handler while a mandatory local nonforwarding HTTP proxy prevents provider connections. No keys, real profiles, desktop input or model requests.",
+  "sourceContracts": [
+    "reference/stagewise/apps/browser/src/shared/flagship-models.ts:131",
+    "reference/stagewise/apps/browser/src/shared/flagship-models.ts:152",
+    "reference/stagewise/apps/browser/src/shared/flagship-models.ts:237",
+    "reference/stagewise/apps/browser/src/backend/services/preferences.ts:2027",
+    "reference/stagewise/apps/browser/src/backend/services/preferences.ts:2460",
+    "reference/stagewise/apps/browser/src/shared/provider-instance-helpers.ts:769",
+    "reference/stagewise/apps/browser/src/shared/provider-instance-helpers.ts:970"
+  ],
+  "dataVerification": "scripts/extract-model-discovery-policy.py --reference reference/stagewise --check passed. Exact source SHA checks and 54 catalog IDs/47 OpenRouter IDs/2 vendor sets are preserved.",
+  "renders": [
+    {
+      "path": "renders/models-dark-350.png",
+      "sha256": "2f649514fe06147ca30d5dcfd562c3ea3e541be1de94c4f97d081781352024fa",
+      "visuallyInspected": true,
+      "observation": "Light/dark 620/350: controls stay visible; text is readable, long IDs elide with full tooltips; 2 of 3 enabled."
+    },
+    {
+      "path": "renders/models-dark-620.png",
+      "sha256": "4fcbba5c86bc289cd345ab75e21adad293b18851c90d33771017171c9bb0962a",
+      "visuallyInspected": true,
+      "observation": "Light/dark 620/350: controls stay visible; text is readable, long IDs elide with full tooltips; 2 of 3 enabled."
+    },
+    {
+      "path": "renders/models-light-350.png",
+      "sha256": "40b8791c24a907908a0ea2f2fc841207605f6343ff6a646298e83ecf38bcb455",
+      "visuallyInspected": true,
+      "observation": "Light/dark 620/350: controls stay visible; text is readable, long IDs elide with full tooltips; 2 of 3 enabled."
+    },
+    {
+      "path": "renders/models-light-620.png",
+      "sha256": "95fda6a9d292bc8c3a53d812d259eda4b72f06d6aa66b206346d6d0de6c64204",
+      "visuallyInspected": true,
+      "observation": "Light/dark 620/350: controls stay visible; text is readable, long IDs elide with full tooltips; 2 of 3 enabled."
+    }
+  ],
+  "limits": [
+    "No claim of full model-management parity: curated catalog entries absent from discovery, vendor groups, custom-model CRUD/options/headers and pricing/capability cards remain deferred.",
+    "Pinned model IDs are source data, not claims about current availability or entitlement. No account quota verification occurs.",
+    "Existing imported/legacy providers without explicit matching template provenance remain uncurated; vendor identity is not guessed from labels or arbitrary endpoints.",
+    "Inventory is bounded to 10000 sanitized entries and the existing provider-file aggregate 4 MiB limit; malformed/oversized saves preserve original data. No automatic snapshot truncation.",
+    "Context limits remain unknown when not provided; this does not adopt the source 128k fallback or change compression defaults.",
+    "Runtime suites used the isolated pre-Claude application snapshot. The current Claude-aware narrow merge separately compiled and applies cleanly; root combined runtime tests are pending."
+  ]
+}

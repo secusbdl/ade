@@ -1,0 +1,63 @@
+********* Start testing of WorkbenchLayoutTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkbenchLayoutTest::initTestCase()
+PASS   : WorkbenchLayoutTest::freshChatHasNoContent()
+PASS   : WorkbenchLayoutTest::composerCenteredUntilHistory()
+QWARN  : WorkbenchLayoutTest::openHideRestoreAndLastClose() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::openHideRestoreAndLastClose() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::openHideRestoreAndLastClose()
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::fullscreenResizePreservesHiddenChrome()
+PASS   : WorkbenchLayoutTest::terminalSurvivesHideAndReopen()
+QWARN  : WorkbenchLayoutTest::contentWidthAndCollapsePersist() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::contentWidthAndCollapsePersist() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::contentWidthAndCollapsePersist() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::contentWidthAndCollapsePersist()
+QWARN  : WorkbenchLayoutTest::legacySplitMigratesWithoutOpeningContent() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::legacySplitMigratesWithoutOpeningContent() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::legacySplitMigratesWithoutOpeningContent()
+QWARN  : WorkbenchLayoutTest::filesIndependentWithoutCreatingBrowser() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::filesIndependentWithoutCreatingBrowser() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::filesIndependentWithoutCreatingBrowser() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::filesIndependentWithoutCreatingBrowser()
+PASS   : WorkbenchLayoutTest::hiddenDirtyEditorIsPreservedAndRevealed()
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-70-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-70-500)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-100-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-100-500)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-130-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(350-130-500)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-70-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-70-500)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-100-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-100-500)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-130-250)
+PASS   : WorkbenchLayoutTest::responsiveMinimumAndZoom(768-130-500)
+QWARN  : WorkbenchLayoutTest::compactContentKeepsCloseAndFilesReachable() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::compactContentKeepsCloseAndFilesReachable()
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+QWARN  : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits() This plugin does not support setting window masks
+PASS   : WorkbenchLayoutTest::resizingRestoresFilesAndPlaceholderFits()
+PASS   : WorkbenchLayoutTest::longDraftKeepsSendReachableAtMinimumHeight()
+PASS   : WorkbenchLayoutTest::compactNavigationKeepsWidePreference()
+PASS   : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(light)
+PASS   : WorkbenchLayoutTest::transcriptBackgroundUsesChatSurface(dark)
+PASS   : WorkbenchLayoutTest::compactReadMountLabels(ws1/probe.txt)
+PASS   : WorkbenchLayoutTest::compactReadMountLabels(w1/probe.txt)
+PASS   : WorkbenchLayoutTest::compactReadMountLabels(w123abcf/probe.txt)
+PASS   : WorkbenchLayoutTest::arbitraryFolderIsNotTreatedAsNativeMount()
+PASS   : WorkbenchLayoutTest::messageRowsStayCenteredAndBounded()
+PASS   : WorkbenchLayoutTest::cleanupTestCase()
+Totals: 34 passed, 0 failed, 0 skipped, 0 blacklisted, 7616ms
+********* Finished testing of WorkbenchLayoutTest *********

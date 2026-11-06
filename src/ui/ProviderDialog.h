@@ -13,6 +13,7 @@ class QFormLayout;
 namespace ade {
 class CodexAppServer;
 class OpenCodeModelDiscovery;
+class ClaudeModelDiscovery;
 class ProviderService;
 class AddProviderDialog;
 class ProviderDialog : public QDialog {
@@ -20,7 +21,7 @@ class ProviderDialog : public QDialog {
 public:
     ProviderDialog(QList<ProviderConfig> providers, QJsonObject catalogs = {}, QWidget* parent = nullptr);
     ~ProviderDialog() override;
-    QList<ProviderConfig> providers() const { return m_providers; }
+    QList<ProviderConfig> providers() const;
     QJsonObject modelCatalogs() const { return m_catalogs; }
     bool selectProviderId(const QString& providerId);
 public slots:
@@ -36,6 +37,7 @@ private:
     ProviderConfig currentConfig() const;
     void beginHarnessConnection(bool login);
     void beginOpenCodeDiscovery();
+    void beginClaudeDiscovery();
     void finishHarnessConnection();
     void beginApiOperation(bool validation);
     void cancelOperations();
@@ -50,6 +52,7 @@ private:
     QList<QWidget*> m_operationControls;
     QPointer<ProviderService> m_service;
     QPointer<OpenCodeModelDiscovery> m_openCodeDiscovery;
+    QPointer<ClaudeModelDiscovery> m_claudeDiscovery;
     quint64 m_operationEpoch=0;
     bool m_apiBusy=false,m_closing=false;
     QList<ProviderConfig> m_providers;

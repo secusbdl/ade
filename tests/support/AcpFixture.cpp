@@ -53,6 +53,7 @@ int main(int argc, char **argv) {
   }
   QString session = "session-one";
   QJsonValue promptId;
+  QString workspace;
   QJsonArray config{QJsonObject{
       {"id", "model"},
       {"type", "select"},
@@ -109,6 +110,7 @@ int main(int argc, char **argv) {
             QJsonArray{
                 QJsonObject{{"id", "login"}, {"name", "Use CLI sign-in"}}}}});
     else if (method == "session/new" || method == "session/resume") {
+      workspace=p["cwd"].toString();
       if (scenario == "auth-required" ||
           (scenario == "resume-error" && method == "session/resume") ||
           scenario == "session-error") {
@@ -139,6 +141,25 @@ int main(int argc, char **argv) {
       update(
           {{"sessionUpdate", "agent_thought_chunk"},
            {"content", QJsonObject{{"type", "text"}, {"text", "Thinking"}}}});
+      if (scenario == "presentation") {
+        const QJsonArray tools{
+            QJsonObject{{"toolCallId","read-id"},{"name","vendor-read"},{"kind","read"},{"title","Read fixture"},{"locations",QJsonArray{QJsonObject{{"path",workspace+"/probe.txt"}}}},{"rawInput",QJsonObject{{"rawSentinel","retain me"}}},{"rawOutput","read body"}},
+            QJsonObject{{"toolCallId","list-id"},{"kind","read"},{"title","List 'src'"}},
+            QJsonObject{{"toolCallId","search-id"},{"kind","search"},{"title","Search 'needle'"},{"rawOutput","a\nb\n"}},
+            QJsonObject{{"toolCallId","execute-id"},{"kind","execute"},{"title","Check fixture"},{"rawInput",QJsonObject{{"command","echo"},{"args",QJsonArray{"test",3}}}},{"rawOutput",QJsonObject{{"output","OUTPUT"},{"exit_code",0}}}},
+            QJsonObject{{"toolCallId","diff-id"},{"kind","edit"},{"content",QJsonArray{QJsonObject{{"type","diff"},{"path",workspace+"/a.cpp"},{"oldText","old\n"},{"newText","new\n"}},QJsonObject{{"type","diff"},{"path",workspace+"/b.cpp"},{"newText","added\n"}}}}}
+        };
+        for(const auto &value:tools) {
+          auto tool=value.toObject();tool["sessionUpdate"]="tool_call";tool["status"]="in_progress";update(tool);
+          update({{"sessionUpdate","tool_call_update"},{"toolCallId",tool["toolCallId"]},{"status","completed"}});
+        }
+        update({{"sessionUpdate","agent_message_chunk"},{"content",QJsonObject{{"type","text"},{"text","READY"}}}});done();continue;
+      }
+      if (scenario == "presentation-approval-first") {
+        const QJsonObject call{{"toolCallId","tool-1"},{"name","vendor-read"},{"kind","read"},{"title","Read fixture"},{"status","pending"},{"locations",QJsonArray{QJsonObject{{"path",workspace+"/probe.txt"}}}}};
+        send({{"id","approval-1"},{"method","session/request_permission"},{"params",QJsonObject{{"sessionId",session},{"toolCall",call},{"options",QJsonArray{QJsonObject{{"optionId","yes"},{"kind","allow_once"},{"name","Allow"}},QJsonObject{{"optionId","no"},{"kind","reject_once"},{"name","Deny"}}}}}}});
+        auto updated=call;updated["sessionUpdate"]="tool_call_update";updated["rawOutput"]="partial while permission pending";update(updated);continue;
+      }
       if (scenario == "updates") {
         update({{"sessionUpdate", "agent_message_chunk"},
                 {"messageId", "message-a"},

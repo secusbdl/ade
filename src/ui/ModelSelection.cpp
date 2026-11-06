@@ -1,4 +1,5 @@
 #include "ModelSelection.h"
+#include "core/ModelDiscoveryPolicy.h"
 #include <QJsonDocument>
 #include <QSet>
 #include <QUrl>
@@ -86,6 +87,22 @@ QJsonObject cleanModelCatalog(const ProviderConfig &provider,const QJsonArray &m
     return {{"baseUrl",provider.baseUrl},{"protocol",provider.protocol},{"kind",provider.kind},
             {"harnessExecutable",provider.harnessExecutable},{"models",entries}};
 }
+QJsonObject effectiveModelCatalog(const ProviderConfig& provider,const QJsonObject& legacyCatalog) {
+    if(provider.discoverySnapshot.isEmpty())return catalogMatches(provider,legacyCatalog)?legacyCatalog:QJsonObject{};
+    if(!modelDiscoveryMatches(provider,provider.discoverySnapshot)||!provider.discoverySnapshot.value("complete").toBool()
+       ||!validModelDiscoverySnapshot(provider,provider.discoverySnapshot))return {};
+    auto catalog=provider.discoverySnapshot.value("identity").toObject();
+    catalog["models"]=provider.discoverySnapshot.value("models");return catalog;
+}
+void prepareModelDiscoveryForSave(ProviderConfig& provider,const QJsonObject& legacyCatalog) {
+    invalidateModelDiscovery(provider);
+    if(!provider.discoverySnapshot.isEmpty()||!catalogMatches(provider,legacyCatalog)||!legacyCatalog.value("models").isArray())return;
+    const auto models=legacyCatalog.value("models").toArray();
+    if(models.size()>10000)return;
+    const auto cleaned=cleanModelCatalog(provider,models).value("models").toArray();
+    if(cleaned.size()!=models.size())return;
+    provider.discoverySnapshot=makeModelDiscoverySnapshot(provider,cleaned,true);
+}
 QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &providers,
     const QJsonObject &catalogs,const QJsonArray &presets,bool includeDisabled) {
     QList<ModelSelection> result;QSet<QString> keys;
@@ -104,7 +121,7 @@ QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &prov
         if(!includeDisabled)for(const auto& id:p.disabledModelIds)disabled.insert(normalizedModelVisibilityId(p,id));
         const auto enabled=[&](const QString& id){return !disabled.contains(normalizedModelVisibilityId(p,id));};
         if(includeDisabled||enabled(p.model))append({p.id,p.model,{},p.name+" / "+p.model,{}});
-        const auto catalog=catalogs[p.id].toObject();
+        const auto catalog=effectiveModelCatalog(p,catalogs[p.id].toObject());
         // A catalog belongs to one endpoint/protocol. Editing a provider invalidates old discovery.
         if(!catalogMatches(p,catalog))continue;
         for(const auto &value:catalog["models"].toArray()) {
@@ -118,7 +135,7 @@ QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,co
     QList<ModelConfig> result;QSet<QString> seen;
     for(const auto& value:entries){const auto item=value.toObject();auto selection=ModelSelection::fromJson(item);ProviderConfig provider;
         if(!selection.resolve(providers,&provider)||seen.contains(selection.key()))continue;
-        const auto catalog=catalogs[provider.id].toObject();
+        const auto catalog=effectiveModelCatalog(provider,catalogs[provider.id].toObject());
         if(provider.contextWindowTokens==0&&catalogMatches(provider,catalog)){
             for(const auto& value:catalog["models"].toArray()){
                 const auto model=value.toObject();const auto limit=model["inputTokenLimit"];

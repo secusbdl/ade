@@ -1,0 +1,22 @@
+********* Start testing of PluginRuntimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PluginRuntimeTest::initTestCase()
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(github)
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(supabase)
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(posthog)
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(vercel)
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(figma)
+PASS   : PluginRuntimeTest::encryptedCatalogToPinnedSkillToNativeFetch(posthog-eu)
+PASS   : PluginRuntimeTest::disableAndRotationInvalidateWorkerHeldHandles(github)
+PASS   : PluginRuntimeTest::disableAndRotationInvalidateWorkerHeldHandles(supabase)
+PASS   : PluginRuntimeTest::disableAndRotationInvalidateWorkerHeldHandles(posthog)
+PASS   : PluginRuntimeTest::disableAndRotationInvalidateWorkerHeldHandles(vercel)
+PASS   : PluginRuntimeTest::disableAndRotationInvalidateWorkerHeldHandles(figma)
+PASS   : PluginRuntimeTest::originAndReflectionBoundariesUseTheRealRegistry()
+PASS   : PluginRuntimeTest::handlesCannotCrossActualAgentHosts()
+PASS   : PluginRuntimeTest::borrowedTransportDestructionSettlesPendingRuntime()
+PASS   : PluginRuntimeTest::borrowedTransportOwnershipAndDeletionReentry()
+PASS   : PluginRuntimeTest::abortObserverMayDestroyBroker()
+PASS   : PluginRuntimeTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 11068ms
+********* Finished testing of PluginRuntimeTest *********

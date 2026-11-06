@@ -1,6 +1,8 @@
 #include "AgentEngine.h"
 #include "harness/AcpForm.h"
+#include "harness/AcpToolPresentation.h"
 #include "harness/AcpHarnessSession.h"
+#include <QCoreApplication>
 #include <QJsonDocument>
 #include <QUuid>
 namespace ade {
@@ -33,6 +35,10 @@ QString toolName(const QJsonObject &tool) {
 void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
                                     const QStringList &transcript) {
   const auto generation = m_generation;
+  const QString displayWorkspace = m_tools.workspace().isEmpty() ? m_harnessFallbackWorkspace : m_tools.workspace();
+  QList<AcpDisplayMount> displayMounts;
+  if (!displayWorkspace.isEmpty()) displayMounts.append({"ws1", displayWorkspace});
+  if (!m_tools.appsDirectory().isEmpty()) displayMounts.append({"apps", m_tools.appsDirectory()});
   if (!m_acp)
     m_acp = new AcpHarnessSession(this);
   m_acp->disconnect(this);
@@ -54,13 +60,25 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
             }
           });
   connect(m_acp, &AcpHarnessSession::event, this,
-          [this, generation](const QJsonObject &value) {
+          [this, generation, displayMounts](const QJsonObject &value) {
             if (!m_busy || generation != m_generation)
               return;
             const auto type = value["type"].toString();
             QJsonObject event = value;
             event["itemId"] = value["id"];
-            if (type == "tool") {
+            if (type == "stagewiseQuestion") {
+              event["type"] = "tool";
+              event["name"] = "askUserQuestions";
+              event["arguments"] = value["form"];
+              event["output"] =
+                  !value["error"].toString().isEmpty()
+                      ? value["error"].toString()
+                  : value["result"].toObject().isEmpty()
+                      ? QString{}
+                      : QString::fromUtf8(
+                            QJsonDocument(value["result"].toObject())
+                                .toJson(QJsonDocument::Compact));
+            } else if (type == "tool") {
               const auto tool = value["update"].toObject();
               event["name"] = toolName(tool);
               auto args = tool["rawInput"].toObject();
@@ -75,6 +93,7 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
                       : (tool["status"] == "completed" ? "output-available"
                                                        : "input-available");
               event["output"] = toolOutput(tool);
+              event["acpPresentation"] = AcpToolPresentation::map(tool, displayMounts);
             } else if (type == "plan") {
               const auto update = value["update"].toObject();
               const auto kind = update["sessionUpdate"].toString();
@@ -111,7 +130,7 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
             consumeHarnessEvent(event);
           });
   connect(m_acp, &AcpHarnessSession::approvalRequired, this,
-          [this, generation](const QString &token, const QJsonObject &request) {
+          [this, generation, displayMounts](const QString &token, const QJsonObject &request) {
             if (!m_busy || generation != m_generation)
               return;
             const auto tool = request["toolCall"].toObject();
@@ -126,6 +145,7 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
                   QString::fromUtf8(QJsonDocument(tool["rawInput"].toObject())
                                         .toJson(QJsonDocument::Compact)));
             }
+            m_display.setToolPresentation(callId, AcpToolPresentation::map(tool, displayMounts));
             m_display.toolState(callId, "approval-requested");
             const QPointer<AgentEngine> self(this);
             emit displayChanged();
@@ -153,6 +173,38 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
             m_questionToken =
                 QUuid::createUuid().toString(QUuid::WithoutBraces);
             m_questionCallId = "opencode-question/" + token;
+            emit questionChanged();
+          });
+  connect(
+      m_acp, &AcpHarnessSession::stagewiseQuestionRequired, this,
+      [this, generation](const QString &token, const QJsonObject &definition) {
+        if (!m_busy || generation != m_generation)
+          return;
+        if (!m_questionToolEnabled || !m_questionToken.isEmpty()) {
+          m_acp->cancelQuestion(token);
+          return;
+        }
+        QuestionForm form;
+        QString error;
+        if (!form.begin(definition, &error)) {
+          m_acp->completeStagewiseQuestion(token, {}, error);
+          return;
+        }
+        m_question = std::move(form);
+        m_harnessQuestionToken = token;
+        m_questionToken = QUuid::createUuid().toString(QUuid::WithoutBraces);
+        m_questionCallId =
+            "opencode/" + m_acp->turnId() + "/stagewise-mcp:" + token;
+        emit questionChanged();
+      });
+  connect(m_acp, &AcpHarnessSession::stagewiseQuestionCancelled, this,
+          [this, generation](const QString &token) {
+            if (generation != m_generation || token != m_harnessQuestionToken)
+              return;
+            m_harnessQuestionToken.clear();
+            m_questionToken.clear();
+            m_questionCallId.clear();
+            m_questionStopReason.clear();
             emit questionChanged();
           });
   connect(m_acp, &AcpHarnessSession::failed, this,
@@ -202,6 +254,8 @@ void AgentEngine::requestAcpHarness(const QJsonArray &originalInput,
   options.workspace = m_tools.workspace().isEmpty() ? m_harnessFallbackWorkspace
                                                     : m_tools.workspace();
   options.alwaysAllow = m_alwaysAllow;
+  if (m_questionToolEnabled)
+    options.questionMcpExecutable = QCoreApplication::applicationFilePath();
   if (!transcript.isEmpty())
     options.historyContext = "<conversation-history>\n" +
                              transcript.join("\n\n") +

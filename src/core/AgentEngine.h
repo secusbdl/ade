@@ -20,6 +20,7 @@ namespace ade {
 class UtilityService;
 class CodexHarnessSession;
 class AcpHarnessSession;
+class ClaudeHarnessSession;
 
 class AgentEngine final : public QObject {
     Q_OBJECT
@@ -134,6 +135,7 @@ private:
     void requestModel();
     void requestHarness();
     void requestAcpHarness(const QJsonArray& input,const QStringList& transcript);
+    void requestClaudeHarness(const QJsonArray& input,const QStringList& transcript);
     void stopHarness();
     void retainHarnessResponse();
     void consumeHarnessEvent(const QJsonObject& event);
@@ -166,6 +168,7 @@ private:
 
     QPointer<CodexHarnessSession> m_harness;
     QPointer<AcpHarnessSession> m_acp;
+    QPointer<ClaudeHarnessSession> m_claude;
     QString m_harnessOwnerId,m_harnessFallbackWorkspace,m_harnessQuestionToken;
     QJsonObject m_harnessState,m_harnessUsage;
     QMap<QString,QString> m_harnessText,m_harnessReasoning,m_harnessApprovals;

@@ -1,5 +1,6 @@
 #include "AcpHarnessSession.h"
 #include "AcpForm.h"
+#include "QuestionMcpProtocol.h"
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QStandardPaths>
@@ -49,7 +50,45 @@ QJsonObject permission(const QJsonArray &options, bool allow) {
 }
 } // namespace
 AcpHarnessSession::AcpHarnessSession(QObject *parent)
-    : QObject(parent), m_process(this) {
+    : QObject(parent), m_process(this), m_questionMcp(this) {
+  connect(&m_questionMcp, &QuestionMcpBridge::questionRequested, this,
+          [this](const QString &token, const QString &turn,
+                 const QJsonObject &form) {
+            bool otherQuestion = !m_stagewiseQuestion.isEmpty();
+            for (const auto &pending : m_pending)
+              otherQuestion |= pending.question;
+            if (!m_busy || m_interrupted || !m_promptSent || turn != m_turnId ||
+                otherQuestion) {
+              m_questionMcp.complete(token,
+                                     QuestionMcpProtocol::cancelledResult());
+              return;
+            }
+            m_stagewiseQuestion = token;
+            m_stagewiseForm = form;
+            refreshPromptDeadline();
+            const QPointer<AcpHarnessSession> self(this);
+            const auto generation = m_generation;
+            if (!publishStagewiseQuestion(token, form) || !self ||
+                !active(generation) || m_stagewiseQuestion != token)
+              return;
+            emit stagewiseQuestionRequired(token, form);
+          });
+  connect(&m_questionMcp, &QuestionMcpBridge::questionCancelled, this,
+          [this](const QString &token) {
+            if (token != m_stagewiseQuestion)
+              return;
+            const auto form = m_stagewiseForm;
+            m_stagewiseQuestion.clear();
+            m_stagewiseForm = {};
+            refreshPromptDeadline();
+            const QPointer<AcpHarnessSession> self(this);
+            const auto generation = m_generation;
+            if (m_busy)
+              publishStagewiseQuestion(token, form,
+                                       QuestionMcpProtocol::cancelledResult());
+            if (self && generation == m_generation)
+              emit stagewiseQuestionCancelled(token);
+          });
   m_cancelTimer.setSingleShot(true);
   connect(&m_cancelTimer, &QTimer::timeout, this, [this] {
     if (m_busy)
@@ -70,7 +109,10 @@ AcpHarnessSession::AcpHarnessSession(QObject *parent)
                            : "The OpenCode process became unavailable.");
   });
 }
-AcpHarnessSession::~AcpHarnessSession() { shutdown(); }
+AcpHarnessSession::~AcpHarnessSession() {
+  disconnect(&m_questionMcp, nullptr, this, nullptr);
+  shutdown();
+}
 QProcessEnvironment AcpHarnessSession::environment(bool alwaysAllow) {
   auto env = JsonRpcProcess::managedEnvironment();
   auto config =
@@ -98,7 +140,8 @@ bool AcpHarnessSession::startTurn(const AcpHarnessOptions &options,
   const auto exe = QStandardPaths::findExecutable(
       options.executable.isEmpty() ? "opencode" : options.executable);
   const auto root = HarnessWorkspace::resolve(options.workspace);
-  if (exe.isEmpty() || root.path.isEmpty() || options.providerId.isEmpty() ||
+  if (options.promptTimeoutMs < 100 || options.promptTimeoutMs > 600000 ||
+      exe.isEmpty() || root.path.isEmpty() || options.providerId.isEmpty() ||
       input.isEmpty() ||
       QJsonDocument(input).toJson(QJsonDocument::Compact).size() > Bound) {
     emit failed("OpenCode requires its installed CLI, an owned workspace, and "
@@ -119,9 +162,12 @@ bool AcpHarnessSession::startTurn(const AcpHarnessOptions &options,
       same(m_options.executable, exe) &&
       m_workspace.identity == root.identity &&
       m_options.providerId == options.providerId &&
-      m_options.alwaysAllow == options.alwaysAllow && !saved["fork"].toBool() &&
+      m_options.alwaysAllow == options.alwaysAllow &&
+      m_options.questionMcpExecutable == options.questionMcpExecutable &&
+      !saved["fork"].toBool() &&
       (id(saved["sessionId"]).isEmpty() || saved["sessionId"] == m_sessionId);
   if (!reuse) {
+    m_questionMcp.revoke();
     m_process.stop();
     m_initialized = false;
     m_sessionId.clear();
@@ -137,6 +183,9 @@ bool AcpHarnessSession::startTurn(const AcpHarnessOptions &options,
   m_saved = saved;
   m_calls.clear();
   m_pending.clear();
+  m_promptRequestId.clear();
+  m_stagewiseQuestion.clear();
+  m_stagewiseForm = {};
   m_configured.clear();
   m_parts = {};
   m_toolStates.clear();
@@ -180,6 +229,8 @@ bool AcpHarnessSession::call(const QString &method, const QJsonObject &params,
     return false;
   }
   m_calls.insert(requestId, method);
+  if (method == "session/prompt")
+    m_promptRequestId = requestId;
   return true;
 }
 void AcpHarnessSession::initialize() {
@@ -203,7 +254,18 @@ void AcpHarnessSession::beginSession() {
     configure();
     return;
   }
-  QJsonObject params{{"cwd", m_workspace.path}, {"mcpServers", QJsonArray{}}};
+  QJsonArray servers;
+  if (!m_options.questionMcpExecutable.isEmpty()) {
+    QString error;
+    const auto config =
+        m_questionMcp.start(m_options.questionMcpExecutable, &error);
+    if (config.isEmpty()) {
+      finish("failed", error);
+      return;
+    }
+    servers.append(config);
+  }
+  QJsonObject params{{"cwd", m_workspace.path}, {"mcpServers", servers}};
   const auto previous = id(m_saved["sessionId"]);
   if (!previous.isEmpty() &&
       m_capabilities["sessionCapabilities"].toObject()["resume"].isObject()) {
@@ -291,8 +353,13 @@ void AcpHarnessSession::prompt() {
     return;
   }
   m_promptSent = true;
+  const QPointer<AcpHarnessSession> self(this);
+  const auto generation = m_generation;
+  m_questionMcp.beginTurn(m_turnId);
+  if (!self || !active(generation))
+    return;
   call("session/prompt", {{"sessionId", m_sessionId}, {"prompt", content}},
-       600000);
+       m_options.promptTimeoutMs);
 }
 void AcpHarnessSession::response(const QString &requestId,
                                  const QJsonValue &value,
@@ -300,6 +367,8 @@ void AcpHarnessSession::response(const QString &requestId,
   if (!m_busy)
     return;
   const auto method = m_calls.take(requestId);
+  if (requestId == m_promptRequestId)
+    m_promptRequestId.clear();
   if (method.isEmpty())
     return;
   if (!error.isEmpty()) {
@@ -512,10 +581,19 @@ void AcpHarnessSession::request(const QJsonValue &requestId,
       return;
     }
     m_pending.insert(token, {requestId, params, false});
+    refreshPromptDeadline();
     emit approvalRequired(token, params);
   } else if (method == "elicitation/create" &&
              !acpQuestionForm(params).isEmpty()) {
+    bool otherQuestion = !m_stagewiseQuestion.isEmpty();
+    for (const auto &pending : m_pending)
+      otherQuestion |= pending.question;
+    if (otherQuestion) {
+      m_process.respond(requestId, QJsonObject{{"action", "cancel"}});
+      return;
+    }
     m_pending.insert(token, {requestId, params, true});
+    refreshPromptDeadline();
     emit questionRequired(token, params);
   } else
     m_process.reject(requestId, -32601,
@@ -527,11 +605,16 @@ bool AcpHarnessSession::answerApproval(const QString &token, bool allow) {
     return false;
   const auto pending = *found;
   m_pending.remove(token);
+  refreshPromptDeadline();
   return m_process.respond(
       pending.id, permission(pending.parameters["options"].toArray(), allow));
 }
 bool AcpHarnessSession::validQuestionAnswer(const QString &token,
                                             const QJsonObject &answers) const {
+  if (m_busy && !m_interrupted && token == m_stagewiseQuestion &&
+      !token.isEmpty())
+    return QJsonDocument(answers).toJson(QJsonDocument::Compact).size() <=
+           2 * 1024 * 1024;
   const auto found = m_pending.constFind(token);
   return m_busy && !m_interrupted && found != m_pending.cend() &&
          found->question && acpQuestionAnswers(found->parameters, answers);
@@ -544,26 +627,93 @@ bool AcpHarnessSession::answerQuestion(const QString &token,
     return false;
   const auto pending = *found;
   m_pending.remove(token);
+  refreshPromptDeadline();
   return m_process.respond(
       pending.id, QJsonObject{{"action", "accept"}, {"content", answers}});
 }
 bool AcpHarnessSession::cancelQuestion(const QString &token) {
+  if (!token.isEmpty() && token == m_stagewiseQuestion)
+    return completeStagewiseQuestion(token,
+                                     QuestionMcpProtocol::cancelledResult());
   const auto found = m_pending.constFind(token);
   if (!m_busy || found == m_pending.cend() || !found->question)
     return false;
   const auto pending = *found;
   m_pending.remove(token);
+  refreshPromptDeadline();
   return m_process.respond(pending.id, QJsonObject{{"action", "cancel"}});
+}
+void AcpHarnessSession::refreshPromptDeadline() {
+  if (m_promptRequestId.isEmpty())
+    return;
+  if (!m_pending.isEmpty() || !m_stagewiseQuestion.isEmpty())
+    m_process.suspendDeadline(m_promptRequestId);
+  else
+    m_process.resumeDeadline(m_promptRequestId);
+}
+bool AcpHarnessSession::publishStagewiseQuestion(const QString &token,
+                                                 const QJsonObject &form,
+                                                 const QJsonObject &result,
+                                                 const QString &error) {
+  return publish(
+      {{"type", "stagewiseQuestion"},
+       {"id", "stagewise-mcp:" + token},
+       {"form", form},
+       {"result", result},
+       {"error", error},
+       {"state", result.isEmpty() && error.isEmpty() ? "input-available"
+                 : error.isEmpty()                   ? "output-available"
+                                                     : "output-error"}});
+}
+bool AcpHarnessSession::completeStagewiseQuestion(const QString &token,
+                                                  const QJsonObject &result,
+                                                  const QString &error) {
+  if (!m_busy || token.isEmpty() || token != m_stagewiseQuestion)
+    return false;
+  if (error.isEmpty()) {
+    const auto steps = result.value("completedSteps");
+    if (!result.value("completed").isBool() ||
+        !result.value("cancelled").isBool() ||
+        !result.value("answers").isObject() || !steps.isDouble() ||
+        steps.toDouble() < 0 ||
+        steps.toDouble() > m_stagewiseForm.value("steps").toArray().size() ||
+        std::floor(steps.toDouble()) != steps.toDouble() ||
+        (result.value("completed").toBool() &&
+         result.value("cancelled").toBool()) ||
+        QJsonDocument(result).toJson(QJsonDocument::Compact).size() >
+            2 * 1024 * 1024)
+      return false;
+  }
+  const auto form = m_stagewiseForm;
+  m_stagewiseQuestion.clear();
+  m_stagewiseForm = {};
+  refreshPromptDeadline();
+  const QPointer<AcpHarnessSession> self(this);
+  const auto generation = m_generation;
+  const bool accepted = m_questionMcp.complete(token, result, error);
+  if (!self || !active(generation))
+    return accepted;
+  publishStagewiseQuestion(token, form, result, error);
+  return accepted;
 }
 void AcpHarnessSession::interrupt() {
   if (!m_busy)
     return;
   m_interrupted = true;
+  const QPointer<AcpHarnessSession> self(this);
+  const auto generation = m_generation;
+  m_questionMcp.endTurn();
+  if (!self || generation != m_generation || !m_busy)
+    return;
   const auto pending = m_pending;
   m_pending.clear();
-  for (const auto &p : pending)
+  refreshPromptDeadline();
+  for (const auto &p : pending) {
     m_process.respond(p.id, p.question ? QJsonObject{{"action", "cancel"}}
                                        : permission({}, false));
+    if (!self || generation != m_generation || !m_busy)
+      return;
+  }
   if (m_sessionId.isEmpty() || !m_promptSent) {
     finish("interrupted");
     return;
@@ -574,11 +724,20 @@ void AcpHarnessSession::interrupt() {
 void AcpHarnessSession::finish(const QString &status, const QString &error) {
   if (!m_busy)
     return;
+  const QPointer<AcpHarnessSession> bridgeGuard(this);
+  const auto bridgeGeneration = m_generation;
+  m_questionMcp.endTurn();
+  if (!bridgeGuard || bridgeGeneration != m_generation || !m_busy)
+    return;
   m_cancelTimer.stop();
   m_busy = false;
   m_calls.clear();
   m_pending.clear();
+  m_promptRequestId.clear();
+  m_stagewiseQuestion.clear();
+  m_stagewiseForm = {};
   if (status != "completed") {
+    m_questionMcp.revoke();
     m_process.stop();
     m_initialized = false;
     m_sessionId.clear();
@@ -605,7 +764,14 @@ void AcpHarnessSession::shutdown() {
   m_cancelTimer.stop();
   m_calls.clear();
   m_pending.clear();
+  m_promptRequestId.clear();
+  m_stagewiseQuestion.clear();
+  m_stagewiseForm = {};
   m_sessionId.clear();
+  m_stagewiseQuestion.clear();
+  m_stagewiseForm = {};
+  m_promptRequestId.clear();
+  m_questionMcp.revoke();
   m_process.stop();
   m_workspace = {};
 }

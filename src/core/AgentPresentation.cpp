@@ -1,4 +1,5 @@
 #include "AgentPresentation.h"
+#include "harness/AcpToolPresentation.h"
 #include "mutations/FileMutationDiff.h"
 #include <QCryptographicHash>
 #include <QJsonDocument>
@@ -127,6 +128,15 @@ void AgentPresentation::tool(int index,const QString& callId,const QString& name
 }
 void AgentPresentation::setText(const QString& type,const QString& value,const QString& key){const int index=findPart(key);if(index<0){text(type,value,key);return;}auto part=m_parts[index].toObject();part["text"]=value;m_parts[index]=part;}
 void AgentPresentation::closePart(const QString& key,const QString& state){closeAt(findPart(key),state);}
+void AgentPresentation::setToolPresentation(const QString& callId,const QJsonObject& presentation) {
+    for(int i=0;i<m_parts.size();++i) {
+        auto part=m_parts[i].toObject();
+        if(part["type"]!="tool"||part["toolCallId"]!=callId)continue;
+        if(AcpToolPresentation::valid(presentation))part["acpPresentation"]=presentation;
+        else part.remove("acpPresentation");
+        m_parts[i]=part;return;
+    }
+}
 void AgentPresentation::toolState(const QString& callId,const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){part["state"]=state;m_parts[i]=part;return;}}}
 QString AgentPresentation::toolOutput(const QString& callId)const{for(const auto& value:m_parts){const auto part=value.toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId)return part["output"].toString();}return {};}
 bool AgentPresentation::setToolOutput(const QString& callId,const QString& output){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){if(part["output"]==output)return false;part["output"]=output;m_parts[i]=part;return true;}}return false;}
@@ -185,6 +195,15 @@ struct HistoryProjectionState {
         assistant=-1;completed.clear();const auto display=message["metadata"].toObject()["display"].toObject();const bool saved=displayMatches(display,message)&&!rowIds.contains(display["id"].toString());auto id=saved?display["id"].toString():legacyId(message,&occurrences);
         const auto baseId=id;int collision=1;while(rowIds.contains(id))id=baseId+'~'+QString::number(collision++);rowIds.insert(id);
         QJsonObject row{{"id",id},{"role",role},{"provisional",false},{"parts",saved?display["parts"].toArray():legacyParts(message,id)}};
+        // Optional UI metadata must not invalidate the raw retained ACP tool.
+        auto safeParts=row["parts"].toArray();
+        for(int i=0;i<safeParts.size();++i) {
+            auto part=safeParts[i].toObject();
+            if(part.contains("acpPresentation")&&!AcpToolPresentation::valid(part["acpPresentation"].toObject())) {
+                part.remove("acpPresentation");safeParts[i]=part;
+            }
+        }
+        row["parts"]=safeParts;
         const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty())row["attachments"]=attachments;
         result.append(row);if(role=="assistant")assistant=result.size()-1;
     }

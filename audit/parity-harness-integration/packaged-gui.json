@@ -1,0 +1,62 @@
+{
+  "verifiedUtc": "2026-11-06T23:23:24.387182+00:00",
+  "binarySha256": "d1fd4a88fa548726610cc8482388fb594a92874a50c32da2c1927093daa1565b",
+  "syntheticProtocolFixtures": true,
+  "modelNetworkRequests": 0,
+  "checks": [
+    "Settings opens with Models & Providers and API-key import entry visible.",
+    "Claude provider editor opens and Escape returns to settings.",
+    "Typing into the native composer enables Send; settled accessibility state confirms it.",
+    "Send opens the owning chat native two-step MCP question panel.",
+    "Windows titlebar X closes ADE while its native question is pending."
+  ],
+  "close": {
+    "pid": 35676,
+    "exitCode": 0,
+    "ownedTestProcessesRemaining": 0
+  },
+  "screenshots": [
+    {
+      "localPath": "private/harness-gui-483e655d/01-final-main.png",
+      "sha256": "2475a82c95d694bf0e0b81e4e81136841f31ec817866fa384f980b14b70636c6"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/02-final-settings.png",
+      "sha256": "829d7b0803304436c2226f4c08614b6b0f268acdcdfe89f7d664895ca3286aea"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/03-final-claude-editor-owned-1.png",
+      "sha256": "3b24f9508e9dc9664deda3ff621f0a193e5f0725dde6f95ed3c0f6a0bc7c3f89"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/03-final-claude-editor.png",
+      "sha256": "85373484807b900bbab3751f133b4a71720801a3438c218ced36759fb5204642"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/04-final-claude-editor-settled-owned-1.png",
+      "sha256": "13bf07198dc60d6c149c40cecd82416370e20d8d94677f36673604659fb3d3c2"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/04-final-claude-editor-settled.png",
+      "sha256": "2c08235c861ef61d3eca89db370825cd3235d228e65a5c656e9d5198949872db"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/05-final-settings-return.png",
+      "sha256": "01d0db7c79a996db80f4db25265589af6d65d5f7f0a4cb9d63a4a2e9c205657b"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/06-final-send-enabled.png",
+      "sha256": "61bc0a9e7779ef29e5e97944c0f0ad2bcb9fa19fc4aa4565277fa62df189bd7b"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/07-final-send-settled.png",
+      "sha256": "c7be5c74463b5a8ca93757f000df134d80368320dad4068d1922ca7143bba901"
+    },
+    {
+      "localPath": "private/harness-gui-483e655d/08-final-pending-question.png",
+      "sha256": "a1fc5843bfc11d3f34217fc4bec6ada8dbc0cfef16d3cf071910958e123e03d0"
+    }
+  ],
+  "screenshotsLocalOnly": true,
+  "limits": "Actual packaged Windows UI with synthetic protocol fixtures. It does not establish every UI interaction, identical reasoning, or full Stagewise parity."
+}

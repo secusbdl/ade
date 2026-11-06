@@ -21,6 +21,9 @@ bool isModelEnabled(const ProviderConfig& provider,const QString& modelId);
 QStringList setModelEnabled(const ProviderConfig& provider,const QString& modelId,bool enabled);
 QJsonArray enabledDiscoveredModels(const ProviderConfig& provider,const QJsonArray& models);
 QString discoveredDefaultModel(const ProviderConfig& provider,const QJsonArray& models,const QString& current);
+// Durable snapshots supersede the legacy Settings cache, including invalidated/empty inventory.
+QJsonObject effectiveModelCatalog(const ProviderConfig& provider,const QJsonObject& legacyCatalog={});
+void prepareModelDiscoveryForSave(ProviderConfig& provider,const QJsonObject& legacyCatalog={});
 QJsonObject cleanModelCatalog(const ProviderConfig &provider, const QJsonArray &models);
 QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,const QJsonArray& entries,const QJsonObject& catalogs={});
 QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets,const QJsonObject& catalogs={});

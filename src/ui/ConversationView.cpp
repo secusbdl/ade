@@ -1,4 +1,5 @@
 #include "ConversationView.h"
+#include "harness/AcpToolPresentation.h"
 #include "TranscriptGrouping.h"
 #include "MarkdownParts.h"
 #include "FileDiffView.h"
@@ -32,9 +33,21 @@ namespace ade {
 namespace {
 bool darkFor(const QWidget *widget){return widget->palette().color(QPalette::Window).lightness()<128;}
 bool settled(const QString &state){return QStringList{"done","error","output-available","output-error","output-denied","canceled"}.contains(state);}
+QJsonObject acpEntry(const QJsonObject &part) {
+    const auto mapped=part["acpPresentation"].toObject();
+    return AcpToolPresentation::valid(mapped)?mapped["entries"].toArray().first().toObject():QJsonObject{};
+}
+QString visualToolName(const QJsonObject &part) {
+    const auto entry=acpEntry(part);const auto kind=entry["kind"].toString();
+    if(kind=="read")return "read";
+    if(kind=="list")return "ls";
+    if(kind=="search")return "grepSearch";
+    if(kind=="execute")return "executeShellCommand";
+    return entry["name"].toString(part["name"].toString());
+}
 bool exploratory(const QJsonObject &part){
     if(part["type"]=="reasoning")return true;
-    return part["type"]=="tool"&&QStringList{"glob","grepSearch","read","ls","searchInLibraryDocs","listLibraryDocs","executeSandboxJs","readConsoleLogs","getLintingDiagnostics"}.contains(part["name"].toString());
+    return part["type"]=="tool"&&QStringList{"glob","grepSearch","read","ls","searchInLibraryDocs","listLibraryDocs","executeSandboxJs","readConsoleLogs","getLintingDiagnostics"}.contains(visualToolName(part));
 }
 QString partPlain(const QJsonObject &part){
     if(part["type"]=="tool") {
@@ -116,6 +129,71 @@ private:
     QString key,fullTitle;Callbacks callbacks;std::optional<bool> manual;bool compactOnly=false;
 };
 
+// Reported ACP diffs are read-only display values, never journal snapshots.
+// Each child retains its index identity beneath the original raw owner/part.
+class ReportedDiffEntries final : public QWidget {
+public:
+    ReportedDiffEntries(const QString &key,const Callbacks &callbacks,QWidget *parent)
+        :QWidget(parent),key(key),callbacks(callbacks) {
+        setObjectName("acpReportedDiffs");layout=new QVBoxLayout(this);
+        layout->setContentsMargins(0,0,0,0);layout->setSpacing(7);
+        notice=new QLabel(this);notice->setObjectName("acpDiffNotice");notice->setWordWrap(true);notice->setTextFormat(Qt::PlainText);layout->addWidget(notice);
+    }
+    void update(QJsonObject mapped,QString state,bool last) {
+        const QPointer<ReportedDiffEntries> self(this);const auto epoch=++generation;
+        const auto current=[self,epoch]{return self&&self->generation==epoch;};
+        const auto entries=mapped["entries"].toArray();QSet<QString> keep;
+        for(const auto &value:entries) {
+            const auto entry=value.toObject();const auto kind=entry["kind"].toString();
+            if(kind!="write"&&kind!="edit"&&kind!="delete")continue;
+            const auto id=entry["id"].toString();keep.insert(id);
+            auto item=items.value(id);
+            if(!item.disclosure) {
+                item.disclosure=new Disclosure(key+"/acp-diff/"+id,callbacks,this);
+                item.disclosure->setObjectName("acpReportedDiff_"+id);item.disclosure->setProperty("displayChildId",id);
+                item.text=new CodeEditor(item.disclosure->body);item.text->setObjectName("acpReportedDiffText");item.text->setReadOnly(true);item.text->setFrameShape(QFrame::NoFrame);item.text->setLineWrapMode(QPlainTextEdit::NoWrap);
+                item.disclosure->bodyLayout->addWidget(item.text);items.insert(id,item);
+                layout->insertWidget(layout->count()-1,item.disclosure);
+            }
+            item.disclosure->setProperty("reportedPath",entry["path"]);
+            if(!current())return;
+            const auto path=callbacks.displayPath(entry["path"].toString());
+            QString title=path.section('/',-1);
+            if(kind=="delete")title="Deleted "+title;
+            else if(kind=="write")title+=" · Added";
+            if(entry["added"].toInt()>0)title+=QString(" +%1").arg(entry["added"].toInt());
+            if(entry["removed"].toInt()>0)title+=QString(" -%1").arg(entry["removed"].toInt());
+            if(!settled(state))title=(kind=="delete"?"Deleting ":kind=="write"?"Writing ":"Editing ")+path;
+            item.disclosure->trigger->setProperty("reportedPath",entry["path"]);
+            if(!current())return;
+            if(state=="output-error")title=entry["errorText"].toString().isEmpty()?"Error editing "+path:entry["errorText"].toString();
+            else if(state=="canceled"||state=="output-denied")title="Skipped · "+title;
+            item.disclosure->title(title);if(!current())return;
+            item.disclosure->trigger->setEnabled(state!="output-error");
+            if(state=="output-error")item.disclosure->apply(false);else item.disclosure->policy(true);
+            if(!current())return;
+            Q_UNUSED(last);
+            const QString text=entry["diffAvailable"].toBool()
+                ?FileDiffView::unifiedPreview(entry["before"].toString(),entry["after"].toString())
+                :QString("Reported diff unavailable: missing or oversized text.");
+            if(item.text->sourceText()!=text) {
+                const auto cursor=item.text->textCursor();item.text->setPlainText(text);
+                if(!current())return;
+                auto restored=item.text->textCursor();restored.setPosition(qMin(cursor.anchor(),text.size()));restored.setPosition(qMin(cursor.position(),text.size()),QTextCursor::KeepAnchor);item.text->setTextCursor(restored);if(!current())return;
+            }
+            item.text->setFileName("reported.diff");item.text->setDarkTheme(darkFor(this));
+            item.text->setFixedHeight(qBound(40,item.text->blockCount()*item.text->fontMetrics().lineSpacing()+14,220));
+        }
+        for(const auto &id:items.keys())if(!keep.contains(id)){delete items.take(id).disclosure;if(!current())return;}
+        QString message="Reported by coding agent · read-only preview";
+        if(mapped["omitted"].toInt()>0)message+=QString(" · %1 additional diffs omitted").arg(mapped["omitted"].toInt());
+        notice->setText(message);setVisible(!items.isEmpty());
+    }
+private:
+    struct Item{Disclosure *disclosure=nullptr;CodeEditor *text=nullptr;};
+    QString key;Callbacks callbacks;QVBoxLayout *layout;QLabel *notice;QHash<QString,Item> items;quint64 generation=0;
+};
+
 class PartWidget final : public QWidget {
 public:
     PartWidget(const QString &key,const QString &messageId,const QString &type,const Callbacks &callbacks,QWidget *parent):QWidget(parent),type(type),messageId(messageId),callbacks(callbacks) {
@@ -134,6 +212,7 @@ public:
             auto *copyInput=new QPushButton("Copy arguments",inputSection->body);copyInput->setObjectName("copyToolArguments");inputSection->bodyLayout->addWidget(copyInput,0,Qt::AlignRight);
             outputSection=new Disclosure(key+"/result",callbacks,disclosure->body);outputSection->trigger->setObjectName("toolResultToggle");disclosure->bodyLayout->addWidget(outputSection);
             output=new TranscriptText(outputSection->body);output->setObjectName("toolOutput");outputSection->bodyLayout->addWidget(output);
+            acpDiffs=new ReportedDiffEntries(key,callbacks,this);layout->insertWidget(0,acpDiffs);acpDiffs->hide();
             fileDiff=new FileDiffView(disclosure->body);disclosure->bodyLayout->insertWidget(1,fileDiff);fileDiff->hide();
             auto *copyOutput=new QPushButton("Copy result",outputSection->body);copyOutput->setObjectName("copyToolResult");outputSection->bodyLayout->addWidget(copyOutput,0,Qt::AlignRight);
             connect(copyInput,&QPushButton::clicked,this,[this]{const auto value=rawInput;QApplication::clipboard()->setText(value);});
@@ -148,8 +227,10 @@ public:
         }
         if(markdown)connect(markdown,&MarkdownParts::imageRequested,this,[this](const QUrl &url){const auto callback=this->callbacks.image;callback(this->messageId,this->partId,url,this->markdown);});
     }
-    void updatePart(const QJsonObject &part,bool last,bool busy) {
+    void updatePart(const QJsonObject part,bool last,bool busy) {
+        const QPointer<PartWidget> self(this);
         if(initialized&&previousPart==part&&wasLast==last&&wasBusy==busy)return;
+        const auto updateEpoch=++updateGeneration;
         initialized=true;previousPart=part;wasLast=last;wasBusy=busy;
         const auto state=part["state"].toString();const bool active=!settled(state)&&busy;
         partId=part["id"].toString();setProperty("partId",partId);setProperty("displayState",state);
@@ -161,7 +242,10 @@ public:
             markdown->updateText(part["text"].toString(),state=="streaming");
             auto p=markdown->palette();auto foreground=palette().color(QPalette::Text);foreground.setAlphaF(0.75);p.setColor(QPalette::Text,foreground);markdown->setPalette(p);
         } else if(type=="tool") {
-            callId=part["toolCallId"].toString();const auto name=part["name"].toString("Tool");
+            callId=part["toolCallId"].toString();const auto mapped=part["acpPresentation"].toObject();
+            const auto mappedEntry=acpEntry(part);const auto name=visualToolName(part);
+            const bool hasMapped=!mappedEntry.isEmpty();const auto mappedKind=mappedEntry["kind"].toString();
+            const bool hasDiff=hasMapped&&QStringList{"write","edit","delete"}.contains(mappedKind);
             QString prefix;
             if(state=="output-available")prefix="Completed · ";
             else if(state=="output-error")prefix="Error · ";
@@ -171,15 +255,47 @@ public:
             else if(state=="input-streaming")prefix="Preparing · ";
             else if(state=="running")prefix="Running · ";
             else prefix="Ready · ";
-            const auto diagnostic=part["errorText"].toString();
+            const auto diagnostic=part["errorText"].toString(mappedEntry["errorText"].toString());
             auto inputText=part["inputText"].toString();if(inputText.isEmpty()&&part["input"].isObject())inputText=QString::fromUtf8(QJsonDocument(part["input"].toObject()).toJson(QJsonDocument::Indented));
             auto arguments=part["input"].toObject();if(arguments.isEmpty())arguments=QJsonDocument::fromJson(inputText.toUtf8()).object();
+            if(hasMapped) {
+                if(mappedKind=="read"||mappedKind=="list")arguments=QJsonObject{{"path",mappedEntry["path"]}};
+                else if(mappedKind=="execute")arguments=QJsonObject{{"command",mappedEntry["command"]},{"explanation",mappedEntry["explanation"]}};
+            }
             const bool compactRead=name=="read"&&state!="approval-requested";
-            disclosure->compact(compactRead);
+            const bool compactMapped=hasMapped&&(mappedKind=="list"||mappedKind=="search")&&state!="approval-requested";
+            disclosure->compact(compactRead||compactMapped);
+
             QString title=prefix+name+((state=="output-error"&&!diagnostic.isEmpty())?" · "+diagnostic:QString());
             if((name=="executeSandboxJs"||name=="executeShellCommand")&&!arguments["explanation"].toString().isEmpty())title=(state=="output-available"?QString():prefix)+arguments["explanation"].toString();
-            if(compactRead){auto args=part["input"].toObject();if(args.isEmpty())args=QJsonDocument::fromJson(inputText.toUtf8()).object();const auto path=callbacks.displayPath(args["path"].toString());if(state=="output-available")title="Read "+path;else if(state=="output-error")title="Error · "+(diagnostic.isEmpty()?QString("Could not read ")+path:diagnostic);else if(!settled(state))title=path.isEmpty()?QStringLiteral("Reading file..."):"Reading "+path+"...";}
-            disclosure->title(title);disclosure->policy(active||last||state=="approval-requested");
+            if(compactRead){const auto path=callbacks.displayPath(arguments["path"].toString());if(state=="output-available")title="Read "+path;else if(state=="output-error")title="Error · "+(diagnostic.isEmpty()?QString("Could not read ")+path:diagnostic);else if(!settled(state))title=path.isEmpty()?QStringLiteral("Reading file..."):"Reading "+path+"...";}
+            if(mappedKind=="execute"&&state!="approval-requested") {
+                const auto explanation=mappedEntry["explanation"].toString();const auto command=mappedEntry["command"].toString();
+                if(state=="output-error")title=diagnostic.isEmpty()?"Error running: "+command:diagnostic;
+                else if(state=="output-denied")title=explanation.isEmpty()?"Skipped command":explanation;
+                else if(state=="canceled")title="Canceled · "+(explanation.isEmpty()?command:explanation);
+                else if(state=="output-available") {
+                    title=explanation.isEmpty()?"Ran command":explanation;
+                    if(mappedEntry.contains("exitCode")&&mappedEntry["exitCode"].toDouble()!=0)title+=QString(" (%1)").arg(mappedEntry["exitCode"].toDouble());
+                }else title=explanation.isEmpty()?"Running "+command:explanation;
+            }
+            if(compactMapped) {
+                if(mappedKind=="list") {
+                    const auto path=callbacks.displayPath(mappedEntry["path"].toString());
+                    title=state=="output-available"?"Listed "+path:path.isEmpty()?"Listing directory...":"Listing "+path+"...";
+                }else {
+                    const auto query=mappedEntry["query"].toString();
+                    title=state=="output-available"?(mappedEntry.contains("matches")?QString("Found %1 result%2").arg(mappedEntry["matches"].toInt()).arg(mappedEntry["matches"].toInt()==1?"":"s"):QString("Search results (preview truncated)")):query.isEmpty()?"Searching with grep...":"Searching for "+query+"...";
+                    if(state=="output-available"&&!query.isEmpty())title+=" for \""+query+"\"";
+                }
+                if(state=="output-error")title="Error · "+diagnostic;
+                else if(state=="canceled"||state=="output-denied")title="Skipped · "+title;
+            }
+            if(hasDiff&&state!="approval-requested")title="Raw tool details · "+part["name"].toString();
+            disclosure->title(title);disclosure->policy(hasDiff?state=="approval-requested":active||last||state=="approval-requested");
+            acpDiffs->update(hasDiff?mapped:QJsonObject{},state,last);
+            if(!self||updateGeneration!=updateEpoch)return;
+
             const auto script=name=="executeSandboxJs"?arguments["script"].toString():name=="executeShellCommand"?arguments["command"].toString():QString();
             preview->setVisible(!script.isEmpty());
             if(!script.isEmpty()){
@@ -190,12 +306,12 @@ public:
                 preview->setToolTip(script.size()>65536?QStringLiteral("Preview shows the first 65,536 characters; copy arguments for the full input."):QString());
             }
             rawInput=inputText;input->setSource(inputText.left(65536),false);inputSection->setVisible(!inputText.isEmpty());
-            inputSection->title(inputText.size()>65536?QStringLiteral("Arguments · first 65,536 characters"):QStringLiteral("Arguments"));inputSection->policy(script.isEmpty());
+            inputSection->title(inputText.size()>65536?QStringLiteral("Arguments · first 65,536 characters"):QStringLiteral("Arguments"));inputSection->policy(script.isEmpty()&&!hasDiff);
             rawOutput=part["output"].toString(part["errorText"].toString());output->setSource(rawOutput.right(65536),false);outputSection->setVisible(!rawOutput.isEmpty());
             fileDiff->setDiff(part["fileDiff"].toObject());
             QString resultLabel=state=="output-error"?"Error":active?"Live output":"Result";
             if(rawOutput.size()>65536)resultLabel+=" · last 65,536 characters";
-            outputSection->title(resultLabel);outputSection->policy(true);
+            outputSection->title(resultLabel);outputSection->policy(!hasDiff);
             if(previousState!=state)decisionPending=false;
             const bool requested=state=="approval-requested";approvalBar->setVisible(requested);
             canDecide=requested&&!decisionPending&&!callId.isEmpty()&&busy;
@@ -209,10 +325,10 @@ public:
 private:
     void decide(bool allowed){if(!canDecide||decisionPending||callId.isEmpty()||previousState!="approval-requested")return;decisionPending=true;canDecide=false;approve->setEnabled(false);deny->setEnabled(false);const auto id=callId;callbacks.approval(messageId,partId,id,allowed);}
     QString type,messageId,partId,callId,previousState,rawInput,rawOutput;Callbacks callbacks;bool decisionPending=false,canDecide=false;
-    QJsonObject previousPart;bool initialized=false,wasLast=false,wasBusy=false;
+    QJsonObject previousPart;bool initialized=false,wasLast=false,wasBusy=false;quint64 updateGeneration=0;
     MarkdownParts *markdown=nullptr;Disclosure *disclosure=nullptr;TranscriptText *input=nullptr,*output=nullptr,*error=nullptr;
     Disclosure *inputSection=nullptr,*outputSection=nullptr;CodeEditor *preview=nullptr;
-    FileDiffView* fileDiff=nullptr;
+    FileDiffView* fileDiff=nullptr;ReportedDiffEntries* acpDiffs=nullptr;
     QWidget *approvalBar=nullptr;QPushButton *approve=nullptr,*deny=nullptr;
 };
 
@@ -222,7 +338,8 @@ public:
         auto *layout=new QVBoxLayout(this);layout->setContentsMargins(0,0,0,0);
         disclosure=new Disclosure(key,callbacks,this);layout->addWidget(disclosure);setObjectName("explorationGroup");
     }
-    void updateParts(const QList<TranscriptPart> &parts,bool last,bool busy) {
+    void updateParts(QList<TranscriptPart> parts,bool last,bool busy) {
+        const QPointer<ExplorationGroup> self(this);const auto epoch=++generation;
         QSet<QString> keep;bool active=false;int completed=0;
         for(qsizetype index=0;index<parts.size();++index){
             const auto& reference=parts[index];const auto part=reference.value;const auto id=reference.key();keep.insert(id);
@@ -230,6 +347,7 @@ public:
             const auto* item=disclosure->bodyLayout->itemAt(index);
             if(!item||item->widget()!=widget){disclosure->bodyLayout->removeWidget(widget);disclosure->bodyLayout->insertWidget(index,widget);}
             widget->updatePart(part,last&&index==parts.size()-1,busy);
+            if(!self||generation!=epoch)return;
             active=active||!settled(part["state"].toString());if(part["type"]=="tool"&&part["state"]=="output-available")++completed;
         }
         const auto ids=widgets.keys();for(const auto &id:ids)if(!keep.contains(id))delete widgets.take(id);
@@ -237,7 +355,7 @@ public:
         disclosure->policy(last);disclosure->inlineOnly(parts.size()==1);disclosure->scroll->setLimit(384);
     }
 private:
-    QString key,messageId;Callbacks callbacks;Disclosure *disclosure;QHash<QString,PartWidget*> widgets;
+    QString key,messageId;Callbacks callbacks;Disclosure *disclosure;QHash<QString,PartWidget*> widgets;quint64 generation=0;
 };
 
 class AttachmentChips final : public QWidget {
@@ -286,7 +404,8 @@ public:
         QSet<QString> collapsed;for(const auto& entry:summary["files"].toArray()){const auto path=entry.toObject()["path"].toString();QString key;const auto pieces=path.split('/');for(int i=0;i+1<pieces.size();++i){key+=(key.isEmpty()?QString():"/")+pieces[i];if(callbacks.disclosure(id+"/files/"+key)==false)collapsed.insert(key);}}
         turnFiles->setCollapsedFolders(collapsed);
     }
-    void updateRow(const TranscriptGroup &row,bool busy,bool lastRow) {
+    void updateRow(TranscriptGroup row,bool busy,bool lastRow) {
+        const QPointer<MessageRow> self(this);const auto epoch=++generation;
         const bool active=busy&&lastRow;
         if(initialized&&data==row&&lastBusy==active&&lastPosition==lastRow)return;
         initialized=true;lastBusy=active;lastPosition=lastRow;
@@ -300,6 +419,7 @@ public:
             if(!item||item->widget()!=widget){layout->removeWidget(widget);layout->insertWidget(position,widget);}++position;
             if(group)static_cast<ExplorationGroup*>(widget)->updateParts(grouped,lastRow&&index==parts.size(),busy&&lastRow);
             else static_cast<PartWidget*>(widget)->updatePart(part,lastRow&&index==parts.size(),busy&&lastRow);
+            if(!self||generation!=epoch)return;
         }
         const auto keys=items.keys();for(const auto &key:keys)if(!keep.contains(key))delete items.take(key);
         chips->update(row.attachments);measure();
@@ -310,7 +430,7 @@ protected:
 private:
     void colors(){if(role=="user")body->setStyleSheet("QFrame#messageBody{background:"+QString(darkFor(this)?"#2c313b":"#f1f3f6")+";border:1px solid "+QString(darkFor(this)?"#3c424c":"#dfe3e8")+";border-radius:8px;}");}
     void measure(){if(role!="user")return;int desired=72;for(const auto &value:data.parts)for(const auto &line:value.value["text"].toString().split('\n'))desired=qMax(desired,fontMetrics().horizontalAdvance(line.left(1000))+24);if(!data.first["attachments"].toArray().isEmpty())desired=qMax(desired,250);body->setMaximumWidth(qMin(qMax(60,width()-16),qMin(736,desired)));}
-    QString id,role,turnRow;Callbacks callbacks;QFrame *body;QVBoxLayout *layout;AttachmentChips *chips;TurnFileEdits* turnFiles=nullptr;QHash<QString,QWidget*> items;TranscriptGroup data;bool initialized=false,lastBusy=false,lastPosition=false;
+    QString id,role,turnRow;Callbacks callbacks;QFrame *body;QVBoxLayout *layout;AttachmentChips *chips;TurnFileEdits* turnFiles=nullptr;QHash<QString,QWidget*> items;TranscriptGroup data;bool initialized=false,lastBusy=false,lastPosition=false;quint64 generation=0;
 };
 } // namespace
 
@@ -471,6 +591,7 @@ void ConversationView::setConversation(const QString &id,const QJsonArray &messa
         if(!widget){widget=new MessageRow(key,role,callbacks,d->content);d->rows.insert(key,widget);}
         const auto* layoutItem=d->layout->itemAt(position);
         if(!layoutItem||layoutItem->widget()!=widget){d->layout->removeWidget(widget);d->layout->insertWidget(position,widget);}++position;widget->updateRow(row,busy,index==groups.size()-1);
+        if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch||self->d->messages!=messages)return;
         const bool show=selections.contains(selectionRow)&&!(busy&&index==groups.size()-1);
         if(!show)widget->fileSummary(false);
         else{

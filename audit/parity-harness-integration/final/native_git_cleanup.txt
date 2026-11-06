@@ -1,0 +1,25 @@
+********* Start testing of CleanupTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CleanupTests::initTestCase()
+PASS   : CleanupTests::reviewDoesNotDeleteAndExplicitRemovalRetainsBranch()
+PASS   : CleanupTests::unknownHistoryAndRecoveryNeverAuthorizeRemoval(unknown)
+PASS   : CleanupTests::unknownHistoryAndRecoveryNeverAuthorizeRemoval(changed-history)
+PASS   : CleanupTests::freshGuardsRejectReviewedChange(dirty)
+PASS   : CleanupTests::freshGuardsRejectReviewedChange(mounted)
+PASS   : CleanupTests::freshGuardsRejectReviewedChange(journal)
+PASS   : CleanupTests::freshGuardsRejectReviewedChange(instance)
+PASS   : CleanupTests::snoozeSurvivesCleanRestart()
+PASS   : CleanupTests::cleanShutdownRecordsFinalLiveUse()
+PASS   : CleanupTests::newLiveMountRevokesReviewAndReleaseRecordsUse()
+PASS   : CleanupTests::destructionDuringStartedSignalPreventsDispatch()
+PASS   : CleanupTests::mountDuringStartedSignalRevokesBeforeDispatch()
+PASS   : CleanupTests::booleanHistoryFlagCannotAuthorizeCleanup()
+PASS   : CleanupTests::competingJournalAndIncompleteScanFailClosed()
+PASS   : CleanupTests::checkoutAfterFinalStatusCannotRemoveUnmergedBranch(different-branch)
+PASS   : CleanupTests::checkoutAfterFinalStatusCannotRemoveUnmergedBranch(same-branch-new-head)
+PASS   : CleanupTests::destructionCancelsInFlightPreRemovalInspection()
+PASS   : CleanupTests::managedRootRetargetCannotAdoptKnownExternalWorktree()
+PASS   : CleanupTests::managedRootUnderAuthorizedJunctionParentStillWorks()
+PASS   : CleanupTests::cleanupTestCase()
+Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 95484ms
+********* Finished testing of CleanupTests *********

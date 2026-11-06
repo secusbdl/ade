@@ -210,7 +210,19 @@ void MainWindow::buildUi() {
         }
         m_tabs->removeTab(index);if(page!=m_files&&page!=m_downloads&&page!=m_git)page->deleteLater();refreshWorkbench();scheduleBrowserSessionSave();
     });
-    connect(m_tabs,&QTabWidget::currentChanged,this,[this](int index){refreshWorkbench();if(auto* page=m_tabs->widget(index)){if(m_fullscreenBrowser&&!page->isAncestorOf(m_fullscreenBrowser))setBrowserFullscreen(m_fullscreenBrowser,false);const auto id=page->property("browserTabId").toString();if(!id.isEmpty())m_browserBridge->setActiveTab(id);}});
+    connect(m_tabs, &QTabWidget::currentChanged, this, [this](int index) {
+        const QPointer<MainWindow> self(this);
+        refreshWorkbench();
+        if (!self || m_tabs->currentIndex() != index) return;
+        const QPointer<QWidget> page(m_tabs->widget(index));
+        if (m_fullscreenBrowser && (!page || !page->isAncestorOf(m_fullscreenBrowser)))
+            setBrowserFullscreen(m_fullscreenBrowser, false);
+        if (!self || m_tabs->currentIndex() != index || m_tabs->widget(index) != page) return;
+        const auto id = page ? page->property("browserTabId").toString() : QString();
+        // Non-browser content and no selection must not leave a stale browser
+        // marked active. Registration alone does not imply UI focus.
+        if (!m_browserBridge->setActiveTab(id)) m_browserBridge->setActiveTab({});
+    });
     connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
     new QShortcut(QKeySequence("Ctrl+N"),this,[this]{newConversation();});
     new QShortcut(QKeySequence("Ctrl+B"),this,[this]{m_sidebarSplitter->toggle();if(m_sidebarSplitter->isCollapsed())m_sidebarReopen->setFocus();else m_search->setFocus();});
@@ -527,12 +539,11 @@ void MainWindow::showProviders(bool add,const QString& providerId){
     const auto result=dialog->exec();
     if(!self||!dialog)return;
     if(result!=QDialog::Accepted){dialog->deleteLater();finish();return;}
-    const auto providers=dialog->providers();const auto catalogs=dialog->modelCatalogs();dialog->deleteLater();
+    const auto providers=dialog->providers();dialog->deleteLater();
     if(!m_providerRepository.save(providers,&error)){finish(error);return;}
     m_providers=providers;
-    const bool savedCatalog=m_settings->setPreference("modelCatalogs",catalogs);
-    if(!self)return;
-    finish(savedCatalog?QString():QStringLiteral("Provider saved, but the discovered catalog could not be saved."));
+    // Discovery and visibility were saved in the same provider CAS revision.
+    finish();
     if(self)refreshModels();
 }
 void MainWindow::showSettings(){m_settings->setContextWorkspace(current()?current()->workspace:QString());m_settings->reload();m_pages->setCurrentWidget(m_settings);}

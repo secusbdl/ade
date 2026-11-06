@@ -4,6 +4,7 @@
 #include "ui/SettingsPage.h"
 #include "ui/SmokeTranscriptCapture.h"
 #include "core/AgentEngine.h"
+#include "harness/QuestionMcpStdio.h"
 #include "core/ProviderStore.h"
 #include "plugins/PluginCatalog.h"
 #include "browser/browserwidget.h"
@@ -79,6 +80,8 @@ bool configureSmokePlugins(AgentToolHost& host, PluginCatalog& catalog, const QS
 }
 }
 int main(int argc,char** argv) {
+    if(argc==2 && QByteArray(argv[1])=="--question-mcp-stdio")
+        return runQuestionMcpStdio(argc,argv,QuestionForm::toolDefinition()["function"].toObject()["parameters"].toObject());
     QApplication app(argc,argv);app.setApplicationName("ADE");app.setOrganizationName("ADE");app.setApplicationVersion("0.1.0");
     initializeAppStyle(app);
     QCommandLineParser parser;parser.setApplicationDescription("ADE — native Qt agentic development environment");parser.addHelpOption();parser.addVersionOption();
@@ -131,7 +134,7 @@ int main(int argc,char** argv) {
         if(!error.isEmpty()){QTextStream(stderr)<<"Cannot prepare attachments: "<<error<<'\n';return 2;}
         if(parser.isSet("browser-url")){
             browser=std::make_unique<BrowserWidget>();browser->setProfileDirectory(directory+"/browser");browser->setAttribute(Qt::WA_DontShowOnScreen);browser->resize(1024,768);
-            browserTools.registerTab(browser.get());
+            browserTools.setActiveTab(browserTools.registerTab(browser.get()));
             browser->navigate(QUrl(parser.value("browser-url")));browser->show();
         }
         QString response,failure;QJsonArray tools;bool done=false;QElapsedTimer elapsed;elapsed.start();

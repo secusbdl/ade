@@ -4,6 +4,7 @@
 #include "UtilityService.h"
 #include "harness/CodexHarnessSession.h"
 #include "harness/AcpHarnessSession.h"
+#include "harness/ClaudeHarnessSession.h"
 #include <QStandardPaths>
 #include <QFileInfo>
 
@@ -242,6 +243,10 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
     if (m_provider.isCodexHarness() && (CodexAppServer::findExecutable(m_provider.harnessExecutable).isEmpty() || m_harnessOwnerId.isEmpty()
         || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
         rejectSubmission("Configure the installed Codex coding agent and its chat context first."); return false;
+    }
+    if (m_provider.isClaudeHarness() && (QStandardPaths::findExecutable(m_provider.harnessExecutable.isEmpty()?"claude":m_provider.harnessExecutable).isEmpty() || m_harnessOwnerId.isEmpty()
+        || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
+        rejectSubmission("Choose an installed Claude executable and an owned workspace."); return false;
     }
     if (m_provider.isOpenCodeHarness() && (QStandardPaths::findExecutable(m_provider.harnessExecutable.isEmpty()?"opencode":m_provider.harnessExecutable).isEmpty() || m_harnessOwnerId.isEmpty()
         || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
@@ -909,6 +914,11 @@ void AgentEngine::completeExternalToolWithAttachments(const QString &requestId, 
 }
 
 void AgentEngine::approveTool(const QString &id, bool allow) {
+    if(m_busy&&m_provider.isClaudeHarness()&&m_claude&&m_harnessApprovals.contains(id)){
+        const auto token=m_harnessApprovals.take(id);
+        if(m_claude->answerApproval(token,allow)){m_display.toolState(id,allow?"input-available":"output-denied");emit displayChanged();}
+        return;
+    }
     if(m_busy&&m_provider.isOpenCodeHarness()&&m_acp&&m_harnessApprovals.contains(id)){
         const auto token=m_harnessApprovals.take(id);
         if(m_acp->answerApproval(token,allow)){m_display.toolState(id,allow?"input-available":"output-denied");emit displayChanged();}

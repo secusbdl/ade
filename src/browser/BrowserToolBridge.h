@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BrowserContext.h"
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -22,11 +23,14 @@ public:
     ~BrowserToolBridge() override;
     QString registerTab(BrowserWidget* browser, const QString& requestedId = QString());
     void unregisterTab(const QString& tabId);
+    // Only the host selects focus; empty clears it. Registration does not focus.
     bool setActiveTab(const QString& tabId);
     QString activeTabId() const { return m_activeTabId; }
     QJsonArray definitions() const;
     bool handles(const QString& name) const;
     void setRequestTimeoutMs(int milliseconds);
+    // Owner-thread value copy. Empty/invalid identity never means unscoped.
+    BrowserContextSnapshot snapshotForAgent(const QString& agentId) const;
     bool canAccessTab(const QString& tabId,const QString& agentId) const;
 
 public slots:
@@ -47,6 +51,9 @@ private:
     struct Tab {
         QPointer<BrowserWidget> browser;
         QString title;
+        QString url;
+        qint64 lastFocusedAt = 0;
+        quint64 focusOrder = 0;
         QList<QJsonObject> logs;
         QList<QMetaObject::Connection> connections;
     };

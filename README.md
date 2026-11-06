@@ -67,12 +67,18 @@ identical model reasoning or output.
   grouped assistant replies and image lifecycle repairs. Exact package and GUI
   evidence are identified separately from earlier live-model runs.
 
+- [`audit/parity-harness-integration.json`](audit/parity-harness-integration.json)
+  records the **144-suite checkpoint**: native Claude Code, OpenCode question MCP,
+  source-derived ACP presentation, durable model inventory and fresh browser-tab
+  context. Earlier-candidate live OpenCode question evidence and exact final-package
+  checks identify their binaries separately.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
 | --- | --- | --- |
 | Agent engine | Four provider wire protocols, streaming, cancellation, fallback, durable message queue and typed multi-step questions | `src/core` |
-| Coding agents | Installed Codex app-server and OpenCode ACP, CLI-managed accounts, model discovery, session resume, streamed tools/approvals/questions and isolated fallback conversation files | `src/harness`, `src/core/AgentEngineHarness.cpp`, `src/runtime/HarnessFileContext*` |
+| Coding agents | Installed Codex app-server, OpenCode ACP and Claude Code stream-json; CLI-managed accounts, model discovery, streamed tools/approvals/questions and isolated fallback conversation files | `src/harness`, `src/core/AgentEngineHarness.cpp`, `src/runtime/HarnessFileContext*` |
 | Transcript | Consecutive assistant grouping with raw provenance, incremental Markdown/code/tool cards, inline approval, document-owned trusted images, bounded file diffs and per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
 | Transcript links | Conversation-scoped file, attachment and browser links; persisted/forked provenance remains checked against current mount identity | `src/links`, `src/ui/MainWindowLinks.cpp` |
 | Conversations | Atomic persistence, drafts, fork, archive/restore, restart selection, durable deletion cleanup and isolated side-chat promotion/discard | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp`, `src/ui/MainWindowSideChats.cpp` |
@@ -183,6 +189,25 @@ do not yet capture every filesystem change made by an external coding agent.
 Other coding-agent adapters remain separate gaps unless an integration report
 explicitly records their implemented and tested scope.
 
+The **Claude Code** choice uses its installed CLI and native stream-json control
+protocol. **Fetch Claude models** performs initialization only; it does not verify
+account entitlement or spend a model request. Questions, approvals, cancellation
+and streamed tool state use correlated native protocol handling.
+
+OpenCode can call ADE's **stagewise_request_user_input** MCP tool. The same ADE
+executable has an early stdio-helper mode; it opens the owner chat's native form
+and returns completed steps, answers and cancellation status. The real
+OpenCode/DeepSeek GUI smoke is recorded in `audit/harness-candidate-gui-native.json`.
+The direct Claude question flow has separate actual-host fixture coverage.
+
+Discovered models and visibility choices now save atomically with their provider.
+Eligible pinned provider templates apply source-derived defaults on first discovery;
+manual enable/disable choices survive refresh and restart. A complete inventory
+with no enabled models can be saved, then enabled through **Models**. Endpoint or
+protocol changes invalidate stale inventory; incomplete pagination preserves the
+previous choices and reports an error. Custom-model CRUD and advanced options
+remain separate gaps.
+
 The provider editor's optional **Model context limit** applies to that
 provider's default model. Changing its model, endpoint or protocol clears the
 limit; another discovered model must supply its own matching catalog limit.
@@ -229,6 +254,12 @@ uses a loopback model and synthetic credential-state checks, with no external
 plugin request.
 
 ## Evidence and remaining work
+
+Native HTTP requests now include fresh registered browser-tab metadata owned by
+the current chat or shared globally, with explicit active selection and MRU order.
+This is current host context, not DOM contents or user instructions. Historical
+environment snapshots/deltas and automatic external-harness browser metadata
+remain separate gaps.
 
 The renewed source review adds ordinary browser restart restoration, model usage
 and guarded automatic compression, explicit worktree cleanup review, and 26

@@ -19,6 +19,7 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTabWidget>
+#include <QTextBlock>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTemporaryDir>
@@ -433,6 +434,104 @@ class TranscriptLinkUiTest : public QObject {
         QVERIFY(wasOwned);
         QVERIFY(!provisionalBrowser);
     }
+void nonBrowserContentClearsActiveBrowserContext() {
+  QTemporaryDir data;
+  QVERIFY(seed(data.path(), {}));
+  MainWindow window(data.path());
+  QVERIFY(select(window, "first"));
+  auto *browserPage = tab(window, "active-fixture");
+  auto *content = window.findChild<QTabWidget *>("contentTabs");
+  auto *bridge = window.findChild<BrowserToolBridge *>();
+  content->setCurrentWidget(browserPage);
+  QCOMPARE(bridge->activeTabId(), "active-fixture");
+  auto *file = new QWidget;
+  content->addTab(file, "Fixture editor");
+  content->setCurrentWidget(file);
+  QVERIFY2(bridge->activeTabId().isEmpty(), qPrintable(bridge->activeTabId()));
+  QVERIFY(bridge->snapshotForAgent("first").activeTabId.isEmpty());
+}
+
+void browserCurrentRemovalAndReentryUseLatestSelection() {
+  QTemporaryDir data;
+  QVERIFY(seed(data.path(), {}));
+  MainWindow window(data.path());
+  QVERIFY(select(window, "first"));
+  auto *a = tab(window, "first-context");
+  auto *b = tab(window, "second-context");
+  auto *content = window.findChild<QTabWidget *>("contentTabs");
+  auto *bridge = window.findChild<BrowserToolBridge *>();
+  auto *neutral = new QWidget;
+  content->addTab(neutral, "Neutral");
+  content->setCurrentWidget(neutral);
+  bool once = true;
+  connect(bridge, &BrowserToolBridge::tabsChanged, &window, [&] {
+    if (once && bridge->activeTabId() == "first-context") {
+      once = false;
+      content->setCurrentWidget(b);
+    }
+  });
+  content->setCurrentWidget(a);
+  QCOMPARE(content->currentWidget(), b);
+  QCOMPARE(bridge->activeTabId(), "second-context");
+  content->setCurrentWidget(neutral);
+  auto *background = tab(window, "background-context");
+  QVERIFY(bridge->activeTabId().isEmpty());
+  content->setCurrentWidget(background);
+  content->removeTab(content->indexOf(background));
+  delete background;
+  const auto *current = content->currentWidget();
+  QCOMPARE(bridge->activeTabId(),
+           current ? current->property("browserTabId").toString() : QString());
+  while (content->count() > 0) {
+    auto *page = content->widget(0);
+    content->removeTab(0);
+    page->setParent(&window);
+  }
+  QVERIFY(bridge->activeTabId().isEmpty());
+}
+void renderedTabAnchorActivatesOnlyCurrentOwnedTab() {
+  QTemporaryDir data;
+  QVERIFY(seed(data.path(), {}));
+  Provider provider;
+  provider.reply =
+      "[Visible browser](tab:owned-link) [Foreign browser](tab:other-link)";
+  QVERIFY(provider.save(data.path()));
+  MainWindow window(data.path());
+  QVERIFY(select(window, "first"));
+  auto *owned = tab(window, "owned-link", "first", true);
+  tab(window, "other-link", "second", true);
+  auto *tabs = window.findChild<QTabWidget *>("contentTabs");
+  auto *neutral = new QWidget;
+  tabs->addTab(neutral, "Neutral");
+  tabs->setCurrentWidget(neutral);
+  window.submitPrompt("Return descriptive links");
+  QTRY_COMPARE(provider.requests, 1);
+  auto *engine = window.findChild<AgentEngine *>();
+  QVERIFY(engine);
+  QTRY_VERIFY(!engine->isBusy());
+  auto *view = window.findChild<ConversationView *>();
+  TranscriptText *target = nullptr;
+  bool anchor = false;
+  for (auto *text : view->findChildren<TranscriptText *>())
+    if (text->source().contains("[Visible browser]")) {
+      target = text;
+      for (auto block = text->document()->begin(); block.isValid();
+           block = block.next())
+        for (auto it = block.begin(); !it.atEnd(); ++it)
+          if (it.fragment().charFormat().anchorHref() == "tab:owned-link")
+            anchor = true;
+    }
+  QVERIFY(target && anchor);
+  QVERIFY(target->toPlainText().contains("Visible browser"));
+  emit target->anchorClicked(QUrl("tab:owned-link"));
+  QCOMPARE(tabs->currentWidget(), owned);
+  tabs->setCurrentWidget(neutral);
+  emit target->anchorClicked(QUrl("tab:other-link"));
+  QCOMPARE(tabs->currentWidget(), neutral);
+  owned->findChild<BrowserWidget *>()->setProperty("adeOwnerAgentId", "second");
+  emit target->anchorClicked(QUrl("tab:owned-link"));
+  QCOMPARE(tabs->currentWidget(), neutral);
+}
 };
 QTEST_MAIN(TranscriptLinkUiTest)
 #include "test_transcript_link_ui.moc"

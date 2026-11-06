@@ -1,6 +1,7 @@
 #include "AgentEngine.h"
 #include "harness/CodexHarnessSession.h"
 #include "harness/AcpHarnessSession.h"
+#include "harness/ClaudeHarnessSession.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QJsonDocument>
@@ -18,7 +19,24 @@ void AgentEngine::setHarnessContext(const QString &ownerId,
   m_harnessFallbackWorkspace = accepted;
 }
 void AgentEngine::stopHarness() {
+  // Preserve the user's owned partial form before stopping the external
+  // process. This is display history, not an invented native model
+  // tool-call/result pair.
+  if (m_acp && m_acp->isStagewiseQuestion(m_harnessQuestionToken) &&
+      !m_questionToken.isEmpty() && m_harnessTools.contains(m_questionCallId)) {
+    const auto reason = m_questionStopReason.isEmpty()
+                            ? QString("agent_stopped")
+                            : m_questionStopReason;
+    m_display.setToolOutput(
+        m_questionCallId,
+        QString::fromUtf8(QJsonDocument(m_question.result(reason))
+                              .toJson(QJsonDocument::Compact)));
+    m_display.toolState(m_questionCallId, reason == "user_sent_message"
+                                              ? "output-available"
+                                              : "canceled");
+  }
   if(m_acp)m_acp->shutdown();
+  if(m_claude)m_claude->shutdown();
   if (m_harness)
     m_harness->shutdown();
   m_harnessApprovals.clear();
@@ -127,6 +145,14 @@ void AgentEngine::requestHarness() {
         if (url.startsWith("data:image/"))
           images.append(QJsonObject{{"type", "image"}, {"url", url}});
       }
+      if (part.value("type") == "image") {
+        const auto mime=part.value("mediaType").toString();
+        const auto encoded=part.value("dataBase64").toString();
+        if(!mime.startsWith("image/")||encoded.isEmpty()){
+          fail("Prepared coding-agent image content is invalid.");return;
+        }
+        images.append(QJsonObject{{"type","image"},{"url","data:"+mime+";base64,"+encoded}});
+      }
     }
     if (i == history.size() - 1) {
       input.append(QJsonObject{{"type", "text"}, {"text", text}});
@@ -142,6 +168,10 @@ void AgentEngine::requestHarness() {
       m_harnessState = saved;
       break;
     }
+  }
+  if(m_provider.isClaudeHarness()) {
+    if(!m_harnessState.isEmpty() && m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState["fork"]=true;
+    requestClaudeHarness(input,transcript);return;
   }
   if(m_provider.isOpenCodeHarness()) {
     if(!m_harnessState.isEmpty() && m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState["fork"]=true;
@@ -339,8 +369,10 @@ void AgentEngine::consumeHarnessEvent(const QJsonObject &event) {
     const auto args = event["arguments"].toObject();
     m_display.tool(
         m_harnessTools[key], key, event["name"].toString(),
-        QString::fromUtf8(QJsonDocument(args).toJson(QJsonDocument::Compact)));
-    m_display.toolState(key, event["state"].toString());
+        event.value("argumentText").isString() ? event.value("argumentText").toString() : QString::fromUtf8(QJsonDocument(args).toJson(QJsonDocument::Compact)));
+    if (event.contains("acpPresentation"))
+      m_display.setToolPresentation(key, event["acpPresentation"].toObject());
+    m_display.toolState(key, m_harnessApprovals.contains(key) ? QString("approval-requested") : event["state"].toString());
     m_display.setToolOutput(key, event["output"].toString());
     if (first) {
       emit toolStarted(key, event["name"].toString(), args);
@@ -366,19 +398,33 @@ void AgentEngine::consumeHarnessEvent(const QJsonObject &event) {
 }
 void AgentEngine::finishHarnessQuestion(const QString &reason) {
   const auto token = m_harnessQuestionToken;
-  const auto answers = m_question.result(reason)["answers"].toObject();
+  const auto result = m_question.result(reason);
+  const auto answers = result["answers"].toObject();
+  const auto generation = m_generation;
+  const QPointer<AgentEngine> self(this);
   m_harnessQuestionToken.clear();
   m_questionToken.clear();
   m_questionCallId.clear();
   m_questionStopReason.clear();
-  if (m_provider.isOpenCodeHarness() && m_acp) {
-    if(reason.isEmpty())m_acp->answerQuestion(token,answers);else m_acp->cancelQuestion(token);
+  if (m_provider.isClaudeHarness() && m_claude) {
+    if (reason.isEmpty())
+      m_claude->answerQuestion(token, answers);
+    else
+      m_claude->cancelQuestion(token);
+  } else if (m_provider.isOpenCodeHarness() && m_acp) {
+    if (m_acp->isStagewiseQuestion(token))
+      m_acp->completeStagewiseQuestion(token, result);
+    else if (reason.isEmpty())
+      m_acp->answerQuestion(token, answers);
+    else
+      m_acp->cancelQuestion(token);
   } else if (m_harness) {
     if (reason.isEmpty())
       m_harness->answerQuestion(token, answers);
     else
       m_harness->cancelQuestion(token);
   }
-  emit questionChanged();
+  if (self && generation == m_generation)
+    emit questionChanged();
 }
 } // namespace ade

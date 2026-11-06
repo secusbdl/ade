@@ -1,6 +1,7 @@
 #pragma once
-#include "harness/HarnessWorkspace.h"
-#include "harness/JsonRpcProcess.h"
+#include "HarnessWorkspace.h"
+#include "JsonRpcProcess.h"
+#include "QuestionMcpBridge.h"
 #include <QJsonArray>
 #include <QSet>
 #include <QTimer>
@@ -9,6 +10,8 @@ namespace ade {
 struct AcpHarnessOptions {
   QString executable, providerId, workspace, model, reasoningEffort;
   QString instructions, historyContext;
+  QString questionMcpExecutable;
+  int promptTimeoutMs = 600000;
   bool thinkingDisabled = false;
   bool alwaysAllow = false;
 };
@@ -27,6 +30,12 @@ public:
   bool answerQuestion(const QString &token, const QJsonObject &answers);
   bool validQuestionAnswer(const QString& token,const QJsonObject& answers) const;
   bool cancelQuestion(const QString &token);
+  bool completeStagewiseQuestion(const QString &token,
+                                 const QJsonObject &result,
+                                 const QString &error = {});
+  bool isStagewiseQuestion(const QString &token) const {
+    return m_busy && !token.isEmpty() && token == m_stagewiseQuestion;
+  }
   QString turnId() const { return m_turnId; }
   bool isBusy() const { return m_busy; }
   QJsonObject sessionState() const;
@@ -36,6 +45,8 @@ signals:
   void sessionStateChanged(QJsonObject state);
   void approvalRequired(QString token, QJsonObject request);
   void questionRequired(QString token, QJsonObject request);
+  void stagewiseQuestionRequired(QString token, QJsonObject form);
+  void stagewiseQuestionCancelled(QString token);
   void authenticationRequired(QJsonArray methods);
   void finished(QJsonObject result);
   void failed(QString message);
@@ -60,7 +71,12 @@ private:
   void finish(const QString &status, const QString &error = {});
   bool publish(QJsonObject event);
   bool active(quint64 generation) const;
+  void refreshPromptDeadline();
+  bool publishStagewiseQuestion(const QString &token, const QJsonObject &form,
+                                const QJsonObject &result = {},
+                                const QString &error = {});
   JsonRpcProcess m_process;
+  QuestionMcpBridge m_questionMcp;
   AcpHarnessOptions m_options;
   HarnessWorkspace m_workspace;
   QJsonObject m_saved, m_capabilities, m_usage;
@@ -70,6 +86,8 @@ private:
   QHash<QString, Pending> m_pending;
   QSet<QString> m_configured;
   QString m_sessionId, m_currentPart, m_currentType, m_turnId;
+  QString m_promptRequestId, m_stagewiseQuestion;
+  QJsonObject m_stagewiseForm;
   QTimer m_cancelTimer;
   quint64 m_generation = 0;
   qsizetype m_outputSize = 0;

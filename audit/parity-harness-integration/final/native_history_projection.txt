@@ -1,0 +1,15 @@
+********* Start testing of HistoryProjectionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HistoryProjectionTest::initTestCase()
+PASS   : HistoryProjectionTest::unchangedHistoryDoesNoProjectionWork()
+PASS   : HistoryProjectionTest::changingToolTailDoesNotReprojectSettledRows()
+PASS   : HistoryProjectionTest::toolIdsAttachmentsAndDuplicateRowsStayBatchLocal()
+PASS   : HistoryProjectionTest::replacementTruncationAndClearCannotReuseStalePrefix()
+PASS   : HistoryProjectionTest::retainedOutputSnapshotsAreImmutable()
+PASS   : HistoryProjectionTest::mutationReferencesBelongOnlyToFirstMatchingResult()
+PASS   : HistoryProjectionTest::malformedAndExcessMutationReferencesAreBounded()
+PASS   : HistoryProjectionTest::savedIdCollisionsAndMalformedMetadataMatchFreshProjection()
+PASS   : HistoryProjectionTest::deterministicMixedEditsMatchFreshProjection()
+PASS   : HistoryProjectionTest::cleanupTestCase()
+Totals: 11 passed, 0 failed, 0 skipped, 0 blacklisted, 1230ms
+********* Finished testing of HistoryProjectionTest *********

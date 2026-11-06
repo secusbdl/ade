@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "status": "Frozen private follow-on; actual production libraries linked read-only; root CTest registration pending",
+  "observedHead": "48318e02cc2603350405d1067973011d3795ed7d",
+  "productionChangesByThisFollowOn": false,
+  "test": {
+    "path": "private/harness-forms-host-stage/test_harness_forms_host.cpp",
+    "sha256": "0992321e2abe992363413ac3b9bf5e85fc4a04d0ea662514e9c428e88fa3cb52",
+    "hashMode": "canonical-LF"
+  },
+  "copy": {
+    "from": "private/harness-forms-host-stage/test_harness_forms_host.cpp",
+    "to": "tests/test_harness_forms_host.cpp"
+  },
+  "cmake": {
+    "path": "private/harness-forms-host-stage/CMAKE-HANDOFF.txt",
+    "sha256": "cf60bb2110f6f7516f746f5608580fb905ee64928bcbcad356f00d3f74b54378",
+    "hashMode": "canonical-LF"
+  },
+  "finalEvidence": [
+    "settled-final.txt",
+    "settled-final.xml"
+  ],
+  "reports": [
+    {
+      "path": "private/harness-forms-host-stage/first.txt",
+      "sha256": "8d6249c494ebc4b18d5a39e9dab42349bcfee0817b554be991083923ad47003b",
+      "hashMode": "canonical-LF",
+      "passed": 4,
+      "failed": 3,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 2707
+    },
+    {
+      "path": "private/harness-forms-host-stage/second.txt",
+      "sha256": "6d799e960041faea0092c725ac43dc4f09ca41cd6a42b874381ac0e79030505a",
+      "hashMode": "canonical-LF",
+      "passed": 2,
+      "failed": 5,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 96715
+    },
+    {
+      "path": "private/harness-forms-host-stage/third.txt",
+      "sha256": "7f75ea5cd9c1062b43d721ce7789f07068c47012ff769e9c089de23278c224ad",
+      "hashMode": "canonical-LF",
+      "passed": 6,
+      "failed": 1,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 3146
+    },
+    {
+      "path": "private/harness-forms-host-stage/final.txt",
+      "sha256": "5e4b7d8992f57755100f7db463663b0a3ea74d52eae14aeddf2556b546541b66",
+      "hashMode": "canonical-LF",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 2635
+    },
+    {
+      "path": "private/harness-forms-host-stage/settled-final.txt",
+      "sha256": "93eca5c000dfe925cef9213e1e72db8698441199b2b5b8063c7cc204bd15b52b",
+      "hashMode": "canonical-LF",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 2772
+    }
+  ],
+  "coverage": [
+    "Actual MainWindow Send to the native OpenCode ACP fixture; real self-spawned same-binary MCP stdio helper and authenticated loopback bridge.",
+    "QuestionPanel rejects cross-visible-chat answer; returning to owner accepts real native input and Submit.",
+    "Stable raw tool part/call identity, rendered transcript linkage, persisted display history and exact helper-delivered structured answer.",
+    "Two-step native form retains completed first answer and second partial answer on Cancel and real Agent Stop; stale prior-step token rejected.",
+    "Claude native fixture QuestionPanel replaces composer; actual AppStyle/Settings theme initialization in light and dark; provider heading contrast and rendered text pixels checked.",
+    "Captures wait for real deferred TranscriptText document height measurement, rather than using an arbitrary sleep."
+  ],
+  "fixtureCorrections": [
+    "Initial helper selection/readiness failures were test harness failures. No production defect was established by those failures.",
+    "Second draft incorrectly used mutating click actions inside QTRY_VERIFY. QTRY evaluates its final assertion again; successful first click removed/replaced the form. Replaced with pure visible/enabled predicate followed by exactly one click.",
+    "Third draft had an unbraced else introduced during test editing, so Stop incorrectly attempted a subsequent form Cancel. Fixed the test braces.",
+    "Initial passing captures could precede TranscriptText deferred geometry; final test waits on document width/height equality before capture."
+  ],
+  "limits": [
+    "Synthetic native CLI fixtures only; no live authentication, account entitlement, paid model request or real service tested.",
+    "Offscreen Qt UI rendering/input is tested; native Windows focus and WebView behavior are outside this follow-on.",
+    "Theme assertions cover actual host palette, visible question actions and provider heading contrast; they do not establish universal pixel-perfect Stagewise parity.",
+    "Root aggregate integration has not been rerun by this follow-on."
+  ],
+  "inspectedProductionSources": [
+    {
+      "path": "src/core/AgentEngineHarness.cpp",
+      "sha256": "b90f4aff2e855f36a05f945152a1ad5c8e72604939ddbe47f67b371883120e3c",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngineAcp.cpp",
+      "sha256": "8f574b68c5035cbac869240bfc9e02544655a1c635f34fce2268b3e6af9cd4cb",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngineClaude.cpp",
+      "sha256": "1587c62ca07459a5f893b25afe07ef5d6a56b3e3b24f3bc669a71900d04d9695",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/harness/QuestionMcpBridge.cpp",
+      "sha256": "a736b50766d5723897246f4249c99699eb8bd8037bd5e1989b89f497c084313b",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/harness/QuestionMcpStdio.cpp",
+      "sha256": "8cc06c9113f1d82bb7bc43ff14caf50788117ff30d54da2c36fb8fa57642e4d4",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/ui/MainWindowControl.cpp",
+      "sha256": "41947d757c9fb7c02c045e1f2a4c620f05ff2fba7a12c02e6cdeec29bf5183f6",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/ui/QuestionPanel.cpp",
+      "sha256": "fc0740ead3f74ff3d8c041d940e2e5ed6a6ce2208fb15c188c98d64f3043982b",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/ui/ProviderDialog.cpp",
+      "sha256": "faa93ac81b3ac77699e16101d52d7dd1a54018492e0efbfaf6ace3a5b4782611",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "tests/support/ClaudeFixture.cpp",
+      "sha256": "ebc51cda9d77af7640779f4b62f743f3b7b0fdb1b04ceb408ec77ccbdfddc80b",
+      "hashMode": "canonical-LF"
+    }
+  ],
+  "linkedLibraries": [
+    {
+      "path": "build-next/libade_ui.a",
+      "sha256": "935eee34bf01cdf87e9473d3ac557ce02a9a2afb5b2da8764fd43dca4a9a6c94",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_host.a",
+      "sha256": "58ef62004359ddd4f6eb044173165fe6d8b6eaf1374a0e328e8d4d89c13fd050",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_shell.a",
+      "sha256": "c7c19e6d605e679fb6b5dc095e4e98639d13da52f90f4c3f2ac1d782031fd5ed",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/src/terminal/libade_terminal.a",
+      "sha256": "6882468f4f4a0d7b678f3fbe74531adcc9fd243447347dfd8e6f905f7c97ecef",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/src/terminal/libade_vterm.a",
+      "sha256": "a6f9b5d2c00ca4771d8fe410e3dee751840ac590186b63b08f23d28d72bb0afb",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_plugins.a",
+      "sha256": "3decf7d0fbe80f14f598f5367cf794369d10b0bf698720bb409d66b4306163f6",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_network.a",
+      "sha256": "55eb953b571a592daf4a09e6965b7a69b014df507e2fa62da9165419e047608d",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/src/git/ui/libade_git_ui.a",
+      "sha256": "c16c1279516b2d6bd85279ac4ac941442c325bd80628d174ea15c8c83f312abe",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_editor.a",
+      "sha256": "e8b53c4d5e389dfc149a9da8f4efebba8ef6f48a0def8d800f908a1c66f53ef9",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/src/git/libade_git.a",
+      "sha256": "ada59221e87800f4be1d4ad6aa6d991d2e43acda97e5fd710b377b376158749f",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_transcript_links.a",
+      "sha256": "1e44099df8bcfbe389e0e2dd501047d692e720d06f3bed9dc77c05d9ab5c37d1",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_attachments.a",
+      "sha256": "d43c8f9ef6dcf6f98efde319c4a5bc127ce92a2f082eab3327a41f10f1dac162",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_core.a",
+      "sha256": "ab8dfc2b6198fb28cd15ae15ad9264c52708d4c52a3f442929a871611f199f7a",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_harness.a",
+      "sha256": "1d0854293f24f81a00224c22c7cd343e47c50aa8a501f94968e1700171813167",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "build-next/libade_file_transformer.a",
+      "sha256": "8e1f53064704921b073a93173038cfe60d034871965cbd6cd52dffb7d92d9475",
+      "hashMode": "raw-bytes"
+    }
+  ],
+  "executables": [
+    {
+      "path": "private/harness-forms-host-stage/bin/test_harness_forms_host.exe",
+      "sha256": "8a402ea07c1a1042c674938676fb4e7bc46d4f3b6ae06a991a7cf440422cc260",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/bin/acp_mcp_fixture.exe",
+      "sha256": "1008be6a2286aaca499ade1aaa1bc29270912df4b36073406ef352a13a2f5a79",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/bin/claude_fixture.exe",
+      "sha256": "75d9b86bbe96635a1bfee1283990f8d19702b2f70d17a89a10be95a577f05011",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/bin/ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "hashMode": "raw-bytes"
+    }
+  ],
+  "captures": [
+    {
+      "path": "private/harness-forms-host-stage/captures/claude-host-dark.png",
+      "sha256": "b23e305da2902f4445a64356ef18148ed89f850a2b4e2c960bf71a9762455aba",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/captures/claude-host-light.png",
+      "sha256": "3e7053504e6a5bf0b1877372d8cccc8a981b02100115b6598e340682eece842d",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/captures/claude-provider-host-theme-dark.png",
+      "sha256": "3f30cc32f598c20020a8cce7fedd9a7ce9d86e073c2f4c5da9f92a945745b93a",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-forms-host-stage/captures/claude-provider-host-theme-light.png",
+      "sha256": "2a12222290dcda57f674562a7b7f4240e08685d7200d91b6efea5c91ab999ee7",
+      "hashMode": "raw-bytes"
+    }
+  ],
+  "captureReview": "Final four captures visually reviewed. Main form questions, choices and action controls are shown in both themes; provider headings are readable. No claim of all-widget pixel parity.",
+  "futureClaudeReadOnlySmoke": "CLAUDE-SMOKE-FEASIBILITY.json; plan only, no new CLI/account/model request"
+}

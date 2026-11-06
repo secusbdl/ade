@@ -1,0 +1,10 @@
+********* Start testing of TranscriptLinkUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TranscriptLinkUiTest::initTestCase()
+QWARN  : TranscriptLinkUiTest::nonBrowserContentClearsActiveBrowserContext() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : TranscriptLinkUiTest::nonBrowserContentClearsActiveBrowserContext() 'bridge->activeTabId().isEmpty()' returned FALSE. (active-fixture)
+D:/age/ADE/private/browser-context-stage/tests/test_transcript_link_ui.cpp(442) : failure location
+PASS   : TranscriptLinkUiTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 114ms
+********* Finished testing of TranscriptLinkUiTest *********

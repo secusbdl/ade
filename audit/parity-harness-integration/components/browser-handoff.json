@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "status": "private_implemented_focused_tested_not_production_integrated",
+  "frozen": true,
+  "date": "2026-11-07",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeCheckpoint": "8f24722",
+  "parentHeadAtHandoff": "48318e02cc2603350405d1067973011d3795ed7d",
+  "patch": "browser-context.patch",
+  "patchSha256": "bca36d46eaf360978a0a15262fd7714074190542893f5e856fa5b368beecd725",
+  "manifest": "source-manifest.json",
+  "cmake": "CMake.integration.txt",
+  "plan": "../dynamic-context-plan/PLAN.json",
+  "behavior": [
+    "Native HTTP requests receive fresh owned browser tab metadata plus existing shell context at every model step. No synthetic history rows are added.",
+    "Global and exact host-owned registered BrowserWidgets only. Nonempty fixed host identity required; whitespace-only, >256chars or null IDs are unavailable. Getter returns unavailable off owner thread before reading registry.",
+    "Stable IDs/title/URL, deterministic MRU focus order with registration-order ties, last focus timestamp and visible active marker. Hidden foreign active is absent. Snapshot is value-only with no callbacks/authority.",
+    "Focus is explicitly host selected: registering a tab does not activate it; removing active clears; setActiveTab(empty) clears. MainWindow publishes selected browser or empty for nonbrowser/no tabs, with QPointer/current selection checks across callbacks. Explicit smoke browser-url selection is preserved by a one-line companion.",
+    "XML attributes and Unicode remain complete. Title max2048UTF16 units with titleTruncated; URL max8192 and invalid Unicode URL rows omitted whole. Up to128 accessible tabs; output <=65536UTF8 bytes; explicit accumulated omissions.",
+    "Guidance states titles/URLs are untrusted environment state, not user intent or observed DOM/content/screenshots. Teaches descriptive-label [Tab title](tab:ID), using existing IDs; getBrowserTabs remains available.",
+    "Existing transcript owner/session provenance is unchanged. Managed Codex/OpenCode fixture wires keep structured external instructions and exclude native browser metadata/API claims."
+  ],
+  "sourceReferences": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/env-domains/browser-domain-adapter.ts",
+      "lines": [
+        42,
+        94,
+        119,
+        209
+      ],
+      "contract": "owned/global browser projection, MRU, keyframe fields and delta distinction"
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/agent-core-bridge/host.ts",
+      "lines": [
+        179
+      ],
+      "contract": "tab protocol uses real context IDs"
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "lines": [
+        2881
+      ],
+      "contract": "persisted per-message env snapshots/deltas; explicitly not implemented by this live-only slice"
+    }
+  ],
+  "beforeEvidence": [
+    {
+      "text": "before.txt",
+      "xml": "before.xml",
+      "result": "2 pass4 fail",
+      "cause": "Actual host requests in four HTTP protocols omit tab context."
+    },
+    {
+      "text": "nonbrowser-before.txt",
+      "xml": "nonbrowser-before.xml",
+      "result": "2 pass1 fail",
+      "cause": "Actual MainWindow retained previous active browser after switching to nonbrowser."
+    }
+  ],
+  "reports": [
+    {
+      "text": "browser_context-frozen.txt",
+      "xml": "browser_context-frozen.xml",
+      "passedIncludingInitCleanup": 23,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "b10438483a0790b27ca46a112dbdfd61859543e33ee5eaa3ca23fc9a0d9f0e50",
+      "xmlSha256": "f5ce75967acc5fa14ded74d4ed38038fef3e55c3224487956ede7c2c593f94d8"
+    },
+    {
+      "text": "browser_context_runtime-frozen.txt",
+      "xml": "browser_context_runtime-frozen.xml",
+      "passedIncludingInitCleanup": 15,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "5dc37f530ef640f8628a7d9a76467bbdc1c3e05466638952a1ebe166f0c7072c",
+      "xmlSha256": "951259c57f820676cfef127b58bf046cafad0a45e7df42ffc71fb3aaac3b4638"
+    },
+    {
+      "text": "transcript_link_ui-frozen.txt",
+      "xml": "transcript_link_ui-frozen.xml",
+      "passedIncludingInitCleanup": 17,
+      "failed": 0,
+      "skipped": 1,
+      "textSha256": "cf2ab53b9ebe523309c582c06bae80b5edc92044253d2cc9d577347195b65269",
+      "xmlSha256": "e471a74b1c9192c38295a13f8fb84db828ed2f54ab40a2688ee121e8c2d67bac"
+    },
+    {
+      "text": "agent_prompt-final.txt",
+      "xml": "agent_prompt-final.xml",
+      "passedIncludingInitCleanup": 19,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "93a18ebc8f9a3edb0441d53c3c02d2618f1c8b2a34d282c4b898c22069895edb",
+      "xmlSha256": "d67c8adddf769344d960c3a83e2d766200c13aed27385b68de06f3a7aec06946"
+    },
+    {
+      "text": "shell_engine-final.txt",
+      "xml": "shell_engine-final.xml",
+      "passedIncludingInitCleanup": 16,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "fdf43fb39f029f2858d249d7c48a5d705bcf83df18571e6325301792bf0e6490",
+      "xmlSha256": "335904e87b6d83e8d3eae1365cb8107efda0fe2f15ee75abc0140844be264029"
+    },
+    {
+      "text": "transcript_links-final.txt",
+      "xml": "transcript_links-final.xml",
+      "passedIncludingInitCleanup": 40,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "2935281aed91f941b182e62bb8020d48eeea97d390e60b4512dd930ca1398757",
+      "xmlSha256": "493e95b31fa277e4ff4573a6a2e6c2f329890c29a20227f7faabd90b332d036b"
+    },
+    {
+      "text": "acp_engine-final.txt",
+      "xml": "acp_engine-final.xml",
+      "passedIncludingInitCleanup": 15,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "bf2328e5316fbb9cb62fe4fd62253819803f699c2ab046f60f5ce058d9ad6639",
+      "xmlSha256": "0ec47d26858da9cdd2f9c9eaa33a8a2b2ac83c0b88d04a183a97f6749c15e8a3"
+    },
+    {
+      "text": "codex_engine-final.txt",
+      "xml": "codex_engine-final.xml",
+      "passedIncludingInitCleanup": 13,
+      "failed": 0,
+      "skipped": 0,
+      "textSha256": "0ea5ec4cac9d52afb5e45db4c9c5b51767d602e9835c7a63ec136e757e00960a",
+      "xmlSha256": "e184bf500d6c8b4bb479683ad45589fda84095017d5cae84319e22a67f78d6be"
+    }
+  ],
+  "counts": {
+    "passRowsIncludingInitCleanup": 158,
+    "failed": 0,
+    "skipped": 1,
+    "singleFullRepositoryRun": false
+  },
+  "testScope": "Three slice/UI targets rebuilt and rerun after final owner-thread guard/formatting. Five unchanged compatibility binaries passed earlier within same isolated stage. All counts refer to actual reports, not an integrated parent gate.",
+  "skip": {
+    "test": "TranscriptLinkUiTest::closedOrdinaryTabReopensOnlyCapturedLoopbackUrl",
+    "reason": "Existing real WebView row intentionally skips under offscreen. Root retains native Windows companion; no foreground or live-WebView test run here."
+  },
+  "coverage": [
+    "23 component rows: ownership, foreign active, explicit focus, stable MRU, removal/replacement/deletion, owner-thread check, registry cap, omission totals, malformed XML/Unicode, byte budgets, real QTextDocument visible descriptive anchors and empty-label absence.",
+    "15 actual AgentToolHost rows: four protocol payloads, next-tool-round refresh and raw history counts, simultaneous owners, invalid identity, bridge/host teardown, native Codex/OpenCode process fixture context isolation.",
+    "17 actual MainWindow/link rows: new real rendered tab anchor routing/foreign denial/changed-owner denial, nonbrowser active clearing, background registration, removal/reentry; existing workspace/attachment/session provenance cases.",
+    "Compatibility: prompt19, shellEngine16, linkResolver40, ACPEngine15, CodexEngine13."
+  ],
+  "build": {
+    "compiler": "GCC16.2.0 MinGW",
+    "qt": "6.11.2 static",
+    "platform": "Windows11 with QPA offscreen",
+    "jobs": 1,
+    "dependencyEvidence": "deps-manifest.json records copied current archive bytes. Private stage_host and changed MainWindow.cpp rebuilt. Private BridgeAbiCheck proves unchanged bridge size/alignment for imported baseline UI. Normal parent rebuild uses all source and does not copy private archives.",
+    "logs": [
+      "baseline-build.txt",
+      "first-build.txt",
+      "expanded-build.txt",
+      "validation-build.txt",
+      "validation-build2.txt",
+      "freeze-build.txt"
+    ]
+  },
+  "fixtureCorrections": [
+    "runtime-expanded.txt retains one incorrect expected second request after host deletion. Existing message preparer correctly rejects unavailable host; corrected test requires failure and no second request. No production defect claimed.",
+    "validation-build.txt records duplicate AUTOMOC when privately overriding MainWindow.cpp while importing UI library. Private CMake now skips its unchanged-header AUTOMOC and uses captured UI metaobject. Normal root build does not use this override.",
+    "Initial offscreen font warning corrected with QT_QPA_FONTDIR=C:/Windows/Fonts in final runs."
+  ],
+  "peerReview": {
+    "reviewer": "qt_port_review",
+    "kind": "bounded source-only, no independent execution/fuzz",
+    "scope": "UTF16/XML, wholeURL omission, byte/footer budget, owner filtering and omission counting",
+    "result": "No additional concrete defect found in inspected paths. Not a universal lifecycle guarantee."
+  },
+  "integration": [
+    "Apply narrow10-path patch, not full copied src tree. Root owns CMake/shared builds. BrowserContext files are covered by existing ade_host GLOB; two new test targets in CMake.integration.txt.",
+    "MainWindow.cpp, main.cpp and AgentToolHost.cpp may contain newer parent seams. Patch hunks only; no Engine/harness/MCP change.",
+    "Caller audit: ordinary MainWindow tabs explicitly select/emits currentChanged; mini-apps select only if requested, so background registration remains inactive; main smoke browser-url gets explicit selection. CDP uses explicit tab ID, not an implicit active target.",
+    "One-line smoke companion is source-only here, not a newly built or exercised packaged CLI. Parent normal all-target compilation and smoke integration remain required.",
+    "Existing real-WebView skipped row requires Windows native companion gate. Metadata runtime fixtures use real registered BrowserWidget signal paths without loading pages."
+  ],
+  "limits": [
+    "Live snapshot only, no persisted env keyframes/deltas/restart events.",
+    "No total console/error fields, separate activeApp manifest, archive memory or plans workflow.",
+    "Stagewise empty-label tab chips remain missing; native descriptive anchors are verified.",
+    "No native browser capability or IDs injected into external managed harnesses.",
+    "No actual DOM/page content/screenshot observation implied."
+  ],
+  "scan": {
+    "scope": "Only10 intended patch source/test files, bounded high-confidence token/private-key patterns; no credential files read",
+    "candidates": []
+  },
+  "boundaries": {
+    "productionWrites": 0,
+    "sharedBuildUse": 0,
+    "guiAutomation": 0,
+    "liveModels": 0,
+    "realCredentialsRead": 0,
+    "McpHandoffModified": false
+  }
+}

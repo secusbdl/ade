@@ -86,6 +86,14 @@ void ProviderService::requestPage(const QString &cursor) {
                 {"inputTokenLimit", limit(model["inputTokenLimit"])}, {"outputTokenLimit", limit(model["outputTokenLimit"])}, {"metadata", model}});
             if (m_models.size() > 10000) { discoveryError("Model catalog exceeded its entry limit."); return; }
         }
+        // modelsReady means complete inventory. Missing/ill-typed pagination
+        // cannot be treated as the last page: callers may prune prior choices.
+        if ((protocol == "google" && object.contains("nextPageToken") && !object.value("nextPageToken").isString())
+            || (protocol != "google" && object.contains("has_more") && !object.value("has_more").isBool())
+            || (protocol != "google" && object.value("has_more").toBool()
+                && (!object.value("last_id").isString() || object.value("last_id").toString().isEmpty()))) {
+            discoveryError("Model catalog has invalid pagination; previous inventory was preserved."); return;
+        }
         QString next = protocol == "google" ? object["nextPageToken"].toString()
             : object["has_more"].toBool() ? object["last_id"].toString() : QString();
         if (!next.isEmpty()) {

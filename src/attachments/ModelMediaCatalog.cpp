@@ -1,4 +1,5 @@
 #include "ModelMediaCatalog.h"
+#include "core/ProviderConfig.h"
 namespace ade {
 namespace {
 #include "ModelMediaEntries.inc"
@@ -27,6 +28,13 @@ ModelMediaCapabilities ModelMediaCatalog::resolve(const QString &requestedId) {
         return result;
     }
     return result;
+}
+ModelMediaCapabilities ModelMediaCatalog::resolve(const ProviderConfig& provider) {
+    // Pinned external-agent.ts9-24 declares image input for external harnesses,
+    // independent of the HTTP alias table. This is transport capability, not a
+    // claim about account entitlement. Existing native byte/pixel bounds apply.
+    if(provider.isExternalHarness()) {ModelMediaCapabilities result;result.image=true;return result;}
+    return resolve(provider.model);
 }
 QStringList ModelMediaCatalog::modelIds() { QStringList ids; for (const auto &entry : Entries) ids.append(QLatin1String(entry.id)); return ids; }
 }
