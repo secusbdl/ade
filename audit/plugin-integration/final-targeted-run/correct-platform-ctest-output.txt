@@ -1,0 +1,17 @@
+Test project D:/age/ADE/build-next
+    Start 66: native_settings_audit
+1/6 Test #66: native_settings_audit ............   Passed    0.42 sec
+    Start 72: native_ui
+2/6 Test #72: native_ui ........................   Passed    1.72 sec
+    Start 73: native_ui_audit
+3/6 Test #73: native_ui_audit ..................   Passed    5.24 sec
+    Start 75: native_sandbox
+4/6 Test #75: native_sandbox ...................   Passed    4.58 sec
+    Start 76: native_runtime
+5/6 Test #76: native_runtime ...................   Passed    5.40 sec
+    Start 79: native_settings
+6/6 Test #79: native_settings ..................   Passed    0.38 sec
+
+100% tests passed out of 6
+
+Total Test time (real) =  17.74 sec

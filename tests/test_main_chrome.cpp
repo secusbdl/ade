@@ -9,6 +9,8 @@
 #include <QDir>
 #include <QDialog>
 #include <QLineEdit>
+#include <QLabel>
+#include <QPushButton>
 #include <QSettings>
 #include <QScrollBar>
 #include <QSignalSpy>
@@ -31,6 +33,31 @@ QToolButton* sidebarToggle(MainWindow& window){for(auto* button:window.findChild
 class MainChromeTest:public QObject{
     Q_OBJECT
 private slots:
+    void settingsHasVisibleLabelAndOpens_data(){QTest::addColumn<int>("zoom");for(int zoom:{70,100,130})QTest::newRow(qPrintable(QString::number(zoom)))<<zoom;}
+    void settingsHasVisibleLabelAndOpens(){
+        QFETCH(int,zoom);QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
+        auto* page=window.findChild<SettingsPage*>();QVERIFY(page);QVERIFY(page->setPreference("personalization.uiZoom",zoom));
+        auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);shell->setSizes({qRound(176*zoom/100.0),window.width()});QCoreApplication::processEvents();
+        auto* settings=window.findChild<QToolButton*>("settingsButton");QVERIFY(settings&&settings->isVisible());
+        QCOMPARE(settings->text(),QString("Settings"));QCOMPARE(settings->toolButtonStyle(),Qt::ToolButtonTextBesideIcon);
+        QVERIFY(settings->width()>=settings->fontMetrics().horizontalAdvance(settings->text())+settings->iconSize().width()+8);
+        QVERIFY(settings->parentWidget()->rect().contains(settings->geometry()));
+        settings->click();QCoreApplication::processEvents();QVERIFY(page->isVisible());QCOMPARE(page->currentSection(),QString("models-providers"));
+        auto* import=page->findChild<QPushButton*>("settingsImportProviderKeys");QVERIFY(import&&import->isVisible());
+        auto* back=page->findChild<QPushButton*>("settingsBack");QVERIFY(back);back->click();QCoreApplication::processEvents();QVERIFY(settings->isVisible());
+    }
+    void providerImportReportsVisibleOutcomeAndRefreshesModels(){
+        QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);
+        window.findChild<QToolButton*>("settingsButton")->click();auto* page=window.findChild<SettingsPage*>();QVERIFY(page&&page->isVisible());
+        const auto path=data.filePath("synthetic.env");{QFile fixture(path);QVERIFY(fixture.open(QIODevice::WriteOnly));const QByteArray bytes("OPENAI_API_KEY=fixture-not-a-live-key\n");QCOMPARE(fixture.write(bytes),qint64(bytes.size()));}
+        window.importKeys(path);QCoreApplication::processEvents();
+        auto* status=page->findChild<QLabel*>("settingsStatus");QVERIFY(status&&status->isVisible());QVERIFY(status->text().contains("Imported 1 provider key(s)"));
+        bool providerCard=false;for(auto* label:page->findChildren<QLabel*>())if(label->isVisible()&&label->text()=="OpenAI")providerCard=true;QVERIFY(providerCard);
+        auto* models=window.findChild<QComboBox*>("modelSelector");QVERIFY(models);bool importedModel=false;for(int i=0;i<models->count();++i)if(models->itemText(i).contains("gpt-4o-mini"))importedModel=true;QVERIFY(importedModel);
+        const auto modelCount=models->count();{QFile fixture(path);QVERIFY(fixture.open(QIODevice::WriteOnly|QIODevice::Truncate));QVERIFY(fixture.write("This is a malformed import fixture.")>0);}
+        window.importKeys(path);QCoreApplication::processEvents();status=page->findChild<QLabel*>("settingsStatus");QVERIFY(status&&status->isVisible());QVERIFY(status->text().contains("No PROVIDER_API_KEY entries were found"));QCOMPARE(models->count(),modelCount);
+        for(auto* label:page->findChildren<QLabel*>())QVERIFY(!label->text().contains("fixture-not-a-live-key"));
+    }
     void repeatedShownWindowTeardownPreservesStyleObservers(){
         for(int iteration=0;iteration<6;++iteration){
             QTemporaryDir data;QVERIFY(seed(data.path()));

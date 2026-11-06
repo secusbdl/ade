@@ -1,0 +1,58 @@
+[0/2] Re-checking globbed directories...
+[1/63] Automatic MOC and UIC for target render_settings
+[2/62] Automatic MOC and UIC for target test_settings
+[3/61] Automatic MOC and UIC for target test_settings_audit
+[4/60] Automatic MOC and UIC for target ade_ui
+[5/59] Linking CXX executable bin\test_shell_runtime.exe
+[6/59] Linking CXX executable bin\test_mutation_runtime.exe
+[7/59] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowConversations.cpp.obj
+[8/59] Linking CXX executable bin\test_formatted_att.exe
+[9/59] Linking CXX executable bin\test_attachment_mount.exe
+[10/59] Building CXX object CMakeFiles/test_settings.dir/src/ui/SettingsPage.cpp.obj
+[11/59] Building CXX object CMakeFiles/render_settings.dir/src/ui/SettingsPage.cpp.obj
+[12/59] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/SettingsPage.cpp.obj
+[13/59] Linking CXX executable bin\test_sandbox_apps.exe
+[14/59] Linking CXX executable bin\test_runtime_apps.exe
+[15/59] Linking CXX executable test_plugins.exe
+[16/59] Linking CXX executable bin\test_app_resources.exe
+[17/59] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SettingsPage.cpp.obj
+[18/59] Linking CXX static library libade_ui.a
+[19/59] Linking CXX executable bin\test_mini_apps.exe
+[20/59] Linking CXX executable bin\test_read_runtime.exe
+[21/59] Linking CXX executable render_settings.exe
+[22/59] Automatic MOC and UIC for target test_plugin_settings
+[23/58] Linking CXX executable bin\test_sandbox_network.exe
+[24/58] Linking CXX executable bin\test_downloads.exe
+[25/58] Linking CXX executable bin\ADE.exe
+[26/58] Linking CXX executable bin\test_question_panel.exe
+[27/58] Linking CXX executable bin\test_transcript_rich.exe
+[28/58] Building CXX object CMakeFiles/test_plugin_settings.dir/tests/test_plugin_settings.cpp.obj
+[29/58] Linking CXX executable bin\test_composer_search.exe
+[30/58] Linking CXX executable bin\test_composer_completion.exe
+[31/58] Linking CXX executable bin\test_composer_host.exe
+[32/58] Linking CXX executable bin\test_reference_controls.exe
+[33/58] Linking CXX executable bin\test_agent_control_ui.exe
+[34/58] Linking CXX executable bin\test_command_center.exe
+[35/58] Linking CXX executable bin\test_command_file_search.exe
+[36/58] Linking CXX executable bin\test_command_center_host.exe
+[37/58] Linking CXX executable bin\test_side_chat.exe
+[38/58] Linking CXX executable bin\test_side_chat_host.exe
+[39/58] Linking CXX executable bin\test_transcript_link_ui.exe
+[40/58] Linking CXX executable bin\test_workbench_layout.exe
+[41/58] Linking CXX executable bin\test_chevron.exe
+[42/58] Linking CXX executable bin\test_workbench_helpers.exe
+[43/58] Linking CXX executable bin\test_sidebar_navigation.exe
+[44/58] Linking CXX executable bin\test_transcript_ui.exe
+[45/58] Linking CXX executable bin\test_main_chrome.exe
+[46/58] Linking CXX executable bin\test_conversations.exe
+[47/58] Linking CXX executable bin\test_plugin_connections.exe
+[48/58] Linking CXX executable bin\test_git_host.exe
+[49/58] Linking CXX executable test_network.exe
+[50/58] Linking CXX executable bin\test_plugin_runtime.exe
+[51/58] Linking CXX executable test_settings_audit.exe
+[52/58] Linking CXX executable bin\test_plugin_settings.exe
+[53/58] Linking CXX executable bin\test_ui.exe
+[54/58] Linking CXX executable bin\test_ui_audit.exe
+[55/58] Linking CXX executable bin\test_sandbox.exe
+[56/58] Linking CXX executable bin\test_runtime.exe
+[57/58] Linking CXX executable test_settings.exe

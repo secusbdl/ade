@@ -16,9 +16,9 @@ bool prepareAppDirectory(const QString& directory){
 }
 
 AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,const QString& agentId,
-    const QString& dataDirectory,QObject* parent):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_mutations(dataDirectory,agentId),
+    const QString& dataDirectory,QObject* parent,QNetworkAccessManager* network):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_mutations(dataDirectory,agentId),
     m_shellLogs(std::make_shared<SessionLogStore>(dataDirectory,agentId)),m_shells(agentId,m_shellLogs,this),
-    m_attachmentStore(dataDirectory),m_attachmentPipeline(m_attachmentStore),m_readSnapshots(dataDirectory),m_readLease(m_readSnapshots.acquire(agentId)),m_attachmentFiles(agentId,dataDirectory,this),m_apps(agentId,dataDirectory,this) {
+    m_attachmentStore(dataDirectory),m_attachmentPipeline(m_attachmentStore),m_readSnapshots(dataDirectory),m_readLease(m_readSnapshots.acquire(agentId)),m_attachmentFiles(agentId,dataDirectory,this),m_network(network,this),m_apps(agentId,dataDirectory,this) {
     m_attachmentPipeline.setFileReadLease(m_readLease);
     m_files.setFileMutationExecutor(m_mutations.executor());
     m_files.setShellReadSource(m_shellLogs->formattedSource());

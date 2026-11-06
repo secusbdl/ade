@@ -141,12 +141,16 @@ bool MainWindow::archiveConversation(const QString& id) {
     if(!find(id))return false;
     const QPointer<MainWindow> self(this);
     QStringList children;for(const auto& session:m_sessions)if(session.sideChatParentId==id)children.append(session.id);
-    for(const auto& target:QStringList(children)<<id)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before archiving this chat family.");return false;}
+    auto family=children;family.append(id);
+    for(const auto& target:family)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before archiving this chat family.");return false;}
     for(const auto& child:children){if(auto* engine=m_engines.value(child);engine&&engine->isBusy())engine->cancel();if(!self)return false;}
     if(auto* engine=m_engines.value(id);engine&&engine->isBusy())engine->cancel();
     if(!self||!find(id))return false;
     QStringList currentChildren;for(const auto& session:m_sessions)if(session.sideChatParentId==id)currentChildren.append(session.id);
     if(currentChildren!=children){conversationError("The chat family changed while stopping. Retry the archive action.");return false;}
+    // Stopping an engine emits callbacks that may start a file recovery/undo.
+    // Keep the entire family loaded until those new mutations have settled.
+    for(const auto& target:family)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before archiving this chat family.");return false;}
     auto next=m_sessions;for(auto& session:next)if(session.id==id){session.archived=true;session.archivedAt=QDateTime::currentMSecsSinceEpoch();if(id==m_currentId)session.draft=m_composer->toPlainText();}
     if(!commitConversationState(next,m_store.pendingCleanup()))return false;
     if(m_sidebarNavigation)m_sidebarNavigation->forgetPinned(id);

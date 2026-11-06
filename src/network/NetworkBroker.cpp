@@ -69,8 +69,18 @@ struct NetworkBroker::Request {
     bool hasCredentials = false, redirected = false;
 };
 
-NetworkBroker::NetworkBroker(QObject *parent) : QObject(parent), m_network(this) {
+NetworkBroker::NetworkBroker(QObject *parent) : NetworkBroker(nullptr, parent) {}
+NetworkBroker::NetworkBroker(QNetworkAccessManager *manager, QObject *parent)
+    : QObject(parent), m_network(manager ? manager : new QNetworkAccessManager(this)) {
     for (const auto &definition : builtinCredentialTypes()) registerCredentialType(definition);
+    connect(m_network, &QObject::destroyed, this, [this] {
+        m_network = nullptr;
+        const QPointer<NetworkBroker> alive(this);
+        for (const auto &state : m_pending.values()) {
+            finish(state, {}, "HTTP transport is no longer available.");
+            if (!alive) return;
+        }
+    });
 }
 NetworkBroker::~NetworkBroker() {
     for (const auto &state : m_pending) {
@@ -291,6 +301,9 @@ void NetworkBroker::fetch(const QString &id, const QString &agentId, const QJson
 
 void NetworkBroker::send(const QSharedPointer<Request> &state) {
     if (m_pending.value(state->id) != state) return;
+    if (!m_network || m_network->thread() != thread()) {
+        finish(state, {}, "HTTP transport is unavailable on this thread."); return;
+    }
     QNetworkRequest request(state->url);
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
     request.setAttribute(QNetworkRequest::CookieLoadControlAttribute, QNetworkRequest::Manual);
@@ -302,10 +315,19 @@ void NetworkBroker::send(const QSharedPointer<Request> &state) {
         else request.setRawHeader(header.first, header.second);
     }
     request.setTransferTimeout(m_limits.timeoutMs); state->response.clear();
-    state->reply = m_network.sendCustomRequest(request, state->method, state->body);
+    const QPointer<NetworkBroker> alive(this);
+    const QPointer<QNetworkAccessManager> manager(m_network);
+    QPointer<QNetworkReply> reply = manager->sendCustomRequest(request, state->method, state->body);
+    if (!alive || m_pending.value(state->id) != state) {
+        if (reply) { reply->abort(); if (reply) reply->deleteLater(); }
+        return;
+    }
+    if (!manager || !reply) { finish(state, {}, "HTTP transport did not return an available reply."); return; }
+    state->reply = reply;
     state->reply->setReadBufferSize(m_limits.maxResponseBytes + 1);
     connect(state->reply, &QNetworkReply::readyRead, this, [this, state] { read(state); });
     connect(state->reply, &QNetworkReply::finished, this, [this, state] { received(state); });
+    if (state->reply->isFinished()) QTimer::singleShot(0, this, [this, state] { received(state); });
 }
 void NetworkBroker::read(const QSharedPointer<Request> &state) {
     if (m_pending.value(state->id) != state || !state->reply) return;
@@ -364,9 +386,11 @@ void NetworkBroker::received(const QSharedPointer<Request> &state) {
 }
 void NetworkBroker::finish(const QSharedPointer<Request> &state, const QJsonObject &response, const QString &error) {
     if (m_pending.value(state->id) != state) return;
+    const QPointer<NetworkBroker> alive(this);
     m_pending.remove(state->id);
     if (state->timer) { state->timer->stop(); state->timer->disconnect(this); state->timer->deleteLater(); state->timer = nullptr; }
-    if (state->reply) { auto reply = state->reply; state->reply = nullptr; reply->disconnect(this); if (!reply->isFinished()) reply->abort(); reply->deleteLater(); }
+    if (state->reply) { auto reply = state->reply; state->reply = nullptr; reply->disconnect(this); if (!reply->isFinished()) reply->abort(); if (reply) reply->deleteLater(); }
+    if (!alive) return;
     emit completed(state->id, response, error);
 }
 void NetworkBroker::cancel(const QString &requestId) { if (m_pending.contains(requestId)) finish(m_pending.value(requestId), {}, "HTTP request cancelled."); }

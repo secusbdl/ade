@@ -101,7 +101,12 @@ void MainWindow::buildUi() {
     auto* section=new QHBoxLayout;auto* agentsLabel=new QLabel("Agents");agentsLabel->setProperty("muted",true);section->addWidget(agentsLabel);section->addStretch();
     auto* grouping=new ChevronToolButton;grouping->setText("Group by Age");grouping->setAutoRaise(true);section->addWidget(grouping);side->addLayout(section);
     m_agents=new QListWidget;m_agents->setObjectName("agentList");m_agents->setContextMenuPolicy(Qt::CustomContextMenu);m_agents->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);m_agents->setTextElideMode(Qt::ElideRight);side->addWidget(m_agents,1);
-    auto* bottom=new QHBoxLayout;bottom->addStretch();auto* settings=button("settings","Settings");settings->setObjectName("settingsButton");bottom->addWidget(settings);side->addLayout(bottom);
+    auto* bottom=new QHBoxLayout;
+    auto* settings=new QToolButton;
+    settings->setObjectName("settingsButton");settings->setText("Settings");settings->setIcon(icon("settings"));
+    settings->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);settings->setAutoRaise(true);
+    settings->setAccessibleName("Settings");settings->setToolTip("Settings (Ctrl+,)");settings->setMinimumHeight(30);
+    settings->setCursor(Qt::PointingHandCursor);bottom->addWidget(settings);bottom->addStretch();side->addLayout(bottom);
     m_splitter=new WorkbenchSplitter(m_store.directory()+"/window.ini");m_sidebarSplitter->addWidget(m_splitter);
     m_chat=new ChatSurface;auto* chatLayout=m_chat->footerLayout();
     m_sidebarReopen=button("sidebar","Show sidebar");m_sidebarReopen->setObjectName("sidebarReopenButton");m_sidebarReopen->setVisible(m_sidebarSplitter->isCollapsed());m_chat->headerLayout()->addWidget(m_sidebarReopen);m_chat->headerLayout()->addStretch();
@@ -224,6 +229,7 @@ void MainWindow::buildUi() {
     connect(m_settings,&SettingsPage::openUrlRequested,this,[this](const QUrl& url){m_pages->setCurrentIndex(0);addBrowserTab(url);});
     connect(m_settings,&SettingsPage::clearBrowsingDataRequested,this,&MainWindow::clearBrowsingData);
     connect(m_settings,&SettingsPage::pluginCredentialsChanged,this,&MainWindow::refreshPluginConfiguration);
+    initializePluginConnections();
     connect(m_settings,&SettingsPage::restoreConversationRequested,this,[this](const QString& id){restoreConversation(id);});
     connect(m_settings,&SettingsPage::deleteConversationRequested,this,&MainWindow::requestDeleteConversation);
     initializeAgentControls();initializeCompletions();initializeCommandCenter();
@@ -487,7 +493,27 @@ void MainWindow::applyPreferences(){
     if(current())renderConversation();
     updateAppThemes();if(!self)return;refreshAgents();refreshCompletionContext();refreshSideChats();
 }
-void MainWindow::importKeys(const QString& path){QString error;auto providers=m_providerRepository.load(&error);if(!error.isEmpty()){m_status->setText(error);return;}const auto imported=ProviderStore::importKeyFile(path,&error);if(imported.isEmpty()&&!error.isEmpty()){m_status->setText(error);return;}for(const auto& p:imported){auto it=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& a){return a.id==p.id;});if(it==providers.end())providers.append(p);else *it=p;}if(!m_providerRepository.save(providers,&error)){m_status->setText(error);return;}m_providers=providers;refreshModels();}
+void MainWindow::importKeys(const QString& path){
+    const auto report=[this](const QString& message,bool failed){
+        m_status->setText(message);
+        if(m_settings)m_settings->reportProviderImportResult(message,failed);
+    };
+    QString error;auto providers=m_providerRepository.load(&error);
+    if(!error.isEmpty()){report(error,true);return;}
+    const auto imported=ProviderStore::importKeyFile(path,&error);
+    if(imported.isEmpty()){report(error.isEmpty()?"No provider keys found.":error,true);return;}
+    const auto notice=error;
+    for(const auto& p:imported){
+        auto it=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& a){return a.id==p.id;});
+        if(it==providers.end())providers.append(p);else *it=p;
+    }
+    if(!m_providerRepository.save(providers,&error)){report(error,true);return;}
+    m_providers=providers;refreshModels();
+    const QPointer<MainWindow> self(this);
+    if(m_settings)m_settings->reload();
+    if(!self)return;
+    report(QString("Imported %1 provider key(s). ").arg(imported.size())+notice,false);
+}
 void MainWindow::chooseWorkspace(){const auto path=QFileDialog::getExistingDirectory(this,"Connect workspace",current()?current()->workspace:QString());if(!path.isEmpty())connectWorkspace(path);}
 void MainWindow::connectWorkspace(const QString& path){
     auto* s=current();if(!s||!QFileInfo(path).isDir())return;

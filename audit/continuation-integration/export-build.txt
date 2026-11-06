@@ -1,0 +1,430 @@
+[0/2] Re-checking globbed directories...
+[1/160] Automatic UIC for target ade_vterm
+[2/160] Automatic MOC and UIC for target ade_file_transformer
+[3/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/encoding.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c: In function 'init_utf8':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c:20:38: warning: unused parameter 'enc' [-Wunused-parameter]
+   20 | static void init_utf8(VTermEncoding *enc, void *data_)
+      |                       ~~~~~~~~~~~~~~~^~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c: In function 'decode_utf8':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c:28:40: warning: unused parameter 'enc' [-Wunused-parameter]
+   28 | static void decode_utf8(VTermEncoding *enc, void *data_,
+      |                         ~~~~~~~~~~~~~~~^~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c: In function 'decode_usascii':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c:162:43: warning: unused parameter 'enc' [-Wunused-parameter]
+  162 | static void decode_usascii(VTermEncoding *enc, void *data,
+      |                            ~~~~~~~~~~~~~~~^~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c:162:54: warning: unused parameter 'data' [-Wunused-parameter]
+  162 | static void decode_usascii(VTermEncoding *enc, void *data,
+      |                                                ~~~~~~^~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c: In function 'decode_table':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/encoding.c:187:52: warning: unused parameter 'data' [-Wunused-parameter]
+  187 | static void decode_table(VTermEncoding *enc, void *data,
+      |                                              ~~~~~~^~~~
+[4/160] Building CXX object CMakeFiles/ade_file_transformer.dir/ade_file_transformer_autogen/mocs_compilation.cpp.obj
+[5/160] Building C object CMakeFiles/ade_quickjs.dir/third_party/quickjs/dtoa.c.obj
+[6/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/keyboard.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:73:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   73 |   { KEYCODE_ENTER,   '\r'   }, // ENTER
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:74:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   74 |   { KEYCODE_TAB,     '\t'   }, // TAB
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:75:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   75 |   { KEYCODE_LITERAL, '\x7f' }, // BACKSPACE == ASCII DEL
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:76:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   76 |   { KEYCODE_LITERAL, '\x1b' }, // ESCAPE
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:78:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   78 |   { KEYCODE_CSI_CURSOR, 'A' }, // UP
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:79:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   79 |   { KEYCODE_CSI_CURSOR, 'B' }, // DOWN
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:80:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   80 |   { KEYCODE_CSI_CURSOR, 'D' }, // LEFT
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:81:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   81 |   { KEYCODE_CSI_CURSOR, 'C' }, // RIGHT
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:85:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   85 |   { KEYCODE_CSI_CURSOR, 'H' }, // HOME
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:86:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   86 |   { KEYCODE_CSI_CURSOR, 'F' }, // END
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:93:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   93 |   { KEYCODE_SS3,    'P' },     // F1
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:94:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   94 |   { KEYCODE_SS3,    'Q' },     // F2
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:95:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   95 |   { KEYCODE_SS3,    'R' },     // F3
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:96:3: warning: missing initializer for field 'csinum' of 'keycodes_s' [-Wmissing-field-initializers]
+   96 |   { KEYCODE_SS3,    'S' },     // F4
+      |   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/keyboard.c:67:7: note: 'csinum' declared here
+   67 |   int csinum;
+      |       ^~~~~~
+[7/160] Building C object CMakeFiles/ade_quickjs.dir/third_party/quickjs/libunicode.c.obj
+[8/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/mouse.c.obj
+[9/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/parser.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/parser.c: In function 'vterm_input_write':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/parser.c:257:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  257 |       vt->parser.state = CSI_INTERMED;
+      |       ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/parser.c:258:5: note: here
+  258 |     case CSI_INTERMED:
+      |     ^~~~
+[10/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/pen.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'lookup_colour':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:91:44: warning: unused parameter 'state' [-Wunused-parameter]
+   91 | static int lookup_colour(const VTermState *state, int palette, const long args[], int argcount, VTermColor *col)
+      |                          ~~~~~~~~~~~~~~~~~~^~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'setpenattr':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:119:74: warning: unused parameter 'type' [-Wunused-parameter]
+  119 | static void setpenattr(VTermState *state, VTermAttr attr, VTermValueType type, VTermValue *val)
+      |                                                           ~~~~~~~~~~~~~~~^~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_setpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:465:58: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
+  465 |       DEBUG_LOG("libvterm: Unhandled CSI SGR %ld\n", arg);
+      |                                                          ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_getpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:504:69: warning: unused parameter 'argcount' [-Wunused-parameter]
+  504 | INTERNAL int vterm_state_getpen(VTermState *state, long args[], int argcount)
+      |                                                                 ~~~~^~~~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_newpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:168:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  168 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_resetpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:185:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  185 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_savepen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:209:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  209 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_setpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:469:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  469 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c: In function 'vterm_state_getpen':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/pen.c:549:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  549 | }
+      | ^
+[11/160] Building C object CMakeFiles/ade_quickjs.dir/third_party/quickjs/libregexp.c.obj
+[12/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/unicode.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c: In function 'bisearch':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:134:11: warning: comparison of integer expressions of different signedness: 'uint32_t' {aka 'unsigned int'} and 'int' [-Wsign-compare]
+  134 |   if (ucs < table[0].first || ucs > table[max].last)
+      |           ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:134:35: warning: comparison of integer expressions of different signedness: 'uint32_t' {aka 'unsigned int'} and 'int' [-Wsign-compare]
+  134 |   if (ucs < table[0].first || ucs > table[max].last)
+      |                                   ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:138:13: warning: comparison of integer expressions of different signedness: 'uint32_t' {aka 'unsigned int'} and 'int' [-Wsign-compare]
+  138 |     if (ucs > table[mid].last)
+      |             ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:140:18: warning: comparison of integer expressions of different signedness: 'uint32_t' {aka 'unsigned int'} and 'int' [-Wsign-compare]
+  140 |     else if (ucs < table[mid].first)
+      |                  ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c: In function 'vterm_unicode_width':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:308:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  308 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c: In function 'vterm_unicode_is_combining':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/unicode.c:313:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  313 | }
+      | ^
+[13/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/vterm.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'default_malloc':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:12:48: warning: unused parameter 'allocdata' [-Wunused-parameter]
+   12 | static void *default_malloc(size_t size, void *allocdata)
+      |                                          ~~~~~~^~~~~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'default_free':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:20:43: warning: unused parameter 'allocdata' [-Wunused-parameter]
+   20 | static void default_free(void *ptr, void *allocdata)
+      |                                     ~~~~~~^~~~~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_allocator_malloc':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:101:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  101 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_allocator_free':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:106:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  106 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_push_output_bytes':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:156:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  156 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_push_output_vsprintf':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:164:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  164 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_push_output_sprintf':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:172:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  172 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_push_output_sprintf_ctrl':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:198:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  198 | }
+      | ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c: In function 'vterm_push_output_sprintf_str':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/vterm.c:234:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  234 | }
+      | ^
+[14/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/screen.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c: In function 'erase_user':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c:297:43: warning: unused parameter 'selective' [-Wunused-parameter]
+  297 | static int erase_user(VTermRect rect, int selective, void *user)
+      |                                       ~~~~^~~~~~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c: In function 'line_popcount':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c:497:59: warning: unused parameter 'rows' [-Wunused-parameter]
+  497 | static int line_popcount(ScreenCell *buffer, int row, int rows, int cols)
+      |                                                       ~~~~^~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c: In function 'vterm_screen_free':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/screen.c:900:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  900 | }
+      | ^
+[15/160] Building C object src/terminal/CMakeFiles/ade_vterm.dir/vendor/libvterm-0.3.3/src/state.c.obj
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c: In function 'on_text':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:331:20: warning: comparison of integer expressions of different signedness: 'int' and 'size_t' {aka 'long long unsigned int'} [-Wsign-compare]
+  331 |         if(saved_i >= state->combine_chars_size)
+      |                    ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:335:18: warning: comparison of integer expressions of different signedness: 'int' and 'size_t' {aka 'long long unsigned int'} [-Wsign-compare]
+  335 |       if(saved_i >= state->combine_chars_size)
+      |                  ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:421:19: warning: comparison of integer expressions of different signedness: 'int' and 'size_t' {aka 'long long unsigned int'} [-Wsign-compare]
+  421 |         if(save_i >= state->combine_chars_size)
+      |                   ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:425:17: warning: comparison of integer expressions of different signedness: 'int' and 'size_t' {aka 'long long unsigned int'} [-Wsign-compare]
+  425 |       if(save_i >= state->combine_chars_size)
+      |                 ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c: In function 'on_csi':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:1465:80: warning: operand of '?:' changes signedness from 'int' to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+ 1465 |     state->scrollregion_bottom = argcount < 2 || CSI_ARG_IS_MISSING(args[1]) ? -1 : CSI_ARG(args[1]);
+      |                                                                                ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:1493:79: warning: operand of '?:' changes signedness from 'int' to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+ 1493 |     state->scrollregion_right = argcount < 2 || CSI_ARG_IS_MISSING(args[1]) ? -1 : CSI_ARG(args[1]);
+      |                                                                               ^~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c: In function 'request_status_string':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:1830:11: warning: comparison of integer expressions of different signedness: 'int' and 'long long unsigned int' [-Wsign-compare]
+ 1830 |   while(i < sizeof(state->tmp.decrqss)-1 && tmp[i])
+      |           ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:1832:11: warning: comparison of integer expressions of different signedness: 'int' and 'long long unsigned int' [-Wsign-compare]
+ 1832 |   while(i < sizeof(state->tmp.decrqss)-1 && frag.len--)
+      |           ^
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c: In function 'vterm_state_send_selection':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:2284:5: warning: 'static' is not at beginning of declaration [-Wold-style-declaration]
+ 2284 |     const static char selection_chars[] = "cpqs";
+      |     ^~~~~
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c: In function 'vterm_state_free':
+D:/age/ADE/out/publish-ade-continuation/src/terminal/vendor/libvterm-0.3.3/src/state.c:110:1: warning: visibility attribute not supported in this configuration; ignored [-Wattributes]
+  110 | }
+      | ^
+[16/160] Linking C static library src\terminal\libade_vterm.a
+[17/160] Automatic MOC and UIC for target ade_editor
+[18/160] Automatic MOC and UIC for target ade_network
+[19/160] Automatic MOC and UIC for target ade_terminal
+[20/160] Automatic MOC and UIC for target ade_git
+[21/160] Building CXX object CMakeFiles/ade_file_transformer.dir/src/attachments/archive/ArchiveTransformer.cpp.obj
+[22/160] Building CXX object CMakeFiles/ade_file_transformer.dir/src/attachments/FileTransformer.cpp.obj
+[23/160] Linking CXX static library libade_file_transformer.a
+[24/160] Building CXX object CMakeFiles/ade_network.dir/ade_network_autogen/mocs_compilation.cpp.obj
+[25/160] Automatic MOC and UIC for target ade_core
+[26/160] Building CXX object src/terminal/CMakeFiles/ade_terminal.dir/ade_terminal_autogen/mocs_compilation.cpp.obj
+[27/160] Building CXX object src/terminal/CMakeFiles/ade_terminal.dir/TerminalModel.cpp.obj
+[28/160] Building CXX object src/terminal/CMakeFiles/ade_terminal.dir/ConPtyProcess.cpp.obj
+[29/160] Building CXX object src/terminal/CMakeFiles/ade_terminal.dir/TerminalWidget.cpp.obj
+[30/160] Building CXX object CMakeFiles/ade_core.dir/ade_core_autogen/mocs_compilation.cpp.obj
+[31/160] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineControl.cpp.obj
+[32/160] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentPresentation.cpp.obj
+[33/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderService.cpp.obj
+[34/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ContextLoader.cpp.obj
+[35/160] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngine.cpp.obj
+[36/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderProtocol.cpp.obj
+[37/160] Building CXX object CMakeFiles/ade_core.dir/src/core/SseParser.cpp.obj
+[38/160] Building CXX object CMakeFiles/ade_core.dir/src/core/QueuedMessages.cpp.obj
+[39/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ScopedDirectory.cpp.obj
+[40/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderStore.cpp.obj
+[41/160] Building CXX object CMakeFiles/ade_core.dir/src/core/QuestionForm.cpp.obj
+[42/160] Linking CXX static library src\terminal\libade_terminal.a
+[43/160] Building CXX object CMakeFiles/ade_core.dir/src/core/UtilityService.cpp.obj
+[44/160] Building CXX object CMakeFiles/ade_core.dir/src/mutations/FileMutationJournal.cpp.obj
+[45/160] Building CXX object CMakeFiles/ade_core.dir/src/core/ToolExecutor.cpp.obj
+[46/160] Building CXX object CMakeFiles/ade_editor.dir/ade_editor_autogen/mocs_compilation.cpp.obj
+[47/160] Building CXX object CMakeFiles/ade_network.dir/src/network/NetworkBroker.cpp.obj
+[48/160] Building CXX object CMakeFiles/ade_editor.dir/src/editor/CodeEditor.cpp.obj
+[49/160] Building CXX object CMakeFiles/ade_editor.dir/src/editor/TextFile.cpp.obj
+[50/160] Building CXX object CMakeFiles/ade_editor.dir/src/editor/EditorWidget.cpp.obj
+[51/160] Building CXX object src/git/CMakeFiles/ade_git.dir/ade_git_autogen/mocs_compilation.cpp.obj
+[52/160] Building CXX object CMakeFiles/ade_core.dir/src/mutations/FileMutationStore.cpp.obj
+[53/160] Linking CXX static library libade_core.a
+[54/160] Automatic MOC and UIC for target ade_attachments
+[55/160] Building CXX object CMakeFiles/ade_attachments.dir/ade_attachments_autogen/mocs_compilation.cpp.obj
+[56/160] Building C object CMakeFiles/ade_quickjs.dir/third_party/quickjs/quickjs.c.obj
+[57/160] Building CXX object src/git/CMakeFiles/ade_git.dir/GitParsing.cpp.obj
+[58/160] Building CXX object src/git/CMakeFiles/ade_git.dir/ProcessRunner.cpp.obj
+[59/160] Building CXX object CMakeFiles/ade_attachments.dir/src/attachments/AttachmentPipeline.cpp.obj
+[60/160] Building CXX object src/git/CMakeFiles/ade_git.dir/GitRepositoryWatcher.cpp.obj
+[61/160] Linking C static library libade_quickjs.a
+[62/160] Automatic MOC and UIC for target ADE-sandbox-worker
+[63/160] Building CXX object CMakeFiles/ade_attachments.dir/src/attachments/ModelMediaCatalog.cpp.obj
+[64/160] Building CXX object CMakeFiles/ade_attachments.dir/src/attachments/AttachmentStore.cpp.obj
+[65/160] Linking CXX static library libade_network.a
+[66/160] Linking CXX static library libade_editor.a
+[67/160] Building CXX object CMakeFiles/ADE-sandbox-worker.dir/ADE-sandbox-worker_autogen/mocs_compilation.cpp.obj
+[68/160] Building CXX object CMakeFiles/ade_attachments.dir/src/attachments/FileReadSnapshotStore.cpp.obj
+[69/160] Linking CXX static library libade_attachments.a
+[70/160] Building CXX object src/git/CMakeFiles/ade_git.dir/SetupScriptText.cpp.obj
+[71/160] Building CXX object src/git/CMakeFiles/ade_git.dir/GitService.cpp.obj
+[72/160] Automatic MOC and UIC for target ade_plugins
+[73/160] Automatic RCC for assets/plugins/ade_plugins.qrc
+[74/160] Automatic MOC and UIC for target ade_transcript_links
+[75/160] Building CXX object CMakeFiles/ade_plugins.dir/ade_plugins_autogen/mocs_compilation.cpp.obj
+[76/160] Building CXX object CMakeFiles/ade_plugins.dir/ade_plugins_autogen/FXF66RSXSF/qrc_ade_plugins.cpp.obj
+[77/160] Building CXX object CMakeFiles/ade_transcript_links.dir/ade_transcript_links_autogen/mocs_compilation.cpp.obj
+[78/160] Automatic MOC and UIC for target ade_shell
+[79/160] Building CXX object src/git/CMakeFiles/ade_git.dir/WorktreeSetupRunner.cpp.obj
+[80/160] Building CXX object src/git/CMakeFiles/ade_git.dir/CodexSetup.cpp.obj
+[81/160] Building CXX object CMakeFiles/ade_shell.dir/ade_shell_autogen/mocs_compilation.cpp.obj
+[82/160] Building CXX object CMakeFiles/ADE-sandbox-worker.dir/src/sandbox/worker_main.cpp.obj
+[83/160] Linking CXX static library src\git\libade_git.a
+[84/160] Building CXX object CMakeFiles/ade_plugins.dir/src/plugins/PluginCatalog.cpp.obj
+[85/160] Building CXX object CMakeFiles/ade_transcript_links.dir/src/links/TranscriptLinkResolver.cpp.obj
+[86/160] Linking CXX static library libade_transcript_links.a
+[87/160] Linking CXX static library libade_plugins.a
+[88/160] Building CXX object CMakeFiles/ade_shell.dir/src/shell/ShellProtocol.cpp.obj
+[89/160] Linking CXX executable bin\ADE-sandbox-worker.exe
+[90/160] Automatic MOC and UIC for target ade_git_ui
+[91/160] Automatic RCC for ../resources/git_ui.qrc
+[92/160] Building CXX object CMakeFiles/ade_shell.dir/src/shell/ShellService.cpp.obj
+[93/160] Building CXX object src/git/ui/CMakeFiles/ade_git_ui.dir/ade_git_ui_autogen/VBNVT3BQC7/qrc_git_ui.cpp.obj
+[94/160] Building CXX object src/git/ui/CMakeFiles/ade_git_ui.dir/ade_git_ui_autogen/mocs_compilation.cpp.obj
+[95/160] Building CXX object CMakeFiles/ade_shell.dir/src/shell/SessionLogStore.cpp.obj
+[96/160] Linking CXX static library libade_shell.a
+[97/160] Building CXX object src/git/ui/CMakeFiles/ade_git_ui.dir/__/WorktreeSettingsController.cpp.obj
+[98/160] Building CXX object src/git/ui/CMakeFiles/ade_git_ui.dir/__/WorktreeSettingsPane.cpp.obj
+[99/160] Automatic MOC and UIC for target ade_host
+[100/160] Building CXX object src/git/ui/CMakeFiles/ade_git_ui.dir/__/GitPanel.cpp.obj
+[101/160] Building CXX object CMakeFiles/ade_host.dir/ade_host_autogen/mocs_compilation.cpp.obj
+[102/160] Building CXX object CMakeFiles/ade_host.dir/src/browser/BrowserInspector.cpp.obj
+[103/160] Building CXX object CMakeFiles/ade_host.dir/src/apps/AppResourceStore.cpp.obj
+[104/160] Building CXX object CMakeFiles/ade_host.dir/src/browser/BrowserToolBridge.cpp.obj
+[105/160] Building CXX object CMakeFiles/ade_host.dir/src/apps/MiniAppPage.cpp.obj
+[106/160] Building CXX object CMakeFiles/ade_host.dir/src/apps/MiniAppHost.cpp.obj
+[107/160] Linking CXX static library src\git\ui\libade_git_ui.a
+[108/160] Building CXX object CMakeFiles/ade_host.dir/src/browser/browserwidget.cpp.obj
+[109/160] Building CXX object CMakeFiles/ade_host.dir/src/runtime/AttachmentFileBroker.cpp.obj
+[110/160] Building CXX object CMakeFiles/ade_host.dir/src/runtime/AgentToolHost.cpp.obj
+[111/160] Building CXX object CMakeFiles/ade_host.dir/src/sandbox/SandboxHost.cpp.obj
+[112/160] Linking CXX static library libade_host.a
+[113/160] Automatic MOC and UIC for target ade_ui
+[114/160] Automatic RCC for resources.qrc
+[115/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AppStyle.cpp.obj
+[116/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AppFonts.cpp.obj
+[117/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AttachmentStrip.cpp.obj
+[118/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/CommandFileSearch.cpp.obj
+[119/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/CommandCenter.cpp.obj
+[120/160] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[121/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ContextPreferences.cpp.obj
+[122/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/Composer.cpp.obj
+[123/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ComposerWorkspaceSearch.cpp.obj
+[124/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/Icons.cpp.obj
+[125/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/FileChangesPanel.cpp.obj
+[126/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/FileDiffView.cpp.obj
+[127/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ImagePreview.cpp.obj
+[128/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/DownloadsPage.cpp.obj
+[129/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ConversationView.cpp.obj
+[130/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowBrowserTools.cpp.obj
+[131/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowApps.cpp.obj
+[132/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowControl.cpp.obj
+[133/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCommandCenter.cpp.obj
+[134/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCompletions.cpp.obj
+[135/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowGit.cpp.obj
+[136/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowConversations.cpp.obj
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtCore/qbytearray.h:12,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtCore/qcborvalue.h:8,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtCore/qjsonvalue.h:8,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtCore/qjsonarray.h:8,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtCore/QJsonArray:1,
+                 from D:/age/ADE/out/publish-ade-continuation/src/ui/SessionStore.h:2,
+                 from D:/age/ADE/out/publish-ade-continuation/src/ui/MainWindow.h:2,
+                 from D:/age/ADE/out/publish-ade-continuation/src/ui/MainWindowConversations.cpp:1:
+In member function 'bool QArrayDataPointer<T>::needsDetach() const [with T = QString]',
+    inlined from 'void QArrayDataPointer<T>::detach(QArrayDataPointer<T>*) [with T = QString]' at C:/Qt/6.11.2-mingw64-static/include/QtCore/qarraydatapointer.h:135:24,
+    inlined from 'void QList<T>::detach() [with T = QString]' at C:/Qt/6.11.2-mingw64-static/include/QtCore/qlist.h:491:29,
+    inlined from 'QList<T>::iterator QList<T>::begin() [with T = QString]' at C:/Qt/6.11.2-mingw64-static/include/QtCore/qlist.h:695:30,
+    inlined from 'bool ade::MainWindow::archiveConversation(const QString&)' at D:/age/ADE/out/publish-ade-continuation/src/ui/MainWindowConversations.cpp:144:51:
+C:/Qt/6.11.2-mingw64-static/include/QtCore/qarraydatapointer.h:355:49: warning: '*(const QArrayDataPointer<QString>*)((char*)&<unnamed> + offsetof(QStringList, QList<QString>::<unnamed>.QListSpecialMethods<QString>::<unnamed>)).QArrayDataPointer<QString>::d' may be used uninitialized [-Wmaybe-uninitialized]
+  355 |     bool needsDetach() const noexcept { return !d || d->needsDetach(); }
+      |                                                 ^
+D:/age/ADE/out/publish-ade-continuation/src/ui/MainWindowConversations.cpp: In member function 'bool ade::MainWindow::archiveConversation(const QString&)':
+D:/age/ADE/out/publish-ade-continuation/src/ui/MainWindowConversations.cpp:144:48: note: '<anonymous>' declared here
+  144 |     for(const auto& target:QStringList(children)<<id)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before archiving this chat family.");return false;}
+      |                                                ^
+[137/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[138/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShells.cpp.obj
+[139/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowLinks.cpp.obj
+[140/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowMutations.cpp.obj
+[141/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowWorkbench.cpp.obj
+[142/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowSideChats.cpp.obj
+[143/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderRepository.cpp.obj
+[144/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MessageQueuePanel.cpp.obj
+[145/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ModelSelection.cpp.obj
+[146/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderDialog.cpp.obj
+[147/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MarkdownParts.cpp.obj
+[148/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/QuestionPanel.cpp.obj
+[149/160] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/EWIEGA46WW/qrc_resources.cpp.obj
+[150/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SideChatPane.cpp.obj
+[151/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SessionStore.cpp.obj
+[152/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SidebarModel.cpp.obj
+[153/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SidebarNavigation.cpp.obj
+[154/160] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SettingsPage.cpp.obj
+[155/160] Linking CXX static library libade_ui.a
+[156/160] Automatic MOC and UIC for target ADE
+[157/160] Building CXX object CMakeFiles/ADE.dir/ADE_autogen/mocs_compilation.cpp.obj
+[158/160] Building CXX object CMakeFiles/ADE.dir/src/main.cpp.obj
+[159/160] Linking CXX executable bin\ADE.exe

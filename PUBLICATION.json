@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-06T14:06:07.777783+00:00",
+  "createdUtc": "2026-11-06T14:44:44.869530+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "a64bfc8915f04d39ede2ff967c12845353f36284",
+  "developmentCommit": "cdf57434d020f5c8e3aee50250dac6476b0b6d65",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 2714,
-  "bytes": 27829776,
+  "fileCount": 2760,
+  "bytes": 28050898,
   "files": [
     {
       "path": ".gitattributes",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 40970,
-      "sha256": "f1a05a43f51727fa0905bb13f37fc9bb7c6e4d0adef74fde30a1034b21e895e3"
+      "bytes": 41858,
+      "sha256": "c7f10cc95028fce48d33dfbb58cef7d5d8cf95ef202d0c38cb95247073fa743d"
     },
     {
       "path": "CMakePresets.json",
@@ -94,8 +94,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 10272,
-      "sha256": "59fa3e22514c272d284dec5a9b088a054fdbde215ceaee8f288f4d076ab79081"
+      "bytes": 12242,
+      "sha256": "789e61ce90209341deed2db4bb4fba924a2c88fa21ac7cb91a2273e384cf2fce"
     },
     {
       "path": "assets/fonts/Geist-Italic-Variable.ttf",
@@ -446,6 +446,16 @@
       "path": "audit/continuation-integration/command-shell-host-before.txt",
       "bytes": 3389,
       "sha256": "444a3038f91391483d561aae7ebee46c6f069efd627ae3e94f4476c95b8aeb30"
+    },
+    {
+      "path": "audit/continuation-integration/export-build.txt",
+      "bytes": 37199,
+      "sha256": "18a1acc083743eb9cfd95d783d735c4e144e7d39609422f8ac13272f4773d26d"
+    },
+    {
+      "path": "audit/continuation-integration/export-configure.txt",
+      "bytes": 1909,
+      "sha256": "2b2c4460fc2802eb5f21ea1bd4b5380779f488573db02ebb3b7d62aaf9f5e0b5"
     },
     {
       "path": "audit/continuation-integration/final-full-run/build-output.txt",
@@ -1286,6 +1296,16 @@
       "path": "audit/continuation-integration/workbench-fullscreen-before.txt",
       "bytes": 5823,
       "sha256": "2eb01cf3be40baec3c63a642dd8191463176b46e9f85131c718b6ff87f61e5f5"
+    },
+    {
+      "path": "audit/continuation-publication.json",
+      "bytes": 6167,
+      "sha256": "2b563b547cccd7cd478b5970edc3c4e6c51888caca305eaaf3de0ce3dc77bcf0"
+    },
+    {
+      "path": "audit/continuation-source-export-verification.json",
+      "bytes": 4408,
+      "sha256": "7c3541c3c81fb3d68d08e8248e4fa308cc4c48a21d5f37ae6b8e7a596be326cd"
     },
     {
       "path": "audit/conversation-controls-native.json",
@@ -2411,6 +2431,181 @@
       "path": "audit/plugin-catalog-evidence.md",
       "bytes": 6066,
       "sha256": "4f43971e548607e0516d3f1d65edb883687387aed66db89bd71f1a8eadd460f1"
+    },
+    {
+      "path": "audit/plugin-integration.json",
+      "bytes": 21957,
+      "sha256": "352f0862c19815abe9b6e46fa534d7929ffb1f6d91d5ec518ddb4101e54301ab"
+    },
+    {
+      "path": "audit/plugin-integration/before/native_side_chat_host.txt",
+      "bytes": 3352,
+      "sha256": "0235e3488457de028112a3560e85c97ef5b83e10c80534588b793acbd8c7a36e"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/build-output.txt",
+      "bytes": 3457,
+      "sha256": "c77bb32f3089ecc23f761921f6eeb0da126778c0234a88e234bac20a3d718933"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/correct-platform-ctest-output.txt",
+      "bytes": 698,
+      "sha256": "7efb96bf5c5528897458875698b5f72275c34e361ef5b7a0ba25e77a8b1cc36f"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/correct-platform-ctest.xml",
+      "bytes": 1076,
+      "sha256": "62d3bfa0bbc780f2b2349d85e5545ae770c461ad3db47772f5c7e7e98487843b"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/initial-ctest-output.txt",
+      "bytes": 2651,
+      "sha256": "49984c157f1e1adf0788cc9e662d521606853b10e2599eb46a2a535bec66efd8"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_agent_control_ui.txt",
+      "bytes": 789,
+      "sha256": "91895db5504e7718a8a964996edb996075f5102966aa6c043c051f80e4ba97da"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_context.txt",
+      "bytes": 742,
+      "sha256": "ea445384d5bdc13fa67796215d12f8f864918332f54b4f547ea206bc1bcd0cc0"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "e9ca5a7ecb1c807f651de8da626eafff94d1746a1a6903b7666c962474094a19"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_core.txt",
+      "bytes": 2674,
+      "sha256": "f16da96bb97616fd2ebadb59176879fd5bf6175d9893994eb153f032a44eb7ca"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_engine_observers.txt",
+      "bytes": 3940,
+      "sha256": "9b99b60d128b86f46848d6ff88476c0bd2faa4dd0fce66745392440adab9bddc"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_git.txt",
+      "bytes": 1164,
+      "sha256": "fa57562903b7b0be1a4e6964c9ba859659fe8595ff3ba1ebc651edb033d2604f"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_git_host.txt",
+      "bytes": 2517,
+      "sha256": "1b669f87f1f7eac7c711a13d9a95a2e0d20a6189c0cc36ae0c542b42957a1eef"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_git_ui.txt",
+      "bytes": 1466,
+      "sha256": "9facc2f3a2520203260a04cb4665b0c67491d6826bc56abff82c954106a4876c"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_main_chrome.txt",
+      "bytes": 4797,
+      "sha256": "6665f1697008de9d18d2a629d378520af277516892224e16dcfeb3b76cef9d70"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_mutation_runtime.txt",
+      "bytes": 1022,
+      "sha256": "c2b7b28d240848fa675956c7bada6d79c7475a94b44a930e699a418e52429375"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_network.txt",
+      "bytes": 1383,
+      "sha256": "e9f9e818ec260591c787be795d5f173f1b60f71950f13ed710a0f017632b8cff"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_connections.txt",
+      "bytes": 1655,
+      "sha256": "c6d2b6b4dafff68d6e0f9c683fa0d1f68ade556034c03d1d853ae5efb9619369"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_runtime.txt",
+      "bytes": 1639,
+      "sha256": "c5b29e6d98bfbc4988e18701f8d1f831df9cb8782abc914f865af6f7bd4bd74d"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_settings.txt",
+      "bytes": 1669,
+      "sha256": "72b34de75f393b347f8ba989db1a38fe6208f9454d59edef8f5768067c009f86"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugins.txt",
+      "bytes": 1717,
+      "sha256": "e46073e6aee4df1b24674307471282788968ddf07154f4928f230c0a49749c50"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_runtime.txt",
+      "bytes": 1806,
+      "sha256": "d340b5d4e718ffaf7a9e3b85f130f0935a60df3d81a023f25339fbc694425352"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_sandbox.txt",
+      "bytes": 2081,
+      "sha256": "e1cd7f405cf60d4b89ad6ed4001267add18ad31d08d12c54ef473d23ba907cfb"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_sandbox_network.txt",
+      "bytes": 1158,
+      "sha256": "45c46cd836bed80a9a3ba615ccad3feef0fc31788048929d3f59649c39c98f28"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_settings.txt",
+      "bytes": 3319,
+      "sha256": "c6f8286cdaf59e69e387b4cbdc04402342c1f49bddcc3c8a4a392c157f94cda0"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_settings_audit.txt",
+      "bytes": 1393,
+      "sha256": "21e4edcf5b50cf35c5cdf9de3eb971a7a9019cbebc4b6feea8f9dee9d4c91807"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_side_chat.txt",
+      "bytes": 1675,
+      "sha256": "f9ae18ba994d3fd70c03a94b57128c8522feacf5ad916f42128d42053bf80d6b"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_side_chat_host.txt",
+      "bytes": 3168,
+      "sha256": "4b9867ed8f4165c69f25f8f5169a6d41f63e5f2ad148a3bb4e8132a5b872a38b"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_sidebar_navigation.txt",
+      "bytes": 1612,
+      "sha256": "4f82183c067fe8548ab0a455d88f7844c0e23353726f2cf86f34b3f62fded312"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_transcript_rich.txt",
+      "bytes": 1494,
+      "sha256": "16731376696a734537e1311141fc0fd460285be725e05a32dcf99161f5f7d5f6"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_transcript_ui.txt",
+      "bytes": 864,
+      "sha256": "2eff189126a9977b9ab076d244769fc2fa166510db4a80cd2a580507d195a576"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_ui.txt",
+      "bytes": 965,
+      "sha256": "b288e05da050aa8ecc889c7ab4dd6eb589964e36465dc9a55ac978feb4040fca"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "2ea610d44184decb96a36ff1deb88cf68237eaf007226077ccc054b52012a905"
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_worktree_settings.txt",
+      "bytes": 1543,
+      "sha256": "3426b55309705e1c904ba0a71a0552e46847ff507c41f975bde13cbe723e7efb"
+    },
+    {
+      "path": "audit/plugin-packaged-controls.json",
+      "bytes": 5572,
+      "sha256": "c9d567ea78ed76478a16bed26a4fbafcbef1971b3a7fb417d69ecb58b31b512b"
     },
     {
       "path": "audit/presentation-native.json",
@@ -11184,13 +11379,13 @@
     },
     {
       "path": "src/network/NetworkBroker.cpp",
-      "bytes": 26452,
-      "sha256": "9ebc26d015ffc8e549a26f5cf78597d3cffc417bb4e01439fdd39fdd8302ddef"
+      "bytes": 27678,
+      "sha256": "a6d92e66b5b6f3ca8a15226fa82b92974cfd7148d53d9deca6452d2c3364d0c2"
     },
     {
       "path": "src/network/NetworkBroker.h",
-      "bytes": 2855,
-      "sha256": "1a53b4d5d03ce5d360ddced1f9868cb3bf93b47303b8aaf9c2c94128d604633b"
+      "bytes": 3113,
+      "sha256": "1379ea7a1c8318a049b18cc9869782d31ce2401ed963eb8eb88b84c99b10b2f6"
     },
     {
       "path": "src/plugins/PluginCatalog.cpp",
@@ -11203,19 +11398,29 @@
       "sha256": "95d25095bbdc193e47cf1a7621e2e14f9afb636bfe0fd048410098ece1f8aa08"
     },
     {
+      "path": "src/plugins/PluginConnectionService.cpp",
+      "bytes": 6454,
+      "sha256": "31e701c5e78ee8d7da7c5136b7f0b106df6d0c93f667798389e60cdd5cd63600"
+    },
+    {
+      "path": "src/plugins/PluginConnectionService.h",
+      "bytes": 1041,
+      "sha256": "abdb9aecbfdb8fd316f71ea8aed6d1ea3463820d4bdac134878e0b7d65582d12"
+    },
+    {
       "path": "src/probe.cpp",
       "bytes": 6220,
       "sha256": "846ab1907432db1fd8f943a6a69b5daff115157348605f6060d0e4deff8066c3"
     },
     {
       "path": "src/runtime/AgentToolHost.cpp",
-      "bytes": 25953,
-      "sha256": "4b089f2e3d7d0674960292e86dae9b5189a95458e6cc6d23f788f1fcb591e32f"
+      "bytes": 26008,
+      "sha256": "7168f86d36bac3ab2a946b8f58ea2d3f45d7a18e187cb05e3c63301f2bec6a6d"
     },
     {
       "path": "src/runtime/AgentToolHost.h",
-      "bytes": 3845,
-      "sha256": "3274bcacf7a27c31cb1f7054b71c3ad87c0d22365e42950df5e161b183dd3afb"
+      "bytes": 3884,
+      "sha256": "cd0d3f9017e68a13e5c1d29f4df893b750e0dfcfc3860b164ac9560fa6abf4a4"
     },
     {
       "path": "src/runtime/AttachmentFileBroker.cpp",
@@ -11834,13 +12039,13 @@
     },
     {
       "path": "src/ui/MainWindow.cpp",
-      "bytes": 66030,
-      "sha256": "92f0091e3fed6bbc8fb503e47a90a0ad32e3c32560119db678509a5d8b985c4b"
+      "bytes": 66860,
+      "sha256": "3b9e2d4c85d681d1b6f9b523ce005025dba3b16c5a124310eba7ee56d6fd1193"
     },
     {
       "path": "src/ui/MainWindow.h",
-      "bytes": 8811,
-      "sha256": "1ecb0722a1d4b1643f78ca93aae6f5d1b37077214a23f5c013b219c4fd5252d4"
+      "bytes": 8851,
+      "sha256": "3cbcef2b10803cfd7900b8e9e6a6e4c4d41aec181ea7bea37579256bff9f1954"
     },
     {
       "path": "src/ui/MainWindowApps.cpp",
@@ -11869,8 +12074,8 @@
     },
     {
       "path": "src/ui/MainWindowConversations.cpp",
-      "bytes": 14541,
-      "sha256": "83c48254c189c669acea4a5add317a36681135f724ce1c472bd5ff454808297b"
+      "bytes": 14994,
+      "sha256": "d142518126cbc5e825f2e3ada086b9ae9099db4fafad651c3694aea20fa579f9"
     },
     {
       "path": "src/ui/MainWindowGit.cpp",
@@ -11886,6 +12091,11 @@
       "path": "src/ui/MainWindowMutations.cpp",
       "bytes": 7162,
       "sha256": "4398fce5ab3dbe29506bddb452c0999003a61ffd69a0d8bba23d1cdb95738eca"
+    },
+    {
+      "path": "src/ui/MainWindowPlugins.cpp",
+      "bytes": 1157,
+      "sha256": "585c46346ff9a2f402df7819022aa3fd1c73f5fa5df28c9bc6f7996cc20b6723"
     },
     {
       "path": "src/ui/MainWindowShells.cpp",
@@ -11974,13 +12184,13 @@
     },
     {
       "path": "src/ui/SettingsPage.cpp",
-      "bytes": 84166,
-      "sha256": "03e7cd1cc705070ded8cbfd8e583a2cae76f168ac99cddf71a00ec4f7463de28"
+      "bytes": 93562,
+      "sha256": "a42377f600391c6e7669a89ecea181e123e340cdebc14aa0790773c081ab4e81"
     },
     {
       "path": "src/ui/SettingsPage.h",
-      "bytes": 3303,
-      "sha256": "b33fa20c3f059a69086685c53ae8c491a3a005834e7e5d54b4e9376f63e0b1db"
+      "bytes": 4097,
+      "sha256": "7c7e3bd466288e7641010a82c50acd9a0a85ad8391c12f1033f588b274f603d5"
     },
     {
       "path": "src/ui/SideChatPane.cpp",
@@ -12041,6 +12251,11 @@
       "path": "tests/render_workbench_layout.cpp",
       "bytes": 2659,
       "sha256": "25656de742a0ffc37d0e5f58e2ab4dbadbe7c4bad4f3ad083738494197bca5d8"
+    },
+    {
+      "path": "tests/support/PluginTransport.h",
+      "bytes": 3835,
+      "sha256": "736820fb2628c86f831c051b31fa2ece8408e14292bc03a0164867f7f71bfb1b"
     },
     {
       "path": "tests/test_agent_control_ui.cpp",
@@ -12229,8 +12444,8 @@
     },
     {
       "path": "tests/test_main_chrome.cpp",
-      "bytes": 13205,
-      "sha256": "b1947d083e48dd2688fa028085ef2904daf7e5adb479f7e9b258bb3fc59e2aee"
+      "bytes": 16525,
+      "sha256": "576cecc189157236d2c76adcf19dcef92eed21c27a736f53026654f2a27d5fb9"
     },
     {
       "path": "tests/test_mini_apps.cpp",
@@ -12246,6 +12461,21 @@
       "path": "tests/test_network.cpp",
       "bytes": 22443,
       "sha256": "e65c1b375962862ecca239ea4462f0663d1f06c852ad82e9673e6c8e48d2afbb"
+    },
+    {
+      "path": "tests/test_plugin_connections.cpp",
+      "bytes": 10743,
+      "sha256": "0ceab8732cdbb8d6ee89ec952ecf1ab89c21581251bc26c1b8a36fb6095761b1"
+    },
+    {
+      "path": "tests/test_plugin_runtime.cpp",
+      "bytes": 18481,
+      "sha256": "685ca287364b9b3b1c1b27f26694ab4b166504be2a6f455a0a057cf522dd80f3"
+    },
+    {
+      "path": "tests/test_plugin_settings.cpp",
+      "bytes": 10992,
+      "sha256": "1ed4243185713e790dbd666476e47b8fe6bf1e0eaec1ad176595f78348e8c9c6"
     },
     {
       "path": "tests/test_plugins.cpp",
@@ -12359,8 +12589,8 @@
     },
     {
       "path": "tests/test_side_chat_host.cpp",
-      "bytes": 23210,
-      "sha256": "2d0fd3d3daeb54c618e1bdcef09ee0b60b234f66d048ae719ee911ce14130d36"
+      "bytes": 24604,
+      "sha256": "278e60f08a7c7ab6da82ee5cf54ed61ed71a6b25c56b72766dfad82afda9e9b7"
     },
     {
       "path": "tests/test_sidebar_model.cpp",

@@ -71,6 +71,7 @@ private:
     void showDownloads();
     void initializeWorkbench();void refreshWorkbench();void revealContent();
     void refreshPluginConfiguration();
+    void initializePluginConnections();
     void connectAppTabs(AgentToolHost* host);
     void beginTranscriptLinkTurn(const QString& id,bool acceptedUserMessage=false);
     QJsonObject forkTranscriptLinkProvenance(const QString& sourceId,const QString& targetId,const QString& workspace);

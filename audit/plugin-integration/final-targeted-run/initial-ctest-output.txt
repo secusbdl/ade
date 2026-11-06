@@ -1,0 +1,52 @@
+Test project D:/age/ADE/build-next
+      Start 10: native_transcript_rich
+ 1/28 Test #10: native_transcript_rich ...........   Passed    1.17 sec
+      Start 15: native_agent_control_ui
+ 2/28 Test #15: native_agent_control_ui ..........   Passed    2.46 sec
+      Start 19: native_side_chat
+ 3/28 Test #19: native_side_chat .................   Passed    0.40 sec
+      Start 20: native_side_chat_host
+ 4/28 Test #20: native_side_chat_host ............   Passed    7.67 sec
+      Start 23: native_mutation_runtime
+ 5/28 Test #23: native_mutation_runtime ..........   Passed    3.03 sec
+      Start 32: native_sidebar_navigation
+ 6/28 Test #32: native_sidebar_navigation ........   Passed    4.13 sec
+      Start 35: native_transcript_ui
+ 7/28 Test #35: native_transcript_ui .............   Passed    2.26 sec
+      Start 36: native_main_chrome
+ 8/28 Test #36: native_main_chrome ...............   Passed    3.47 sec
+      Start 38: native_conversations
+ 9/28 Test #38: native_conversations .............   Passed   17.56 sec
+      Start 49: native_worktree_settings
+10/28 Test #49: native_worktree_settings .........   Passed   36.07 sec
+      Start 50: native_git_host
+11/28 Test #50: native_git_host ..................   Passed   53.54 sec
+      Start 53: native_git
+12/28 Test #53: native_git .......................   Passed   92.95 sec
+      Start 54: native_git_ui
+13/28 Test #54: native_git_ui ....................   Passed   49.87 sec
+      Start 60: native_plugins
+14/28 Test #60: native_plugins ...................   Passed    0.95 sec
+      Start 61: native_plugin_connections
+15/28 Test #61: native_plugin_connections ........   Passed    0.40 sec
+      Start 62: native_plugin_runtime
+16/28 Test #62: native_plugin_runtime ............   Passed   10.22 sec
+      Start 63: native_plugin_settings
+17/28 Test #63: native_plugin_settings ...........   Passed    0.49 sec
+      Start 64: native_sandbox_network
+18/28 Test #64: native_sandbox_network ...........   Passed    5.49 sec
+      Start 66: native_settings_audit
+19/28 Test #66: native_settings_audit ............***Timeout  60.02 sec
+
+      Start 67: native_network
+20/28 Test #67: native_network ...................   Passed    2.02 sec
+      Start 69: native_engine_observers
+21/28 Test #69: native_engine_observers ..........   Passed    7.99 sec
+      Start 70: native_core
+22/28 Test #70: native_core ......................   Passed    7.98 sec
+      Start 71: native_context
+23/28 Test #71: native_context ...................   Passed    0.19 sec
+      Start 72: native_ui
+24/28 Test #72: native_ui ........................***Timeout  45.02 sec
+
+      Start 73: native_ui_audit

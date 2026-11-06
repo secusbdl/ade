@@ -1,0 +1,28 @@
+********* Start testing of GitHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitHostTest::initTestCase()
+PASS   : GitHostTest::connectedJunctionIsStoredCanonically()
+QWARN  : GitHostTest::removedLegacyJunctionDetachesAllAffectedChats() This plugin does not support propagateSizeHints()
+QWARN  : GitHostTest::removedLegacyJunctionDetachesAllAffectedChats() QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_git_host-kvkVDb\alias"  (Access is denied.)
+QWARN  : GitHostTest::removedLegacyJunctionDetachesAllAffectedChats() QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_git_host-kvkVDb\repository\.git\worktrees\linked"  (Access is denied.)
+QWARN  : GitHostTest::removedLegacyJunctionDetachesAllAffectedChats() QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_git_host-kvkVDb\repository\.git\worktrees"  (Access is denied.)
+PASS   : GitHostTest::removedLegacyJunctionDetachesAllAffectedChats()
+PASS   : GitHostTest::cleanupRequiresIndependentUsageHistory()
+PASS   : GitHostTest::noWorkspaceChatClearsFileTree()
+PASS   : GitHostTest::unopenedFilesViewIsDestroyedWithWindow()
+PASS   : GitHostTest::inFlightMutationBlocksSendAndReconnect()
+PASS   : GitHostTest::setupStartsOnlyAfterSuccessfulMountAndBlocksWork()
+PASS   : GitHostTest::failedMountDoesNotExecuteSetup()
+QWARN  : GitHostTest::dirtyAliasEditorCanVetoBranchMutation() This plugin does not support propagateSizeHints()
+QWARN  : GitHostTest::dirtyAliasEditorCanVetoBranchMutation() This plugin does not support propagateSizeHints()
+PASS   : GitHostTest::dirtyAliasEditorCanVetoBranchMutation()
+QWARN  : GitHostTest::otherChatBusyAgentCanVetoBranchMutation() This plugin does not support propagateSizeHints()
+PASS   : GitHostTest::otherChatBusyAgentCanVetoBranchMutation()
+QWARN  : GitHostTest::activeTerminalCanVetoWorktreeRemoval() This plugin does not support propagateSizeHints()
+PASS   : GitHostTest::activeTerminalCanVetoWorktreeRemoval()
+PASS   : GitHostTest::repositorySettingsPreserveDraftsAndUnrelatedEditors()
+PASS   : GitHostTest::settingsRemovalUsesTheTerminalGuard()
+PASS   : GitHostTest::externalTopologyRefreshesSettingsAndPreservesDraft()
+PASS   : GitHostTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 53367ms
+********* Finished testing of GitHostTest *********

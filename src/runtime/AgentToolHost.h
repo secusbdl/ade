@@ -21,7 +21,7 @@ class AgentToolHost final:public QObject {
     Q_OBJECT
 public:
     AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,const QString& agentId,
-                 const QString& dataDirectory,QObject* parent=nullptr);
+                 const QString& dataDirectory,QObject* parent=nullptr,QNetworkAccessManager* network=nullptr);
     ~AgentToolHost() override;
     bool setWorkspace(const QString& workspace,QString* error=nullptr);
     ContextSnapshot configureContext(const ContextOptions& options);

@@ -4,6 +4,7 @@
 #include <QJsonValue>
 #include <QNetworkAccessManager>
 #include <QObject>
+#include <QPointer>
 #include <QSharedPointer>
 #include <QStringList>
 
@@ -27,6 +28,9 @@ class NetworkBroker final : public QObject {
     Q_OBJECT
 public:
     explicit NetworkBroker(QObject *parent = nullptr);
+    // Host-only dependency injection. A supplied manager is borrowed and must
+    // live on this object's thread; nullptr selects the ordinary owned manager.
+    NetworkBroker(QNetworkAccessManager *manager, QObject *parent);
     ~NetworkBroker() override;
     bool registerCredentialType(const CredentialType &definition, QString *error = nullptr);
     bool setCredential(const QString &typeId, const QJsonObject &fields, QString *error = nullptr);
@@ -58,7 +62,7 @@ private:
     bool containsKnownSecret(const QByteArray &value) const;
     QString substitute(const QString &value, const QHash<QString, Secret> &used, bool url, qsizetype maxChars, bool *overflow) const;
 
-    QNetworkAccessManager m_network;
+    QPointer<QNetworkAccessManager> m_network;
     NetworkLimits m_limits;
     QHash<QString, CredentialType> m_types;
     QHash<QString, QJsonObject> m_credentials;

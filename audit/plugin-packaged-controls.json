@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-11-06",
+  "status": "rebuilt_package_controls_verified",
+  "artifact": {
+    "path": "out/agentic-reference-checkpoint/ADE.exe",
+    "sha256": "9443d5a7cd72174f35e2d2a169a5afdc0439547f72ff0fab173954ef4fb7fd19",
+    "sizeBytes": 80769977,
+    "scope": "Current previous-ready package; the older continuation-preview-1 artifact reported by the user was not tested."
+  },
+  "isolation": {
+    "profile": "private/packaged-controls-7dfbf992/profile",
+    "workspace": "private/packaged-controls-7dfbf992/workspace",
+    "method": "Actual native Windows executable with explicit new --data-dir and --workspace; computer-use skill via @oai/sky.",
+    "realCredentialsReadOrEntered": false,
+    "existingUserProfileModified": false,
+    "externalProviderRequests": false
+  },
+  "observations": [
+    {"control":"Settings","result":"pass","detail":"Bottom-left icon opened the native Settings page at Models & Providers."},
+    {"control":"API key import affordance","result":"pass","detail":"Models & Providers > Add Provider opened the provider dialog. Import API key file opened the native picker. Picker and dialog were canceled without selecting a file or entering a key."},
+    {"control":"Content-tab X","result":"pass","detail":"Ctrl+T opened an about:blank browser tab. Its tab X removed that tab and restored the empty workbench."},
+    {"control":"Native titlebar X","result":"pass","detail":"Top-right titlebar X closed the main window. Immediate native-window enumeration returned no ADE window; subsequent process enumeration returned no ADE.exe process."}
+  ],
+  "discoveredUsabilityIssues": [
+    "Settings was only a small icon in the expanded sidebar.",
+    "API-key file import was hidden behind Add Provider instead of being directly visible on Models & Providers."
+  ],
+  "integratedDiscoverabilityChanges": [
+    {"path":"src/ui/MainWindow.cpp","change":"Visible Settings text beside its icon, with size-hint width, existing objectName/accessibility/keyboard behavior retained."},
+    {"path":"src/ui/SettingsPage.cpp","change":"Direct Import API key file entry and visible import result feedback on Models & Providers."},
+    {"path":"tests/test_main_chrome.cpp","change":"Settings label/geometry/navigation at 70, 100 and 130 percent zoom; synthetic dotenv import provider/model refresh and malformed-import visible error."}
+  ],
+  "privateEvidenceDirectory": "private/packaged-controls-7dfbf992",
+  "privateScreenshots": ["fresh-workbench.png","settings-models.png","provider-dialog-0.png","provider-dialog-1.png","browser-tab-before-close.png","browser-tab-after-close.png"],
+  "newBuildCheck": {
+    "status": "pass_for_observed_controls",
+    "artifact": "out/plugin-reference-checkpoint/ADE.exe",
+    "sha256": "ef3ffae37c6e84a6a1c097bf92f141833578323119eeceabd6b1d720430c9251",
+    "sizeBytes": 80878224,
+    "profile": "private/plugin-packaged-controls-f17e6807/profile",
+    "workspace": "private/plugin-packaged-controls-f17e6807/workspace",
+    "method": "Actual rebuilt executable, native computer-use input and screenshots; fresh isolated profile/workspace.",
+    "observations": [
+      {"control":"Settings label","result":"pass","detail":"Visible Settings text beside its icon at the bottom-left; clicking opened Models & Providers."},
+      {"control":"Direct API-key import","result":"pass","detail":"Import API key file button visible directly on Models & Providers. Clicking opened the native file picker; Escape canceled and returned to the page without choosing a file."},
+      {"control":"Plugin cards","result":"pass","detail":"Figma, GitHub, PostHog, Supabase and Vercel cards visible with Needs token state. Supabase card opened its detail page."},
+      {"control":"Supabase setup","result":"pass_for_affordances","detail":"Personal Access Token field, account Management API guidance, Create or manage token help, Save token, Check saved token and Remove token controls present. Save/Check/Remove disabled with no token. No token was entered or saved; help and remote Check were not clicked."},
+      {"control":"Content-tab X","result":"pass","detail":"Ctrl+T opened an about:blank browser tab; its X removed the tab and restored the empty workbench."},
+      {"control":"Native titlebar X","result":"pass","detail":"Main titlebar X closed ADE; subsequent native window enumeration returned no matching window and process enumeration returned no process for the recorded scratch PID."}
+    ],
+    "privateEvidenceDirectory": "private/plugin-packaged-controls-f17e6807",
+    "privateScreenshots": ["settings-label.png","direct-import.png","plugin-cards.png","supabase-controls.png","tab-before-close.png","tab-after-close.png"],
+    "liveCredentialsOrServiceRequests": false,
+    "regressionSuiteResults": "Recorded separately by the integration owner; this audit records actual packaged UI observations."
+  },
+  "limits": [
+    "No native close failure was reproduced in the inspected artifact.",
+    "The fresh profile had no provider or chat history; populated test fixtures do not represent default startup content.",
+    "Affordance verification did not import or validate a live API key.",
+    "Private raster evidence is intentionally excluded from publication. The rebuilt package passed the controls observed above; automated integration results are recorded separately.",
+    "Supabase token persistence and live account validity were not exercised through this manual UI check; it verifies the setup affordances without accessing a real token or external service."
+  ]
+}

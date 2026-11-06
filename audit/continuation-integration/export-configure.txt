@@ -1,0 +1,44 @@
+-- The C compiler identification is GNU 16.2.0
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/mingw64/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/mingw64/bin/g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Using Qt bundled ZLIB.
+-- Found WrapZLIB: TRUE (found version "6.11.2")
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Using Qt bundled PCRE2.
+-- Found WrapPCRE2: TRUE (found version "6.11.2")
+-- Performing Test HAVE_GETTIME
+-- Performing Test HAVE_GETTIME - Success
+-- Performing Test HAVE_SHM_OPEN_SHM_UNLINK
+-- Performing Test HAVE_SHM_OPEN_SHM_UNLINK - Failed
+-- Found WrapRt: TRUE
+-- Found OpenGL: opengl32
+-- Found WrapOpenGL: TRUE
+-- Using Qt bundled PNG.
+-- Found WrapPNG: TRUE (found version "6.11.2")
+-- Using Qt bundled Harfbuzz.
+-- Found WrapHarfbuzz: TRUE (found version "6.11.2")
+-- Using Qt bundled Freetype.
+-- Found WrapFreetype: TRUE (found version "6.11.2")
+-- Using Qt bundled Jpeg.
+-- Found WrapJpeg: TRUE (found version "6.11.2")
+-- Found OpenSSL: C:/Qt/openssl-3.5.8-mingw64-static/lib/libcrypto.a (found version "3.5.8")
+-- Found WrapOpenSSLHeaders: C:/Qt/openssl-3.5.8-mingw64-static/include (found version "3.5.8")
+-- Found WrapOpenSSL: C:/Qt/openssl-3.5.8-mingw64-static/lib/libcrypto.a (found version "3.5.8")
+-- Found ODBC: libodbc32.a
+-- Configuring done (3.5s)
+-- Generating done (3.1s)
+-- Build files have been written to: D:/age/ADE/out/publish-ade-continuation/build

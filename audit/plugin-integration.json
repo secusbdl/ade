@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T14:43:45.750322+00:00",
+  "scope": "Native token integrations and usable packaged IDE controls. Full Stagewise parity is not claimed.",
+  "developmentBase": "a27ca22848bf369e0339ca4650dcabba8384bda8",
+  "sourceState": "Reviewed working tree; canonical changed-source hashes identify the tested source. PUBLICATION.json records the later source commit.",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "inventoryRows": 701,
+  "build": {
+    "configuration": "Release; static Qt6.11.2/GCC16.2/OpenSSL3.5.8; experiments ON",
+    "result": "All targets built",
+    "report": "audit/plugin-integration/final-targeted-run/build-output.txt"
+  },
+  "tests": {
+    "suites": 28,
+    "passedSuites": 28,
+    "failedSuites": 0,
+    "skippedCases": 0,
+    "passedCasesIncludingLifecycle": 497,
+    "passingRunElapsedSeconds": 328.043592,
+    "rows": [
+      {
+        "suite": "native_transcript_rich",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 884,
+        "report": "audit/plugin-integration/final-targeted-run/native_transcript_rich.txt",
+        "reportSha256": "16731376696a734537e1311141fc0fd460285be725e05a32dcf99161f5f7d5f6"
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2305,
+        "report": "audit/plugin-integration/final-targeted-run/native_agent_control_ui.txt",
+        "reportSha256": "91895db5504e7718a8a964996edb996075f5102966aa6c043c051f80e4ba97da"
+      },
+      {
+        "suite": "native_side_chat",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 242,
+        "report": "audit/plugin-integration/final-targeted-run/native_side_chat.txt",
+        "reportSha256": "f9ae18ba994d3fd70c03a94b57128c8522feacf5ad916f42128d42053bf80d6b"
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7479,
+        "report": "audit/plugin-integration/final-targeted-run/native_side_chat_host.txt",
+        "reportSha256": "4b9867ed8f4165c69f25f8f5169a6d41f63e5f2ad148a3bb4e8132a5b872a38b"
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2892,
+        "report": "audit/plugin-integration/final-targeted-run/native_mutation_runtime.txt",
+        "reportSha256": "c2b7b28d240848fa675956c7bada6d79c7475a94b44a930e699a418e52429375"
+      },
+      {
+        "suite": "native_sidebar_navigation",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3979,
+        "report": "audit/plugin-integration/final-targeted-run/native_sidebar_navigation.txt",
+        "reportSha256": "4f82183c067fe8548ab0a455d88f7844c0e23353726f2cf86f34b3f62fded312"
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2130,
+        "report": "audit/plugin-integration/final-targeted-run/native_transcript_ui.txt",
+        "reportSha256": "2eff189126a9977b9ab076d244769fc2fa166510db4a80cd2a580507d195a576"
+      },
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3334,
+        "report": "audit/plugin-integration/final-targeted-run/native_main_chrome.txt",
+        "reportSha256": "6665f1697008de9d18d2a629d378520af277516892224e16dcfeb3b76cef9d70"
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 17377,
+        "report": "audit/plugin-integration/final-targeted-run/native_conversations.txt",
+        "reportSha256": "e9ca5a7ecb1c807f651de8da626eafff94d1746a1a6903b7666c962474094a19"
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 36032,
+        "report": "audit/plugin-integration/final-targeted-run/native_worktree_settings.txt",
+        "reportSha256": "3426b55309705e1c904ba0a71a0552e46847ff507c41f975bde13cbe723e7efb"
+      },
+      {
+        "suite": "native_git_host",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 53367,
+        "report": "audit/plugin-integration/final-targeted-run/native_git_host.txt",
+        "reportSha256": "1b669f87f1f7eac7c711a13d9a95a2e0d20a6189c0cc36ae0c542b42957a1eef"
+      },
+      {
+        "suite": "native_git",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 92918,
+        "report": "audit/plugin-integration/final-targeted-run/native_git.txt",
+        "reportSha256": "fa57562903b7b0be1a4e6964c9ba859659fe8595ff3ba1ebc651edb033d2604f"
+      },
+      {
+        "suite": "native_git_ui",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 49824,
+        "report": "audit/plugin-integration/final-targeted-run/native_git_ui.txt",
+        "reportSha256": "9facc2f3a2520203260a04cb4665b0c67491d6826bc56abff82c954106a4876c"
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 914,
+        "report": "audit/plugin-integration/final-targeted-run/native_plugins.txt",
+        "reportSha256": "e46073e6aee4df1b24674307471282788968ddf07154f4928f230c0a49749c50"
+      },
+      {
+        "suite": "native_plugin_connections",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 187,
+        "report": "audit/plugin-integration/final-targeted-run/native_plugin_connections.txt",
+        "reportSha256": "c6d2b6b4dafff68d6e0f9c683fa0d1f68ade556034c03d1d853ae5efb9619369"
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10064,
+        "report": "audit/plugin-integration/final-targeted-run/native_plugin_runtime.txt",
+        "reportSha256": "c5b29e6d98bfbc4988e18701f8d1f831df9cb8782abc914f865af6f7bd4bd74d"
+      },
+      {
+        "suite": "native_plugin_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 335,
+        "report": "audit/plugin-integration/final-targeted-run/native_plugin_settings.txt",
+        "reportSha256": "72b34de75f393b347f8ba989db1a38fe6208f9454d59edef8f5768067c009f86"
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5273,
+        "report": "audit/plugin-integration/final-targeted-run/native_sandbox_network.txt",
+        "reportSha256": "45c46cd836bed80a9a3ba615ccad3feef0fc31788048929d3f59649c39c98f28"
+      },
+      {
+        "suite": "native_network",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1980,
+        "report": "audit/plugin-integration/final-targeted-run/native_network.txt",
+        "reportSha256": "e9f9e818ec260591c787be795d5f173f1b60f71950f13ed710a0f017632b8cff"
+      },
+      {
+        "suite": "native_engine_observers",
+        "passedIncludingLifecycle": 56,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7956,
+        "report": "audit/plugin-integration/final-targeted-run/native_engine_observers.txt",
+        "reportSha256": "9b99b60d128b86f46848d6ff88476c0bd2faa4dd0fce66745392440adab9bddc"
+      },
+      {
+        "suite": "native_core",
+        "passedIncludingLifecycle": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7952,
+        "report": "audit/plugin-integration/final-targeted-run/native_core.txt",
+        "reportSha256": "f16da96bb97616fd2ebadb59176879fd5bf6175d9893994eb153f032a44eb7ca"
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 157,
+        "report": "audit/plugin-integration/final-targeted-run/native_context.txt",
+        "reportSha256": "ea445384d5bdc13fa67796215d12f8f864918332f54b4f547ea206bc1bcd0cc0"
+      },
+      {
+        "suite": "native_settings_audit",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 361,
+        "report": "audit/plugin-integration/final-targeted-run/native_settings_audit.txt",
+        "reportSha256": "21e4edcf5b50cf35c5cdf9de3eb971a7a9019cbebc4b6feea8f9dee9d4c91807"
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1651,
+        "report": "audit/plugin-integration/final-targeted-run/native_ui.txt",
+        "reportSha256": "b288e05da050aa8ecc889c7ab4dd6eb589964e36465dc9a55ac978feb4040fca"
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5164,
+        "report": "audit/plugin-integration/final-targeted-run/native_ui_audit.txt",
+        "reportSha256": "2ea610d44184decb96a36ff1deb88cf68237eaf007226077ccc054b52012a905"
+      },
+      {
+        "suite": "native_sandbox",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4530,
+        "report": "audit/plugin-integration/final-targeted-run/native_sandbox.txt",
+        "reportSha256": "e1cd7f405cf60d4b89ad6ed4001267add18ad31d08d12c54ef473d23ba907cfb"
+      },
+      {
+        "suite": "native_runtime",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5327,
+        "report": "audit/plugin-integration/final-targeted-run/native_runtime.txt",
+        "reportSha256": "d340b5d4e718ffaf7a9e3b85f130f0935a60df3d81a023f25339fbc694425352"
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 315,
+        "report": "audit/plugin-integration/final-targeted-run/native_settings.txt",
+        "reportSha256": "c6f8286cdaf59e69e387b4cbdc04402342c1f49bddcc3c8a4a392c157f94cda0"
+      }
+    ],
+    "harnessCorrection": "22 suites passed in the initial batch. A global QT_QPA_PLATFORM=offscreen override caused startup timeouts for native_settings_audit and native_ui; the remaining batch was stopped. Six affected/remaining targets then passed with the override removed and their normal platform defaults. No source or binaries changed between these runs. This is a combined28-suite result, not a single uninterrupted run.",
+    "reportHashBasis": "canonical Git text LF"
+  },
+  "baseline": {
+    "report": "audit/continuation-integration.json",
+    "scope": "Prior source checkpoint passed all80 CTest suites. This batch reruns28 relevant suites; the remaining55 current suites were not rerun."
+  },
+  "changes": [
+    "Visible Settings label plus direct Models & Providers API-key file import, visible import results and refreshed provider/model UI.",
+    "Five plugin cards show saved/missing token state separately from enabled state; dedicated source-specific personal-token help, masked editing and explicit encrypted Save/Remove.",
+    "Read-only saved-token checks use fixed GitHub/Supabase/Figma/Vercel/PostHog endpoints, bounded requests, manual redirects and safe local result messages. PostHog US/EU is explicit; scopes/errors are distinguished.",
+    "Plugin saves/removals use revision-checked ProviderRepository; corrupt/concurrent stores are preserved, stale connection results are ignored, callback deletion/reentry is guarded.",
+    "Actual worker integration fixtures run pinned skill snippets for all5 services through encrypted storage, PluginCatalog, AgentToolHost, QuickJS and NetworkBroker; production origin registry is unchanged.",
+    "NetworkBroker supports a host-only borrowed transport for deterministic tests, with destruction/cancellation handling; default transport remains native QNetworkAccessManager.",
+    "Archive family iteration no longer references a destroyed temporary; busy file mutation state is rechecked after agent-stop callbacks. Two before failures now pass."
+  ],
+  "connectionEndpoints": {
+    "github": {
+      "GET": "https://api.github.com/user",
+      "docs": "https://docs.github.com/en/rest/users/users#get-the-authenticated-user"
+    },
+    "supabase": {
+      "GET": "https://api.supabase.com/v1/projects",
+      "scope": "projects_read",
+      "docs": "https://supabase.com/docs/reference/api/v1-list-all-projects"
+    },
+    "figma": {
+      "GET": "https://api.figma.com/v1/me",
+      "scope": "current_user:read",
+      "docs": "https://developers.figma.com/docs/rest-api/users-endpoints/"
+    },
+    "vercel": {
+      "GET": "https://api.vercel.com/v2/user",
+      "docs": "https://vercel.com/docs/rest-api/user/get-the-user"
+    },
+    "posthog": {
+      "GET": [
+        "https://us.posthog.com/api/users/@me/",
+        "https://eu.posthog.com/api/users/@me/"
+      ],
+      "scope": "user:read",
+      "docs": "https://posthog.com/docs/api/users"
+    }
+  },
+  "limits": [
+    "New automated plugin/service tests use synthetic credentials and transport responses plus loopback model streams; no real keys or live service requests were used.",
+    "A connection check verifies only its read endpoint. Service permissions, TLS/DNS, all remote mutations and actual user account entitlements are not established.",
+    "No close failure reproduced in the previous ready artifact; that was not the older preview reported by the user. Both controls are checked again in the new packaged artifact.",
+    "Provider/model reasoning is nondeterministic and not claimed identical. OAuth/install ecosystem and other full-parity gaps remain recorded in README/reference-readiness.",
+    "Runtime requires installed WebView2 Evergreen, Git and PowerShell. There is no Node/Electron sidecar; no clean-machine provisioning test is claimed."
+  ],
+  "packagedControls": "audit/plugin-packaged-controls.json",
+  "beforeFailureEvidence": "audit/plugin-integration/before/native_side_chat_host.txt",
+  "readyBuild": {
+    "directory": "out/plugin-reference-checkpoint",
+    "versionSmoke": "ADE 0.1.0",
+    "files": [
+      {
+        "path": "ADE.exe",
+        "bytes": 80878224,
+        "sha256": "ef3ffae37c6e84a6a1c097bf92f141833578323119eeceabd6b1d720430c9251",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "CMakeLists.txt",
+      "bytes": 41858,
+      "sha256": "c7f10cc95028fce48d33dfbb58cef7d5d8cf95ef202d0c38cb95247073fa743d",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "README.md",
+      "bytes": 12242,
+      "sha256": "789e61ce90209341deed2db4bb4fba924a2c88fa21ac7cb91a2273e384cf2fce",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/network/NetworkBroker.cpp",
+      "bytes": 27678,
+      "sha256": "a6d92e66b5b6f3ca8a15226fa82b92974cfd7148d53d9deca6452d2c3364d0c2",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/network/NetworkBroker.h",
+      "bytes": 3113,
+      "sha256": "1379ea7a1c8318a049b18cc9869782d31ce2401ed963eb8eb88b84c99b10b2f6",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/plugins/PluginConnectionService.cpp",
+      "bytes": 6454,
+      "sha256": "31e701c5e78ee8d7da7c5136b7f0b106df6d0c93f667798389e60cdd5cd63600",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/plugins/PluginConnectionService.h",
+      "bytes": 1041,
+      "sha256": "abdb9aecbfdb8fd316f71ea8aed6d1ea3463820d4bdac134878e0b7d65582d12",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "bytes": 26008,
+      "sha256": "7168f86d36bac3ab2a946b8f58ea2d3f45d7a18e187cb05e3c63301f2bec6a6d",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "bytes": 3884,
+      "sha256": "cd0d3f9017e68a13e5c1d29f4df893b750e0dfcfc3860b164ac9560fa6abf4a4",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "bytes": 66860,
+      "sha256": "3b9e2d4c85d681d1b6f9b523ce005025dba3b16c5a124310eba7ee56d6fd1193",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "bytes": 8851,
+      "sha256": "3cbcef2b10803cfd7900b8e9e6a6e4c4d41aec181ea7bea37579256bff9f1954",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "bytes": 14994,
+      "sha256": "d142518126cbc5e825f2e3ada086b9ae9099db4fafad651c3694aea20fa579f9",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/MainWindowPlugins.cpp",
+      "bytes": 1157,
+      "sha256": "585c46346ff9a2f402df7819022aa3fd1c73f5fa5df28c9bc6f7996cc20b6723",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "bytes": 93562,
+      "sha256": "a42377f600391c6e7669a89ecea181e123e340cdebc14aa0790773c081ab4e81",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.h",
+      "bytes": 4097,
+      "sha256": "7c7e3bd466288e7641010a82c50acd9a0a85ad8391c12f1033f588b274f603d5",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/support/PluginTransport.h",
+      "bytes": 3835,
+      "sha256": "736820fb2628c86f831c051b31fa2ece8408e14292bc03a0164867f7f71bfb1b",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "bytes": 16525,
+      "sha256": "576cecc189157236d2c76adcf19dcef92eed21c27a736f53026654f2a27d5fb9",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/test_plugin_connections.cpp",
+      "bytes": 10743,
+      "sha256": "0ceab8732cdbb8d6ee89ec952ecf1ab89c21581251bc26c1b8a36fb6095761b1",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/test_plugin_runtime.cpp",
+      "bytes": 18481,
+      "sha256": "685ca287364b9b3b1c1b27f26694ab4b166504be2a6f455a0a057cf522dd80f3",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/test_plugin_settings.cpp",
+      "bytes": 10992,
+      "sha256": "1ed4243185713e790dbd666476e47b8fe6bf1e0eaec1ad176595f78348e8c9c6",
+      "hashBasis": "canonical Git text LF"
+    },
+    {
+      "path": "tests/test_side_chat_host.cpp",
+      "bytes": 24604,
+      "sha256": "278e60f08a7c7ab6da82ee5cf54ed61ed71a6b25c56b72766dfad82afda9e9b7",
+      "hashBasis": "canonical Git text LF"
+    }
+  ]
+}

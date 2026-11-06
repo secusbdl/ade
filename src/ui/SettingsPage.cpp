@@ -4,7 +4,10 @@
 #include "ModelSelection.h"
 #include "Icons.h"
 #include "ContextPreferences.h"
+#include "ProviderRepository.h"
 #include "core/ProviderStore.h"
+#include <QCryptographicHash>
+#include <memory>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
@@ -70,14 +73,23 @@ constexpr Section sections[] = {
     {"account","Account"," ","♙"},
     {"about","About","","ⓘ"}
 };
-struct Plugin { const char *id; const char *name; const char *description; const char *origin; };
+struct Plugin { const char *id; const char *name; const char *description; const char *origin; const char *credentialName; const char *fieldLabel; const char *helpText; const char *helpUrl; };
 constexpr Plugin plugins[] = {
-    {"figma","Figma","Teaches the agent how to work with Figma designs and components.","https://api.figma.com"},
-    {"github","GitHub","Lets the agent interact with GitHub repositories, issues, pull requests, actions, and more via the REST API.","https://api.github.com"},
-    {"posthog","PostHog","Lets the agent query analytics, manage feature flags, inspect events and persons, run HogQL queries, and more via the PostHog REST API.","https://us.posthog.com"},
-    {"supabase","Supabase","Lets the agent interact with Supabase projects via the Management API — run SQL queries, list projects, manage edge functions, secrets, migrations, and more.","https://api.supabase.com"},
-    {"vercel","Vercel","Lets the agent manage deployments, inspect logs, and interact with the Vercel API on your behalf.","https://api.vercel.com"}
+    {"figma","Figma","Teaches the agent how to work with Figma designs and components.","https://api.figma.com","Figma Personal Access Token","Personal Access Token","Create a token in Figma Settings → Security → Personal access tokens.","https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens"},
+    {"github","GitHub","Lets the agent interact with GitHub repositories, issues, pull requests, actions, and more via the REST API.","https://api.github.com","GitHub Personal Access Token","Personal Access Token","Create a token with access to the repositories and actions you intend to use.","https://github.com/settings/tokens"},
+    {"posthog","PostHog","Lets the agent query analytics, manage feature flags, inspect events and persons, run HogQL queries, and more via the PostHog REST API.","https://us.posthog.com","PostHog Personal API Key","Personal API Key (phx_...)","Create a personal API key in your PostHog dashboard's user settings.","https://us.posthog.com/settings/user-api-keys"},
+    {"supabase","Supabase","Lets the agent interact with Supabase projects via the Management API — run SQL queries, list projects, manage edge functions, secrets, migrations, and more.","https://api.supabase.com","Supabase Access Token","Personal Access Token","Use an account access token for the Management API, not a project anon or service-role key.","https://supabase.com/dashboard/account/tokens"},
+    {"vercel","Vercel","Lets the agent manage deployments, inspect logs, and interact with the Vercel API on your behalf.","https://api.vercel.com","Vercel Personal Access Token","Personal Access Token","Create a token at vercel.com/account/tokens.","https://vercel.com/account/tokens"}
 };
+
+QByteArray pluginCredentialRevision(const QString& path) {
+    QFile file(path);
+    if(!file.exists())return QCryptographicHash::hash("missing",QCryptographicHash::Sha256);
+    if(!file.open(QIODevice::ReadOnly)||file.size()>4*1024*1024)return {};
+    const auto bytes=file.read(4*1024*1024+1);
+    if(bytes.size()>4*1024*1024||file.error()!=QFileDevice::NoError)return {};
+    return QCryptographicHash::hash(bytes,QCryptographicHash::Sha256);
+}
 
 class TwoLineDescription final:public QLabel {
 public:
@@ -190,6 +202,13 @@ bool matchingKnownTypes(const QJsonObject &object, const QJsonObject &defaults) 
 bool validPreferences(const QJsonObject &preferences) {
     const auto defaults = SettingsPage::defaultPreferences();
     if (!matchingKnownTypes(preferences, defaults)) return false;
+    const auto pluginSettings=preferences["plugins"].toObject();
+    for(auto entry=pluginSettings.begin();entry!=pluginSettings.end();++entry){
+        if(!entry.value().isObject())return false;
+        const auto options=entry.value().toObject();
+        if(options.contains("enabled")&&!options["enabled"].isBool())return false;
+        if(entry.key()=="posthog"&&options.contains("region")&&(!options["region"].isString()||!QStringList{"us","eu"}.contains(options["region"].toString())))return false;
+    }
     const auto value = [&](const QString &path) {
         return getPath(preferences, path.split('.'), getPath(defaults, path.split('.'), {}));
     };
@@ -456,7 +475,9 @@ void SettingsPage::reload() {
         }
     }
     applyAppearance();
+    const QPointer<SettingsPage> alive(this);
     buildContent();
+    if(!alive)return;
     if (!m_storageValid) showStatus(m_storageError,true);
 }
 
@@ -511,6 +532,10 @@ void SettingsPage::selectSection(const QString &section) {
 }
 
 void SettingsPage::buildContent() {
+    const auto generation=++m_pluginViewGeneration;
+    const QPointer<SettingsPage> alive(this);
+    invalidatePluginConnectionCheck();
+    if(!alive||generation!=m_pluginViewGeneration)return;
     for (auto *button : m_navigation->buttons()) button->setChecked(button->property("sectionId").toString()==m_section);
     if (auto *old = m_scroll->takeWidget()) {
         // Navigation can originate inside this subtree. Keep its sender alive
@@ -588,6 +613,7 @@ void SettingsPage::buildProviders(QVBoxLayout *layout) {
     }
     if (providers.isEmpty()) card(layout,"No providers configured","Connect your own provider to start an agent session.");
     connect(action(layout,"+ Add Provider","settingsAddProvider",Qt::AlignRight),&QPushButton::clicked,this,&SettingsPage::providersRequested);
+    connect(action(layout,"Import API key file…","settingsImportProviderKeys"),&QPushButton::clicked,this,&SettingsPage::providerKeyImportRequested);
     heading(layout,"Default utility models","These models are used for background tasks when no preset-specific configuration is set. The agent tries each model in order until one succeeds.");
     buildUtilityModels(layout,"utilityModels.titleGeneration","Title generation");
     buildUtilityModels(layout,"utilityModels.contextCompression","Context compression");
@@ -801,7 +827,9 @@ void SettingsPage::resizeEvent(QResizeEvent* event){
 
 void SettingsPage::buildPlugins(QVBoxLayout *layout) {
     if(m_plugin.isEmpty()){
+        QString credentialError;const auto saved=ProviderStore::load(m_dataDir+"/plugin-credentials.json",&credentialError);
         layout->addWidget(text("Enable or disable plugins to extend the agent's capabilities with additional skills."));
+        if(!credentialError.isEmpty())layout->addWidget(text("Saved plugin credentials could not be read. Open a plugin to review the storage error."));
         m_pluginColumns=width()>=1024?2:1;
         for(const bool enabled:{true,false}){
             QList<const Plugin*> entries;for(const auto& plugin:plugins)if(preference("plugins."+QString(plugin.id)+".enabled",true).toBool()==enabled)entries.append(&plugin);
@@ -817,7 +845,9 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
                 logo->setPixmap(mark);row->addWidget(logo);
                 auto* labels=new QVBoxLayout;labels->setSpacing(2);auto* titleRow=new QHBoxLayout;titleRow->setSpacing(7);
                 auto* title=text(plugin->name,"settingCardTitle");title->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(title);
-                auto* meta=text("1 skill, credentials");meta->setStyleSheet("font-size:12px;");meta->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(meta);titleRow->addStretch();labels->addLayout(titleRow);
+                const bool configured=std::any_of(saved.begin(),saved.end(),[&](const ProviderConfig& value){return value.id==plugin->id&&value.protocol=="credential"&&!value.apiKey.isEmpty();});
+                const QString savedState=!credentialError.isEmpty()?"Storage error":configured?"Token saved":"Needs token";
+                auto* meta=text("1 skill · "+savedState);meta->setObjectName("pluginCardStatus_"+QString(plugin->id));meta->setStyleSheet("font-size:12px;");meta->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);meta->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(meta,1);labels->addLayout(titleRow);
                 auto* description=new TwoLineDescription(plugin->description);labels->addWidget(description);row->addLayout(labels,1);
                 auto* arrow=new QLabel;arrow->setPixmap(icon("forward",QColor("#777c81")).pixmap(14,14));arrow->setAttribute(Qt::WA_TransparentForMouseEvents);row->addWidget(arrow,0,Qt::AlignTop);
                 details->setToolTip(plugin->description);grid->addWidget(details,index/m_pluginColumns,index%m_pluginColumns);++index;
@@ -830,29 +860,70 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
     const Plugin *selected=nullptr;for(const auto &plugin:plugins)if(m_plugin==plugin.id)selected=&plugin;if(!selected)return;
     connect(action(layout,"← All plugins","allPlugins"),&QPushButton::clicked,this,[this]{m_plugin.clear();buildContent();});
     auto* enabled=new QCheckBox("Enabled");enabled->setObjectName("pluginEnabled_"+m_plugin);enabled->setChecked(preference("plugins."+m_plugin+".enabled",true).toBool());layout->addWidget(enabled);
-    connect(enabled,&QCheckBox::toggled,this,[this,enabled,id=m_plugin](bool checked){if(!setPreference("plugins."+id+".enabled",checked)){QSignalBlocker blocked(enabled);enabled->setChecked(!checked);}});
     heading(layout,QString::fromUtf8(selected->name),QString::fromUtf8(selected->description));
-    heading(layout,"Personal access token","Stored with Windows account encryption for use by enabled plugin skills.");
+    auto* usage=text({});usage->setObjectName("pluginUsageStatus");layout->addWidget(usage);
+    heading(layout,QString::fromUtf8(selected->credentialName),"Stored with Windows account encryption. Saved tokens are never displayed again.");
+    layout->addWidget(text(QString::fromUtf8(selected->fieldLabel)));
     const QString credentialPath=m_dataDir+"/plugin-credentials.json";
-    QString error;const auto credentials=ProviderStore::load(credentialPath,&error);
-    const auto configured=std::any_of(credentials.begin(),credentials.end(),[this](const ProviderConfig &p){return p.id==m_plugin&&!p.apiKey.isEmpty();});
-    if(!error.isEmpty())layout->addWidget(text(error));
-    auto *token=new QLineEdit;token->setObjectName("pluginCredential");token->setEchoMode(QLineEdit::Password);token->setPlaceholderText(configured?"Credential saved — enter a new token to replace":"Personal access token");layout->addWidget(token);
+    auto repository=std::make_shared<ProviderRepository>(credentialPath);
+    QString error;auto records=std::make_shared<QList<ProviderConfig>>(repository->load(&error));
+    auto configured=std::make_shared<bool>(std::any_of(records->begin(),records->end(),[this](const ProviderConfig &p){return p.id==m_plugin&&p.protocol=="credential"&&!p.apiKey.isEmpty();}));
+    if(!error.isEmpty())layout->addWidget(text("Plugin credentials: "+error));
+    auto *token=new QLineEdit;token->setObjectName("pluginCredential");token->setAccessibleName(selected->fieldLabel);token->setEchoMode(QLineEdit::Password);token->setMaxLength(65537);token->setPlaceholderText(*configured?"Token saved — enter a replacement":QString("Enter %1…").arg(QString(selected->fieldLabel).toLower()));layout->addWidget(token);
+    layout->addWidget(text(QString::fromUtf8(selected->helpText)));
     const auto plugin=*selected;
-    connect(action(layout,"Save credential","savePluginCredential"),&QPushButton::clicked,this,[this,token,credentialPath,plugin]{
-        if(token->text().trimmed().isEmpty()){showStatus("Enter a token to save.",true);return;}
-        QString failure;auto records=ProviderStore::load(credentialPath,&failure);if(!failure.isEmpty()){showStatus(failure,true);return;}
-        records.erase(std::remove_if(records.begin(),records.end(),[&](const ProviderConfig &p){return p.id==plugin.id;}),records.end());
-        ProviderConfig credential;credential.id=plugin.id;credential.name=plugin.name;credential.baseUrl=plugin.origin;credential.protocol="credential";credential.apiKey=token->text().trimmed();records.append(credential);
-        if(!ProviderStore::save(credentialPath,records,&failure)){showStatus(failure,true);return;}
-        emit pluginCredentialsChanged();
-        token->clear();token->setPlaceholderText("Credential saved — enter a new token to replace");showStatus("Credential saved for this Windows account.");
+    connect(action(layout,"Create or manage token","pluginTokenHelp"),&QPushButton::clicked,this,[this,plugin]{emit openUrlRequested(QUrl(plugin.helpUrl));});
+    auto* status=text(*configured?"Token saved — connection has not been checked.":"No token saved.");status->setObjectName("pluginConnectionStatus");layout->addWidget(status);m_pluginCheckStatus=status;
+    auto* save=action(layout,"Save token","savePluginCredential");
+    auto* check=action(layout,"Check saved token","checkPluginConnection");m_pluginCheckButton=check;
+    auto* remove=action(layout,"Remove token","removePluginCredential");
+    const auto generation=m_pluginViewGeneration;
+    const auto refresh=[this,token,save,check,remove,usage,configured,plugin,error]{
+        const bool draft=!token->text().isEmpty();save->setEnabled(error.isEmpty()&&!token->text().trimmed().isEmpty());remove->setEnabled(error.isEmpty()&&*configured);
+        check->setEnabled(error.isEmpty()&&*configured&&!draft&&!m_pluginCheckRequest);
+        usage->setText(preference("plugins."+QString(plugin.id)+".enabled",true).toBool()?(*configured?"Enabled · saved token is available to this plugin's skills.":"Enabled · add a token to authorize service requests."):"Disabled · saved tokens are retained but are not available to agent skills.");
+    };
+    refresh();
+    connect(enabled,&QCheckBox::toggled,this,[this,enabled,id=m_plugin,generation,refresh](bool checked){const QPointer<SettingsPage> self(this);const QPointer<QCheckBox> control(enabled);const bool saved=setPreference("plugins."+id+".enabled",checked);if(!self||!control||generation!=m_pluginViewGeneration)return;if(!saved){QSignalBlocker blocked(control);control->setChecked(!checked);}refresh();});
+    connect(token,&QLineEdit::textChanged,this,[this,status,token,check,configured,generation,refresh]{const QPointer<SettingsPage> self(this);invalidatePluginConnectionCheck();if(!self||generation!=m_pluginViewGeneration)return;m_pluginCheckStatus=status;m_pluginCheckButton=check;status->setText(token->text().isEmpty()?(*configured?"Saved token has not been checked.":"No token saved."):"Unsaved changes · save the token before checking it.");refresh();});
+    auto saveToken=[this,token,status,check,plugin,repository,records,configured,generation,refresh]{
+        const QString value=token->text().trimmed();if(value.isEmpty())return;
+        if(value.size()>65536||value.contains(QRegularExpression("[\\s\\x00-\\x1f\\x7f]"))){showStatus("Enter a token without spaces or control characters (maximum 65,536 characters).",true);return;}
+        auto next=*records;next.erase(std::remove_if(next.begin(),next.end(),[&](const ProviderConfig& p){return p.id==plugin.id;}),next.end());
+        ProviderConfig credential;credential.id=plugin.id;credential.name=plugin.name;credential.baseUrl=plugin.origin;credential.protocol="credential";credential.apiKey=value;next.append(credential);
+        const QPointer<SettingsPage> self(this);invalidatePluginConnectionCheck();if(!self||generation!=m_pluginViewGeneration)return;
+        QString failure;if(!repository->save(next,&failure)){showStatus("Plugin credentials: "+failure,true);return;}
+        *records=next;*configured=true;{QSignalBlocker blocker(token);token->clear();}token->setPlaceholderText("Token saved — enter a replacement");status->setText("Token saved — connection has not been checked.");m_pluginCheckStatus=status;m_pluginCheckButton=check;refresh();showStatus("Token saved for this Windows account. Check saved token to verify access.");emit pluginCredentialsChanged();
+    };
+    connect(save,&QPushButton::clicked,this,saveToken);connect(token,&QLineEdit::returnPressed,this,saveToken);
+    connect(remove,&QPushButton::clicked,this,[this,token,status,check,plugin,repository,records,configured,generation,refresh]{
+        auto next=*records;next.erase(std::remove_if(next.begin(),next.end(),[&](const ProviderConfig& p){return p.id==plugin.id;}),next.end());
+        const QPointer<SettingsPage> self(this);invalidatePluginConnectionCheck();if(!self||generation!=m_pluginViewGeneration)return;
+        QString failure;if(!repository->save(next,&failure)){showStatus("Plugin credentials: "+failure,true);return;}
+        *records=next;*configured=false;{QSignalBlocker blocker(token);token->clear();}token->setPlaceholderText(QString("Enter %1…").arg(QString(plugin.fieldLabel).toLower()));status->setText("Token removed. This plugin can no longer make authenticated requests.");m_pluginCheckStatus=status;m_pluginCheckButton=check;refresh();showStatus("Saved plugin token removed.");emit pluginCredentialsChanged();
     });
-    connect(action(layout,"Remove saved credential","removePluginCredential"),&QPushButton::clicked,this,[this,credentialPath,plugin,token]{
-        QString failure;auto records=ProviderStore::load(credentialPath,&failure);if(!failure.isEmpty()){showStatus(failure,true);return;}
-        records.erase(std::remove_if(records.begin(),records.end(),[&](const ProviderConfig &p){return p.id==plugin.id;}),records.end());
-        if(!ProviderStore::save(credentialPath,records,&failure)){showStatus(failure,true);return;}emit pluginCredentialsChanged();token->clear();token->setPlaceholderText("Personal access token");showStatus("Saved credential removed.");
+    if(m_plugin=="posthog"){
+        heading(layout,"PostHog region","Choose the region used for this read-only connection check.");auto* region=new QComboBox;region->setObjectName("pluginPosthogRegion");region->addItem("US Cloud","us");region->addItem("EU Cloud","eu");region->setCurrentIndex(qMax(0,region->findData(preference("plugins.posthog.region","us").toString())));layout->addWidget(region);
+        connect(region,&QComboBox::currentIndexChanged,this,[this,region,status,check,generation,refresh]{const auto previous=preference("plugins.posthog.region","us").toString();const QPointer<SettingsPage> self(this);const QPointer<QComboBox> control(region);const bool saved=setPreference("plugins.posthog.region",region->currentData().toString());if(!self||!control||generation!=m_pluginViewGeneration)return;if(!saved){QSignalBlocker blocker(control);control->setCurrentIndex(control->findData(previous));return;}invalidatePluginConnectionCheck();if(!self||generation!=m_pluginViewGeneration)return;m_pluginCheckStatus=status;m_pluginCheckButton=check;status->setText("Region changed — check the saved token again.");refresh();});
+    }
+    connect(check,&QPushButton::clicked,this,[this,plugin,credentialPath,status,check,generation]{
+        const auto revision=pluginCredentialRevision(credentialPath);if(revision.isEmpty()){showStatus("Cannot read saved plugin credentials for a connection check.",true);return;}
+        const QPointer<SettingsPage> self(this);invalidatePluginConnectionCheck();if(!self||generation!=m_pluginViewGeneration)return;
+        m_pluginCheckRequest=++m_nextPluginCheck;m_pluginCheckId=plugin.id;m_pluginCheckRegion=preference("plugins.posthog.region","us").toString();m_pluginCheckRevision=revision;m_pluginCheckStatus=status;m_pluginCheckButton=check;check->setEnabled(false);status->setText("Checking saved token…");emit pluginConnectionCheckRequested(m_pluginCheckRequest,plugin.id);
     });
+}
+
+void SettingsPage::invalidatePluginConnectionCheck(){
+    const auto request=m_pluginCheckRequest;m_pluginCheckRequest=0;m_pluginCheckId.clear();m_pluginCheckRevision.clear();m_pluginCheckStatus.clear();m_pluginCheckButton.clear();
+    if(request)emit pluginConnectionCheckCancelled(request);
+}
+
+void SettingsPage::completePluginConnectionCheck(quint64 requestId,const QString& pluginId,bool success,const QString& safeMessage){
+    if(!requestId||requestId!=m_pluginCheckRequest||pluginId!=m_pluginCheckId||m_section!="plugins"||m_plugin!=pluginId)return;
+    m_pluginCheckRequest=0;
+    const bool current=pluginCredentialRevision(m_dataDir+"/plugin-credentials.json")==m_pluginCheckRevision&&m_pluginCheckRegion==preference("plugins.posthog.region","us").toString();
+    if(m_pluginCheckStatus)m_pluginCheckStatus->setText(current?(success?"Connection verified. ":"Connection check failed. ")+safeMessage.left(2048):"Saved credentials or region changed. Reopen this plugin before checking again.");
+    if(m_pluginCheckButton)m_pluginCheckButton->setEnabled(current);
 }
 
 void SettingsPage::buildArchived(QVBoxLayout *layout) {

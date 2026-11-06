@@ -27,8 +27,10 @@ identical model reasoning or output.
   `src/mutations`; worktree-usage tracking remains experimental.
 - [`audit/feature-progress-update.json`](audit/feature-progress-update.json) maps
   the current additions onto the same 701-row scope without changing the baseline.
+- [`audit/plugin-integration.json`](audit/plugin-integration.json) records the
+  latest token-plugin, Settings/import and packaged-control verification.
 - [`audit/continuation-integration.json`](audit/continuation-integration.json) is
-  the current checkpoint report: **80/80 CTest suites passed in one final run**.
+  the preceding checkpoint report: **80/80 CTest suites passed in one final run**.
   Its one offscreen-only skipped case passed in the separate Windows suite.
   [`audit/reference-integration.json`](audit/reference-integration.json) and
   [`audit/source-publication.json`](audit/source-publication.json) describe the
@@ -103,6 +105,35 @@ Configure API keys in Settings. Keys are protected with Windows DPAPI in the
 selected private profile. Never commit profiles, imported key files, or live
 conversation exports. Automated tests use local fixtures; optional `--smoke`
 provider validation must use disposable workspaces and ignored report paths.
+
+## Configure providers and plugins
+
+Use the labeled **Settings** button or **Ctrl+,**. In **Models & Providers**,
+**Import API key file…** reads dotenv-style entries such as
+`PROVIDER_API_KEY=value`; **Add Provider** opens manual provider configuration.
+Imports report their result on the Settings page and refresh the model selector.
+Providers without a known endpoint or model require configuration before use.
+
+In **Plugins**, open a card, save its token, then use **Check saved token** for
+an explicit read-only connection check. Saving a token never starts a request.
+The check validates one endpoint; it does not establish every permission needed
+for that plugin. Supabase requires a **Management API personal access token**,
+not a project's anon/publishable/service-role key. PostHog uses a personal API
+key and the US/EU region selected for the check. Figma, GitHub and Vercel use their
+personal access tokens. Each screen links to token setup help.
+
+Tokens are encrypted in the separate plugin credential store and remain masked.
+Disabling a plugin retains its token but removes access from agent skills;
+replacing/removing a token revokes existing worker handles and pending requests
+when configuration reloads. The native host inserts tokens only for the pinned
+service origins. Agent scripts use `API.getCredential` and global `fetch` with
+opaque handles, as the bundled Stagewise skills specify. GitHub API access is
+separate from the system Git authentication used for local repository operations.
+
+The five bundled integrations are GitHub, Supabase, Figma, PostHog and Vercel.
+Their actual worker flows are tested with synthetic tokens and exact service
+URLs through a simulated transport. This is not a claim that a user's live
+account permissions or every remote API operation have been tested.
 
 ## Evidence and remaining work
 

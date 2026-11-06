@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QWidget>
+#include <QPointer>
 #include <QUrl>
 #include <functional>
 
@@ -11,6 +12,7 @@ class QButtonGroup;
 class QLabel;
 class QScrollArea;
 class QVBoxLayout;
+class QPushButton;
 
 namespace ade {
 
@@ -30,6 +32,9 @@ public:
     void setContextWorkspace(const QString& workspace){m_contextWorkspace=workspace;}
     void setWorktreePageFactory(std::function<QWidget*(QWidget*)> factory);
     void reportConversationError(const QString& error);
+    void reportProviderImportResult(const QString& message, bool error) { showStatus(message,error); }
+    void completePluginConnectionCheck(quint64 requestId, const QString& pluginId,
+                                       bool success, const QString& safeMessage);
 
 public slots:
     void selectSection(const QString &section);
@@ -38,12 +43,15 @@ public slots:
 signals:
     void backRequested();
     void providersRequested();
+    void providerKeyImportRequested();
     void preferencesChanged();
     void restoreConversationRequested(const QString &id);
     void deleteConversationRequested(const QString &id);
     void openUrlRequested(const QUrl &url);
     void clearBrowsingDataRequested(const QJsonObject &options);
     void pluginCredentialsChanged();
+    void pluginConnectionCheckRequested(quint64 requestId, QString pluginId);
+    void pluginConnectionCheckCancelled(quint64 requestId);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -56,6 +64,7 @@ private:
     void buildSkills(QVBoxLayout *layout);
     void buildWorktrees(QVBoxLayout *layout);
     void buildPlugins(QVBoxLayout *layout);
+    void invalidatePluginConnectionCheck();
     void buildArchived(QVBoxLayout *layout);
     void buildPersonalization(QVBoxLayout *layout);
     void buildBrowsing(QVBoxLayout *layout);
@@ -72,6 +81,11 @@ private:
     QString m_contextWorkspace;
     QString m_section = QStringLiteral("models-providers");
     QString m_plugin;
+    quint64 m_pluginViewGeneration = 0, m_nextPluginCheck = 0, m_pluginCheckRequest = 0;
+    QString m_pluginCheckId, m_pluginCheckRegion;
+    QByteArray m_pluginCheckRevision;
+    QPointer<QLabel> m_pluginCheckStatus;
+    QPointer<QPushButton> m_pluginCheckButton;
     QString m_storageError;
     QString m_baseStyleSheet;
     bool m_storageValid = true;
