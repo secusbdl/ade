@@ -1,0 +1,1256 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeHeadAtReview": "b48683b",
+  "purpose": "Grouped source capability trace; parent global function index remains required. Not a line-by-line equivalence certificate.",
+  "scopePreserved": {
+    "inventory": "audit/upstream-feature-inventory.json",
+    "rows": 701,
+    "allOriginalRowsRemainRequired": true
+  },
+  "reviewInputs": [
+    "README.md",
+    "audit/reference-readiness.json",
+    "audit/feature-progress-update.json",
+    "audit/upstream-feature-inventory.json"
+  ],
+  "summary": {
+    "capabilityRows": 35,
+    "statusCounts": {
+      "source_only_no_native_equivalent": 11,
+      "partial_native_with_tests": 23,
+      "stored_preference_without_runtime_consumer": 1
+    },
+    "exactParityRows": 0
+  },
+  "capabilities": [
+    {
+      "id": "transcript.user_edit",
+      "inventoryIds": [
+        "agents.history-edit"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 217,
+          "anchor": "const handleConfirmEdit"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx",
+          "line": 320,
+          "anchor": "const handleSubmitEdit"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/ConversationView.h",
+          "line": 24,
+          "anchor": "signals:"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Historical user edit with metadata and optional undo has no native action/controller."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.retry",
+      "inventoryIds": [
+        "agents.history-edit"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 352,
+          "anchor": "const retryLastUserMessage"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-runtime-error.tsx",
+          "line": 87,
+          "anchor": "const canShowRetry"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/ConversationView.h",
+          "line": 24,
+          "anchor": "signals:"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Transport retry and queue edit are distinct from retrying a historical user turn."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.restore_checkpoint",
+      "inventoryIds": [
+        "agents.history-edit",
+        "editor.undo"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 322,
+          "anchor": "const dispatchRestore"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowMutations.cpp",
+          "line": 164,
+          "anchor": "host->undoMutations"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_reference_controls.cpp",
+          "line": 143,
+          "anchor": "persistedMutationCanBeReviewedAndUndoneFromWindow"
+        }
+      ],
+      "gaps": [
+        "Selected native journal undo works but does not rewind history or restore a message checkpoint."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.assistant_grouping",
+      "inventoryIds": [
+        "agents.stream"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 455,
+          "anchor": "lastMessage.parts ="
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentPresentation.cpp",
+          "line": 153,
+          "anchor": "QJsonArray AgentPresentation::history"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript.cpp",
+          "line": 36,
+          "anchor": "orderedPartsRetainWidgetsAndSelection"
+        }
+      ],
+      "gaps": [
+        "Native stable provider-round rows differ from merged consecutive source assistant messages."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.reasoning",
+      "inventoryIds": [
+        "agents.stream"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/thinking.tsx",
+          "line": 9,
+          "anchor": "export const ThinkingPart"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/ConversationView.cpp",
+          "line": 154,
+          "anchor": "disclosure->policy(state=="
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript.cpp",
+          "line": 37,
+          "anchor": "reasoningDefaults"
+        }
+      ],
+      "gaps": [
+        "Native state timing and manual disclosure work. Merged-turn defaults and exact geometry remain unverified."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.tools",
+      "inventoryIds": [
+        "agents.stream",
+        "agents.approvals"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx",
+          "line": 310,
+          "anchor": "const showTurnFileEdits"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/ConversationView.cpp",
+          "line": 130,
+          "anchor": "copyToolArguments"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript_rich.cpp",
+          "line": 46,
+          "anchor": "toolsHaveSeparateCopyableBoundedDisclosures"
+        }
+      ],
+      "gaps": [
+        "Scoped approvals and bounded copied arguments/results exist. All specialized source tool cards are not implemented."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.markdown",
+      "inventoryIds": [
+        "agents.stream"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 3,
+          "anchor": "import { math }"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx",
+          "line": 344,
+          "anchor": "language === 'mermaid'"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MarkdownParts.cpp",
+          "line": 186,
+          "anchor": "QTextDocument::MarkdownDialectGitHub"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript_rich.cpp",
+          "line": 40,
+          "anchor": "everyFenceSplitConvergesAndKeepsClosedBlock"
+        }
+      ],
+      "gaps": [
+        "Split Markdown and fences work. Math/Mermaid and full table controls are absent and QTextDocument differs from Streamdown."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.scroll",
+      "inventoryIds": [
+        "agents.stream"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+          "line": 289,
+          "anchor": "scrollEndThreshold: 100"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/ConversationView.cpp",
+          "line": 306,
+          "anchor": "void scheduleScroll"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript.cpp",
+          "line": 51,
+          "anchor": "largeHistoryRetainsUnchangedDocuments"
+        }
+      ],
+      "gaps": [
+        "Native selection/manual-scroll/100px-follow behavior is tested but all row widgets are instantiated instead of source virtualization."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "transcript.images",
+      "inventoryIds": [
+        "agents.attachments",
+        "editor.media"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/image-expanded.tsx",
+          "line": 5,
+          "anchor": "ImageExpanded"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowLinks.cpp",
+          "line": 247,
+          "anchor": "provideTranscriptImage"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_transcript_link_ui.cpp",
+          "line": 281,
+          "anchor": "trustedAttachmentImageUsesHostResolver"
+        }
+      ],
+      "gaps": [
+        "Trusted owner-scoped bounded raster bytes work. Animation and full source image/gallery formats remain incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.tab_restore",
+      "inventoryIds": [
+        "browser.tabs",
+        "settings_detail.new-tab-startup"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+          "line": 3039,
+          "anchor": "private saveTabState()"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+          "line": 3119,
+          "anchor": "private async loadTabState()"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+          "line": 2449,
+          "anchor": "private async ensureAgentTabsCreated"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 236,
+          "anchor": "const auto startup="
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Source persists ordered global/per-agent content tabs and lazy restoration. Baseline native only restores window/split/last chat and optional startup URL."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.navigation",
+      "inventoryIds": [
+        "browser.cdp",
+        "browser.toolbar",
+        "browser.tabs"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts",
+          "line": 77,
+          "anchor": "navigationHistory"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 878,
+          "anchor": "void BrowserWidget::navigate"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_browser_tools.cpp",
+          "line": 192,
+          "anchor": "domNavigationHistoryAndScreenshot"
+        }
+      ],
+      "gaps": [
+        "Native navigation/CDP/screenshots work. Full Electron tab ownership/lifecycle/popups/find/auth/certificate behavior remains incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.selection_devices",
+      "inventoryIds": [
+        "browser.dom",
+        "browser.cdp"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/selected-element-tracker/index.ts",
+          "line": 18,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/BrowserInspector.cpp",
+          "line": 50,
+          "anchor": "BrowserInspector::"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_browser_inspector.cpp",
+          "line": 165,
+          "anchor": "capturesSelectedElementAndExcludesInputValue"
+        }
+      ],
+      "gaps": [
+        "Native DOM selection/device metrics work. Framework ancestry and per-element WebP/full metadata and partial-CDP rollback remain incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.omnibox",
+      "inventoryIds": [
+        "browser.omnibox"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/omnibox-suggestions.ts",
+          "line": 16,
+          "anchor": "export class OmniboxSuggestionsService"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 553,
+          "anchor": "address->setPlaceholderText"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "URL/search-template entry lacks equivalent rich suggestions/ranking."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.permissions",
+      "inventoryIds": [
+        "browser.permissions",
+        "browser.authentication"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/tab-permission-handler/index.ts",
+          "line": 17,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 342,
+          "anchor": "BrowserWidget::setPermissionDefaults"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_browser_tools.cpp",
+          "line": 381,
+          "anchor": "permissionDefaults"
+        }
+      ],
+      "gaps": [
+        "Common defaults/exact origins/fullscreen work. Device/display-capture choosers and auth/certificate flows remain missing or runtime-dependent."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "browser.history_clear_download",
+      "inventoryIds": [
+        "browser.history",
+        "settings.clear-data"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/history-section.tsx",
+          "line": 357,
+          "anchor": "HistorySection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 597,
+          "anchor": "void MainWindow::recordBrowserHistory"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_browser_tools.cpp",
+          "line": 518,
+          "anchor": "downloadPauseResumeAndCancel"
+        }
+      ],
+      "gaps": [
+        "Capped history/selective profile clear/download controls work. Full date grouping/range filtering/restart download resume/ETA remain incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "editor.io",
+      "inventoryIds": [
+        "editor.controller"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts",
+          "line": 90,
+          "anchor": "export function useFileEditorController"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/editor/EditorWidget.cpp",
+          "line": 123,
+          "anchor": "bool EditorWidget::save"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_editor.cpp",
+          "line": 41,
+          "anchor": "encodingAndEolRoundTrip"
+        }
+      ],
+      "gaps": [
+        "UTF8/UTF16/BOM/EOL/conflicts/close work. Full Monaco model/undo and every external filesystem race are not equivalent."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "editor.monaco",
+      "inventoryIds": [
+        "editor.controller",
+        "editor.diff"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx",
+          "line": 360,
+          "anchor": "configureMonacoTypeScript"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 14,
+          "anchor": "class CodeHighlighter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_editor.cpp",
+          "line": 54,
+          "anchor": "findReplace"
+        }
+      ],
+      "gaps": [
+        "Native lexical highlighting/gutter/find exist. Monaco language features/multicursor/folding/embedded grammars/editable diff remain absent. No invented LSP requirement."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "media.markdown_svg",
+      "inventoryIds": [
+        "editor.markdown",
+        "editor.media"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx",
+          "line": 1774,
+          "anchor": "function SvgPreview"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx",
+          "line": 2221,
+          "anchor": "function MarkdownPreview"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/TrustedImage.h",
+          "line": 6,
+          "anchor": "readTrustedImage"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_image_preview.cpp",
+          "line": 44,
+          "anchor": "rejectsSvgUnknownAndHugeHeaders"
+        }
+      ],
+      "gaps": [
+        "Native source editing is distinct from Markdown rendered preview and SVG source/render/background/currentColor controls."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "media.pdf",
+      "inventoryIds": [
+        "editor.media"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/pdf-expanded.tsx",
+          "line": 4,
+          "anchor": "PdfExpanded"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 606,
+          "anchor": "void MainWindow::openFile"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Text extraction/listing is not a PDF document preview/paging UI."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "media.audio_video",
+      "inventoryIds": [
+        "editor.media"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/video-expanded.tsx",
+          "line": 5,
+          "anchor": "VideoExpanded"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/audio-expanded.tsx",
+          "line": 4,
+          "anchor": "AudioExpanded"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/AttachmentStrip.cpp",
+          "line": 18,
+          "anchor": "void AttachmentStrip::setAttachments"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "No equivalent audio/video expanded playback/seek/duration controls."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "media.font",
+      "inventoryIds": [
+        "editor.media"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/font-expanded.tsx",
+          "line": 10,
+          "anchor": "FontExpanded"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/AppFonts.cpp",
+          "line": 15,
+          "anchor": "AppFonts::load"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Embedded application fonts are not user font attachment previews."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "attachments.lifecycle",
+      "inventoryIds": [
+        "agents.attachments"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/components/file-preview/index.ts",
+          "line": 18,
+          "anchor": "const entries:"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/attachments/AttachmentStore.cpp",
+          "line": 122,
+          "anchor": "AttachmentStore::"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_attachments.cpp",
+          "line": 78,
+          "anchor": "originalsReferencesCloneAndDelete"
+        }
+      ],
+      "gaps": [
+        "Scoped refs/clone/delete/media serializers work. Chips lack full preview/open/download behavior and missing MIME preview families remain required."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "composer.context_slash",
+      "inventoryIds": [
+        "agents.composer",
+        "agents.context"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text/slash/provider.ts",
+          "line": 6,
+          "anchor": "command:side"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCompletions.cpp",
+          "line": 78,
+          "anchor": "void MainWindow::initializeComposerCompletions"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_composer_host.cpp",
+          "line": 42,
+          "anchor": "workspaceChoice"
+        }
+      ],
+      "gaps": [
+        "Scoped completion/pinned refs/turn context work. TipTap chip semantics/full relevance/gitignore/history scoring and /side route are incomplete. Main /compact is separate."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "navigation.workbench",
+      "inventoryIds": [
+        "shell.layout"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/index.tsx",
+          "line": 83,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_workbench_layout.cpp",
+          "line": 188,
+          "anchor": "contentWidthAndCollapsePersist"
+        }
+      ],
+      "gaps": [
+        "Native content hide/show/centered footer/file tree/splits work. Exact all-DPI geometry and source content lifecycle are not certified."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "navigation.sidebar",
+      "inventoryIds": [
+        "agents.sidebar"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx",
+          "line": 685,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SidebarNavigation.cpp",
+          "line": 28,
+          "anchor": "SidebarNavigation::"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sidebar_navigation.cpp",
+          "line": 49,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Native groups/pins/activity/repo grouping work. Drag reorder/full worktree paging/attention/multimount are incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "navigation.command_center",
+      "inventoryIds": [
+        "shell.command-center"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/main/command-center/command-center.tsx",
+          "line": 61,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 71,
+          "anchor": "void MainWindow::initializeCommandCenter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center_host.cpp",
+          "line": 78,
+          "anchor": "shortcutSearch"
+        }
+      ],
+      "gaps": [
+        "Six modes and real owner-scoped actions work. All source ranking/previews/shortcuts are not verified."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "navigation.side_chats",
+      "inventoryIds": [
+        "agents.lifecycle",
+        "browser.tabs"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+          "line": 110,
+          "anchor": "sideChatAgentInstanceId"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowSideChats.cpp",
+          "line": 48,
+          "anchor": "void MainWindow::openSideChat"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_side_chat_host.cpp",
+          "line": 81,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Independent native engines/forms/queues and family lifecycle work. Per-agent browser tabs and source multimount semantics remain incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "navigation.onboarding",
+      "inventoryIds": [
+        "shell.onboarding",
+        "shell.tutorial"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/onboarding/index.tsx",
+          "line": 34,
+          "anchor": "export"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 74,
+          "anchor": "MainWindow::MainWindow"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Native main/settings paths do not implement the source onboarding/tutorial lifecycle."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.general_runtime",
+      "inventoryIds": [
+        "shell.power",
+        "shell.notifications",
+        "settings_detail.general-awake",
+        "settings_detail.general-sounds"
+      ],
+      "status": "stored_preference_without_runtime_consumer",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/agent-power-save-blocker.ts",
+          "line": 68,
+          "anchor": "AgentPowerSaveBlockerService"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/notification.ts",
+          "line": 27,
+          "anchor": "NotificationService"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 581,
+          "anchor": "void SettingsPage::buildGeneral"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Keep-awake/sound/loudness switches persist but source scan found no corresponding runtime consumer. Stored controls are not implemented behavior."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.providers",
+      "inventoryIds": [
+        "settings.models-providers",
+        "settings_detail.provider-instances",
+        "settings_detail.utility-title",
+        "settings_detail.utility-compression",
+        "settings_detail.presets"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+          "line": 3560,
+          "anchor": "ModelsProvidersSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 600,
+          "anchor": "void SettingsPage::buildProviders"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_settings.cpp",
+          "line": 21,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Native BYOK/DPAPI import/catalog/presets/utility fallbacks work. All provider-specific options/hosted OAuth/subscriptions/catalog remain incomplete."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.skills_worktrees",
+      "inventoryIds": [
+        "settings.skills-context",
+        "settings.worktree-setup"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/skills-context-section.tsx",
+          "line": 490,
+          "anchor": "SkillsContextSection"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/agent-settings.worktree-setup.tsx",
+          "line": 106,
+          "anchor": "WorktreeSetupSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 730,
+          "anchor": "void SettingsPage::buildSkills"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_worktree_settings.cpp",
+          "line": 36,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Native context injection and trusted script CAS/drafts work. Install/update/memory and production usage cleanup remain incomplete at baseline. Reference prototypes are not app features."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.plugins",
+      "inventoryIds": [
+        "settings.plugins",
+        "settings_detail.plugin-cards"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "line": 391,
+          "anchor": "PluginsSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 828,
+          "anchor": "void SettingsPage::buildPlugins"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_plugin_settings.cpp",
+          "line": 29,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Five token plugins support edit/disconnect/check with stale guards. All bundled/OAuth/install flows and every live capability are not verified."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.archived",
+      "inventoryIds": [
+        "settings.archived-agents"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/archived-agents-section.tsx",
+          "line": 21,
+          "anchor": "ArchivedAgentsSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 929,
+          "anchor": "void SettingsPage::buildArchived"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_conversations.cpp",
+          "line": 113,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Dated sorting/per-row actions/search/paging and lifecycle guards work. Exact visual parity is not certified."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.personalization",
+      "inventoryIds": [
+        "settings.personalization"
+      ],
+      "status": "partial_native_with_tests",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/personalization-settings-section.tsx",
+          "line": 186,
+          "anchor": "PersonalizationSettingsSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 981,
+          "anchor": "void SettingsPage::buildPersonalization"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_settings.cpp",
+          "line": 21,
+          "anchor": "private slots:"
+        }
+      ],
+      "gaps": [
+        "Native theme/zoom/fonts apply. English-only and incomplete source appearance/background/color options remain."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    },
+    {
+      "id": "settings.account_about",
+      "inventoryIds": [
+        "settings.account",
+        "settings.about",
+        "account.auth",
+        "account.usage"
+      ],
+      "status": "source_only_no_native_equivalent",
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+          "line": 16,
+          "anchor": "AccountSection"
+        },
+        {
+          "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/about-section.tsx",
+          "line": 407,
+          "anchor": "AboutSection"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 1094,
+          "anchor": "void SettingsPage::buildAccount"
+        }
+      ],
+      "tests": [],
+      "gaps": [
+        "Native BYOK/version/attribution guidance does not implement hosted auth/billing/subscriptions/updater lifecycle."
+      ],
+      "evidenceLimit": "Source inspection and existing test source only. No test run or screenshot parity claim in this review."
+    }
+  ],
+  "postChangeNote": "This baseline precedes approved ordinary browser restoration and parallel Git usage/utility work. Those changes require their own tested evidence; baseline statuses are not silently promoted.",
+  "sourceManifestCanonicalLf": {
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-user.tsx": "0e13fb6b59941149da0d661d8067e29a7fecd7b3aa8530e54d0657a928fc1e23",
+    "src/ui/ConversationView.h": "0e924cbeaebb4d9747f6f70ebef2cc64dd206c0ca0fc1359dbd45a20ffdd28fd",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx": "919ad128a2c7b130a3c893a204843c61a45cc8425767dd287050b73007cd4b29",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx": "5636e5fc4ee3473400e2fc5e92fe5fd62e30b533688248797208ed80bb9a99ff",
+    "src/ui/MainWindowMutations.cpp": "4398fce5ab3dbe29506bddb452c0999003a61ffd69a0d8bba23d1cdb95738eca",
+    "tests/test_reference_controls.cpp": "03e0004fa4f319c8c7af7445779e36a21cdc562cd98141445d8968beec0b23e2",
+    "src/core/AgentPresentation.cpp": "c3b927c2402f69316f0c7ba8c7c93457a8d9926ea4289698631b2fad2e7123cb",
+    "tests/test_transcript.cpp": "d68c0f3c7ad7cf7a8c0fc3d058ade7f4f3d857aa7c86fb2556071abae73df347",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/thinking.tsx": "4a5a70cfe28c83dfec50d63d089afcf46dfc08dd10d0a45b15ca08a45173b9ce",
+    "src/ui/ConversationView.cpp": "b7ff97509229e7dd337dbfb707522a3ee2e4b9fe220bec95b5f5e5938fdf82b0",
+    "tests/test_transcript_rich.cpp": "ee80d90c25b59a6a5baa36d0e3408a9c5227f3d629021cd7a61e0a111a129a1e",
+    "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx": "66d4d7fe0ad95cae5eaa36bd19fdb561306cf9041d78d49412df41cc894e1f03",
+    "src/ui/MarkdownParts.cpp": "8034948c41c04eb2c8edc24016e74f8e903ec7cbb443acda9b8b9c50eed611a5",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/image-expanded.tsx": "e561be4943eb5ead5431ab0826d72d09f7e7de9a502270276450695d4cc8e28b",
+    "src/ui/MainWindowLinks.cpp": "2c17aa406721ddbc5be579e9f339e0ebfb0b956c4a98b38191fe42d0a1e4e6f7",
+    "tests/test_transcript_link_ui.cpp": "357fa60e81c0c2c8d01f6f6fef09beb96b8636eb08a710824757a1d4b42e344a",
+    "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts": "313940ba0b31b15d9b74058725324eb1ef198afb248f700f02644b0bc90ec7ec",
+    "src/ui/MainWindow.cpp": "3b9e2d4c85d681d1b6f9b523ce005025dba3b16c5a124310eba7ee56d6fd1193",
+    "reference/stagewise/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts": "e2ff8b6e14ee120060c8368ac77153cebc4a7f43df2219d1a30d24edf6f29132",
+    "src/browser/browserwidget.cpp": "da0dc0ffc89addf340b4fb34a06f203705cf4069bdbf9befc2751b2c5722bd18",
+    "tests/test_browser_tools.cpp": "dd221120766961ab3db512753cdb1821cf65c86bb30b57965fc441c5a9ef192f",
+    "reference/stagewise/apps/browser/src/backend/services/window-layout/selected-element-tracker/index.ts": "f32f796f6f6e32f919d3cf68b857020fd503ecec7b0b3c51b12a293498c4e154",
+    "src/browser/BrowserInspector.cpp": "73c775ae5f09fe13fdae4bb483ab77609456294999e51788feea6df39addf902",
+    "tests/test_browser_inspector.cpp": "9b5be15fde3b00c2642065ac687e965858d07d48bd13c51fe4735fa774a90b5c",
+    "reference/stagewise/apps/browser/src/backend/services/omnibox-suggestions.ts": "c89ffecffd97d79f272a8cc2b388bf02fba539767e5aeb3b06f10e2c140e81b3",
+    "reference/stagewise/apps/browser/src/backend/services/window-layout/tab-permission-handler/index.ts": "0196ba7a6680af32cabc832138f063267e06efd4a3dbed4157209cb8def5d75c",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/history-section.tsx": "aa10de17b7a4587bda5b01bf76d356b4b060148f419c4767dd5e989ef29a06c8",
+    "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/use-file-editor-controller.ts": "f250fdf0ed4d6d571c48959a5baaff64f554ca06a4313afc5d82209819a42629",
+    "src/editor/EditorWidget.cpp": "187fc843011015fa995125032472798b06ddb481aabc5ee5f087ebe05bb17b95",
+    "tests/test_editor.cpp": "406bfd8e4682d2f4a86bf77e7662d3ade8417146a1fc7d6245e9d66ad7a47bd8",
+    "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-preview-tab-content.tsx": "0b407c67c452e95401af1cff4203d6c504a6964f59b7273df9ef28a6790e3a02",
+    "src/editor/CodeEditor.cpp": "ffb5fd5c6f933feca62351ff385dd10a2a9caa5df93da4fe3b895b0912226c45",
+    "src/ui/TrustedImage.h": "b7e5ac6234ab752f928cdd1c8cd9090ce6dfbd13ba1b179718190d6ae7327d37",
+    "tests/test_image_preview.cpp": "2f073c9b5eb7f8a66d211449b1f00ef379e84f46c4c81fbf97a7b89e4be120f8",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/pdf-expanded.tsx": "a18dcb80cccc29e078d02ef1ddfd6370cfe6ed23b1b5dc4ad198b2e6470af21a",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/video-expanded.tsx": "4c36c1f0df59b3e0dcd2de8cee2cdbc67ffc904dc9a930c6addecf9cb8745f21",
+    "src/ui/AttachmentStrip.cpp": "a61e2f12807e7b1c1063328b5134a13a4e9830fcc383472687c9b0fa674b9ef8",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/font-expanded.tsx": "02f83a212ed42a86616d7a0b68f9e7ff0b1ae3ba95e830a903327b6fe12269f0",
+    "src/ui/AppFonts.cpp": "3822619d34a714f13c52c0ca6d0975360841ab7871459f24c2036150e2017a58",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/index.ts": "bca66b78d9e3051ca41de5ce5375d76b933be85c7fbe5fff4007e255fcb8b757",
+    "src/attachments/AttachmentStore.cpp": "60f784a31c02c0faf7bf871c6f21f1c5175b50fa202b83309d925eeeddd14822",
+    "tests/test_attachments.cpp": "e9f06d3aa3584f10d223c850ebb315ca7dcca860adf5cdfd5ddf5fdcff024c5a",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text/slash/provider.ts": "a90cffc2a36012f2a26e51e7db17527ac7d3363a7a1904915f191724d03646a2",
+    "src/ui/MainWindowCompletions.cpp": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648",
+    "tests/test_composer_host.cpp": "2e63a5f5e041adf5ff41b789caa2be63bd4461dab616e0c3227c8e53e299192c",
+    "reference/stagewise/apps/browser/src/ui/screens/main/index.tsx": "e0bdb364fdfca5931ee1194c025864f7eda5488c4b9d1393de37de306ca533b7",
+    "src/ui/MainWindowWorkbench.cpp": "deefd1a9d07ab040a004274208dc18fb338f950525c0347edbdac76c77544ead",
+    "tests/test_workbench_layout.cpp": "925ef52401577f57ab3825d5a58d9cff4157ef62dea72db82068154e9d71b829",
+    "reference/stagewise/apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx": "c8c16ac3bd29dd0d621cae81d591293e3df1425ea1fdfe494a88c7bbf56b25ac",
+    "src/ui/SidebarNavigation.cpp": "b083f47461722f4303624938c4bfe7f3b9eb99dca4c018bcc292a711cd5a45b1",
+    "tests/test_sidebar_navigation.cpp": "e6ec99cb25b75e5f9d778260e085b8316f26a3b72b00df5ed7fa61fb5aa4a5f9",
+    "reference/stagewise/apps/browser/src/ui/screens/main/command-center/command-center.tsx": "fd19914147f0bd1cf7ca66519ad5116dc2f131a11d2dfeb07b98027f8157124e",
+    "src/ui/MainWindowCommandCenter.cpp": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55",
+    "tests/test_command_center_host.cpp": "8ba89bb5c0c806ff59c6b20ef9eea259f2b9ab79238ad0e81c1487891a8be146",
+    "src/ui/MainWindowSideChats.cpp": "6e9a2e33e0af26d1cb59fc7624b70f80975de19c5f9b550d7f90107aa397b087",
+    "tests/test_side_chat_host.cpp": "278e60f08a7c7ab6da82ee5cf54ed61ed71a6b25c56b72766dfad82afda9e9b7",
+    "reference/stagewise/apps/browser/src/ui/screens/onboarding/index.tsx": "fc2991ff218db1d25716579bf0446cc294a77f94d90555ee14e8a5e705b7864b",
+    "reference/stagewise/apps/browser/src/backend/services/agent-power-save-blocker.ts": "130cf9e3624832566487db66a2497aa46d4fa0cd0b553fe4124ead78ef91dbee",
+    "src/ui/SettingsPage.cpp": "845b5c448e5707f7e21a8a3be7519aa5cf20cb967341cec6bf0e775c8f2c00dd",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx": "fb288d42a8c548122cc40fba68e49344141a373b85e15c75c84e81d03c36fbda",
+    "tests/test_settings.cpp": "279c878899278f6aa6bd16d5d71e30803d8f873a1d50af17631c64e9edf606fe",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/skills-context-section.tsx": "30d8c34362797cc1bbbc0dba70bee9dabfeaf19267fc0bb65de85d4a5e071c3b",
+    "tests/test_worktree_settings.cpp": "0a97e5d6f6f5a95651c3cef175295e431e07b3ecaf8c5e9ffea883e8878a689b",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx": "019486ecb7c44ad7c6f39a8bd5e448d74ac38a516906b320f6c9800cc8165605",
+    "tests/test_plugin_settings.cpp": "1ed4243185713e790dbd666476e47b8fe6bf1e0eaec1ad176595f78348e8c9c6",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/archived-agents-section.tsx": "e71b6da050072b78c201d74a56a8326f2c1ed4fa23c571d76b467fe23bc98d98",
+    "tests/test_conversations.cpp": "d6ef78643f77ed260d66bd0d85ad38ee31408fae3a46a14ac649e396185f5a4b",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/personalization-settings-section.tsx": "131fceff3e5247a2d5118186198bad071adbe5d5993b602ff7a24a4af3c5d355",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/account-section.tsx": "a9fae0e46aa77303c75f4255df7af8559434203a8955c0823c37ade8c17792fe",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-runtime-error.tsx": "bfbb1087250081348b9abe9889e8326baf00c7b056b00650f86f5e13f4ffa675",
+    "reference/stagewise/apps/browser/src/ui/components/file-preview/previews/audio-expanded.tsx": "b82d6a180b6131912c588dc5ce3771c0b375486f60b207dfad192eabd0233c1d",
+    "reference/stagewise/apps/browser/src/backend/services/notification.ts": "d91a2acddcec19b0a258da9ab954d25edeaf8748b7b8c1454464058c1148a374",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/agent-settings.worktree-setup.tsx": "cecaf704b001f9fe898dd34e3147be74fea21f80bdfa9a3ecaf10a6c9fc6b7ca",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/about-section.tsx": "af1d5fcd389d485b71e1b51f0187fcb1802d43de15b3a33d52ca609e28476205"
+  },
+  "completionRequirements": [
+    "Map every source function in parent index; grouped review is not a substitute.",
+    "Coordinate history/file-journal consistency before exposing edit/retry/checkpoint actions.",
+    "Test corrupt/CAS-preserving browser state and real host restart, then extend ownership/nonbrowser types.",
+    "Actual media preview/playback is required; attachment transport is not preview parity.",
+    "Compare source/native UI renders and focused/integrated tests before visual equivalence claims."
+  ],
+  "postChangeEvidence": [
+    {
+      "path": "audit/browser-session-native.json",
+      "capabilityId": "browser.tab_restore",
+      "status": "bounded_native_slice_integrated_focused_verified"
+    }
+  ]
+}

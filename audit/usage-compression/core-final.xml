@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="CoreTest" timestamp="2026&#x002D;11&#x002D;06T18:51:39" hostname="VOID" tests="48" failures="0" errors="0" skipped="0" time="8.507">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="CoreTest" time="0.000"/>
+  <testcase name="toolObserverCancellation(started&#x002D;cancel)" classname="CoreTest" time="0.129"/>
+  <testcase name="toolObserverCancellation(started&#x002D;replace)" classname="CoreTest" time="0.191"/>
+  <testcase name="toolObserverCancellation(finished&#x002D;cancel)" classname="CoreTest" time="0.191"/>
+  <testcase name="toolObserverCancellation(finished&#x002D;replace)" classname="CoreTest" time="0.198"/>
+  <testcase name="toolObserverDeletion(started)" classname="CoreTest" time="0.189"/>
+  <testcase name="toolObserverDeletion(finished)" classname="CoreTest" time="0.195"/>
+  <testcase name="cancellationFromResultSettlesWholeToolBlockBeforeReplacement" classname="CoreTest" time="0.121"/>
+  <testcase name="sseArbitraryChunks" classname="CoreTest" time="0.000"/>
+  <testcase name="sseLimits" classname="CoreTest" time="0.003"/>
+  <testcase name="pathScope" classname="CoreTest" time="0.002"/>
+  <testcase name="junctionEscape" classname="CoreTest" time="0.040"/>
+  <testcase name="appsBinaryBoundsAndJunctionIsolation" classname="CoreTest" time="0.076"/>
+  <testcase name="editsAreAtomic" classname="CoreTest" time="0.005"/>
+  <testcase name="fileChangedReentrancy(write)" classname="CoreTest" time="0.061"/>
+  <testcase name="fileChangedReentrancy(multiEdit)" classname="CoreTest" time="0.058"/>
+  <testcase name="fileChangedMayDeleteExecutor" classname="CoreTest" time="0.004"/>
+  <testcase name="finalProcessOutputMayReplaceOperation" classname="CoreTest" time="0.908"/>
+  <testcase name="providerStorageAndImport" classname="CoreTest" time="0.006"/>
+  <testcase name="streamsAndPersistsConversation" classname="CoreTest" time="0.113"/>
+  <testcase name="approvedToolLoop" classname="CoreTest" time="0.228"/>
+  <testcase name="rejectedToolDoesNotWrite" classname="CoreTest" time="0.161"/>
+  <testcase name="cancellationSettlesToolCalls" classname="CoreTest" time="0.145"/>
+  <testcase name="cancellationStopsNetwork" classname="CoreTest" time="0.104"/>
+  <testcase name="incompleteStreamPreservesPartial" classname="CoreTest" time="0.117"/>
+  <testcase name="retriesTransientBeforeOutput" classname="CoreTest" time="1.152"/>
+  <testcase name="commandAndCancellation" classname="CoreTest" time="0.485"/>
+  <testcase name="invalidSubmissionSettles" classname="CoreTest" time="0.000"/>
+  <testcase name="nativeProtocolRequests" classname="CoreTest" time="0.000"/>
+  <testcase name="anthropicSignedToolRoundTrip" classname="CoreTest" time="0.236"/>
+  <testcase name="googleSignedToolRoundTrip" classname="CoreTest" time="0.173"/>
+  <testcase name="modelDiscoveryPagination" classname="CoreTest" time="0.169"/>
+  <testcase name="providerValidationIsBounded" classname="CoreTest" time="0.132"/>
+  <testcase name="externalToolRoundTripAndCancellation" classname="CoreTest" time="0.283"/>
+  <testcase name="malformedProviderRecordsRejected" classname="CoreTest" time="0.003"/>
+  <testcase name="verifiedProviderRoutingMetadata" classname="CoreTest" time="0.001"/>
+  <testcase name="modelDiscoveryRejectsInvalidResponses" classname="CoreTest" time="0.299"/>
+  <testcase name="rawReadsPreserveBytesAndRejectTruncation" classname="CoreTest" time="0.006"/>
+  <testcase name="responsesSignedToolRoundTrip" classname="CoreTest" time="0.159"/>
+  <testcase name="responsesValidationAndFailure" classname="CoreTest" time="0.568"/>
+  <testcase name="modelFallbackState" classname="CoreTest" time="0.000"/>
+  <testcase name="modelFallbackRuntime" classname="CoreTest" time="0.788"/>
+  <testcase name="utilityFallbackAndCancellation" classname="CoreTest" time="0.418"/>
+  <testcase name="compressionPreservesHistoryAndTools" classname="CoreTest" time="0.183"/>
+  <testcase name="partialCancellationDoesNotSucceed" classname="CoreTest" time="0.066"/>
+  <testcase name="providerSaveRejectsUnreloadableRecords" classname="CoreTest" time="0.025"/>
+  <testcase name="systemContextAndReadOnlySkillTool" classname="CoreTest" time="0.115"/>
+  <testcase name="cleanupTestCase" classname="CoreTest" time="0.000"/>
+</testsuite>

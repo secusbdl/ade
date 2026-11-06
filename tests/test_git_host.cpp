@@ -34,6 +34,7 @@
 #include "git/WorktreeSetupRunner.h"
 #include "git/WorktreeSettingsController.h"
 #include "git/WorktreeSettingsPane.h"
+#include "git/WorktreeCleanupController.h"
 using namespace ade;
 namespace {
 bool put(const QString &path,const QByteArray &bytes) { QDir().mkpath(QFileInfo(path).absolutePath()); QFile file(path); return file.open(QIODevice::WriteOnly)&&file.write(bytes)==bytes.size(); }
@@ -105,6 +106,7 @@ private slots:
     void connectedJunctionIsStoredCanonically();
     void removedLegacyJunctionDetachesAllAffectedChats();
     void cleanupRequiresIndependentUsageHistory();
+    void reviewedCleanupUiRetainsChatAndBranch();
     void noWorkspaceChatClearsFileTree();
     void unopenedFilesViewIsDestroyedWithWindow();
     void inFlightMutationBlocksSendAndReconnect();
@@ -141,7 +143,23 @@ void GitHostTest::removedLegacyJunctionDetachesAllAffectedChats() {
 void GitHostTest::cleanupRequiresIndependentUsageHistory() {
     Fixture f; const auto linked=f.linked(); QVERIFY(!linked.isEmpty()); QVERIFY(f.seed({f.chat("chat",linked)})); MainWindow window(f.data);
     window.connectWorkspace(f.root); auto *panel=window.findChild<GitPanel *>(); auto result=waitFor(panel->service(),panel->service()->cleanupCandidates());
-    QVERIFY2(result.ok,qPrintable(result.error.message)); QVERIFY2(result.cleanup.isEmpty(),"A just-used worktree cannot become an old cleanup candidate merely because its chat changed workspace.");
+    QCOMPARE(result.error.code,GitErrorCode::UnsafeCleanup);
+    auto* tracking=window.findChild<WorktreeCleanupController*>();QVERIFY(tracking);
+    QTRY_VERIFY_WITH_TIMEOUT(tracking->trackingReady(),15000);tracking->refresh();QTRY_VERIFY_WITH_TIMEOUT(!tracking->busy(),15000);
+    QCOMPARE(tracking->rows().size(),1);QVERIFY2(!tracking->rows().first().decision.eligible,"A just-used or unverified worktree cannot become an old cleanup candidate merely because its chat changed workspace.");
+    QVERIFY(QFileInfo::exists(linked));QVERIFY(panel->findChild<QPushButton*>("gitReviewCleanup"));
+}
+void GitHostTest::reviewedCleanupUiRetainsChatAndBranch(){
+    Fixture f;const auto linked=f.linked();QVERIFY(!linked.isEmpty());auto retained=f.chat("archived",linked);retained.archived=true;retained.messages=QJsonArray{QJsonObject{{"role","user"},{"content","Retain this worktree conversation"}}};QVERIFY(f.seed({f.chat("main",f.root),retained}));
+    SessionStore store(f.data);QVERIFY(!store.load().isEmpty());GitServiceOptions options;options.managedWorktreeRoot=f.data+"/worktrees";
+    {GitService service(options);GitWorkspaceContext context;context.trustedRoots={f.root};service.setWorkspaceContext(context);const auto inspection=waitFor(&service,service.inspectUsage(linked));QVERIFY2(inspection.ok,qPrintable(inspection.error.message));const auto old=QDateTime::currentMSecsSinceEpoch()-10LL*24*60*60*1000;WorktreeUsageJournal journal(f.data);QVERIFY(journal.open(old,store.durableRevision()));QVERIFY(journal.recordLiveUse(inspection.usage.first().identity,old));QVERIFY(journal.closeClean(store.durableRevision()));}
+    MainWindow window(f.data);auto* tracking=window.findChild<WorktreeCleanupController*>();QVERIFY(tracking);QTRY_VERIFY_WITH_TIMEOUT(tracking->trackingReady(),15000);
+    auto* panel=window.findChild<GitPanel*>();QVERIFY(panel);panel->findChild<QPushButton*>("gitReviewCleanup")->click();auto* dialog=window.findChild<QDialog*>("worktreeCleanupDialog");QVERIFY(dialog);
+    auto* rows=dialog->findChild<QTreeWidget*>("worktreeCleanupRows");QVERIFY(rows);QTRY_COMPARE_WITH_TIMEOUT(rows->topLevelItemCount(),1,15000);QCOMPARE(rows->topLevelItem(0)->text(2),"Ready");QVERIFY(QFileInfo::exists(linked));
+    rows->topLevelItem(0)->setCheckState(0,Qt::Checked);QSignalSpy finished(tracking,&WorktreeCleanupController::worktreeRemovalFinished);
+    QTimer confirmation;confirmation.setInterval(10);connect(&confirmation,&QTimer::timeout,&window,[]{if(auto* box=qobject_cast<QMessageBox*>(QApplication::activeModalWidget());box&&box->windowTitle()=="Remove worktrees")box->button(QMessageBox::Yes)->click();});confirmation.start();
+    dialog->findChild<QPushButton*>("worktreeCleanupRemove")->click();QTRY_COMPARE_WITH_TIMEOUT(finished.size(),1,20000);QVERIFY(finished.first()[1].toBool());QVERIFY(!QFileInfo::exists(linked));
+    QCOMPARE(stored(f,"archived").messages,retained.messages);QVERIFY(stored(f,"archived").archived);QVERIFY(stored(f,"archived").workspace.isEmpty());QVERIFY(f.run({"show-ref","--verify","refs/heads/linked"}));dialog->close();QVERIFY(window.close());
 }
 void GitHostTest::noWorkspaceChatClearsFileTree() {
     Fixture f; QVERIFY(f.seed({f.chat("connected",f.root),f.chat("empty",{})})); MainWindow window(f.data); auto *files=openFiles(window); QVERIFY(files); QVERIFY(files->model());

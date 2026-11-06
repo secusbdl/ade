@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UsageSettingsTest" timestamp="2026&#x002D;11&#x002D;06T18:52:33" hostname="VOID" tests="4" failures="0" errors="0" skipped="0" time="0.062">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UsageSettingsTest" time="0.000"/>
+  <testcase name="explicitContextLimitCanBeSavedAndClearedForAnotherModel" classname="UsageSettingsTest" time="0.059"/>
+  <testcase name="endpointAndProtocolEditsInvalidateExplicitLimit" classname="UsageSettingsTest" time="0.001"/>
+  <testcase name="cleanupTestCase" classname="UsageSettingsTest" time="0.000"/>
+</testsuite>

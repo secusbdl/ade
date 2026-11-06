@@ -1,0 +1,3039 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "reviewedNativeBaseCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "purpose": "Explicit assessment of all71 shortcut inventory rows, including new native navigation bindings. No full feature or line-by-line parity claim.",
+  "postReviewImplementation": "src/ui/MainWindowShortcuts.cpp and terminal host-marked navigation arbitration added in this working tree; integrated test results belong in audit/parity-integration.json.",
+  "coverage": {
+    "shortcutRows": 71,
+    "newDirectNativeActions": 26,
+    "allPlatformAndFocusCombinationsTested": false
+  },
+  "capabilities": [
+    {
+      "id": "shortcut.toggle_context_selector",
+      "inventoryIds": [
+        "shortcut.toggle_context_selector"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+I",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 156,
+          "anchor": "[HotkeyActions.TOGGLE_CONTEXT_SELECTOR]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_sidebar",
+      "inventoryIds": [
+        "shortcut.toggle_sidebar"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+B",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 160,
+          "anchor": "[HotkeyActions.TOGGLE_SIDEBAR]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 213,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+N\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 60,
+          "anchor": "class MainChromeTest"
+        }
+      ],
+      "implemented": [
+        "Window-level Qt bindings exist for these actions."
+      ],
+      "gaps": [
+        "Not all upstream focus/capture/modal-suppression rules and aliases are established; existing chrome tests do not test every shortcut in every focus target."
+      ]
+    },
+    {
+      "id": "shortcut.focus_chat_input",
+      "inventoryIds": [
+        "shortcut.focus_chat_input"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+L",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 165,
+          "anchor": "[HotkeyActions.FOCUS_CHAT_INPUT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.open_settings",
+      "inventoryIds": [
+        "shortcut.open_settings"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Comma",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 169,
+          "anchor": "[HotkeyActions.OPEN_SETTINGS]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 213,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+N\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 60,
+          "anchor": "class MainChromeTest"
+        }
+      ],
+      "implemented": [
+        "Window-level Qt bindings exist for these actions."
+      ],
+      "gaps": [
+        "Not all upstream focus/capture/modal-suppression rules and aliases are established; existing chrome tests do not test every shortcut in every focus target."
+      ]
+    },
+    {
+      "id": "shortcut.edit_nearest_user_message",
+      "inventoryIds": [
+        "shortcut.edit_nearest_user_message"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Shift+E",
+        "mac": "Mod+Shift+I",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 173,
+          "anchor": "[HotkeyActions.EDIT_NEAREST_USER_MESSAGE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.open_workspace_select",
+      "inventoryIds": [
+        "shortcut.open_workspace_select"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+O",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 178,
+          "anchor": "[HotkeyActions.OPEN_WORKSPACE_SELECT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build.",
+        "The handler is shared with the existing workspace chooser; the new key-to-dialog path has no separate interactive fixture."
+      ]
+    },
+    {
+      "id": "shortcut.open_model_select",
+      "inventoryIds": [
+        "shortcut.open_model_select"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Slash",
+        "aliases": [
+          "Mod+Shift+Slash"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 182,
+          "anchor": "[HotkeyActions.OPEN_MODEL_SELECT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.cycle_model_thinking_effort",
+      "inventoryIds": [
+        "shortcut.cycle_model_thinking_effort"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+Slash",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 187,
+          "anchor": "[HotkeyActions.CYCLE_MODEL_THINKING_EFFORT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.open_command_center",
+      "inventoryIds": [
+        "shortcut.open_command_center"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+K",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 191,
+          "anchor": "[HotkeyActions.OPEN_COMMAND_CENTER]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.open_file_search",
+      "inventoryIds": [
+        "shortcut.open_file_search"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+P",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 199,
+          "anchor": "[HotkeyActions.OPEN_FILE_SEARCH]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.open_content_file_search",
+      "inventoryIds": [
+        "shortcut.open_content_file_search"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+F",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 203,
+          "anchor": "[HotkeyActions.OPEN_CONTENT_FILE_SEARCH]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_rename_agent",
+      "inventoryIds": [
+        "shortcut.command_center_rename_agent"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+E",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 207,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_RENAME_AGENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_toggle_agent_pin",
+      "inventoryIds": [
+        "shortcut.command_center_toggle_agent_pin"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Shift+P",
+        "mac": "Mod+P",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 211,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_TOGGLE_AGENT_PIN]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_copy_tab_url",
+      "inventoryIds": [
+        "shortcut.command_center_copy_tab_url"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+C",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 216,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_COPY_TAB_URL]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_delete_agent",
+      "inventoryIds": [
+        "shortcut.command_center_delete_agent"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Shift+D",
+        "mac": "Mod+D",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 220,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_DELETE_AGENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_toggle_gitignored",
+      "inventoryIds": [
+        "shortcut.command_center_toggle_gitignored"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+G",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 225,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_TOGGLE_GITIGNORED]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.command_center_toggle_search_in_content",
+      "inventoryIds": [
+        "shortcut.command_center_toggle_search_in_content"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+F",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 229,
+          "anchor": "[HotkeyActions.COMMAND_CENTER_TOGGLE_SEARCH_IN_CONTENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowCommandCenter.cpp",
+          "line": 101,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+K\")"
+        },
+        {
+          "path": "src/ui/CommandCenter.cpp",
+          "line": 101,
+          "anchor": "bool CommandCenter::eventFilter"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_command_center.cpp",
+          "line": 13,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native command-center open/search bindings and dialog keyboard actions are present."
+      ],
+      "gaps": [
+        "Native dialog/search behavior differs from upstream; platform/focus capture matrix is not exhaustive."
+      ]
+    },
+    {
+      "id": "shortcut.new_chat",
+      "inventoryIds": [
+        "shortcut.new_chat"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+N",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 233,
+          "anchor": "[HotkeyActions.NEW_CHAT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 213,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+N\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 60,
+          "anchor": "class MainChromeTest"
+        }
+      ],
+      "implemented": [
+        "Window-level Qt bindings exist for these actions."
+      ],
+      "gaps": [
+        "Not all upstream focus/capture/modal-suppression rules and aliases are established; existing chrome tests do not test every shortcut in every focus target."
+      ]
+    },
+    {
+      "id": "shortcut.cmd_enter",
+      "inventoryIds": [
+        "shortcut.cmd_enter"
+      ],
+      "status": "partial",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Enter",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 237,
+          "anchor": "[HotkeyActions.CMD_ENTER]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/Composer.h",
+          "line": 65,
+          "anchor": "void keyPressEvent"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 203,
+          "anchor": "void enterAndShiftEnterPreserveInputContract"
+        }
+      ],
+      "implemented": [
+        "Focused composer submits Enter/Ctrl+Enter while Shift+Enter inserts a newline."
+      ],
+      "gaps": [
+        "No global dominant Ctrl+Enter dispatch for every upstream chat/control state."
+      ]
+    },
+    {
+      "id": "shortcut.stop_agent",
+      "inventoryIds": [
+        "shortcut.stop_agent"
+      ],
+      "status": "different_binding",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+C",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 241,
+          "anchor": "[HotkeyActions.STOP_AGENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/Composer.h",
+          "line": 65,
+          "anchor": "void keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Native focused composer uses Escape and the visible stop button; terminal Ctrl+C remains process input."
+      ],
+      "gaps": [
+        "Upstream Ctrl+C stop semantics with selection/copy/focus arbitration are not ported."
+      ]
+    },
+    {
+      "id": "shortcut.new_tab",
+      "inventoryIds": [
+        "shortcut.new_tab"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+T",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 247,
+          "anchor": "[HotkeyActions.NEW_TAB]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 213,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+N\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 60,
+          "anchor": "class MainChromeTest"
+        }
+      ],
+      "implemented": [
+        "Window-level Qt bindings exist for these actions."
+      ],
+      "gaps": [
+        "Not all upstream focus/capture/modal-suppression rules and aliases are established; existing chrome tests do not test every shortcut in every focus target."
+      ]
+    },
+    {
+      "id": "shortcut.new_terminal_tab",
+      "inventoryIds": [
+        "shortcut.new_terminal_tab"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+T",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 251,
+          "anchor": "[HotkeyActions.NEW_TERMINAL_TAB]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 213,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+N\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_main_chrome.cpp",
+          "line": 60,
+          "anchor": "class MainChromeTest"
+        }
+      ],
+      "implemented": [
+        "Window-level Qt bindings exist for these actions."
+      ],
+      "gaps": [
+        "Not all upstream focus/capture/modal-suppression rules and aliases are established; existing chrome tests do not test every shortcut in every focus target."
+      ]
+    },
+    {
+      "id": "shortcut.focus_or_toggle_terminal",
+      "inventoryIds": [
+        "shortcut.focus_or_toggle_terminal"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Backquote",
+        "macAliases": [
+          "Mod+J"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 255,
+          "anchor": "[HotkeyActions.FOCUS_OR_TOGGLE_TERMINAL]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.close_tab",
+      "inventoryIds": [
+        "shortcut.close_tab"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+W",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 260,
+          "anchor": "[HotkeyActions.CLOSE_TAB]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 88,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+Alt+B\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_workbench_layout.cpp",
+          "line": 81,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native workbench bindings exist, with editor close handling routed through tabCloseRequested."
+      ],
+      "gaps": [
+        "Per-agent/global tab scoping and dominant WebView interception remain unported. Source Ctrl+Shift+E overlaps edit-nearest-user in different UI scopes; native has only the file-tree action."
+      ]
+    },
+    {
+      "id": "shortcut.next_tab",
+      "inventoryIds": [
+        "shortcut.next_tab"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+PageDown",
+        "mac": "Mod+Alt+ArrowRight",
+        "macAliases": [
+          "Mod+Alt+PageDown"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 266,
+          "anchor": "[HotkeyActions.NEXT_TAB]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.prev_tab",
+      "inventoryIds": [
+        "shortcut.prev_tab"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+PageUp",
+        "mac": "Mod+Alt+ArrowLeft",
+        "macAliases": [
+          "Mod+Alt+PageUp"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 272,
+          "anchor": "[HotkeyActions.PREV_TAB]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_tab_pin",
+      "inventoryIds": [
+        "shortcut.toggle_tab_pin"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+P",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 366,
+          "anchor": "[HotkeyActions.TOGGLE_TAB_PIN]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_1",
+      "inventoryIds": [
+        "shortcut.focus_tab_1"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+1",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 330,
+          "anchor": "[HotkeyActions.FOCUS_TAB_1]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_2",
+      "inventoryIds": [
+        "shortcut.focus_tab_2"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+2",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 334,
+          "anchor": "[HotkeyActions.FOCUS_TAB_2]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_3",
+      "inventoryIds": [
+        "shortcut.focus_tab_3"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+3",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 338,
+          "anchor": "[HotkeyActions.FOCUS_TAB_3]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_4",
+      "inventoryIds": [
+        "shortcut.focus_tab_4"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+4",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 342,
+          "anchor": "[HotkeyActions.FOCUS_TAB_4]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_5",
+      "inventoryIds": [
+        "shortcut.focus_tab_5"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+5",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 346,
+          "anchor": "[HotkeyActions.FOCUS_TAB_5]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_6",
+      "inventoryIds": [
+        "shortcut.focus_tab_6"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+6",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 350,
+          "anchor": "[HotkeyActions.FOCUS_TAB_6]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_7",
+      "inventoryIds": [
+        "shortcut.focus_tab_7"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+7",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 354,
+          "anchor": "[HotkeyActions.FOCUS_TAB_7]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_8",
+      "inventoryIds": [
+        "shortcut.focus_tab_8"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+8",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 358,
+          "anchor": "[HotkeyActions.FOCUS_TAB_8]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_tab_9",
+      "inventoryIds": [
+        "shortcut.focus_tab_9"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+9",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 362,
+          "anchor": "[HotkeyActions.FOCUS_TAB_9]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_content_panel",
+      "inventoryIds": [
+        "shortcut.toggle_content_panel"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+B",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 370,
+          "anchor": "[HotkeyActions.TOGGLE_CONTENT_PANEL]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 88,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+Alt+B\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_workbench_layout.cpp",
+          "line": 81,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native workbench bindings exist, with editor close handling routed through tabCloseRequested."
+      ],
+      "gaps": [
+        "Per-agent/global tab scoping and dominant WebView interception remain unported. Source Ctrl+Shift+E overlaps edit-nearest-user in different UI scopes; native has only the file-tree action."
+      ]
+    },
+    {
+      "id": "shortcut.next_agent",
+      "inventoryIds": [
+        "shortcut.next_agent"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Tab",
+        "aliases": [
+          "Mod+PageDown"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 282,
+          "anchor": "[HotkeyActions.NEXT_AGENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build.",
+        "Only Ctrl+PageDown/PageUp immediate aliases are implemented. Ctrl+Tab preview, Escape cancellation and commit-on-Control-release remain absent."
+      ]
+    },
+    {
+      "id": "shortcut.prev_agent",
+      "inventoryIds": [
+        "shortcut.prev_agent"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Shift+Tab",
+        "aliases": [
+          "Mod+PageUp"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 287,
+          "anchor": "[HotkeyActions.PREV_AGENT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build.",
+        "Only Ctrl+PageDown/PageUp immediate aliases are implemented. Ctrl+Tab preview, Escape cancellation and commit-on-Control-release remain absent."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_1",
+      "inventoryIds": [
+        "shortcut.focus_agent_1"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+1",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 292,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_1]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_2",
+      "inventoryIds": [
+        "shortcut.focus_agent_2"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+2",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 296,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_2]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_3",
+      "inventoryIds": [
+        "shortcut.focus_agent_3"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+3",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 300,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_3]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_4",
+      "inventoryIds": [
+        "shortcut.focus_agent_4"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+4",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 304,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_4]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_5",
+      "inventoryIds": [
+        "shortcut.focus_agent_5"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+5",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 308,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_5]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_6",
+      "inventoryIds": [
+        "shortcut.focus_agent_6"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+6",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 312,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_6]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_7",
+      "inventoryIds": [
+        "shortcut.focus_agent_7"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+7",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 316,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_7]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_8",
+      "inventoryIds": [
+        "shortcut.focus_agent_8"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+8",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 320,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_8]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.focus_agent_last",
+      "inventoryIds": [
+        "shortcut.focus_agent_last"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+9",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 324,
+          "anchor": "[HotkeyActions.FOCUS_AGENT_LAST]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.history_back",
+      "inventoryIds": [
+        "shortcut.history_back"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Alt+ArrowLeft",
+        "mac": "Mod+ArrowLeft",
+        "macAliases": [
+          "Mod+BracketLeft"
+        ],
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 376,
+          "anchor": "[HotkeyActions.HISTORY_BACK]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.history_forward",
+      "inventoryIds": [
+        "shortcut.history_forward"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Alt+ArrowRight",
+        "mac": "Mod+ArrowRight",
+        "macAliases": [
+          "Mod+BracketRight"
+        ],
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 382,
+          "anchor": "[HotkeyActions.HISTORY_FORWARD]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.focus_url_bar",
+      "inventoryIds": [
+        "shortcut.focus_url_bar"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Alt+D",
+        "aliases": [
+          "F6",
+          "Ctrl+Alt+L"
+        ],
+        "macAliases": [
+          "Mod+Alt+L",
+          "F6"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 390,
+          "anchor": "[HotkeyActions.FOCUS_URL_BAR]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowShortcuts.cpp",
+          "line": 14,
+          "anchor": "void MainWindow::initializeNavigationShortcuts"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 126,
+          "anchor": "bool TerminalWidget::event"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_navigation_shortcuts.cpp",
+          "line": 55,
+          "anchor": "class NavigationShortcutsTest"
+        }
+      ],
+      "implemented": [
+        "Explicit native Qt window bindings follow the pinned Windows combinations/index rules; rendered sidebar order and direct tab ordering are used."
+      ],
+      "gaps": [
+        "WebView2 child-window dominant interception is not established. Native tabs are global, not upstream per-agent/global orders. Mac/Linux combinations are outside this Windows build."
+      ]
+    },
+    {
+      "id": "shortcut.reload",
+      "inventoryIds": [
+        "shortcut.reload"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+R",
+        "aliases": [
+          "F5"
+        ],
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 398,
+          "anchor": "[HotkeyActions.RELOAD]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.hard_reload",
+      "inventoryIds": [
+        "shortcut.hard_reload"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+R",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 403,
+          "anchor": "[HotkeyActions.HARD_RELOAD]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.find_in_page",
+      "inventoryIds": [
+        "shortcut.find_in_page"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+F",
+        "aliases": [
+          "F3"
+        ],
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 409,
+          "anchor": "[HotkeyActions.FIND_IN_PAGE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.find_next",
+      "inventoryIds": [
+        "shortcut.find_next"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+G",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 414,
+          "anchor": "[HotkeyActions.FIND_NEXT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.find_prev",
+      "inventoryIds": [
+        "shortcut.find_prev"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+G",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 418,
+          "anchor": "[HotkeyActions.FIND_PREV]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.dev_tools",
+      "inventoryIds": [
+        "shortcut.dev_tools"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Ctrl+Alt+I",
+        "mac": "Mod+Alt+I",
+        "aliases": [
+          "F12",
+          "Ctrl+Shift+I",
+          "Ctrl+Shift+J"
+        ],
+        "macAliases": [
+          "F12"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 424,
+          "anchor": "[HotkeyActions.DEV_TOOLS]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.zoom_in",
+      "inventoryIds": [
+        "shortcut.zoom_in"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Equal",
+        "aliases": [
+          "Mod+Shift+Equal"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 435,
+          "anchor": "[HotkeyActions.ZOOM_IN]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.zoom_out",
+      "inventoryIds": [
+        "shortcut.zoom_out"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Minus",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 440,
+          "anchor": "[HotkeyActions.ZOOM_OUT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.zoom_reset",
+      "inventoryIds": [
+        "shortcut.zoom_reset"
+      ],
+      "status": "implicit_or_unverified",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+0",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 444,
+          "anchor": "[HotkeyActions.ZOOM_RESET]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/browserwidget.cpp",
+          "line": 381,
+          "anchor": "void BrowserWidget::"
+        },
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 106,
+          "anchor": "void TerminalWidget::keyPressEvent"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Underlying browser/editor/terminal commands exist, and some runtime-native shortcuts may work inside their focused control."
+      ],
+      "gaps": [
+        "No complete explicit source binding/alias/capture arbitration was located at the host level. Do not infer behavior from WebView2 defaults or treat editor zoom as browser zoom parity."
+      ]
+    },
+    {
+      "id": "shortcut.save_file",
+      "inventoryIds": [
+        "shortcut.save_file"
+      ],
+      "status": "partial",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+S",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 448,
+          "anchor": "[HotkeyActions.SAVE_FILE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_editor.cpp",
+          "line": 38,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native focused code editor handles Save and delegates text editing keys to QPlainTextEdit."
+      ],
+      "gaps": [
+        "No exact Monaco edit stack or dominant global dispatch equivalence; Qt standard-key behavior is not evidence for every upstream alias."
+      ]
+    },
+    {
+      "id": "shortcut.undo_file_edit",
+      "inventoryIds": [
+        "shortcut.undo_file_edit"
+      ],
+      "status": "partial",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Z",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 452,
+          "anchor": "[HotkeyActions.UNDO_FILE_EDIT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_editor.cpp",
+          "line": 38,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native focused code editor handles Save and delegates text editing keys to QPlainTextEdit."
+      ],
+      "gaps": [
+        "No exact Monaco edit stack or dominant global dispatch equivalence; Qt standard-key behavior is not evidence for every upstream alias."
+      ]
+    },
+    {
+      "id": "shortcut.redo_file_edit",
+      "inventoryIds": [
+        "shortcut.redo_file_edit"
+      ],
+      "status": "partial",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+Z",
+        "aliases": [
+          "Mod+Y"
+        ],
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 456,
+          "anchor": "[HotkeyActions.REDO_FILE_EDIT]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/editor/CodeEditor.cpp",
+          "line": 162,
+          "anchor": "void CodeEditor::keyPressEvent"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_editor.cpp",
+          "line": 38,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native focused code editor handles Save and delegates text editing keys to QPlainTextEdit."
+      ],
+      "gaps": [
+        "No exact Monaco edit stack or dominant global dispatch equivalence; Qt standard-key behavior is not evidence for every upstream alias."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_file_tree",
+      "inventoryIds": [
+        "shortcut.toggle_file_tree"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+B",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 461,
+          "anchor": "[HotkeyActions.TOGGLE_FILE_TREE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 88,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+Alt+B\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_workbench_layout.cpp",
+          "line": 81,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native workbench bindings exist, with editor close handling routed through tabCloseRequested."
+      ],
+      "gaps": [
+        "Per-agent/global tab scoping and dominant WebView interception remain unported. Source Ctrl+Shift+E overlaps edit-nearest-user in different UI scopes; native has only the file-tree action."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_file_tree_files",
+      "inventoryIds": [
+        "shortcut.toggle_file_tree_files"
+      ],
+      "status": "implemented_with_limits",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+E",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 465,
+          "anchor": "[HotkeyActions.TOGGLE_FILE_TREE_FILES]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 88,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+Alt+B\")"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_workbench_layout.cpp",
+          "line": 81,
+          "anchor": "class "
+        }
+      ],
+      "implemented": [
+        "Native workbench bindings exist, with editor close handling routed through tabCloseRequested."
+      ],
+      "gaps": [
+        "Per-agent/global tab scoping and dominant WebView interception remain unported. Source Ctrl+Shift+E overlaps edit-nearest-user in different UI scopes; native has only the file-tree action."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_file_tree_diff",
+      "inventoryIds": [
+        "shortcut.toggle_file_tree_diff"
+      ],
+      "status": "different_action",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+G",
+        "captureDominantly": false
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 469,
+          "anchor": "[HotkeyActions.TOGGLE_FILE_TREE_DIFF]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 220,
+          "anchor": "new QShortcut(QKeySequence(\"Ctrl+Shift+G\")"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Ctrl+Shift+G currently opens Source control."
+      ],
+      "gaps": [
+        "Upstream toggles the file-tree diff view and shares the key with find-previous under contextual arbitration. Native file changes panel is separate."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_svg_code_mode",
+      "inventoryIds": [
+        "shortcut.toggle_svg_code_mode"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+V",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 473,
+          "anchor": "[HotkeyActions.TOGGLE_SVG_CODE_MODE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.center_image",
+      "inventoryIds": [
+        "shortcut.center_image"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+C",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 477,
+          "anchor": "[HotkeyActions.CENTER_IMAGE]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.cycle_svg_bg",
+      "inventoryIds": [
+        "shortcut.cycle_svg_bg"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+G",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 481,
+          "anchor": "[HotkeyActions.CYCLE_SVG_BG]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.cycle_svg_fg",
+      "inventoryIds": [
+        "shortcut.cycle_svg_fg"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Alt+F",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 485,
+          "anchor": "[HotkeyActions.CYCLE_SVG_FG]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    },
+    {
+      "id": "shortcut.toggle_markdown_preview",
+      "inventoryIds": [
+        "shortcut.toggle_markdown_preview"
+      ],
+      "status": "missing_shortcut_or_required_feature",
+      "sourceWindowsDefinition": {
+        "accelerator": "Mod+Shift+V",
+        "captureDominantly": true
+      },
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+          "line": 489,
+          "anchor": "[HotkeyActions.TOGGLE_MARKDOWN_PREVIEW]"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 93,
+          "anchor": "void MainWindow::buildUi"
+        },
+        {
+          "path": "src/ui/MainWindowWorkbench.cpp",
+          "line": 29,
+          "anchor": "void MainWindow::initializeWorkbench"
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "No equivalent end-to-end binding was located in the reviewed native handlers."
+      ],
+      "gaps": [
+        "The source action requires explicit implementation and focus-aware regression coverage; a visible mouse control or similarly named function is not shortcut parity."
+      ]
+    }
+  ],
+  "sourceManifestCanonicalLf": [
+    {
+      "path": "src/browser/browserwidget.cpp",
+      "sha256": "da0dc0ffc89addf340b4fb34a06f203705cf4069bdbf9befc2751b2c5722bd18"
+    },
+    {
+      "path": "src/editor/CodeEditor.cpp",
+      "sha256": "ffb5fd5c6f933feca62351ff385dd10a2a9caa5df93da4fe3b895b0912226c45"
+    },
+    {
+      "path": "src/terminal/TerminalWidget.cpp",
+      "sha256": "328fd7c3a68fa30faabfc1e9029b569dfed3ab1540fada35084844ad93a2dae3"
+    },
+    {
+      "path": "src/ui/CommandCenter.cpp",
+      "sha256": "e80e828a2cbc50fb70210e7d43fc9946bae6a592b706b669043fbe15d3df3ca8"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "sha256": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "bb3f5ea8a34108f31d0b9d158766bbfb079fb28bfe1280a45bbd3513972f8cc1"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "sha256": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55"
+    },
+    {
+      "path": "src/ui/MainWindowShortcuts.cpp",
+      "sha256": "dbf5c69354a60052a8fd3c6f7ede2598e041bb9bc6d3900108c2f916fad605bd"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256": "deefd1a9d07ab040a004274208dc18fb338f950525c0347edbdac76c77544ead"
+    },
+    {
+      "path": "tests/test_command_center.cpp",
+      "sha256": "5fe61845a33ec67b3ef37345510cc1f739d2f366d867f78a223d5d57206e3d68"
+    },
+    {
+      "path": "tests/test_editor.cpp",
+      "sha256": "406bfd8e4682d2f4a86bf77e7662d3ade8417146a1fc7d6245e9d66ad7a47bd8"
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "sha256": "76b1e208f59660d622d2c6dbb4ca74e746eae935326c86ef002d643685ac7870"
+    },
+    {
+      "path": "tests/test_navigation_shortcuts.cpp",
+      "sha256": "2809c23e18a62b2d95e8bf51fe253c65889f2b187e86f46ba0be6addef4da1e5"
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "sha256": "47d53b8629439f661f9718d7a08061bad03f589fe028c9957f85abab44024c39"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/shared/hotkeys.ts",
+      "sha256": "ddc34cbf93cff772746f4c0a4cfa21a8b3aa9320fae135d7c59f42e14b3fca47"
+    }
+  ]
+}

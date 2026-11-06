@@ -22,7 +22,7 @@ private:
     QListWidget* m_list;
     QLineEdit *m_name, *m_url, *m_key, *m_model;
     QComboBox *m_protocol,*m_reasoning,*m_thinking;
-    QSpinBox *m_thinkingBudget,*m_maxTokens;
+    QSpinBox *m_thinkingBudget,*m_maxTokens,*m_contextTokens;
     QLabel* m_feedback;
     int m_selected=-1;
 };

@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QScrollBar>
+#include <QShortcut>
 
 namespace ade {
 TerminalWidget::TerminalWidget(QWidget *parent):TerminalWidget(nullptr,nullptr,parent){}
@@ -122,5 +123,22 @@ void TerminalWidget::focusOutEvent(QFocusEvent *event){QAbstractScrollArea::focu
 void TerminalWidget::inputMethodEvent(QInputMethodEvent *event){if(m_model&&!event->commitString().isEmpty())m_model->key(0,Qt::NoModifier,event->commitString());event->accept();}
 QVariant TerminalWidget::inputMethodQuery(Qt::InputMethodQuery query)const{if(m_model&&query==Qt::ImCursorRectangle){const auto p=m_model->cursor();return QRect(m_padding+(p.x()-horizontalScrollBar()->value())*m_cell.width(),m_padding+(m_model->historyLines()+p.y()-verticalScrollBar()->value())*m_cell.height(),m_cell.width(),m_cell.height());}if(query==Qt::ImEnabled)return bool(m_model)&&isRunning();return QAbstractScrollArea::inputMethodQuery(query);}
 void TerminalWidget::contextMenuEvent(QContextMenuEvent *event){QMenu menu(this);auto *copy=menu.addAction("Copy",this,&TerminalWidget::copySelection);copy->setEnabled(!selectedText().isEmpty());auto *paste=menu.addAction("Paste",this,&TerminalWidget::pasteClipboard);paste->setEnabled(isRunning());menu.addSeparator();menu.addAction("Reset zoom",this,[this]{setZoomPercent(100);});menu.exec(event->globalPos());}
-bool TerminalWidget::event(QEvent *event){if(event->type()==QEvent::ShortcutOverride){auto *key=static_cast<QKeyEvent*>(event);const bool ctrl=key->modifiers().testFlag(Qt::ControlModifier),alt=key->modifiers().testFlag(Qt::AltModifier);const bool applicationShortcut=key->key()==Qt::Key_F11||(ctrl&&(key->key()==Qt::Key_W||key->key()==Qt::Key_T||key->key()==Qt::Key_QuoteLeft||(alt&&(key->key()==Qt::Key_Left||key->key()==Qt::Key_Right))));if(applicationShortcut){event->ignore();return false;}event->accept();return true;}return QAbstractScrollArea::event(event);}
+bool TerminalWidget::event(QEvent *event){
+    if(event->type()==QEvent::ShortcutOverride){
+        auto *key=static_cast<QKeyEvent*>(event);
+        const bool ctrl=key->modifiers().testFlag(Qt::ControlModifier),alt=key->modifiers().testFlag(Qt::AltModifier);
+        bool applicationShortcut=key->key()==Qt::Key_F11||(ctrl&&(key->key()==Qt::Key_W||key->key()==Qt::Key_T||key->key()==Qt::Key_QuoteLeft||(alt&&(key->key()==Qt::Key_Left||key->key()==Qt::Key_Right))));
+        // Host-marked navigation wins over terminal input. Other terminal
+        // bindings (notably Ctrl+C) retain their existing input behavior.
+        if(!applicationShortcut)for(auto* shortcut:window()->findChildren<QShortcut*>()){
+            if(!shortcut->isEnabled()||!shortcut->property("adeDominantNavigation").toBool())continue;
+            for(const auto& sequence:shortcut->keys())
+                if(sequence.matches(QKeySequence(key->keyCombination()))==QKeySequence::ExactMatch){applicationShortcut=true;break;}
+            if(applicationShortcut)break;
+        }
+        if(applicationShortcut){event->ignore();return false;}
+        event->accept();return true;
+    }
+    return QAbstractScrollArea::event(event);
+}
 }

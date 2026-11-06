@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UsageCompressionTest" timestamp="2026&#x002D;11&#x002D;06T18:52:24" hostname="VOID" tests="3" failures="1" errors="0" skipped="0" time="0.071">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="utilityPairsRepeatedCallIdsWithinEachBatch" classname="UsageCompressionTest" time="0.069">
+    <failure type="fail" message="&apos;body.contains(&quot;FIRST_RESULT&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="UsageCompressionTest" time="0.000"/>
+</testsuite>

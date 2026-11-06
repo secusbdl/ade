@@ -12,6 +12,21 @@ identical model reasoning or output.
 
 ## Start here
 
+- [`audit/upstream-source-index.json`](audit/upstream-source-index.json) inventories
+  **all 2,139 tracked files** at the pin. The companion
+  [`audit/upstream-function-index.jsonl`](audit/upstream-function-index.jsonl)
+  locates **17,331 function bodies** in 1,519 TS/JS files by exact source spans
+  and hashes, with no parser errors. These include tests, callbacks and tooling;
+  they are not 17,331 independent features or completed ports. Static indexing
+  does not establish semantic review or native parity for any line.
+- `audit/parity-review-core.json`, `audit/parity-review-ui.json` and
+  `audit/parity-review-integrations.json` contain the current source review with
+  upstream/native/test anchors and explicit unresolved behavior. Historical
+  test evidence in those reviews is identified separately from new test runs.
+- [`audit/parity-review-coverage.json`](audit/parity-review-coverage.json) joins
+  those reviews and the complete 71-action shortcut review onto all 701 feature
+  rows. Rows without individual reassessment remain explicit. These are review
+  references, not completion percentages or proof of a line-by-line port.
 - [`audit/reference-readiness.json`](audit/reference-readiness.json) maps 20
   important capability groups to native code, tests, source contracts and gaps.
 - [`audit/upstream-feature-inventory.json`](audit/upstream-feature-inventory.json)
@@ -21,12 +36,17 @@ identical model reasoning or output.
   indexes the curated upstream source, with original Git blob IDs and SHA256 hashes.
   It is an offline code/contract reference. Excluded media and icon packages mean
   this snapshot is not a standalone buildable copy of Stagewise.
+- [`reference/stagewise-supplement/REFERENCE_MANIFEST.json`](reference/stagewise-supplement/REFERENCE_MANIFEST.json)
+  additionally preserves the public update-server and desktop build/storybook
+  tooling as exact blobs. A native updater remains a separate implementation
+  gap; the public update-server source is available at the pinned commit.
 - [`reference/native-experiments`](reference/native-experiments) preserves native
   mutation-journal and worktree-usage prototypes with tests and integration limits.
   The preserved prototypes stay unlinked. Production mutation/undo now lives in
-  `src/mutations`; worktree-usage tracking remains experimental.
+  `src/mutations`; production worktree usage and reviewed cleanup now live in
+  `src/git`. The original experimental copies remain unchanged and unlinked.
 - [`audit/feature-progress-update.json`](audit/feature-progress-update.json) maps
-  the current additions onto the same 701-row scope without changing the baseline.
+  the earlier continuation additions onto the same 701-row scope without changing the baseline.
 - [`audit/plugin-integration.json`](audit/plugin-integration.json) records the
   latest token-plugin, Settings/import and packaged-control verification.
 - [`audit/continuation-integration.json`](audit/continuation-integration.json) is
@@ -35,6 +55,8 @@ identical model reasoning or output.
   [`audit/reference-integration.json`](audit/reference-integration.json) and
   [`audit/source-publication.json`](audit/source-publication.json) describe the
   earlier verified and published checkpoint.
+- [`audit/parity-integration.json`](audit/parity-integration.json) records the
+  newest integrated build, test results, package hashes and remaining limits.
 
 ## Native components to reuse
 
@@ -46,12 +68,12 @@ identical model reasoning or output.
 | Conversations | Atomic persistence, drafts, fork, archive/restore, restart selection, durable deletion cleanup and isolated side-chat promotion/discard | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp`, `src/ui/MainWindowSideChats.cpp` |
 | Files and context | Scoped reads/search, immutable read snapshots and reinjection; journaled write/edit/copy/move/delete and conflict-aware undo/recovery | `src/core/ToolExecutor*`, `src/mutations`, `src/attachments`, `src/runtime` |
 | Tools and apps | Native QuickJS worker, correlated host calls, persistent sandbox state, agent-authored app previews | `src/sandbox`, `src/runtime`, `src/apps` |
-| Context utilities | Manual `/compact` in the main chat preserves saved history while preparing compressed model context; configurable title/compression models | `src/core/UtilityService*`, `src/ui/MainWindow.cpp` |
-| Browser | WebView2 tabs, CDP, selected-element and screenshot context, device preview, permissions, downloads and history | `src/browser`, `src/ui/MainWindowBrowserTools.cpp` |
+| Context utilities | Four-protocol usage snapshots, automatic compression with a known model limit, manual `/compact`, configurable utility models and retained original history | `src/core/ProviderUsage*`, `src/core/AgentEngineCompression.cpp`, `src/core/UtilityService*` |
+| Browser | WebView2 tabs, durable ordinary-tab restoration, CDP, selected-element and screenshot context, device preview, permissions, downloads and history | `src/browser`, `src/ui/MainWindowBrowser*` |
 | Editor and terminal | Native text editor, encoding/EOL preservation, conflict-aware saving, ConPTY/libvterm terminal | `src/editor`, `src/terminal` |
 | Agent shells | Persistent PowerShell sessions, commands/stdin/polls, process-local watchers, per-chat logs and readonly `shells/` mount | `src/shell`, `src/runtime/AgentToolHost*` |
-| Git and worktrees | Branch/worktree actions, repository watches, setup settings/execution and active-use guards | `src/git` |
-| Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, workspace/content controls and provider/plugin configuration | `src/ui` |
+| Git and worktrees | Branch/worktree actions, repository watches, setup settings/execution, durable usage tracking and explicitly reviewed cleanup with fresh identity/status checks | `src/git` |
+| Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, direct tab/agent/focus shortcuts and provider/plugin configuration | `src/ui` |
 | Network/integrations | Credential redaction, per-host authorization and packaged integration instructions | `src/network`, `src/plugins`, `assets/plugins` |
 
 On Windows, the Git/worktree service passes `-c core.longpaths=true` per command
@@ -94,6 +116,21 @@ usage prototypes. Their `reference_*` tests remain separate from application
 features; enabling them never links their libraries into ADE. Verify preserved
 source bytes with `python scripts/verify-reference.py` (Python 3.9 or newer).
 
+To reproduce the function audit, install the pinned TypeScript parser as a
+development tool and run:
+
+```powershell
+npm install --prefix private/parity-tools --no-save --ignore-scripts typescript@5.9.3
+node scripts/index-upstream-functions.cjs --self-test
+node scripts/index-upstream-functions.cjs --verify
+```
+
+The index reads Git blobs from `upstream/stagewise` at the pinned commit, including
+files omitted from the curated reference. It never executes upstream code.
+Neither ADE nor its native sandbox worker depends on this Node-based audit tool.
+`python scripts/preserve-reference-supplement.py` reproduces the supplement and
+refuses to overwrite modified preserved files.
+
 ```powershell
 .\build\bin\ADE.exe --data-dir .\private\profile --workspace .\private\workspace
 ```
@@ -119,6 +156,14 @@ Use the labeled **Settings** button or **Ctrl+,**. In **Models & Providers**,
 `PROVIDER_API_KEY=value`; **Add Provider** opens manual provider configuration.
 Imports report their result on the Settings page and refresh the model selector.
 Providers without a known endpoint or model require configuration before use.
+
+The provider editor's optional **Model context limit** applies to that
+provider's default model. Changing its model, endpoint or protocol clears the
+limit; another discovered model must supply its own matching catalog limit.
+Zero means unknown and keeps compression manual. Automatic compression uses
+the last completed provider usage snapshot, pauses at a completed tool-batch
+boundary, and retains original saved messages. Usage is not a billing estimate;
+the exact upstream tokenizer, asynchronous compaction and UI remain separate gaps.
 
 In **Plugins**, open a card, save its token, then use **Check saved token** for
 an explicit read-only connection check. Saving a token never starts a request.
@@ -158,6 +203,24 @@ uses a loopback model and synthetic credential-state checks, with no external
 plugin request.
 
 ## Evidence and remaining work
+
+The renewed source review adds ordinary browser restart restoration, model usage
+and guarded automatic compression, explicit worktree cleanup review, and 26
+direct navigation actions. See `audit/browser-session-native.json`,
+`audit/usage-compression-native.json`, `audit/parity-review-shortcuts.json` and
+the current integration checkpoint. Native keyboard tests cover draft retention,
+filtered sidebar order, tab index/wrap behavior, address/model focus, narrow
+layouts, terminal focus and deletion during focus callbacks. Ctrl+Tab's preview
+switcher is still absent; the immediate Ctrl+PageDown/PageUp aliases are present.
+
+**Source control → Review unused worktrees** lists eligibility before any action.
+Only clean, unmounted, merged managed worktrees with trustworthy activity older
+than seven days can be selected. Removal rechecks the physical instance,
+branch/HEAD, status, active use and review revision; branches are retained.
+Imported or damaged usage history stays protected, and nothing is removed
+automatically. Ordinary browser restoration covers HTTP/HTTPS/about:blank tabs
+with saved order and selection; per-agent associations and editor/terminal/app
+restoration remain unported.
 
 Older ADE profiles that omit the optional conversation cleanup field now load
 without resetting history. The regression covers typing and sending with the
@@ -199,7 +262,7 @@ filesystem write is not crash-durable.
 Important remaining work includes simultaneous workspace mounts, the remaining
 sandbox Node/importModule APIs, transcript retry/edit/revert, source-equivalent
 automatic context compression and token accounting,
-smart shell approval and local-server discovery, integrated worktree-usage cleanup,
+smart shell approval and local-server discovery, complete upstream cleanup policy/UI,
 rich PDF/Office/audio/video previews, every provider/subscription authentication flow,
 plugin installation/OAuth, hosted accounts/billing, ACP/research integrations,
 complete browser/session restoration, updater/installer and full visual parity.

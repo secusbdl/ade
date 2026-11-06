@@ -1,0 +1,23 @@
+********* Start testing of NetworkTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : NetworkTest::initTestCase()
+PASS   : NetworkTest::registryAndOriginPolicy()
+PASS   : NetworkTest::opaqueSubstitutionAndResponseMetadata()
+PASS   : NetworkTest::handleIsolationRevocationAndDestination()
+PASS   : NetworkTest::credentialRedirectIsManual()
+PASS   : NetworkTest::publicRedirectPolicy()
+PASS   : NetworkTest::binaryBodyResponseAndHttpErrors()
+PASS   : NetworkTest::limitsTimeoutCancelAndReuse()
+PASS   : NetworkTest::revocationIsImmediateAndAgentScoped()
+PASS   : NetworkTest::responseHeaderAndEncodedUploadLimits()
+PASS   : NetworkTest::secretReflectionAndTruncatedResponse()
+PASS   : NetworkTest::malformedRequestsNeverReachNetwork()
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(cancel)
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(reset)
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(remove)
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(rotate)
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(register)
+PASS   : NetworkTest::cancellationObserverMayDeleteBroker(allowlist)
+PASS   : NetworkTest::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 2002ms
+********* Finished testing of NetworkTest *********

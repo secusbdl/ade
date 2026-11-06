@@ -1,0 +1,34 @@
+********* Start testing of UsageCompressionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UsageCompressionTest::initTestCase()
+PASS   : UsageCompressionTest::countersAreCumulativeAndCacheAware()
+PASS   : UsageCompressionTest::invalidAndMissingCountersStayUnknown()
+PASS   : UsageCompressionTest::usageRoundTripsAndNeverEntersWire(openai)
+PASS   : UsageCompressionTest::usageRoundTripsAndNeverEntersWire(responses)
+FAIL!  : UsageCompressionTest::usageRoundTripsAndNeverEntersWire(anthropic) Compared values are not the same
+   Actual   (saved[2].toObject()["content"]): QJsonValue(string, "Error: Tool arguments are not a JSON object.")
+   Expected ("EXACT_TOOL_RESULT")           : EXACT_TOOL_RESULT
+D:/age/ADE/tests/test_usage_compression.cpp(113) : failure location
+PASS   : UsageCompressionTest::usageRoundTripsAndNeverEntersWire(google)
+PASS   : UsageCompressionTest::automaticCompressionPreservesToolsAndOriginalHistory(openai)
+PASS   : UsageCompressionTest::automaticCompressionPreservesToolsAndOriginalHistory(responses)
+FAIL!  : UsageCompressionTest::automaticCompressionPreservesToolsAndOriginalHistory(anthropic) 'wire.contains("EXACT_TOOL_RESULT")' returned FALSE. ()
+D:/age/ADE/tests/test_usage_compression.cpp(128) : failure location
+PASS   : UsageCompressionTest::automaticCompressionPreservesToolsAndOriginalHistory(google)
+PASS   : UsageCompressionTest::unknownLimitsAndThresholdEqualityDoNotCompress()
+PASS   : UsageCompressionTest::failedCompressionContinuesWithFullHistory()
+PASS   : UsageCompressionTest::cancellationDuringUtilityCannotCommitOrResume()
+PASS   : UsageCompressionTest::completedCompressionRestoresWithoutDuplicateUtility()
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(usage-cancel)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(usage-delete)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(usage-replace)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(start-cancel)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(start-delete)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(start-replace)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(finish-cancel)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(finish-delete)
+PASS   : UsageCompressionTest::observersCanCancelDeleteAndReplace(finish-replace)
+PASS   : UsageCompressionTest::explicitAndDiscoveredLimitsAreModelScopedAndPersisted()
+PASS   : UsageCompressionTest::cleanupTestCase()
+Totals: 24 passed, 2 failed, 0 skipped, 0 blacklisted, 3787ms
+********* Finished testing of UsageCompressionTest *********

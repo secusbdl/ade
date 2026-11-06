@@ -19,6 +19,7 @@
 #include <QSignalSpy>
 #include <QSplitter>
 #include <QTemporaryDir>
+#include <QTabWidget>
 #include <QToolButton>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -156,7 +157,7 @@ private slots:
         QTemporaryDir data;QVERIFY(seed(data.path()));double expected=0;
         {MainWindow window(data.path());showHidden(window);window.findChild<QToolButton*>("openBrowserButton")->click();auto* split=window.findChild<QSplitter*>("workspaceSplitter");split->setSizes({650,350,0});emit split->splitterMoved(650,1);const auto sizes=split->sizes();expected=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY(window.close());}
         QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
-        MainWindow restored(data.path());showHidden(restored);restored.findChild<QToolButton*>("openBrowserButton")->click();const auto sizes=restored.findChild<QSplitter*>("workspaceSplitter")->sizes();const double actual=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY(qAbs(actual-expected)<0.015);
+        MainWindow restored(data.path());showHidden(restored);QCOMPARE(restored.findChild<QTabWidget*>()->count(),1);const auto sizes=restored.findChild<QSplitter*>("workspaceSplitter")->sizes();const double actual=double(sizes[1])/(sizes[0]+sizes[1]);QVERIFY(qAbs(actual-expected)<0.015);
     }
     void sidebarHalfWindowLimitPreservesPreferredWidth(){
         QTemporaryDir data;QVERIFY(seed(data.path()));{QSettings saved(data.filePath("window.ini"),QSettings::IniFormat);saved.setValue("sidebarWidth",672);}

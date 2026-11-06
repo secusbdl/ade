@@ -209,7 +209,8 @@ ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonAr
                 message.remove("reasoning_content");
             messages.append(message);
         }
-        body = {{"model", p.model}, {"messages", messages}, {"stream", true}};
+        body = {{"model", p.model}, {"messages", messages}, {"stream", true},
+                {"stream_options", QJsonObject{{"include_usage", true}}}};
         if (!tools.isEmpty()) { body["tools"] = tools; body["tool_choice"] = "auto"; }
         if (!p.reasoningEffort.isEmpty()) body["reasoning_effort"] = p.reasoningEffort;
         if (!p.thinkingMode.isEmpty()) body["thinking"] = QJsonObject{{"type", p.thinkingMode}};

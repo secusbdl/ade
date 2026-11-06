@@ -1,0 +1,27 @@
+********* Start testing of AttachmentTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AttachmentTest::initTestCase()
+PASS   : AttachmentTest::originalsReferencesCloneAndDelete()
+PASS   : AttachmentTest::scopeAndJunctions()
+PASS   : AttachmentTest::textSnapshotsAndBinaryFallback()
+PASS   : AttachmentTest::modelImageConstraintsAndFourSerializers()
+PASS   : AttachmentTest::toolMediaPreservesToolPairsAndSignedHistory()
+PASS   : AttachmentTest::requestBoundsAndMalformedMetadata()
+PASS   : AttachmentTest::pinnedModelCapabilities()
+PASS   : AttachmentTest::snapshotsPersistAfterDeletionAndStayAgentScoped()
+PASS   : AttachmentTest::nativeEngineImageRequest(openai)
+PASS   : AttachmentTest::nativeEngineImageRequest(responses)
+PASS   : AttachmentTest::nativeEngineImageRequest(anthropic)
+PASS   : AttachmentTest::nativeEngineImageRequest(google)
+PASS   : AttachmentTest::fallbackRebuildsFromOriginalReferences()
+PASS   : AttachmentTest::preparationFailureAndCancellationKeepOriginalHistory()
+PASS   : AttachmentTest::structuredTextPreparationAndCapturedMetadata()
+PASS   : AttachmentTest::malformedCapturedMetadata(not-object)
+PASS   : AttachmentTest::malformedCapturedMetadata(empty)
+PASS   : AttachmentTest::malformedCapturedMetadata(wrong-size)
+PASS   : AttachmentTest::malformedCapturedMetadata(string-size)
+PASS   : AttachmentTest::malformedCapturedMetadata(invalid-time)
+PASS   : AttachmentTest::malformedCapturedMetadata(wrong-time-type)
+PASS   : AttachmentTest::cleanupTestCase()
+Totals: 23 passed, 0 failed, 0 skipped, 0 blacklisted, 967ms
+********* Finished testing of AttachmentTest *********

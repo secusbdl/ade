@@ -33,7 +33,7 @@ bool MainWindow::commitConversationState(const QList<Conversation>& next,const Q
     if(!m_store.saveWithCleanup(next,pendingCleanup,&error)) {
         conversationError("Could not save conversations: "+error);return false;
     }
-    m_sessions=next;return true;
+    m_sessions=next;updateGitUsageTracking();return true;
 }
 void MainWindow::newConversation() {
     Conversation session;

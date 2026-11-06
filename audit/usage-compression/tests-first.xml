@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UsageCompressionTest" timestamp="2026&#x002D;11&#x002D;06T18:46:23" hostname="VOID" tests="26" failures="2" errors="0" skipped="0" time="3.787">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="countersAreCumulativeAndCacheAware" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="invalidAndMissingCountersStayUnknown" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(openai)" classname="UsageCompressionTest" time="0.188"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(responses)" classname="UsageCompressionTest" time="0.176"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(anthropic)" classname="UsageCompressionTest" time="0.124">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (saved[2].toObject()["content"]): QJsonValue(string, "Error: Tool arguments are not a JSON object.")
+   Expected ("EXACT_TOOL_RESULT")           : EXACT_TOOL_RESULT]]>
+    </failure>
+  </testcase>
+  <testcase name="usageRoundTripsAndNeverEntersWire(google)" classname="UsageCompressionTest" time="0.124"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(openai)" classname="UsageCompressionTest" time="0.224"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(responses)" classname="UsageCompressionTest" time="0.237"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(anthropic)" classname="UsageCompressionTest" time="0.242">
+    <failure type="fail" message="&apos;wire.contains(&quot;EXACT_TOOL_RESULT&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(google)" classname="UsageCompressionTest" time="0.224"/>
+  <testcase name="unknownLimitsAndThresholdEqualityDoNotCompress" classname="UsageCompressionTest" time="0.234"/>
+  <testcase name="failedCompressionContinuesWithFullHistory" classname="UsageCompressionTest" time="0.215"/>
+  <testcase name="cancellationDuringUtilityCannotCommitOrResume" classname="UsageCompressionTest" time="0.333"/>
+  <testcase name="completedCompressionRestoresWithoutDuplicateUtility" classname="UsageCompressionTest" time="0.289"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;cancel)" classname="UsageCompressionTest" time="0.066"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;delete)" classname="UsageCompressionTest" time="0.117"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;replace)" classname="UsageCompressionTest" time="0.189"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;cancel)" classname="UsageCompressionTest" time="0.067"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;delete)" classname="UsageCompressionTest" time="0.108"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;replace)" classname="UsageCompressionTest" time="0.165"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;cancel)" classname="UsageCompressionTest" time="0.170"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;delete)" classname="UsageCompressionTest" time="0.117"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;replace)" classname="UsageCompressionTest" time="0.168"/>
+  <testcase name="explicitAndDiscoveredLimitsAreModelScopedAndPersisted" classname="UsageCompressionTest" time="0.007"/>
+  <testcase name="cleanupTestCase" classname="UsageCompressionTest" time="0.000"/>
+</testsuite>

@@ -39,13 +39,19 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     m_thinking=new QComboBox;m_thinking->addItem("Provider default",QString());m_thinking->addItem("Enabled","enabled");m_thinking->addItem("Disabled","disabled");
     m_thinkingBudget=new QSpinBox;m_thinkingBudget->setRange(0,200000);m_thinkingBudget->setSpecialValueText("Provider default");
     m_maxTokens=new QSpinBox;m_maxTokens->setRange(0,200000);m_maxTokens->setSpecialValueText("Provider default");
+    m_contextTokens=new QSpinBox;m_contextTokens->setObjectName("providerContextWindow");m_contextTokens->setRange(0,100000000);m_contextTokens->setSpecialValueText("Unknown / use discovered model limit");
+    m_contextTokens->setToolTip("Context tokens for this default model. Automatic compression uses half this limit, capped at 100,000 tokens. Unknown models keep manual /compact.");
     form->addRow("Name",m_name);form->addRow("Base URL",m_url);form->addRow("API key",m_key);form->addRow("Model",m_model);form->addRow("Protocol",m_protocol);
     form->addRow("Reasoning effort",m_reasoning);form->addRow("Thinking",m_thinking);form->addRow("Thinking budget",m_thinkingBudget);form->addRow("Output token limit",m_maxTokens);
+    form->addRow("Model context limit",m_contextTokens);
+    connect(m_model,&QLineEdit::textChanged,this,[this]{m_contextTokens->setValue(0);});
+    connect(m_url,&QLineEdit::textChanged,this,[this]{m_contextTokens->setValue(0);});
+    connect(m_protocol,&QComboBox::currentIndexChanged,this,[this]{m_contextTokens->setValue(0);});
     m_feedback=new QLabel;m_feedback->setWordWrap(true);right->addWidget(m_feedback);right->addStretch();
     auto* apply=new QPushButton("Apply provider");right->addWidget(apply,0,Qt::AlignRight);
     auto* probeRow=new QHBoxLayout;auto* discover=new QPushButton("Fetch models");auto* validate=new QPushButton("Test connection");probeRow->addWidget(discover);probeRow->addWidget(validate);right->addLayout(probeRow);
     auto* service=new ProviderService(this);
-    auto liveConfig=[this]{ProviderConfig p;if(m_selected>=0)p=m_providers[m_selected];p.name=m_name->text().trimmed();p.baseUrl=m_url->text().trimmed();p.apiKey=m_key->text().trimmed();p.model=m_model->text().trimmed();p.protocol=m_protocol->currentData().toString();p.reasoningEffort=m_reasoning->currentData().toString();p.thinkingMode=m_thinking->currentData().toString();p.thinkingBudget=m_thinkingBudget->value();p.maxOutputTokens=m_maxTokens->value();return p;};
+    auto liveConfig=[this]{ProviderConfig p;if(m_selected>=0)p=m_providers[m_selected];p.name=m_name->text().trimmed();p.baseUrl=m_url->text().trimmed();p.apiKey=m_key->text().trimmed();p.model=m_model->text().trimmed();p.protocol=m_protocol->currentData().toString();p.reasoningEffort=m_reasoning->currentData().toString();p.thinkingMode=m_thinking->currentData().toString();p.thinkingBudget=m_thinkingBudget->value();p.maxOutputTokens=m_maxTokens->value();p.contextWindowTokens=m_contextTokens->value();return p;};
     connect(discover,&QPushButton::clicked,this,[this,service,liveConfig]{m_discoveryProvider=liveConfig();service->discover(m_discoveryProvider);});
     connect(validate,&QPushButton::clicked,this,[service,liveConfig]{service->test(liveConfig());});
     connect(service,&ProviderService::busyChanged,this,[this,discover,validate,add,import,apply](bool busy){discover->setEnabled(!busy);validate->setEnabled(!busy);m_list->setEnabled(!busy);add->setEnabled(!busy);import->setEnabled(!busy);apply->setEnabled(!busy);for(auto* edit:{m_name,m_url,m_key,m_model})edit->setEnabled(!busy);m_protocol->setEnabled(!busy);});
@@ -68,6 +74,7 @@ void ProviderDialog::selectProvider(int row) {
     const auto& p=m_providers[row];m_name->setText(p.name);m_url->setText(p.baseUrl);m_key->setText(p.apiKey);m_model->setText(p.model);
     auto i=m_protocol->findData(p.protocol);m_protocol->setCurrentIndex(qMax(0,i));m_feedback->clear();m_feedback->setProperty("error",false);
     m_reasoning->setCurrentIndex(qMax(0,m_reasoning->findData(p.reasoningEffort)));m_thinking->setCurrentIndex(qMax(0,m_thinking->findData(p.thinkingMode)));m_thinkingBudget->setValue(p.thinkingBudget);m_maxTokens->setValue(p.maxOutputTokens);
+    m_contextTokens->setValue(p.contextWindowTokens);
 }
 void ProviderDialog::applyProvider() {
     m_feedback->setProperty("error",false);if(m_selected<0)return;
@@ -78,6 +85,7 @@ void ProviderDialog::applyProvider() {
     }
     auto& p=m_providers[m_selected];p.name=m_name->text().trimmed();p.baseUrl=url.toString();p.apiKey=m_key->text().trimmed();p.model=m_model->text().trimmed();p.protocol=m_protocol->currentData().toString();
     p.reasoningEffort=m_reasoning->currentData().toString();p.thinkingMode=m_thinking->currentData().toString();p.thinkingBudget=m_thinkingBudget->value();p.maxOutputTokens=m_maxTokens->value();
+    p.contextWindowTokens=m_contextTokens->value();
     m_list->item(m_selected)->setText(p.name);m_feedback->setText("Provider configured. Save to store it on this computer.");
 }
 void ProviderDialog::importKeys() {

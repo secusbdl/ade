@@ -1,5 +1,6 @@
 #include "AgentEngine.h"
 #include "ProviderProtocol.h"
+#include "UtilityService.h"
 
 #include <QDateTime>
 #include <QJsonDocument>
@@ -104,6 +105,7 @@ AgentEngine::AgentEngine(QObject *parent)
 AgentEngine::~AgentEngine() {
     m_busy = false;
     ++m_generation;
+    stopCompression();
     stopNetwork();
     if (!m_externalRequestId.isEmpty()) emit externalToolCancellationRequested(m_externalRequestId);
     m_tools.disconnect(this);
@@ -272,6 +274,7 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
 
 void AgentEngine::requestModel() {
     if (!m_busy) return;
+    if (maybeCompress(false)) return;
     const QPointer<AgentEngine> self(this);
     const auto generation = m_generation;
     const QUrl endpoint(m_provider.baseUrl);
@@ -292,6 +295,9 @@ void AgentEngine::requestModel() {
     m_finishReason.clear();
     m_responseBody.clear();
     m_done = false;
+    m_roundUsage = {};
+    m_usageId = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    m_usageComplete = false;
     m_sse = true;
     m_responseRetained = false;
     m_display.begin();m_displayHistoryIndex=-1;
@@ -416,6 +422,7 @@ void AgentEngine::consumeCompletion(const QJsonObject &object, bool streaming) {
         return;
     }
     const auto protocol = ProviderProtocol::kind(m_provider);
+    m_roundUsage.consume(protocol, object);
     if (protocol == "responses") { consumeResponses(object, streaming); return; }
     if (protocol == "anthropic") { consumeAnthropic(object, streaming); return; }
     if (protocol == "google") { consumeGoogle(object); return; }
@@ -778,11 +785,17 @@ void AgentEngine::finishReply() {
         fail(QStringLiteral("The provider returned no assistant text or tool calls.")); return;
     }
     m_retry = 0;
+    m_usageComplete = true;
     m_display.finish();
     retainPartialResponse();
+    const auto usage = currentUsageRecord();
+    if (!usage.isEmpty()) {
+        emit usageChanged(usage);
+        if (!self || generation != m_generation || !m_busy) return;
+    }
     emit displayChanged();
     if(!self||generation!=m_generation||!m_busy)return;
-    if (m_streamCalls.isEmpty()) { complete(); return; }
+    if (m_streamCalls.isEmpty()) { if (!maybeCompress(true)) complete(); return; }
     m_pendingTools = m_streamCalls.values();
     m_toolIndex = 0;
     runNextTool();
@@ -792,6 +805,8 @@ void AgentEngine::retainPartialResponse() {
     if (m_responseRetained || (m_streamText.isEmpty() && m_streamReasoning.isEmpty() && m_streamCalls.isEmpty())) return;
     const bool uiOnly=m_streamText.isEmpty()&&m_streamCalls.isEmpty()&&!m_streamReasoning.isEmpty()&&!m_busy;
     QJsonObject message{{"role", "assistant"}, {"content", m_streamText}};
+    const auto usage = currentUsageRecord();
+    if (!usage.isEmpty()) message["metadata"] = QJsonObject{{"usage", usage}};
     if (!uiOnly&&!m_streamReasoning.isEmpty() && ProviderProtocol::kind(m_provider) == "openai") {
         message["reasoning_content"] = m_streamReasoning;
         message["ade_reasoning_source"] = QJsonObject{{"providerId", m_provider.id}, {"model", m_provider.model}};
@@ -1018,6 +1033,7 @@ void AgentEngine::fail(const QString &message) {
     m_queuePaused=true;++m_queueResumeSerial;
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);const auto safeMessage=redact(message).left(2000);
     m_busy=false;
+    stopCompression();
     stopNetwork();
     if(!self||generation!=m_generation)return;
     m_display.finish("error");m_display.error(safeMessage);syncDisplayMetadata();
@@ -1042,6 +1058,7 @@ void AgentEngine::cancel() {
     if (!m_busy) return;
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);
     m_busy=false;
+    stopCompression();
     stopNetwork();
     if(!self||generation!=m_generation)return;
     m_display.finish("canceled");syncDisplayMetadata();

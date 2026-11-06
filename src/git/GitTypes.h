@@ -1,4 +1,5 @@
 #pragma once
+#include "WorktreeUsage.h"
 #include <QByteArray>
 #include <QDateTime>
 #include <QList>
@@ -7,7 +8,7 @@
 #include <QStringList>
 
 namespace ade {
-enum class GitOperation { Inspect, Status, Diff, FileDiff, Branches, Worktrees, SwitchBranch, CreateBranch, CreateWorktree, DeletionInfo, RemoveWorktree, CleanupCandidates, SetupRepositories, SaveSetupScript };
+enum class GitOperation { Inspect, Status, Diff, FileDiff, Branches, Worktrees, SwitchBranch, CreateBranch, CreateWorktree, DeletionInfo, RemoveWorktree, CleanupCandidates, SetupRepositories, SaveSetupScript, UsageInspect, UsageScan };
 enum class GitRemovePolicy { Explicit, Settings, Cleanup };
 enum class GitErrorCode { None, Cancelled, UntrustedPath, NotRepository, InvalidName, InvalidPath, BranchNotFound, BranchExists, BranchCheckedOut, WorktreeExists, MainWorktree, DirtyWorktree, MountedWorktree, UnsafeCleanup, ProcessFailed, Timeout, OutputLimit, IoError, Conflict };
 struct GitError { GitErrorCode code=GitErrorCode::None; QString message; int exitCode=-1; };
@@ -34,6 +35,7 @@ struct GitResult {
     GitDiffSummary diff; GitFileDiff fileDiff; GitDeletionInfo deletion;
     QList<GitCleanupCandidate> cleanup; QList<GitSetupRepository> setupRepositories;
     QString path, branch; QStringList warnings; WorktreeSetupMetadata setup; GitSetupScript setupScript;
+    QList<WorktreeCleanupFacts> usage;
 };
 // Host supplies only paths the user opened/mounted. Unknown usage blocks cleanup.
 struct GitWorkspaceContext { QStringList trustedRoots, mountedPaths; QMap<QString,qint64> lastUsedAt; bool usageKnown=false; };

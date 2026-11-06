@@ -26,6 +26,8 @@ public:
     using Cleanup = std::function<bool(const QString& agentId,const QString& directory,QString* error)>;
     bool processPendingCleanup(const QList<Conversation>& sessions,const Cleanup& cleanup,QString* error=nullptr) const;
     QString directory() const { return m_directory; }
+    // Hash of bytes successfully loaded/saved, never speculative chat JSON.
+    QByteArray durableRevision() const { return m_loaded&&m_valid?m_revision:QByteArray(); }
 private:
     QString m_directory;
     mutable bool m_loaded=false;

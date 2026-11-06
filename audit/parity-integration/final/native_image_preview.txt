@@ -1,0 +1,14 @@
+********* Start testing of ImagePreviewTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ImagePreviewTest::initTestCase()
+PASS   : ImagePreviewTest::rasterDecodingIsBounded(png)
+PASS   : ImagePreviewTest::rasterDecodingIsBounded(jpeg)
+PASS   : ImagePreviewTest::rasterDecodingIsBounded(webp)
+PASS   : ImagePreviewTest::rejectsSvgUnknownAndHugeHeaders()
+QWARN  : ImagePreviewTest::fitZoomAndResizeStayBounded() This plugin does not support propagateSizeHints()
+QWARN  : ImagePreviewTest::fitZoomAndResizeStayBounded() This plugin does not support propagateSizeHints()
+QWARN  : ImagePreviewTest::fitZoomAndResizeStayBounded() This plugin does not support propagateSizeHints()
+PASS   : ImagePreviewTest::fitZoomAndResizeStayBounded()
+PASS   : ImagePreviewTest::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 345ms
+********* Finished testing of ImagePreviewTest *********

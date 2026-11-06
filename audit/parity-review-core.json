@@ -1,0 +1,4518 @@
+{
+  "schemaVersion": 1,
+  "reviewedUtc": "2026-11-06T16:46:23.447311+00:00",
+  "nativeHead": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "reviewedNativeBaseCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "sourceLineBasis": "Native source anchors describe the reviewed b48683b base, before the separately authorized usage/compression implementation. Subsequent changes must be recorded in postReviewChanges with their own current source hashes/lines.",
+  "postReviewChanges": [
+    {
+      "capabilityIds": [
+        "engine.usage",
+        "engine.automatic_compression",
+        "engine.manual_compression"
+      ],
+      "inventoryIds": [
+        "agents.compression"
+      ],
+      "status": "partial",
+      "change": "Bounded provider usage +automatic compression now implemented after the reviewed base; base capability statuses/line anchors remain historical.",
+      "implementationReport": "audit/usage-compression-native.json",
+      "currentNativeAnchors": [
+        {
+          "path": "src/core/ProviderUsage.cpp",
+          "line": 17,
+          "anchor": "void ProviderUsage::consume",
+          "sha256CanonicalLf": "6cd0af11b9ec318a9674b30a7e8ff86f0fd8685f8b6d926a8687dc2c1a9d02ed"
+        },
+        {
+          "path": "src/core/ProviderUsage.cpp",
+          "line": 59,
+          "anchor": "QJsonObject ProviderUsage::counters",
+          "sha256CanonicalLf": "6cd0af11b9ec318a9674b30a7e8ff86f0fd8685f8b6d926a8687dc2c1a9d02ed"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 425,
+          "anchor": "m_roundUsage.consume",
+          "sha256CanonicalLf": "1735480fdbfcbc499ecbaa4c3cfd0e997e94f88ba98a90339bafe9f1a2b87aa8"
+        },
+        {
+          "path": "src/core/AgentEngineCompression.cpp",
+          "line": 25,
+          "anchor": "QJsonObject AgentEngine::latestUsage",
+          "sha256CanonicalLf": "b8a82451565640ce02cfb5a9e85b77922a51da75c0eb66e438ea57da2d79e7a3"
+        },
+        {
+          "path": "src/core/AgentEngineCompression.cpp",
+          "line": 56,
+          "anchor": "bool AgentEngine::maybeCompress",
+          "sha256CanonicalLf": "b8a82451565640ce02cfb5a9e85b77922a51da75c0eb66e438ea57da2d79e7a3"
+        },
+        {
+          "path": "src/core/UtilityService.cpp",
+          "line": 44,
+          "anchor": "Provider IDs may repeat",
+          "sha256CanonicalLf": "ca363cb90fe13cf81c887a484f321a02be3f13f748b8dc132b15e991a1fbb5b8"
+        },
+        {
+          "path": "src/ui/ProviderDialog.cpp",
+          "line": 46,
+          "anchor": "Model context limit",
+          "sha256CanonicalLf": "236a6986fbc2223b591bdbbdced4bea60e0e12e775596869ae6ea5bdc91c506d"
+        },
+        {
+          "path": "src/ui/ModelSelection.cpp",
+          "line": 72,
+          "anchor": "QList<ModelConfig> resolveModelEntries",
+          "sha256CanonicalLf": "19a5fea18fcd14938b6258fec286ad58244bcc3bf412c471a4e430c0e1ecf7f8"
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 307,
+          "anchor": "setCompressionModels(resolveModelEntries",
+          "sha256CanonicalLf": "bb3f5ea8a34108f31d0b9d158766bbfb079fb28bfe1280a45bbd3513972f8cc1"
+        }
+      ],
+      "evidence": "31 new usage +4 settings;247 prior regression cases, all pass in private focused run.",
+      "remaining": [
+        "No full Stagewise parity claim. Full Node Buffer/builtins/importModule, archival memory/plans, LSP/research/cloud-provider gaps remain in parity-review-core.json.",
+        "Usage records represent the latest provider request, not lifetime token/cost accounting. No currency pricing, billing reconciliation, account/subscription warning calculation or tokenizer implementation.",
+        "Missing/malformed counters remain unknown; no guessed model context size. Counters on failed requests without retained assistant payload are not a durable billing ledger. Unknown compatible-provider usage schemas are not normalized.",
+        "Automatic compression waits at a complete tool-batch boundary (or final turn) rather than racing the next generation in the background. A utility failure keeps full history and resumes the suspended action; cancellation stops it.",
+        "Retained history uses the existing approximate JSON-byte token estimate,12 preferred canonical rows and user-turn alignment. Canonical native tool results are separate rows, so this is not exact source UI-message counting/tokenization.",
+        "Unknown contextWindowTokens disables automatic compression; manual /compact remains available. Explicit model limit and valid discovered inputTokenLimit are supported; no broad per-vendor catalog inference.",
+        "Automatic briefing writes preserve original rows and existing attachment/native metadata. History is persisted through existing host save/queue callbacks; no new transactional crash journal is claimed.",
+        "Chat Completions requests now ask stream_options.include_usage=true. Local fixtures cover all four protocols, not every real OpenAI-compatible endpoint accepting that option; no live services or real credentials used.",
+        "ProviderDialog is tested through actual widgets offscreen. This does not establish full visual parity or application deployment validation."
+      ]
+    }
+  ],
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Source-level core/agent/provider/streaming/context/sandbox/tool API comparison. Native C++ is assessed for behavior, not literal TypeScript line translation. UI/platform/integrations have separate peer reports.",
+  "inputsReviewed": [
+    "audit/reference-readiness.json",
+    "audit/upstream-feature-inventory.json",
+    "audit/feature-progress-update.json"
+  ],
+  "conclusion": "Full Stagewise parity is NOT established and is contradicted by explicit unsupported native paths and absent subsystems. Preserved upstream source is not a native implementation.",
+  "reviewMethod": [
+    "Read pinned upstream contracts and corresponding native implementations. Every capability below has verified file/line anchors and canonical source hashes.",
+    "Mapped every agent_command/provider/tool row and selected core-owned agents/workspace/procedure rows from the 701-row inventory to a capability or explicit shared-review boundary.",
+    "This is a semantic capability audit, not proof that every upstream function/body line was ported. Root owns the global function/source inventory.",
+    "No production edits, tests, private credentials/history, UI automation or remote calls during this review."
+  ],
+  "statusSemantics": {
+    "implemented_with_limits": "Native implementation plus named exercised fixtures; explicit constraints remain. Not complete parity.",
+    "partial": "Material native subset exists but specified upstream behavior is missing or different.",
+    "missing": "Concrete absent/unsupported native capability; counterpart entry points and upstream implementation identified.",
+    "shared_review": "Implemented native plumbing exists, but detailed behavior belongs another domain review and is not certified here."
+  },
+  "counts": {
+    "capabilities": 37,
+    "statusCounts": {
+      "implemented_with_limits": 10,
+      "partial": 15,
+      "missing": 10,
+      "shared_review": 2
+    },
+    "mappedInventoryRows": 103,
+    "providerTypes": 26,
+    "baselineInventoryRows": 701,
+    "unmappedInventoryRows": 598
+  },
+  "capabilities": [
+    {
+      "id": "engine.protocols",
+      "title": "Four model wire protocols",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Native Qt networking serializes Chat Completions, Responses, Anthropic Messages and Google GenerateContent and parses streamed tool/text output.",
+      "remaining": [
+        "Four protocol implementations do not equal all 26 upstream provider adapters; vendor authentication/options and SDK behavior are separately assessed."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/model-provider.ts",
+          "line": 105,
+          "anchor": "reasoningSignatureSource",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/model-provider.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/model-provider.ts#L105"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2106,
+          "anchor": "experimental_repairToolCall: repairToolCall",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2106"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 404,
+          "anchor": "void AgentEngine::consumeCompletion",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 462,
+          "anchor": "void AgentEngine::consumeAnthropic",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 544,
+          "anchor": "void AgentEngine::consumeGoogle",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 585,
+          "anchor": "void AgentEngine::consumeResponses",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 514,
+          "anchor": "void CoreTest::nativeProtocolRequests",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "line": 713,
+          "anchor": "void CoreTest::responsesSignedToolRoundTrip",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "provider.custom-anthropic",
+        "provider.custom-openai-chat",
+        "provider.custom-openai-responses",
+        "provider.custom-google"
+      ]
+    },
+    {
+      "id": "engine.stream_lifetime",
+      "title": "Streaming order, interruption and cancellation",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Incremental SSE/text/tool fragments, provisional-to-retained display identities, partial canceled history and generation/lifetime guards are implemented.",
+      "remaining": [
+        "Native step/output/deadline caps differ from the SDK/runtime; recorded fixture scope is not every malformed provider event."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+          "line": 40,
+          "anchor": "export function mergeUIMessageStream",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts#L40"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 3262,
+          "anchor": "private async handleUiStream",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L3262"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/SseParser.cpp",
+          "line": 5,
+          "anchor": "QList<QByteArray> SseParser::feed",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 372,
+          "anchor": "void AgentEngine::readReply",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 1038,
+          "anchor": "void AgentEngine::cancel",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentPresentation.cpp",
+          "line": 17,
+          "anchor": "bool validDisplay",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 146,
+          "anchor": "void CoreTest::sseArbitraryChunks",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_engine_observers.cpp",
+          "line": 160,
+          "anchor": "void deletion(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_engine_observers"
+        },
+        {
+          "path": "tests/test_presentation.cpp",
+          "line": 90,
+          "anchor": "void multiRound(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_presentation"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.stream",
+        "agent_command.agents.stop"
+      ]
+    },
+    {
+      "id": "engine.reasoning",
+      "title": "Reasoning presentation and signed replay",
+      "status": "partial",
+      "nativeBehavior": "Reasoning text/duration and provider/model-bound signed native blocks are preserved, with UI-only metadata excluded from provider messages.",
+      "remaining": [
+        "Full upstream reasoning-source identity includes routed vendor/provider-mode/apiSpec distinctions not present in the smaller ProviderConfig.",
+        "Thinking-selection defaults, model capability validation and provider-option merge rules are not fully ported."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/reasoning-signatures.ts",
+          "line": 12,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/reasoning-signatures.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/reasoning-signatures.ts#L12"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/model-thinking-capabilities.ts",
+          "line": 206,
+          "anchor": "export function getSupportedThinkingOptions",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/shared/model-thinking-capabilities.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/model-thinking-capabilities.ts#L206"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 11,
+          "anchor": "QJsonArray nativeContent",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 199,
+          "anchor": "thinkingConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 15,
+          "anchor": "QString reasoningEffort",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentPresentation.cpp",
+          "line": 28,
+          "anchor": "durationMs",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 537,
+          "anchor": "void CoreTest::anthropicSignedToolRoundTrip",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "line": 567,
+          "anchor": "void CoreTest::googleSignedToolRoundTrip",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_presentation.cpp",
+          "line": 140,
+          "anchor": "void wireUnchanged(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_presentation"
+        },
+        {
+          "path": "tests/test_presentation.cpp",
+          "line": 187,
+          "anchor": "void durationIsMeasuredAndFreezes(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_presentation"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "engine.fallback",
+      "title": "Ordered preset fallback and retries",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Ordered configured models, five-minute fallback persistence, preset/signature invalidation, cancellation reset and bounded transient retries are present.",
+      "remaining": [
+        "Transport retries are native policy, not a proof of identical AI SDK retry classification/backoff."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/model-fallback-manager.ts",
+          "line": 8,
+          "anchor": "export const FALLBACK_PERSISTENCE_MS",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/model-fallback-manager.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/model-fallback-manager.ts#L8"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ModelFallback.h",
+          "line": 11,
+          "anchor": "int resolve(",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 730,
+          "anchor": "m_fallback.advance",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 741,
+          "anchor": "m_retry < 2 && beforeOutput",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 796,
+          "anchor": "void CoreTest::modelFallbackState",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "line": 814,
+          "anchor": "void CoreTest::modelFallbackRuntime",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "engine.queue",
+      "title": "Durable queued messages",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Enqueue/edit/remove/move/send-now/resume, success drain, atomic host queue/history commit and paused stop/failure/restart behavior are implemented.",
+      "remaining": [
+        "Background watcher retry is process-local; see integration audit. Queue persistence depends on host QueueCommitter, not standalone Engine alone."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/queue.ts",
+          "line": 14,
+          "anchor": "export function enqueueUserMessage",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/state-mutations/queue.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/queue.ts#L14"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 988,
+          "anchor": "hasQueuedMessages",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L988"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngineControl.cpp",
+          "line": 83,
+          "anchor": "bool AgentEngine::sendUserMessage",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngineControl.cpp",
+          "line": 171,
+          "anchor": "bool AgentEngine::flushQueuedMessage",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngineControl.cpp",
+          "line": 202,
+          "anchor": "void AgentEngine::scheduleQueue",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 236,
+          "anchor": "void queueEditsAreDurableAndDrainInOrder()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        },
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 293,
+          "anchor": "void stopAndRestartKeepQueuePaused()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        },
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 328,
+          "anchor": "void failedSaveDoesNotDropOrSend()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.queue",
+        "agent_command.agents.sendUserMessage",
+        "agent_command.agents.flushQueue",
+        "agent_command.agents.clearQueue",
+        "agent_command.agents.deleteQueuedMessage",
+        "agent_command.agents.moveQueuedMessage"
+      ]
+    },
+    {
+      "id": "engine.questions",
+      "title": "Structured user questions",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Opt-in typed multistep forms, backtracking, draft answers, opaque phase tokens, interrupt/cancel results and four-protocol associations exist.",
+      "remaining": [
+        "Pending question UI is not restored as an active form after process restart; inherited pending tool history is settled before another send. Headless hosts intentionally do not advertise questions."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+          "line": 12,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts#L12"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 128,
+          "anchor": "askUserQuestions",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L128"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/QuestionForm.cpp",
+          "line": 96,
+          "anchor": "bool QuestionForm::validate(",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngineControl.cpp",
+          "line": 216,
+          "anchor": "void AgentEngine::beginQuestion",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngineControl.cpp",
+          "line": 245,
+          "anchor": "bool AgentEngine::submitQuestionStep",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 515,
+          "anchor": "void questionCompletesWithExactProtocolAssociation()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        },
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 567,
+          "anchor": "void questionsValidateBacktrackingAndStaleStepTokens()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        },
+        {
+          "path": "tests/test_conversation_control.cpp",
+          "line": 599,
+          "anchor": "void normalMessageInterruptsQuestionBeforeNextRequest()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_conversation_control"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.questions",
+        "tool.askUserQuestions",
+        "procedure.toolbox.cancelUserQuestion",
+        "procedure.toolbox.goBackUserQuestion",
+        "procedure.toolbox.submitUserQuestionStep",
+        "agent_command.agents.interruptQuestionWithMessage"
+      ]
+    },
+    {
+      "id": "engine.approvals",
+      "title": "Tool approval and explicit denial",
+      "status": "partial",
+      "nativeBehavior": "Per-call approval/denial, read-only exceptions and per-chat always-allow setting are available; stale external requests are correlated.",
+      "remaining": [
+        "Upstream smart shell approval classifier and all approval-policy semantics are not implemented; native has a simpler explicit policy."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "line": 142,
+          "anchor": "export function resolveApproval",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts#L142"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "line": 18,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts#L18"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 821,
+          "anchor": "void AgentEngine::runNextTool",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 884,
+          "anchor": "void AgentEngine::approveTool",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 334,
+          "anchor": "bool ToolExecutor::requiresApproval",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 383,
+          "anchor": "void CoreTest::rejectedToolDoesNotWrite",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_presentation.cpp",
+          "line": 124,
+          "anchor": "void displayObserverCanDecideApproval(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_presentation"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.approvals",
+        "agent_command.agents.sendToolApprovalResponse",
+        "agent_command.agents.setToolApprovalMode"
+      ]
+    },
+    {
+      "id": "engine.history_recovery",
+      "title": "Interrupted inherited tool-call recovery",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Unresolved inherited calls receive exactly one error result before new input; original source history and native blocks remain unchanged; malformed associations reject atomically.",
+      "remaining": [
+        "Known native call IDs/names/order are validated; this is not a complete semantic comparison of arbitrary signed provider payloads."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 854,
+          "anchor": "session ended before",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L854"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "line": 81,
+          "anchor": "export function terminateNonTerminalToolPartsInLastAssistant",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts#L81"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 14,
+          "anchor": "recoverInterruptedHistory",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_history_recovery.cpp",
+          "line": 72,
+          "anchor": "void repairsInheritedCallsWithoutExecution(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_history_recovery"
+        },
+        {
+          "path": "tests/test_history_recovery.cpp",
+          "line": 132,
+          "anchor": "void busySourceForkRecoversOnlyTarget(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_history_recovery"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "engine.history_actions",
+      "title": "Retry, replace and revert conversation turns",
+      "status": "missing",
+      "nativeBehavior": "Native file-mutation undo is implemented separately; it is not conversation retry/edit/revert.",
+      "remaining": [
+        "No native equivalents of retryLastUserMessage, replaceUserMessage or revertToUserMessage with their history/tool undo semantics were found in Engine or current conversation controls."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 637,
+          "anchor": "'agents.revertToUserMessage'",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L637"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+          "line": 40,
+          "anchor": "export function replaceUserMessage",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/history.ts#L40"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.h",
+          "line": 22,
+          "anchor": "public:",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindowConversations.cpp",
+          "line": 196,
+          "anchor": "void MainWindow::retryConversationCleanup",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.history-edit",
+        "agent_command.agents.revertToUserMessage",
+        "agent_command.agents.replaceUserMessage",
+        "agent_command.agents.retryLastUserMessage"
+      ]
+    },
+    {
+      "id": "engine.tool_validation",
+      "title": "Tool schema validation and repair diagnostics",
+      "status": "partial",
+      "nativeBehavior": "Malformed JSON objects and individual native tool argument checks return errors to the model.",
+      "remaining": [
+        "No complete shared JSON-schema validator or upstream repairToolCall diagnostic classification; some native tools use toString/toBool defaults rather than the source schema semantics."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/repair-tool-call.ts",
+          "line": 52,
+          "anchor": "export async function repairToolCall",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/repair-tool-call.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/repair-tool-call.ts#L52"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 833,
+          "anchor": "Tool arguments are not a JSON object.",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 338,
+          "anchor": "QJsonArray ToolExecutor::definitions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 359,
+          "anchor": "void CoreTest::approvedToolLoop",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "engine.titles",
+      "title": "Title generation and utility fallback",
+      "status": "partial",
+      "nativeBehavior": "Configured title/compression model chains fall back to the main chain; bounded utility calls, title sanitization and guarded native title application exist.",
+      "remaining": [
+        "No identical upstream hardcoded utility-default model registry or every provider-option policy; UI ownership/rename semantics are reviewed separately."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "line": 18,
+          "anchor": "export const TITLE_GENERATION_MODELS",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/title-generation/index.ts#L18"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "line": 87,
+          "anchor": "export const generateSimpleTitle",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/title-generation/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/title-generation/index.ts#L87"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/UtilityService.cpp",
+          "line": 114,
+          "anchor": "void UtilityService::start",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/UtilityService.cpp",
+          "line": 135,
+          "anchor": "void UtilityService::attempt()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 414,
+          "anchor": "void MainWindow::configureUtilities",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 848,
+          "anchor": "void CoreTest::utilityFallbackAndCancellation",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.titles",
+        "agent_command.agents.setTitle"
+      ]
+    },
+    {
+      "id": "engine.manual_compression",
+      "title": "Manual history compression",
+      "status": "partial",
+      "nativeBehavior": "Main-chat /compact uses UtilityService, stores a briefing at a user-turn boundary and retains original saved messages/tool pairs.",
+      "remaining": [
+        "Boundary estimate uses serialized bytes/4 rather than the complete source token accounting. MainWindow passes the default boundary context limit; model-aware automatic triggering is absent. Side-chat /compact is still ordinary text."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/history-compression/index.ts",
+          "line": 193,
+          "anchor": "export const generateSimpleCompressedHistory",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/history-compression/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/history-compression/index.ts#L193"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2442,
+          "anchor": "private async compressHistoryInternal",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2442"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/UtilityService.cpp",
+          "line": 210,
+          "anchor": "int UtilityService::compressionBoundary",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 125,
+          "anchor": "bool AgentEngine::applyCompression",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 436,
+          "anchor": "void MainWindow::compressContext",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 873,
+          "anchor": "void CoreTest::compressionPreservesHistoryAndTools",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "engine.automatic_compression",
+      "title": "Automatic context compression",
+      "status": "missing",
+      "nativeBehavior": "No automatic trigger is connected to provider-step usage in the current native engine.",
+      "remaining": [
+        "Upstream triggers after a completed step at min(configured context fraction,100000 tokens), retains at most min(20% context,40000 tokens), and guards concurrent/stale compression. Native only exposes manual compression."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2432,
+          "anchor": "HISTORY_COMPRESSION_HARD_CAP_TOKENS = 100_000",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2432"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2836,
+          "anchor": "const compactionThreshold = this.config.historyCompressionThreshold",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2836"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 713,
+          "anchor": "void AgentEngine::finishReply",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/UtilityService.cpp",
+          "line": 210,
+          "anchor": "int UtilityService::compressionBoundary",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindow.cpp",
+          "line": 436,
+          "anchor": "void MainWindow::compressContext",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.compression"
+      ]
+    },
+    {
+      "id": "engine.usage",
+      "title": "Provider token and cache accounting",
+      "status": "missing",
+      "nativeBehavior": "maxOutputTokens limits exist, but Engine does not retain or aggregate input/output/cache/reasoning token usage.",
+      "remaining": [
+        "OpenAI usage-only SSE, Anthropic split usage, Google usageMetadata and Responses usage are not consumed into state. No usedTokens/context warning/cost/billing equivalence."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2784,
+          "anchor": "this.state.commands.recordUsage({",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2784"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2788,
+          "anchor": "this.updateUsageWarning(result)",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2788"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.h",
+          "line": 172,
+          "anchor": "QString m_actualModel",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 404,
+          "anchor": "void AgentEngine::consumeCompletion",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 585,
+          "anchor": "void AgentEngine::consumeResponses",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 18,
+          "anchor": "int maxOutputTokens",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "context.prompt",
+      "title": "System prompt and environment-domain conversion",
+      "status": "partial",
+      "nativeBehavior": "Native assistant instructions, read-only context roster, tool capabilities and a dynamic shell manifest are injected into requests.",
+      "remaining": [
+        "Not a port of the full source prompt builder, soul/output protocols/authority fragments or ordered domain registry.",
+        "No source-equivalent per-message environment keyframes/deltas for workspace,fileDiffs,agentsMd,skills,memory,plans,logs,browser,shells,sandbox,activeApp,logIngest."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/chat/system-prompt-builder/system-prompt-builder.ts",
+          "line": 56,
+          "anchor": "export function buildChatSystemPrompt",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/chat/system-prompt-builder/system-prompt-builder.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/chat/system-prompt-builder/system-prompt-builder.ts#L56"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/env/adapters/index.ts",
+          "line": 2,
+          "anchor": "Core-owned",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/env/adapters/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/env/adapters/index.ts#L2"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/message-conversion.ts",
+          "line": 861,
+          "anchor": "if (!envState)",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/message-conversion.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/message-conversion.ts#L861"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 301,
+          "anchor": "You are ADE, a native agentic IDE",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 26,
+          "anchor": "engine->setDynamicSystemContext",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ContextLoader.cpp",
+          "line": 238,
+          "anchor": "QStringList blocks",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 934,
+          "anchor": "void CoreTest::systemContextAndReadOnlySkillTool",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.context"
+      ]
+    },
+    {
+      "id": "context.memory",
+      "title": "Archival memory mount and global index",
+      "status": "missing",
+      "nativeBehavior": "The native compression briefing uses a memory XML tag; this is not the source archival memory service.",
+      "remaining": [
+        "No per-agent history.md/history.jsonl/metadata.json archive writer, shared memory/index registry, lifecycle snapshot updates or readonly memory/ mount."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/env/adapters/memory.ts",
+          "line": 25,
+          "anchor": "function buildMemoryState",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/env/adapters/memory.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/env/adapters/memory.ts#L25"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+          "line": 2573,
+          "anchor": "this._memoryWriter ??= new AgentMemoryWriter",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/base-agent.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/base-agent.ts#L2573"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 345,
+          "anchor": "<memory><![CDATA[",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 302,
+          "anchor": "QString ToolExecutor::resolvePath",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "context.plans",
+      "title": "Owned plan files and active-plan environment",
+      "status": "missing",
+      "nativeBehavior": "Ordinary workspace text files can be edited, but no native plan subsystem is implemented.",
+      "remaining": [
+        "No plans/ ownership tracking, Markdown task parsing, active-plan manifest or progress/delta injection."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/env/adapters/plans.ts",
+          "line": 31,
+          "anchor": "async function buildPlansState",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/env/adapters/plans.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/env/adapters/plans.ts#L31"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/env/adapters/plans.ts",
+          "line": 56,
+          "anchor": "function renderFullPlans",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/env/adapters/plans.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/env/adapters/plans.ts#L56"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ContextLoader.h",
+          "line": 10,
+          "anchor": "struct ContextOptions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 302,
+          "anchor": "QString ToolExecutor::resolvePath",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "context.instructions",
+      "title": "AGENTS.md and enabled skill context",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Workspace-root AGENTS, optional scoped ancestors, workspace/global/custom/plugin skills, invocation metadata and bounded readContext are implemented.",
+      "remaining": [
+        "Loader uses explicit bounds and read-only UTF-8 references; it is not every upstream context-file/media feature. Nested AGENTS discovery is an optional native relevantPaths extension, not automatic whole-tree scanning. Plugin discovery/enable semantics are also reviewed by integrations."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts",
+          "line": 19,
+          "anchor": "export async function readAgentsMd",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts#L19"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/global-skills.ts",
+          "line": 11,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/global-skills.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/global-skills.ts#L11"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ContextLoader.cpp",
+          "line": 134,
+          "anchor": "ContextSnapshot ContextLoader::load",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ContextLoader.cpp",
+          "line": 268,
+          "anchor": "QString ContextLoader::readFile",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindowCompletions.cpp",
+          "line": 164,
+          "anchor": "bool MainWindow::configureTurnContext",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_context.cpp",
+          "line": 36,
+          "anchor": "void ContextTest::sourcePrecedenceAndOptIn",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_context"
+        },
+        {
+          "path": "tests/test_context.cpp",
+          "line": 81,
+          "anchor": "void ContextTest::instructionsDefaultAndScopedHierarchy",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_context"
+        },
+        {
+          "path": "tests/test_context.cpp",
+          "line": 141,
+          "anchor": "void ContextTest::junctionSkillsAndEscapingReferences",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_context"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "workspace.instructions",
+        "workspace.skills"
+      ]
+    },
+    {
+      "id": "context.mounts",
+      "title": "Workspace and virtual mount model",
+      "status": "partial",
+      "nativeBehavior": "One current workspace with ws1/w1 aliases plus separate per-chat apps/, readonly att/ and shells/ sources is available.",
+      "remaining": [
+        "Not the source multi-workspace mount manager with multiple IDs/permissions; memory/, plans/, logs/, skill/plugin mounts are not generally exposed through native fs. Source tree/file-watcher behavior is a separate UI/integration review."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/mount-manager/index.ts",
+          "line": 7,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/mount-manager/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/index.ts#L7"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+          "line": 91,
+          "anchor": "readFileSync",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts#L91"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 302,
+          "anchor": "QString ToolExecutor::resolvePath",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 234,
+          "anchor": "bool AgentToolHost::setWorkspace",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 172,
+          "anchor": "void CoreTest::pathScope",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_runtime_apps.cpp",
+          "line": 206,
+          "anchor": "void invalidWorkspaceDoesNotSilentlyReplaceAcceptedRoot(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_runtime_apps"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "workspace.mounts",
+        "procedure.toolbox.mountWorkspace",
+        "procedure.toolbox.unmountWorkspace"
+      ]
+    },
+    {
+      "id": "tools.read_context",
+      "title": "Formatted read/ls snapshots and reinjection",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "A formatted read captures bytes/typed directory manifest once, stores per-call immutable snapshot/ranges, persists references and reinjects media with protocol tool associations; restart/fork/delete are lease-bound.",
+      "remaining": [
+        "Native limits and storage design differ; non-Windows pinning is weaker. Concurrent in-place writes are bounded captures, not an atomic file-content snapshot."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 330,
+          "anchor": "export async function readToolExecute",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L330"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/message-conversion.ts",
+          "line": 516,
+          "anchor": "if (readFileRequests && readFileRequests.length > 0)",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/message-conversion.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/message-conversion.ts#L516"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 146,
+          "anchor": "FormattedRead formattedMountedRead",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/attachments/FileReadSnapshotStore.cpp",
+          "line": 171,
+          "anchor": "QJsonObject FileReadSnapshotStore::commit",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/attachments/AttachmentPipeline.cpp",
+          "line": 126,
+          "anchor": "QJsonArray AttachmentPipeline::prepare",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_read_lifecycle.cpp",
+          "line": 137,
+          "anchor": "void pipelinePerCallRangesOrderingAndHistoryIdentity(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_read_lifecycle"
+        },
+        {
+          "path": "tests/test_read_lifecycle.cpp",
+          "line": 108,
+          "anchor": "void sameCapturedBytesDespiteSourceDeletionAndLegacySlot(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_read_lifecycle"
+        },
+        {
+          "path": "tests/test_read_lifecycle.cpp",
+          "line": 155,
+          "anchor": "void imageReadAndFourProtocolToolAssociations(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_read_lifecycle"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "tool.read",
+        "tool.ls"
+      ]
+    },
+    {
+      "id": "tools.transforms",
+      "title": "Attachment and file transformations",
+      "status": "partial",
+      "nativeBehavior": "Native text/Markdown/SVG/binary metadata/directory/image handling and bounded ZIP/JAR/WAR/TAR/TGZ listings exist; original references/snapshots persist.",
+      "remaining": [
+        "PDF/Office/raw-camera/disk-image/source-code AST outline and broad audio/video transformations are not fully native; unsupported types return explicit placeholders. Archive extraction/execution is not performed."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/index.ts",
+          "line": 2,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/file-read-transformer/transformers/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/file-read-transformer/transformers/index.ts#L2"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/pdf.ts",
+          "line": 317,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/file-read-transformer/transformers/pdf.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/file-read-transformer/transformers/pdf.ts#L317"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/source-code.ts",
+          "line": 164,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/file-read-transformer/transformers/source-code.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/file-read-transformer/transformers/source-code.ts#L164"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/attachments/FileTransformer.cpp",
+          "line": 190,
+          "anchor": "FileTransformResult FileTransformer::fromBytes",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/attachments/AttachmentPipeline.cpp",
+          "line": 55,
+          "anchor": "QJsonArray AttachmentPipeline::transform",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/attachments/archive/ArchiveTransformer.cpp",
+          "line": 246,
+          "anchor": "ArchiveTransformer::fromBytes",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_attachments.cpp",
+          "line": 183,
+          "anchor": "void AttachmentTest::modelImageConstraintsAndFourSerializers",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_attachments"
+        },
+        {
+          "path": "tests/test_file_transformer.cpp",
+          "line": 113,
+          "anchor": "void StructuredReadTest::markdownSourceOutline",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_file_transformer"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.attachments",
+        "agent_command.agents.storeAttachment",
+        "agent_command.agents.storeAttachmentByPath"
+      ]
+    },
+    {
+      "id": "tools.mutations",
+      "title": "Write/edit/mkdir/copy/move/delete and undo",
+      "status": "partial",
+      "nativeBehavior": "Native journaled file/directory mutation callbacks, before/after byte snapshots and guarded undo/recovery are integrated with tools and raw sandbox writes.",
+      "remaining": [
+        "Filesystem ACL/metadata semantics, unlimited transaction sizes, source model _diff summaries and conversation revert are not identical. Detailed journal/Git review belongs integrations."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 396,
+          "anchor": "export async function writeToolExecute",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L396"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 544,
+          "anchor": "export async function copyToolExecute",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L544"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 338,
+          "anchor": "QJsonArray ToolExecutor::definitions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 322,
+          "anchor": "void AgentToolHost::undoMutations",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 207,
+          "anchor": "void CoreTest::editsAreAtomic",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "tool.write",
+        "tool.delete",
+        "tool.multiEdit",
+        "tool.mkdir",
+        "tool.copy",
+        "procedure.toolbox.getFileEditsForToolCalls",
+        "agent_command.agents.getTouchedFiles"
+      ]
+    },
+    {
+      "id": "tools.search",
+      "title": "Glob and regular-expression content search",
+      "status": "partial",
+      "nativeBehavior": "Workspace-scoped native glob and grepSearch support bounded recursive search without following child junctions.",
+      "remaining": [
+        "Native patterns, exclusions, traversal/file/output budgets and ordering are not a complete ripgrep/glob-option port."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 757,
+          "anchor": "export async function globToolExecute",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L757"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "line": 794,
+          "anchor": "export async function grepSearchToolExecute",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L794"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 232,
+          "anchor": "QRegularExpression globRegex",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 116,
+          "anchor": "bool walkScopedDirectory",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 188,
+          "anchor": "void CoreTest::junctionEscape",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "workspace.search",
+        "tool.glob",
+        "tool.grepSearch",
+        "procedure.toolbox.searchMentionFiles"
+      ]
+    },
+    {
+      "id": "tools.research",
+      "title": "Library documentation search tools",
+      "status": "missing",
+      "nativeBehavior": "listLibraryDocs and searchInLibraryDocs are not in the native tool registry.",
+      "remaining": [
+        "No native library-doc listing/search service or compatible runtime tool implementations."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+          "line": 16,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts#L16"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+          "line": 16,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts#L16"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 338,
+          "anchor": "QJsonArray ToolExecutor::definitions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 53,
+          "anchor": "setExternalTools",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "integration.research",
+        "tool.listLibraryDocs",
+        "tool.searchInLibraryDocs"
+      ]
+    },
+    {
+      "id": "tools.linting",
+      "title": "Language-server lint diagnostics tool",
+      "status": "missing",
+      "nativeBehavior": "The native editor exists but getLintingDiagnostics is not a native model tool.",
+      "remaining": [
+        "Source LSP client and TypeScript/ESLint/Biome/clangd/rust-analyzer server integrations are not ported."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/file-modification/get-linting-diagnostics.ts",
+          "line": 16,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/file-modification/get-linting-diagnostics.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/file-modification/get-linting-diagnostics.ts#L16"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/services/lsp/index.ts",
+          "line": 26,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/services/lsp/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/lsp/index.ts#L26"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ToolExecutor.cpp",
+          "line": 338,
+          "anchor": "QJsonArray ToolExecutor::definitions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 53,
+          "anchor": "setExternalTools",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "tool.getLintingDiagnostics"
+      ]
+    },
+    {
+      "id": "sandbox.execution",
+      "title": "Persistent JavaScript and bounded worker execution",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "Separate native QuickJS process, persistent per-agent globals, async IIFEs, timers, host RPC correlation and cancellation/memory/output limits exist.",
+      "remaining": [
+        "QuickJS is not Node VM; compatibility globals/modules and numeric/resource limits must be assessed independently. Context resets on fatal limits/cancel intentionally discard that realm."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts",
+          "line": 13,
+          "anchor": "export const executeSandboxJs",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts#L13"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 487,
+          "anchor": "vm.createContext",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L487"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 518,
+          "anchor": "std::unique_ptr<Context> createContext",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/SandboxHost.cpp",
+          "line": 123,
+          "anchor": "void SandboxHost::execute",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 61,
+          "anchor": "void asyncPersistentGlobalsAndAgentIsolation()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        },
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 193,
+          "anchor": "void cancellationInterruptsSynchronousLoopAndResetsContext()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        },
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 236,
+          "anchor": "void memoryLimitAndOutputLimitRecover()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "tool.executeSandboxJs"
+      ]
+    },
+    {
+      "id": "sandbox.buffer",
+      "title": "Buffer compatibility",
+      "status": "partial",
+      "nativeBehavior": "Buffer.from/isBuffer/alloc/concat/toString/toJSON support basic UTF-8/base64/Latin1 binary attachment and file workflows.",
+      "remaining": [
+        "Not the Node Buffer API: hex/UTF-16 and other encodings, byteLength/compare, numeric read/write helpers, offset/length overloads and Node shared-slice semantics are not implemented/verified. Tests named BasicBuffer do not establish full compatibility."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 82,
+          "anchor": "'buffer',",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L82"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 523,
+          "anchor": "    Buffer,",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L523"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 412,
+          "anchor": "class Buffer extends Uint8Array",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 419,
+          "anchor": "return unsupported('Buffer encoding '",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 181,
+          "anchor": "void attachmentsAndBasicBuffer()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        },
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 143,
+          "anchor": "void appsMountWithoutWorkspaceAndBinaryCallbacks()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "sandbox.modules",
+      "title": "Allowed computational Node modules",
+      "status": "missing",
+      "nativeBehavior": "require supports only fs, fs/promises and the small buffer shim.",
+      "remaining": [
+        "Source allows crypto,events,path,querystring,stream,string_decoder,url,util,zlib,assert. Native require throws for them; unchanged scripts using those modules fail."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 81,
+          "anchor": "const ALLOWED_NODE_MODULES = new Set",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L81"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 490,
+          "anchor": "globalThis.require=name=>",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 495,
+          "anchor": "return unsupported('require('",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 87,
+          "anchor": "void javascriptErrorsAndUnsupportedApisAreExplicit()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "sandbox.import_module",
+      "title": "HTTPS ESM imports and session cache",
+      "status": "missing",
+      "nativeBehavior": "Native importModule unconditionally throws unsupported.",
+      "remaining": [
+        "Source HTTPS loader, esm.sh bundle-wrapper resolution and per-session ESM cache are absent; this blocks dependent npm/Remotion recipes. No remote-module validation was run in this audit."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 143,
+          "anchor": "async function importFromUrl(",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L143"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 572,
+          "anchor": "async importModule(url: string)",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L572"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 497,
+          "anchor": "globalThis.importModule=async()=>unsupported('importModule')",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 87,
+          "anchor": "void javascriptErrorsAndUnsupportedApisAreExplicit()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "sandbox.fs",
+      "title": "Sandbox filesystem API compatibility",
+      "status": "partial",
+      "nativeBehavior": "Async/promise and callback readFile/writeFile/mkdir/readdir with exact UTF-8/binary data route through scoped native brokers; sync APIs explicitly throw.",
+      "remaining": [
+        "stat/lstat/rm/unlink/rename/copyFile/appendFile/access, sync APIs, streams, file handles and broad options remain unsupported despite upstream standard fs exposure.",
+        "Raw reads/writes use explicit 4 MiB bounds; formatted logs have a distinct bounded path."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+          "line": 288,
+          "anchor": "const FILE_FUNCTIONS = ['appendFile', 'readFile', 'writeFile']",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts#L288"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 449,
+          "anchor": "const promises = {",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 478,
+          "anchor": "for(const method of ['stat','lstat'",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 487,
+          "anchor": "for(const method of ['readFileSync'",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 120,
+          "anchor": "void mountedFilesPreserveUtf8BytesAndScope()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        },
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 170,
+          "anchor": "void binaryReadsAreNeverSilentlyTruncated()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "sandbox.web_globals",
+      "title": "Fetch and Web API subset",
+      "status": "partial",
+      "nativeBehavior": "Buffered Headers/Request/Response, AbortController/AbortSignal, UTF-8 TextEncoder/Decoder and global fetch are implemented through the native broker.",
+      "remaining": [
+        "No streaming response bodies, Blob/FormData, URL/URLSearchParams, structuredClone or crypto.randomUUID globals. TextEncoder.encodeInto and full TextDecoder encoding/stream options are not implemented.",
+        "Request options/credentials modes and body sizes are deliberately restricted."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 517,
+          "anchor": "    URLSearchParams,",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L517"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 525,
+          "anchor": "    structuredClone,",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L525"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/network_bootstrap.h",
+          "line": 80,
+          "anchor": "class Request",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/network_bootstrap.h",
+          "line": 71,
+          "anchor": "return unsupported('ReadableStream body')",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 436,
+          "anchor": "globalThis.TextEncoder",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox_network.cpp",
+          "line": 82,
+          "anchor": "void bufferedResponsesHeadersAndBodyConsumption()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox_network"
+        },
+        {
+          "path": "tests/test_sandbox_network.cpp",
+          "line": 110,
+          "anchor": "void abortIsPerFetchAndLeavesContextUsable()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox_network"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": []
+    },
+    {
+      "id": "sandbox.host_api",
+      "title": "Output, attachments, CDP and persistent app events",
+      "status": "implemented_with_limits",
+      "nativeBehavior": "API.output/createAttachment/sendCDP/onCDPEvent/openApp/closeApp/sendMessage/onMessage/getCredential are host-brokered and agent-correlated.",
+      "remaining": [
+        "Browser/app lifecycle, credential origin rules and bundled-plugin end-to-end scope are separately reviewed; not every CDP method or real third-party account interaction is verified."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 309,
+          "anchor": "function getSandboxAPI",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L309"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "line": 311,
+          "anchor": "sendCDP",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/sandbox-worker.ts#L311"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 498,
+          "anchor": "globalThis.API=Object.freeze",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/sandbox/SandboxHost.cpp",
+          "line": 310,
+          "anchor": "void SandboxHost::completeBrowserRequest",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox.cpp",
+          "line": 371,
+          "anchor": "void persistentEventsCanSendBackgroundAppMessages()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox"
+        },
+        {
+          "path": "tests/test_runtime_apps.cpp",
+          "line": 249,
+          "anchor": "void idleAppCallbackCompletesThroughActualHost(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_runtime_apps"
+        },
+        {
+          "path": "tests/test_sandbox_network.cpp",
+          "line": 121,
+          "anchor": "void opaqueCredentialsAreScopedRevokedAndNeverReflected()",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_sandbox_network"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "procedure.toolbox.forwardAppMessage"
+      ]
+    },
+    {
+      "id": "providers.discovery",
+      "title": "Provider storage, discovery and validation",
+      "status": "partial",
+      "nativeBehavior": "Windows DPAPI records, bounded model catalog discovery/pagination and small validation requests exist; arbitrary registered protocol endpoints can be configured manually.",
+      "remaining": [
+        "No source-equivalent provider instance registry, all account auth methods or every provider model-catalog schema. Key import endpoint presets are a subset, not account availability proof."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+          "line": 42,
+          "anchor": "PROVIDER_TYPE_REGISTRY",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L42"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/official-api.ts",
+          "line": 27,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/providers/official-api.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/official-api.ts#L27"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ProviderService.cpp",
+          "line": 26,
+          "anchor": "void ProviderService::discover",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderService.cpp",
+          "line": 97,
+          "anchor": "void ProviderService::test",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderStore.cpp",
+          "line": 169,
+          "anchor": "QList<ProviderConfig> ProviderStore::importKeyFile",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 591,
+          "anchor": "void CoreTest::modelDiscoveryPagination",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "line": 669,
+          "anchor": "void CoreTest::modelDiscoveryRejectsInvalidResponses",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        },
+        {
+          "path": "tests/test_core.cpp",
+          "line": 322,
+          "anchor": "void CoreTest::providerStorageAndImport",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "providers.credentials"
+      ]
+    },
+    {
+      "id": "providers.vendor_options",
+      "title": "Provider routing, thinking and cache options",
+      "status": "partial",
+      "nativeBehavior": "Native protocol adapters expose reasoning effort/thinking mode/budget and selected output-token fields.",
+      "remaining": [
+        "Source model aliases, per-vendor thinking presets/capabilities, apiSpec-aware options, request headers, provider-option deep merge, prompt cache breakpoints and routed reasoning-source semantics are not fully replicated."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/shared/model-thinking-capabilities.ts",
+          "line": 346,
+          "anchor": "export function createThinkingProviderOptionsPatch",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/shared/model-thinking-capabilities.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/model-thinking-capabilities.ts#L346"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/provider-options.ts",
+          "line": 32,
+          "anchor": "export function deepMergeProviderOptions",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/provider-options.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/provider-options.ts#L32"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/agents/shared/message-conversion.ts",
+          "line": 420,
+          "anchor": "return addCacheControlBreakpoints",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/agents/shared/message-conversion.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/message-conversion.ts#L420"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 73,
+          "anchor": "ProviderRequest ProviderProtocol::prepare",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/ModelSelection.cpp",
+          "line": 25,
+          "anchor": "thinkingBudget",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_core.cpp",
+          "line": 514,
+          "anchor": "void CoreTest::nativeProtocolRequests",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_core"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "providers.routing",
+        "provider.anthropic-api",
+        "provider.openai-api",
+        "provider.google-api",
+        "provider.moonshotai-api",
+        "provider.alibaba-api",
+        "provider.deepseek-api",
+        "provider.z-ai-api",
+        "provider.minimax-api",
+        "provider.xiaomi-mimo-api",
+        "provider.mistral-api",
+        "provider.x-ai-api",
+        "provider.coding-plan",
+        "provider.ollama",
+        "provider.openrouter",
+        "agent_command.agents.setActiveModelId"
+      ]
+    },
+    {
+      "id": "providers.cloud_external",
+      "title": "Cloud, hosted and external agent adapters",
+      "status": "missing",
+      "nativeBehavior": "The four generic native wire protocols are not implementations of cloud signing or external agent harnesses.",
+      "remaining": [
+        "Missing Stagewise hosted provider/subscription flow, Azure deployment/api-version auth, Bedrock AWS signing/profile/default chain, Vertex service-account/ADC, Codex/ChatGPT OAuth/app-server, Claude Code/OpenCode ACP and coding-plan account adapters. Generic compatible endpoints are only a manually configured subset."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/cloud.ts",
+          "line": 17,
+          "anchor": "export type AzureConfig",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/providers/cloud.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/cloud.ts#L17"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/cloud.ts",
+          "line": 50,
+          "anchor": "export type BedrockConfig",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/providers/cloud.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/cloud.ts#L50"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+          "line": 68,
+          "anchor": "'codex-stagewise'",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L68"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 65,
+          "anchor": "void ProviderProtocol::authorize",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "providers.acp",
+        "provider.stagewise",
+        "provider.azure",
+        "provider.bedrock",
+        "provider.vertex",
+        "provider.codex-stagewise",
+        "provider.codex",
+        "provider.claude-code",
+        "provider.opencode"
+      ]
+    },
+    {
+      "id": "agent.lifecycle_shared",
+      "title": "Conversation lifecycle and persisted chat controls",
+      "status": "shared_review",
+      "nativeBehavior": "Native MainWindow/SessionStore lifecycle exists; this core review checks inherited history preservation rather than certifying every UI command.",
+      "remaining": [
+        "Create/fork/side-chat/promote/archive/delete/read-state/history APIs require the dedicated UI parity report; direct Qt calls are not the source Karton command protocol."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 467,
+          "anchor": "'agents.create'",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L467"
+        },
+        {
+          "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 540,
+          "anchor": "'agents.fork'",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L540"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SessionStore.cpp",
+          "line": 77,
+          "anchor": "QList<Conversation> SessionStore::load",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/ui/MainWindowConversations.cpp",
+          "line": 31,
+          "anchor": "bool MainWindow::commitConversationState",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_history_recovery.cpp",
+          "line": 132,
+          "anchor": "void busySourceForkRecoversOnlyTarget(){",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+          "suite": "native_history_recovery"
+        }
+      ],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "agents.lifecycle",
+        "agent_command.agents.create",
+        "agent_command.agents.fork",
+        "agent_command.agents.createSideChat",
+        "agent_command.agents.promoteSideChat",
+        "agent_command.agents.discardSideChat",
+        "agent_command.agents.resume",
+        "agent_command.agents.delete",
+        "agent_command.agents.archive",
+        "agent_command.agents.unarchive",
+        "agent_command.agents.markAsRead",
+        "agent_command.agents.markAsUnread",
+        "agent_command.agents.getAgentsHistoryList",
+        "agent_command.agents.getAgentHistoryEntriesByIds",
+        "agent_command.agents.updateInputState",
+        "agent_command.agents.getStoredInstance",
+        "agent_command.agents.revealWorkingDirectory"
+      ]
+    },
+    {
+      "id": "tools.shell_browser_shared",
+      "title": "Shell and browser runtime tools",
+      "status": "shared_review",
+      "nativeBehavior": "Native persistent shell service and browser bridge are wired through AgentToolHost.",
+      "remaining": [
+        "Detailed shell/session/log/approval and browser/CDP parity belong integration and UI reviews; tool availability alone is not full parity."
+      ],
+      "upstream": [
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 18,
+          "anchor": "createShellSession",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/index.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L18"
+        },
+        {
+          "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts",
+          "line": 14,
+          "anchor": "export",
+          "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+          "pinnedPath": "apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts",
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts#L14"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 20,
+          "anchor": "m_shells",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/browser/BrowserToolBridge.cpp",
+          "line": 152,
+          "anchor": "QJsonArray BrowserToolBridge::definitions",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "tests": [],
+      "evidenceScope": "Read-only source comparison; existing named fixture results only. No tests or live services run in this audit.",
+      "inventoryIds": [
+        "tool.readConsoleLogs",
+        "tool.createShellSession",
+        "tool.createWatcherSession",
+        "tool.executeShellCommand"
+      ]
+    }
+  ],
+  "inventoryMapping": [
+    {
+      "inventoryId": "agents.lifecycle",
+      "title": "Create, resume, stop, fork, side chat and archive",
+      "category": "agents",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.queue",
+      "title": "Queued user messages and interruption",
+      "category": "agents",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.stream",
+      "title": "Streaming history and tool-call state",
+      "category": "agents",
+      "capability": "engine.stream_lifetime",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.approvals",
+      "title": "Tool approval modes and per-call decisions",
+      "category": "agents",
+      "capability": "engine.approvals",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.history-edit",
+      "title": "Retry, edit, revert and undo tool changes",
+      "category": "agents",
+      "capability": "engine.history_actions",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.context",
+      "title": "Environment domains, prompts, memory and plans",
+      "category": "agents",
+      "capability": "context.prompt",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.compression",
+      "title": "History compression and context accounting",
+      "category": "agents",
+      "capability": "engine.automatic_compression",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.titles",
+      "title": "Automatic and locked custom titles",
+      "category": "agents",
+      "capability": "engine.titles",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.attachments",
+      "title": "Attachment storage, image processing and previews",
+      "category": "agents",
+      "capability": "tools.transforms",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agents.questions",
+      "title": "Multi-step user question forms",
+      "category": "agents",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "providers.routing",
+      "title": "Provider instance and model identity",
+      "category": "providers",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "providers.acp",
+      "title": "External agent ACP process integration",
+      "category": "providers",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "providers.credentials",
+      "title": "Credential storage and connection lifecycle",
+      "category": "providers",
+      "capability": "providers.discovery",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "workspace.mounts",
+      "title": "Multiple workspace mounts and permissions",
+      "category": "workspace",
+      "capability": "context.mounts",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "workspace.search",
+      "title": "Filename fuzzy search and content search",
+      "category": "workspace",
+      "capability": "tools.search",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "workspace.instructions",
+      "title": "AGENTS.md and skills discovery",
+      "category": "workspace",
+      "capability": "context.instructions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "workspace.skills",
+      "title": "Global and workspace skills",
+      "category": "workspace",
+      "capability": "context.instructions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "integration.research",
+      "title": "Library documentation research services",
+      "category": "integration",
+      "capability": "tools.research",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.stagewise",
+      "title": "stagewise",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.anthropic-api",
+      "title": "anthropic-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.openai-api",
+      "title": "openai-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.google-api",
+      "title": "google-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.moonshotai-api",
+      "title": "moonshotai-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.alibaba-api",
+      "title": "alibaba-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.deepseek-api",
+      "title": "deepseek-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.z-ai-api",
+      "title": "z-ai-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.minimax-api",
+      "title": "minimax-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.xiaomi-mimo-api",
+      "title": "xiaomi-mimo-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.mistral-api",
+      "title": "mistral-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.x-ai-api",
+      "title": "x-ai-api",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.coding-plan",
+      "title": "coding-plan",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.custom-anthropic",
+      "title": "custom-anthropic",
+      "category": "provider",
+      "capability": "engine.protocols",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.custom-openai-chat",
+      "title": "custom-openai-chat",
+      "category": "provider",
+      "capability": "engine.protocols",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.custom-openai-responses",
+      "title": "custom-openai-responses",
+      "category": "provider",
+      "capability": "engine.protocols",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.custom-google",
+      "title": "custom-google",
+      "category": "provider",
+      "capability": "engine.protocols",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.azure",
+      "title": "azure",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.bedrock",
+      "title": "bedrock",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.vertex",
+      "title": "vertex",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.ollama",
+      "title": "ollama",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.openrouter",
+      "title": "openrouter",
+      "category": "provider",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.codex-stagewise",
+      "title": "codex-stagewise",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.codex",
+      "title": "codex",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.claude-code",
+      "title": "claude-code",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "provider.opencode",
+      "title": "opencode",
+      "category": "provider",
+      "capability": "providers.cloud_external",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.write",
+      "title": "write",
+      "category": "tool",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.read",
+      "title": "read",
+      "category": "tool",
+      "capability": "tools.read_context",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.ls",
+      "title": "ls",
+      "category": "tool",
+      "capability": "tools.read_context",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.delete",
+      "title": "delete",
+      "category": "tool",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.glob",
+      "title": "glob",
+      "category": "tool",
+      "capability": "tools.search",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.grepSearch",
+      "title": "grepSearch",
+      "category": "tool",
+      "capability": "tools.search",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.multiEdit",
+      "title": "multiEdit",
+      "category": "tool",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.mkdir",
+      "title": "mkdir",
+      "category": "tool",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.copy",
+      "title": "copy",
+      "category": "tool",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.listLibraryDocs",
+      "title": "listLibraryDocs",
+      "category": "tool",
+      "capability": "tools.research",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.searchInLibraryDocs",
+      "title": "searchInLibraryDocs",
+      "category": "tool",
+      "capability": "tools.research",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.getLintingDiagnostics",
+      "title": "getLintingDiagnostics",
+      "category": "tool",
+      "capability": "tools.linting",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.executeSandboxJs",
+      "title": "executeSandboxJs",
+      "category": "tool",
+      "capability": "sandbox.execution",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.readConsoleLogs",
+      "title": "readConsoleLogs",
+      "category": "tool",
+      "capability": "tools.shell_browser_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.askUserQuestions",
+      "title": "askUserQuestions",
+      "category": "tool",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.createShellSession",
+      "title": "createShellSession",
+      "category": "tool",
+      "capability": "tools.shell_browser_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.createWatcherSession",
+      "title": "createWatcherSession",
+      "category": "tool",
+      "capability": "tools.shell_browser_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "tool.executeShellCommand",
+      "title": "executeShellCommand",
+      "category": "tool",
+      "capability": "tools.shell_browser_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.cancelUserQuestion",
+      "title": "toolbox.cancelUserQuestion",
+      "category": "procedure",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.forwardAppMessage",
+      "title": "toolbox.forwardAppMessage",
+      "category": "procedure",
+      "capability": "sandbox.host_api",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.getFileEditsForToolCalls",
+      "title": "toolbox.getFileEditsForToolCalls",
+      "category": "procedure",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.goBackUserQuestion",
+      "title": "toolbox.goBackUserQuestion",
+      "category": "procedure",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.mountWorkspace",
+      "title": "toolbox.mountWorkspace",
+      "category": "procedure",
+      "capability": "context.mounts",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.searchMentionFiles",
+      "title": "toolbox.searchMentionFiles",
+      "category": "procedure",
+      "capability": "tools.search",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.submitUserQuestionStep",
+      "title": "toolbox.submitUserQuestionStep",
+      "category": "procedure",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "procedure.toolbox.unmountWorkspace",
+      "title": "toolbox.unmountWorkspace",
+      "category": "procedure",
+      "capability": "context.mounts",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.create",
+      "title": "agents.create",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.fork",
+      "title": "agents.fork",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.createSideChat",
+      "title": "agents.createSideChat",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.promoteSideChat",
+      "title": "agents.promoteSideChat",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.discardSideChat",
+      "title": "agents.discardSideChat",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.resume",
+      "title": "agents.resume",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.sendUserMessage",
+      "title": "agents.sendUserMessage",
+      "category": "agent_command",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.interruptQuestionWithMessage",
+      "title": "agents.interruptQuestionWithMessage",
+      "category": "agent_command",
+      "capability": "engine.questions",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.sendToolApprovalResponse",
+      "title": "agents.sendToolApprovalResponse",
+      "category": "agent_command",
+      "capability": "engine.approvals",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.setToolApprovalMode",
+      "title": "agents.setToolApprovalMode",
+      "category": "agent_command",
+      "capability": "engine.approvals",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.stop",
+      "title": "agents.stop",
+      "category": "agent_command",
+      "capability": "engine.stream_lifetime",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.flushQueue",
+      "title": "agents.flushQueue",
+      "category": "agent_command",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.clearQueue",
+      "title": "agents.clearQueue",
+      "category": "agent_command",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.deleteQueuedMessage",
+      "title": "agents.deleteQueuedMessage",
+      "category": "agent_command",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.moveQueuedMessage",
+      "title": "agents.moveQueuedMessage",
+      "category": "agent_command",
+      "capability": "engine.queue",
+      "status": "implemented_with_limits",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.revertToUserMessage",
+      "title": "agents.revertToUserMessage",
+      "category": "agent_command",
+      "capability": "engine.history_actions",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.replaceUserMessage",
+      "title": "agents.replaceUserMessage",
+      "category": "agent_command",
+      "capability": "engine.history_actions",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.delete",
+      "title": "agents.delete",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.archive",
+      "title": "agents.archive",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.unarchive",
+      "title": "agents.unarchive",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.markAsRead",
+      "title": "agents.markAsRead",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.markAsUnread",
+      "title": "agents.markAsUnread",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.setActiveModelId",
+      "title": "agents.setActiveModelId",
+      "category": "agent_command",
+      "capability": "providers.vendor_options",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.setTitle",
+      "title": "agents.setTitle",
+      "category": "agent_command",
+      "capability": "engine.titles",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.getAgentsHistoryList",
+      "title": "agents.getAgentsHistoryList",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.getAgentHistoryEntriesByIds",
+      "title": "agents.getAgentHistoryEntriesByIds",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.updateInputState",
+      "title": "agents.updateInputState",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.retryLastUserMessage",
+      "title": "agents.retryLastUserMessage",
+      "category": "agent_command",
+      "capability": "engine.history_actions",
+      "status": "missing",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.storeAttachment",
+      "title": "agents.storeAttachment",
+      "category": "agent_command",
+      "capability": "tools.transforms",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.storeAttachmentByPath",
+      "title": "agents.storeAttachmentByPath",
+      "category": "agent_command",
+      "capability": "tools.transforms",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.getStoredInstance",
+      "title": "agents.getStoredInstance",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.getTouchedFiles",
+      "title": "agents.getTouchedFiles",
+      "category": "agent_command",
+      "capability": "tools.mutations",
+      "status": "partial",
+      "baselineStatusesUnchanged": true
+    },
+    {
+      "inventoryId": "agent_command.agents.revealWorkingDirectory",
+      "title": "agents.revealWorkingDirectory",
+      "category": "agent_command",
+      "capability": "agent.lifecycle_shared",
+      "status": "shared_review",
+      "baselineStatusesUnchanged": true
+    }
+  ],
+  "providerMatrix": [
+    {
+      "inventoryId": "provider.stagewise",
+      "providerType": "stagewise",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 46,
+        "anchor": "  stagewise:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L46"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.anthropic-api",
+      "providerType": "anthropic-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 47,
+        "anchor": "'anthropic-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L47"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.openai-api",
+      "providerType": "openai-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 48,
+        "anchor": "'openai-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L48"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.google-api",
+      "providerType": "google-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 49,
+        "anchor": "'google-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L49"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.moonshotai-api",
+      "providerType": "moonshotai-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 50,
+        "anchor": "'moonshotai-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L50"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.alibaba-api",
+      "providerType": "alibaba-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 51,
+        "anchor": "'alibaba-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L51"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.deepseek-api",
+      "providerType": "deepseek-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 52,
+        "anchor": "'deepseek-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L52"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.z-ai-api",
+      "providerType": "z-ai-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 53,
+        "anchor": "'z-ai-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L53"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.minimax-api",
+      "providerType": "minimax-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 54,
+        "anchor": "'minimax-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L54"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.xiaomi-mimo-api",
+      "providerType": "xiaomi-mimo-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 55,
+        "anchor": "'xiaomi-mimo-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L55"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.mistral-api",
+      "providerType": "mistral-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 56,
+        "anchor": "'mistral-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L56"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.x-ai-api",
+      "providerType": "x-ai-api",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 57,
+        "anchor": "'x-ai-api':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L57"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.coding-plan",
+      "providerType": "coding-plan",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 58,
+        "anchor": "'coding-plan':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L58"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.custom-anthropic",
+      "providerType": "custom-anthropic",
+      "status": "generic_protocol_subset",
+      "capability": "engine.protocols",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 59,
+        "anchor": "'custom-anthropic':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L59"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.custom-openai-chat",
+      "providerType": "custom-openai-chat",
+      "status": "generic_protocol_subset",
+      "capability": "engine.protocols",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 60,
+        "anchor": "'custom-openai-chat':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L60"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.custom-openai-responses",
+      "providerType": "custom-openai-responses",
+      "status": "generic_protocol_subset",
+      "capability": "engine.protocols",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 61,
+        "anchor": "'custom-openai-responses':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L61"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.custom-google",
+      "providerType": "custom-google",
+      "status": "generic_protocol_subset",
+      "capability": "engine.protocols",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 62,
+        "anchor": "'custom-google':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L62"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.azure",
+      "providerType": "azure",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 63,
+        "anchor": "  azure:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L63"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.bedrock",
+      "providerType": "bedrock",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 64,
+        "anchor": "  bedrock:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L64"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.vertex",
+      "providerType": "vertex",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 65,
+        "anchor": "  vertex:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L65"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.ollama",
+      "providerType": "ollama",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 66,
+        "anchor": "  ollama:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L66"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.openrouter",
+      "providerType": "openrouter",
+      "status": "generic_protocol_subset",
+      "capability": "providers.vendor_options",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 67,
+        "anchor": "  openrouter:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L67"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "Manual native protocol configuration can cover requests; this does not certify the provider-specific registry, discovery, auth, thinking/options or all models."
+    },
+    {
+      "inventoryId": "provider.codex-stagewise",
+      "providerType": "codex-stagewise",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 68,
+        "anchor": "'codex-stagewise':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L68"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.codex",
+      "providerType": "codex",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 69,
+        "anchor": "  codex:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L69"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.claude-code",
+      "providerType": "claude-code",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 70,
+        "anchor": "'claude-code':",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L70"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    },
+    {
+      "inventoryId": "provider.opencode",
+      "providerType": "opencode",
+      "status": "missing_dedicated_adapter",
+      "capability": "providers.cloud_external",
+      "upstream": {
+        "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+        "line": 71,
+        "anchor": "  opencode:",
+        "sourceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+        "pinnedPath": "apps/browser/src/backend/agents/providers/registry.ts",
+        "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/agents/providers/registry.ts#L71"
+      },
+      "native": [
+        {
+          "path": "src/core/ProviderProtocol.cpp",
+          "line": 62,
+          "anchor": "bool ProviderProtocol::supports",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        },
+        {
+          "path": "src/core/ProviderConfig.h",
+          "line": 8,
+          "anchor": "struct ProviderConfig",
+          "sourceCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b"
+        }
+      ],
+      "limit": "No dedicated instance/auth/runtime adapter; source preservation is not implementation."
+    }
+  ],
+  "retainedTestEvidence": [
+    {
+      "suite": "native_attachments",
+      "report": "audit/continuation-integration/final-full-run/native_attachments.txt",
+      "passedIncludingLifecycle": 23,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 776,
+      "sha256CanonicalLf": "5a27ab7f2d2e343fecad4a74d2e4fb7a75d2c03a5f1755941cc743e0206d44d3",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_context",
+      "report": "audit/native-live-validation/native_context.txt",
+      "passedIncludingLifecycle": 9,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 207,
+      "sha256CanonicalLf": "60d2eb66356581d54bfdd796c3d5ce04bd06504907dc86fb2ce7436601883cdb",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_conversation_control",
+      "report": "audit/continuation-integration/final-full-run/native_conversation_control.txt",
+      "passedIncludingLifecycle": 26,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4264,
+      "sha256CanonicalLf": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_core",
+      "report": "audit/plugin-integration/final-targeted-run/native_core.txt",
+      "passedIncludingLifecycle": 48,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 7952,
+      "sha256CanonicalLf": "f16da96bb97616fd2ebadb59176879fd5bf6175d9893994eb153f032a44eb7ca",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_engine_observers",
+      "report": "audit/plugin-integration/final-targeted-run/native_engine_observers.txt",
+      "passedIncludingLifecycle": 56,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 7956,
+      "sha256CanonicalLf": "9b99b60d128b86f46848d6ff88476c0bd2faa4dd0fce66745392440adab9bddc",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_file_transformer",
+      "report": "audit/continuation-integration/final-full-run/native_file_transformer.txt",
+      "passedIncludingLifecycle": 32,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3,
+      "sha256CanonicalLf": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_history_recovery",
+      "report": "audit/continuation-integration/final-full-run/native_history_recovery.txt",
+      "passedIncludingLifecycle": 28,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1388,
+      "sha256CanonicalLf": "fe6b5549f35b0490ef776c7556811367006225dc0f7310992d23b977eb503e24",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_presentation",
+      "report": "audit/continuation-integration/final-full-run/native_presentation.txt",
+      "passedIncludingLifecycle": 89,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 17245,
+      "sha256CanonicalLf": "11cd889f043920b5bb1e3fee7a7a043a26fd9e1f0d79b16e8ccaf31d57057190",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_read_lifecycle",
+      "report": "audit/continuation-integration/final-full-run/native_read_lifecycle.txt",
+      "passedIncludingLifecycle": 21,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 482,
+      "sha256CanonicalLf": "133af47c258de1026005849c7ea64e45e3462dca28d64f1d339f5a898dd36266",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_runtime_apps",
+      "report": "audit/continuation-integration/final-full-run/native_runtime_apps.txt",
+      "passedIncludingLifecycle": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 6691,
+      "sha256CanonicalLf": "0b8d1ab70f2b6b863b5e67efd62011bd5d0dbc8655929b94cf9c4eb5e90567bf",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_sandbox",
+      "report": "audit/plugin-integration/final-targeted-run/native_sandbox.txt",
+      "passedIncludingLifecycle": 27,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4530,
+      "sha256CanonicalLf": "e1cd7f405cf60d4b89ad6ed4001267add18ad31d08d12c54ef473d23ba907cfb",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    },
+    {
+      "suite": "native_sandbox_network",
+      "report": "audit/plugin-integration/final-targeted-run/native_sandbox_network.txt",
+      "passedIncludingLifecycle": 12,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5273,
+      "sha256CanonicalLf": "45c46cd836bed80a9a3ba615ccad3feef0fc31788048929d3f59649c39c98f28",
+      "evidenceType": "Existing historical fixture report; not rerun and not a new aggregate run."
+    }
+  ],
+  "priorityRecommendations": [
+    {
+      "priority": 1,
+      "capabilities": [
+        "engine.usage",
+        "engine.automatic_compression"
+      ],
+      "next": "Parse and deduplicate four-protocol usage, retain per-round accounting without provider-wire pollution; use trusted context limits and complete tool-batch boundaries for guarded automatic compression. Test cancellation, fallback, partial usage, stale history and all four request serializers."
+    },
+    {
+      "priority": 1,
+      "capabilities": [
+        "sandbox.buffer",
+        "sandbox.modules",
+        "sandbox.import_module",
+        "sandbox.web_globals"
+      ],
+      "next": "Define exact compatibility fixtures from pinned skill usage before adding bounded native Buffer/builtin/ESM primitives. Keep unsupported APIs explicit; do not advertise unchanged npm recipes until their imports and APIs work."
+    },
+    {
+      "priority": 1,
+      "capabilities": [
+        "context.memory",
+        "context.plans",
+        "context.prompt"
+      ],
+      "next": "Implement owned archival memory/index and plans manifests with read-only/shared mount semantics and persisted environment keyframe/delta conversion; ordinary files or a compression memory tag do not satisfy these contracts."
+    },
+    {
+      "priority": 2,
+      "capabilities": [
+        "providers.cloud_external",
+        "providers.vendor_options"
+      ],
+      "next": "Port provider-instance/auth/options semantics separately from generic wire adapters; fixtures should verify each source registry type and routed reasoning ownership before live validation."
+    },
+    {
+      "priority": 2,
+      "capabilities": [
+        "tools.research",
+        "tools.linting",
+        "engine.history_actions",
+        "tools.transforms"
+      ],
+      "next": "Implement library research/LSP diagnostics, retry-edit-revert and remaining native preview codecs with their own authority/lifecycle fixtures."
+    }
+  ],
+  "evidenceLimits": [
+    "Existing passing tests are scoped evidence only; no full suite was repeated and no universal defect-free guarantee is made.",
+    "API absences were verified in native definitions/bootstrap/config types and implementation searches; optional upstream framework behavior may need later product-specific acceptance cases.",
+    "Report describes the current source before any separately authorized usage/compression or Buffer implementation; later changes require an explicit overlay, not rewriting this observation as previously complete."
+  ],
+  "sourceHashes": [
+    {
+      "path": "src/attachments/AttachmentPipeline.cpp",
+      "sha256CanonicalLf": "1ecb0da983fad569e156f86e1e0567891948e8480f43b6d80d1196536137eef7"
+    },
+    {
+      "path": "src/attachments/FileReadSnapshotStore.cpp",
+      "sha256CanonicalLf": "a93367e800f596184e850c3c4a8f5ba9978723af33a35f00db18be0857ae45d5"
+    },
+    {
+      "path": "src/attachments/FileTransformer.cpp",
+      "sha256CanonicalLf": "d5c7a83c64d09efb748f246e4371acbad5c5a26eb64c33ca823d8e44b2b7ec89"
+    },
+    {
+      "path": "src/attachments/archive/ArchiveTransformer.cpp",
+      "sha256CanonicalLf": "c77f2706f46a422f6729aeba0cbee25b19f2b7d0acf943fd3ef7753e5ba46204"
+    },
+    {
+      "path": "src/browser/BrowserToolBridge.cpp",
+      "sha256CanonicalLf": "0e45b8d539f9549f5710ae99eb3686eb069b7ffe0f01324f1498b4641fed0926"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "sha256CanonicalLf": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd"
+    },
+    {
+      "path": "src/core/AgentEngine.h",
+      "sha256CanonicalLf": "deb340449e1a6bb9da6fe616106d6e8d9c06c54c740f8e14fadcc21029a97ba2"
+    },
+    {
+      "path": "src/core/AgentEngineControl.cpp",
+      "sha256CanonicalLf": "2b462c3733f8093d0098e132c9a9cfc07bbafe771e8f63841a9bb8a2a05994b8"
+    },
+    {
+      "path": "src/core/AgentPresentation.cpp",
+      "sha256CanonicalLf": "c3b927c2402f69316f0c7ba8c7c93457a8d9926ea4289698631b2fad2e7123cb"
+    },
+    {
+      "path": "src/core/ContextLoader.cpp",
+      "sha256CanonicalLf": "a589eb488cfb662764f9f0afca4d020126b5e9e47633f1d57e1672a3d95a20db"
+    },
+    {
+      "path": "src/core/ContextLoader.h",
+      "sha256CanonicalLf": "2cea29948dd38a0b8b925a867c2eba59c2d9a71e0b47465d559d16c7f0202e44"
+    },
+    {
+      "path": "src/core/ModelFallback.h",
+      "sha256CanonicalLf": "b3403a706633f2a6663a831e081e3fddf8066cacbc544e12962c757939b3c248"
+    },
+    {
+      "path": "src/core/ProviderConfig.h",
+      "sha256CanonicalLf": "1e9352d89dc7a0101bef8a9cc0b6ea327e4f057a14dfbbd2ceb305452f560d1f"
+    },
+    {
+      "path": "src/core/ProviderProtocol.cpp",
+      "sha256CanonicalLf": "671fa015bcb8d5721dc8d9601491e28738ac705dd6d2d374a7727ad995308efc"
+    },
+    {
+      "path": "src/core/ProviderService.cpp",
+      "sha256CanonicalLf": "06dc17e2b64c0874dd18e40776bf7aab70334cc35b95ff579fe6bb9798242924"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "sha256CanonicalLf": "c313038bdf1393566b15cee923e25412c4e31057546d4644b317bfa8c5cbbeb3"
+    },
+    {
+      "path": "src/core/QuestionForm.cpp",
+      "sha256CanonicalLf": "f1c8c1cfa9d870b92ac3ba85426094f7c628993a783052c0884461ddf9cea0f9"
+    },
+    {
+      "path": "src/core/SseParser.cpp",
+      "sha256CanonicalLf": "37f13d34be13ac14234bcf785322458a2ba90260880f6f5ab0c6808e932160b9"
+    },
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256CanonicalLf": "885bc3672d6604952d51f632ccdc2870d402ec4617ec235421d81785ce5e77ff"
+    },
+    {
+      "path": "src/core/UtilityService.cpp",
+      "sha256CanonicalLf": "ee87548098d1c2e9fe943775e376d01209691a50c6e4166dd74c19ad98632eb5"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256CanonicalLf": "7168f86d36bac3ab2a946b8f58ea2d3f45d7a18e187cb05e3c63301f2bec6a6d"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.cpp",
+      "sha256CanonicalLf": "b743aae3e41ddc7853ff51508a60ef67d5fa7e7925a8c269c6ae9a08265c8c3a"
+    },
+    {
+      "path": "src/sandbox/network_bootstrap.h",
+      "sha256CanonicalLf": "4884237c21f7a4007edfe1b4009c76dbffcc9d451df5da15e308a44be08820d8"
+    },
+    {
+      "path": "src/sandbox/worker_main.cpp",
+      "sha256CanonicalLf": "9a719557e424a50fb7c84fd30bfd86c27a8dfc2a34012f2a743bcbb7f15bb33f"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256CanonicalLf": "3b9e2d4c85d681d1b6f9b523ce005025dba3b16c5a124310eba7ee56d6fd1193"
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "sha256CanonicalLf": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256CanonicalLf": "d142518126cbc5e825f2e3ada086b9ae9099db4fafad651c3694aea20fa579f9"
+    },
+    {
+      "path": "src/ui/ModelSelection.cpp",
+      "sha256CanonicalLf": "c69378a1c34fc1a4de8479938eab0212bdcf15d950455325b144c62988a138b0"
+    },
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256CanonicalLf": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7"
+    },
+    {
+      "path": "tests/test_attachments.cpp",
+      "sha256CanonicalLf": "e9f06d3aa3584f10d223c850ebb315ca7dcca860adf5cdfd5ddf5fdcff024c5a"
+    },
+    {
+      "path": "tests/test_context.cpp",
+      "sha256CanonicalLf": "0daf7bb7b0d9cf1a07372e56605c1f69067485e253774c72676c788056247453"
+    },
+    {
+      "path": "tests/test_conversation_control.cpp",
+      "sha256CanonicalLf": "296c0cff6d19ffc7d33b5506841323b527d69ba904b8b987157e1604a6ee6227"
+    },
+    {
+      "path": "tests/test_core.cpp",
+      "sha256CanonicalLf": "57d715c4bf924f1d31a157bae77b2c5022a32577ede909a0b38e8806fe7ac614"
+    },
+    {
+      "path": "tests/test_engine_observers.cpp",
+      "sha256CanonicalLf": "943eff6b74bd0045549c982654aa5604638eda9f7154a1b2cf6ce23e69a29eef"
+    },
+    {
+      "path": "tests/test_file_transformer.cpp",
+      "sha256CanonicalLf": "b44f8d6a6f4fd686e0432510144075edfb0380d3fa62b9f39537b11087843fbf"
+    },
+    {
+      "path": "tests/test_history_recovery.cpp",
+      "sha256CanonicalLf": "087be333d77fa85ad9bae00c2485f26f45c8b240b5b77b6dfeea665dec1111ed"
+    },
+    {
+      "path": "tests/test_presentation.cpp",
+      "sha256CanonicalLf": "1a67f707ac43bc5ab7540cee92755a08ac9c0daab8ac07bbee5d2f02b9292bc9"
+    },
+    {
+      "path": "tests/test_read_lifecycle.cpp",
+      "sha256CanonicalLf": "42dca6f73ca843b216e574da0aac20df308bc77564350f195d5f8ec71a845d0a"
+    },
+    {
+      "path": "tests/test_runtime_apps.cpp",
+      "sha256CanonicalLf": "27db14952e4804c3d7a029c2dd62ba0f61d07df7743d07e453d1655fda56f8dd"
+    },
+    {
+      "path": "tests/test_sandbox.cpp",
+      "sha256CanonicalLf": "28176aea55ff24ba09082b78aaaee7b63cc3468e11efcd9975b0ca002538ed0e"
+    },
+    {
+      "path": "tests/test_sandbox_network.cpp",
+      "sha256CanonicalLf": "1d0d0b66d88ec10933bdb8e28ed3155fc3e3af339a9b355b77db213b3040654f"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/model-provider.ts",
+      "sha256CanonicalLf": "d9cec251da406c4eb9de7a25ff7352e26d68590781d36b366d1e218980958676"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/cloud.ts",
+      "sha256CanonicalLf": "38cef1d13dd24385c8935564844c059dcd72471bd0f215d0565603f19028a201"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/official-api.ts",
+      "sha256CanonicalLf": "7eb7d28c3855ff44d3dc390599ba576b55ced7f3d8ac6fc2febe07692c5fbaa9"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/registry.ts",
+      "sha256CanonicalLf": "f5531c567032676731a0543005321be13c7da7cb475287990467aae0e809e4b8"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/sandbox-worker.ts",
+      "sha256CanonicalLf": "0d2a7301a41cbf36ca9900a50cae94f9ba3e8e4e2daad5f91cadc238653777d8"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/sandbox/utils/isolated-fs.ts",
+      "sha256CanonicalLf": "fd43d87efba843186c1df8c542195d02d02b74233e00f38a787e3f4d8ba0a11f"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/global-skills.ts",
+      "sha256CanonicalLf": "bab6ba7bb3f778dd010f33ecd00ad9d744bfb8759299d200dc7264b185a968df"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+      "sha256CanonicalLf": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/services/lsp/index.ts",
+      "sha256CanonicalLf": "d36cebc47c6678b6756d4c09221a97befa6a944e5a7f85c580f4ef6fa5efb2ce"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/browser/execute-sandbox-js.ts",
+      "sha256CanonicalLf": "4b0866347f4b604c135dcd5a0874bdd05970eebaa4209cfba3d54fe484d1ce32"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts",
+      "sha256CanonicalLf": "45d60305ce25478e917a01867259a1c1dca038b20e990941213fb4c2f3b41f47"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/file-modification/get-linting-diagnostics.ts",
+      "sha256CanonicalLf": "b41a36d9f67e7cd92162f535c6e8302885b59256d326284e0e2894fad7d65e66"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+      "sha256CanonicalLf": "d31312786fa24104e60c2112e657d34dc338c87c4151ab0f9abd881d32e57198"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+      "sha256CanonicalLf": "8faa7a137d5eaba32b24a2922fb9868b7f041ee1ffb8b3780ac90c93ef6f2a9b"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+      "sha256CanonicalLf": "8564a108be16b9e2d06e86bb13b520e9e5b67d8db9c838ad239863fb7eb763af"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+      "sha256CanonicalLf": "86540bb592363ffc91b9e88d22faa1cfd52ea76e7b55edac20ac63cfee1e4c54"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/shared/model-thinking-capabilities.ts",
+      "sha256CanonicalLf": "5f9e08a8af1f9aa46258f3475d6d6369d7cf8c973611a7578a6f181718cd404c"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "sha256CanonicalLf": "f3baea7d090e1b3641d4f09e30223f0e5e669e6eec54d18b10ebb304d3d29196"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/chat/system-prompt-builder/system-prompt-builder.ts",
+      "sha256CanonicalLf": "57137527f1d2e6e884a63daa3b52c3704be58d216ad0de713a591cc11113b47b"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/model-fallback-manager.ts",
+      "sha256CanonicalLf": "6ab22d7b070373680372d81beec69eb4d62d94c71ef7135f24676e7688c8e521"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/history-compression/index.ts",
+      "sha256CanonicalLf": "d3eeddb5ae777ca551b8e7cc94568873f587e8e4e56f71c02fb7fdcf8adc6b78"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/message-conversion.ts",
+      "sha256CanonicalLf": "a66753be641c7650de9544d53e26f568e3240072221565d21bbf864c7e4ec454"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/provider-options.ts",
+      "sha256CanonicalLf": "6b462956a801076a2a14117a486fd986024aa7bfb35799887820c2d09c58f1fb"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/reasoning-signatures.ts",
+      "sha256CanonicalLf": "ecae545ddc440f16d80f2ef17e2293c3a394bad7729856b4a023b9ba48e33d0b"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/repair-tool-call.ts",
+      "sha256CanonicalLf": "cc748ec0de681157cc22b6c88a54ca06f4d1eae6b71c3e99762d2bcbedd6139d"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+      "sha256CanonicalLf": "b66dbe64695d9106d083303d6104ba46da7921903cc3a3f8f66acbfade2af9f2"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/env/adapters/index.ts",
+      "sha256CanonicalLf": "d27d7ffe70734a72d8a467223e1f6169d57304ed85da2054b3dc0186242396de"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/env/adapters/memory.ts",
+      "sha256CanonicalLf": "62ac7046ba8232d0970b2d7999eb3324f5aac812be136302298b8bf57d60b439"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/env/adapters/plans.ts",
+      "sha256CanonicalLf": "c146ab6866fb8df8f228e2779ed4d84bed98b5ea0440785c7b86fc40cf09cb79"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/index.ts",
+      "sha256CanonicalLf": "d32e8f15dba88258b47183f05d4fe29774f94304d2e8caa660e356f4dfe5ccd9"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/pdf.ts",
+      "sha256CanonicalLf": "455fd3a7417b28af7ef040f61765f4a8a7e1ee659a1fdd5145e92f944fd535a7"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/file-read-transformer/transformers/source-code.ts",
+      "sha256CanonicalLf": "52854a0bf7424218485b2df26543471a19d872ff58faf51705a8516078950689"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+      "sha256CanonicalLf": "608f10239dca4da536e2a93eda485dd0aabf6e69f13bb7a84a8bd6d97fc29fa5"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/approvals.ts",
+      "sha256CanonicalLf": "20e71c2bdbf64e8da336949e95fa6c973cb2b3fe47eaa0ebb4b0e4487581ffee"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+      "sha256CanonicalLf": "ab319972c098bc0c45cc08a0769b6018e8b80f5db1885ae94de5a2542c2a8295"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/queue.ts",
+      "sha256CanonicalLf": "00cd5615ece99c2f5c9604e6bfd08453bd6193e6561802c43198cc343eef6b5d"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+      "sha256CanonicalLf": "cc00db8e5a490a83793980c9b2fabc67b468755717f1c74c4404adfd53ce6248"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/mount-manager/index.ts",
+      "sha256CanonicalLf": "4a44c1cf10f46af4b1f4c86171427bb815497cde877ef191e8021748ae023b6f"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/mount-manager/workspace-info/agents-md.ts",
+      "sha256CanonicalLf": "fb41863e4bbaf2c17934d7e1d21a541bae9b2fd1e3cac8d6fc6f73127194a91c"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "sha256CanonicalLf": "7fe14916458da6b47e42c82ac40de92d672711d4623b44321f7ce52be6c061c3"
+    }
+  ]
+}

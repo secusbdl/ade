@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-06T17:20:42.982265+00:00",
+  "status": "blocked_by_computer_use_input_guard",
+  "package": {
+    "path": "out/parity-review-1/ADE.exe",
+    "sha256": "022bcf8162739c861e94c746f5fa1922fe3a5b36380c49bf9a6414d983da2776"
+  },
+  "isolation": {
+    "profile": "private/packaged-browser-qa-run-7929252b/profile",
+    "workspace": "private/packaged-browser-qa-run-7929252b/workspace",
+    "syntheticCredentialsOnly": true,
+    "realCredentialsOrDefaultProfilesRead": false,
+    "externalServicesUsed": false
+  },
+  "method": "Computer-use skill @oai/sky documented Windows API. No direct UI Automation/OS input fallback. Only the approved isolated app was selected; no input was sent to other windows.",
+  "observed": {
+    "appPid": 49020,
+    "appStillRunningAtObservation": true,
+    "appWindowState": "minimized",
+    "normalExitVerified": false,
+    "fixturePid": 42244,
+    "loopbackPort": 61136,
+    "modelRequests": 0,
+    "browserPageLoads": 0
+  },
+  "checks": [
+    {
+      "id": "package-launch",
+      "status": "pass",
+      "evidence": "Hash-gated runner started the approved artifact with explicit isolated --data-dir. Actual ADE title/window and synthetic profile observed."
+    },
+    {
+      "id": "settings-visible",
+      "status": "pass",
+      "evidence": "Correct main-window screenshot/accessibility reports Settings button. Opening Settings was blocked before click."
+    },
+    {
+      "id": "settings-route-import",
+      "status": "pending",
+      "scope": "Open Settings and inspect direct Import API key file affordance"
+    },
+    {
+      "id": "context-limit-editor",
+      "status": "pending",
+      "scope": "Edit/save Model context limit65536 and confirm persisted public field"
+    },
+    {
+      "id": "typing-send-stream",
+      "status": "pending",
+      "scope": "Type synthetic prompt, Send, capture incremental reasoning/text and complete response"
+    },
+    {
+      "id": "browser-address-focus",
+      "status": "pending",
+      "scope": "Load two loopback pages and verify URL/address aliases and CtrlL chat focus"
+    },
+    {
+      "id": "idle-close",
+      "status": "pending",
+      "scope": "Use native titlebar X and require normal owned process exit0"
+    },
+    {
+      "id": "restart-restoration",
+      "status": "pending",
+      "scope": "Reopen same isolated profile and inspect saved tab order/active URL/chat"
+    },
+    {
+      "id": "held-stream-close",
+      "status": "pending",
+      "scope": "Start HOLD LOCAL STREAM, close before90seconds, require exit0/clientDisconnected=true/completed=false"
+    }
+  ],
+  "guardEvidence": [
+    {
+      "action": "First Settings button click after correct target snapshot",
+      "outcome": "user input was detected in this window; call get_window_state before continuing"
+    },
+    {
+      "action": "Fresh get_window_state",
+      "outcome": "window is minimized; call activate_window, refresh with get_window, then retry get_window_state"
+    },
+    {
+      "action": "Documented activate_window/get_window recovery, including one node session reset",
+      "outcome": "user input was detected in this window; call get_window_state before continuing"
+    },
+    {
+      "action": "After user authorized continuation while sleeping, one fresh read and prescribed activation",
+      "outcome": "Same minimized-state/activation guard loop. Stopped without bypass."
+    }
+  ],
+  "screenshots": [
+    {
+      "step": 1,
+      "description": "Actual isolated packaged ADE main window: visible Settings label, synthetic chat and configured local model. No typed prompt yet.",
+      "path": "private/packaged-browser-qa-run-7929252b/01-main-0.jpg",
+      "sha256": "82a2c5bf45e4c6df05fe9298ce7b4b2e63e400a69b897c21cf8936eba31f4fa7",
+      "observedAt": "2026-11-06T17:16:55.614Z",
+      "scope": "Target ADE window only. Initial occluded non-target capture was discarded and not saved."
+    }
+  ],
+  "privateEvidenceIndex": "private/packaged-browser-qa-run-7929252b/evidence.json",
+  "privateAccessibility": "private/packaged-browser-qa-run-7929252b/01-main-accessibility.txt",
+  "limits": [
+    "These observations are not a functional GUI pass for any pending check.",
+    "All91 automated suites passing is separate parent evidence, not a substitute for this blocked packaged UI run.",
+    "No screenshot parity claim. The saved main-window screenshot shows the actual package only.",
+    "The isolated process/profile/fixture are preserved. No forced focus, process termination, user-instance changes or real-service requests occurred.",
+    "No more foreground retries until a future authorized run can use the documented tools without bypassing the guard."
+  ],
+  "completionSummarySent": true
+}

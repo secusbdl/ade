@@ -17,6 +17,6 @@ struct ModelSelection {
 QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &providers,
     const QJsonObject &catalogs, const QJsonArray &presets);
 QJsonObject cleanModelCatalog(const ProviderConfig &provider, const QJsonArray &models);
-QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,const QJsonArray& entries);
-QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets);
+QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,const QJsonArray& entries,const QJsonObject& catalogs={});
+QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets,const QJsonObject& catalogs={});
 }

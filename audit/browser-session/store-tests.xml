@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="BrowserSessionTest" timestamp="2026&#x002D;11&#x002D;06T18:43:46" hostname="redacted" tests="23" failures="0" errors="0" skipped="0" time="0.079">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="BrowserSessionTest" time="0.000"/>
+  <testcase name="absentProfileRoundTripOrderAndSelection" classname="BrowserSessionTest" time="0.016"/>
+  <testcase name="credentialsRemovedButEncodedPathQueryAndFragmentRetained" classname="BrowserSessionTest" time="0.005"/>
+  <testcase name="invalidStorage(truncated)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(future&#x002D;schema)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(wrong&#x002D;tabs&#x002D;type)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(missing&#x002D;active)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(duplicate&#x002D;id)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(absent&#x002D;active)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(title&#x002D;type)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(file:///C:/private.txt)" classname="BrowserSessionTest" time="0.001"/>
+  <testcase name="invalidStorage(javascript:alert(1))" classname="BrowserSessionTest" time="0.001"/>
+  <testcase name="invalidStorage(data:text/html,private)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(about:config)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(ade&#x002D;app://owner/a)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidStorage(relative/path)" classname="BrowserSessionTest" time="0.001"/>
+  <testcase name="invalidStorage(https://)" classname="BrowserSessionTest" time="0.001"/>
+  <testcase name="invalidStorage(oversized)" classname="BrowserSessionTest" time="0.002"/>
+  <testcase name="invalidCandidatePreservesOriginal" classname="BrowserSessionTest" time="0.005"/>
+  <testcase name="concurrentWindowsAndExternalDeletionDoNotOverwrite" classname="BrowserSessionTest" time="0.009"/>
+  <testcase name="lockConflictAndExternalEditPreserveData" classname="BrowserSessionTest" time="0.009"/>
+  <testcase name="replacedProfileDirectoryCannotReceiveStaleSave" classname="BrowserSessionTest" time="0.006"/>
+  <testcase name="cleanupTestCase" classname="BrowserSessionTest" time="0.000"/>
+</testsuite>

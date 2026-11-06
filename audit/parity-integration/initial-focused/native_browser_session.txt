@@ -1,0 +1,27 @@
+********* Start testing of BrowserSessionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserSessionTest::initTestCase()
+PASS   : BrowserSessionTest::absentProfileRoundTripOrderAndSelection()
+PASS   : BrowserSessionTest::credentialsRemovedButEncodedPathQueryAndFragmentRetained()
+PASS   : BrowserSessionTest::invalidStorage(truncated)
+PASS   : BrowserSessionTest::invalidStorage(future-schema)
+PASS   : BrowserSessionTest::invalidStorage(wrong-tabs-type)
+PASS   : BrowserSessionTest::invalidStorage(missing-active)
+PASS   : BrowserSessionTest::invalidStorage(duplicate-id)
+PASS   : BrowserSessionTest::invalidStorage(absent-active)
+PASS   : BrowserSessionTest::invalidStorage(title-type)
+PASS   : BrowserSessionTest::invalidStorage(file:///C:/private.txt)
+PASS   : BrowserSessionTest::invalidStorage(javascript:alert(1))
+PASS   : BrowserSessionTest::invalidStorage(data:text/html,private)
+PASS   : BrowserSessionTest::invalidStorage(about:config)
+PASS   : BrowserSessionTest::invalidStorage(ade-app://owner/a)
+PASS   : BrowserSessionTest::invalidStorage(relative/path)
+PASS   : BrowserSessionTest::invalidStorage(https://)
+PASS   : BrowserSessionTest::invalidStorage(oversized)
+PASS   : BrowserSessionTest::invalidCandidatePreservesOriginal()
+PASS   : BrowserSessionTest::concurrentWindowsAndExternalDeletionDoNotOverwrite()
+PASS   : BrowserSessionTest::lockConflictAndExternalEditPreserveData()
+PASS   : BrowserSessionTest::replacedProfileDirectoryCannotReceiveStaleSave()
+PASS   : BrowserSessionTest::cleanupTestCase()
+Totals: 23 passed, 0 failed, 0 skipped, 0 blacklisted, 80ms
+********* Finished testing of BrowserSessionTest *********

@@ -1,0 +1,8 @@
+********* Start testing of UsageCompressionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UsageCompressionTest::initTestCase()
+FAIL!  : UsageCompressionTest::utilityPairsRepeatedCallIdsWithinEachBatch() 'body.contains("FIRST_RESULT")' returned FALSE. ()
+D:/age/ADE/tests/test_usage_compression.cpp(647) : failure location
+PASS   : UsageCompressionTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 71ms
+********* Finished testing of UsageCompressionTest *********

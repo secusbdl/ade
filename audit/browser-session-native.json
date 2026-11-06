@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "baselineAudit": "audit/parity-review-ui.json",
+  "capabilityId": "browser.tab_restore",
+  "status": "implemented_bounded_subset_integrated_focused_verified",
+  "upstream": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+      "line": 3039,
+      "anchor": "private saveTabState()"
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+      "line": 3119,
+      "anchor": "private async loadTabState()"
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+      "line": 2449,
+      "anchor": "private async ensureAgentTabsCreated"
+    }
+  ],
+  "implemented": [
+    "Ordinary browser tab URLs, saved titles, explicit order and last-active browser selection survive restart.",
+    "Per-tab persistent IDs are separate from fresh runtime browser authority IDs.",
+    "Creation/address entry/navigation/title/selection/reorder/close schedule a200ms coalesced write; normal window close flushes.",
+    "Restoration suppresses intermediate writes, retains hidden content preference and restores blank tabs without applying custom New Tab URL.",
+    "Legacy profiles with no inventory use configured startup URL; explicitly saved empty inventory stays empty.",
+    "Versioned bounded JSON, atomic save, cooperating-writer lock/revision checks, profile directory identity check and invalid/externally changed state preservation.",
+    "HTTP/HTTPS/about:blank only; userinfo removed, encoded path/query/fragment preserved. Nonbrowser content is excluded."
+  ],
+  "bounds": {
+    "maximumTabs": 128,
+    "maximumJsonBytes": 1048576,
+    "maximumEncodedUrlBytes": 8192,
+    "maximumTitleUtf16Units": 1024,
+    "saveCoalescingMs": 200
+  },
+  "validation": {
+    "unit": {
+      "result": "pass",
+      "cases": 23,
+      "failures": 0,
+      "skipped": 0,
+      "elapsedMs": 79,
+      "text": "private/browser-session-stage/store-tests.txt",
+      "xml": "private/browser-session-stage/store-tests.xml",
+      "publicEvidence": [
+        {
+          "path": "audit/browser-session/store-tests.txt",
+          "sha256CanonicalLf": "349390fc6a92cc39ba59e8c1965a8fa7ac47ae2b034936c4cbe5b904fd8295b7",
+          "redactions": {
+            "xmlHostname": 0
+          }
+        },
+        {
+          "path": "audit/browser-session/store-tests.xml",
+          "sha256CanonicalLf": "e274431176f6de4fc9de67343a79dd89d73cba29245cfe5f651783848d8cdca3",
+          "redactions": {
+            "xmlHostname": 1
+          }
+        }
+      ],
+      "sharedRun": {
+        "result": "pass",
+        "cases": 23,
+        "failures": 0,
+        "skipped": 0,
+        "elapsedMs": 80,
+        "report": "build-next/Testing/native_browser_session.txt",
+        "finalEvidenceDestination": "audit/parity-integration/final/native_browser_session.txt"
+      }
+    },
+    "host": {
+      "result": "pass",
+      "cases": 10,
+      "failures": 0,
+      "skipped": 0,
+      "elapsedMs": 1687,
+      "source": "tests/test_browser_session_host.cpp",
+      "report": "build-next/Testing/native_browser_session_host.txt",
+      "finalEvidenceDestination": "audit/parity-integration/final/native_browser_session_host.txt",
+      "scope": "Real MainWindow/address-submit/tab-control/restart fixtures. Windows remain hidden and actual WebView navigation is not initialized; no external service or user profile.",
+      "warnings": [
+        "QtTest reported a missing toolchain font directory. No visual parity or font-render claim derives from this functional suite."
+      ]
+    },
+    "fullIntegratedSuite": "pending_parent_run"
+  },
+  "limits": [
+    "Not full Stagewise tab lifecycle parity: current native ordinary browser tabs are global; per-agent association/pinning/deferred restoration remain unimplemented.",
+    "Terminal/editor/app/image/side-chat content restoration is not supplied by this browser inventory. Existing side-chat lifecycle is independent.",
+    "No cross-product Stagewise profile import, navigation-stack/form/scroll/media/session-process restoration.",
+    "Persistence occurs after a200ms debounce plus close flush; abrupt termination before a pending write can lose the most recent tab update.",
+    "Atomic CAS coordinates cooperating writers. It does not claim race-free arbitrary external file writers or complete ancestor-reparse protection.",
+    "Save errors report status and preserve disk data; they do not prevent closing or implement a recovery/import UI.",
+    "No source/native screenshot or universal zero-defect claim."
+  ],
+  "sourceHashesCanonicalLf": {
+    "src/ui/BrowserSessionStore.h": "19132c612f15feb207415fff3feed57550c8b36f7c92d0109c585e90beeb72bb",
+    "src/ui/BrowserSessionStore.cpp": "c3c6e8e63c677e2e9ee472379cc62922bcc28bdda824422327cab550db4ef4cf",
+    "src/ui/MainWindowBrowserSession.cpp": "472218dcca2038290072e4fbffb7ad8c59babbd84272a3317a412a1080c642e2",
+    "tests/test_browser_session.cpp": "d08574d6d1366416fff7b9a5bfc02501f60a7b855c106274c1b3170ef153f5d1",
+    "tests/test_browser_session_host.cpp": "09fadbe0c93cb370a74b9af8c85f6013bdbee920e1aef19af3815b93ccb972a0"
+  },
+  "independentReview": "license_review bounded read of store/CAS/root identity/restore guards found no concrete additional defect; source review only.",
+  "hostHookEvidence": [
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "symbols": [
+        "initializeBrowserSession",
+        "addBrowserTab",
+        "scheduleBrowserSessionSave",
+        "saveBrowserSession"
+      ]
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "symbols": [
+        "BrowserSessionStore",
+        "m_browserSessionTimer"
+      ]
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "symbol": "contentWidthAndCollapsePersist",
+      "note": "Parent migrated previous zero-tab expectation to one restored hidden tab and preserved width assertion."
+    }
+  ],
+  "integratedVerification": {
+    "report": "audit/parity-integration.json",
+    "ctestSuites": 91,
+    "failedSuites": 0,
+    "nativeHostTestsPassed": true,
+    "packagedUiReport": "audit/parity-integration/packaged-ui-qa.json",
+    "packagedInteractionStatus": "blocked_by_computer_use_input_guard"
+  }
+}

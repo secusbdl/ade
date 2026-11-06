@@ -42,6 +42,9 @@ def verify_manifest(directory, manifest_name):
 
 root = Path(__file__).resolve().parents[1]
 results = {"stagewise": verify_manifest(root / "reference/stagewise", "REFERENCE_MANIFEST.json")}
+supplement = root / "reference/stagewise-supplement"
+if supplement.exists():
+    results["stagewise-supplement"] = verify_manifest(supplement, "REFERENCE_MANIFEST.json")
 for experiment in ("file-mutations", "git-usage"):
     results[experiment] = verify_manifest(root / "reference/native-experiments" / experiment,
                                           "EXPERIMENT_MANIFEST.json")

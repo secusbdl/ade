@@ -1,0 +1,55 @@
+{
+  "verifiedUtc": "2026-11-06T15:56:15.632409+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "commit": "ecb2db018a5c4724c8426a55f6e08bc6dd3f348a",
+  "parent": "5c979e86afdc1924fd58a019e2ebd9ebe47f9a61",
+  "sourceDevelopmentCommit": "e2efe11b8df9a9dc4471b46a07460c081e7bd25e",
+  "method": "GitHub Desktop UI, single Push origin after exact outgoing commit/checkout verification; observed push complete. Independent git ls-remote matched HEAD and main.",
+  "remoteRefs": {
+    "HEAD": "ecb2db018a5c4724c8426a55f6e08bc6dd3f348a",
+    "refs/heads/main": "ecb2db018a5c4724c8426a55f6e08bc6dd3f348a"
+  },
+  "developmentHistoryImported": false,
+  "publicationManifestVerification": {
+    "commit": "ecb2db018a5c4724c8426a55f6e08bc6dd3f348a",
+    "parent": "5c979e86afdc1924fd58a019e2ebd9ebe47f9a61",
+    "sourceCommit": "e2efe11b8df9a9dc4471b46a07460c081e7bd25e",
+    "files": 2799,
+    "committedFiles": 2800,
+    "sourceHashMismatches": 0,
+    "testReportHashesVerified": 6,
+    "committedManifestSha256": "9752a6604c918abc84b995ec8f58fed37b2f247d4c506918ce8b90d8dce46d9f"
+  },
+  "sourceExportVerification": {
+    "verifiedUtc": "2026-11-06T15:54:04.843474+00:00",
+    "sourceDevelopmentCommit": "e2efe11b8df9a9dc4471b46a07460c081e7bd25e",
+    "sourceExport": "out/composer-send-source-export",
+    "manifestSha256": "25c12fee9914411f28edf950128adca7c3a8d6b727d447fdf0d896092478a71a",
+    "manifestFiles": 2799,
+    "manifestHashMismatches": 0,
+    "currentAuditPathsVerified": 17,
+    "excludedAuditImages": 49,
+    "scan": {
+      "textFiles": 2793,
+      "highConfidenceCandidatePaths": [],
+      "privateStatePathCandidates": [],
+      "scope": "Bounded token/private-key/JWT shapes and private state names; no live credential reads, not a universal detector."
+    },
+    "referenceVerification": "Pinned Stagewise1400, mutation17 and Git16 files verified in source/export by prepare-publication.py.",
+    "buildScope": "Targeted production ADE and affected tests rebuilt and actual packaged EXE exercised; no additional fresh export build claimed for this patch."
+  },
+  "validation": "audit/composer-send-verification.json",
+  "tests": {
+    "passedSuites": 6,
+    "passedCasesIncludingLifecycle": 137,
+    "fullApplicationSuiteRerun": false
+  },
+  "readyBuild": {
+    "path": "out/composer-send-fix/ADE.exe",
+    "sha256": "a161b5819863f6fa7133dd92071bff6eab5d2bea839bae4a58fdf4a899f7f0d7",
+    "unchangedAfterPackagedUiCheck": true
+  },
+  "userData": "Actual saved session loaded read-only and stayed byte-identical; user running older process/draft and credentials were untouched. Restart with the fixed executable is required.",
+  "fullParity": false
+}

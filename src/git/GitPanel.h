@@ -20,6 +20,7 @@ public:
     // Host closes/saves affected dirty editor tabs and checks active runs here.
     void setMutationGuard(std::function<bool(const QString &,GitOperation)> guard);
 signals:
+    void cleanupReviewRequested();
     void mutationStarted(const QString &path,ade::GitOperation operation);
     void mutationFinished(const QString &path,ade::GitOperation operation,bool success);
     void mountWorktreeRequested(const QString &path,const ade::WorktreeSetupMetadata &setup);

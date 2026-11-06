@@ -72,7 +72,10 @@ GitPanel::GitPanel(GitServiceOptions options,QWidget *parent):QWidget(parent),d(
     d->service=new GitService(std::move(options),this);
     auto *layout=new QVBoxLayout(this); layout->setContentsMargins(16,14,16,14); layout->setSpacing(10);
     auto *top=new QHBoxLayout; d->heading=new QLabel("Source control"); d->heading->setObjectName("gitHeading"); auto titleFont=d->heading->font(); titleFont.setWeight(QFont::DemiBold); if(titleFont.pixelSize()>0) titleFont.setPixelSize(titleFont.pixelSize()+1); else titleFont.setPointSizeF(qMax(8.0,titleFont.pointSizeF())+1); d->heading->setFont(titleFont);
-    d->refresh=button("Refresh","gitRefresh"); top->addWidget(d->heading,1); top->addWidget(d->refresh); layout->addLayout(top);
+    d->refresh=button("Refresh","gitRefresh"); top->addWidget(d->heading,1);
+    auto* review=button("Review unused worktrees…","gitReviewCleanup");top->addWidget(review);
+    connect(review,&QPushButton::clicked,this,&GitPanel::cleanupReviewRequested);
+    top->addWidget(d->refresh); layout->addLayout(top);
     d->summary=new QLabel("Connect a repository to view changes and worktrees."); d->summary->setObjectName("gitSummary"); d->summary->setWordWrap(true); d->summary->setTextInteractionFlags(Qt::TextSelectableByMouse); layout->addWidget(d->summary);
     auto *actions=new QHBoxLayout; actions->setSpacing(6);
     d->switchBranch=button("Switch branch","gitSwitchBranch"); d->createBranch=button("New branch","gitCreateBranch"); d->createWorktree=button("New worktree","gitCreateWorktree"); d->fetch=button("Fetch","gitFetch");

@@ -210,19 +210,21 @@ void GitTest::removalPolicies() {
 void GitTest::cleanupRules() {
     Fixture f; GitService service(f.options()); auto context=f.context(); service.setWorkspaceContext(context);
     auto created=waitFor(service,service.createWorktree(f.root,"merged","main")); QVERIFY(ok(created));
-    auto result=waitFor(service,service.cleanupCandidates()); QVERIFY(ok(result)); QCOMPARE(result.cleanup.size(),1); QCOMPARE(result.cleanup[0].mergedInto,"main");
-    context.lastUsedAt[created.path]=QDateTime::currentMSecsSinceEpoch(); service.setWorkspaceContext(context);
-    result=waitFor(service,service.cleanupCandidates()); QVERIFY(ok(result)); QVERIFY(result.cleanup.isEmpty());
+    // A caller-provided boolean/age no longer substitutes for durable identity history.
+    QCOMPARE(waitFor(service,service.cleanupCandidates()).error.code,GitErrorCode::UnsafeCleanup);
     QCOMPARE(waitFor(service,service.removeWorktree(created.path,GitRemovePolicy::Cleanup)).error.code,GitErrorCode::UnsafeCleanup);
-    context.lastUsedAt[created.path]=QDateTime::currentMSecsSinceEpoch()-8LL*24*60*60*1000; context.usageKnown=false; service.setWorkspaceContext(context);
-    result=waitFor(service,service.cleanupCandidates()); QVERIFY(ok(result)); QVERIFY(result.cleanup.isEmpty());
-    context.usageKnown=true; service.setWorkspaceContext(context); QVERIFY(write(created.path+"/late.txt","do not lose"));
+    auto result=waitFor(service,service.inspectUsage(created.path));QVERIFY(ok(result));QCOMPARE(result.usage.size(),1);QVERIFY(result.usage.first().identity.valid());
+    result=waitFor(service,service.scanUsage());QVERIFY(ok(result));QCOMPARE(result.usage.size(),1);QVERIFY(result.usage.first().merged);QCOMPARE(result.usage.first().mergedInto,"main");
+    context.lastUsedAt[created.path]=QDateTime::currentMSecsSinceEpoch()-8LL*24*60*60*1000;context.usageKnown=true;service.setWorkspaceContext(context);
+    QVERIFY(write(created.path+"/late.txt","do not lose"));
     QCOMPARE(waitFor(service,service.removeWorktree(created.path,GitRemovePolicy::Cleanup)).error.code,GitErrorCode::DirtyWorktree);
-    QVERIFY(QFile::remove(created.path+"/late.txt")); QVERIFY(ok(waitFor(service,service.removeWorktree(created.path,GitRemovePolicy::Cleanup))));
-    created=waitFor(service,service.createWorktree(f.root,"unmerged","main")); QVERIFY(ok(created));
-    QVERIFY(write(created.path+"/new-commit.txt","unique commit")); QVERIFY(f.run({"add","."},created.path)); QVERIFY(f.run({"commit","-m","unmerged"},created.path));
-    result=waitFor(service,service.cleanupCandidates()); QVERIFY(ok(result)); QVERIFY(result.cleanup.isEmpty());
+    QVERIFY(QFile::remove(created.path+"/late.txt"));
     QCOMPARE(waitFor(service,service.removeWorktree(created.path,GitRemovePolicy::Cleanup)).error.code,GitErrorCode::UnsafeCleanup);
+    QVERIFY(QFileInfo::exists(created.path));
+    QVERIFY(write(created.path+"/new-commit.txt","unique commit"));QVERIFY(f.run({"add","."},created.path));QVERIFY(f.run({"commit","-m","unmerged"},created.path));
+    result=waitFor(service,service.scanUsage());QVERIFY(ok(result));QCOMPARE(result.usage.size(),1);QVERIFY(!result.usage.first().merged);
+    // Actual permitted removal, restart, and stale-review failures are exercised
+    // through WorktreeCleanupController in native_git_cleanup.
 }
 void GitTest::detachedUnmanagedAndLockedWorktrees() {
     Fixture f; GitService service(f.options()); auto context=f.context(); service.setWorkspaceContext(context);

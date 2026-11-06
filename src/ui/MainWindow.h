@@ -9,6 +9,7 @@
 #include <QPointer>
 #include <QSet>
 #include <QUuid>
+#include <memory>
 class QComboBox; class QFileSystemModel; class QLabel; class QLineEdit; class QListWidget;
 class QPlainTextEdit; class QSplitter; class QStackedWidget; class QTabWidget; class QTextBrowser;
 class QToolButton; class QTreeView;
@@ -23,11 +24,13 @@ class AttachmentStrip;
 class SidebarSplitter;class SidebarNavigation;class WorkbenchSplitter;class ChatSurface;
 class ConversationView;
 class GitPanel;class WorktreeSetupRunner;class WorktreeSettingsController;enum class GitOperation;
+class WorktreeCleanupController;
 class ComposerCompletionController;
 class CommandCenterController;
 class FileChangesPanel;
 class QuestionPanel;class MessageQueuePanel;
 class SideChatPane;
+class BrowserSessionStore;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -64,7 +67,12 @@ private:
     void conversationError(const QString& message);
     void refreshAgents(); void refreshModels(); void restoreModelSelection(); void renderConversation(); bool saveSessions();
     void send();void showProviders();void showSettings();void applyPreferences();void chooseWorkspace();void openFile(const QString& path);
-    void addBrowserTab(const QUrl& url=QUrl("about:blank")); void showTerminal();
+    void addBrowserTab(const QUrl& url=QUrl("about:blank"),const QString& restoredId={},const QString& restoredTitle={}); void showTerminal();
+    void initializeBrowserSession();void scheduleBrowserSessionSave();bool saveBrowserSession();
+    std::unique_ptr<BrowserSessionStore> m_browserSessionStore;
+    QTimer* m_browserSessionTimer=nullptr;
+    QString m_lastActiveBrowserId;
+    bool m_browserSessionInitialized=false,m_restoringBrowserSession=false;
     void showAgentShell(const QString& agentId,const QString& sessionId);
     QWidget* configureBrowserTools(QWidget* page,BrowserWidget* browser,QHBoxLayout* navigation);
     void attachBrowserContext(const QString& agentId,const QString& name,const QByteArray& bytes);
@@ -87,6 +95,7 @@ private:
     QJsonObject appThemeVariables() const;
     void updateAppThemes();
     void initializeGit();void showGit();void updateGitContext();
+    void updateGitUsageTracking();void closeGitUsageTracking();void reviewUnusedWorktrees();
     void configureWorktreeSettingsPage();
     bool prepareGitMutation(const QString& path,GitOperation operation);
     bool gitPathBusy(const QString& path) const;
@@ -98,6 +107,7 @@ private:
     void initializeComposerCompletions(Composer* composer,const QString& fixedChat);
     QHash<QString,QPointer<ComposerCompletionController>> m_sideCompletionControllers;
     void initializeCommandCenter();
+    void initializeNavigationShortcuts();
     void openCommandCenter(const QString& mode="global",bool searchContents=false);
     QPointer<CommandCenterController> m_commandCenterController;
     void refreshCompletionContext();
@@ -154,6 +164,7 @@ private:
     GitPanel* m_git=nullptr;
     WorktreeSetupRunner* m_worktreeSetup=nullptr;
     WorktreeSettingsController* m_worktreeSettings=nullptr;
+    WorktreeCleanupController* m_worktreeCleanup=nullptr;
     QSet<QString> m_gitMutatingPaths,m_worktreesRemoving,m_worktreeSetups;
     QSet<QString> m_repositoryWatchOwners;
     QSet<QString> m_liveConversationOwners;

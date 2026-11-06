@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="UsageCompressionTest" timestamp="2026&#x002D;11&#x002D;06T18:52:28" hostname="VOID" tests="31" failures="0" errors="0" skipped="0" time="4.644">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="countersAreCumulativeAndCacheAware" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="invalidAndMissingCountersStayUnknown" classname="UsageCompressionTest" time="0.000"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(openai)" classname="UsageCompressionTest" time="0.181"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(responses)" classname="UsageCompressionTest" time="0.182"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(anthropic)" classname="UsageCompressionTest" time="0.169"/>
+  <testcase name="usageRoundTripsAndNeverEntersWire(google)" classname="UsageCompressionTest" time="0.128"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(openai)" classname="UsageCompressionTest" time="0.170"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(responses)" classname="UsageCompressionTest" time="0.242"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(anthropic)" classname="UsageCompressionTest" time="0.215"/>
+  <testcase name="automaticCompressionPreservesToolsAndOriginalHistory(google)" classname="UsageCompressionTest" time="0.173"/>
+  <testcase name="unknownLimitsAndThresholdEqualityDoNotCompress" classname="UsageCompressionTest" time="0.242"/>
+  <testcase name="failedCompressionContinuesWithFullHistory" classname="UsageCompressionTest" time="0.185"/>
+  <testcase name="cancellationDuringUtilityCannotCommitOrResume" classname="UsageCompressionTest" time="0.301"/>
+  <testcase name="completedCompressionRestoresWithoutDuplicateUtility" classname="UsageCompressionTest" time="0.255"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;cancel)" classname="UsageCompressionTest" time="0.060"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;delete)" classname="UsageCompressionTest" time="0.126"/>
+  <testcase name="observersCanCancelDeleteAndReplace(usage&#x002D;replace)" classname="UsageCompressionTest" time="0.171"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;cancel)" classname="UsageCompressionTest" time="0.061"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;delete)" classname="UsageCompressionTest" time="0.108"/>
+  <testcase name="observersCanCancelDeleteAndReplace(start&#x002D;replace)" classname="UsageCompressionTest" time="0.187"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;cancel)" classname="UsageCompressionTest" time="0.162"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;delete)" classname="UsageCompressionTest" time="0.154"/>
+  <testcase name="observersCanCancelDeleteAndReplace(finish&#x002D;replace)" classname="UsageCompressionTest" time="0.231"/>
+  <testcase name="explicitAndDiscoveredLimitsAreModelScopedAndPersisted" classname="UsageCompressionTest" time="0.007"/>
+  <testcase name="utilityPairsRepeatedCallIdsWithinEachBatch" classname="UsageCompressionTest" time="0.112"/>
+  <testcase name="partialAndUnmeteredRoundsCannotUsePreviousCounts" classname="UsageCompressionTest" time="0.307"/>
+  <testcase name="overloadFallbackDoesNotAttributeOldProviderUsage" classname="UsageCompressionTest" time="0.188"/>
+  <testcase name="largeContextUsesHardCapAndConfiguredUtilityFallback" classname="UsageCompressionTest" time="0.251"/>
+  <testcase name="utilityCompletionCanDestroyServiceOutsideNetworkFrame" classname="UsageCompressionTest" time="0.075"/>
+  <testcase name="cleanupTestCase" classname="UsageCompressionTest" time="0.000"/>
+</testsuite>

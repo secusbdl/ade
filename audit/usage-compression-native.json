@@ -1,0 +1,373 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-11-06T16:54:24.335782+00:00",
+  "reviewedBaseCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "implementationStatus": "Implemented native bounded slice; integrated root build/test pending at report creation. Source frozen.",
+  "sourceContract": [
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/agent-manager/state-mutations/simple.ts",
+      "line": 97,
+      "anchor": "export function recordUsage",
+      "sha256CanonicalLf": "138a64baa1dd7c73713cdcc1f8517282f1cdc545e8bddb8e1a9542564fb57c2f"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/chat/chat.ts",
+      "line": 38,
+      "anchor": "historyCompressionThreshold: 0.5",
+      "sha256CanonicalLf": "ba7b56e424b6147ca119eb5d982ce29bee28ba5739ded17c463e2a53f50de03d"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "line": 2781,
+      "anchor": "private async handlePostStep",
+      "sha256CanonicalLf": "f3baea7d090e1b3641d4f09e30223f0e5e669e6eec54d18b10ebb304d3d29196"
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "line": 2442,
+      "anchor": "private async compressHistoryInternal",
+      "sha256CanonicalLf": "f3baea7d090e1b3641d4f09e30223f0e5e669e6eec54d18b10ebb304d3d29196"
+    }
+  ],
+  "nativeAnchors": [
+    {
+      "path": "src/core/ProviderUsage.cpp",
+      "line": 17,
+      "anchor": "void ProviderUsage::consume",
+      "sha256CanonicalLf": "6cd0af11b9ec318a9674b30a7e8ff86f0fd8685f8b6d926a8687dc2c1a9d02ed"
+    },
+    {
+      "path": "src/core/ProviderUsage.cpp",
+      "line": 59,
+      "anchor": "QJsonObject ProviderUsage::counters",
+      "sha256CanonicalLf": "6cd0af11b9ec318a9674b30a7e8ff86f0fd8685f8b6d926a8687dc2c1a9d02ed"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "line": 425,
+      "anchor": "m_roundUsage.consume",
+      "sha256CanonicalLf": "1735480fdbfcbc499ecbaa4c3cfd0e997e94f88ba98a90339bafe9f1a2b87aa8"
+    },
+    {
+      "path": "src/core/AgentEngineCompression.cpp",
+      "line": 25,
+      "anchor": "QJsonObject AgentEngine::latestUsage",
+      "sha256CanonicalLf": "b8a82451565640ce02cfb5a9e85b77922a51da75c0eb66e438ea57da2d79e7a3"
+    },
+    {
+      "path": "src/core/AgentEngineCompression.cpp",
+      "line": 56,
+      "anchor": "bool AgentEngine::maybeCompress",
+      "sha256CanonicalLf": "b8a82451565640ce02cfb5a9e85b77922a51da75c0eb66e438ea57da2d79e7a3"
+    },
+    {
+      "path": "src/core/UtilityService.cpp",
+      "line": 44,
+      "anchor": "Provider IDs may repeat",
+      "sha256CanonicalLf": "ca363cb90fe13cf81c887a484f321a02be3f13f748b8dc132b15e991a1fbb5b8"
+    },
+    {
+      "path": "src/ui/ProviderDialog.cpp",
+      "line": 46,
+      "anchor": "Model context limit",
+      "sha256CanonicalLf": "236a6986fbc2223b591bdbbdced4bea60e0e12e775596869ae6ea5bdc91c506d"
+    },
+    {
+      "path": "src/ui/ModelSelection.cpp",
+      "line": 72,
+      "anchor": "QList<ModelConfig> resolveModelEntries",
+      "sha256CanonicalLf": "19a5fea18fcd14938b6258fec286ad58244bcc3bf412c471a4e430c0e1ecf7f8"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "line": 307,
+      "anchor": "setCompressionModels(resolveModelEntries",
+      "sha256CanonicalLf": "bb3f5ea8a34108f31d0b9d158766bbfb079fb28bfe1280a45bbd3513972f8cc1"
+    }
+  ],
+  "behavior": [
+    "Four-protocol request usage parser consumes OpenAI usage-only SSE, Anthropic message_start/message_delta snapshots, Google usageMetadata and Responses terminal usage. Repeated cumulative events overwrite instead of adding.",
+    "Anthropic uncached input+cache creation+cache reads form total input. OpenAI cached/reasoning details remain subsets; Google candidates+thoughts form output while reported total is retained. Strict nonnegative integer bounds prevent overflow/coercion.",
+    "Versioned usage stays under metadata.usage alongside existing display/attachments and signed native replay. actual next request and serializer equality fixtures prove usage does not enter any of four provider histories.",
+    "Chat source0.5 threshold and100000 hard cap trigger utility fallback chain with a known model context limit. Only a valid completed latest round for exact provider/endpoint/protocol/model is eligible; no older count reused after missing/partial/fallback results.",
+    "Generation, QPointer and immutable history checks guard utility completion; restored applied usage IDs prevent duplicate compression. Original full history remains available and request preparation injects only the chosen briefing+retained suffix.",
+    "ProviderConfig persists optional contextWindowTokens (0 unknown,<=100M). ProviderDialog exposes it and clears it on model/endpoint/protocol changes. Matching discovery catalog limits are resolved per exact model and endpoint; explicit default-model limits do not transfer to another model.",
+    "Main and side-chat/queue model chains receive catalog metadata; actual turn hook supplies configured global/preset utility chains. Existing manual compression stays functional.",
+    "UtilityService result lookup now associates repeated tool IDs only inside the same assistant/result batch. Its network callbacks are queued and reply/generation-bound to support owner deletion outside Qt backend dispatch."
+  ],
+  "tests": {
+    "newUsageSuite": 31,
+    "newSettingsSuite": 4,
+    "existingCore": 48,
+    "existingEngineObservers": 56,
+    "existingHistoryRecovery": 28,
+    "existingPresentation": 89,
+    "existingConversationControl": 26,
+    "totalPassedIncludingLifecycle": 282,
+    "allFinalFailures": 0,
+    "execution": "Independent private Qt/MinGW build and loopback/in-memory synthetic fixtures; no shared build or full aggregate repeated by this agent.",
+    "cases": [
+      "usage-only SSE with content/tools",
+      "repeated cumulative totals",
+      "cache/reasoning distinctions",
+      "all4 signed payload/history roundtrips",
+      "tool\u2192compression\u2192toolresult association",
+      "full history preservation",
+      "unknown/equal thresholds",
+      "100k hardcap",
+      "configured utility fallback",
+      "failed utility resume without history loss",
+      "cancel during held utility HTTP",
+      "cancel/delete/replacement atusage/start/finish observers",
+      "restart no duplicateutility",
+      "provider fallback no staleusage",
+      "partial/missingusage staysunknown",
+      "explicit and discovery limit scope",
+      "ProviderDialog save/invalidation",
+      "utility owner deletion",
+      "reused tool IDs summary regression"
+    ]
+  },
+  "beforeEvidence": {
+    "utilityReusedIds": {
+      "baselineSource": "git show b48683b:src/core/UtilityService.cpp",
+      "method": "Compiled the exact old UtilityService implementation against the new focused fixture; only the reused-ID summary test was run.",
+      "result": "2 lifecycle passed,1 failed: FIRST_RESULT missing because global ID map used later batch output. Current suite contains and orders both results."
+    },
+    "initialFixtureFailure": {
+      "result": "24passed,2failed; Anthropic synthetic stream omitted content_block_stop and input JSON delta.",
+      "correction": "Fixture now emits valid block delta/stop events. Existing production parser already defaults an empty completed tool block to {}; no parser weakening."
+    }
+  },
+  "peerReview": {
+    "reviewer": "license_review",
+    "scope": "Read-only ProviderUsage/AgentEngineCompression and usage finish/cancel hook review",
+    "result": "No additional concrete lifetime/cancellation/foreign-usage defect found; no independent fixture rerun."
+  },
+  "limits": [
+    "No full Stagewise parity claim. Full Node Buffer/builtins/importModule, archival memory/plans, LSP/research/cloud-provider gaps remain in parity-review-core.json.",
+    "Usage records represent the latest provider request, not lifetime token/cost accounting. No currency pricing, billing reconciliation, account/subscription warning calculation or tokenizer implementation.",
+    "Missing/malformed counters remain unknown; no guessed model context size. Counters on failed requests without retained assistant payload are not a durable billing ledger. Unknown compatible-provider usage schemas are not normalized.",
+    "Automatic compression waits at a complete tool-batch boundary (or final turn) rather than racing the next generation in the background. A utility failure keeps full history and resumes the suspended action; cancellation stops it.",
+    "Retained history uses the existing approximate JSON-byte token estimate,12 preferred canonical rows and user-turn alignment. Canonical native tool results are separate rows, so this is not exact source UI-message counting/tokenization.",
+    "Unknown contextWindowTokens disables automatic compression; manual /compact remains available. Explicit model limit and valid discovered inputTokenLimit are supported; no broad per-vendor catalog inference.",
+    "Automatic briefing writes preserve original rows and existing attachment/native metadata. History is persisted through existing host save/queue callbacks; no new transactional crash journal is claimed.",
+    "Chat Completions requests now ask stream_options.include_usage=true. Local fixtures cover all four protocols, not every real OpenAI-compatible endpoint accepting that option; no live services or real credentials used.",
+    "ProviderDialog is tested through actual widgets offscreen. This does not establish full visual parity or application deployment validation."
+  ],
+  "reports": [
+    {
+      "suite": "utility_reused_id_before",
+      "path": "audit/usage-compression/utility-before.txt",
+      "sha256CanonicalLf": "e9875896b81d807da9af484a3623966ee227a850bba638a375d265cc73f9f9fc",
+      "passedIncludingLifecycle": 2,
+      "failed": 1,
+      "skipped": 0,
+      "milliseconds": 71
+    },
+    {
+      "suite": "utility_reused_id_before",
+      "path": "audit/usage-compression/utility-before.xml",
+      "sha256CanonicalLf": "32e0c82950062a825dc6000a79fba0e0a5260b5df2fd7b361203dfcb6cc2c476"
+    },
+    {
+      "suite": "usage_initial_fixture",
+      "path": "audit/usage-compression/tests-first.txt",
+      "sha256CanonicalLf": "5cebeb1dd6d7a34b1bfd06a2b74ba0ffd884ccb474fbd3d0e5dccc2fb00ae44e",
+      "passedIncludingLifecycle": 24,
+      "failed": 2,
+      "skipped": 0,
+      "milliseconds": 3787
+    },
+    {
+      "suite": "usage_initial_fixture",
+      "path": "audit/usage-compression/tests-first.xml",
+      "sha256CanonicalLf": "30f37d1d2cd2677341af9cb72ebcf50c662d08dc0937ad86d043775e1d7a4e5e"
+    },
+    {
+      "suite": "native_usage_compression",
+      "path": "audit/usage-compression/tests-final.txt",
+      "sha256CanonicalLf": "f50ef48f3d72b63c6dfe6ffb163f70a0e94181f1b076859403efdf07e650a89d",
+      "passedIncludingLifecycle": 31,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4644
+    },
+    {
+      "suite": "native_usage_compression",
+      "path": "audit/usage-compression/tests-final.xml",
+      "sha256CanonicalLf": "8c400a728d66c850887e9ae8896fa503906b3a939f7331b499cb2aaa3fd343cf"
+    },
+    {
+      "suite": "native_usage_settings",
+      "path": "audit/usage-compression/settings-final.txt",
+      "sha256CanonicalLf": "faee5adfa4e6886ed9f10db62013f76e3dea30ed572d972fec4254f46ce87fe9",
+      "passedIncludingLifecycle": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 62
+    },
+    {
+      "suite": "native_usage_settings",
+      "path": "audit/usage-compression/settings-final.xml",
+      "sha256CanonicalLf": "fe1787e3082411b948a9acafb4d35712f16db3641c504821dda31837adb7ba72"
+    },
+    {
+      "suite": "native_core",
+      "path": "audit/usage-compression/core-final.txt",
+      "sha256CanonicalLf": "c3f19ce53b1f61e5e9f7b5a1f5a18a848cd2b7e4e8022c2c42496f8d5454c77c",
+      "passedIncludingLifecycle": 48,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8507
+    },
+    {
+      "suite": "native_core",
+      "path": "audit/usage-compression/core-final.xml",
+      "sha256CanonicalLf": "ec88896f69fe6abd2387387d7a8cf9c2c241794d5e509f588dd604df97ae2168"
+    },
+    {
+      "suite": "native_engine_observers",
+      "path": "audit/usage-compression/engine_observers-final.txt",
+      "sha256CanonicalLf": "8c616ba42445677a694017e383820182cfff31c9d184b6bc1f895f230a67d62a",
+      "passedIncludingLifecycle": 56,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8752
+    },
+    {
+      "suite": "native_engine_observers",
+      "path": "audit/usage-compression/engine_observers-final.xml",
+      "sha256CanonicalLf": "2f33b7dc110fb07d0be2bf4e1cd17cf8e868ffcdc7f5f1fc42c34979df5b64ee"
+    },
+    {
+      "suite": "native_history_recovery",
+      "path": "audit/usage-compression/history_recovery-final.txt",
+      "sha256CanonicalLf": "96d6df37f1929c57c534257190154736c61da7b939b01d316d1d2e9a4d2f6560",
+      "passedIncludingLifecycle": 28,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1602
+    },
+    {
+      "suite": "native_history_recovery",
+      "path": "audit/usage-compression/history_recovery-final.xml",
+      "sha256CanonicalLf": "410a8d63d70899c974f8792ea24b20d0535bce7038c51880b99e91d37ba36de2"
+    },
+    {
+      "suite": "native_presentation",
+      "path": "audit/usage-compression/presentation-final.txt",
+      "sha256CanonicalLf": "a64928d3eee3005e6f960f0bbdf8b26c86b8254de654176a9f49653b7bc320e8",
+      "passedIncludingLifecycle": 89,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 16870
+    },
+    {
+      "suite": "native_presentation",
+      "path": "audit/usage-compression/presentation-final.xml",
+      "sha256CanonicalLf": "62c0962493ba0c655510103f33bf2ea669d395cb5e61ea2f2b32365f02d73c37"
+    },
+    {
+      "suite": "native_conversation_control",
+      "path": "audit/usage-compression/conversation_control-final.txt",
+      "sha256CanonicalLf": "20ebc95f6eb176259c3d42f167fd1517c604bad902393463113fb2ebc24605aa",
+      "passedIncludingLifecycle": 26,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4146
+    },
+    {
+      "suite": "native_conversation_control",
+      "path": "audit/usage-compression/conversation_control-final.xml",
+      "sha256CanonicalLf": "af46234583a6c2eb4c6d4aee2226e7cede2fdd6c5461f9385053d9e68cbd1c24"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "src/core/ProviderUsage.h",
+      "sha256CanonicalLf": "d8b6d04a90293423623a0884c79a49f71764c6f16eeb5450120d38a3701bb487"
+    },
+    {
+      "path": "src/core/ProviderUsage.cpp",
+      "sha256CanonicalLf": "6cd0af11b9ec318a9674b30a7e8ff86f0fd8685f8b6d926a8687dc2c1a9d02ed"
+    },
+    {
+      "path": "src/core/AgentEngine.h",
+      "sha256CanonicalLf": "3e9d55d99b7e3c6f5174040ab836118217625d04cea9993aac2c870716e72653"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "sha256CanonicalLf": "1735480fdbfcbc499ecbaa4c3cfd0e997e94f88ba98a90339bafe9f1a2b87aa8"
+    },
+    {
+      "path": "src/core/AgentEngineCompression.cpp",
+      "sha256CanonicalLf": "b8a82451565640ce02cfb5a9e85b77922a51da75c0eb66e438ea57da2d79e7a3"
+    },
+    {
+      "path": "src/core/ProviderConfig.h",
+      "sha256CanonicalLf": "1b7a44981a7bc6c90a38f73cc8ce3b5adb43cccf6c2ce29252e510e12db43daf"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "sha256CanonicalLf": "9914865f2937eda2172622516eed48a85f8adad274be51add259fa6849cc1111"
+    },
+    {
+      "path": "src/core/ProviderProtocol.cpp",
+      "sha256CanonicalLf": "2e540debc323f95c0093f398efb2539874e7f0af6f643b64e16275a3399b9d6e"
+    },
+    {
+      "path": "src/core/ProviderService.cpp",
+      "sha256CanonicalLf": "1f6cafd91dfc8dba4b199ee47f150ae8791d3d4ffcd35ddb6aef70746bd3fa29"
+    },
+    {
+      "path": "src/core/UtilityService.cpp",
+      "sha256CanonicalLf": "ca363cb90fe13cf81c887a484f321a02be3f13f748b8dc132b15e991a1fbb5b8"
+    },
+    {
+      "path": "src/ui/ModelSelection.h",
+      "sha256CanonicalLf": "543c6f9e86c9bb67ca827588f8c53c263674c2e306262c2e9b546cf611db5055"
+    },
+    {
+      "path": "src/ui/ModelSelection.cpp",
+      "sha256CanonicalLf": "19a5fea18fcd14938b6258fec286ad58244bcc3bf412c471a4e430c0e1ecf7f8"
+    },
+    {
+      "path": "src/ui/ProviderDialog.h",
+      "sha256CanonicalLf": "883622c6a0ae188ceefa6330fa71a2fdb62fc31623e70886180c7d9174a26df3"
+    },
+    {
+      "path": "src/ui/ProviderDialog.cpp",
+      "sha256CanonicalLf": "236a6986fbc2223b591bdbbdced4bea60e0e12e775596869ae6ea5bdc91c506d"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256CanonicalLf": "bb3f5ea8a34108f31d0b9d158766bbfb079fb28bfe1280a45bbd3513972f8cc1"
+    },
+    {
+      "path": "src/ui/MainWindowControl.cpp",
+      "sha256CanonicalLf": "a948c87b09beffdb5aa70ff8e923b5080ee099282a3f3d494cf04b06d59478d6"
+    },
+    {
+      "path": "src/ui/MainWindowSideChats.cpp",
+      "sha256CanonicalLf": "cbd038101e144ac99b8fb0ebf3cf3617b6d16346dba4285c3111894f186d371a"
+    },
+    {
+      "path": "tests/test_usage_compression.cpp",
+      "sha256CanonicalLf": "93bb511004088cba2b5e41b20a7711a5ba975483a8cbb048cedf67897a72ee7e"
+    },
+    {
+      "path": "tests/test_usage_settings.cpp",
+      "sha256CanonicalLf": "d352c12a1b90204209a318e2b7d07d9d22d0afc89bb9670a9114202b4cfa781d"
+    }
+  ],
+  "integratedVerification": {
+    "report": "audit/parity-integration.json",
+    "ctestSuites": 91,
+    "failedSuites": 0,
+    "nativeHostTestsPassed": true,
+    "packagedUiReport": "audit/parity-integration/packaged-ui-qa.json",
+    "packagedInteractionStatus": "blocked_by_computer_use_input_guard"
+  }
+}

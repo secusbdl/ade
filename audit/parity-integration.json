@@ -1,0 +1,1161 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T17:16:00.008692+00:00",
+  "status": "all_targets_built_91_ctest_suites_passed_packaged_interaction_pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "reviewedNativeBaseCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "fullNativeParity": false,
+  "lineByLinePortEstablished": false,
+  "sourceIndex": "audit/upstream-source-index.json",
+  "scopeLedger": "audit/parity-review-coverage.json",
+  "tests": {
+    "ctestSuites": 91,
+    "failedSuites": 0,
+    "passedCasesIncludingLifecycle": 1698,
+    "skippedCases": 1,
+    "skipExplanation": "One real-WebView case is intentionally skipped in the offscreen transcript suite and passes in native_transcript_tabs_real under the Windows platform in this same run.",
+    "junit": {
+      "path": "audit/parity-integration/full-ctest.xml",
+      "sha256": "fdf5652c367f05c260fb79fb71d2bf7102b96d2f90e83941a4f9e77c365c63ab"
+    },
+    "rows": [
+      {
+        "suite": "native_link_provenance_codec",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16,
+        "report": {
+          "path": "audit/parity-integration/final/native_link_provenance_codec.txt",
+          "sha256CanonicalLf": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc"
+        }
+      },
+      {
+        "suite": "native_navigation_shortcuts",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1620,
+        "report": {
+          "path": "audit/parity-integration/final/native_navigation_shortcuts.txt",
+          "sha256CanonicalLf": "e2190c5073519af94b7afd36729a47d3947782034150ed13bc6d7a236e95b9cc"
+        }
+      },
+      {
+        "suite": "native_browser_session",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 83,
+        "report": {
+          "path": "audit/parity-integration/final/native_browser_session.txt",
+          "sha256CanonicalLf": "12164948425c93c117f65a48aeaf4adbcb726c4d1e3a9cdf5c0dc491fd737cae"
+        }
+      },
+      {
+        "suite": "native_browser_session_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1834,
+        "report": {
+          "path": "audit/parity-integration/final/native_browser_session_host.txt",
+          "sha256CanonicalLf": "61f9ff095bcb270e4bca9430020b1a481783258c1616f516aee3d2874895d0cd"
+        }
+      },
+      {
+        "suite": "native_usage_compression",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3830,
+        "report": {
+          "path": "audit/parity-integration/final/native_usage_compression.txt",
+          "sha256CanonicalLf": "9ded79cc0a4750f1b11c74b768707503e9ddf721b6bcb9b86e649afccbe3afbb"
+        }
+      },
+      {
+        "suite": "native_usage_settings",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 81,
+        "report": {
+          "path": "audit/parity-integration/final/native_usage_settings.txt",
+          "sha256CanonicalLf": "95ee87289a1b69dfb1dff4727bc4583329f7e9c5aed250da9194054517dcccef"
+        }
+      },
+      {
+        "suite": "native_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1880,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_usage.txt",
+          "sha256CanonicalLf": "197c59dc100a4f2b205d58473ae040b5361c3f89da1d0ceb92070b2d11c22b14"
+        }
+      },
+      {
+        "suite": "native_git_cleanup",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 87762,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_cleanup.txt",
+          "sha256CanonicalLf": "b77cb4ce75fa61644ceda2fc7e073f7dd8422b57d8fe64affb6845f3668b721c"
+        }
+      },
+      {
+        "suite": "native_session_logs",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 286,
+        "report": {
+          "path": "audit/parity-integration/final/native_session_logs.txt",
+          "sha256CanonicalLf": "00192bb0af396b26cdd6b50a695ce444bb0446ca722f7a3fe374fe05919b313a"
+        }
+      },
+      {
+        "suite": "native_shell_log_mount",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 543,
+        "report": {
+          "path": "audit/parity-integration/final/native_shell_log_mount.txt",
+          "sha256CanonicalLf": "1fbcba9279b4d2a32fa7adbd39834dff34eca657c4a442df06c33a58b96a4503"
+        }
+      },
+      {
+        "suite": "native_shell_service",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 40516,
+        "report": {
+          "path": "audit/parity-integration/final/native_shell_service.txt",
+          "sha256CanonicalLf": "e636e09b862bc7404d1309ce32201edaa8033cea155c897e70c0aee2121adadc"
+        }
+      },
+      {
+        "suite": "native_shell_engine",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4602,
+        "report": {
+          "path": "audit/parity-integration/final/native_shell_engine.txt",
+          "sha256CanonicalLf": "39422a6bfa34f7ca0b02e39e927fe85e1c13cfeeb9d232a6141f5266ad9bcd57"
+        }
+      },
+      {
+        "suite": "native_shell_view",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1304,
+        "report": {
+          "path": "audit/parity-integration/final/native_shell_view.txt",
+          "sha256CanonicalLf": "41216578cfac10c2ffc92a8ceb1326137df2cf706c36043cf26fe1e81d7d0722"
+        }
+      },
+      {
+        "suite": "native_conversation_control",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4181,
+        "report": {
+          "path": "audit/parity-integration/final/native_conversation_control.txt",
+          "sha256CanonicalLf": "0d52d37004da64b2486e627e9ae24a5c40c0de2d93a56b028dfe2b9dc59ab558"
+        }
+      },
+      {
+        "suite": "native_file_mutations",
+        "passedIncludingLifecycle": 60,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3400,
+        "report": {
+          "path": "audit/parity-integration/final/native_file_mutations.txt",
+          "sha256CanonicalLf": "751bcd3b49e33f68a39c114c23f29d5260e313e9ec2a318952fb69d4d9453235"
+        }
+      },
+      {
+        "suite": "native_question_panel",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 160,
+        "report": {
+          "path": "audit/parity-integration/final/native_question_panel.txt",
+          "sha256CanonicalLf": "455b59803fc3d2603086ba40a36c93dc7a27242eaa576b87c6259c238c2efd84"
+        }
+      },
+      {
+        "suite": "native_transcript_rich",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 952,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript_rich.txt",
+          "sha256CanonicalLf": "89496cb8bb3d3e87d1d8b17860ff1567028797a9837d2cb6121aea12ba25c4d4"
+        }
+      },
+      {
+        "suite": "native_composer_completion",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2203,
+        "report": {
+          "path": "audit/parity-integration/final/native_composer_completion.txt",
+          "sha256CanonicalLf": "1ba200e97adf2cd23e6d800d8c3ec2e61b3110100d04aab466d9fbb58cf11aa0"
+        }
+      },
+      {
+        "suite": "native_composer_search",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 127,
+        "report": {
+          "path": "audit/parity-integration/final/native_composer_search.txt",
+          "sha256CanonicalLf": "547ba6d25795fd6ab34f314e6813420b256685ca2b569f666c67a6093c0f1c67"
+        }
+      },
+      {
+        "suite": "native_composer_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2869,
+        "report": {
+          "path": "audit/parity-integration/final/native_composer_host.txt",
+          "sha256CanonicalLf": "41ea1cf640535c329e8f76e5c44d0db5776f6fdf5edda79fcea45cb95ff8fb81"
+        }
+      },
+      {
+        "suite": "native_reference_controls",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 624,
+        "report": {
+          "path": "audit/parity-integration/final/native_reference_controls.txt",
+          "sha256CanonicalLf": "c16257279cc813f176eb33be8140795b7ab2b1ed56a5a9df02229f11e660b4b7"
+        }
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2278,
+        "report": {
+          "path": "audit/parity-integration/final/native_agent_control_ui.txt",
+          "sha256CanonicalLf": "d6031315e443c9a004cc95841d707e0c974078b1004ee2339222a42609861981"
+        }
+      },
+      {
+        "suite": "native_command_center",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 232,
+        "report": {
+          "path": "audit/parity-integration/final/native_command_center.txt",
+          "sha256CanonicalLf": "81274b7cf1199cc783edcde3ddd9e932b80cf8f0e69bf0b097b29e54891a43c0"
+        }
+      },
+      {
+        "suite": "native_command_file_search",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 622,
+        "report": {
+          "path": "audit/parity-integration/final/native_command_file_search.txt",
+          "sha256CanonicalLf": "18c86540c24c0aee5515a4f1a711e0c6c2a383eaca1380436cc90ed1f0f9c217"
+        }
+      },
+      {
+        "suite": "native_command_center_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2956,
+        "report": {
+          "path": "audit/parity-integration/final/native_command_center_host.txt",
+          "sha256CanonicalLf": "f2a63f72c639b6569ae6d9b11860aa280a6fac8e3c61d6856733a94788b8561d"
+        }
+      },
+      {
+        "suite": "native_side_chat",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 256,
+        "report": {
+          "path": "audit/parity-integration/final/native_side_chat.txt",
+          "sha256CanonicalLf": "48bfe7e90e68cc501d01f089e8fa2647b3fde68e7d5642d34f727b0e09b7b875"
+        }
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7896,
+        "report": {
+          "path": "audit/parity-integration/final/native_side_chat_host.txt",
+          "sha256CanonicalLf": "0933bd2e84d338b60d04a049c1191ec221fb55b23728fc33949acaed0e906ba1"
+        }
+      },
+      {
+        "suite": "native_file_diff",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 133,
+        "report": {
+          "path": "audit/parity-integration/final/native_file_diff.txt",
+          "sha256CanonicalLf": "03738f73b21822407182d92dd2acfd1fc87fbaf4a55c3cd4827ca346e917214f"
+        }
+      },
+      {
+        "suite": "native_image_preview",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 345,
+        "report": {
+          "path": "audit/parity-integration/final/native_image_preview.txt",
+          "sha256CanonicalLf": "c7a5d245045fe4ed91204a49558a99f23a406352524c45ef7b37c728fc059f4b"
+        }
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2761,
+        "report": {
+          "path": "audit/parity-integration/final/native_mutation_runtime.txt",
+          "sha256CanonicalLf": "a3bc7d1783d3e3714614fd663fccbf4de2570585d1fc88ba8cc1d1a62a60a33b"
+        }
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 11431,
+        "report": {
+          "path": "audit/parity-integration/final/native_shell_runtime.txt",
+          "sha256CanonicalLf": "dbe6c808083868479ec104196412c6ca48450cea3c408be30ad63e9001974fff"
+        }
+      },
+      {
+        "suite": "native_transcript_links",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 114,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript_links.txt",
+          "sha256CanonicalLf": "d3c26924b0131b2a54d5146412ccd2e294e3325450b52c9b0102f64c09402bc9"
+        }
+      },
+      {
+        "suite": "native_transcript_link_ui",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 3701,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript_link_ui.txt",
+          "sha256CanonicalLf": "178ad47de7129c87a689d082fd840e55126d2d6bec48e55aafe0343547ed79af"
+        }
+      },
+      {
+        "suite": "native_transcript_tabs_real",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1426,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript_tabs_real.txt",
+          "sha256CanonicalLf": "9dadc4fce076ec5ec4442923a466c3d4fdde64dc46f2a95a81badd0af46deabd"
+        }
+      },
+      {
+        "suite": "native_workbench_layout",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7023,
+        "report": {
+          "path": "audit/parity-integration/final/native_workbench_layout.txt",
+          "sha256CanonicalLf": "e2ceacf27508c8ed1148faa586d48e0a8311be1901a7b1af2d2cee28c44de82f"
+        }
+      },
+      {
+        "suite": "native_workbench_helpers",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 22,
+        "report": {
+          "path": "audit/parity-integration/final/native_workbench_helpers.txt",
+          "sha256CanonicalLf": "6fae72227a999e2abebedd443c5911e9078259a3619def9368e7b1b502279a3c"
+        }
+      },
+      {
+        "suite": "native_chevron",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 162,
+        "report": {
+          "path": "audit/parity-integration/final/native_chevron.txt",
+          "sha256CanonicalLf": "36fc62d815da1ec4c9aa158db082ba00d600a9f873dadbc675b0c8f48fb6e141"
+        }
+      },
+      {
+        "suite": "native_sidebar_model",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8,
+        "report": {
+          "path": "audit/parity-integration/final/native_sidebar_model.txt",
+          "sha256CanonicalLf": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e"
+        }
+      },
+      {
+        "suite": "native_sidebar_navigation",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4210,
+        "report": {
+          "path": "audit/parity-integration/final/native_sidebar_navigation.txt",
+          "sha256CanonicalLf": "75fd4f6dc842c90aca7849fc435c8671537497b5d2762b7069be95a125a476bb"
+        }
+      },
+      {
+        "suite": "native_presentation",
+        "passedIncludingLifecycle": 89,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16543,
+        "report": {
+          "path": "audit/parity-integration/final/native_presentation.txt",
+          "sha256CanonicalLf": "8c057ba750b0d644057074b4a1252cf178adfda96628fe95f1cd02b3a8657923"
+        }
+      },
+      {
+        "suite": "native_transcript",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2314,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript.txt",
+          "sha256CanonicalLf": "540fcbfd7c0aa77d29fef9027feb7b4117658bbebc9ee361c6a4de5ee4033566"
+        }
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2253,
+        "report": {
+          "path": "audit/parity-integration/final/native_transcript_ui.txt",
+          "sha256CanonicalLf": "d84d734d2252a21b0c34ffd756e59470bfce5584f59d1be915f7445be8a1a578"
+        }
+      },
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4374,
+        "report": {
+          "path": "audit/parity-integration/final/native_main_chrome.txt",
+          "sha256CanonicalLf": "8228eb388ad25fb0779608ebf26a7de19d9b028e6fc1052c90fad8360a0a4b15"
+        }
+      },
+      {
+        "suite": "native_formatted_att",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2712,
+        "report": {
+          "path": "audit/parity-integration/final/native_formatted_att.txt",
+          "sha256CanonicalLf": "e357e63db918f36193775fe7487eb43aa59b0eeb57b439c5c7c61fbc4fc68566"
+        }
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 26636,
+        "report": {
+          "path": "audit/parity-integration/final/native_conversations.txt",
+          "sha256CanonicalLf": "fb3d96f4c8d9bed94d3b5dff4addefcb1ba561ac5e43d48816eb472d7d838ad0"
+        }
+      },
+      {
+        "suite": "native_history_recovery",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1162,
+        "report": {
+          "path": "audit/parity-integration/final/native_history_recovery.txt",
+          "sha256CanonicalLf": "331c0899349923a04c8bf9c667b88dbdccbd60f3e70b38090e3dc3301a11d8bd"
+        }
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 477,
+        "report": {
+          "path": "audit/parity-integration/final/native_session_cleanup.txt",
+          "sha256CanonicalLf": "a6ccc9b4bcb0db91f53208fc15d8a68790a8d465efb7c87c8b49e0abecfc05a5"
+        }
+      },
+      {
+        "suite": "native_raw_enumeration_races",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1731,
+        "report": {
+          "path": "audit/parity-integration/final/native_raw_enumeration_races.txt",
+          "sha256CanonicalLf": "115079df3ebb7bc120ff8a6ecc1a136a1882951bab7a86f376903df850317c14"
+        }
+      },
+      {
+        "suite": "native_git_watcher",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 28019,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_watcher.txt",
+          "sha256CanonicalLf": "a0ffcd8360a000211457f7b0eab2419151885d1595dd1d564c9bf7a2aaf89693"
+        }
+      },
+      {
+        "suite": "native_git_watcher_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 21190,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_watcher_ui.txt",
+          "sha256CanonicalLf": "af3c53c7287792b9e12557724e3fef6d572e196066d42f49844a63a94ffd4b5f"
+        }
+      },
+      {
+        "suite": "native_file_tools_races",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 741,
+        "report": {
+          "path": "audit/parity-integration/final/native_file_tools_races.txt",
+          "sha256CanonicalLf": "0f48083a932f411eb60734d3bb2fdc871feab023a86a567c9a8f06b6c2bdaab5"
+        }
+      },
+      {
+        "suite": "native_archive_transformer",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 43,
+        "report": {
+          "path": "audit/parity-integration/final/native_archive_transformer.txt",
+          "sha256CanonicalLf": "f768b0edee06da6a198ca74ef0a91401eb09e308700a0f0b333f96af488f1e67"
+        }
+      },
+      {
+        "suite": "native_file_tools",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 45,
+        "report": {
+          "path": "audit/parity-integration/final/native_file_tools.txt",
+          "sha256CanonicalLf": "5e0282c7ddba55276da891fb0489b809163171f1ade9d249e4d2296aa9786927"
+        }
+      },
+      {
+        "suite": "native_attachment_mount",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 666,
+        "report": {
+          "path": "audit/parity-integration/final/native_attachment_mount.txt",
+          "sha256CanonicalLf": "be7587312e7c59874dfa85ae426a76940ffab9cb645ea4297c7ae6355d95106f"
+        }
+      },
+      {
+        "suite": "native_file_transformer",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3,
+        "report": {
+          "path": "audit/parity-integration/final/native_file_transformer.txt",
+          "sha256CanonicalLf": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+        }
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 37631,
+        "report": {
+          "path": "audit/parity-integration/final/native_worktree_settings.txt",
+          "sha256CanonicalLf": "951fdbff1bcc4edeec20e6e3a96dd45eb80ae9a0b84adec52b7eaa83361a23dd"
+        }
+      },
+      {
+        "suite": "native_git_host",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 89829,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_host.txt",
+          "sha256CanonicalLf": "99279944513869a0882fee55f3f3b12da6f0fc30ce42743635ece855866fac7a"
+        }
+      },
+      {
+        "suite": "native_sandbox_apps",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2151,
+        "report": {
+          "path": "audit/parity-integration/final/native_sandbox_apps.txt",
+          "sha256CanonicalLf": "56797a5a4067fbfc5914e917eac0e2f613d36dd5d36ef3e3360f3bc5c53bc746"
+        }
+      },
+      {
+        "suite": "native_runtime_apps",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6609,
+        "report": {
+          "path": "audit/parity-integration/final/native_runtime_apps.txt",
+          "sha256CanonicalLf": "67e990d2ecc330efc19144a982e2a099c8cb35dff045250b80ec40fe7234921b"
+        }
+      },
+      {
+        "suite": "native_git",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 106991,
+        "report": {
+          "path": "audit/parity-integration/final/native_git.txt",
+          "sha256CanonicalLf": "ad2eec583ab577795d49f38b1b977e9be8042250a8a5b4cd34b7c38b25916a6c"
+        }
+      },
+      {
+        "suite": "native_git_ui",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 51434,
+        "report": {
+          "path": "audit/parity-integration/final/native_git_ui.txt",
+          "sha256CanonicalLf": "12ff62dcd4c21d49794cc42497767d78c565408aac6c425d2f808475de664be9"
+        }
+      },
+      {
+        "suite": "native_app_resources",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 66,
+        "report": {
+          "path": "audit/parity-integration/final/native_app_resources.txt",
+          "sha256CanonicalLf": "3a77d47af55b9c69137e3a4904da4b7f64aeebad44d73af195209e00d9a64c5c"
+        }
+      },
+      {
+        "suite": "native_mini_apps",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3366,
+        "report": {
+          "path": "audit/parity-integration/final/native_mini_apps.txt",
+          "sha256CanonicalLf": "3f7c66c361ec0cbb907c9a39d9abbc3e8a0ac6c84c1a3872a1d6953a6313ca71"
+        }
+      },
+      {
+        "suite": "native_attachments",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 967,
+        "report": {
+          "path": "audit/parity-integration/final/native_attachments.txt",
+          "sha256CanonicalLf": "85cabac13dffc463e018680b757e5edd3f1677a8e975f2f2c728944ff34d6495"
+        }
+      },
+      {
+        "suite": "native_read_lifecycle",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 558,
+        "report": {
+          "path": "audit/parity-integration/final/native_read_lifecycle.txt",
+          "sha256CanonicalLf": "339a0207048e9abfea44b0a7cc7c1bf59c2c49886b44c3ce4f871ee5049ddfa5"
+        }
+      },
+      {
+        "suite": "native_read_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2812,
+        "report": {
+          "path": "audit/parity-integration/final/native_read_runtime.txt",
+          "sha256CanonicalLf": "ebaed7d040ad4b0ac4128f98e423216a8a04d88b93de08e0eef9afb703870644"
+        }
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 892,
+        "report": {
+          "path": "audit/parity-integration/final/native_plugins.txt",
+          "sha256CanonicalLf": "3b9f85b3e5515d2da3631efbe5ac89e6a9d0f43377b4944313f1bc140bc5a591"
+        }
+      },
+      {
+        "suite": "native_plugin_connections",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 191,
+        "report": {
+          "path": "audit/parity-integration/final/native_plugin_connections.txt",
+          "sha256CanonicalLf": "8ef42360631cdb58d6489ccba82dc61ca57ba339c0aff0ced9291b914fce289c"
+        }
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9147,
+        "report": {
+          "path": "audit/parity-integration/final/native_plugin_runtime.txt",
+          "sha256CanonicalLf": "6bbc1874798ca7b1290aafc5704bbc8bf2b9b88f92870054cfcfa3cdbbb2f5df"
+        }
+      },
+      {
+        "suite": "native_plugin_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 345,
+        "report": {
+          "path": "audit/parity-integration/final/native_plugin_settings.txt",
+          "sha256CanonicalLf": "0f8a5b7711edda7948c9129a6546714478d147d3cc09e1fdd32562250aecd651"
+        }
+      },
+      {
+        "suite": "native_smoke_plugins",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1825,
+        "report": {
+          "path": "audit/parity-integration/final/native_smoke_plugins.txt",
+          "sha256CanonicalLf": "4c8a0a917e3dd26e17be4f86c0949be125de16c624fa71739d8981708cd7dbc6"
+        }
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5310,
+        "report": {
+          "path": "audit/parity-integration/final/native_sandbox_network.txt",
+          "sha256CanonicalLf": "64471624b2ea864bf53ad986a85f93a096c77885e7f634ac44727e156de0f61d"
+        }
+      },
+      {
+        "suite": "native_downloads",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7810,
+        "report": {
+          "path": "audit/parity-integration/final/native_downloads.txt",
+          "sha256CanonicalLf": "63efde0372d58184000b451eb6d3e8f4e1b1e143371a0e4af3765768e6bdaea2"
+        }
+      },
+      {
+        "suite": "native_settings_audit",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 309,
+        "report": {
+          "path": "audit/parity-integration/final/native_settings_audit.txt",
+          "sha256CanonicalLf": "3858d074d9111d6bd419fda051e89d003aa87e9c00161138ff73931e8e74d9e0"
+        }
+      },
+      {
+        "suite": "native_network",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2002,
+        "report": {
+          "path": "audit/parity-integration/final/native_network.txt",
+          "sha256CanonicalLf": "e3fac4aa370809410057a009fe4aa52fdcfd4771d4042c54b756b6063375c53f"
+        }
+      },
+      {
+        "suite": "native_terminal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2857,
+        "report": {
+          "path": "audit/parity-integration/final/native_terminal.txt",
+          "sha256CanonicalLf": "3a4e0007d889940f48d8a077498b148a407bea03ce72e6052a209560bb39815a"
+        }
+      },
+      {
+        "suite": "native_engine_observers",
+        "passedIncludingLifecycle": 56,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7393,
+        "report": {
+          "path": "audit/parity-integration/final/native_engine_observers.txt",
+          "sha256CanonicalLf": "9f84f936d87e03f0440a5acb66b653b12f8ab045faad2f935f33082ee729f01a"
+        }
+      },
+      {
+        "suite": "native_core",
+        "passedIncludingLifecycle": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7651,
+        "report": {
+          "path": "audit/parity-integration/final/native_core.txt",
+          "sha256CanonicalLf": "c69112175fd5cb25423f9d2787eaf6249b8efbbfccd66bdbcbc855735a7830c3"
+        }
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 172,
+        "report": {
+          "path": "audit/parity-integration/final/native_context.txt",
+          "sha256CanonicalLf": "afbf77ac2fc093d0757d1b05007b541b327cd1b054bb3278313e3b492bb89608"
+        }
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1773,
+        "report": {
+          "path": "audit/parity-integration/final/native_ui.txt",
+          "sha256CanonicalLf": "f8b385eddc37fc6e3f498f585e772394c4ca7495bee9d2165da6748a1ef586d2"
+        }
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5700,
+        "report": {
+          "path": "audit/parity-integration/final/native_ui_audit.txt",
+          "sha256CanonicalLf": "c28c9abac92fa56ffefc642dbf73f4090a19e6b842c226bf2f1312683fe4e13d"
+        }
+      },
+      {
+        "suite": "native_editor",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1032,
+        "report": {
+          "path": "audit/parity-integration/final/native_editor.txt",
+          "sha256CanonicalLf": "eb4661e2d92118a945953b3c2c14be0895fe130ab17d156f3463d581aaaf2a01"
+        }
+      },
+      {
+        "suite": "native_sandbox",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4703,
+        "report": {
+          "path": "audit/parity-integration/final/native_sandbox.txt",
+          "sha256CanonicalLf": "5dd074b38302209f53761c29594ecb0394ddd05e2b7f9ac5dd2f903f71fa973b"
+        }
+      },
+      {
+        "suite": "native_runtime",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5402,
+        "report": {
+          "path": "audit/parity-integration/final/native_runtime.txt",
+          "sha256CanonicalLf": "401b7e15f456a59cfcf7fb2fd6e2ba826b5d3e5ae695f0bb7bbf1a1161b2f4b6"
+        }
+      },
+      {
+        "suite": "native_fonts",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 332,
+        "report": {
+          "path": "audit/parity-integration/final/native_fonts.txt",
+          "sha256CanonicalLf": "c882438db5ac64f516ac5cec80d603b98b5cd4f5770a29cfc68a56c2f7cd1041"
+        }
+      },
+      {
+        "suite": "native_browser",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5827,
+        "report": {
+          "path": "audit/parity-integration/final/native_browser.txt",
+          "sha256CanonicalLf": "be15f45f52bab1b59247afd567341c5c18b8dabdd7df7445098b1d901ef59f3f"
+        }
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 518,
+        "report": {
+          "path": "audit/parity-integration/final/native_settings.txt",
+          "sha256CanonicalLf": "439f3dc4bb805af95678f3b5b41ca021b8aa6e0d1c4c572a32dddc9fb3336fd6"
+        }
+      },
+      {
+        "suite": "native_browser_inspector",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5890,
+        "report": {
+          "path": "audit/parity-integration/final/native_browser_inspector.txt",
+          "sha256CanonicalLf": "2bf1c793712b9e90bb9213823c4a5d29c69aab4228445619521259eb281f9969"
+        }
+      },
+      {
+        "suite": "native_browser_tools",
+        "passedIncludingLifecycle": 24,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 15977,
+        "report": {
+          "path": "audit/parity-integration/final/native_browser_tools.txt",
+          "sha256CanonicalLf": "f9f00e542243bb8c3574f07dccd88e304c7150305a04abdb9eadb9cccc4ceb33"
+        }
+      },
+      {
+        "suite": "reference_file_mutations",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1583,
+        "report": {
+          "path": "audit/parity-integration/final/reference_file_mutations.txt",
+          "sha256CanonicalLf": "1b78bfe5b41510fea96c535d871a9c193ea2a90b1aa720995eca9528b0e0e034"
+        }
+      },
+      {
+        "suite": "reference_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2121,
+        "report": {
+          "path": "audit/parity-integration/final/reference_git_usage.txt",
+          "sha256CanonicalLf": "6d386ac5636b07b13eae1c0c1e855f5028fe9aea42131b9e19d1d9f2adcdf797"
+        }
+      }
+    ]
+  },
+  "coveredChanges": [
+    "Four-protocol usage snapshots and cancellation-safe automatic compression when an explicit/discovered model context limit exists; original history retained.",
+    "Fixed reused tool-call IDs associating utility summaries with the wrong earlier batch.",
+    "Ordinary global browser tab persistence/restoration with order, last active browser, coalesced writes and invalid/external state preservation.",
+    "Durable worktree usage and explicitly reviewed cleanup with branch/HEAD, physical identity, managed-root authority, fresh status and mounted/revoked-review guards.",
+    "26 direct navigation actions, preserving drafts, filtered sidebar order, tab indexing and focus including narrow layouts/terminal controls."
+  ],
+  "initialFocusedRun": {
+    "path": "audit/parity-integration/initial-focused",
+    "note": "Initial navigation test2 failures were incorrect fixture ordering: seed set updated only, while existing sidebar sorts created/lastMessageAt. Seed corrected to establish the intended displayed order. Production navigation behavior was unchanged for that correction."
+  },
+  "componentEvidence": [
+    "audit/usage-compression-native.json",
+    "audit/browser-session-native.json",
+    "audit/worktree-cleanup-native.json",
+    "audit/parity-review-shortcuts.json"
+  ],
+  "package": "out/parity-review-1",
+  "binaries": [
+    {
+      "path": "ADE.exe",
+      "bytes": 81393939,
+      "sha256": "022bcf8162739c861e94c746f5fa1922fe3a5b36380c49bf9a6414d983da2776",
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "path": "ADE-sandbox-worker.exe",
+      "bytes": 19775944,
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "bytes": 194912,
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "peImports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "versionSmoke": "ADE 0.1.0",
+  "packagedUiVerification": {
+    "status": "blocked_by_computer_use_input_guard",
+    "report": "audit/parity-integration/packaged-ui-qa.json",
+    "observed": "Exact package launched; visible Settings. Functional interactions pending due to Computer Use input guard."
+  },
+  "limits": [
+    "All701 feature rows are retained. This pass has311 domain-review-linked rows and390 without individual reassessment; neither count is a parity percentage.",
+    "17331 AST function bodies are indexed, including callbacks/tests/tooling; not every statement has been semantically reviewed or mapped to a tested C++ equivalent.",
+    "No new live provider/plugin service requests or exhaustive side-by-side upstream UI run in this checkpoint. Historical live GitHub evidence remains separate.",
+    "Full Node/importModule, transcript edit/retry/revert, all subscription/provider auth, rich media, multi-workspace, per-agent browser state, hosted services/updater and full visual parity remain unfinished.",
+    "Token counts are provider snapshots, not billing/tokenizer equivalence. Automatic compaction pauses at tool boundaries rather than matching upstream background scheduling.",
+    "Cleanup remains an explicit bounded native workflow; no universal filesystem race/power-loss or full upstream policy equivalence is claimed.",
+    "Qt/compiler/QuickJS static; WebView2 Evergreen, Git and system shell are external runtime dependencies."
+  ],
+  "publication": {
+    "status": "pending",
+    "repository": "https://github.com/secusbdl/ade"
+  }
+}

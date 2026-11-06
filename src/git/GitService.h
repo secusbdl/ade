@@ -29,6 +29,9 @@ public:
     // Branches are always retained. Explicit force never propagates to Settings/Cleanup.
     quint64 removeWorktree(const QString &workspace, GitRemovePolicy policy=GitRemovePolicy::Explicit, bool force=false);
     quint64 cleanupCandidates();
+    quint64 inspectUsage(const QString &workspace);
+    quint64 scanUsage();
+    quint64 removeReviewedWorktree(const WorktreeCleanupPermit &permit);
     quint64 setupRepositories();
     // Resolve the main root from this currently trusted anchor; compare the
     // exact loaded bytes before saving. A missing baseline is explicit.
@@ -50,6 +53,6 @@ private:
     struct Private; std::unique_ptr<Private> d;
     bool watchAuthorized(const QString &workspace) const;
     void completeWatch(quint64 id,const GitResult &result);
-    quint64 submit(GitOperation operation, const QString &workspace={}, const QString &a={}, const QString &b={}, bool flag=false, GitRemovePolicy policy=GitRemovePolicy::Explicit, const GitScriptRevision &expected={});
+    quint64 submit(GitOperation operation, const QString &workspace={}, const QString &a={}, const QString &b={}, bool flag=false, GitRemovePolicy policy=GitRemovePolicy::Explicit, const GitScriptRevision &expected={}, const WorktreeCleanupPermit &permit={});
 };
 }

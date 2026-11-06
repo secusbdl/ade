@@ -1,0 +1,8 @@
+********* Start testing of CleanupTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CleanupTests::initTestCase()
+FAIL!  : CleanupTests::checkoutAfterFinalStatusCannotRemoveUnmergedBranch() '!removed.first()[1].toBool()' returned FALSE. (A changed HEAD/branch invalidates the earlier merged-branch review.)
+D:/age/ADE/tests/test_git_cleanup.cpp(62) : failure location
+PASS   : CleanupTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 8110ms
+********* Finished testing of CleanupTests *********

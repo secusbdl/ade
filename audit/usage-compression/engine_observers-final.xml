@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="StreamObserverTest" timestamp="2026&#x002D;11&#x002D;06T18:51:48" hostname="VOID" tests="56" failures="0" errors="0" skipped="0" time="8.752">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="StreamObserverTest" time="0.000"/>
+  <testcase name="cancellation(openai&#x002D;json&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.181"/>
+  <testcase name="cancellation(openai&#x002D;json&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.222"/>
+  <testcase name="cancellation(openai&#x002D;json&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.163"/>
+  <testcase name="cancellation(openai&#x002D;json&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.215"/>
+  <testcase name="cancellation(openai&#x002D;sse&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.170"/>
+  <testcase name="cancellation(openai&#x002D;sse&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.186"/>
+  <testcase name="cancellation(openai&#x002D;sse&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.178"/>
+  <testcase name="cancellation(openai&#x002D;sse&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.221"/>
+  <testcase name="cancellation(anthropic&#x002D;json&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.160"/>
+  <testcase name="cancellation(anthropic&#x002D;json&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.213"/>
+  <testcase name="cancellation(anthropic&#x002D;json&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.159"/>
+  <testcase name="cancellation(anthropic&#x002D;json&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.180"/>
+  <testcase name="cancellation(anthropic&#x002D;sse&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.185"/>
+  <testcase name="cancellation(anthropic&#x002D;sse&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.185"/>
+  <testcase name="cancellation(anthropic&#x002D;sse&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.164"/>
+  <testcase name="cancellation(anthropic&#x002D;sse&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.185"/>
+  <testcase name="cancellation(google&#x002D;json&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.112"/>
+  <testcase name="cancellation(google&#x002D;json&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.176"/>
+  <testcase name="cancellation(google&#x002D;json&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.176"/>
+  <testcase name="cancellation(google&#x002D;json&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.168"/>
+  <testcase name="cancellation(google&#x002D;sse&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.152"/>
+  <testcase name="cancellation(google&#x002D;sse&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.213"/>
+  <testcase name="cancellation(google&#x002D;sse&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.175"/>
+  <testcase name="cancellation(google&#x002D;sse&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.206"/>
+  <testcase name="cancellation(responses&#x002D;json&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.164"/>
+  <testcase name="cancellation(responses&#x002D;json&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.228"/>
+  <testcase name="cancellation(responses&#x002D;json&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.118"/>
+  <testcase name="cancellation(responses&#x002D;json&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.215"/>
+  <testcase name="cancellation(responses&#x002D;sse&#x002D;text&#x002D;cancel)" classname="StreamObserverTest" time="0.164"/>
+  <testcase name="cancellation(responses&#x002D;sse&#x002D;text&#x002D;replace)" classname="StreamObserverTest" time="0.173"/>
+  <testcase name="cancellation(responses&#x002D;sse&#x002D;reasoning&#x002D;cancel)" classname="StreamObserverTest" time="0.160"/>
+  <testcase name="cancellation(responses&#x002D;sse&#x002D;reasoning&#x002D;replace)" classname="StreamObserverTest" time="0.170"/>
+  <testcase name="deletion(openai&#x002D;json&#x002D;text)" classname="StreamObserverTest" time="0.184"/>
+  <testcase name="deletion(openai&#x002D;json&#x002D;reasoning)" classname="StreamObserverTest" time="0.158"/>
+  <testcase name="deletion(openai&#x002D;sse&#x002D;text)" classname="StreamObserverTest" time="0.154"/>
+  <testcase name="deletion(openai&#x002D;sse&#x002D;reasoning)" classname="StreamObserverTest" time="0.149"/>
+  <testcase name="deletion(anthropic&#x002D;json&#x002D;text)" classname="StreamObserverTest" time="0.104"/>
+  <testcase name="deletion(anthropic&#x002D;json&#x002D;reasoning)" classname="StreamObserverTest" time="0.184"/>
+  <testcase name="deletion(anthropic&#x002D;sse&#x002D;text)" classname="StreamObserverTest" time="0.112"/>
+  <testcase name="deletion(anthropic&#x002D;sse&#x002D;reasoning)" classname="StreamObserverTest" time="0.185"/>
+  <testcase name="deletion(google&#x002D;json&#x002D;text)" classname="StreamObserverTest" time="0.100"/>
+  <testcase name="deletion(google&#x002D;json&#x002D;reasoning)" classname="StreamObserverTest" time="0.170"/>
+  <testcase name="deletion(google&#x002D;sse&#x002D;text)" classname="StreamObserverTest" time="0.164"/>
+  <testcase name="deletion(google&#x002D;sse&#x002D;reasoning)" classname="StreamObserverTest" time="0.109"/>
+  <testcase name="deletion(responses&#x002D;json&#x002D;text)" classname="StreamObserverTest" time="0.102"/>
+  <testcase name="deletion(responses&#x002D;json&#x002D;reasoning)" classname="StreamObserverTest" time="0.164"/>
+  <testcase name="deletion(responses&#x002D;sse&#x002D;text)" classname="StreamObserverTest" time="0.109"/>
+  <testcase name="deletion(responses&#x002D;sse&#x002D;reasoning)" classname="StreamObserverTest" time="0.193"/>
+  <testcase name="setupCallback(preparer0)" classname="StreamObserverTest" time="0.057"/>
+  <testcase name="setupCallback(preparer1)" classname="StreamObserverTest" time="0.098"/>
+  <testcase name="setupCallback(preparer2)" classname="StreamObserverTest" time="0.044"/>
+  <testcase name="setupCallback(fallback0)" classname="StreamObserverTest" time="0.170"/>
+  <testcase name="setupCallback(fallback1)" classname="StreamObserverTest" time="0.146"/>
+  <testcase name="setupCallback(fallback2)" classname="StreamObserverTest" time="0.157"/>
+  <testcase name="cleanupTestCase" classname="StreamObserverTest" time="0.000"/>
+</testsuite>

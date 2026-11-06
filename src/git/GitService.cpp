@@ -1,5 +1,6 @@
 #include "GitService.h"
 #include "GitRepositoryWatcher.h"
+#include "WorktreeUsageIdentity.h"
 #include "GitParsing.h"
 #include "ProcessRunner.h"
 #include "SetupScriptText.h"
@@ -37,6 +38,25 @@ namespace {
 struct Failure { GitError error; };
 [[noreturn]] void fail(GitErrorCode code, const QString &message, int exitCode=-1) { throw Failure{{code,message,exitCode}}; }
 void requireNotCancelled(const Cancellation &cancel){if(cancel->load())fail(GitErrorCode::Cancelled,"Operation cancelled.");}
+QString managedRootAuthority(const QString &configured){
+    // Resolve the configured parent once, including legitimate profile-parent
+    // junctions. Do not follow the managed-root entry itself: it must remain a
+    // directory at this authorized name, not redirect future scans elsewhere.
+    const QFileInfo target(QDir::cleanPath(QFileInfo(configured).absoluteFilePath()));
+    QString ancestor=target.absolutePath(),relative=target.fileName();
+    if(relative.isEmpty())return {};
+    while(!QFileInfo(ancestor).exists()&&!QFileInfo(ancestor).isSymLink()&&!QFileInfo(ancestor).isJunction()){
+        const QFileInfo part(ancestor);if(part.absolutePath()==ancestor)return {};
+        relative=part.fileName()+'/'+relative;ancestor=part.absolutePath();
+    }
+    const auto resolved=canonical(ancestor);
+    if(resolved.isEmpty()||!safeRelativePath(relative))return {};
+    return QDir::cleanPath(QDir(resolved).filePath(relative));
+}
+QString currentManagedRoot(const QString &authority){
+    const auto resolved=canonical(authority);
+    return !authority.isEmpty()&&key(resolved)==key(authority)?resolved:QString();
+}
 #ifdef Q_OS_WIN
 QString openedPath(HANDLE handle){
     const DWORD length=GetFinalPathNameByHandleW(handle,nullptr,0,FILE_NAME_NORMALIZED|VOLUME_NAME_DOS);if(!length)return {};
@@ -117,7 +137,7 @@ struct Lock {
 class Work {
 public:
     GitServiceOptions options; GitWorkspaceContext context; Cancellation cancel; std::shared_ptr<Shared> shared;
-    bool mutationStarted=false;
+    bool mutationStarted=false; WorktreeCleanupPermit cleanupPermit;
     QProcessEnvironment environment=safeEnvironment();
     ProcessResult command(const QString &cwd,const QStringList &args,bool mutation=false) {
         QStringList finalArgs{"--literal-pathspecs","-c","color.ui=false","-c","core.quotePath=false"};
@@ -135,7 +155,7 @@ public:
         const auto result=command(cwd,args,mutation); requireProcess(result); return result.out;
     }
     void refreshContext() { QMutexLocker lock(&shared->contextMutex); context=shared->context; }
-    QString managedRoot() const { return canonical(options.managedWorktreeRoot); }
+    QString managedRoot() const { return currentManagedRoot(options.managedWorktreeRoot); }
     bool managed(const QString &path) const { return inside(managedRoot(),canonical(path)); }
     bool trusted(const QString &path) const {
         const auto resolved=canonical(path); if(resolved.isEmpty()) return false;
@@ -363,16 +383,55 @@ public:
         }
         return {};
     }
+    WorktreeCleanupFacts usageFacts(const GitSnapshot &repo,bool withMerge) {
+        WorktreeCleanupFacts facts;const auto info=deletion(repo);
+        const auto raw=text(checked(repo.repoRoot,{"rev-parse","--absolute-git-dir"}));
+        QString error;facts.identity=probeWorktreeUsageIdentity(repo,canonical(raw),&error);
+        if(!facts.identity.valid())fail(GitErrorCode::UnsafeCleanup,"Cannot verify worktree identity: "+error);
+        facts.authorized=trusted(repo.repoRoot);facts.managed=managed(repo.repoRoot);facts.registered=true;
+        facts.main=info.main;facts.detached=info.detached;facts.branch=info.branch;
+        facts.statusKnown=info.status.known;facts.dirty=info.status.dirty;facts.mounted=info.mounted;
+        // Status may invoke filesystem-monitor hooks or run concurrently with
+        // another Git client. Do not combine its result with an earlier HEAD.
+        bool currentFound=false;
+        for(const auto &tree:treeList(repo))if(tree.current){
+            currentFound=true;
+            if(tree.branch!=info.branch||tree.detached!=info.detached)
+                fail(GitErrorCode::Conflict,"Worktree branch changed during status inspection.");
+            facts.headSha=tree.headSha;facts.busy=tree.locked||tree.prunable;
+        }
+        if(!currentFound)fail(GitErrorCode::NotRepository,"Worktree registration changed during inspection.");
+        if(withMerge&&!facts.main&&!facts.detached&&!facts.branch.isEmpty()) {
+            facts.defaultBranch=branchList(repo,false).defaultBranch;
+            facts.mergedInto=mergedTarget(repo,facts.branch);facts.merged=!facts.mergedInto.isEmpty();
+        }
+        return facts;
+    }
+    void verifyCleanupPermit() {
+        const auto &permit=cleanupPermit;
+        if(!permit.valid||!permit.valid->load()||!permit.record.identity.valid()||permit.journalRevision.size()!=32||permit.branch.isEmpty()||permit.headSha.isEmpty())
+            fail(GitErrorCode::UnsafeCleanup,"Review expired. Refresh unused worktrees before removing anything.");
+        QFile file(permit.journalPath);
+        if(!file.open(QIODevice::ReadOnly))fail(GitErrorCode::UnsafeCleanup,"Worktree usage history is unavailable.");
+#ifdef Q_OS_WIN
+        if(file.handle()<0||key(openedPath(reinterpret_cast<HANDLE>(_get_osfhandle(file.handle()))))!=key(QDir::cleanPath(permit.journalPath)))
+            fail(GitErrorCode::UnsafeCleanup,"Worktree usage history path changed.");
+#endif
+        const auto bytes=file.read(4*1024*1024+1);
+        if(bytes.size()>4*1024*1024||!file.atEnd()||file.error()!=QFileDevice::NoError||QCryptographicHash::hash(bytes,QCryptographicHash::Sha256)!=permit.journalRevision)
+            fail(GitErrorCode::UnsafeCleanup,"Worktree usage history changed. Review again.");
+        requireNotCancelled(cancel);
+        if(!permit.valid->load())fail(GitErrorCode::UnsafeCleanup,"Review was revoked by workspace activity.");
+    }
     GitCleanupCandidate cleanup(const GitSnapshot &repo) {
-        const auto info=deletion(repo);
-        if(!managed(repo.repoRoot) || info.main || info.mounted || info.detached || info.branch.isEmpty() || !info.status.known || info.status.dirty || !context.usageKnown)
-            fail(GitErrorCode::UnsafeCleanup,"Worktree is not safe to clean.");
-        GitCleanupCandidate result; result.lastUsedAt=lastUsed(repo.repoRoot);
-        if(result.lastUsedAt>=0 && QDateTime::currentMSecsSinceEpoch()-result.lastUsedAt<7LL*24*60*60*1000)
-            fail(GitErrorCode::UnsafeCleanup,"Worktree was used in the last seven days.");
-        result.mergedInto=mergedTarget(repo,info.branch);
-        if(result.mergedInto.isEmpty()) fail(GitErrorCode::UnsafeCleanup,"Worktree branch is not merged into a cleanup target.");
-        for(const auto &tree:treeList(repo)) if(tree.current) result.worktree=tree;
+        verifyCleanupPermit();
+        const auto facts=usageFacts(repo,true);
+        if(facts.branch!=cleanupPermit.branch||facts.headSha!=cleanupPermit.headSha)
+            fail(GitErrorCode::UnsafeCleanup,"Worktree branch or HEAD changed after review.");
+        const auto decision=evaluateWorktreeCleanup(facts,&cleanupPermit.record,cleanupPermit.health,QDateTime::currentMSecsSinceEpoch());
+        if(!decision.eligible)fail(GitErrorCode::UnsafeCleanup,"Worktree cannot be cleaned: "+decision.reason);
+        GitCleanupCandidate result;result.lastUsedAt=decision.lastUsedAt;result.mergedInto=facts.mergedInto;
+        for(const auto &tree:treeList(repo))if(tree.current)result.worktree=tree;
         return result;
     }
     QStringList managedPaths() const {
@@ -418,7 +477,7 @@ GitService::GitService(GitServiceOptions options,QObject *parent):QObject(parent
     qRegisterMetaType<GitResult>();
     if(options.gitExecutable.isEmpty()) options.gitExecutable=QStandardPaths::findExecutable("git");
     if(options.managedWorktreeRoot.isEmpty()) options.managedWorktreeRoot=QDir::homePath()+"/.ade/worktrees";
-    options.managedWorktreeRoot=QFileInfo(options.managedWorktreeRoot).absoluteFilePath();
+    options.managedWorktreeRoot=managedRootAuthority(options.managedWorktreeRoot);
     options.readTimeoutMs=std::clamp(options.readTimeoutMs,50,300000);
     options.mutationTimeoutMs=std::clamp(options.mutationTimeoutMs,50,1200000);
     options.outputLimit=std::clamp<qint64>(options.outputLimit,1024,256*1024*1024);
@@ -437,7 +496,7 @@ void GitService::setWorkspaceContext(const GitWorkspaceContext &context) {
 }
 bool GitService::watchAuthorized(const QString &workspace) const {
     const QString resolved=canonical(workspace);if(resolved.isEmpty())return false;
-    if(inside(canonical(d->options.managedWorktreeRoot),resolved))return true;
+    if(inside(currentManagedRoot(d->options.managedWorktreeRoot),resolved))return true;
     GitWorkspaceContext context;{QMutexLocker lock(&d->shared->contextMutex);context=d->shared->context;}
     for(const auto &root:context.trustedRoots+context.mountedPaths)if(key(canonical(root))==key(resolved))return true;
     return false;
@@ -473,11 +532,11 @@ QString GitService::canonicalPath(const QString &path) { return canonical(path);
 QString GitService::pathKey(const QString &path) { const auto resolved=canonical(path); return key(resolved.isEmpty()?path:resolved); }
 void GitService::cancel(quint64 id) { const auto flag=d->requests.value(id); if(flag) flag->store(true); }
 void GitService::cancelAll() { for(const auto &flag:d->requests) flag->store(true); }
-quint64 GitService::submit(GitOperation operation,const QString &workspace,const QString &a,const QString &b,bool flag,GitRemovePolicy policy,const GitScriptRevision &expected) {
+quint64 GitService::submit(GitOperation operation,const QString &workspace,const QString &a,const QString &b,bool flag,GitRemovePolicy policy,const GitScriptRevision &expected,const WorktreeCleanupPermit &permit) {
     const auto id=++d->nextId; const auto cancellation=std::make_shared<std::atomic_bool>(false); d->requests.insert(id,cancellation);
     const QPointer<GitService> receiver(this); const auto options=d->options; const auto shared=d->shared;
-    d->pool.start([receiver,options,shared,cancellation,id,operation,workspace,a,b,flag,policy,expected] {
-        Work work; work.options=options; work.cancel=cancellation; work.shared=shared;
+    d->pool.start([receiver,options,shared,cancellation,id,operation,workspace,a,b,flag,policy,expected,permit] {
+        Work work; work.options=options; work.cancel=cancellation; work.shared=shared; work.cleanupPermit=permit;
         GitResult result; result.operation=operation;
         try { result=work.dispatch(operation,workspace,a,b,flag,policy,expected); }
         catch(const Failure &failure) { result.error=failure.error; }
@@ -504,6 +563,9 @@ quint64 GitService::createWorktree(const QString &w,const QString &name,const QS
 quint64 GitService::deletionInfo(const QString &w) { return submit(GitOperation::DeletionInfo,w); }
 quint64 GitService::removeWorktree(const QString &w,GitRemovePolicy policy,bool force) { return submit(GitOperation::RemoveWorktree,w,{},{},force,policy); }
 quint64 GitService::cleanupCandidates() { return submit(GitOperation::CleanupCandidates); }
+quint64 GitService::inspectUsage(const QString &w) { return submit(GitOperation::UsageInspect,w); }
+quint64 GitService::scanUsage() { return submit(GitOperation::UsageScan); }
+quint64 GitService::removeReviewedWorktree(const WorktreeCleanupPermit &permit) { return submit(GitOperation::RemoveWorktree,permit.record.identity.path,{},{},false,GitRemovePolicy::Cleanup,{},permit); }
 quint64 GitService::setupRepositories() { return submit(GitOperation::SetupRepositories); }
 quint64 GitService::saveSetupScript(const QString &w,GitSetupVariant variant,const QString &content,const GitScriptRevision &expected) { return submit(GitOperation::SaveSetupScript,w,content,QString::number(int(variant)),variant==GitSetupVariant::PowerShell,GitRemovePolicy::Explicit,expected); }
 }
@@ -514,7 +576,9 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
     refreshContext();
     if(options.gitExecutable.isEmpty()) fail(GitErrorCode::ProcessFailed,"System Git is not installed or could not be located.");
     if(cancel->load()) fail(GitErrorCode::Cancelled,"Operation cancelled.");
-    if(operation==GitOperation::CleanupCandidates || operation==GitOperation::SetupRepositories) {
+    if(operation==GitOperation::CleanupCandidates)
+        fail(GitErrorCode::UnsafeCleanup,"Cleanup requires a durable usage review and explicit removal permit.");
+    if(operation==GitOperation::UsageScan || operation==GitOperation::SetupRepositories) {
         const auto paths=managedPaths(); QStringList roots=paths;
         if(operation==GitOperation::SetupRepositories) roots+=context.trustedRoots+context.mountedPaths;
         QSet<QString> seen;
@@ -522,10 +586,9 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
             try {
                 auto repo=repository(path); Lock lock(shared->lockFor(repo.commonGitDir),cancel);
                 refreshContext(); repo=repository(path);
-                if(operation==GitOperation::CleanupCandidates) {
-                    if(seen.contains(key(repo.repoRoot))) continue;
-                    seen.insert(key(repo.repoRoot));
-                    result.cleanup.append(cleanup(repo)); continue;
+                if(operation==GitOperation::UsageScan) {
+                    if(seen.contains(key(repo.repoRoot)))continue;
+                    seen.insert(key(repo.repoRoot));result.usage.append(usageFacts(repo,true));continue;
                 }
                 if(seen.contains(key(repo.commonGitDir))) continue;
                 seen.insert(key(repo.commonGitDir));
@@ -568,6 +631,7 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
     result.path=repo.repoRoot;
     switch(operation) {
     case GitOperation::Inspect: result.snapshot=snapshot(repo); break;
+    case GitOperation::UsageInspect: result.usage.append(usageFacts(repo,false)); break;
     case GitOperation::Status: result.status=getStatus(repo.repoRoot); break;
     case GitOperation::Diff: result.diff=diffSummary(repo); break;
     case GitOperation::FileDiff: result.fileDiff=content(repo,a,flag,b); break;
@@ -621,6 +685,14 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
         // Run from the main root; Git must not remove its own process current directory.
         QString main; for(const auto &tree:treeList(repo)) if(tree.main) main=tree.path;
         if(main.isEmpty()) fail(GitErrorCode::NotRepository,"Main worktree is unavailable.");
+        if(policy==GitRemovePolicy::Cleanup) {
+            // Recheck after the last Git subprocess; mounted contexts can change
+            // while earlier status/merge commands were running.
+            refreshContext();const auto fresh=usageFacts(repo,false);
+            if(fresh.identity.key()!=cleanupPermit.record.identity.key()||fresh.branch!=cleanupPermit.branch||fresh.headSha!=cleanupPermit.headSha||fresh.busy||fresh.mounted||!fresh.statusKnown||fresh.dirty)
+                fail(GitErrorCode::UnsafeCleanup,"Worktree changed after review.");
+            verifyCleanupPermit();
+        }
         checked(main,args,true); break;
     }
     case GitOperation::SaveSetupScript: {

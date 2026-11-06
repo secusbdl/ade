@@ -1,0 +1,2214 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "version": "1.31.1",
+  "purpose": "Read-only integration/platform parity review. No production edits, test execution, live profile/credential reads or remote mutations.",
+  "coverage": {
+    "baselineInventory": "audit/upstream-feature-inventory.json",
+    "rows": 701,
+    "completeFunctionAudit": false,
+    "rule": "Overlapping inventory procedures and UI contracts are not independent completion units. Root owns the complete function index. Preserved source, a native implementation, and passing bounded tests are distinct evidence levels.",
+    "capabilities": 27,
+    "distinctInventoryRowsReferenced": 111
+  },
+  "priorAuditCaveats": [
+    "reference-readiness.json and feature-progress-update.json retain the earlier continuation checkpoint and pending-publication wording; later plugin/live/Send-fix evidence supersedes those dated statuses.",
+    "Historical git implementation audits list host/settings/watchers as pending; current source and newer host tests show those integrations are now connected.",
+    "No exhaustive paired native/upstream session or function-by-function differential test was run by this review."
+  ],
+  "capabilities": [
+    {
+      "id": "git.repository",
+      "inventoryIds": [
+        "contract_operation.toolbox.createGitBranchByPath",
+        "contract_operation.toolbox.createGitWorktreeByPath",
+        "contract_operation.toolbox.createWorkspaceGitBranch",
+        "contract_operation.toolbox.createWorkspaceGitWorktree",
+        "contract_operation.toolbox.deleteGitWorktreeByPath",
+        "contract_operation.toolbox.getGitRepositoryRemoteUrlByPath",
+        "contract_operation.toolbox.getGitWorktreeDeletionInfo",
+        "contract_operation.toolbox.listGitBranchesByPath",
+        "contract_operation.toolbox.listGitWorktreesByPath",
+        "contract_operation.toolbox.listWorkspaceGitBranches",
+        "contract_operation.toolbox.listWorkspaceGitWorktrees",
+        "contract_operation.toolbox.switchGitBranchByPath",
+        "contract_operation.toolbox.switchWorkspaceGitBranch",
+        "git.workflows",
+        "git.worktrees",
+        "procedure.toolbox.createGitBranchByPath",
+        "procedure.toolbox.createGitWorktreeByPath",
+        "procedure.toolbox.createWorkspaceGitBranch",
+        "procedure.toolbox.createWorkspaceGitWorktree",
+        "procedure.toolbox.deleteGitWorktreeByPath",
+        "procedure.toolbox.getGitRepositoryRemoteUrlByPath",
+        "procedure.toolbox.getGitWorktreeDeletionInfo",
+        "procedure.toolbox.listGitBranchesByPath",
+        "procedure.toolbox.listGitWorktreesByPath",
+        "procedure.toolbox.listWorkspaceGitBranches",
+        "procedure.toolbox.listWorkspaceGitWorktrees",
+        "procedure.toolbox.switchGitBranchByPath",
+        "procedure.toolbox.switchWorkspaceGitBranch"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 259,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L259"
+        },
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 405,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L405"
+        },
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 888,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L888"
+        },
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 978,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L978"
+        },
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 1531,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L1531"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/git/GitService.cpp",
+          "line": 497
+        },
+        {
+          "path": "src/git/GitService.cpp",
+          "line": 512
+        },
+        {
+          "path": "src/git/GitPanel.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/ui/MainWindowGit.cpp",
+          "line": 39
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_git.cpp",
+          "line": 70
+        },
+        {
+          "path": "tests/test_git_host.cpp",
+          "line": 105
+        },
+        {
+          "path": "tests/test_git_ui.cpp",
+          "line": 62
+        }
+      ],
+      "implemented": [
+        "System-Git status/branches/remotes/worktrees, source-ref fetch, create/switch, file diffs and explicit removal; busy/dirty-editor/terminal guards and setup-after-mount are connected.",
+        "Real scratch-clone worktree actions and Windows long-path behavior have separate retained evidence."
+      ],
+      "gaps": [
+        "Native pane differs from source popover/Monaco diff; binary/submodule/symlink presentation remains limited.",
+        "Commit/push buttons are not present in the examined source Git RPC contract. Shell or GitHub REST actions are separate capabilities.",
+        "No exhaustive Git-version/hooks/remote-auth/filesystem compatibility claim."
+      ],
+      "nextAcceptance": "Source return-shape differential fixtures and remaining diff presentations without weakening mutation guards."
+    },
+    {
+      "id": "git.multimount",
+      "inventoryIds": [
+        "git.worktrees"
+      ],
+      "status": "partial",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 866,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L866"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 944,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L944"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 1070,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1070"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SessionStore.h",
+          "line": 1
+        },
+        {
+          "path": "src/ui/MainWindowGit.cpp",
+          "line": 70
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 238
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_git_host.cpp",
+          "line": 106
+        }
+      ],
+      "implemented": [
+        "One current workspace per conversation; explicit removal detaches affected chats and persists them."
+      ],
+      "gaps": [
+        "Source maintains multiple mounted prefixes/runtimes per agent; native uses sole ws1 plus specialized apps/att/shells mounts.",
+        "Source deletion workflow optionally deletes related chats after successful removal; native host currently detaches them without that optional multi-chat deletion action."
+      ],
+      "nextAcceptance": "Stable persisted mount IDs with per-mount revoke/cancel/fork/restart tests and exact source removal policy."
+    },
+    {
+      "id": "git.setup",
+      "inventoryIds": [
+        "contract_operation.toolbox.deleteWorktreeSetupWorktree",
+        "contract_operation.toolbox.listWorktreeSetupRepositories",
+        "contract_operation.toolbox.saveWorktreeSetupScript",
+        "procedure.toolbox.deleteWorktreeSetupWorktree",
+        "procedure.toolbox.listWorktreeSetupRepositories",
+        "procedure.toolbox.saveWorktreeSetupScript",
+        "settings.worktree-setup",
+        "settings_detail.worktree-scripts"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/worktree-setup-settings.ts",
+          "line": 150,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/worktree-setup-settings.ts#L150"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts",
+          "line": 178,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts#L178"
+        },
+        {
+          "path": "apps/browser/src/backend/services/codex-worktree-setup.ts",
+          "line": 15,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/codex-worktree-setup.ts#L15"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/git/WorktreeSetupRunner.cpp",
+          "line": 30
+        },
+        {
+          "path": "src/git/WorktreeSettingsController.cpp",
+          "line": 37
+        },
+        {
+          "path": "src/ui/MainWindowGit.cpp",
+          "line": 91
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_worktree_settings.cpp",
+          "line": 37
+        },
+        {
+          "path": "tests/test_git.cpp",
+          "line": 86
+        },
+        {
+          "path": "tests/test_git_host.cpp",
+          "line": 111
+        }
+      ],
+      "implemented": [
+        "Per-repository scripts, revision-aware save, BOM/EOL preservation, Codex TOML fallback, execution only after successful mount, bounded output/cancel/deadline and isolated drafts."
+      ],
+      "gaps": [
+        "Windows execution verified; native POSIX/macOS deployment unavailable.",
+        "Scripts deliberately retain user OS authority."
+      ],
+      "nextAcceptance": "Source environment-variable/platform-selection corpus and platform-specific process tests."
+    },
+    {
+      "id": "git.watches",
+      "inventoryIds": [
+        "git.workflows",
+        "git.worktrees"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 1588,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1588"
+        },
+        {
+          "path": "apps/browser/src/backend/services/git/index.ts",
+          "line": 685,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/git/index.ts#L685"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/git/GitRepositoryWatcher.cpp",
+          "line": 103
+        },
+        {
+          "path": "src/git/GitRepositoryWatcher.cpp",
+          "line": 177
+        },
+        {
+          "path": "src/ui/MainWindowGit.cpp",
+          "line": 114
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_git_watcher.cpp",
+          "line": 89
+        },
+        {
+          "path": "tests/test_git_watcher.cpp",
+          "line": 123
+        },
+        {
+          "path": "tests/test_git_host.cpp",
+          "line": 118
+        }
+      ],
+      "implemented": [
+        "Shared owners, asynchronous fingerprint/debounce, atomic HEAD replacement, topology changes, disappearance/reappearance and stale-owner cancellation."
+      ],
+      "gaps": [
+        "Native path/repository/scan budgets report incomplete state; not unbounded cross-platform parity.",
+        "Latest sharing failure was a fixture atomic-replacement primitive mismatch, not evidence of a newly fixed production watcher bug."
+      ],
+      "nextAcceptance": "Retain source ignore/topology semantic fixtures and explicit bounded-incomplete behavior."
+    },
+    {
+      "id": "git.cleanup",
+      "inventoryIds": [
+        "contract_operation.toolbox.cleanWorkspaceGitWorktrees",
+        "contract_operation.toolbox.dismissWorkspaceGitCleanupPrompt",
+        "procedure.toolbox.cleanWorkspaceGitWorktrees",
+        "procedure.toolbox.dismissWorkspaceGitCleanupPrompt"
+      ],
+      "status": "partial_disabled_in_production",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 990,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L990"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 1172,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1172"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+          "line": 1345,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1345"
+        },
+        {
+          "path": "packages/agent-core/src/services/agent-persistence/db.ts",
+          "line": 629,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-persistence/db.ts#L629"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/git/GitService.cpp",
+          "line": 366
+        },
+        {
+          "path": "src/ui/MainWindowGit.cpp",
+          "line": 102
+        },
+        {
+          "path": "reference/native-experiments/CMakeLists.txt",
+          "line": 17
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_git_host.cpp",
+          "line": 107
+        },
+        {
+          "path": "tests/test_git.cpp",
+          "line": 78
+        }
+      ],
+      "implemented": [
+        "Backend checks managed/clean/unmounted/attached/merged/seven-day age; unknown usage fails closed. Optional usage journal is preserved/tested but unlinked to ADE."
+      ],
+      "gaps": [
+        "MainWindow always sets usageKnown=false, so automatic age/history cleanup and startup prompt/snooze are unavailable.",
+        "Current workspace/updated is not equivalent to source mountedWorkspaces/lastMessageAt history."
+      ],
+      "nextAcceptance": "Durable physical-identity-aware usage history, unknown-history floor, host lifecycle events, then candidate review/snooze and fresh guarded removal."
+    },
+    {
+      "id": "terminal.interactive",
+      "inventoryIds": [
+        "terminal.interactive"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/terminal/index.ts",
+          "line": 309,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/terminal/index.ts#L309"
+        },
+        {
+          "path": "apps/browser/src/backend/services/terminal/index.ts",
+          "line": 426,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/terminal/index.ts#L426"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/terminal/ConPtyProcess.cpp",
+          "line": 143
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 15
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 104
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_terminal.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "ConPTY/libvterm input, copy/paste, scrollback, resize, owned process lifetime and borrowed agent-shell views."
+      ],
+      "gaps": [
+        "No source-equivalent persisted terminal-tab recreation or cross-platform PTY/shell discovery. Persistent shell sessions are a distinct capability."
+      ],
+      "nextAcceptance": "Typed terminal descriptors with validated cwd and explicit fresh-process restart, without claiming process resurrection."
+    },
+    {
+      "id": "shell.sessions",
+      "inventoryIds": [
+        "contract_operation.toolbox.killShellSession",
+        "procedure.toolbox.killShellSession",
+        "terminal.shell-engine",
+        "tool.createShellSession",
+        "tool.executeShellCommand"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "packages/agent-shell/src/schemas/index.ts",
+          "line": 23,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/schemas/index.ts#L23"
+        },
+        {
+          "path": "packages/agent-shell/src/tools/execute-shell-command.ts",
+          "line": 339,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/tools/execute-shell-command.ts#L339"
+        },
+        {
+          "path": "packages/agent-shell/src/engine/session-manager.ts",
+          "line": 419,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts#L419"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/shell/ShellService.cpp",
+          "line": 136
+        },
+        {
+          "path": "src/shell/ShellService.cpp",
+          "line": 261
+        },
+        {
+          "path": "src/shell/ShellService.cpp",
+          "line": 405
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 54
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_shell_service.cpp",
+          "line": 122
+        },
+        {
+          "path": "tests/test_shell_service.cpp",
+          "line": 228
+        },
+        {
+          "path": "tests/test_shell_runtime.cpp",
+          "line": 87
+        }
+      ],
+      "implemented": [
+        "createShellSession/executeShellCommand/createWatcherSession, persistent cwd/variables, stdin/poll/kill, five active sessions, paced input, authenticated OSC completion and ownership/cancel."
+      ],
+      "gaps": [
+        "PowerShell only; no Bash/Zsh or source sentinel fallback when OSC initialization fails.",
+        "PCRE2 differs from JS RegExp; retained exited grids32 sessions/200 rows is an explicit native choice.",
+        "Commands retain user OS permissions, not an OS sandbox."
+      ],
+      "nextAcceptance": "Source shell-detection/environment/integration adapters with chunked completion/failure/cancel fixtures."
+    },
+    {
+      "id": "shell.watchers_logs",
+      "inventoryIds": [
+        "terminal.shell-engine"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "packages/agent-shell/src/engine/session-manager.ts",
+          "line": 641,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts#L641"
+        },
+        {
+          "path": "packages/agent-shell/src/engine/session-logger.ts",
+          "line": 18,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-logger.ts#L18"
+        },
+        {
+          "path": "packages/agent-shell/src/env/shells-domain-adapter.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/env/shells-domain-adapter.ts#L1"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 24
+        },
+        {
+          "path": "src/runtime/AgentToolHost.cpp",
+          "line": 77
+        },
+        {
+          "path": "src/shell/SessionLogStore.cpp",
+          "line": 170
+        },
+        {
+          "path": "src/shell/SessionLogStore.cpp",
+          "line": 245
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_shell_runtime.cpp",
+          "line": 103
+        },
+        {
+          "path": "tests/test_shell_runtime.cpp",
+          "line": 110
+        },
+        {
+          "path": "tests/test_shell_log_mount.cpp",
+          "line": 14
+        }
+      ],
+      "implemented": [
+        "Process-local one-shot watchers, per-round manifest, accepted durable queue wake preserving pause/question/approval, bounded failed-save retry;50MiB logs and readonly exact/raw plus immutable formatted reads; clone logs without processes."
+      ],
+      "gaps": [
+        "Failed queue writes retained only in memory, not crash durable.",
+        "Source revision/delta environment representation differs. Raw log transfer4MiB/64Ki chars; shells glob/grep missing."
+      ],
+      "nextAcceptance": "Source environment-state comparison and historical log navigation without conflating logs with active processes."
+    },
+    {
+      "id": "shell.smart_approval",
+      "inventoryIds": [
+        "terminal.smart-approval"
+      ],
+      "status": "missing",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "line": 18,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts#L18"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+          "line": 65,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts#L65"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/AgentEngine.cpp",
+          "line": 839
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_shell_engine.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "Ask/Allow and source-derived create/owned-kill approval bypass."
+      ],
+      "gaps": [
+        "No Smart classifier model fallback/schema/timeout/decision explanation."
+      ],
+      "nextAcceptance": "Fail-closed classifier, exact command/cwd identity, stale cancellation and actual-engine approval tests."
+    },
+    {
+      "id": "shell.local_ports",
+      "inventoryIds": [
+        "terminal.servers"
+      ],
+      "status": "missing",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/local-ports-scanner.ts",
+          "line": 35,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/local-ports-scanner.ts#L35"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/shell/ShellService.cpp",
+          "line": 804
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Owned shell enumeration/kill is available."
+      ],
+      "gaps": [
+        "No local listening-port scanner or source discovered server list/stop workflow."
+      ],
+      "nextAcceptance": "Read-only OS port discovery and exact process ownership; never infer stop authority from port number alone."
+    },
+    {
+      "id": "skills.context",
+      "inventoryIds": [
+        "settings.skills-context",
+        "settings_detail.skills-context",
+        "workspace.skills"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/global-skills.ts",
+          "line": 11,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/global-skills.ts#L11"
+        },
+        {
+          "path": "packages/agent-core/src/services/mount-manager/workspace-info/skills.ts",
+          "line": 16,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/workspace-info/skills.ts#L16"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 1222,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L1222"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/core/ContextLoader.cpp",
+          "line": 180
+        },
+        {
+          "path": "src/core/ContextLoader.cpp",
+          "line": 214
+        },
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 741
+        },
+        {
+          "path": "src/ui/ContextPreferences.cpp",
+          "line": 1
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_context.cpp",
+          "line": 27
+        },
+        {
+          "path": "tests/test_settings_audit.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "Workspace/global .stagewise/.agents, opt-in Codex/Claude, precedence, scoped AGENTS.md, enablement, slash flags and readonly references."
+      ],
+      "gaps": [
+        "Bounded custom frontmatter parser is not full gray-matter/YAML parity;512 skills/2048 children/1MiB caps.",
+        "Single workspace prevents source multiprefix ownership parity."
+      ],
+      "nextAcceptance": "Source YAML/duplicate/symlink precedence corpus and per-mount context lifetime tests."
+    },
+    {
+      "id": "plugins.tokens",
+      "inventoryIds": [
+        "bundled_plugin.figma",
+        "bundled_plugin.github",
+        "bundled_plugin.posthog",
+        "bundled_plugin.supabase",
+        "bundled_plugin.vercel",
+        "integration.plugins",
+        "plugin.figma",
+        "plugin.github",
+        "plugin.posthog",
+        "plugin.supabase",
+        "plugin.vercel",
+        "settings.plugins",
+        "settings_detail.plugin-cards"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/shared/credential-types/index.ts",
+          "line": 32,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/credential-types/index.ts#L32"
+        },
+        {
+          "path": "apps/browser/src/backend/utils/discover-plugins.ts",
+          "line": 7,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/utils/discover-plugins.ts#L7"
+        },
+        {
+          "path": "apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx#L1"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/plugins/PluginCatalog.cpp",
+          "line": 104
+        },
+        {
+          "path": "src/plugins/PluginCatalog.cpp",
+          "line": 183
+        },
+        {
+          "path": "src/plugins/PluginConnectionService.cpp",
+          "line": 46
+        },
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 831
+        },
+        {
+          "path": "src/main.cpp",
+          "line": 45
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_plugin_runtime.cpp",
+          "line": 149
+        },
+        {
+          "path": "tests/test_plugin_connections.cpp",
+          "line": 23
+        },
+        {
+          "path": "tests/test_plugin_settings.cpp",
+          "line": 1
+        },
+        {
+          "path": "tests/test_smoke_plugins.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "Five PAT skills/assets with provenance, enablement, DPAPI token save/remove/read-check and actual host/worker fetch; CLI smoke loads same plugin context.",
+        "GitHub live native chat covered identity/repo plus disposable branch/content/PR/merge/cleanup; main stayed unchanged during that validation."
+      ],
+      "gaps": [
+        "Other four services have synthetic transport/runtime tests, not live account operation verification. Read checks prove only their endpoint/current permissions.",
+        "Source discovery loads bundled plugin directories; an arbitrary marketplace installer was not found. All five source credentials are PATs, so generic plugin OAuth wording is not a proven missing contract."
+      ],
+      "nextAcceptance": "Recipe-specific compatibility and honest live matrix; new installer/OAuth requires a separately established contract."
+    },
+    {
+      "id": "plugins.other_bundles",
+      "inventoryIds": [
+        "bundled_plugin.javascript-sandbox",
+        "bundled_plugin.mini-apps",
+        "bundled_plugin.remotion"
+      ],
+      "status": "partial_preserved_not_all_registered",
+      "upstream": [
+        {
+          "path": "apps/browser/bundled/plugins/javascript-sandbox/SKILL.md",
+          "line": 74,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/javascript-sandbox/SKILL.md#L74"
+        },
+        {
+          "path": "apps/browser/bundled/plugins/mini-apps/SKILL.md",
+          "line": 25,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/mini-apps/SKILL.md#L25"
+        },
+        {
+          "path": "apps/browser/bundled/plugins/remotion/SKILL.md",
+          "line": 8,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/bundled/plugins/remotion/SKILL.md#L8"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/plugins/PluginCatalog.cpp",
+          "line": 104
+        },
+        {
+          "path": "src/apps/MiniAppHost.cpp",
+          "line": 1
+        },
+        {
+          "path": "src/sandbox/worker_main.cpp",
+          "line": 497
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_sandbox_apps.cpp",
+          "line": 1
+        },
+        {
+          "path": "tests/test_runtime_apps.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "Native mini-app authoring/messaging and JS APIs exist, including Figma local recipe tests."
+      ],
+      "gaps": [
+        "Catalog registers five PAT plugins, not the separate JavaScript Sandbox/Mini Apps/Remotion bundles; preserved docs are not native discoverability.",
+        "Remotion workflow/Node/npm/video-toolchain compatibility unverified; importModule rejects. Small Buffer shim exists, but complete Node builtins are absent."
+      ],
+      "nextAcceptance": "Register compatible source skills only after exact runtime recipe checks; detailed sandbox map belongs to core peer audit."
+    },
+    {
+      "id": "credentials.registry",
+      "inventoryIds": [
+        "contract_operation.credentials.delete",
+        "contract_operation.credentials.getConfiguredIds",
+        "contract_operation.credentials.set",
+        "procedure.credentials.delete",
+        "procedure.credentials.getConfiguredIds",
+        "procedure.credentials.set",
+        "providers.credentials"
+      ],
+      "status": "partial",
+      "upstream": [
+        {
+          "path": "apps/browser/src/shared/credential-types/index.ts",
+          "line": 32,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/credential-types/index.ts#L32"
+        },
+        {
+          "path": "apps/browser/src/backend/services/credentials/index.ts",
+          "line": 106,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/credentials/index.ts#L106"
+        },
+        {
+          "path": "apps/browser/src/backend/services/credentials/index.ts",
+          "line": 170,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/credentials/index.ts#L170"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 91
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 164
+        },
+        {
+          "path": "src/core/ProviderStore.cpp",
+          "line": 31
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_plugins.cpp",
+          "line": 104
+        },
+        {
+          "path": "tests/test_network.cpp",
+          "line": 79
+        }
+      ],
+      "implemented": [
+        "Five PAT schemas, DPAPI persistence, per-agent opaque handles, rotation/revocation and exact origins; raw plugin secrets remain in native host rather than source worker secretMap transport."
+      ],
+      "gaps": [
+        "Source google-ai-key and automatically managed stagewise-auth are absent from native sandbox registry; model-provider Google keys are separate.",
+        "Generic public fields/onGet refresh registry not source equivalent; current PAT onGet functions are identity transforms."
+      ],
+      "nextAcceptance": "Add source google-ai-key contract if needed; stagewise-auth requires real authorized account integration."
+    },
+    {
+      "id": "network.fetch",
+      "inventoryIds": [
+        "integration.plugins",
+        "providers.credentials"
+      ],
+      "status": "implemented_with_limits",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts#L1"
+        },
+        {
+          "path": "apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts",
+          "line": 135,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts#L135"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 208
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 294
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 338
+        },
+        {
+          "path": "src/network/NetworkBroker.h",
+          "line": 18
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_network.cpp",
+          "line": 77
+        },
+        {
+          "path": "tests/test_plugin_runtime.cpp",
+          "line": 184
+        }
+      ],
+      "implemented": [
+        "HTTP(S), origin-bound opaque substitution, manual credential redirects, public redirects, binary bodies, cancel/deadline/limits, reflection rejection and revocation."
+      ],
+      "gaps": [
+        "Default1MiB upload/2MiB response/30s deadline and forbidden connection/cookie headers differ from full Node fetch; no complete streaming/cookie/multipart parity.",
+        "Browser pages and system Git authentication are separate; PATs are not injected into those contexts."
+      ],
+      "nextAcceptance": "Actual-host fixtures for new fetch shapes while preserving origin, redirect and secret boundaries."
+    },
+    {
+      "id": "account.auth",
+      "inventoryIds": [
+        "account.auth",
+        "contract_operation.userAccount.logout",
+        "contract_operation.userAccount.refreshStatus",
+        "contract_operation.userAccount.sendOtp",
+        "contract_operation.userAccount.signInEmail",
+        "contract_operation.userAccount.signInSocial",
+        "contract_operation.userAccount.validateApiKeys",
+        "contract_operation.userAccount.verifyOtp",
+        "procedure.userAccount.logout",
+        "procedure.userAccount.refreshStatus",
+        "procedure.userAccount.sendOtp",
+        "procedure.userAccount.signInEmail",
+        "procedure.userAccount.signInSocial",
+        "procedure.userAccount.validateApiKeys",
+        "procedure.userAccount.verifyOtp",
+        "settings.account",
+        "settings_detail.account"
+      ],
+      "status": "missing_host_service_required",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/auth/index.ts",
+          "line": 249,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/index.ts#L249"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth/index.ts",
+          "line": 354,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/index.ts#L354"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth/index.ts",
+          "line": 491,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/index.ts#L491"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth/server-interop.ts",
+          "line": 169,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/server-interop.ts#L169"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 1094
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Native honestly offers BYOK and reports account authentication unavailable."
+      ],
+      "gaps": [
+        "No OTP/email/social handoff, callback state/session refresh/logout or Stagewise token provider.",
+        "Public client contracts are preserved; backing /v1/auth implementation was not located in pinned apps. This does not prove the remote service is unavailable."
+      ],
+      "nextAcceptance": "Choose an authorized backend, then native encrypted session/callback/nonce validation with fake service tests."
+    },
+    {
+      "id": "account.usage",
+      "inventoryIds": [
+        "account.usage",
+        "contract_operation.userAccount.getUsageCurrent",
+        "contract_operation.userAccount.getUsageHistory",
+        "contract_operation.userAccount.refreshSubscription",
+        "procedure.userAccount.getUsageCurrent",
+        "procedure.userAccount.getUsageHistory",
+        "procedure.userAccount.refreshSubscription"
+      ],
+      "status": "missing_host_service_required",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/auth/server-interop.ts",
+          "line": 221,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/server-interop.ts#L221"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth/server-interop.ts",
+          "line": 252,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/server-interop.ts#L252"
+        },
+        {
+          "path": "apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/settings/sections/account-section.tsx#L1"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 1094
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Local provider configuration remains independent of a hosted subscription."
+      ],
+      "gaps": [
+        "No authenticated billing/plan/history panels; local token accounting is not account billing.",
+        "Pinned README:81 contains a planned account-service sunset notice; current remote availability and entitlements were not verified here."
+      ],
+      "nextAcceptance": "Authorized backend contract with honest offline/expired states, no fabricated usage data."
+    },
+    {
+      "id": "distribution.update_client",
+      "inventoryIds": [
+        "contract_operation.autoUpdate.checkForUpdates",
+        "contract_operation.autoUpdate.quitAndInstall",
+        "distribution.updates",
+        "procedure.autoUpdate.checkForUpdates",
+        "procedure.autoUpdate.quitAndInstall"
+      ],
+      "status": "missing",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/auto-update.ts",
+          "line": 86,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auto-update.ts#L86"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auto-update.ts",
+          "line": 184,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auto-update.ts#L184"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auto-update.ts",
+          "line": 323,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auto-update.ts#L323"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auto-update.ts",
+          "line": 405,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auto-update.ts#L405"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 1110
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "About explicitly reports automatic updates/signing unconfigured."
+      ],
+      "gaps": [
+        "No feed/channel/version query, download readiness, supersession or busy-agent install/restart flow.",
+        "Source updater excludes Linux/dev builds; do not inflate source support."
+      ],
+      "nextAcceptance": "Owned signed feed/assets, atomic staging/rollback, busy-agent gate and restart fixtures."
+    },
+    {
+      "id": "distribution.update_server",
+      "inventoryIds": [],
+      "status": "preserved_in_supplement_not_ported",
+      "upstream": [
+        {
+          "path": "apps/update-server/src/routes.ts",
+          "line": 74,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/update-server/src/routes.ts#L74"
+        },
+        {
+          "path": "apps/update-server/src/github.ts",
+          "line": 37,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/update-server/src/github.ts#L37"
+        },
+        {
+          "path": "apps/update-server/src/releases.ts",
+          "line": 90,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/update-server/src/releases.ts#L90"
+        }
+      ],
+      "native": [],
+      "tests": [],
+      "implemented": [
+        "Root added all13 public update-server files to the separate byte-exact supplemental source reference during this review; original1400-file tree is unchanged."
+      ],
+      "gaps": [
+        "Public updater source is now preserved in reference/stagewise-supplement; this does not implement or deploy the native update pipeline.",
+        "Public server supplies release metadata, Windows RELEASES/nupkg and platform download routing; no native implementation/deployment is configured."
+      ],
+      "nextAcceptance": "Verify supplement hashes/licenses, then choose native artifact/signature/feed contract before implementing updates."
+    },
+    {
+      "id": "distribution.build",
+      "inventoryIds": [
+        "distribution.packaging"
+      ],
+      "status": "partial",
+      "upstream": [
+        {
+          "path": "apps/browser/forge.config.mts",
+          "line": 318,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/forge.config.mts#L318"
+        },
+        {
+          "path": "apps/browser/forge.config.mts",
+          "line": 376,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/forge.config.mts#L376"
+        }
+      ],
+      "native": [
+        {
+          "path": "CMakeLists.txt",
+          "line": 1
+        },
+        {
+          "path": "scripts/build.ps1",
+          "line": 1
+        },
+        {
+          "path": "scripts/prepare-publication.py",
+          "line": 1
+        },
+        {
+          "path": "README.md",
+          "line": 72
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Static Qt/GCC/QuickJS Windows build, configurable paths, reusable libraries and fresh-source export builds on existing toolchain."
+      ],
+      "gaps": [
+        "CMake rejects non-Windows/non-MinGW/dynamic Qt; no native macOS/Linux target.",
+        "Bundle requires WebView2Loader.dll and installed Evergreen/Git/shell; no signed installer, protocol registration or clean-machine provisioning test.",
+        "Fresh source build is not bit-identical reproducible binary or clean install proof."
+      ],
+      "nextAcceptance": "Installer/portable manifest with dependency/license checks and disposable clean Windows test, then platform adapters."
+    },
+    {
+      "id": "integration.deep_links",
+      "inventoryIds": [
+        "integration.deep-links"
+      ],
+      "status": "missing",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/uri-handler.ts",
+          "line": 31,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/uri-handler.ts#L31"
+        },
+        {
+          "path": "apps/browser/src/backend/services/auth/callback-scheme.ts",
+          "line": 18,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/auth/callback-scheme.ts#L18"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/main.cpp",
+          "line": 77
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Native CLI profile/workspace/import/smoke flags exist."
+      ],
+      "gaps": [
+        "No OS custom protocol registration, single-instance auth callback routing or source startup deep-link validation."
+      ],
+      "nextAcceptance": "Separate ADE scheme, strict allowlist/state validation; never take over Stagewise protocol by accident."
+    },
+    {
+      "id": "integration.devtools",
+      "inventoryIds": [
+        "integration.devtool-api"
+      ],
+      "status": "partial",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/dev-tool-api/index.ts",
+          "line": 83,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/dev-tool-api/index.ts#L83"
+        },
+        {
+          "path": "apps/browser/src/backend/services/dev-tool-api/index.ts",
+          "line": 252,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/dev-tool-api/index.ts#L252"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/browser/BrowserToolBridge.cpp",
+          "line": 157
+        },
+        {
+          "path": "src/ui/MainWindowBrowserTools.cpp",
+          "line": 66
+        },
+        {
+          "path": "src/browser/BrowserWidget.cpp",
+          "line": 943
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/test_browser_tools.cpp",
+          "line": 1
+        },
+        {
+          "path": "tests/test_browser_inspector.cpp",
+          "line": 1
+        }
+      ],
+      "implemented": [
+        "Native DevTools/CDP, screenshot/selection/device controls and scoped commands/events cover important behavior."
+      ],
+      "gaps": [
+        "Electron Karton/dual-DevTools/window contracts differ. File name alone does not prove an external IDE API server.",
+        "Detailed browser/MiniApp parity is assigned to UI/browser peer audit."
+      ],
+      "nextAcceptance": "Each source RPC mapped to native action/result or explicit absence with ownership and screenshot bounds."
+    },
+    {
+      "id": "integration.research",
+      "inventoryIds": [
+        "integration.research"
+      ],
+      "status": "missing_host_service_required",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+          "line": 21,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts#L21"
+        },
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+          "line": 22,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts#L22"
+        }
+      ],
+      "native": [],
+      "tests": [],
+      "implemented": [],
+      "gaps": [
+        "No native listLibraryDocs/searchInLibraryDocs tools. Source wrappers call /v1/context7/search and /v1/context7/docs; public client code is not the backing service."
+      ],
+      "nextAcceptance": "Authorized docs backend with matching result/cap/error semantics; generic web search is not exact parity."
+    },
+    {
+      "id": "integration.log_ingest",
+      "inventoryIds": [
+        "integration.log-ingest"
+      ],
+      "status": "missing",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/log-ingest/index.ts",
+          "line": 62,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/log-ingest/index.ts#L62"
+        },
+        {
+          "path": "apps/browser/src/backend/services/log-ingest/index.ts",
+          "line": 91,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/log-ingest/index.ts#L91"
+        },
+        {
+          "path": "apps/browser/src/backend/services/log-ingest/index.ts",
+          "line": 267,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/log-ingest/index.ts#L267"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/shell/SessionLogStore.cpp",
+          "line": 170
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Shell logs exist under a distinct readonly shells/ domain."
+      ],
+      "gaps": [
+        "No source loopback token-authenticated ingest server, channel buffers/flush or logs/ mount. Shell logs do not implement this."
+      ],
+      "nextAcceptance": "Loopback-only random-token ingest, bounded channel/name/body and owner routing with rejection and lifecycle fixtures."
+    },
+    {
+      "id": "distribution.telemetry",
+      "inventoryIds": [
+        "distribution.telemetry"
+      ],
+      "status": "missing_no_transport",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/telemetry.ts",
+          "line": 895,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/telemetry.ts#L895"
+        },
+        {
+          "path": "apps/browser/src/backend/services/telemetry.ts",
+          "line": 933,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/telemetry.ts#L933"
+        }
+      ],
+      "native": [],
+      "tests": [],
+      "implemented": [],
+      "gaps": [
+        "No native PostHog telemetry event/level/identity policy. Absence is not authority to transmit to Stagewise infrastructure."
+      ],
+      "nextAcceptance": "Only if required: ADE-owned opt-in endpoint, redaction/batching and default-off tests."
+    },
+    {
+      "id": "platform.power",
+      "inventoryIds": [
+        "shell.power"
+      ],
+      "status": "settings_only_missing_consumer",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/agent-power-save-blocker.ts",
+          "line": 123,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/agent-power-save-blocker.ts#L123"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 581
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Keep-awake checkbox persists a preference."
+      ],
+      "gaps": [
+        "No native PowerRequest/SetThreadExecutionState or equivalent consumer found; the control does not currently prevent suspension."
+      ],
+      "nextAcceptance": "Per-active-agent Windows power request, excluding waiting question/approval; release on cancellation, destruction and preference change."
+    },
+    {
+      "id": "platform.notifications",
+      "inventoryIds": [
+        "shell.notifications"
+      ],
+      "status": "partial_settings_only",
+      "upstream": [
+        {
+          "path": "apps/browser/src/backend/services/notification.ts",
+          "line": 66,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/notification.ts#L66"
+        },
+        {
+          "path": "apps/browser/src/backend/services/notification.ts",
+          "line": 123,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/notification.ts#L123"
+        }
+      ],
+      "native": [
+        {
+          "path": "src/ui/SettingsPage.cpp",
+          "line": 588
+        },
+        {
+          "path": "src/terminal/TerminalWidget.cpp",
+          "line": 28
+        }
+      ],
+      "tests": [],
+      "implemented": [
+        "Native status/errors and terminal bell; notification loudness preference persists."
+      ],
+      "gaps": [
+        "No source toast actions/dismiss/timer service or agent per-event sound consumer. Terminal bell is unrelated; Settings explicitly says playback is still being connected."
+      ],
+      "nextAcceptance": "Typed native notifications, lifetime-safe action IDs, quiet/off/dedup tests and independently licensed assets."
+    }
+  ],
+  "crossAuditBoundaries": {
+    "core": "Peer audit/parity-review-core.json owns detailed engine/provider/ACP/Buffer/importModule/tool/read-context map; this reference is not a claim that the pending file already passed review.",
+    "ui": "Root/peer audit owns exact layouts, browser authentication/session restoration and MiniApp CSP."
+  },
+  "highestValueNextSlices": [
+    {
+      "rank": 1,
+      "id": "platform.power",
+      "reason": "Visible preference lacks runtime behavior; finite native adapter closes a user-visible correctness gap."
+    },
+    {
+      "rank": 2,
+      "id": "git.cleanup",
+      "reason": "Important lifecycle function is deliberately disabled; reviewed usage prototype can be integrated with recovery/ownership safeguards."
+    },
+    {
+      "rank": 3,
+      "id": "shell.smart_approval",
+      "reason": "Restores source approval behavior on existing persistent shell tools."
+    },
+    {
+      "rank": 4,
+      "id": "plugins.other_bundles",
+      "reason": "Compatible Mini Apps/JavaScript docs can become discoverable while real runtime gaps are closed; Remotion must not be enabled prematurely."
+    },
+    {
+      "rank": 5,
+      "id": "git.multimount",
+      "reason": "Multiple workspaces underpin source Git, skills, file and Remotion behavior."
+    },
+    {
+      "rank": 6,
+      "id": "distribution.update_server",
+      "reason": "Public preservation gap closed by root supplement during audit; native updater/deployment remains missing."
+    },
+    {
+      "rank": 7,
+      "id": "distribution.build",
+      "reason": "Existing-toolchain builds do not establish clean-machine deployment."
+    }
+  ],
+  "liveEvidence": [
+    "audit/native-github-live-verification.json",
+    "audit/native-git-worktree-live-verification.json",
+    "audit/native-close-process-verification.json",
+    "audit/composer-legacy-storage-fix.json"
+  ],
+  "status": "review_complete_with_explicit_partial_missing_unverified_boundaries",
+  "nativeHead": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "reviewedAtUtc": "2026-11-06T16:30:34.374612+00:00",
+  "sourceManifest": [
+    {
+      "path": "apps/browser/src/backend/services/git/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/git/index.ts",
+      "sha256": "b6af9bfa60907a601eedf09baafda9a84d49a23ae033d8ca88c57d1240ebeb8d",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "localPath": "src/git/GitService.cpp",
+      "sha256": "42f3228aea4f7785f8cd53f09d811b95d2376dac232460dec087a3294f42d863",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitPanel.cpp",
+      "localPath": "src/git/GitPanel.cpp",
+      "sha256": "a035fb2dcb3f1b199dcff9e9ba40001f9eecd61baed9ef87f2c7fdf4f4146a09",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "localPath": "src/ui/MainWindowGit.cpp",
+      "sha256": "ec93e2cd7bd9c8784f14a664b3a0fda8e32236ada6c16377489b3c85d6d25b7e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git.cpp",
+      "localPath": "tests/test_git.cpp",
+      "sha256": "ab0822034cc738c773aff3f4677a5a4809c4fbce8a6f77474b4fe0090e436d9f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_host.cpp",
+      "localPath": "tests/test_git_host.cpp",
+      "sha256": "bf3a60baf880206d7241ddd7e1910249656085e55bd13e16b16a6197f8025df5",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_ui.cpp",
+      "localPath": "tests/test_git_ui.cpp",
+      "sha256": "73fa5297a0e224d003d276cb19a533bfc21cfc943dd420dde38a86a17a475cad",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "sha256": "93f070d23cd12ca8822f9e06c481ab3ba385f9f4fb116255eb5197f76bdc7b45",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "localPath": "src/ui/SessionStore.h",
+      "sha256": "bca2ec27bcfa6035537a98910c8957b631cf95b3c0f8ee7e4c6cea03b06edd0b",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "localPath": "src/runtime/AgentToolHost.cpp",
+      "sha256": "7168f86d36bac3ab2a946b8f58ea2d3f45d7a18e187cb05e3c63301f2bec6a6d",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/worktree-setup-settings.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/worktree-setup-settings.ts",
+      "sha256": "b15dc5eaa833997b39da887686954350da62e48af7895dc54a74b95de77e7d90",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/services/mount-manager/worktree-setup-runner.ts",
+      "sha256": "da924509c6068bfcb1712d1f94cbf36d752418ea9914e7564e5be4921c75213f",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/codex-worktree-setup.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/codex-worktree-setup.ts",
+      "sha256": "cbe1ffa42a715e6b8742c550b1158bb520eb646080571412732cebadae6e8322",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/git/WorktreeSetupRunner.cpp",
+      "localPath": "src/git/WorktreeSetupRunner.cpp",
+      "sha256": "1ac31ce259136e9299b41f9a9a4a925a02a9ef756fab85163dd1d0b7b1414c17",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeSettingsController.cpp",
+      "localPath": "src/git/WorktreeSettingsController.cpp",
+      "sha256": "00fc8e7e31925c221539c110cd87a527f473e6836549252bbc636afaa9566ede",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_worktree_settings.cpp",
+      "localPath": "tests/test_worktree_settings.cpp",
+      "sha256": "0a97e5d6f6f5a95651c3cef175295e431e07b3ecaf8c5e9ffea883e8878a689b",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitRepositoryWatcher.cpp",
+      "localPath": "src/git/GitRepositoryWatcher.cpp",
+      "sha256": "39915e05d4cfcbadecdcf40b3d0bf3b37d3466ff7cea1f84af2dc56244ee5494",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_watcher.cpp",
+      "localPath": "tests/test_git_watcher.cpp",
+      "sha256": "fbf5e84878a8f3d1539068b21c4c3c943eacad7eaeeaba508b2c40f57947acb6",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "packages/agent-core/src/services/agent-persistence/db.ts",
+      "localPath": "reference/stagewise/packages/agent-core/src/services/agent-persistence/db.ts",
+      "sha256": "e5d9119dc64ffbb70f6e97943ebe02bfbd868ea0bee423bc5546cbb76f71c430",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "reference/native-experiments/CMakeLists.txt",
+      "localPath": "reference/native-experiments/CMakeLists.txt",
+      "sha256": "a95bc0d0313c732339b81a959df9a6af0c468a15b4dbab2a01b470ca87ee3630",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/terminal/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/terminal/index.ts",
+      "sha256": "b125a7ba01de608d5447da7c12b973a51d2f355fc0260f508210603723a503df",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/terminal/ConPtyProcess.cpp",
+      "localPath": "src/terminal/ConPtyProcess.cpp",
+      "sha256": "1266d01490ec6d3fdf1485da572af546da81ab9f91ccab8e79227e1c20a56484",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalWidget.cpp",
+      "localPath": "src/terminal/TerminalWidget.cpp",
+      "sha256": "0ce84daabe393bd3afd49cf6ece43414541480b46021e902b8ee67980f4604ee",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_terminal.cpp",
+      "localPath": "tests/test_terminal.cpp",
+      "sha256": "f0db233561ee8f4c84ffae4fa27ac2e40e2c04609821eefa8a79dc587decf43c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "packages/agent-shell/src/schemas/index.ts",
+      "localPath": "reference/stagewise/packages/agent-shell/src/schemas/index.ts",
+      "sha256": "9771f7e2619f395ededfc8d9f5a0f83fc38ead6ae63519cabf21b5e530289b3a",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "packages/agent-shell/src/tools/execute-shell-command.ts",
+      "localPath": "reference/stagewise/packages/agent-shell/src/tools/execute-shell-command.ts",
+      "sha256": "a304eb41afa6884c2d161ace4f836211345868831fb3c6362be1159e18e716c8",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "packages/agent-shell/src/engine/session-manager.ts",
+      "localPath": "reference/stagewise/packages/agent-shell/src/engine/session-manager.ts",
+      "sha256": "943450a88765c2f6ee19eb4f0e10ae01016db669b395acd2770c4aeda9f20a85",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/shell/ShellService.cpp",
+      "localPath": "src/shell/ShellService.cpp",
+      "sha256": "4f8a7c443f36923a9a6319d65d182aae008d9dde31529d4040796fa6d80cd984",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_service.cpp",
+      "localPath": "tests/test_shell_service.cpp",
+      "sha256": "170b1d942bfe9f2606c54d1b06bfaf202c970a4dd1e78bbea88342f305604e0b",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_runtime.cpp",
+      "localPath": "tests/test_shell_runtime.cpp",
+      "sha256": "b0d0203712a1feddb8d902a8a021befe6c9b2ba202092beef5e9ee2020b1e0e4",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "packages/agent-shell/src/engine/session-logger.ts",
+      "localPath": "reference/stagewise/packages/agent-shell/src/engine/session-logger.ts",
+      "sha256": "be2c58d3ebb37cfd15b4c8d5f6868a69e376e0b23cee25ed4dd9c4b8e72d6fe6",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "packages/agent-shell/src/env/shells-domain-adapter.ts",
+      "localPath": "reference/stagewise/packages/agent-shell/src/env/shells-domain-adapter.ts",
+      "sha256": "e1e0ed8e189deac8c6fc9afa716f03e2faa0bde965e15fe5d0cddc55dd816d4b",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/shell/SessionLogStore.cpp",
+      "localPath": "src/shell/SessionLogStore.cpp",
+      "sha256": "177bae3972520f96cc508b0573caca089a9a113919a5659b74f8fa728402225e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_log_mount.cpp",
+      "localPath": "tests/test_shell_log_mount.cpp",
+      "sha256": "b19797e5ac30ed0a11c1da6496aab10aeedde7746a8625a8f91cb5776bf1123f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/tools/shell/smart-approval/index.ts",
+      "sha256": "8564a108be16b9e2d06e86bb13b520e9e5b67d8db9c838ad239863fb7eb763af",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "localPath": "src/core/AgentEngine.cpp",
+      "sha256": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_engine.cpp",
+      "localPath": "tests/test_shell_engine.cpp",
+      "sha256": "856daefaec8d45353d285cdb5bc53b246a26541602a41a734ee061202bdbd050",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/local-ports-scanner.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/local-ports-scanner.ts",
+      "sha256": "a63c173c4fcb5c9c1e2e9946a698d86216124e31f760d2c0ac8492d32741ef0a",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/global-skills.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/global-skills.ts",
+      "sha256": "bab6ba7bb3f778dd010f33ecd00ad9d744bfb8759299d200dc7264b185a968df",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "packages/agent-core/src/services/mount-manager/workspace-info/skills.ts",
+      "localPath": "reference/stagewise/packages/agent-core/src/services/mount-manager/workspace-info/skills.ts",
+      "sha256": "cffaa4b88e6bdccd8f7544e06ce014e641a8374b8e135728188aa3e317514574",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+      "sha256": "4f0147d28a2cdd26c618ec6278d7496e35c58dc27a7e7bee955933e47600bd7b",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/core/ContextLoader.cpp",
+      "localPath": "src/core/ContextLoader.cpp",
+      "sha256": "a589eb488cfb662764f9f0afca4d020126b5e9e47633f1d57e1672a3d95a20db",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "localPath": "src/ui/SettingsPage.cpp",
+      "sha256": "845b5c448e5707f7e21a8a3be7519aa5cf20cb967341cec6bf0e775c8f2c00dd",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ContextPreferences.cpp",
+      "localPath": "src/ui/ContextPreferences.cpp",
+      "sha256": "271ffc54b96d2bb08499406657fe6a2a077ff1106e7dc3a5dbf2b19920817730",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_context.cpp",
+      "localPath": "tests/test_context.cpp",
+      "sha256": "0daf7bb7b0d9cf1a07372e56605c1f69067485e253774c72676c788056247453",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_settings_audit.cpp",
+      "localPath": "tests/test_settings_audit.cpp",
+      "sha256": "06cfa1000beec7718246ee0972a4b64bbc48652d7a58a04c66d7ba9962a15d23",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/shared/credential-types/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/shared/credential-types/index.ts",
+      "sha256": "06003bb29798387a48cdd20f6318af9dde82bd72ceffdcf4c76143b99999ca8a",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/utils/discover-plugins.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/utils/discover-plugins.ts",
+      "sha256": "981d628745ea2f56aee69a242a61cbd845a6db96eba002c489063037b7c317be",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+      "localPath": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx",
+      "sha256": "019486ecb7c44ad7c6f39a8bd5e448d74ac38a516906b320f6c9800cc8165605",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/plugins/PluginCatalog.cpp",
+      "localPath": "src/plugins/PluginCatalog.cpp",
+      "sha256": "92793bcdc3567ca99aa9d1858d829b98121eda71f9b6bb3bf40247c07bea8c2f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/plugins/PluginConnectionService.cpp",
+      "localPath": "src/plugins/PluginConnectionService.cpp",
+      "sha256": "31e701c5e78ee8d7da7c5136b7f0b106df6d0c93f667798389e60cdd5cd63600",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/main.cpp",
+      "localPath": "src/main.cpp",
+      "sha256": "c6351737e4fa47161e586353d332df563dcb48729105ea37644e5a3137385397",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_plugin_runtime.cpp",
+      "localPath": "tests/test_plugin_runtime.cpp",
+      "sha256": "685ca287364b9b3b1c1b27f26694ab4b166504be2a6f455a0a057cf522dd80f3",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_plugin_connections.cpp",
+      "localPath": "tests/test_plugin_connections.cpp",
+      "sha256": "0ceab8732cdbb8d6ee89ec952ecf1ab89c21581251bc26c1b8a36fb6095761b1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_plugin_settings.cpp",
+      "localPath": "tests/test_plugin_settings.cpp",
+      "sha256": "1ed4243185713e790dbd666476e47b8fe6bf1e0eaec1ad176595f78348e8c9c6",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_smoke_plugins.cpp",
+      "localPath": "tests/test_smoke_plugins.cpp",
+      "sha256": "9a7c946e550249aa36d8a3c6095c1373743ce125d3028c3ccc68d36340253775",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/bundled/plugins/javascript-sandbox/SKILL.md",
+      "localPath": "reference/stagewise/apps/browser/bundled/plugins/javascript-sandbox/SKILL.md",
+      "sha256": "ddc6502a48d1a690d6f6b0ecb2210b86fdadf915ee9482a6aa391436bcd3b2cc",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/bundled/plugins/mini-apps/SKILL.md",
+      "localPath": "reference/stagewise/apps/browser/bundled/plugins/mini-apps/SKILL.md",
+      "sha256": "a128c2bf3e028e63524885ff444efc09e5d14b7e1ae9b3cfe1a08a7d334ffd83",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/bundled/plugins/remotion/SKILL.md",
+      "localPath": "reference/stagewise/apps/browser/bundled/plugins/remotion/SKILL.md",
+      "sha256": "30c5195ac19b93153c1e0c5b0e24dcb08d254dc87f61a058dc435d845e9b214e",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/apps/MiniAppHost.cpp",
+      "localPath": "src/apps/MiniAppHost.cpp",
+      "sha256": "8c080dceecc0fcbf686760728c563caec34f75d1a7fa871d9d701f9a9810bb0e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/worker_main.cpp",
+      "localPath": "src/sandbox/worker_main.cpp",
+      "sha256": "9a719557e424a50fb7c84fd30bfd86c27a8dfc2a34012f2a743bcbb7f15bb33f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_sandbox_apps.cpp",
+      "localPath": "tests/test_sandbox_apps.cpp",
+      "sha256": "5bc61ed352c0f5835e763b4c5196cb53b596df622b7c2825409d4576f45764b7",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_runtime_apps.cpp",
+      "localPath": "tests/test_runtime_apps.cpp",
+      "sha256": "27db14952e4804c3d7a029c2dd62ba0f61d07df7743d07e453d1655fda56f8dd",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/credentials/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/credentials/index.ts",
+      "sha256": "8b609c3651b89b373e0d7dff134afda20ba0c4a8ac870112b862f216fe30dd1c",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/network/NetworkBroker.cpp",
+      "localPath": "src/network/NetworkBroker.cpp",
+      "sha256": "a6d92e66b5b6f3ca8a15226fa82b92974cfd7148d53d9deca6452d2c3364d0c2",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "localPath": "src/core/ProviderStore.cpp",
+      "sha256": "c313038bdf1393566b15cee923e25412c4e31057546d4644b317bfa8c5cbbeb3",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_plugins.cpp",
+      "localPath": "tests/test_plugins.cpp",
+      "sha256": "d0a15b9c70a8475a730c833241597e7ac9911df13077cb0bcfa7a78e50e0d2e7",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_network.cpp",
+      "localPath": "tests/test_network.cpp",
+      "sha256": "e65c1b375962862ecca239ea4462f0663d1f06c852ad82e9673e6c8e48d2afbb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts",
+      "sha256": "38d32dbca933585f82fd1dc0c9c85cb6202ac53a5f7dd742d2922bd4d0fd06d6",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/network/NetworkBroker.h",
+      "localPath": "src/network/NetworkBroker.h",
+      "sha256": "1379ea7a1c8318a049b18cc9869782d31ce2401ed963eb8eb88b84c99b10b2f6",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/auth/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/auth/index.ts",
+      "sha256": "530b00692887a8f84a1db777d691930865ed8f72e3a329359b64e35122e95aa2",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/auth/server-interop.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/auth/server-interop.ts",
+      "sha256": "bc2c99d588ba8f00c72165dfca4628ad68d0ff3b8a7f353dd86219a57fe5a0b5",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+      "localPath": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/account-section.tsx",
+      "sha256": "a9fae0e46aa77303c75f4255df7af8559434203a8955c0823c37ade8c17792fe",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/auto-update.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/auto-update.ts",
+      "sha256": "f76c8d9d470fd6b2bcd3e76cdae0a333998f92137419b03282ec803ed5d62cdd",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/update-server/src/routes.ts",
+      "localPath": "reference/stagewise-supplement/apps/update-server/src/routes.ts",
+      "sha256": "2e9cd24e4c64f944dc6ed8a4cdf336d4ddcbdcc68f97198e7ae9eb888db42f28",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": false,
+      "preservedInSupplement": true
+    },
+    {
+      "path": "apps/update-server/src/github.ts",
+      "localPath": "reference/stagewise-supplement/apps/update-server/src/github.ts",
+      "sha256": "f4e16cdb4e3d86b1771352608824e1b940fb6bb5a0c2995c257a364b6310119c",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": false,
+      "preservedInSupplement": true
+    },
+    {
+      "path": "apps/update-server/src/releases.ts",
+      "localPath": "reference/stagewise-supplement/apps/update-server/src/releases.ts",
+      "sha256": "413406692b3ab8159f7119c99dcfde643d1ac0637fa2cdd5ecf6b5ac994f13d6",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": false,
+      "preservedInSupplement": true
+    },
+    {
+      "path": "apps/browser/forge.config.mts",
+      "localPath": "reference/stagewise/apps/browser/forge.config.mts",
+      "sha256": "9608e15071ed5e9a0f4ba2f862d6108f171ac27b9b1967efa564219ee0a1f276",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "CMakeLists.txt",
+      "localPath": "CMakeLists.txt",
+      "sha256": "6a6cf7c92e6e4492fba8e0ecddfdaf495ab3ef2a2425039f3963e29ff83e6d75",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "scripts/build.ps1",
+      "localPath": "scripts/build.ps1",
+      "sha256": "69bf87cb7cddfcb0d4938d048813941a0a153d13474b7bcc77275c503e10b459",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "scripts/prepare-publication.py",
+      "localPath": "scripts/prepare-publication.py",
+      "sha256": "17ac9187ccd4ab8d14b5b37d9ccc28a4cd9cfd4449c34caf221b8285f4fbef7a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "README.md",
+      "localPath": "README.md",
+      "sha256": "e0308a4cdaa9a512deccda768ba034f17de79f38785d0500a1b04669a6acc9a9",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/uri-handler.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/uri-handler.ts",
+      "sha256": "3dd3434cbb7bf268ff7860855e1e1429c75d87643b95d9768e58303e6894f8e3",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/auth/callback-scheme.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/auth/callback-scheme.ts",
+      "sha256": "341f6d695b62012621ca2b80512e3b19901d2d10fc30057586e7180a99908912",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/dev-tool-api/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/dev-tool-api/index.ts",
+      "sha256": "749e61674c1cadea0c8d422530970cdbd958f22af61e06f3a85aec1945629d3f",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "src/browser/BrowserToolBridge.cpp",
+      "localPath": "src/browser/BrowserToolBridge.cpp",
+      "sha256": "0e45b8d539f9549f5710ae99eb3686eb069b7ffe0f01324f1498b4641fed0926",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowBrowserTools.cpp",
+      "localPath": "src/ui/MainWindowBrowserTools.cpp",
+      "sha256": "63317bd9f89765b287a674bdf7dedd3906b63bc32bd745fdaa76c1149037dbfe",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserWidget.cpp",
+      "localPath": "src/browser/BrowserWidget.cpp",
+      "sha256": "da0dc0ffc89addf340b4fb34a06f203705cf4069bdbf9befc2751b2c5722bd18",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_tools.cpp",
+      "localPath": "tests/test_browser_tools.cpp",
+      "sha256": "dd221120766961ab3db512753cdb1821cf65c86bb30b57965fc441c5a9ef192f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_inspector.cpp",
+      "localPath": "tests/test_browser_inspector.cpp",
+      "sha256": "9b5be15fde3b00c2642065ac687e965858d07d48bd13c51fe4735fa774a90b5c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/tools/research/list-library-docs.ts",
+      "sha256": "d31312786fa24104e60c2112e657d34dc338c87c4151ab0f9abd881d32e57198",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/toolbox/tools/research/search-in-library-docs.ts",
+      "sha256": "8faa7a137d5eaba32b24a2922fb9868b7f041ee1ffb8b3780ac90c93ef6f2a9b",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/log-ingest/index.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/log-ingest/index.ts",
+      "sha256": "8845077e40712e852685cf62f971e388f182283cad233694b9eb3eecaa978089",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/telemetry.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/telemetry.ts",
+      "sha256": "fbd8c82b116fb703e624bc77d701ee324829832d0f309264537bf0606c58764d",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/agent-power-save-blocker.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/agent-power-save-blocker.ts",
+      "sha256": "130cf9e3624832566487db66a2497aa46d4fa0cd0b553fe4124ead78ef91dbee",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    },
+    {
+      "path": "apps/browser/src/backend/services/notification.ts",
+      "localPath": "reference/stagewise/apps/browser/src/backend/services/notification.ts",
+      "sha256": "d91a2acddcec19b0a258da9ab954d25edeaf8748b7b8c1454464058c1148a374",
+      "hashBasis": "pinned_git_blob",
+      "preservedInOriginalCuratedTree": true
+    }
+  ],
+  "retainedEvidence": [
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugins.txt",
+      "sha256": "e46073e6aee4df1b24674307471282788968ddf07154f4928f230c0a49749c50",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 914ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_runtime.txt",
+      "sha256": "c5b29e6d98bfbc4988e18701f8d1f831df9cb8782abc914f865af6f7bd4bd74d",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 10064ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_connections.txt",
+      "sha256": "c6d2b6b4dafff68d6e0f9c683fa0d1f68ade556034c03d1d853ae5efb9619369",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 187ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_plugin_settings.txt",
+      "sha256": "72b34de75f393b347f8ba989db1a38fe6208f9454d59edef8f5768067c009f86",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 335ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_network.txt",
+      "sha256": "e9f9e818ec260591c787be795d5f173f1b60f71950f13ed710a0f017632b8cff",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 1980ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_context.txt",
+      "sha256": "ea445384d5bdc13fa67796215d12f8f864918332f54b4f547ea206bc1bcd0cc0",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 157ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_git_host.txt",
+      "sha256": "1b669f87f1f7eac7c711a13d9a95a2e0d20a6189c0cc36ae0c542b42957a1eef",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 53367ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/plugin-integration/final-targeted-run/native_worktree_settings.txt",
+      "sha256": "3426b55309705e1c904ba0a71a0552e46847ff507c41f975bde13cbe723e7efb",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 36032ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/native-live-validation/native_git.txt",
+      "sha256": "63f103a7787648330dbd01d9966ecba7422e2e35d0e4c727a721dd8f083d0f82",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 101053ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/native-live-validation/native_smoke_plugins.txt",
+      "sha256": "ee7bb969402de7ff1a5d539cd134701329f265ce08eb0b84c8b65560274d7a7d",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 2034ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_service.txt",
+      "sha256": "1700159e2c76cc738e6046322d0076327c08df586edbfc55112f393e65cfbc04",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 41635ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_runtime.txt",
+      "sha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 11245ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_engine.txt",
+      "sha256": "94e47a723ed76eee84b8a7265c39faeb6a9adbff474421c5f1d9313461dd0087",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 4785ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_view.txt",
+      "sha256": "d5e742b6c0e459928d0416f414378461db5dff8a05b7192428033917b844608b",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 5 passed, 0 failed, 0 skipped, 0 blacklisted, 1278ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_terminal.txt",
+      "sha256": "7a79d9a3d40b7407deafc79c170b87514d9f525cec9e5c7a7202fd6fead5209a",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 2919ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/full-after.txt",
+      "sha256": "d776c0d566b8f1858292864a114464f0f9e10da8b8ab25b9940043612b719bf9",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 27 passed, 0 failed, 0 skipped, 0 blacklisted, 26307ms",
+      "newRun": false
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/reference_git_usage.txt",
+      "sha256": "f8653a011353a9267a46f5d93d64738b1b0dc53812ceb1a0a0b6d2b688e76a53",
+      "hashBasis": "canonical_git_text_LF",
+      "totals": "Totals: 30 passed, 0 failed, 0 skipped, 0 blacklisted, 1683ms",
+      "newRun": false
+    }
+  ],
+  "supplementReview": {
+    "manifest": "reference/stagewise-supplement/REFERENCE_MANIFEST.json",
+    "files": 68,
+    "bytes": 498435,
+    "originalCuratedTreeUnchanged": true,
+    "selection": "apps/update-server, browser root files, .storybook/etc/scripts/vite-plugins; text Git blobs only",
+    "license": "Root AGPL LICENSE and original third-party notice retained; update-server has no local LICENSE or package license override found. private:true is an npm publication setting, not a restrictive copyright license.",
+    "restrictedAssets": "Selected files contain source/config/docs; no binary/media/Nucleo icon assets were selected. Build scripts reference omitted assets, dependencies and signing configuration; no upstream code was executed.",
+    "bytePreservation": "reference/.gitattributes applies ** -text; every supplemental blob hash checked.",
+    "noticeLimitation": "Original third-party notice links third-party-licenses/class-variance-autority.txt, absent at inspected upstream pin; preserve notice faithfully, do not invent an unavailable file."
+  },
+  "followUpImplementations": [
+    {
+      "capability": "git.cleanup",
+      "audit": "audit/worktree-cleanup-native.json",
+      "note": "This read-only review and its source hashes describe the nativeBaselineCommit/nativeHead recorded here. A later implementation migrated the usage journal and added explicit reviewed cleanup; see its independent before/final tests and remaining limits. Original preserved experimental source was not modified."
+    }
+  ]
+}

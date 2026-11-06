@@ -1,0 +1,37 @@
+********* Start testing of NavigationShortcutsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : NavigationShortcutsTest::initTestCase()
+QWARN  : NavigationShortcutsTest::focusChatDoesNotAlterDraft() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : NavigationShortcutsTest::focusChatDoesNotAlterDraft()
+FAIL!  : NavigationShortcutsTest::agentNavigationFollowsSidebarAndKeepsDrafts() Compared values are not the same
+   Actual   (window.currentSessionId()): "agent0"
+   Expected (QString("agent4"))        : "agent4"
+D:/age/ADE/tests/test_navigation_shortcuts.cpp(71) : failure location
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary) This plugin does not support raise()
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary) This plugin does not support grabbing the keyboard
+PASS   : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary)
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias) This plugin does not support raise()
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias) This plugin does not support grabbing the keyboard
+PASS   : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias)
+PASS   : NavigationShortcutsTest::filteredAgentListAndAbsentIndicesDoNotSelectHiddenChats()
+PASS   : NavigationShortcutsTest::tabCyclingWrapsAndNineSelectsNinthNotLast()
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d)
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6)
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l)
+PASS   : NavigationShortcutsTest::mainNavigationIsSuppressedInSettingsAndModalDialogs()
+FAIL!  : NavigationShortcutsTest::registeredNavigationWorksFromTerminalWithoutStealingCopy() Compared values are not the same
+   Actual   (window.currentSessionId()): "agent0"
+   Expected (QString("agent4"))        : "agent4"
+D:/age/ADE/tests/test_navigation_shortcuts.cpp(168) : failure location
+PASS   : NavigationShortcutsTest::focusChatRevealsHiddenNarrowComposer()
+PASS   : NavigationShortcutsTest::modelFocusObserverCanDeleteWindow()
+PASS   : NavigationShortcutsTest::cleanupTestCase()
+Totals: 13 passed, 2 failed, 0 skipped, 0 blacklisted, 1367ms
+********* Finished testing of NavigationShortcutsTest *********

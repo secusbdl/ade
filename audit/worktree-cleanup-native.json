@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "title": "Durable native worktree usage and explicit reviewed cleanup",
+  "status": "production_source_frozen_private_suites_pass_shared_host_pending",
+  "nativeBaselineCommit": "b48683b7dc7e11132a95c03931654df47fbb6e1b",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstreamVersion": "1.31.1",
+  "recordedAtUtc": "2026-11-06T17:02:06.900220+00:00",
+  "scope": [
+    "Durable physical-instance usage journal, clean-shutdown/history revision recovery floor, explicit live conversation owners, workspace reconnect history and seven-day snooze.",
+    "Native Source control review UI; checked-row confirmation; serialized no-force removal preserving branches and chats.",
+    "Worker repeats registration/status/merge/physical identity/branch/HEAD/mounted/permit checks. Managed directory parent authority is frozen at construction."
+  ],
+  "inventoryIds": [
+    "git.worktrees",
+    "contract_operation.toolbox.cleanWorkspaceGitWorktrees",
+    "contract_operation.toolbox.dismissWorkspaceGitCleanupPrompt",
+    "procedure.toolbox.cleanWorkspaceGitWorktrees",
+    "procedure.toolbox.dismissWorkspaceGitCleanupPrompt"
+  ],
+  "upstreamContracts": [
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 80,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L80"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 559,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L559"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 990,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L990"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 1172,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1172"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 1279,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1279"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts",
+      "line": 1345,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/services/mount-manager/index.ts#L1345"
+    },
+    {
+      "path": "apps/browser/src/backend/main.ts",
+      "line": 712,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/main.ts#L712"
+    },
+    {
+      "path": "apps/browser/src/backend/main.ts",
+      "line": 1304,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/main.ts#L1304"
+    }
+  ],
+  "upstreamContractSummary": [
+    "Source scans on startup, filters dismissed candidates for seven days, uses current mounted paths plus persistent workspace last-message history.",
+    "Source requires managed non-main registered attached worktree, clean known status, seven-day idle time when known, merged branch; fresh recheck per selected path.",
+    "Source preserves Git branches; explicit worktree deletion detaches workspace paths while retaining chats."
+  ],
+  "nativeBehavior": {
+    "entry": "Source control > Review unused worktrees",
+    "automaticDeletion": false,
+    "startupPrompt": false,
+    "missingHistory": "Imported unknown history never ages into permission by itself. Actual live use/new instance creates verified history.",
+    "journal": "worktree-usage.json, 4 MiB/10,000 records, lifetime owner lock, QSaveFile revision checks, pinned Windows storage directory.",
+    "recovery": "Missing, unclean, or differently revised conversation history starts a seven-day protection floor; corrupt/locked/externally changed journal disables cleanup.",
+    "identity": "Windows FILE_ID_INFO volume/file IDs plus creation times for worktree root/common Git/admin dirs and exact .git/commondir/gitdir relationships.",
+    "explicitReview": "Permit contains physical instance, reviewed branch+HEAD, exact durable journal hash and revocable owner/activity epoch. Boolean usageKnown cannot authorize cleanup.",
+    "lifecycle": "Successful SessionStore save/commit hooks track explicit live owners; final close records final live use before clean journal commit. Archive/delete releases after host lifecycle transition.",
+    "snooze": "Seven days per physical instance. Unknown records cannot be snoozed into authority.",
+    "cancel": "Controller destruction revokes permit, cancels owned Git requests; pre-mutation cancellation produces no removal.",
+    "conflicts": "Dirty/mounted/busy/main/detached/unmanaged/unregistered/future timestamp/locked/prunable/changed identity/changed HEAD or branch/stale history all reject."
+  },
+  "reproducedDefects": [
+    {
+      "id": "final-live-use",
+      "before": "audit/worktree-cleanup/shutdown-before.txt",
+      "failure": "Clean close kept activation timestamp for long-lived background mounts.",
+      "fix": "Record all verified currently live owner identities at shutdown before closeClean.",
+      "beforeSha256": "02b94eb4d934a3883d3bbc2d0b911dcfc11da55df46008c5eaf4bd3ee8be56c0"
+    },
+    {
+      "id": "status-checkout-race",
+      "before": "audit/worktree-cleanup/branch-race-before.txt",
+      "failure": "A controlled real Git checkout after the last status subprocess changed to an unmerged branch; earlier code removed its directory.",
+      "fix": "Review branch+HEAD binding and registration reread after status, then final comparison before Git removal.",
+      "fixture": "Test executable forwards real Git and triggers only unique temporary repository actions.",
+      "beforeSha256": "0e5f80885100b2a3d4463546592559b6e4ded7d7afa53e8f60ce59cea8c88845"
+    },
+    {
+      "id": "managed-root-retarget",
+      "before": "audit/worktree-cleanup/root-retarget-before.txt",
+      "failure": "Retargeting managed-root to a junction made a previously used external worktree appear eligible. No external deletion was performed.",
+      "fix": "Freeze canonical configured parent authority; refuse managed-root resolution changes. Preserve valid initially junctioned parent behavior.",
+      "beforeSha256": "852ac4c7c3c724d531e55849a69ce0d3e0d0ded90b57e6e85f02169337d9b9c5"
+    }
+  ],
+  "tests": {
+    "privatePreExpansion": {
+      "usage": {
+        "passed": 30
+      },
+      "cleanup": {
+        "passed": 16
+      },
+      "git": {
+        "passed": 21
+      }
+    },
+    "finalExpanded": "passed",
+    "sharedHost": "pending",
+    "freshProcessScope": "Temporary Git repositories/profiles and synthetic history only; no user workspace, live credentials or network mutations.",
+    "cleanup": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 102663,
+      "report": "audit/worktree-cleanup/cleanup-final.txt",
+      "reportSha256": "4a2652c4f15f57b98ccb4af6c7d031f4c24c9e49ef8fefe56f2b84162a24df5d",
+      "toolchain": "Qt 6.11.2 static / GCC 16.2.0 / Windows 11",
+      "source": "current production source; private isolated test build"
+    },
+    "usage": {
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 1907,
+      "report": "audit/worktree-cleanup/usage-final.txt",
+      "reportSha256": "422f296bf79d3430989491bb5dbd60251774d21bce9f0d50b6657e3d6ef84b20",
+      "toolchain": "Qt 6.11.2 static / GCC 16.2.0 / Windows 11",
+      "source": "current production source; private isolated test build"
+    },
+    "git": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 114271,
+      "report": "audit/worktree-cleanup/git-final.txt",
+      "reportSha256": "9f56a9a7c1849d812c9d3f3536f103999849ed8cf29c4d1859d2918c782d3ce6",
+      "toolchain": "Qt 6.11.2 static / GCC 16.2.0 / Windows 11",
+      "source": "current production source; private isolated test build"
+    }
+  },
+  "limits": [
+    "Not full Stagewise parity. Native usage is a conservative per-instance journal; source uses persistent multi-mount workspace history. Native still has one workspace per chat.",
+    "Review is opened explicitly; automatic source startup prompt and exact source prompt layout remain unimplemented. No automatic destructive cleanup.",
+    "Unknown imported history is more conservative than upstream null-last-use eligibility. Crash recovery adds a seven-day floor.",
+    "No automatic snooze record garbage collection is wired; records remain within explicit 10,000/4 MiB bounds and fail closed when full.",
+    "Windows physical identities implemented; unsupported platforms cannot authorize cleanup.",
+    "Git subprocess state checks and in-process repository locks do not form a filesystem/Git transaction against arbitrary external processes after the final check. Git no-force remains the final dirty/removal guard; no universal race-free guarantee.",
+    "A canceled Git process that already began mutation can have partial effects; this slice verifies cancellation before removal dispatch and before its final command.",
+    "Preserved reference/native-experiments source bytes remain unchanged. Production modules are separate adapted copies; the optional experiment target stays unlinked to ADE."
+  ],
+  "sourceManifest": [
+    {
+      "path": "src/git/WorktreeUsage.h",
+      "sha256": "eac84dd269d85c970596c728f3be22f43ac6c74cccd0cc4004b3f8f9596830a2",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeUsage.cpp",
+      "sha256": "153b363f6557a6d4280244db8850dc67155be2becf0f9f3c81152400c85399f4",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeUsageJournal.h",
+      "sha256": "61d2590d7d1ff2546a46d07fb6d01874f65d8f8be36fdc08150a80728d93325b",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeUsageJournal.cpp",
+      "sha256": "ee5d552bd6e038a8e269e7cee34e571b0affae2b837da854390e33e37a230763",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeUsageIdentity.h",
+      "sha256": "58a9ab24495ec5505b58658ca1db30e00f86cf162e09dee401e7b8f9f2b710dc",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeUsageIdentity.cpp",
+      "sha256": "3c369e840cfb0a2a79b5e26c78dc47095193603f3392cb56ef053d566a7095fa",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeCleanupController.h",
+      "sha256": "cb8f0ae4b265b9381a4e4295f0e2c40c756fab8c65c07786f4393140a6e43e6e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/WorktreeCleanupController.cpp",
+      "sha256": "99449b68436e72738430c9d788c362c5b9b7b693000bdf09ceeacb5cdeaac0f1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitTypes.h",
+      "sha256": "f7e2094c2f1a2e8308aaff1f11c0d00c6586423ce1f33849ac8ea4c1f4be8855",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitService.h",
+      "sha256": "baabc01c97f5af806eba461dbdde5ac0c9b2f4304a4ab8be25f5a6217cf11dab",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "sha256": "28b8e6add1705c4ee2385aed153aaac05c23450df4ce5358346de0cfe5b40269",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitPanel.h",
+      "sha256": "760aa32e561be44f1b2370b5ef3d215a53fff5eb327eca02ef676e082a279c86",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitPanel.cpp",
+      "sha256": "dd942533518c2672bdbf8064ffca7e265276571eac3fc4c53c1106b869a64f13",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "sha256": "1710b60e5dd3ece4956406dfed80085b57369555df08c1611aa1aadaa77c0d37",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "bb3f5ea8a34108f31d0b9d158766bbfb079fb28bfe1280a45bbd3513972f8cc1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "1fe56eea0d2a02f3b0bd1663637301ee11b4bb81d2b1ad2ca4312816c4cf4878",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "04fbd36db757df342727d534416ecfe79d346eaf0de8fcf058f843d5b7c241cb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "sha256": "334d6aa7fa5b2a0b4fb1fc123d5d08c5e7c3ebef0737d4334cdbbe0383829a69",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_usage.cpp",
+      "sha256": "578659934a9db8ee2d6535bf8675140b5b9d06bc4355ec1768dcea526a6dbe42",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_cleanup.cpp",
+      "sha256": "b650fdd350211af50af1280fa28b349af8588e122837032d303de1bcee17b24d",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git.cpp",
+      "sha256": "4e229431b244847477221e8f82e6e1f55c199457df90a4aa1bcb1940e1ab9d16",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_host.cpp",
+      "sha256": "be2f4c4cfa14286a354dec4dc287f31d4b612cc9ba31f5d77e458b9d1c04e7f3",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "updatedAtUtc": "2026-11-06T17:03:09.789904+00:00",
+  "integratedVerification": {
+    "report": "audit/parity-integration.json",
+    "ctestSuites": 91,
+    "failedSuites": 0,
+    "nativeHostTestsPassed": true,
+    "packagedUiReport": "audit/parity-integration/packaged-ui-qa.json",
+    "packagedInteractionStatus": "blocked_by_computer_use_input_guard"
+  }
+}

@@ -1,0 +1,8 @@
+********* Start testing of CleanupTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CleanupTests::initTestCase()
+FAIL!  : CleanupTests::managedRootRetargetCannotAdoptKnownExternalWorktree() '!row.decision.eligible' returned FALSE. (Replacing the managed-root path with a junction cannot authorize an external, previously used worktree.)
+D:/age/ADE/tests/test_git_cleanup.cpp(80) : failure location
+PASS   : CleanupTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 3843ms
+********* Finished testing of CleanupTests *********

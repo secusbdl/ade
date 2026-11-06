@@ -6,6 +6,7 @@
 #include "ToolExecutor.h"
 #include "AgentPresentation.h"
 #include "QuestionForm.h"
+#include "ProviderUsage.h"
 #include <QJsonArray>
 #include <QMap>
 #include <QNetworkAccessManager>
@@ -16,6 +17,7 @@
 #include <functional>
 
 namespace ade {
+class UtilityService;
 
 class AgentEngine final : public QObject {
     Q_OBJECT
@@ -25,6 +27,11 @@ public:
     void setProvider(const ProviderConfig &provider);
     void setModelChain(const QList<ModelConfig> &models, const QString &presetId);
     bool applyCompression(int boundaryIndex, const QString &briefing);
+    // Automatic compression uses the configured model context window only.
+    // Unknown limits retain the manual path. Utility models precede main models.
+    void setCompressionModels(const QList<ModelConfig>& models);
+    QJsonObject latestUsage() const;
+    bool isCompressing() const { return !m_compressor.isNull(); }
     void setWorkspace(const QString &path);
     bool setAppsDirectory(const QString &path);
     void setSystemContext(const QString &context);
@@ -104,6 +111,9 @@ signals:
     void questionChanged();
     void questionError(QString token,QString error);
     void turnAboutToStart(QJsonObject acceptedUserMessage);
+    void usageChanged(QJsonObject usage);
+    void compressionStarted();
+    void compressionFinished(bool applied, QString error);
 
 private:
     struct ToolCall { QString id, name, arguments; };
@@ -131,9 +141,18 @@ private:
     void fail(const QString &message);
     QString redact(QString value) const;
     void stopNetwork();
+    bool maybeCompress(bool finishTurn);
+    void stopCompression();
+    QJsonObject currentUsageRecord() const;
 
     ProviderConfig m_provider;
     QList<ModelConfig> m_models;
+    QList<ModelConfig> m_compressionModels;
+    QPointer<UtilityService> m_compressor;
+    QString m_compressionAttempt;
+    ProviderUsage m_roundUsage;
+    QString m_usageId;
+    bool m_usageComplete = false;
     QString m_presetId;
     QString m_systemContext;
     std::function<QString()> m_dynamicSystemContext;

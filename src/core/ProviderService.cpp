@@ -81,8 +81,9 @@ void ProviderService::requestPage(const QString &cursor) {
             static const QRegularExpression nonChat("\\b(embedding|tts|whisper|realtime|moderation|dall-e)\\b", QRegularExpression::CaseInsensitiveOption);
             if ((protocol == "openai" || protocol == "responses") && nonChat.match(id).hasMatch()) continue;
             m_ids.insert(id);
+            const auto limit=[](const QJsonValue& value){return value.isDouble()&&value.toDouble()==value.toInt()&&value.toInt()>0&&value.toInt()<=100000000?value.toInt():0;};
             m_models.append(QJsonObject{{"id", id}, {"name", model[protocol == "google" ? "displayName" : "display_name"].toString(id)},
-                {"inputTokenLimit", model["inputTokenLimit"].toInt()}, {"outputTokenLimit", model["outputTokenLimit"].toInt()}, {"metadata", model}});
+                {"inputTokenLimit", limit(model["inputTokenLimit"])}, {"outputTokenLimit", limit(model["outputTokenLimit"])}, {"metadata", model}});
             if (m_models.size() > 10000) { discoveryError("Model catalog exceeded its entry limit."); return; }
         }
         QString next = protocol == "google" ? object["nextPageToken"].toString()

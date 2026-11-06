@@ -1,6 +1,10 @@
 add_library(ade_git STATIC
     GitTypes.h GitService.h GitService.cpp GitParsing.h GitParsing.cpp
     GitRepositoryWatcher.h GitRepositoryWatcher.cpp
+    WorktreeUsage.h WorktreeUsage.cpp
+    WorktreeUsageJournal.h WorktreeUsageJournal.cpp
+    WorktreeUsageIdentity.h WorktreeUsageIdentity.cpp
+    WorktreeCleanupController.h WorktreeCleanupController.cpp
     ProcessRunner.h ProcessRunner.cpp CodexSetup.cpp
     WorktreeSetupRunner.h WorktreeSetupRunner.cpp SetupScriptText.h SetupScriptText.cpp)
 set_target_properties(ade_git PROPERTIES AUTOMOC ON)

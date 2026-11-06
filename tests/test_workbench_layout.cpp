@@ -205,8 +205,9 @@ class WorkbenchLayoutTest final : public QObject {
         QVERIFY(prefs.value("contentCollapsed").toBool());
         MainWindow restored(data.path());
         expose(restored);
-        QCOMPARE(tabs(restored)->count(), 0);
-        browser(restored);
+        QCOMPARE(tabs(restored)->count(), 1);
+        QVERIFY(!tabs(restored)->isVisible());
+        action(restored, "showContentPanelButton")->click();
         QVERIFY(tabs(restored)->isVisible());
         const auto sizes = split(restored)->sizes();
         QVERIFY(qAbs(double(sizes[1]) / (sizes[0] + sizes[1]) - expected) < .02);

@@ -36,19 +36,21 @@ QString compactHistory(const QJsonArray &messages, QString previous) {
         const auto summary = messages[i].toObject()["ade_compressedHistory"].toString();
         if (!summary.isEmpty()) { previous = summary; boundary = i; break; }
     }
-    QMap<QString, QString> results, toolAttachments;
-    for (const auto &value : messages) {
-        const auto message = value.toObject();
-        if (message["role"] == "tool") {
-            results[message["tool_call_id"].toString()] = message["content"].toString();
-            toolAttachments[message["tool_call_id"].toString()] = attachmentHints(message);
-        }
-    }
     QStringList lines;
     if (!previous.isEmpty()) lines.append("<previous-chat-history>" + xml(previous) + "</previous-chat-history>");
     for (int i = boundary; i < messages.size(); ++i) {
         const auto message = messages[i].toObject(); const auto role = message["role"].toString();
         if (role != "user" && role != "assistant") continue;
+        // Provider IDs may repeat in later assistant batches. Pair results only
+        // with this assistant's contiguous result block, as the wire does.
+        QMap<QString, QString> results, toolAttachments;
+        if (role == "assistant") for (int j = i + 1; j < messages.size(); ++j) {
+            const auto result = messages[j].toObject();
+            if (result["role"] != "tool") break;
+            const auto id = result["tool_call_id"].toString();
+            results[id] = result["content"].toString();
+            toolAttachments[id] = attachmentHints(result);
+        }
         QString text = xml(message["content"].toString() + attachmentHints(message));
         for (const auto &value : message["tool_calls"].toArray()) {
             const auto call = value.toObject(); const auto function = call["function"].toObject();
@@ -126,7 +128,9 @@ void UtilityService::start(bool title, const QString &prompt) {
     append(title ? m_titleModels : m_compressionModels); append(m_mainModels);
     if (m_candidates.isEmpty()) { emit failed("No available utility or chat model is configured."); return; }
     if (prompt.size() > 4 * 1024 * 1024) { emit failed("Utility input exceeds the 4 MiB character limit."); return; }
-    setBusy(true); attempt();
+    const QPointer<UtilityService> self(this);const auto generation=m_generation;
+    setBusy(true);
+    if(self&&m_busy&&generation==m_generation)attempt();
 }
 void UtilityService::attemptFailed(const QString &error) {
     m_error = redact(error); const auto generation = m_generation;
@@ -134,7 +138,11 @@ void UtilityService::attemptFailed(const QString &error) {
 }
 void UtilityService::attempt() {
     if (!m_busy) return;
-    if (++m_index >= m_candidates.size()) { setBusy(false); emit failed(m_error.isEmpty() ? "All utility models failed." : m_error); return; }
+    if (++m_index >= m_candidates.size()) {
+        const auto error=m_error.isEmpty()?QString("All utility models failed."):m_error;
+        const QPointer<UtilityService> self(this);const auto generation=m_generation;
+        setBusy(false);if(self&&generation==m_generation)emit failed(error);return;
+    }
     const auto entry = m_candidates[m_index]; auto p = entry.provider;
     const QUrl endpoint(p.baseUrl);
     if (!endpoint.isValid() || endpoint.host().isEmpty() || !endpoint.userInfo().isEmpty() || endpoint.hasQuery() || endpoint.hasFragment()
@@ -151,17 +159,20 @@ void UtilityService::attempt() {
         url.setPath(path); url.setQuery(QString{}); prepared.request.setUrl(url);
         auto generation = prepared.body["generationConfig"].toObject(); generation["temperature"] = m_title ? 0.15 : 0.1;
         prepared.body["generationConfig"] = generation;
-    } else { prepared.body["stream"] = false; prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
+    } else { prepared.body["stream"] = false; prepared.body.remove("stream_options"); prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
     prepared.request.setTransferTimeout(m_title ? 15000 : 30000);
     m_body.clear(); m_timedOut = false; m_tooLarge = false;
     m_reply = m_network.post(prepared.request, QJsonDocument(prepared.body).toJson(QJsonDocument::Compact));
-    connect(m_reply, &QNetworkReply::readyRead, this, [this] {
-        if (!m_reply) return;
+    const QPointer<QNetworkReply> reply=m_reply;const auto generation=m_generation;
+    connect(reply, &QNetworkReply::readyRead, this, [this,reply,generation] {
+        if (!reply || m_reply!=reply || !m_busy || generation!=m_generation) return;
         const auto bytes = m_reply->readAll();
         if (m_body.size() + bytes.size() > 4 * 1024 * 1024) { m_tooLarge = true; m_reply->abort(); }
         else m_body += bytes;
-    });
-    connect(m_reply, &QNetworkReply::finished, this, &UtilityService::settleReply);
+    },Qt::QueuedConnection);
+    connect(reply, &QNetworkReply::finished, this, [this,reply,generation] {
+        if(reply&&m_reply==reply&&m_busy&&generation==m_generation)settleReply();
+    },Qt::QueuedConnection);
     m_timeout.start(m_title ? 15000 : 30000);
     emit modelAttempted(p.id, p.model);
 }
@@ -204,7 +215,9 @@ void UtilityService::settleReply() {
     if ((m_title && (text.size() < 6 || text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts).size() < 2))
         || (!m_title && text.size() < 30)) { attemptFailed("Utility response was too short."); return; }
     const bool title = m_title;
+    const QPointer<UtilityService> self(this);const auto generation=m_generation;
     setBusy(false);
+    if(!self||generation!=m_generation)return;
     if (title) emit titleReady(text); else emit compressionReady(text);
 }
 int UtilityService::compressionBoundary(const QJsonArray &messages, int contextWindowTokens, int minKeptMessages) {

@@ -1,0 +1,24 @@
+********* Start testing of FileToolTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : FileToolTests::initTestCase()
+PASS   : FileToolTests::structuredRangesAndRawRemainDistinct()
+PASS   : FileToolTests::previewsPromoteSmallFilesAndOutlineLargeMarkdown()
+PASS   : FileToolTests::invalidRequestsAreRejected(missing)
+PASS   : FileToolTests::invalidRequestsAreRejected(wrong-path-type)
+PASS   : FileToolTests::invalidRequestsAreRejected(line-zero)
+PASS   : FileToolTests::invalidRequestsAreRejected(line-fraction)
+PASS   : FileToolTests::invalidRequestsAreRejected(reversed)
+PASS   : FileToolTests::invalidRequestsAreRejected(preview-type)
+PASS   : FileToolTests::invalidRequestsAreRejected(page-zero)
+PASS   : FileToolTests::invalidRequestsAreRejected(negative-depth)
+PASS   : FileToolTests::invalidRequestsAreRejected(depth-type)
+PASS   : FileToolTests::invalidRequestsAreRejected(excess-depth)
+PASS   : FileToolTests::invalidRequestsAreRejected(ls-file)
+PASS   : FileToolTests::invalidRequestsAreRejected(escape)
+PASS   : FileToolTests::directoryDepthAndHiddenEntries()
+PASS   : FileToolTests::outputBudgetAndBinaryPlaceholder()
+PASS   : FileToolTests::appsWithoutWorkspaceAndQueuedCancellation()
+PASS   : FileToolTests::reservedMountsNeverFallThroughToWorkspace()
+PASS   : FileToolTests::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 45ms
+********* Finished testing of FileToolTests *********

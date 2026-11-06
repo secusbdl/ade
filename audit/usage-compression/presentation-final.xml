@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="PresentationTest" timestamp="2026&#x002D;11&#x002D;06T18:51:59" hostname="VOID" tests="89" failures="0" errors="0" skipped="0" time="16.870">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="PresentationTest" time="0.000"/>
+  <testcase name="multiRound(openai)" classname="PresentationTest" time="0.342"/>
+  <testcase name="multiRound(anthropic)" classname="PresentationTest" time="0.406"/>
+  <testcase name="multiRound(google)" classname="PresentationTest" time="0.236"/>
+  <testcase name="multiRound(responses)" classname="PresentationTest" time="0.343"/>
+  <testcase name="states(output&#x002D;denied)" classname="PresentationTest" time="0.281"/>
+  <testcase name="states(output&#x002D;error)" classname="PresentationTest" time="0.273"/>
+  <testcase name="states(canceled)" classname="PresentationTest" time="0.184"/>
+  <testcase name="displayObserverCanDecideApproval(allow)" classname="PresentationTest" time="0.299"/>
+  <testcase name="displayObserverCanDecideApproval(deny)" classname="PresentationTest" time="0.275"/>
+  <testcase name="reasoningOnly(openai&#x002D;cancel)" classname="PresentationTest" time="0.122"/>
+  <testcase name="reasoningOnly(openai&#x002D;fail)" classname="PresentationTest" time="0.104"/>
+  <testcase name="reasoningOnly(anthropic&#x002D;cancel)" classname="PresentationTest" time="0.114"/>
+  <testcase name="reasoningOnly(anthropic&#x002D;fail)" classname="PresentationTest" time="0.115"/>
+  <testcase name="reasoningOnly(google&#x002D;cancel)" classname="PresentationTest" time="0.109"/>
+  <testcase name="reasoningOnly(google&#x002D;fail)" classname="PresentationTest" time="0.103"/>
+  <testcase name="reasoningOnly(responses&#x002D;cancel)" classname="PresentationTest" time="0.109"/>
+  <testcase name="reasoningOnly(responses&#x002D;fail)" classname="PresentationTest" time="0.118"/>
+  <testcase name="wireUnchanged(openai)" classname="PresentationTest" time="0.000"/>
+  <testcase name="wireUnchanged(anthropic)" classname="PresentationTest" time="0.000"/>
+  <testcase name="wireUnchanged(google)" classname="PresentationTest" time="0.000"/>
+  <testcase name="wireUnchanged(responses)" classname="PresentationTest" time="0.000"/>
+  <testcase name="reusedIdsAndLegacy" classname="PresentationTest" time="0.000"/>
+  <testcase name="malformedDisplayCannotHideCanonicalContent" classname="PresentationTest" time="0.000"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(function_call)" classname="PresentationTest" time="0.000"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(refusal)" classname="PresentationTest" time="0.000"/>
+  <testcase name="uiOnlyCannotHideOtherReplayFields(audio)" classname="PresentationTest" time="0.000"/>
+  <testcase name="savedIdsCannotCollideWithLegacyIds" classname="PresentationTest" time="0.000"/>
+  <testcase name="emptyPartFloodIsBounded" classname="PresentationTest" time="0.309"/>
+  <testcase name="allPartKindsShareOneRuntimeBound" classname="PresentationTest" time="0.086"/>
+  <testcase name="durationIsMeasuredAndFreezes" classname="PresentationTest" time="0.060"/>
+  <testcase name="emptyNativePartStarts(anthropic)" classname="PresentationTest" time="0.389"/>
+  <testcase name="emptyNativePartStarts(responses)" classname="PresentationTest" time="0.345"/>
+  <testcase name="observedToolOrderSurvivesRetention" classname="PresentationTest" time="0.000"/>
+  <testcase name="runningOutputIsBoundedAndReplaced(ascii)" classname="PresentationTest" time="0.285"/>
+  <testcase name="runningOutputIsBoundedAndReplaced(unicode)" classname="PresentationTest" time="0.297"/>
+  <testcase name="outputObserver(cancel)" classname="PresentationTest" time="0.171"/>
+  <testcase name="outputObserver(replace)" classname="PresentationTest" time="0.290"/>
+  <testcase name="outputObserver(destroy)" classname="PresentationTest" time="0.175"/>
+  <testcase name="observer(cancel&#x002D;accepted&#x002D;openai)" classname="PresentationTest" time="0.101"/>
+  <testcase name="observer(cancel&#x002D;accepted&#x002D;anthropic)" classname="PresentationTest" time="0.094"/>
+  <testcase name="observer(cancel&#x002D;accepted&#x002D;google)" classname="PresentationTest" time="0.095"/>
+  <testcase name="observer(cancel&#x002D;accepted&#x002D;responses)" classname="PresentationTest" time="0.092"/>
+  <testcase name="observer(cancel&#x002D;round&#x002D;openai)" classname="PresentationTest" time="0.084"/>
+  <testcase name="observer(cancel&#x002D;round&#x002D;anthropic)" classname="PresentationTest" time="0.085"/>
+  <testcase name="observer(cancel&#x002D;round&#x002D;google)" classname="PresentationTest" time="0.085"/>
+  <testcase name="observer(cancel&#x002D;round&#x002D;responses)" classname="PresentationTest" time="0.091"/>
+  <testcase name="observer(cancel&#x002D;stream&#x002D;openai)" classname="PresentationTest" time="0.271"/>
+  <testcase name="observer(cancel&#x002D;stream&#x002D;anthropic)" classname="PresentationTest" time="0.324"/>
+  <testcase name="observer(cancel&#x002D;stream&#x002D;google)" classname="PresentationTest" time="0.217"/>
+  <testcase name="observer(cancel&#x002D;stream&#x002D;responses)" classname="PresentationTest" time="0.321"/>
+  <testcase name="observer(cancel&#x002D;running&#x002D;openai)" classname="PresentationTest" time="0.315"/>
+  <testcase name="observer(cancel&#x002D;running&#x002D;anthropic)" classname="PresentationTest" time="0.331"/>
+  <testcase name="observer(cancel&#x002D;running&#x002D;google)" classname="PresentationTest" time="0.208"/>
+  <testcase name="observer(cancel&#x002D;running&#x002D;responses)" classname="PresentationTest" time="0.274"/>
+  <testcase name="observer(replace&#x002D;accepted&#x002D;openai)" classname="PresentationTest" time="0.209"/>
+  <testcase name="observer(replace&#x002D;accepted&#x002D;anthropic)" classname="PresentationTest" time="0.256"/>
+  <testcase name="observer(replace&#x002D;accepted&#x002D;google)" classname="PresentationTest" time="0.194"/>
+  <testcase name="observer(replace&#x002D;accepted&#x002D;responses)" classname="PresentationTest" time="0.212"/>
+  <testcase name="observer(replace&#x002D;round&#x002D;openai)" classname="PresentationTest" time="0.213"/>
+  <testcase name="observer(replace&#x002D;round&#x002D;anthropic)" classname="PresentationTest" time="0.197"/>
+  <testcase name="observer(replace&#x002D;round&#x002D;google)" classname="PresentationTest" time="0.202"/>
+  <testcase name="observer(replace&#x002D;round&#x002D;responses)" classname="PresentationTest" time="0.256"/>
+  <testcase name="observer(replace&#x002D;stream&#x002D;openai)" classname="PresentationTest" time="0.344"/>
+  <testcase name="observer(replace&#x002D;stream&#x002D;anthropic)" classname="PresentationTest" time="0.451"/>
+  <testcase name="observer(replace&#x002D;stream&#x002D;google)" classname="PresentationTest" time="0.349"/>
+  <testcase name="observer(replace&#x002D;stream&#x002D;responses)" classname="PresentationTest" time="0.431"/>
+  <testcase name="observer(replace&#x002D;running&#x002D;openai)" classname="PresentationTest" time="0.363"/>
+  <testcase name="observer(replace&#x002D;running&#x002D;anthropic)" classname="PresentationTest" time="0.461"/>
+  <testcase name="observer(replace&#x002D;running&#x002D;google)" classname="PresentationTest" time="0.321"/>
+  <testcase name="observer(replace&#x002D;running&#x002D;responses)" classname="PresentationTest" time="0.358"/>
+  <testcase name="observer(destroy&#x002D;accepted&#x002D;openai)" classname="PresentationTest" time="0.096"/>
+  <testcase name="observer(destroy&#x002D;accepted&#x002D;anthropic)" classname="PresentationTest" time="0.095"/>
+  <testcase name="observer(destroy&#x002D;accepted&#x002D;google)" classname="PresentationTest" time="0.091"/>
+  <testcase name="observer(destroy&#x002D;accepted&#x002D;responses)" classname="PresentationTest" time="0.103"/>
+  <testcase name="observer(destroy&#x002D;round&#x002D;openai)" classname="PresentationTest" time="0.093"/>
+  <testcase name="observer(destroy&#x002D;round&#x002D;anthropic)" classname="PresentationTest" time="0.085"/>
+  <testcase name="observer(destroy&#x002D;round&#x002D;google)" classname="PresentationTest" time="0.085"/>
+  <testcase name="observer(destroy&#x002D;round&#x002D;responses)" classname="PresentationTest" time="0.083"/>
+  <testcase name="observer(destroy&#x002D;stream&#x002D;openai)" classname="PresentationTest" time="0.266"/>
+  <testcase name="observer(destroy&#x002D;stream&#x002D;anthropic)" classname="PresentationTest" time="0.313"/>
+  <testcase name="observer(destroy&#x002D;stream&#x002D;google)" classname="PresentationTest" time="0.253"/>
+  <testcase name="observer(destroy&#x002D;stream&#x002D;responses)" classname="PresentationTest" time="0.298"/>
+  <testcase name="observer(destroy&#x002D;running&#x002D;openai)" classname="PresentationTest" time="0.240"/>
+  <testcase name="observer(destroy&#x002D;running&#x002D;anthropic)" classname="PresentationTest" time="0.322"/>
+  <testcase name="observer(destroy&#x002D;running&#x002D;google)" classname="PresentationTest" time="0.272"/>
+  <testcase name="observer(destroy&#x002D;running&#x002D;responses)" classname="PresentationTest" time="0.309"/>
+  <testcase name="acceptedCancelDoesNotRepeatPreviousRound" classname="PresentationTest" time="0.114"/>
+  <testcase name="cleanupTestCase" classname="PresentationTest" time="0.000"/>
+</testsuite>

@@ -149,7 +149,8 @@ void MainWindow::initializeAgentControls() {
       }
       engine->setModelChain(
           selectedModelChain(selection, m_providers,
-                             m_settings->preference("modelPresets").toArray()),
+                             m_settings->preference("modelPresets").toArray(),
+                             m_settings->preference("modelCatalogs").toObject()),
           selection.presetId);
       engine->setAlwaysAllow(session->alwaysAllow);
     }

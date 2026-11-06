@@ -84,7 +84,7 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
                 return {};
             }
         }
-        for (const auto &field : {"thinkingBudget", "maxOutputTokens"}) {
+        for (const auto &field : {"thinkingBudget", "maxOutputTokens", "contextWindowTokens"}) {
             if (object.contains(field) && (!object[field].isDouble() || object[field].toDouble() < 0
                                           || object[field].toDouble() != object[field].toInt())) {
                 if (error) *error = QStringLiteral("Invalid numeric provider option field.");
@@ -92,6 +92,10 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
             }
         }
         ProviderConfig provider = ProviderConfig::fromPublicJson(object);
+        if (provider.contextWindowTokens > 100000000) {
+            if (error) *error = QStringLiteral("Provider context window exceeds its limit.");
+            return {};
+        }
         if (provider.id.isEmpty() || std::any_of(result.begin(), result.end(), [&provider](const ProviderConfig &existing) { return existing.id == provider.id; })) {
             if (error) *error = QStringLiteral("Provider IDs must be nonempty and unique.");
             return {};
@@ -124,7 +128,7 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
             return false;
         }
         ids.insert(provider.id);
-        if (provider.thinkingBudget < 0 || provider.maxOutputTokens < 0) {
+        if (provider.thinkingBudget < 0 || provider.maxOutputTokens < 0 || provider.contextWindowTokens < 0 || provider.contextWindowTokens > 100000000) {
             if (error) *error = QStringLiteral("Provider numeric options must be nonnegative.");
             return false;
         }

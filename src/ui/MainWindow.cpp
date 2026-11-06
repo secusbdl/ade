@@ -12,6 +12,7 @@
 #include "ContextPreferences.h"
 #include "SettingsPage.h"
 #include "DownloadsPage.h"
+#include "BrowserSessionStore.h"
 #include "browser/browserwidget.h"
 #include "browser/BrowserToolBridge.h"
 #include "core/AgentEngine.h"
@@ -22,6 +23,7 @@
 #include "terminal/TerminalWidget.h"
 #include "git/GitPanel.h"
 #include "git/WorktreeSetupRunner.h"
+#include "git/WorktreeCleanupController.h"
 #include "git/WorktreeSettingsController.h"
 #include "git/WorktreeSettingsPane.h"
 #include <QApplication>
@@ -86,6 +88,7 @@ MainWindow::MainWindow(QString dataDirectory,QWidget* parent):QMainWindow(parent
     if(settings.contains("geometry"))restoreGeometry(settings.value("geometry").toByteArray());
     if(settings.contains("splitter"))m_splitter->restoreLegacyState(settings.value("splitter").toByteArray());
     initializeSideChats();
+    initializeBrowserSession();
 }
 void MainWindow::buildUi() {
     m_browserBridge=new BrowserToolBridge(this);
@@ -203,7 +206,7 @@ void MainWindow::buildUi() {
         if(!instance.isEmpty())if(auto* host=m_toolHosts.value(page->property("appAgentId").toString())){
             host->apps()->closeTab(instance);return;
         }
-        m_tabs->removeTab(index);if(page!=m_files&&page!=m_downloads&&page!=m_git)page->deleteLater();refreshWorkbench();
+        m_tabs->removeTab(index);if(page!=m_files&&page!=m_downloads&&page!=m_git)page->deleteLater();refreshWorkbench();scheduleBrowserSessionSave();
     });
     connect(m_tabs,&QTabWidget::currentChanged,this,[this](int index){refreshWorkbench();if(auto* page=m_tabs->widget(index)){if(m_fullscreenBrowser&&!page->isAncestorOf(m_fullscreenBrowser))setBrowserFullscreen(m_fullscreenBrowser,false);const auto id=page->property("browserTabId").toString();if(!id.isEmpty())m_browserBridge->setActiveTab(id);}});
     connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
@@ -232,9 +235,7 @@ void MainWindow::buildUi() {
     initializePluginConnections();
     connect(m_settings,&SettingsPage::restoreConversationRequested,this,[this](const QString& id){restoreConversation(id);});
     connect(m_settings,&SettingsPage::deleteConversationRequested,this,&MainWindow::requestDeleteConversation);
-    initializeAgentControls();initializeCompletions();initializeCommandCenter();
-    const auto startup=m_settings->preference("browsing.startupUrl").toString();
-    if(!startup.isEmpty())addBrowserTab(QUrl(startup));
+    initializeAgentControls();initializeCompletions();initializeCommandCenter();initializeNavigationShortcuts();
 }
 Conversation* MainWindow::find(const QString& id){for(auto& s:m_sessions)if(s.id==id)return &s;return nullptr;}
 Conversation* MainWindow::current(){return find(m_currentId);}
@@ -292,7 +293,7 @@ void MainWindow::renderConversation(){
     const QPointer<MainWindow> self(this);m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());if(!self)return;
     m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();refreshAgentControls();
 }
-bool MainWindow::saveSessions(){QString error;if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);return false;}return true;}
+bool MainWindow::saveSessions(){QString error;if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);return false;}updateGitUsageTracking();return true;}
 AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))return m_engines[id];
     if(const auto* session=find(id);session&&!session->archived)m_liveConversationOwners.insert(id);
     auto* engine=new AgentEngine(this);engine->setQuestionToolEnabled(true);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
@@ -300,6 +301,11 @@ AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))
     connectMutationControls(id,host);
     connect(engine,&AgentEngine::turnAboutToStart,this,[this,id,engine](const QJsonObject& message){
         const QPointer<MainWindow> self(this);const QPointer<AgentEngine> safe(engine);QString error;
+        if(const auto* session=find(id)){
+            QJsonObject activePreset;for(const auto& value:m_settings->preference("modelPresets").toArray())if(!session->presetId.isEmpty()&&value.toObject()["id"]==session->presetId){activePreset=value.toObject();break;}
+            const auto entries=activePreset.isEmpty()?m_settings->preference("utilityModels.contextCompression").toArray():activePreset["contextCompression"].toArray();
+            engine->setCompressionModels(resolveModelEntries(m_providers,entries,m_settings->preference("modelCatalogs").toObject()));
+        }
         if(!configureTurnContext(id,message["content"].toString(),&error)){if(self)m_status->setText(error);if(safe)safe->cancel();return;}
         if(self&&safe){beginTranscriptLinkTurn(id,true);if(!saveSessions()&&safe)safe->cancel();}
     });
@@ -316,6 +322,8 @@ AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))
     connect(engine,&AgentEngine::approvalRequired,this,[this,id](const QString&,const QString& name,const QJsonObject&){if(id==m_currentId){m_status->setText("Approval required: "+name);renderConversation();}});
     connect(engine,&AgentEngine::busyChanged,this,[this,id](bool busy){if(id==m_currentId){m_models->setEnabled(!busy);m_permissions->setEnabled(!busy);m_workspace->setEnabled(!busy);updateComposerState();}refreshAgents();});
     connect(engine,&AgentEngine::failed,this,[this,id](const QString& error){if(id==m_currentId)m_status->setText(error);});
+    connect(engine,&AgentEngine::compressionStarted,this,[this,id]{if(id==m_currentId)m_status->setText("Compressing context…");});
+    connect(engine,&AgentEngine::compressionFinished,this,[this,id](bool applied,const QString& error){if(id==m_currentId)m_status->setText(applied?"Working…":"Automatic compression could not finish; full history retained. "+error);});
     connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->updated=QDateTime::currentMSecsSinceEpoch();if(!s->messages.isEmpty())s->lastMessageAt=s->updated;}if(engine->lastTurnSucceeded())generateTitle(id);saveSessions();refreshAgents();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
     connectAgentControls(id,engine);
     updateGitContext();
@@ -334,7 +342,7 @@ void MainWindow::send(){
         selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());
         if(!selection.resolve(m_providers,&provider)){showProviders();return;}
         if(m_models->currentText()!=m_models->itemText(m_models->currentIndex())){m_status->setText("Select a model from the search results before sending.");return;}
-        engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray()),selection.presetId);
+        engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject()),selection.presetId);
         engine->setWorkspace(session->workspace);engine->setAlwaysAllow(session->alwaysAllow);
         const QPointer<AgentToolHost> host=m_toolHosts.value(id);
         if(host){
@@ -413,11 +421,11 @@ void MainWindow::attachImage(const QImage& image){
 void MainWindow::submitPrompt(const QString& prompt){m_composer->setPlainText(prompt);send();}
 void MainWindow::configureUtilities(UtilityService* service,const Conversation& session){
     ModelSelection selection{session.providerId,session.model,session.presetId,{},{}};
-    const auto presets=m_settings->preference("modelPresets").toArray();service->setMainModels(selectedModelChain(selection,m_providers,presets));
+    const auto presets=m_settings->preference("modelPresets").toArray();const auto catalogs=m_settings->preference("modelCatalogs").toObject();service->setMainModels(selectedModelChain(selection,m_providers,presets,catalogs));
     QJsonObject activePreset;for(const auto& value:presets)if(value.toObject()["id"].toString()==session.presetId&&!session.presetId.isEmpty()){activePreset=value.toObject();break;}
     const auto titles=activePreset.isEmpty()?m_settings->preference("utilityModels.titleGeneration").toArray():activePreset["titleGeneration"].toArray();
     const auto compression=activePreset.isEmpty()?m_settings->preference("utilityModels.contextCompression").toArray():activePreset["contextCompression"].toArray();
-    service->setTitleModels(resolveModelEntries(m_providers,titles));service->setCompressionModels(resolveModelEntries(m_providers,compression));
+    service->setTitleModels(resolveModelEntries(m_providers,titles,catalogs));service->setCompressionModels(resolveModelEntries(m_providers,compression,catalogs));
 }
 void MainWindow::generateTitle(const QString& id){
     auto* session=find(id);if(!session||session->titleLocked||session->autoTitleAttempted||session->messages.isEmpty())return;
@@ -543,11 +551,15 @@ void MainWindow::connectWorkspace(const QString& path){
     if(m_engines.contains(s->id))m_engines[s->id]->setWorkspace(s->workspace);
     m_files->setModel(m_fileModel);m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));m_workspace->setText(QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();refreshWorkbench();refreshCompletionContext();refreshFileChanges();
 }
-void MainWindow::addBrowserTab(const QUrl& url){
+void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const QString& restoredTitle){
     const QPointer<MainWindow> self(this);const QPointer<BrowserToolBridge> bridge(m_browserBridge);
     // Registration and tab selection emit public signals. Own the provisional
     // widgets before those callbacks, and stop if they dispose this window.
     auto* page=new QWidget(m_tabs);const QPointer<QWidget> preview(page);
+    QUrl target=url;if(restoredId.isEmpty()&&url==QUrl("about:blank")&&m_settings){const auto custom=m_settings->preference("browsing.newTabUrl").toString();if(!custom.isEmpty())target=QUrl(custom);}
+    page->setProperty("browserSessionId",restoredId.isEmpty()?QUuid::createUuid().toString(QUuid::WithoutBraces):restoredId);
+    page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(target));
+    page->setProperty("browserSessionTitle",restoredTitle);
     auto* layout=new QVBoxLayout(page);layout->setContentsMargins(0,0,0,0);layout->setSpacing(0);
     auto* navWidget=new QWidget;navWidget->setObjectName("browserNavigation");auto* nav=new QHBoxLayout(navWidget);nav->setContentsMargins(5,3,5,3);
     auto* back=button("back","Back");auto* forward=button("forward","Forward");auto* reload=button("reload","Reload");auto* address=new QLineEdit;address->setObjectName("browserAddress");address->setPlaceholderText("Search or enter address");
@@ -564,17 +576,17 @@ void MainWindow::addBrowserTab(const QUrl& url){
         // Qt's insertTab continues touching its tab bar after currentChanged.
         // Publish the final selection only after that internal frame returns.
         const QSignalBlocker currentNotifications(m_tabs);
-        index=m_tabs->addTab(page,icon("globe"),"New tab");
+        index=m_tabs->addTab(page,icon("globe"),restoredTitle.isEmpty()?QString("New tab"):restoredTitle.left(28));
         m_tabs->setCurrentIndex(index);
     }
     if(!owned())return;
     emit m_tabs->currentChanged(index);if(!owned())return;
     revealContent();if(!owned())return;
     address->setFocus();if(!owned())return;
-    connect(address,&QLineEdit::returnPressed,page,[this,browser,address]{QString text=address->text().trimmed();if(text.isEmpty())return;QUrl target;if(text.contains(' ')||(!text.contains('.')&&!text.contains(':')&&text!="localhost")){QString searchTemplate="https://www.google.com/search?q=%s";if(m_settings){const auto selected=m_settings->preference("browsing.defaultEngineId").toString();for(const auto& value:m_settings->preference("browsing.searchEngines").toArray()){const auto engine=value.toObject();if(engine["id"].toString()==selected){searchTemplate=engine["url"].toString();break;}}}target=QUrl(searchTemplate.replace("%s",QString::fromUtf8(QUrl::toPercentEncoding(text))));}else target=QUrl::fromUserInput(text);if(target.scheme()=="https"||target.scheme()=="http"||target.scheme()=="about")browser->navigate(target);});
+    connect(address,&QLineEdit::returnPressed,page,[this,browser,address,page]{QString text=address->text().trimmed();if(text.isEmpty())return;QUrl target;if(text.contains(' ')||(!text.contains('.')&&!text.contains(':')&&text!="localhost")){QString searchTemplate="https://www.google.com/search?q=%s";if(m_settings){const auto selected=m_settings->preference("browsing.defaultEngineId").toString();for(const auto& value:m_settings->preference("browsing.searchEngines").toArray()){const auto engine=value.toObject();if(engine["id"].toString()==selected){searchTemplate=engine["url"].toString();break;}}}target=QUrl(searchTemplate.replace("%s",QString::fromUtf8(QUrl::toPercentEncoding(text))));}else target=QUrl::fromUserInput(text);if(target.scheme()=="https"||target.scheme()=="http"||target.scheme()=="about"){page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(target));scheduleBrowserSessionSave();browser->navigate(target);}});
     connect(back,&QToolButton::clicked,browser,&BrowserWidget::back);connect(forward,&QToolButton::clicked,browser,&BrowserWidget::forward);connect(reload,&QToolButton::clicked,browser,&BrowserWidget::reload);
-    connect(browser,&BrowserWidget::urlChanged,address,[address](const QUrl& value){address->setText(value==QUrl("about:blank")?QString():value.toDisplayString());});
-    connect(browser,&BrowserWidget::titleChanged,page,[this,page](const QString& title){auto i=m_tabs->indexOf(page);if(i>=0)m_tabs->setTabText(i,title.isEmpty()?"New tab":title.left(28));});
+    connect(browser,&BrowserWidget::urlChanged,address,[this,page,address](const QUrl& value){page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(value));scheduleBrowserSessionSave();address->setText(value==QUrl("about:blank")?QString():value.toDisplayString());});
+    connect(browser,&BrowserWidget::titleChanged,page,[this,page](const QString& title){page->setProperty("browserSessionTitle",title.left(1024));scheduleBrowserSessionSave();auto i=m_tabs->indexOf(page);if(i>=0)m_tabs->setTabText(i,title.isEmpty()?"New tab":title.left(28));});
     connect(browser,&BrowserWidget::errorOccurred,page,[this](const QString& message){m_status->setText(message);});
     if(m_downloads)m_downloads->attachBrowser(browser);
     connect(browser,&BrowserWidget::fullscreenChanged,this,[this,browser](bool enabled){setBrowserFullscreen(browser,enabled);});
@@ -592,7 +604,7 @@ void MainWindow::addBrowserTab(const QUrl& url){
     });
     connect(browser,&BrowserWidget::loadingChanged,page,[this,browser,page](bool loading){if(!loading){const auto index=m_tabs->indexOf(page);recordBrowserHistory(browser->currentUrl(),index>=0?m_tabs->tabText(index):QString());}});
     connect(browser,&BrowserWidget::titleChanged,page,[this,browser](const QString& title){recordBrowserHistory(browser->currentUrl(),title);});
-    QUrl target=url;if(url==QUrl("about:blank")&&m_settings){const auto custom=m_settings->preference("browsing.newTabUrl").toString();if(!custom.isEmpty())target=QUrl(custom);}browser->navigate(target);
+    address->setText(target==QUrl("about:blank")?QString():target.toDisplayString());if(!owned())return;scheduleBrowserSessionSave();browser->navigate(target);
 }
 void MainWindow::recordBrowserHistory(const QUrl& url,const QString& title){
     if(url.scheme()!="https"&&url.scheme()!="http")return;
@@ -615,6 +627,7 @@ void MainWindow::openFile(const QString& path){
     m_tabs->setCurrentIndex(m_tabs->addTab(editor,QFileInfo(path).fileName()));revealContent();
 }
 MainWindow::~MainWindow(){
+    m_browserSessionInitialized=false;if(m_browserSessionTimer)m_browserSessionTimer->stop();
     // Child destruction occurs after derived members are destroyed. Browser
     // teardown signals must not access those members during QObject cleanup.
     for(auto* child:findChildren<QObject*>())disconnect(child,nullptr,this,nullptr);
@@ -622,6 +635,7 @@ MainWindow::~MainWindow(){
     // Stop managers first, then tear tabs down while derived members live.
     delete m_downloads;m_downloads=nullptr;
     delete m_worktreeSettings;m_worktreeSettings=nullptr;
+    delete m_worktreeCleanup;m_worktreeCleanup=nullptr;
     delete m_git;m_git=nullptr;delete m_worktreeSetup;m_worktreeSetup=nullptr;
     // Keep QObject::destroyed observers intact (notably Qt's stylesheet cache).
     // Tear browsers down now, while callbacks scoped to their pages can still
@@ -742,9 +756,11 @@ void MainWindow::closeEvent(QCloseEvent* event){
     for(auto* engine:std::as_const(m_engines))if(engine->isBusy())engine->cancel();
     if(auto* s=current())s->draft=m_composer->toPlainText();
     if(!saveSessions()){event->ignore();return;}
+    saveBrowserSession();
     if(discardSetupDrafts)m_worktreeSettings->discardDrafts();
     for(auto utility:std::as_const(m_utilities))if(utility)utility->cancel();
     if(m_worktreeSetup)m_worktreeSetup->cancelAll();
+    closeGitUsageTracking();
     QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("geometry",saveGeometry());m_splitter->savePreferences();QMainWindow::closeEvent(event);
 }
 }
