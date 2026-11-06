@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ShellLogMountTests" timestamp="2026&#x002D;11&#x002D;06T14:47:10" hostname="VOID" tests="6" failures="0" errors="0" skipped="0" time="0.533">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ShellLogMountTests" time="0.000"/>
+  <testcase name="rawReadsAreExactAndReadOnly" classname="ShellLogMountTests" time="0.188"/>
+  <testcase name="formattedSnapshotsAreFixedAndOwnerBound" classname="ShellLogMountTests" time="0.068"/>
+  <testcase name="largerLogsDoNotRelaxWorkspaceCaptureBound" classname="ShellLogMountTests" time="0.155"/>
+  <testcase name="revokedCallbackAndCanceledRequestCannotDeliver" classname="ShellLogMountTests" time="0.119"/>
+  <testcase name="cleanupTestCase" classname="ShellLogMountTests" time="0.000"/>
+</testsuite>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TerminalTest" timestamp="2026&#x002D;11&#x002D;06T15:10:01" hostname="VOID" tests="17" failures="0" errors="0" skipped="0" time="2.601">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="TerminalTest" time="0.000"/>
+  <testcase name="splitUnicodeAndControlSequences" classname="TerminalTest" time="0.000"/>
+  <testcase name="cursorEraseAlternateScreenAndColours" classname="TerminalTest" time="0.000"/>
+  <testcase name="boundedHistoryAndResize" classname="TerminalTest" time="0.031"/>
+  <testcase name="keyboardPasteAndProtocolReplies" classname="TerminalTest" time="0.000"/>
+  <testcase name="titleDirectoryAndFragmentLimits" classname="TerminalTest" time="0.001"/>
+  <testcase name="malformedSequencesStayBounded" classname="TerminalTest" time="0.000"/>
+  <testcase name="interactiveConPtyAndResize" classname="TerminalTest" time="0.326"/>
+  <testcase name="stoppingKillsOnlyOwnedProcessTree" classname="TerminalTest" time="0.141"/>
+  <testcase name="invalidStartsAreRecoverable" classname="TerminalTest" time="0.080"/>
+  <testcase name="highVolumeOutputAndImmediateStop" classname="TerminalTest" time="0.592"/>
+  <testcase name="nativeWidgetGeometryAndInput" classname="TerminalTest" time="0.141">
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+    </system-err>
+  </testcase>
+  <testcase name="saturatedInputTeardownAndRestart" classname="TerminalTest" time="0.597"/>
+  <testcase name="powerShellPromptTracksWorkingDirectory" classname="TerminalTest" time="0.686"/>
+  <testcase name="tabAltGrAndAtomicClipboardInput" classname="TerminalTest" time="0.000"/>
+  <testcase name="emptyRepeatCombiningFloodAndGlobalReverse" classname="TerminalTest" time="0.001"/>
+  <testcase name="cleanupTestCase" classname="TerminalTest" time="0.000"/>
+</testsuite>

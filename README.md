@@ -23,29 +23,38 @@ identical model reasoning or output.
   this snapshot is not a standalone buildable copy of Stagewise.
 - [`reference/native-experiments`](reference/native-experiments) preserves native
   mutation-journal and worktree-usage prototypes with tests and integration limits.
-  These modules are not enabled in the application.
-- [`audit/reference-integration.json`](audit/reference-integration.json) records
-  this reference checkpoint's build, test and deployment evidence.
+  The preserved prototypes stay unlinked. Production mutation/undo now lives in
+  `src/mutations`; worktree-usage tracking remains experimental.
+- [`audit/feature-progress-update.json`](audit/feature-progress-update.json) maps
+  the current additions onto the same 701-row scope without changing the baseline.
+- [`audit/continuation-integration.json`](audit/continuation-integration.json) is
+  the current checkpoint report: **80/80 CTest suites passed in one final run**.
+  Its one offscreen-only skipped case passed in the separate Windows suite.
+  [`audit/reference-integration.json`](audit/reference-integration.json) and
+  [`audit/source-publication.json`](audit/source-publication.json) describe the
+  earlier verified and published checkpoint.
 
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
 | --- | --- | --- |
-| Agent engine | Four provider wire protocols, streamed text/reasoning/tools, cancellation, fallback, utility models | `src/core` |
-| Transcript | Ordered stable rows, incremental rendering, disclosure state, inline approval, per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
-| Transcript links | Conversation-scoped file, attachment and browser links with bounded reads and provenance checks | `src/links`, `src/ui/MainWindowLinks.cpp` |
-| Conversations | Atomic persistence, drafts, attachments, fork, archive/restore, restart selection, durable deletion cleanup | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp` |
-| Files and context | Scoped reads/search/write/edit, retained original read snapshots, later-round context reinjection | `src/core/ToolExecutor*`, `src/attachments`, `src/runtime` |
+| Agent engine | Four provider wire protocols, streaming, cancellation, fallback, durable message queue and typed multi-step questions | `src/core` |
+| Transcript | Stable rows, incremental Markdown/code/tool cards, inline approval, trusted image and bounded file-diff presentation, per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
+| Transcript links | Conversation-scoped file, attachment and browser links; persisted/forked provenance remains checked against current mount identity | `src/links`, `src/ui/MainWindowLinks.cpp` |
+| Conversations | Atomic persistence, drafts, fork, archive/restore, restart selection, durable deletion cleanup and isolated side-chat promotion/discard | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp`, `src/ui/MainWindowSideChats.cpp` |
+| Files and context | Scoped reads/search, immutable read snapshots and reinjection; journaled write/edit/copy/move/delete and conflict-aware undo/recovery | `src/core/ToolExecutor*`, `src/mutations`, `src/attachments`, `src/runtime` |
 | Tools and apps | Native QuickJS worker, correlated host calls, persistent sandbox state, agent-authored app previews | `src/sandbox`, `src/runtime`, `src/apps` |
-| Browser | WebView2 tabs, JavaScript/CDP bridge, permissions, downloads and history | `src/browser` |
+| Context utilities | Manual `/compact` in the main chat preserves saved history while preparing compressed model context; configurable title/compression models | `src/core/UtilityService*`, `src/ui/MainWindow.cpp` |
+| Browser | WebView2 tabs, CDP, selected-element and screenshot context, device preview, permissions, downloads and history | `src/browser`, `src/ui/MainWindowBrowserTools.cpp` |
 | Editor and terminal | Native text editor, encoding/EOL preservation, conflict-aware saving, ConPTY/libvterm terminal | `src/editor`, `src/terminal` |
+| Agent shells | Persistent PowerShell sessions, commands/stdin/polls, process-local watchers, per-chat logs and readonly `shells/` mount | `src/shell`, `src/runtime/AgentToolHost*` |
 | Git and worktrees | Branch/worktree actions, repository watches, setup settings/execution and active-use guards | `src/git` |
-| Navigation/settings | Grouping, persistent pins, workspace/content controls, appearance, provider and plugin configuration | `src/ui` |
+| Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, workspace/content controls and provider/plugin configuration | `src/ui` |
 | Network/integrations | Credential redaction, per-host authorization and packaged integration instructions | `src/network`, `src/plugins`, `assets/plugins` |
 
 CMake exports reusable static targets including `ade_core`, `ade_attachments`,
 `ade_file_transformer`, `ade_transcript_links`, `ade_network`, `ade_plugins`, `ade_host`, `ade_editor`,
-`ade_terminal`, `ade_git_ui`, and `ade_ui`. The application and its UI tests share
+`ade_terminal`, `ade_shell`, `ade_git_ui`, and `ade_ui`. The application and its UI tests share
 `ade_ui`, so they exercise the same compiled implementation. These are internal
 components, not a versioned SDK. Preserve their cancellation, ownership, mount
 validation and persistence boundaries when reusing them.
@@ -85,7 +94,9 @@ Deploy `ADE.exe`, `ADE-sandbox-worker.exe`, and `WebView2Loader.dll` together,
 along with the corresponding licenses/notices. Qt, QuickJS and compiler runtimes
 are static. Browser pages require an installed Microsoft WebView2 Evergreen
 Runtime. Git/worktree actions use installed Git; terminals and setup scripts use
-the selected system shell. There is no Electron or Node sidecar. This is not a
+the selected system shell. Persistent agent shell sessions currently use PowerShell
+and have the current user's OS permissions; mounted file checks do not sandbox
+shell commands. There is no Electron or Node sidecar. This is not a
 single dependency-free executable.
 
 Configure API keys in Settings. Keys are protected with Windows DPAPI in the
@@ -102,14 +113,29 @@ apps, forked and restarted chats, removed the original generated probe and
 verified retained values. See `audit/paired-read-context-native.json`; this does
 not establish identical model output or full application parity.
 
-Important remaining work includes queued/side chats and durable undo, multiple
-workspace and other filesystem mounts, complete shell-session semantics, rich
-PDF/Office/media transformation, selected-element browser tools, advanced
-editor/LSP/diff behavior, every provider/subscription authentication flow,
+The current continuation adds durable mutation/undo, message queues and questions,
+persistent agent shells/watchers, richer composer/transcript controls, browser
+context capture, link provenance and side-chat/command-center UI. Their focused
+reports are linked from the readiness map. The final all-target build and 80-suite
+run passed on the documented Windows toolchain; the retained first run was 75/80
+before the documented fixes. Publication/export verification is separate. Shell logs
+survive restart, while live shell processes and watchers are not restored.
+Watcher events whose queue save fails receive bounded in-memory retries; a failed
+filesystem write is not crash-durable.
+
+Important remaining work includes simultaneous workspace mounts, the remaining
+sandbox Node/importModule APIs, transcript retry/edit/revert, source-equivalent
+automatic context compression and token accounting,
+smart shell approval and local-server discovery, integrated worktree-usage cleanup,
+rich PDF/Office/audio/video previews, every provider/subscription authentication flow,
 plugin installation/OAuth, hosted accounts/billing, ACP/research integrations,
-complete browser/session restoration, persisted transcript-link provenance, updater/installer and full visual parity.
-The readiness map gives the implementation boundary for each area. Preserving
-an upstream implementation does not mark its native counterpart complete.
+complete browser/session restoration, updater/installer and full visual parity.
+The journal has explicit size/scope bounds and preserves conflicting user edits;
+its crash fixtures do not establish universal power-loss durability. UI-only file
+diffs do not imply full upstream diff-summary or history-import compatibility.
+The main chat handles `/compact` locally; side-chat panes currently send that text
+as an ordinary message instead of invoking the compression action.
+Preserving an upstream implementation does not mark its native counterpart complete.
 
 Historical audit screenshots, including the original app and desktop, are kept
 in the local development archive; audit raster images are omitted from the publication tree. Their

@@ -7,6 +7,7 @@
 #include "core/ProviderStore.h"
 #include <QComboBox>
 #include <QDir>
+#include <QDialog>
 #include <QLineEdit>
 #include <QSettings>
 #include <QScrollBar>
@@ -91,10 +92,10 @@ private slots:
         QVERIFY(box->rect().contains(permissionRect));QVERIFY(!modelRect.intersects(permissionRect));QVERIFY(!modelRect.intersects(railRect));QVERIFY(!permissionRect.intersects(railRect));
         QCOMPARE(send->width(),qRound(32*zoom/100.0));QCOMPARE(rail->width(),send->width());QCOMPARE(model->toolTip(),label);QCOMPARE(model->lineEdit()->cursorPosition(),0);QVERIFY(model->width()>100);QCOMPARE(window.width(),960);
     }
-    void keyboardCanReopenAndFocusSearch(){
+    void keyboardOpensCommandCenterWhileSidebarCollapsed(){
         QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);window.activateWindow();QApplication::setActiveWindow(&window);auto* input=window.findChild<Composer*>();input->setFocus();QCoreApplication::processEvents();
         QTest::keyClick(input,Qt::Key_B,Qt::ControlModifier);QCoreApplication::processEvents();auto* shell=window.findChild<QSplitter*>("sidebarSplitter");QVERIFY(shell);QCOMPARE(shell->sizes()[0],0);
-        QTest::keyClick(window.findChild<QToolButton*>("sidebarReopenButton"),Qt::Key_K,Qt::ControlModifier);QCoreApplication::processEvents();QVERIFY(shell->sizes()[0]>0);QVERIFY(window.findChild<QLineEdit*>("agentSearch")->hasFocus());
+        QTest::keyClick(window.findChild<QToolButton*>("sidebarReopenButton"),Qt::Key_K,Qt::ControlModifier);QCoreApplication::processEvents();auto* center=window.findChild<QDialog*>("commandCenter");QVERIFY(center&&center->isVisible());QCOMPARE(shell->sizes()[0],0);auto* query=center->findChild<QLineEdit*>("commandQuery");QVERIFY(query&&query->hasFocus());QTest::keyClick(query,Qt::Key_Escape);QVERIFY(!center->isVisible());QCOMPARE(shell->sizes()[0],0);
     }
     void busyStopIsVisibleAndEscapeCancels(){
         QTemporaryDir data;QTcpServer provider;QVERIFY(provider.listen(QHostAddress::LocalHost));ProviderConfig config;config.id="local";config.name="Local fixture";config.model="fixture";config.baseUrl=QString("http://127.0.0.1:%1/v1").arg(provider.serverPort());config.apiKey="fixture-not-a-secret";QVERIFY(ProviderStore::save(data.filePath("providers.json"),{config}));

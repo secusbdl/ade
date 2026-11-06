@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="QuestionPanelTest" timestamp="2026&#x002D;11&#x002D;06T14:06:14" hostname="VOID" tests="8" failures="0" errors="0" skipped="0" time="0.102">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="QuestionPanelTest" time="0.001"/>
+  <testcase name="validatesExplicitSubmissionAndCollectsTypedValues" classname="QuestionPanelTest" time="0.006">
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cancellationPreservesCurrentDraftAndContext" classname="QuestionPanelTest" time="0.003">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="callbackMayDeletePanel" classname="QuestionPanelTest" time="0.001">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="queueControlsRetainScopedIds" classname="QuestionPanelTest" time="0.001">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="nativeFormRendersAllControls" classname="QuestionPanelTest" time="0.043">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="markdownCannotLoadLocalImageBytes" classname="QuestionPanelTest" time="0.044">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="QuestionPanelTest" time="0.000"/>
+</testsuite>

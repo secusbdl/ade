@@ -33,6 +33,12 @@ TerminalModel::~TerminalModel(){vterm_free(m_terminal);}
 void TerminalModel::feed(const QByteArray &bytes){vterm_input_write(m_terminal,bytes.constData(),size_t(bytes.size()));vterm_screen_flush_damage(m_screen);emit changed();}
 bool TerminalModel::resize(QSize cells){if(cells.width()<2||cells.height()<1||cells.width()>500||cells.height()>300)return false;if(cells==m_size)return true;m_size=cells;vterm_set_size(m_terminal,cells.height(),cells.width());vterm_screen_flush_damage(m_screen);emit changed();return true;}
 void TerminalModel::reset(){m_history.clear();++m_historyRevision;m_title.clear();m_osc.clear();vterm_screen_reset(m_screen,1);emit changed();}
+void TerminalModel::trimHistory(int maximumLines){
+    const auto maximum=size_t(qBound(0,maximumLines,HistoryLimit));
+    if(m_history.size()<=maximum)return;
+    while(m_history.size()>maximum){m_history.pop_front();++m_historyRevision;}
+    emit changed();
+}
 void TerminalModel::sendOutput(const QByteArray &bytes){if(m_inputTransaction)m_pendingInput+=bytes;else emit outputReady(bytes);}
 QPoint TerminalModel::cursor()const{VTermPos pos;vterm_state_get_cursorpos(m_state,&pos);return {pos.col,pos.row};}
 TerminalModel::Cell TerminalModel::cell(int row,int column)const{

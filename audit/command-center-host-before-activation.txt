@@ -1,0 +1,22 @@
+********* Start testing of CommandHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CommandHostTest::initTestCase()
+FAIL!  : CommandHostTest::shortcutSearchSelectPreservesDraft() 'center->isVisible()' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(37) : failure location
+FAIL!  : CommandHostTest::settingsActionUsesRealRoute() 'row(center,"route","models-providers")' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(38) : failure location
+FAIL!  : CommandHostTest::pinPersistsAndConflictRollsBack() 'sidebar->isPinned("second")' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(39) : failure location
+FAIL!  : CommandHostTest::fileSelectionOpensActualEditor() 'row(center,"relativePath","src/example.txt")' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(40) : failure location
+FAIL!  : CommandHostTest::folderSelectionRevealsActualTree() 'row(center,"relativePath","nested")' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(41) : failure location
+FAIL!  : CommandHostTest::staleRootResultCannotOpenReplacement() 'row(center,"relativePath","example.txt")' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(42) : failure location
+FAIL!  : CommandHostTest::terminalTargetSurvivesTabIndexChanges() 'selected' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(43) : failure location
+FAIL!  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() 'host' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(46) : failure location
+PASS   : CommandHostTest::cleanupTestCase()
+Totals: 2 passed, 8 failed, 0 skipped, 0 blacklisted, 76677ms
+********* Finished testing of CommandHostTest *********

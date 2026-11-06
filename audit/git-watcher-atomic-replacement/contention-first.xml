@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="GitWatcherTests" timestamp="2026&#x002D;11&#x002D;06T15:27:34" hostname="VOID" tests="4" failures="1" errors="0" skipped="0" time="4.089">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="GitWatcherTests" time="0.000"/>
+  <testcase name="atomicReplacementSharesDeleteWithReaders" classname="GitWatcherTests" time="0.337">
+    <failure type="fail" message="&apos;atomicWrite(path,&quot;ref: refs/heads/shared&#x002D;reader\n&quot;)&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[Atomic fixture write failed: commit C:/Users/secus/AppData/Local/Temp/test_git_watcher-oRqPoc/repository with spaces/.git/HEAD Qt error 10 Access is denied. native error 5]]>
+    </system-err>
+  </testcase>
+  <testcase name="scansDoNotBlockAtomicMetadataChurn" classname="GitWatcherTests" time="3.749"/>
+  <testcase name="cleanupTestCase" classname="GitWatcherTests" time="0.000"/>
+</testsuite>

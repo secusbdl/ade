@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ShellEngineTest" timestamp="2026&#x002D;11&#x002D;06T14:53:49" hostname="VOID" tests="16" failures="0" errors="0" skipped="0" time="4.814">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ShellEngineTest" time="0.000"/>
+  <testcase name="snapshotsAndDynamicContext(openai)" classname="ShellEngineTest" time="0.295"/>
+  <testcase name="snapshotsAndDynamicContext(anthropic)" classname="ShellEngineTest" time="0.393"/>
+  <testcase name="snapshotsAndDynamicContext(google)" classname="ShellEngineTest" time="0.249"/>
+  <testcase name="snapshotsAndDynamicContext(responses)" classname="ShellEngineTest" time="0.406"/>
+  <testcase name="replacementObserver(cancel)" classname="ShellEngineTest" time="0.173"/>
+  <testcase name="replacementObserver(replace)" classname="ShellEngineTest" time="0.280"/>
+  <testcase name="replacementObserver(destroy)" classname="ShellEngineTest" time="0.176"/>
+  <testcase name="dynamicContextObserver(cancel)" classname="ShellEngineTest" time="0.064"/>
+  <testcase name="dynamicContextObserver(destroy)" classname="ShellEngineTest" time="0.063"/>
+  <testcase name="backgroundWakeHonorsPauseAndApproval" classname="ShellEngineTest" time="0.632"/>
+  <testcase name="backgroundWakeAfterFailureAndRestart" classname="ShellEngineTest" time="0.296"/>
+  <testcase name="backgroundWakeDoesNotInterruptQuestion" classname="ShellEngineTest" time="0.157"/>
+  <testcase name="backgroundWakeSurvivesDispatchCommitDenial" classname="ShellEngineTest" time="0.330"/>
+  <testcase name="externalTimeoutIsBoundedAndIdleConfigured" classname="ShellEngineTest" time="1.298"/>
+  <testcase name="cleanupTestCase" classname="ShellEngineTest" time="0.000"/>
+</testsuite>

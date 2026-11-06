@@ -1,0 +1,388 @@
+{
+  "status": "Production native journal and actual tool-host adapters implemented; focused independent tests passed, including host rerun after shell integration. Root aggregate/UI verification is separate.",
+  "date": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "preservedReference": "reference/native-experiments/file-mutations (original bytes unchanged; prototype is not the production authority)",
+  "contracts": [
+    {
+      "tool": "write",
+      "implemented": "Mounted bounded UTF-8 content, source fence stripping for model write; exact raw sandbox write; missing parents created with tracked ownership; missing and empty kept distinct; durable preimage precedes mutation."
+    },
+    {
+      "tool": "multiEdit",
+      "implemented": "Sequential nonoverlapping replacements, unmatched items skipped, count reported, UTF-8 growth checked before allocation; complete transaction rollback on failure. Empty search is rejected explicitly."
+    },
+    {
+      "tool": "copy",
+      "implemented": "Explicit move boolean; file into directory uses basename; recursive directory merge preserves unrelated children; changed destination and moved source states captured before changes; binary content exact."
+    },
+    {
+      "tool": "delete",
+      "implemented": "Files and bounded recursive trees; captured child names never authorize deleting later foreign entries; same-identity empty directory removal only; rollback restores owned files/topology."
+    },
+    {
+      "tool": "undo",
+      "implemented": "User host API selects mutation IDs, merges earliest before/latest after for selected chains, validates current identity+bytes and original physical root; conflicting user edits preserved. Undo itself is durable history."
+    }
+  ],
+  "architecture": {
+    "journal": "SQLite WAL with synchronous FULL; content-addressed before/after snapshots and file/directory intent states; unique host nonce distinct from reused model toolCallId.",
+    "ownership": "Per-agent owner lock covers apply, recovery, undo and deletion. Per-agent shared lease revokes asynchronous executors. Profile storage and opened ancestor directories pinned on Windows.",
+    "publication": "Prepared journal before filesystem changes; staged files and retained backups use nonreplace rename, identity checks and explicit rollback/recovery states. Filesystem-wide atomicity is not claimed.",
+    "async": "ToolExecutor value-only callback runs on QtConcurrent; generation/request checks suppress stale completion. AgentToolHost serializes undo/recovery and emits confirmed fileChanged for editors.",
+    "rawSandbox": "SandboxHost requestOwnerId maps host RPC back to active opaque request, then AgentEngine externalToolCallId supplies model provenance; page/JS arguments cannot choose another chat or original call ID.",
+    "forkAndDelete": "Fork observes current files but starts separate undo authority; copying message metadata does not authorize source edits. Cleanup deletes only its journal/snapshots and preserves workspace files; unresolved recovery blocks cleanup.",
+    "executorCompatibility": "Original three-argument ToolExecutor::execute slot remains available for existing Qt signal connections; executeWithProvenance carries the explicit host-only mutation provenance."
+  },
+  "publicHostApi": {
+    "history": "mutationHistory(error, limit=200)",
+    "undo": "undoMutations(requestId, mutationIds)",
+    "recovery": "recoverMutations(requestId)",
+    "cancel": "cancelUndo(requestId)",
+    "busy": "mutationBusy()",
+    "completion": "mutationUndoCompleted(requestId, output, error, metadata)",
+    "historyRowRecovery": "recoveryRequired boolean includes unfinished committed cleanup; UI must not hide it merely because state is committed."
+  },
+  "limits": {
+    "bytesPerFile": 4194304,
+    "changedFilesPerTransaction": 200,
+    "directoryChanges": 256,
+    "combinedBeforeAfterBytes": 67108864,
+    "depth": 32,
+    "selectedUndoIds": 100,
+    "snapshotBudgetBytes": 536870912,
+    "historyDefaultRows": 200,
+    "historyMaxRows": 1000
+  },
+  "focusedVerification": [
+    {
+      "suite": "native file mutation store",
+      "passed": 60,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 3479,
+      "report": "audit/mutations/mutations-final.txt",
+      "scope": "Exact bytes and empty/missing, sequential edit growth, copy/move/delete and recursive topology, grouped undo, conflicts, reparse/root replacement, pinned ancestors, lock interleaving, process-exit apply and rollback recovery, cancellation/revocation, separate agents, partial owned staging, late foreign child and hard bounds."
+    },
+    {
+      "suite": "actual AgentToolHost + AgentEngine + QuickJS worker",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 3495,
+      "report": "audit/mutations/runtime-final.txt",
+      "scope": "All four provider protocols through local HTTP fixtures; write/edit/copy/delete persisted metadata and grouped undo; restart/fork/user-edit protection; raw binary/fence write and original sandbox call attribution; queued cancellation; host destruction during undo fileChanged; one undo/recovery host lane."
+    }
+  ],
+  "reproducedFixes": [
+    {
+      "before": "audit/mutations/structural-before.txt",
+      "defect": "Rollback after directory creation tried to reopen parents for a staged file never reached by apply.",
+      "fix": "Missing planned parents permitted while loading/recovering; absent unreached staging cleanup skipped after identity validation."
+    },
+    {
+      "before": "audit/mutations/revocation-before.txt",
+      "defect": "Revocation interrupted durable rollback after restoring a deleted directory.",
+      "fix": "Lease revocation stops apply but does not inject failure into rollback boundaries."
+    },
+    {
+      "before": "audit/mutations/undo-lane-before.txt",
+      "defect": "Second different host undo/recovery request could enter while another was pending.",
+      "fix": "Reject all new undo/recovery requests until the host lane settles."
+    },
+    {
+      "before": "audit/mutations/cleanup-visibility-before.txt",
+      "defect": "Committed changes still requiring backup cleanup were not visible as recovery work in host history.",
+      "fix": "Every history row now exposes recoveryRequired, including committed+cleaned=false; recovery clears flag without reverting committed bytes."
+    }
+  ],
+  "build": {
+    "platform": "Windows 11 x64",
+    "compiler": "GCC 16.2.0 MinGW",
+    "qt": "6.11.2 static",
+    "privateProjects": [
+      "private/mutations-integration",
+      "private/mutation-runtime-integration"
+    ],
+    "sharedBuild": "No shared build used for these counts; root owns aggregate integration."
+  },
+  "remainingGaps": [
+    "Full Stagewise parity is not achieved. Native history has exact byte snapshots and UI summary/undo. Root added bounded UI-only metadata.fileDiff rendering; model output _diff remains null and complete upstream diff-summary/import compatibility is not claimed.",
+    "Raw sandbox fs rename/copyFile/rm/unlink remain unsupported; model copy(move)/delete are implemented. mkdir retains existing native no-history behavior.",
+    "Every actual AgentToolHost installs the durable callback. Unconfigured standalone ToolExecutor write/multiEdit retains legacy atomic-write fallback and is not claimed durable.",
+    "Only local Windows drive scopes are supported; UNC, device/ADS paths, reparse points, hardlinks and mount-root mutation are rejected. Simultaneous workspace mounts and plans/logs support remain separate gaps.",
+    "ACLs, alternate streams and all original filesystem metadata are not preserved; exact file bytes and tracked directory topology are the tested contract.",
+    "A process can exit between CREATE_NEW/CreateDirectory and persistence of its new file identity. Recovery fails closed on unrecognized reserved entries rather than deleting guessed ownership.",
+    "Process termination fixtures verify selected application crash boundaries. They do not establish universal power-loss durability or filesystem-wide atomic visibility.",
+    "Journal capacity rejects new operations before mutation rather than silently dropping undo history; no pruning or original Stagewise SQLite migration is implemented.",
+    "External editors can modify in-mount content between separate operations; native physical identity/content checks detect conflicts rather than granting authority from historical paths."
+  ],
+  "upstreamReferences": [
+    {
+      "path": "packages/agent-core/src/types/tools.ts",
+      "line": 275,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L275"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 544,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L544"
+    },
+    {
+      "path": "packages/agent-core/src/types/tools.ts",
+      "line": 236,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L236"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 475,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L475"
+    },
+    {
+      "path": "packages/agent-core/src/types/tools.ts",
+      "line": 4,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L4"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 112,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L112"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 396,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L396"
+    },
+    {
+      "path": "packages/agent-core/src/types/tools.ts",
+      "line": 197,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/types/tools.ts#L197"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 423,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L423"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "line": 375,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/universal-tools.ts#L375"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/index.ts",
+      "line": 1262,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1262"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/utils/db.ts",
+      "line": 904,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/utils/db.ts#L904"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/index.ts",
+      "line": 1197,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1197"
+    },
+    {
+      "path": "apps/browser/src/backend/services/toolbox/index.ts",
+      "line": 706,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L706"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "line": 20,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L20"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "line": 55,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L55"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "line": 110,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts#L110"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/utils.ts",
+      "line": 248,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/utils.ts#L248"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/index.ts",
+      "line": 678,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L678"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/index.ts",
+      "line": 746,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L746"
+    },
+    {
+      "path": "packages/agent-core/src/services/diff-history/schema.sql",
+      "line": 1,
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/schema.sql#L1"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/mutations/FileMutationExecutor.h",
+      "sha256": "bb2ce58fc5e72944666fb6de04b02c93def1fe7d41545c3dabbd734739405947",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.h",
+      "sha256": "7419163d24d7fe6ae3b32c64e28d0de7e0dfd02406e5d6f984d4a369d6c28ddb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.cpp",
+      "sha256": "fdf8227402e855962db4e9ce2546f96e6a6a4fcde258db743a1fea48cd2d1e95",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.h",
+      "sha256": "e18aec8b4487b2785e5f610406332a8e708dc1dc22991cc5157bc054415f78e4",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.cpp",
+      "sha256": "e2b4a24985cf0b27136c54591612145faaa3279f406954b946816c676acc1305",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.h",
+      "sha256": "468a9c94b511c9454e04a9657030f664dcabe7f9fb4ea0b37c8b30d9b1ab6d9f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256": "885bc3672d6604952d51f632ccdc2870d402ec4617ec235421d81785ce5e77ff",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "3274bcacf7a27c31cb1f7054b71c3ad87c0d22365e42950df5e161b183dd3afb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256": "4b089f2e3d7d0674960292e86dae9b5189a95458e6cc6d23f788f1fcb591e32f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.h",
+      "sha256": "c60dbb3496f1f10d0c097aab7f1df93726914c1accd98b2dcd49e48927a702ed",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.cpp",
+      "sha256": "b743aae3e41ddc7853ff51508a60ef67d5fa7e7925a8c269c6ae9a08265c8c3a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_file_mutations.cpp",
+      "sha256": "bf6898ab0aa3c98d533e84ac0c29915a80454091e5aa74bd3f1a3776c982a197",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_mutation_runtime.cpp",
+      "sha256": "e42d3e953ab0443bb96abbf8af035cf8f169bba53b2a08d99cd644bff4f968e9",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "audit/mutations/structural-before.txt",
+      "sha256": "400001a78b2db95f6ef22c8532226ffdb3516b30065b55ae1a57811f1638067d",
+      "copiedFromIgnored": "private/mutations-integration/structural-first.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/revocation-before.txt",
+      "sha256": "7fe539155dbdb57431a066e5d17124a5975e03121ca274df981892478cd277a6",
+      "copiedFromIgnored": "private/mutations-integration/revocation-before.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/undo-lane-before.txt",
+      "sha256": "186ce9610f5e528fda0755734cdb36723622e5c7bbb6091f6fc2fd617afce24c",
+      "copiedFromIgnored": "private/mutation-runtime-integration/undo-lane-before.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/mutations-final.txt",
+      "sha256": "1e7691ac454f037efa2e0684b980817006de490c6809c0fd5b8e53e7bbff2b3f",
+      "copiedFromIgnored": "private/mutations-integration/mutations-final.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/mutations-final.xml",
+      "sha256": "6e8c8752a6aa99aad25923c9e0bf32d12fc27ad80ad3ee2b588767cd68b7f16f",
+      "copiedFromIgnored": "private/mutations-integration/mutations-final.xml",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/runtime-final.txt",
+      "sha256": "8ef205e0872037d95617868765fce3b4864f16ff6493ed74719d58810081ac86",
+      "copiedFromIgnored": "private/mutation-runtime-integration/runtime-final.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/runtime-final.xml",
+      "sha256": "dc8bc9533811ca1ded67c71f52d3e19f24a505d4ddefc286573cef44df9b8a86",
+      "copiedFromIgnored": "private/mutation-runtime-integration/runtime-final.xml",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/cleanup-visibility-before.txt",
+      "copiedFromIgnored": "private/mutations-integration/cleanup-visibility-before.txt",
+      "sha256": "89cd1042c03258480c3cd241265982c5cfa39d5694803546b66c30e7f8e14ebe",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "publicationSafety": {
+    "tests": "Temporary local fixture files and loopback provider only. No live provider credentials or user workspaces accessed.",
+    "reference": "Original curated upstream and experimental blobs were not modified.",
+    "scan": "Selected new source and evidence checked for key-shaped secrets; fixture-only token is synthetic."
+  },
+  "rootDiffIntegration": {
+    "implementation": "src/mutations/FileMutationDiff.h + journal metadata.fileDiff",
+    "authority": "Root-owned implementation and tests; private payload is not placed in provider tool output.",
+    "verification": "Root reported native_file_diff fixture pass; aggregate UI verification belongs to root integration report."
+  },
+  "sourceObservation": "File hashes describe the final integration sources using canonical LF. sharedFinalIntegration records the final80-suite exact-source coverage; retained focused reports remain their named earlier runs, not relabeled new runs.",
+  "sharedFinalIntegration": {
+    "aggregate": "audit/continuation-integration.json",
+    "singleFullRunSuites": 80,
+    "rows": [
+      {
+        "suite": "native_file_mutations",
+        "passedIncludingLifecycle": 60,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3456,
+        "report": "audit/continuation-integration/final-full-run/native_file_mutations.txt",
+        "reportSha256": "ef0895b510c78afab3caea6cfe23e9ce45462c4597c9bd52b2f769e0ce30073e"
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2860,
+        "report": "audit/continuation-integration/final-full-run/native_mutation_runtime.txt",
+        "reportSha256": "40f11b88b5cff6469ebbbb63487483c5efd13357fc2f40115dd26c815f14b8bc"
+      },
+      {
+        "suite": "native_file_diff",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 138,
+        "report": "audit/continuation-integration/final-full-run/native_file_diff.txt",
+        "reportSha256": "f002ac21e497e63f18727f9aa767dfff73cda5d955056ae835e4c84b9b4c38e2"
+      }
+    ]
+  }
+}

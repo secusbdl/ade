@@ -1,4 +1,5 @@
 #include "SessionStore.h"
+#include "core/QueuedMessages.h"
 #include "core/ScopedDirectory.h"
 #include <QDir>
 #include <QFile>
@@ -8,9 +9,11 @@
 #include <QCryptographicHash>
 #include <QLockFile>
 #include <QSet>
+#include <QHash>
 #include <QRegularExpression>
 #include <QFileInfo>
 #include <vector>
+#include <algorithm>
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -18,6 +21,13 @@
 namespace ade {
 namespace {
 bool validAgentId(const QString& id){return QRegularExpression("^[A-Za-z0-9_-]{1,128}$").match(id).hasMatch();}
+bool validSideChatParents(const QList<Conversation>& sessions){
+    QHash<QString,QString> parents;
+    for(const auto& chat:sessions)parents.insert(chat.id,chat.sideChatParentId);
+    for(const auto& chat:sessions)if(!chat.sideChatParentId.isEmpty())
+        if(chat.sideChatParentId==chat.id||!parents.contains(chat.sideChatParentId)||!parents.value(chat.sideChatParentId).isEmpty())return false;
+    return true;
+}
 QString resolvedDirectory(const QString& path) {
 #ifdef Q_OS_WIN
     const auto native=QDir::toNativeSeparators(path).toStdWString();
@@ -54,6 +64,14 @@ bool validDraftAttachments(const QJsonValue& value) {
     }
     return true;
 }
+bool validLinkProvenance(const QJsonValue& value){
+    if(value.isUndefined())return true;
+    if(!value.isObject())return false;
+    const auto object=value.toObject();
+    if(object.size()>8192||QJsonDocument(object).toJson(QJsonDocument::Compact).size()>2*1024*1024)return false;
+    for(auto it=object.begin();it!=object.end();++it)if(it.key().isEmpty()||it.key().size()>128||!it.value().isObject())return false;
+    return true;
+}
 }
 SessionStore::SessionStore(QString directory) : m_directory(std::move(directory)) {}
 QList<Conversation> SessionStore::load(QString* error) const {
@@ -81,16 +99,21 @@ QList<Conversation> SessionStore::load(QString* error) const {
     for (const auto& value : doc.object().value("sessions").toArray()) {
         const auto o = value.toObject();
         const auto id=o["id"].toString();
-        if (!value.isObject()||!validAgentId(id)||ids.contains(id.toCaseFolded())||!o["messages"].isArray()||!o["title"].isString()||!validDraftAttachments(o["draftAttachments"])) {
+        if (!value.isObject()||!validAgentId(id)||ids.contains(id.toCaseFolded())||!o["messages"].isArray()||!o["title"].isString()||!validDraftAttachments(o["draftAttachments"])
+            ||(o.contains("queuedMessages")&&(!o["queuedMessages"].isArray()||!QueuedMessages::validate(o["queuedMessages"].toArray())))||!validLinkProvenance(o["transcriptLinkProvenance"])) {
             if(error)*error="Conversation storage contains invalid or duplicate records. Original data was preserved.";
             return {};
         }
         ids.insert(id.toCaseFolded());
         Conversation s;
+        if(o.contains("sideChatParentId")&&!o["sideChatParentId"].isString()) {if(error)*error="Invalid side-chat parent identity.";return {};}
+        s.sideChatParentId=o["sideChatParentId"].toString();
         s.id=o["id"].toString(); s.title=o["title"].toString(); s.workspace=o["workspace"].toString();
         s.providerId=o["providerId"].toString(); s.model=o["model"].toString();
         s.presetId=o["presetId"].toString();s.draft=o["draft"].toString();
         s.draftAttachments=o["draftAttachments"].toArray();
+        s.queuedMessages=o["queuedMessages"].toArray();
+        s.transcriptLinkProvenance=o["transcriptLinkProvenance"].toObject();
         s.created=o["created"].toInteger(); s.updated=o["updated"].toInteger();s.archivedAt=o["archivedAt"].toInteger();
         s.archived=o["archived"].toBool();s.alwaysAllow=o["alwaysAllow"].toBool(); s.messages=o["messages"].toArray();
         if(o.contains("lastMessageAt")&&(!o["lastMessageAt"].isDouble()||o["lastMessageAt"].toDouble()!=double(o["lastMessageAt"].toInteger())||o["lastMessageAt"].toInteger()<0)){
@@ -101,6 +124,7 @@ QList<Conversation> SessionStore::load(QString* error) const {
         s.titleLocked=o["titleLocked"].toBool();s.autoTitleAttempted=o["autoTitleAttempted"].toBool();
         result.push_back(s);
     }
+    if(!validSideChatParents(result)){if(error)*error="Side chat refers to a missing, nested, or cyclic parent. Original data was preserved.";return {};}
     const auto pending=doc.object()["pendingCleanup"];
     if(!pending.isUndefined()&&(!pending.isArray()||pending.toArray().size()>10000)) {
         if(error)*error="Conversation cleanup records are invalid. Original data was preserved.";
@@ -151,13 +175,14 @@ bool SessionStore::validateRevision(const QString& directory,QString* error) con
     return true;
 }
 bool SessionStore::writeState(const QString& directory,const QList<Conversation>& sessions,const QStringList& pendingCleanup,QString* error) const {
+    if(!validSideChatParents(sessions)){if(error)*error="Cannot save a side chat with a missing, nested, or cyclic parent.";return false;}
     QJsonArray records;
     QSet<QString> ids;
     for (const auto& s : sessions) {
-        if(!validAgentId(s.id)||ids.contains(s.id.toCaseFolded())||!validDraftAttachments(s.draftAttachments)||s.lastMessageAt<0){if(error)*error="Cannot save invalid or duplicate conversation records.";return false;}
+        if(!validAgentId(s.id)||ids.contains(s.id.toCaseFolded())||!validDraftAttachments(s.draftAttachments)||!QueuedMessages::validate(s.queuedMessages)||!validLinkProvenance(s.transcriptLinkProvenance)||s.lastMessageAt<0){if(error)*error="Cannot save invalid or duplicate conversation records.";return false;}
         ids.insert(s.id.toCaseFolded());
         records.append(QJsonObject{
-        {"id",s.id},{"title",s.title},{"workspace",s.workspace},{"providerId",s.providerId},
+        {"id",s.id},{"sideChatParentId",s.sideChatParentId},{"title",s.title},{"workspace",s.workspace},{"providerId",s.providerId},{"queuedMessages",s.queuedMessages},{"transcriptLinkProvenance",s.transcriptLinkProvenance},
         {"model",s.model},{"presetId",s.presetId},{"draft",s.draft},{"draftAttachments",s.draftAttachments},{"messages",s.messages},{"created",s.created},{"updated",s.updated},{"archivedAt",s.archivedAt},{"lastMessageAt",s.lastMessageAt},{"archived",s.archived},{"alwaysAllow",s.alwaysAllow},{"titleLocked",s.titleLocked},{"autoTitleAttempted",s.autoTitleAttempted}});
     }
     if(pendingCleanup.size()>10000){if(error)*error="Too many pending conversation cleanup records.";return false;}

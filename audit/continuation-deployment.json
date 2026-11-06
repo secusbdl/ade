@@ -1,0 +1,459 @@
+{
+  "schemaVersion": 1,
+  "inspectedAtUtc": "2026-11-06T13:54:38.067585+00:00",
+  "scope": "Read-only PE import/hash inspection after the parent confirmed a shared rebuild passed. These are build-next/bin files, not proof of a fresh export or an aggregate test result. Any later rebuild requires another inspection.",
+  "tool": {
+    "path": "C:/mingw64/bin/objdump.exe",
+    "version": "GNU objdump (Binutils for MinGW-W64 x86_64, built by Brecht Sanders, r1) 2.47.20260726",
+    "arguments": [
+      "-p"
+    ]
+  },
+  "files": [
+    {
+      "path": "build-next/bin/ADE.exe",
+      "sizeBytes": 80769977,
+      "sha256": "9443d5a7cd72174f35e2d2a169a5afdc0439547f72ff0fab173954ef4fb7fd19",
+      "lastWriteUtc": "2026-11-06T13:53:01.672876+00:00",
+      "format": "pei-x86-64",
+      "subsystem": "Windows GUI",
+      "imports": [
+        {
+          "name": "ADVAPI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "AUTHZ.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "bcrypt.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "comdlg32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "CRYPT32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "d3d11.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "d3d12.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "d3d9.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "DNSAPI.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "dwmapi.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "DWrite.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "dxgi.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "GDI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "IMM32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "IPHLPAPI.DLL",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "KERNEL32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "api-ms-win-crt-convert-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-environment-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-heap-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-locale-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-math-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-private-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-runtime-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-stdio-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-string-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-time-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-utility-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "ncrypt.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "NETAPI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "ntdll.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "ODBC32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "ole32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "OLEAUT32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "api-ms-win-core-winrt-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "Secur32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "SETUPAPI.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "SHCORE.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "SHELL32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "SHLWAPI.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "api-ms-win-core-synch-l1-2-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "USER32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "USERENV.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "UxTheme.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "VERSION.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WINHTTP.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WINMM.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WS2_32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WTSAPI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        }
+      ],
+      "unresolvedNonSystemImports": [],
+      "qtDllImports": [],
+      "mingwRuntimeDllImports": [],
+      "opensslDllImports": []
+    },
+    {
+      "path": "build-next/bin/ADE-sandbox-worker.exe",
+      "sizeBytes": 19775944,
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "lastWriteUtc": "2026-11-05T11:51:22.280569+00:00",
+      "format": "pei-x86-64",
+      "subsystem": "Windows CUI",
+      "imports": [
+        {
+          "name": "ADVAPI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "AUTHZ.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "KERNEL32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "api-ms-win-crt-convert-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-environment-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-heap-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-locale-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-math-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-private-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-runtime-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-stdio-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-string-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-time-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "api-ms-win-crt-utility-l1-1-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "NETAPI32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "ntdll.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "ole32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "SHELL32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "api-ms-win-core-synch-l1-2-0.dll",
+          "classification": "Windows API-set contract",
+          "presentInSystem32": false
+        },
+        {
+          "name": "USER32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "USERENV.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "VERSION.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WINMM.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        },
+        {
+          "name": "WS2_32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        }
+      ],
+      "unresolvedNonSystemImports": [],
+      "qtDllImports": [],
+      "mingwRuntimeDllImports": [],
+      "opensslDllImports": []
+    },
+    {
+      "path": "build-next/bin/WebView2Loader.dll",
+      "sizeBytes": 194912,
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "lastWriteUtc": "2026-11-05T07:54:26.691494+00:00",
+      "format": "pei-x86-64",
+      "subsystem": "Windows CUI",
+      "imports": [
+        {
+          "name": "KERNEL32.dll",
+          "classification": "Windows System32 library",
+          "presentInSystem32": true
+        }
+      ],
+      "unresolvedNonSystemImports": [],
+      "qtDllImports": [],
+      "mingwRuntimeDllImports": [],
+      "opensslDllImports": []
+    }
+  ],
+  "packagedDynamicDependency": {
+    "file": "WebView2Loader.dll",
+    "loadedBy": "src/browser/browserwidget.cpp environmentFactory(): absolute executable-directory path; LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32",
+    "matchesVendoredLoader": true,
+    "loaderOwnImports": [
+      "KERNEL32.dll"
+    ],
+    "runtime": "Microsoft Edge WebView2 Runtime is required separately for browser/mini-app surfaces; the small loader DLL is not that runtime."
+  },
+  "findings": [
+    "All three inspected PE files are x86-64.",
+    "All declared imports resolve to local Windows System32 libraries or Windows API-set contracts; no unresolved third-party import was found.",
+    "No Qt, MinGW libstdc++/libgcc/libwinpthread/libssp, or OpenSSL DLL import was found, consistent with the intended static build.",
+    "Windows Universal CRT API-set imports remain as OS runtime contracts.",
+    "ADE explicitly loads beside-executable WebView2Loader.dll; its own imports are recorded separately above.",
+    "No executable was launched, rebuilt, moved or modified for this inspection."
+  ],
+  "limits": [
+    "PE imports show statically declared dependencies, not every optional runtime LoadLibrary path or all transitive OS/driver dependencies.",
+    "No fresh-machine installation or WebView2 runtime availability check was performed.",
+    "No claim that upcoming export/published release files match until their hashes are checked.",
+    "Presence in System32 establishes a local system-directory resolution; this inspection does not independently verify Windows signatures or integrity."
+  ]
+}

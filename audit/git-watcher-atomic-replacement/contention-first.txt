@@ -1,0 +1,10 @@
+********* Start testing of GitWatcherTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitWatcherTests::initTestCase()
+QWARN  : GitWatcherTests::atomicReplacementSharesDeleteWithReaders() Atomic fixture write failed: commit C:/Users/secus/AppData/Local/Temp/test_git_watcher-oRqPoc/repository with spaces/.git/HEAD Qt error 10 Access is denied. native error 5
+FAIL!  : GitWatcherTests::atomicReplacementSharesDeleteWithReaders() 'atomicWrite(path,"ref: refs/heads/shared-reader\n")' returned FALSE. ()
+D:/age/ADE/tests/test_git_watcher.cpp(104) : failure location
+PASS   : GitWatcherTests::scansDoNotBlockAtomicMetadataChurn()
+PASS   : GitWatcherTests::cleanupTestCase()
+Totals: 3 passed, 1 failed, 0 skipped, 0 blacklisted, 4089ms
+********* Finished testing of GitWatcherTests *********

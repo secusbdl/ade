@@ -1,0 +1,19 @@
+********* Start testing of SettingsAudit *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SettingsAudit::initTestCase()
+PASS   : SettingsAudit::workspaceInstructionsAndDisabledSkillsStayScoped()
+PASS   : SettingsAudit::disablingGlobalSkillPreservesWorkspaceOverride()
+PASS   : SettingsAudit::failedInstructionSaveRollsBackControl()
+PASS   : SettingsAudit::failedDirectorySaveRollsBackControl()
+PASS   : SettingsAudit::failedGlobalOptInSaveRollsBackControl()
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-array-main-models)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-object-main-model)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(negative-nested-output-limit)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(fractional-thinking-budget)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(empty-nested-provider)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(invalid-title-model)
+PASS   : SettingsAudit::invalidNestedModelEntriesAreRejected(non-array-compression-models)
+PASS   : SettingsAudit::unavailablePresetNeverSilentlySelectsAnotherProvider()
+PASS   : SettingsAudit::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 321ms
+********* Finished testing of SettingsAudit *********

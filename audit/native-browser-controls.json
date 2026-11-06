@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeSources": [
+    "src/browser/BrowserInspector.cpp",
+    "src/browser/BrowserInspector.h",
+    "src/ui/MainWindowBrowserTools.cpp",
+    "src/ui/BrowserViewport.h"
+  ],
+  "upstreamContracts": [
+    "apps/browser/src/shared/selected-elements/swdomelement.ts",
+    "apps/browser/src/ui/screens/main/content/_components/device-emulation-presets.ts",
+    "apps/browser/src/ui/screens/main/content/_components/device-emulation-frame.tsx"
+  ],
+  "implemented": [
+    "Native toolbar DOM selection through CDP Overlay, bounded selected-node JSON attached as .swdomelement; identity, XPath, text, attributes, computed styles, pseudo elements, interaction, ancestry and frame context.",
+    "PNG page screenshot captured into the originating chat attachment store; no delivery to a newly selected chat after an asynchronous response.",
+    "Ten pinned device presets, custom dimensions/scale/mobile mode, rotation and responsive viewport fit preserving logical CSS dimensions.",
+    "Native DevTools action, cancellation on navigation, correlated ten-second CDP deadlines and retirement of stale responses."
+  ],
+  "regressions": [
+    "Actual browser fixtures reproduced three reentrant selection/cancellation failures. Operation epochs and QPointer checks now retire old callbacks when observers cancel, replace or delete an operation.",
+    "Rotation copies QJsonValue before updating either dimension, avoiding aliased QJsonValueRef values."
+  ],
+  "focusedEvidence": {
+    "suite": "native_browser_inspector",
+    "passed": 13,
+    "failed": 0,
+    "before": "audit/continuation-integration/browser-reentry-before.txt",
+    "after": "audit/continuation-integration/browser-reentry-after.txt"
+  },
+  "aggregateEvidence": "audit/continuation-integration.json",
+  "limits": [
+    "Uses the installed WebView2/CDP implementation. Chromium-specific behavior and all source frame navigation cases are not certified equivalent.",
+    "React/Vue component ancestry and source-code metadata are not collected; screenshot is a separate PNG attachment, not source per-element WebP capture.",
+    "Input value and srcdoc attributes are excluded. Native bounds intentionally limit large DOM captures.",
+    "Device metrics can remain applied if touch-emulation setup fails; the UI reports the failure. Full browser/session restoration and every source shortcut remain separate gaps."
+  ],
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

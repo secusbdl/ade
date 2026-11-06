@@ -1,0 +1,10 @@
+********* Start testing of ShellRuntimeTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellRuntimeTests::initTestCase()
+FAIL!  : ShellRuntimeTests::failedWatcherQueueCommitRetriesOnceWithoutResuming() Compared values are not the same
+   Actual   (engine.queuedMessages().size()): 0
+   Expected (1)                             : 1
+D:/age/ADE/tests/test_shell_runtime.cpp(112) : failure location
+PASS   : ShellRuntimeTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 12031ms
+********* Finished testing of ShellRuntimeTests *********

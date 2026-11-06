@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewDate": "2026-11-06",
-  "status": "Curated source and opt-in experiments prepared; all55 suites have passing coverage via54 initial passes plus the repaired browser suite. Final clean export/build/scan and GitHub Desktop push remain pending.",
+  "status": "Prior curated336a033 publication remains verified. Current native all-target build and single full80-suite run passed; new curated export/build/scan/update commit and GitHub Desktop push remain pending.",
   "sourceSnapshotPlan": {
     "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
     "destination": "reference/stagewise",
@@ -174,9 +174,9 @@
     },
     "runOwner": "Root integrated build; this audit observes reports without starting another build."
   },
-  "nativeHeadReviewed": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+  "nativeHeadReviewed": "f29c9ee8fda5c746312bc4133863f114399ef345",
   "target": "secusbdl/ade",
-  "networkActions": "Read-only repository/account checks and requested GitHub Desktop readiness inspection performed. No source commit/push, existing-repository visibility change, credential scraping or app-wide permission change. Browser repository preparation preceded observing an empty public target; this audit does not attribute its creation to a confirmed submit action.",
+  "networkActions": "Prior authorized GitHub Desktop push is recorded in audit/source-publication.json. This update performed local read-only publication checkout checks only; no new push, visibility change or credential access.",
   "allowedChangesPerformed": [
     "New audit/reference-readiness.json and publication-review.json",
     "New reference/stagewise exact curated pinned source",
@@ -657,8 +657,8 @@
   ],
   "buildReadiness": {
     "verifiedPlatform": "Windows x64, static Qt6.11.2 / GCC16.2, native CMake/Ninja; external Evergreen Runtime, Git and shell remain.",
-    "atReviewedHead": "Historical committed base had hard-coded development paths; the reviewed uncommitted integrated source now has parameterized paths and shared ade_ui. Native manifest records canonical LF source bytes.",
-    "workingTreeRemediation": "Parent verified ConfigureOnly with spaces and built the integrated native source plus opt-in experiments on the existing Windows static Qt/GCC toolchain. Current55-suite passing coverage combines54 initial passes and one repaired24-case browser suite; no single all-green55-suite execution is claimed.",
+    "atReviewedHead": "Prior curated checkpoint published336a033. Current development continuation uses parameterized dependency paths, shared ade_ui and static ade_shell; source manifest uses canonical LF while binary/reference hashes remain exact.",
+    "workingTreeRemediation": "All targets and one final80-suite run passed on the installed Windows static Qt/GCC toolchain. First75/80 failures remain retained. Current exact curated export/build/scan and clean-machine provisioning are separate gates.",
     "missingForBinaryRelease": [
       "Document exact Qt/OpenSSL source acquisition/configuration and licenses, static link/relink/source obligations.",
       "Verify a clean exported checkout builds and tests without ignored source/build data.",
@@ -673,8 +673,8 @@
   "finitePublicationGates": [
     {
       "id": "P1",
-      "criterion": "Fresh publication tree contains no development Git history or ignored runtime/profile/key data.",
-      "status": "root_export_pending"
+      "criterion": "Curated update contains no development history or ignored runtime/profile/key data, preserves existing public curated history and uses an exact fresh export.",
+      "status": "new_update_export_pending_prior_curated_publication_verified"
     },
     {
       "id": "P2",
@@ -694,7 +694,7 @@
     {
       "id": "P5",
       "criterion": "Correct README/build portability and freeze a passing native checkpoint; preserve honest limitations.",
-      "status": "native_build_and_55_suite_passing_coverage_verified_final_export_build_pending"
+      "status": "all_targets_and_single_full80suite_passed_current_export_pending"
     },
     {
       "id": "P6",
@@ -704,7 +704,7 @@
     {
       "id": "P7",
       "criterion": "Parent verifies repository identity/authentication and pushes only approved source branch/tree.",
-      "status": "target_public_empty_desktop_authenticated_waiting_final_export_no_push"
+      "status": "existing_public_main336a033_verified_current_update_commit_and_desktop_push_pending"
     }
   ],
   "remainingLimits": [
@@ -735,8 +735,221 @@
       "sha256": "800110ee3e15bcc83e468dcb9d1f233f2d9f4596d141453c3354a3ef2b376d06"
     }
   ],
-  "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+  "reviewedUtc": "2026-11-06T14:05:21.866737+00:00",
   "currentIntegratedCheckpoint": {
+    "state": "single_final_full_run_80_of80_passed_publication_pending",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "aggregate": "audit/continuation-integration.json",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "passedCasesIncludingLifecycle": 1466,
+    "qtSkippedCases": 1,
+    "skipExplanation": "Offscreen transcript link suite skips the real browser-tab case; native_transcript_tabs_real executes and passes that exact case on the Windows platform.",
+    "firstRun": {
+      "passedSuites": 75,
+      "failedSuites": 5,
+      "retainedDirectory": "audit/continuation-integration/first-full-run"
+    },
+    "sourceHashBasis": "canonical_git_text_LF",
+    "publication": "Final curated export/build/scan/update commit and GitHub Desktop push remain separate gates."
+  },
+  "nativeSourceManifest": {
+    "audit": "audit/reference-readiness.json",
+    "field": "sourceManifest",
+    "entries": 97,
+    "hashBasis": "canonical_git_text_LF except explicit -text exact_preserved_bytes",
+    "manifestSha256": "fa22abee3c145620982e26e9ebe889478a4569b782f0b168659bc58076cc1448",
+    "manifestHashEncoding": "UTF-8 compact JSON, ensure_ascii=false, sort_keys=true"
+  },
+  "packagedBuildObservation": {
+    "report": "audit/continuation-integration.json",
+    "scope": "Current local ready test bundle; unsigned, not a public binary release.",
+    "hashBasis": "exact_binary_bytes",
+    "directory": "out/agentic-reference-checkpoint",
+    "versionSmoke": "ADE 0.1.0",
+    "files": [
+      {
+        "path": "ADE.exe",
+        "bytes": 80769977,
+        "sha256": "9443d5a7cd72174f35e2d2a169a5afdc0439547f72ff0fab173954ef4fb7fd19",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ]
+  },
+  "browserFixtureRepair": {
+    "productionSourceChanged": false,
+    "changedFile": "tests/test_browser_tools.cpp",
+    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+    "fullSuite": {
+      "suite": "native_browser_tools",
+      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+      "reportHashBasis": "canonical_git_text_LF",
+      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Full suite"
+    },
+    "focusedRepeats": [
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      },
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      }
+    ],
+    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+  },
+  "nextPublicationPlan": {
+    "existingCheckout": "D:/age/ADE/out/publish-ade-reference",
+    "observedBaseCommit": "336a033b94da68ba10eaba96e3833accb45d6536",
+    "observedState": "Clean main branch at last explicit observation; origin https://github.com/secusbdl/ade.git. Recheck before updating.",
+    "preserve": "Existing public fast-forward history and .git; do not push development history or alter old out/publish-ade scaffold.",
+    "steps": [
+      "Finish root aggregate tests/renders and review changed evidence; commit clean reviewed development source.",
+      "Run scripts/prepare-publication.py to a NEW out/ candidate path; original1400+33 reference hashes must pass.",
+      "Verify exact candidate hashes, fresh build/version/imports and full bounded secret/private-state/license scan; exclude all audit raster images and runtime/profile/build data.",
+      "With existing curated checkout still clean and remote base verified, synchronize only manifest-owned candidate files while preserving .git; review additions/removals and create one update commit.",
+      "Use requested GitHub Desktop to select exact curated checkout/origin/main and Push origin after root provides final ready commit.",
+      "Independently verify remote main equals published commit and record local clean state."
+    ],
+    "gatesPending": [
+      "Final clean development commit",
+      "Exact candidate export/build/scan",
+      "Publication update commit",
+      "GitHub Desktop push and remote SHA verification"
+    ],
+    "currentScan": "audit/publication-update-scan.json",
+    "inventory": "audit/feature-progress-update.json",
+    "currentValidation": {
+      "state": "single_final_full_run_80_of80_passed_publication_pending",
+      "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+      "aggregate": "audit/continuation-integration.json",
+      "suites": 80,
+      "passedSuites": 80,
+      "failedSuites": 0,
+      "passedCasesIncludingLifecycle": 1466,
+      "qtSkippedCases": 1,
+      "skipExplanation": "Offscreen transcript link suite skips the real browser-tab case; native_transcript_tabs_real executes and passes that exact case on the Windows platform.",
+      "firstRun": {
+        "passedSuites": 75,
+        "failedSuites": 5,
+        "retainedDirectory": "audit/continuation-integration/first-full-run"
+      },
+      "sourceHashBasis": "canonical_git_text_LF",
+      "publication": "Final curated export/build/scan/update commit and GitHub Desktop push remain separate gates."
+    }
+  },
+  "previousPublishedIntegratedCheckpoint": {
     "status": "all_55_suites_have_passing_coverage_from_initial_run_plus_repaired_suite",
     "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
     "sourceBaseCommit": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
@@ -803,58 +1016,11 @@
     },
     "coverageReport": "audit/reference-integration.json"
   },
-  "nativeSourceManifest": {
-    "audit": "audit/reference-readiness.json",
-    "field": "sourceManifest",
-    "entries": 76,
-    "hashBasis": "canonical_git_text_LF except explicit -text exact_preserved_bytes",
-    "manifestSha256": "65e48d4d05179b00db93da6bd0408b7bd44e863a0e21e81abf410902ab81a317"
-  },
-  "packagedBuildObservation": {
+  "previousPackagedBuildObservation": {
     "report": "audit/reference-integration.json",
     "path": "out/reference-checkpoint/ADE.exe",
     "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0",
-    "scope": "Parent-built local native test package, not a signed/public binary release. Final exported source build on current toolchain remains parent-owned; clean-machine provisioning is not demonstrated."
-  },
-  "browserFixtureRepair": {
-    "productionSourceChanged": false,
-    "changedFile": "tests/test_browser_tools.cpp",
-    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
-    "fullSuite": {
-      "suite": "native_browser_tools",
-      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
-      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
-      "reportHashBasis": "canonical_git_text_LF",
-      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
-      "passed": 24,
-      "failed": 0,
-      "skipped": 0,
-      "scope": "Full suite"
-    },
-    "focusedRepeats": [
-      {
-        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
-        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
-        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
-        "reportHashBasis": "canonical_git_text_LF",
-        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
-        "passed": 3,
-        "failed": 0,
-        "skipped": 0,
-        "scope": "Focused regression including init/cleanup"
-      },
-      {
-        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
-        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
-        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
-        "reportHashBasis": "canonical_git_text_LF",
-        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
-        "passed": 3,
-        "failed": 0,
-        "skipped": 0,
-        "scope": "Focused regression including init/cleanup"
-      }
-    ],
-    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+    "scope": "Historical local test package from the previously published checkpoint. Current continuation ready bundle is parent-owned and pending final80-suite verification.",
+    "hashBasis": "exact_binary_bytes"
   }
 }

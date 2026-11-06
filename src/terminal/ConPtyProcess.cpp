@@ -140,7 +140,7 @@ QStringList ConPtyProcess::defaultShell(){
     }
     return {qEnvironmentVariable("ComSpec",QDir::toNativeSeparators(qEnvironmentVariable("SystemRoot")+"/System32/cmd.exe")),"/Q"};
 }
-bool ConPtyProcess::start(const QString &workingDirectory,const QStringList &requested,QSize cells,QString *error){
+bool ConPtyProcess::start(const QString &workingDirectory,const QStringList &requested,QSize cells,QString *error,const std::optional<QProcessEnvironment>& requestedEnvironment){
     auto fail=[&](const QString &message){if(error)*error=message;emit errorOccurred(message);return false;};
     if(d->running)return fail("The terminal is already running.");
     stop();
@@ -172,7 +172,7 @@ bool ConPtyProcess::start(const QString &workingDirectory,const QStringList &req
     startup.StartupInfo.dwFlags=STARTF_USESTDHANDLES;
     QString commandLine=quote(QDir::toNativeSeparators(executable));for(qsizetype i=1;i<command.size();++i)commandLine+=' '+quote(command[i]);
     std::wstring mutableCommand=commandLine.toStdWString();
-    auto environment=QProcessEnvironment::systemEnvironment();environment.insert("TERM","xterm-256color");environment.insert("COLORTERM","truecolor");
+    auto environment=requestedEnvironment.value_or(QProcessEnvironment::systemEnvironment());environment.insert("TERM","xterm-256color");environment.insert("COLORTERM","truecolor");
     auto entries=environment.toStringList();entries.sort(Qt::CaseInsensitive);QString block;for(const auto &entry:entries){block+=entry;block+=QChar(0);}block+=QChar(0);
     PROCESS_INFORMATION process{};
     const bool created=CreateProcessW(reinterpret_cast<LPCWSTR>(executable.utf16()),mutableCommand.data(),nullptr,nullptr,FALSE,

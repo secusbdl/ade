@@ -75,14 +75,14 @@ class BrowserToolsTest final : public QObject {
     bool focusForFullscreen(BrowserWidget& browser,BrowserToolBridge& bridge,const QString& tab) {
         // Fullscreen requires the real native foreground, not just CDP's
         // document-focus emulation. Other desktop tools may have taken focus.
-        browser.raise();browser.activateWindow();browser.setFocus(Qt::OtherFocusReason);
+        browser.raise();browser.activateWindow();
 #ifdef Q_OS_WIN
         const auto hwnd=reinterpret_cast<HWND>(browser.winId());
         const auto activate=[&]{
             const auto foregroundThread=GetWindowThreadProcessId(GetForegroundWindow(),nullptr);
             const auto currentThread=GetCurrentThreadId();
             const bool attached=foregroundThread&&foregroundThread!=currentThread&&AttachThreadInput(currentThread,foregroundThread,TRUE);
-            ShowWindow(hwnd,SW_SHOWNORMAL);BringWindowToTop(hwnd);SetForegroundWindow(hwnd);SetActiveWindow(hwnd);SetFocus(hwnd);
+            ShowWindow(hwnd,SW_SHOWNORMAL);BringWindowToTop(hwnd);SetForegroundWindow(hwnd);SetActiveWindow(hwnd);
             if(attached)AttachThreadInput(currentThread,foregroundThread,FALSE);
         };
         activate();
@@ -90,12 +90,20 @@ class BrowserToolsTest final : public QObject {
         // This predicate runs a CDP request; do not use waitFor(), which checks
         // its predicate a second time after success and can observe a new state.
         QElapsedTimer deadline;deadline.start();
+        QJsonObject lastState;
         while(deadline.elapsed()<3000){
 #ifdef Q_OS_WIN
             if(GetForegroundWindow()!=hwnd)activate();
 #endif
-            const auto state=cdp(bridge,tab,"Runtime.evaluate",{{"expression","document.hasFocus() && document.visibilityState==='visible' && document.fullscreenEnabled"},{"returnByValue",true}});
-            const bool focused=state.received&&!state.error&&object(state)["result"].toObject()["value"].toBool();
+            // Transfer focus into the real WebView after foreground activation.
+            // SetFocus(hwnd) here would steal focus back to its Qt parent while
+            // Qt still considers BrowserWidget focused, suppressing focusInEvent
+            // and its ICoreWebView2Controller::MoveFocus call.
+            QApplication::setActiveWindow(browser.window());
+            browser.clearFocus();browser.setFocus(Qt::OtherFocusReason);
+            const auto state=cdp(bridge,tab,"Runtime.evaluate",{{"expression","({focused:document.hasFocus(),visible:document.visibilityState==='visible',fullscreenEnabled:document.fullscreenEnabled})"},{"returnByValue",true}});
+            lastState=object(state)["result"].toObject()["value"].toObject();
+            const bool focused=state.received&&!state.error&&lastState["focused"].toBool()&&lastState["visible"].toBool()&&lastState["fullscreenEnabled"].toBool();
 #ifdef Q_OS_WIN
             if(focused&&GetForegroundWindow()==hwnd)return true;
 #else
@@ -103,6 +111,12 @@ class BrowserToolsTest final : public QObject {
 #endif
             QTest::qWait(10);
         }
+        qWarning()<<"Fullscreen focus gate timed out"<<lastState
+#ifdef Q_OS_WIN
+                  <<"nativeForegroundMatch"<<(GetForegroundWindow()==hwnd)
+                  <<"nativeFocusIsParent"<<(GetFocus()==hwnd)
+#endif
+                  ;
         return false;
     }
     static QJsonObject object(const Result& result) { return QJsonDocument::fromJson(result.output.toUtf8()).object(); }

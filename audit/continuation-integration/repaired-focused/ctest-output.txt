@@ -1,0 +1,66 @@
+Test project D:/age/ADE/build-next
+      Start  5: native_shell_engine
+ 1/12 Test  #5: native_shell_engine ..............   Passed    4.92 sec
+      Start  7: native_conversation_control
+ 2/12 Test  #7: native_conversation_control ......   Passed    4.47 sec
+      Start  9: native_question_panel
+ 3/12 Test  #9: native_question_panel ............   Passed    0.21 sec
+      Start 15: native_agent_control_ui
+ 4/12 Test #15: native_agent_control_ui ..........   Passed    2.27 sec
+      Start 18: native_command_center_host
+ 5/12 Test #18: native_command_center_host .......***Exception: SegFault  2.89 sec
+A crash occurred in D:\age\ADE\build-next\bin\test_command_center_host.exe.
+While testing ownedShellOpensReusesAndSurvivesViewClose
+Function time: 582ms Total time: 2788ms
+
+Exception address: 0x00007ff7c5b29f04
+Exception code   : 0xc0000005
+
+Stack:
+#  1: Unable to obtain symbol
+#  2: UnhandledExceptionFilter() - 0x00007ffc0279f2f0
+#  3: strncpy() - 0x00007ffc050e8110
+#  4: _C_specific_handler() - 0x00007ffc050a4b00
+#  5: _chkstk() - 0x00007ffc050e6410
+#  6: RtlWow64GetCurrentMachine() - 0x00007ffc05043a10
+#  7: KiUserExceptionDispatcher() - 0x00007ffc050e5dc0
+#  8: Unable to obtain symbol
+#  9: Unable to obtain symbol
+# 10: Unable to obtain symbol
+# 11: Unable to obtain symbol
+# 12: Unable to obtain symbol
+# 13: Unable to obtain symbol
+# 14: Unable to obtain symbol
+# 15: Unable to obtain symbol
+# 16: Unable to obtain symbol
+# 17: Unable to obtain symbol
+# 18: Unable to obtain symbol
+# 19: Unable to obtain symbol
+# 20: Unable to obtain symbol
+# 21: Unable to obtain symbol
+# 22: BaseThreadInitThunk() - 0x00007ffc0360dd90
+# 23: RtlUserThreadStart() - 0x00007ffc04ffee20
+
+
+      Start 19: native_side_chat
+ 6/12 Test #19: native_side_chat .................   Passed    0.29 sec
+      Start 20: native_side_chat_host
+ 7/12 Test #20: native_side_chat_host ............   Passed    6.40 sec
+      Start 24: native_shell_runtime
+ 8/12 Test #24: native_shell_runtime .............   Passed   11.23 sec
+      Start 28: native_workbench_layout
+ 9/12 Test #28: native_workbench_layout ..........   Passed    6.71 sec
+      Start 42: native_git_watcher
+10/12 Test #42: native_git_watcher ...............   Passed   27.47 sec
+      Start 67: native_core
+11/12 Test #67: native_core ......................   Passed    8.96 sec
+      Start 78: native_browser_tools
+12/12 Test #78: native_browser_tools .............   Passed   15.39 sec
+
+92% tests passed, 1 tests failed out of 12
+
+Total Test time (real) =  91.22 sec
+
+The following tests FAILED:
+	 18 - native_command_center_host (SEGFAULT)
+Errors while running CTest

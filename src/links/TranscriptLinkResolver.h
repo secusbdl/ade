@@ -20,7 +20,7 @@ struct TranscriptLinkOptions {
     QString agentId, dataDirectory, browserSessionId;
     FileReadSnapshotStore::Lease lease;
     AttachmentMounts mounts;
-    QSet<QString> liveTabIds;
+    QSet<QString> liveTabIds, liveShellIds;
     QSet<QString> readOnlyMounts;
     qint64 maxFileBytes = 20 * 1024 * 1024;
 };
@@ -38,17 +38,17 @@ class TranscriptLinkResolver {
         std::shared_ptr<State> state;
         friend class TranscriptLinkResolver;
     };
-    enum class Kind { Invalid, NoOp, ExternalUrl, ActivateTab, CopyColor, File };
+    enum class Kind { Invalid, NoOp, ExternalUrl, ActivateTab, ActivateShell, CopyColor, File };
     struct Parsed {
         Kind kind = Kind::Invalid;
-        QString path, lineNumber, tabId, color;
+        QString path, lineNumber, tabId, shellId, color;
         QJsonObject params;
         QUrl url;
         bool incomplete = false, directory = false;
     };
     struct Action {
         Kind kind = Kind::Invalid;
-        QString mountedPath, canonicalPath, displayName, mimeType, tabId, color, lineNumber;
+        QString mountedPath, canonicalPath, displayName, mimeType, tabId, shellId, color, lineNumber;
         QJsonObject params;
         QUrl url;
         QByteArray bytes;

@@ -8,8 +8,10 @@
 #include "ui/ConversationView.h"
 #include "ui/MainWindow.h"
 #include "ui/MarkdownParts.h"
+#include "ui/ImagePreview.h"
 #include "ui/SessionStore.h"
 #include <QClipboard>
+#include <QBuffer>
 #include <QFile>
 #include <QJsonDocument>
 #include <QLabel>
@@ -241,7 +243,7 @@ class TranscriptLinkUiTest : public QObject {
         emit markdown->linkActivated(QUrl("color:orange"));
         QVERIFY(!view);
     }
-    void restartDoesNotInventWorkspaceProvenance() {
+    void restartRestoresOnlySavedWorkspaceProvenance() {
         QTemporaryDir data, workspace;
         QVERIFY(put(workspace.filePath("note.txt"), "OWNED"));
         QVERIFY(seed(data.path(), {}, workspace.path()));
@@ -265,9 +267,29 @@ class TranscriptLinkUiTest : public QObject {
         MainWindow restarted(data.path());
         QVERIFY(select(restarted, "first"));
         click(restarted.findChild<ConversationView*>(), "first", current, QUrl("path:ws1/note.txt"));
-        QVERIFY(restarted.findChildren<EditorWidget*>().isEmpty());
-        QVERIFY(restarted.findChild<QLabel*>("sessionStatus")->text().contains("binding"));
+        QCOMPARE(restarted.findChildren<EditorWidget*>().size(),1);
+        QCOMPARE(restarted.findChild<EditorWidget*>()->filePath(),QFileInfo(workspace.filePath("note.txt")).canonicalFilePath());
         QCOMPARE(provider.requests, 1);
+    }
+    void restartRejectsReplacedWorkspaceIdentity(){
+        QTemporaryDir data,container;const auto workspace=container.filePath("workspace");QVERIFY(QDir().mkpath(workspace));QVERIFY(put(workspace+"/note.txt","ORIGINAL"));QVERIFY(seed(data.path(),{},workspace));
+        Provider provider;QVERIFY(provider.save(data.path()));QJsonObject saved;
+        {MainWindow window(data.path());QVERIFY(select(window,"first"));window.submitPrompt("Return a link");QTRY_COMPARE(provider.requests,1);auto* engine=window.findChild<AgentEngine*>();QVERIFY(engine);QTRY_VERIFY(!engine->isBusy());saved=engine->displayMessages().last().toObject();}
+        QVERIFY(QDir().rename(workspace,container.filePath("old-workspace")));QVERIFY(QDir().mkpath(workspace));QVERIFY(put(workspace+"/note.txt","REPLACEMENT"));
+        MainWindow restarted(data.path());QVERIFY(select(restarted,"first"));click(restarted.findChild<ConversationView*>(),"first",saved,QUrl("path:ws1/note.txt"));QVERIFY(restarted.findChildren<EditorWidget*>().isEmpty());QVERIFY(restarted.findChild<QLabel*>("sessionStatus")->text().contains("binding"));
+    }
+    void trustedAttachmentImageUsesHostResolver(){
+        QTemporaryDir data;QImage image(32,24,QImage::Format_ARGB32);image.fill(QColor("#00b8c8"));QByteArray bytes;QBuffer buffer(&bytes);QVERIFY(buffer.open(QIODevice::WriteOnly));QVERIFY(image.save(&buffer,"PNG"));
+        const auto ref=AttachmentStore(data.path()).write("first","diagram.png",bytes);QVERIFY(!ref.path.isEmpty());QVERIFY(seed(data.path(),{message("![diagram](path:"+ref.path+")")}));
+        MainWindow window(data.path());QVERIFY(select(window,"first"));auto* view=window.findChild<ConversationView*>();
+        auto imageCount=[&]{int count=0;for(auto* text:view->findChildren<TranscriptText*>())count+=text->document()->property("trustedImageCount").toInt();return count;};
+        QTRY_COMPARE(imageCount(),1);click(view,"first",row({message("![diagram](path:"+ref.path+")")}),QUrl("path:"+ref.path));QVERIFY(window.findChild<ImagePreview*>());
+        QVERIFY(select(window,"second"));QTest::qWait(50);QCOMPARE(imageCount(),0);
+    }
+    void hostRejectsSvgAndUnboundWorkspaceImages(){
+        QTemporaryDir data,workspace;const auto ref=AttachmentStore(data.path()).write("first","diagram.svg","<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\"><rect width=\"10\" height=\"10\" fill=\"red\"/></svg>");QVERIFY(!ref.path.isEmpty());QImage image(10,10,QImage::Format_ARGB32);image.fill(Qt::red);QVERIFY(image.save(workspace.filePath("image.png")));
+        QVERIFY(seed(data.path(),{message("![svg](path:"+ref.path+") ![unbound](path:ws1/image.png)")},workspace.path()));MainWindow window(data.path());QVERIFY(select(window,"first"));QTest::qWait(100);
+        for(auto* text:window.findChild<ConversationView*>()->findChildren<TranscriptText*>())QCOMPARE(text->document()->property("trustedImageCount").toInt(),0);
     }
     void liveTabsRejectUnknownCrossChatAndClosedMiniApps() {
         QTemporaryDir data;

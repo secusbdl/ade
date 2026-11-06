@@ -1,0 +1,25 @@
+********* Start testing of ShellServiceTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellServiceTest::initTestCase()
+PASS   : ShellServiceTest::boundaryChunksAndSpoofedCwd()
+PASS   : ShellServiceTest::waitBoundsAndEnvironment()
+PASS   : ShellServiceTest::persistentVariablesCwdAndLogs()
+PASS   : ShellServiceTest::timeoutPollAndRawStdin()
+PASS   : ShellServiceTest::cancelOwnedSessionAndRejectForeign()
+PASS   : ShellServiceTest::watcherTriggersOnce()
+PASS   : ShellServiceTest::completionObserverMayDeleteOwner()
+PASS   : ShellServiceTest::timeoutDoesNotDiscardPacedInput()
+PASS   : ShellServiceTest::reentrantReplacementOwnsItsWait()
+PASS   : ShellServiceTest::patternAndIdleLeaveSessionRunning(pattern)
+PASS   : ShellServiceTest::patternAndIdleLeaveSessionRunning(idle)
+PASS   : ShellServiceTest::snapshotObserverMayCancelOrDelete(cancel)
+PASS   : ShellServiceTest::snapshotObserverMayCancelOrDelete(destroy)
+PASS   : ShellServiceTest::watchersCancelTimeoutAndManifest()
+PASS   : ShellServiceTest::fiveSessionLimitAndScopeChange()
+PASS   : ShellServiceTest::killingSessionStopsItsOwnedDescendant()
+PASS   : ShellServiceTest::terminalObserverCannotMatchOldBytesAgainstReplacement()
+PASS   : ShellServiceTest::exitedRetentionPreservesLogsActiveAndRecentViews()
+PASS   : ShellServiceTest::explicitEnvironmentAndUnicode()
+PASS   : ShellServiceTest::cleanupTestCase()
+Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 39752ms
+********* Finished testing of ShellServiceTest *********

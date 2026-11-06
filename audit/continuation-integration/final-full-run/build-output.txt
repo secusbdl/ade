@@ -1,0 +1,24 @@
+[0/2] Re-checking globbed directories...
+[1/24] Linking CXX executable bin\test_composer_search.exe
+[2/24] Linking CXX executable bin\ADE.exe
+[3/24] Linking CXX executable bin\test_question_panel.exe
+[4/24] Linking CXX executable bin\test_composer_completion.exe
+[5/24] Linking CXX executable bin\test_composer_host.exe
+[6/24] Linking CXX executable bin\test_transcript_rich.exe
+[7/24] Linking CXX executable bin\test_reference_controls.exe
+[8/24] Linking CXX executable bin\test_agent_control_ui.exe
+[9/24] Linking CXX executable bin\test_command_center.exe
+[10/24] Linking CXX executable bin\test_command_center_host.exe
+[11/24] Linking CXX executable bin\test_side_chat.exe
+[12/24] Linking CXX executable bin\test_command_file_search.exe
+[13/24] Linking CXX executable bin\test_transcript_link_ui.exe
+[14/24] Linking CXX executable bin\test_chevron.exe
+[15/24] Linking CXX executable bin\test_workbench_layout.exe
+[16/24] Linking CXX executable bin\test_workbench_helpers.exe
+[17/24] Linking CXX executable bin\test_sidebar_navigation.exe
+[18/24] Linking CXX executable bin\test_transcript_ui.exe
+[19/24] Linking CXX executable bin\test_main_chrome.exe
+[20/24] Linking CXX executable bin\test_conversations.exe
+[21/24] Linking CXX executable bin\test_git_host.exe
+[22/24] Linking CXX executable bin\test_ui_audit.exe
+[23/24] Linking CXX executable bin\test_ui.exe

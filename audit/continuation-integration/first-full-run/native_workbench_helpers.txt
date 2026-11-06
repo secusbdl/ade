@@ -1,0 +1,10 @@
+********* Start testing of WorkbenchHelpersTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkbenchHelpersTest::initTestCase()
+QWARN  : WorkbenchHelpersTest::hiddenResizeCollapseCallbackMayDeleteOwner() This plugin does not support propagateSizeHints()
+PASS   : WorkbenchHelpersTest::hiddenResizeCollapseCallbackMayDeleteOwner()
+QWARN  : WorkbenchHelpersTest::invalidPercentagesStayFinite() This plugin does not support propagateSizeHints()
+PASS   : WorkbenchHelpersTest::invalidPercentagesStayFinite()
+PASS   : WorkbenchHelpersTest::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 18ms
+********* Finished testing of WorkbenchHelpersTest *********

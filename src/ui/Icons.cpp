@@ -16,6 +16,10 @@ QIcon icon(const QString& name, const QColor& color) {
     else if(name=="download") {line(12,3,12,15);line(7,10,12,15);line(12,15,17,10);line(4,16,4,21);line(4,21,20,21);line(20,21,20,16);}
     else if(name=="stop") {p.setBrush(color);p.drawRoundedRect(QRectF(7,7,10,10),1,1);}
     else if(name=="close") {line(7,7,17,17);line(17,7,7,17);}
+    else if(name=="select") {QPainterPath a;a.moveTo(5,3);a.lineTo(5,20);a.lineTo(10,15);a.lineTo(15,21);a.lineTo(18,19);a.lineTo(13,13);a.lineTo(20,11);a.closeSubpath();p.drawPath(a);}
+    else if(name=="camera") {p.drawRoundedRect(QRectF(3,6,18,14),2,2);p.drawEllipse(QRectF(8,9,8,8));line(8,6,10,3);line(10,3,16,3);line(16,3,18,6);}
+    else if(name=="device") {p.drawRoundedRect(QRectF(6,2,12,20),2,2);line(10,18,14,18);}
+    else if(name=="code") {line(8,6,2,12);line(2,12,8,18);line(16,6,22,12);line(22,12,16,18);line(14,4,10,20);}
     else if(name=="folder") {QPainterPath a;a.moveTo(3,7);a.lineTo(9,7);a.lineTo(11,9);a.lineTo(21,9);a.lineTo(21,19);a.lineTo(3,19);a.closeSubpath();p.drawPath(a);}
     else if(name=="terminal") {line(5,7,10,12);line(10,12,5,17);line(12,18,19,18);}
     else if(name=="sidebar") {p.drawRoundedRect(QRectF(3,5,18,14),2,2);line(9,5,9,19);line(15,9,12,12);line(12,12,15,15);}

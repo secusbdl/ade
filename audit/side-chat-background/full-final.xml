@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SideChatHostTest" timestamp="2026&#x002D;11&#x002D;06T15:51:38" hostname="VOID" tests="16" failures="0" errors="0" skipped="0" time="6.878">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SideChatHostTest" time="0.001"/>
+  <testcase name="forkIsIndependentAndHiddenThenPromotes" classname="SideChatHostTest" time="0.792">
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+    </system-err>
+  </testcase>
+  <testcase name="sideStreamsAndQueuesWithoutChangingParent" classname="SideChatHostTest" time="0.522"/>
+  <testcase name="questionAnswersStayInChild" classname="SideChatHostTest" time="0.484"/>
+  <testcase name="fileCompletionTargetsChildOnly" classname="SideChatHostTest" time="0.355">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support raise()]]>
+    </system-err>
+  </testcase>
+  <testcase name="closeDiscardsBusyChildAndKeepsParent" classname="SideChatHostTest" time="0.305"/>
+  <testcase name="archiveUnloadsChildrenAndRestoreReopens" classname="SideChatHostTest" time="0.482">
+    <system-err>
+      <![CDATA[This plugin does not support raise()]]>
+      <![CDATA[This plugin does not support grabbing the keyboard]]>
+    </system-err>
+  </testcase>
+  <testcase name="deleteParentCascadesWithSaveConflictProtection" classname="SideChatHostTest" time="0.148">
+    <system-err>
+      <![CDATA[This plugin does not support raise()]]>
+      <![CDATA[This plugin does not support grabbing the keyboard]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="restartRestoresChildWithoutSelectingItAsMain" classname="SideChatHostTest" time="0.485"/>
+  <testcase name="confirmedParentDeletionRemovesChild" classname="SideChatHostTest" time="0.185">
+    <system-err>
+      <![CDATA[This plugin does not support raise()]]>
+      <![CDATA[This plugin does not support grabbing the keyboard]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="promotionSaveConflictLeavesPaneAndParentIdentity" classname="SideChatHostTest" time="0.150"/>
+  <testcase name="rejectedHistoryKeepsChildDraftAndAttachment" classname="SideChatHostTest" time="0.335"/>
+  <testcase name="inlineApprovalUsesChildRowAndChatIdentity" classname="SideChatHostTest" time="0.464"/>
+  <testcase name="integratedThemesQuestionQueueAndCompactGeometry" classname="SideChatHostTest" time="1.728"/>
+  <testcase name="hiddenChildImagesResolveOnlyOwnedBytes" classname="SideChatHostTest" time="0.440"/>
+  <testcase name="cleanupTestCase" classname="SideChatHostTest" time="0.000"/>
+</testsuite>

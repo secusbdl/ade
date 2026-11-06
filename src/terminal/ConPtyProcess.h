@@ -1,7 +1,9 @@
 #pragma once
 #include <QObject>
 #include <QSize>
+#include <QProcessEnvironment>
 #include <memory>
+#include <optional>
 
 namespace ade {
 // A real Windows pseudoconsole. No QProcess pipe emulation or external runtime.
@@ -10,7 +12,8 @@ class ConPtyProcess final : public QObject {
 public:
     explicit ConPtyProcess(QObject *parent=nullptr);
     ~ConPtyProcess() override;
-    bool start(const QString &workingDirectory, const QStringList &command={}, QSize cells={100,30}, QString *error=nullptr);
+    bool start(const QString &workingDirectory, const QStringList &command={}, QSize cells={100,30}, QString *error=nullptr,
+               const std::optional<QProcessEnvironment>& environment=std::nullopt);
     bool write(const QByteArray &bytes);
     bool resize(QSize cells, QString *error=nullptr);
     void stop();

@@ -18,6 +18,13 @@
 #endif
 
 namespace ade {
+QString SandboxHost::requestOwnerId(const QString& rpcRequestId)const{
+    const auto rpc=m_rpc.constFind(rpcRequestId);
+    if(rpc==m_rpc.cend())return {};
+    const auto id=m_wireToId.value(rpc->wireId);
+    const auto pending=m_pending.constFind(id);
+    return pending!=m_pending.cend()&&pending->contextId==rpc->contextId&&!pending->cancelRequested?id:QString{};
+}
 namespace {
 constexpr qsizetype MaxFrameBytes = 32 * 1024 * 1024;
 QString json(const QJsonObject& object) { return QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact)); }
@@ -88,7 +95,7 @@ QJsonArray SandboxHost::definitions() const {
     };
     const QJsonObject parameters{{"type", "object"}, {"properties", properties}, {"required", QJsonArray{"explanation", "script"}}, {"additionalProperties", false}};
     const QString description = QStringLiteral(
-        "Execute JavaScript in a persistent per-agent native QuickJS worker, outside browser pages. Supports async/await, persistent globalThis, timers, API.output, API.sendCDP, API.createAttachment, fsPromises.readFile/writeFile (UTF-8 strings or exact binary Buffer bytes), mkdir and readdir, basic Buffer, buffered HTTP(S) fetch with Headers/Request/Response and AbortController, and API.getCredential for host-authorized opaque credential handles. API.openApp(appId,{pluginId?,title?,target:'tab',setActive?}) opens a host-authorized app and returns {tabId}; API.closeApp() closes the current app; API.sendMessage(appId,data,{pluginId?}) posts JSON to it. API.onMessage(appId,callback,{pluginId?}) and API.onCDPEvent(tabId,event,callback) return unsubscribe functions. These listeners persist across executions and can update globalThis and send app messages while idle. Listener queues are bounded; idle callbacks have a 1-second synchronous limit and idle broker requests a 45-second deadline. Await API calls made by the script body: its outstanding broker calls are canceled when it returns, while independent listener subscriptions and idle requests persist. Fetch supports text or binary bodies up to 1 MiB and buffered responses up to 2 MiB. Page DOM is available through API.sendCDP Runtime.evaluate. Returns API.output messages followed by the return value; API.output requires an active execution. Console is diagnostic. Node builtins beyond the documented subset, importModule, streaming, Blob, FormData, URL helpers, browser cookies and full Node/Web API parity are not implemented. Cancellation/time or memory failure resets this agent's context, listeners, apps and credential handles. The host-owned apps/ mount is available without a workspace for apps/<id>/index.html and local assets. Binary file transfers are bounded to 4 MiB; UTF-8 text reads to 64 Ki characters. The read-only att/ mount provides this chat's original imported or API-generated attachment blobs without a workspace; fs.readFile and fs.readdir can read/list it, while fs writes and mkdir are denied. History snapshots are separate and are not exposed as attachment files. Other filesystem APIs, streams and additional mounts are not implemented. No unrestricted OS/process APIs.");
+        "Execute JavaScript in a persistent per-agent native QuickJS worker, outside browser pages. Supports async/await, persistent globalThis, timers, API.output, API.sendCDP, API.createAttachment, fsPromises.readFile/writeFile (UTF-8 strings or exact binary Buffer bytes), mkdir and readdir, basic Buffer, buffered HTTP(S) fetch with Headers/Request/Response and AbortController, and API.getCredential for host-authorized opaque credential handles. API.openApp(appId,{pluginId?,title?,target:'tab',setActive?}) opens a host-authorized app and returns {tabId}; API.closeApp() closes the current app; API.sendMessage(appId,data,{pluginId?}) posts JSON to it. API.onMessage(appId,callback,{pluginId?}) and API.onCDPEvent(tabId,event,callback) return unsubscribe functions. These listeners persist across executions and can update globalThis and send app messages while idle. Listener queues are bounded; idle callbacks have a 1-second synchronous limit and idle broker requests a 45-second deadline. Await API calls made by the script body: its outstanding broker calls are canceled when it returns, while independent listener subscriptions and idle requests persist. Fetch supports text or binary bodies up to 1 MiB and buffered responses up to 2 MiB. Page DOM is available through API.sendCDP Runtime.evaluate. Returns API.output messages followed by the return value; API.output requires an active execution. Console is diagnostic. Node builtins beyond the documented subset, importModule, streaming, Blob, FormData, URL helpers, browser cookies and full Node/Web API parity are not implemented. Cancellation/time or memory failure resets this agent's context, listeners, apps and credential handles. The host-owned apps/ mount is available without a workspace for apps/<id>/index.html and local assets. Binary file transfers are bounded to 4 MiB; UTF-8 text reads to 64 Ki characters. The read-only att/ mount provides this chat's original imported or API-generated attachment blobs without a workspace; fs.readFile and fs.readdir can read/list it, while fs writes and mkdir are denied. The read-only shells/ mount exposes this chat's persisted session logs at shells/<session-id>.shell.log, including without a workspace; fs.readFile and fs.readdir read/list them within the same raw byte/text bounds. Larger logs use the model read tool with line ranges. History snapshots are separate and are not exposed as attachment files. Other filesystem APIs, streams and additional mounts are not implemented. No unrestricted OS/process APIs.");
     return {QJsonObject{{"type", "function"}, {"function", QJsonObject{{"name", "executeSandboxJs"}, {"description", description}, {"parameters", parameters}}}}};
 }
 
@@ -248,6 +255,9 @@ void SandboxHost::receive(const QJsonObject& message) {
             if(!isSignalConnected(QMetaMethod::fromSignal(&SandboxHost::attachmentFileRequest))){completeRpc(requestId,QJsonValue(),"No attachment file broker is configured.");return;}
             emit attachmentFileRequest(requestId,agent,kind,{{"path",path},{"recursive",arguments["recursive"]}});return;
         }
+        if((path=="shells"||path.startsWith("shells/"))&&kind!="readFile"&&kind!="readBytes"&&kind!="readDirectory"){
+            completeRpc(requestId,QJsonValue(),"The shells/ mount allows read and list operations only.");return;
+        }
         if(kind=="readFile")emit fileRequest(requestId,"read",{{"path",path},{"raw",true},{"encoding","utf8"}});
         else if(kind=="writeFile")emit fileRequest(requestId,"write",{{"path",path},{"raw",true},{"content",arguments["content"]}});
         else if(kind=="writeBytes")emit fileRequest(requestId,"writeBytes",{{"path",path},{"raw",true},{"base64",arguments["base64"]}});
@@ -276,14 +286,14 @@ void SandboxHost::receive(const QJsonObject& message) {
 
 QString SandboxHost::workspacePath(const QString& input,QString* error) const {
     QString path=QDir::fromNativeSeparators(input);
-    if(path=="att"||path.startsWith("att/"))return path;
+    if(path=="att"||path.startsWith("att/")||path=="shells"||path.startsWith("shells/"))return path;
     if(path=="apps"||path.startsWith("apps/")){
         if(m_appsDirectory.isEmpty()){*error="The host-owned apps/ mount is unavailable.";return {};}
     }else{
         if(m_workspace.isEmpty()){*error="No workspace is mounted. Use apps/ for this chat's mini-app files.";return {};}
         if(QRegularExpression(QStringLiteral("^(att|plugins|logs|shells|memory|w[0-9a-f]+|ws[0-9]+)(/|$)")).match(path).hasMatch()
             &&path!="w1"&&path!="ws1"&&!path.startsWith("w1/")&&!path.startsWith("ws1/")){
-            *error="This native sandbox exposes only ws1/w1, apps/ and read-only att/ mounts.";return {};
+            *error="This native sandbox exposes only ws1/w1, apps/ and read-only att/ and shells/ mounts.";return {};
         }
     }
     if(path.isEmpty()){*error="File path is empty.";return {};}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "scope": "Native Windows WebView fullscreen permission fixture focus ordering; no production permission or fullscreen policy change",
+  "reproduced": {
+    "before": "audit/browser-tools-fullscreen-before.txt",
+    "result": "2 passed, 1 failed; actual native/document focus precondition failed before requesting fullscreen"
+  },
+  "cause": "The fixture first focused BrowserWidget (whose focusInEvent moves focus into WebView), then called Win32 SetFocus on the parent HWND. Qt could still consider the widget focused, suppressing a new focusInEvent and leaving document.hasFocus false.",
+  "correction": "Activate the real foreground window first, then explicitly transfer Qt focus through BrowserWidget into its WebView. Never overwrite that focus with SetFocus(parent HWND).",
+  "unchangedGates": [
+    "The actual native foreground HWND must belong to the fixture",
+    "document.hasFocus must be true",
+    "document.visibilityState must be visible",
+    "document.fullscreenEnabled must be true",
+    "Block, Ask/Deny, Allow and exit still assert real fullscreen signals and page state"
+  ],
+  "validation": {
+    "targeted": "audit/browser-tools-fullscreen-after.txt",
+    "targetedResult": "3 passed, 0 failed, 0 skipped; 913ms",
+    "fullSuite": "audit/browser-tools-fullscreen-fixed-suite.txt",
+    "fullSuiteResult": "24 passed, 0 failed, 0 skipped; 14423ms"
+  },
+  "limits": "This is a Windows fixture focus correction. No CDP focus emulation or skip was introduced. It does not prove all desktop focus-interference schedules."
+}

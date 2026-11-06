@@ -36,7 +36,7 @@ QString SidebarModel::ageLabel(qint64 timestamp, const QDateTime& now) {
 SidebarProjection SidebarModel::project(QList<SidebarEntry> entries,
                                         const SidebarProjectionOptions& options) {
     entries.removeIf([&](const auto& entry) {
-        return entry.conversation.archived ||
+        return entry.conversation.archived || !entry.conversation.sideChatParentId.isEmpty() ||
                (!options.query.trimmed().isEmpty() &&
                 !entry.conversation.title.contains(options.query.trimmed(), Qt::CaseInsensitive));
     });

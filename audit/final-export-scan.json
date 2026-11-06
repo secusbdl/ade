@@ -1,0 +1,129 @@
+{
+  "createdUtc": "2026-11-06T11:24:48.181041+00:00",
+  "destination": "D:\\age\\ADE\\out\\publish-ade-reference",
+  "developmentCommit": "9ab76d626cd79bf5ae343d49ff6ec484351d9ebe",
+  "publicationManifestSha256": "57a5e900ca8e98ac14b3867afb839defccf32dc9fd4dc6b1201c2323cea1fc44",
+  "scope": {
+    "manifestFiles": 2370,
+    "manifestBytes": 26174312,
+    "metadataFiles": 1,
+    "metadataBytes": 479569,
+    "binaryFilesContainingNul": 6,
+    "selection": "Only PUBLICATION.json files plus PUBLICATION.json metadata; no directory-wide content scan.",
+    "excluded": [
+      "build/",
+      ".git/",
+      "all nonmanifest files",
+      "real API-key and profile files"
+    ],
+    "excludedAuditRasters": 41
+  },
+  "integrityErrors": [],
+  "referenceVerifier": {
+    "exitCode": 0,
+    "results": {
+      "stagewise": {
+        "files": 1400,
+        "bytes": 10798194,
+        "errors": []
+      },
+      "file-mutations": {
+        "files": 17,
+        "bytes": 108307,
+        "errors": []
+      },
+      "git-usage": {
+        "files": 16,
+        "bytes": 78341,
+        "errors": []
+      }
+    }
+  },
+  "candidates": {
+    "provider_or_service_token": [],
+    "private_key_header": [],
+    "credential_url": [
+      {
+        "path": "reference/stagewise/apps/browser/src/shared/coding-plans.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/test_git.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_settings.cpp",
+        "count": 3
+      },
+      {
+        "path": "tests/test_transcript_links.cpp",
+        "count": 1
+      }
+    ],
+    "quoted_credential_assignment": [
+      {
+        "path": "audit/main-chrome/main-ui.patch",
+        "count": 1
+      },
+      {
+        "path": "audit/main-chrome/sources/final/tests/test_main_chrome.cpp",
+        "count": 1
+      },
+      {
+        "path": "reference/stagewise/apps/browser/src/backend/services/preferences.test.ts",
+        "count": 3
+      },
+      {
+        "path": "tests/test_conversations.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_git_host.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_main_chrome.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_settings_audit.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_transcript_link_ui.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_transcript_ui.cpp",
+        "count": 1
+      },
+      {
+        "path": "tests/test_ui.cpp",
+        "count": 1
+      }
+    ],
+    "jwt_with_json_header_and_payload": []
+  },
+  "candidateCounts": {
+    "provider_or_service_token": 0,
+    "private_key_header": 0,
+    "credential_url": 6,
+    "quoted_credential_assignment": 12,
+    "jwt_with_json_header_and_payload": 0
+  },
+  "privateStateFilenameCandidates": [],
+  "genericCandidateDisposition": {
+    "credentialUrlExamples": 6,
+    "quotedCredentialAssignments": 12,
+    "assessment": "All 18 generic matches occur in test source or saved test patches. URL cases have synthetic/example test context; assignment cases have synthetic markers or descriptive placeholder shapes, including the transcript fixture's loopback provider. No matched values were emitted.",
+    "limits": "This is source-context classification, not live credential validation. No endpoint was contacted."
+  },
+  "limitations": [
+    "Pattern matching cannot prove absence of all credentials; arbitrary unprefixed, encoded, split, encrypted, or unknown-format secrets can evade detection.",
+    "Candidate paths/counts are emitted without matched values; synthetic test/example candidates require context review before disposition.",
+    "No known-real-key comparison was performed and no real key file or existing runtime profile was opened.",
+    "Binary files were scanned as bytes for ASCII signatures; no OCR, decompression, decryption, or full binary semantic inspection was performed.",
+    "Build and Git directories may be created concurrently; they are outside the explicit manifest scan and no claim is made about their contents.",
+    "Publication metadata records hashes but is not an authenticity signature; this check compares bytes against the locally reviewed manifest."
+  ]
+}

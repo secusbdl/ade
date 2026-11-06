@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Native command center navigation and bounded file search; not complete Stagewise parity",
+  "sourceContracts": [
+    {
+      "path": "apps/browser/src/ui/screens/main/command-center/command-center-search.ts",
+      "contract": "Exact/prefix/title/keyword/subtitle/URL ranking with stable recency ties; empty query recency."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/command-center/command-center.tsx",
+      "contract": "Select chat/tab/terminal/settings; files open editor, directories reveal tree; rename/pin/delete; Git ignored and content filters."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/command-center/command-center-hotkeys.tsx",
+      "contract": "Ctrl+K global, Ctrl+P files, Ctrl+Shift+F contents; close returns focus."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/command-center/sources/use-command-center-items.ts",
+      "contract": "Six modes, global nonfile cap30 plus file results, all connected workspace scope."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/command-center/_components/command-center-overlay.tsx",
+      "contract": "640px maximum panel, viewport padding24px; native compact height uses filter menu so controls remain reachable."
+    }
+  ],
+  "implemented": [
+    "Six modes with deterministic source-based ranking and real host actions",
+    "Stable query IDs, immediate invalidation, one asynchronous file worker plus latest pending request, stale descriptor rejection",
+    "Pin preferences commit before visible refresh; chat actions use existing save-conflict-aware lifecycle",
+    "Git ls-files cached/untracked with ignored toggle, case-insensitive content matching and UTF8/UTF16 decode, line navigation, derived real directories",
+    "Pinned physical root and ancestor handles, reparse exclusion, host ownership revalidation on selection",
+    "Modal keyboard navigation, copy URL without stealing selected input text, busy chat deletion guard, focus restoration",
+    "350x250 accessible compact filter menu, light/dark neutral selected rows"
+  ],
+  "bounds": {
+    "workspaces": 16,
+    "globalNonfileItems": 30,
+    "visibleResults": 256,
+    "pathsPerWorkspace": 4096,
+    "gitOutputBytes": 8388608,
+    "gitWaitMs": 2000,
+    "workspaceCheckedElapsedMs": 3500,
+    "aggregateBeforeNextWorkspaceMs": 5000,
+    "contentFiles": 256,
+    "contentBytesPerFile": 524288,
+    "contentBytesPerWorkspace": 16777216,
+    "lineMatchesPerFile": 8,
+    "maxQueryChars": 200
+  },
+  "limitations": [
+    "No source browser screenshot preview, tab pin/ownership reassignment menus, inline rename/delete confirmation presentation, or grouped section headings yet; existing native dialogs perform real actions.",
+    "Source ripgrep/frecency matching is represented by bounded Git listing/filename ranking and modified-time empty-query sort; content search uses literal case-insensitive matching.",
+    "Non-Git fallback is bounded filename scan and explicitly reports unavailable Git-ignore rules. Current fallback can only inspect its64 returned candidates for content.",
+    "At bounds, results are partial and status reports limits; checked elapsed caps do not interrupt a blocking OS filesystem call.",
+    "Only current native single-workspace-per-chat model; no multi-mount ownership parity.",
+    "Standalone renders exercise AppStyle/fonts and theme palette; host integration tests require root shared build. No whole-app pixel parity claim."
+  ],
+  "validation": {
+    "isolatedWidget": "private/command-center-stage/widget-final.txt",
+    "widgetPassed": 12,
+    "isolatedSearch": "private/command-center-stage/search-final.txt",
+    "searchPassed": 8,
+    "host": "audit/command-center-host-final-tests.txt",
+    "renders": "private/command-center-stage/render/command-{light,dark}-{1000,350}.png",
+    "review": "license_review source-only found repeated-present direct query callback lifetime issue, now guarded and regressed; tab focus recheck added",
+    "sourceState": "Production and test sources frozen; standalone widget12/12 and search8/8 passed; integrated MainWindow host10/10 passed; parent aggregate regression pending",
+    "beforeReopen": "audit/command-center-host-before-reopen-activation.txt",
+    "hostPassed": 10,
+    "historicalRuns": [
+      {
+        "label": "Initial offscreen activation failure",
+        "status": "Historical failed run; no production shortcut defect established",
+        "evidence": "audit/command-center-host-before-activation.txt"
+      },
+      {
+        "label": "Shell reopening before per-open activation",
+        "passed": 9,
+        "failed": 1,
+        "evidence": "audit/command-center-host-before-reopen-activation.txt"
+      },
+      {
+        "label": "Focus precondition and unguarded fixture null dereference",
+        "status": "Historical aborted run",
+        "evidence": "audit/command-center-host-before-visible-focus.txt"
+      },
+      {
+        "label": "Settled active-window diagnostic",
+        "passed": 2,
+        "failed": 1,
+        "evidence": "audit/command-center-host-focus-diagnostic.txt",
+        "finding": "After processing queued dialog events, activeWindowMatch=false and focus remained on commandMode_global"
+      },
+      {
+        "passed": 10,
+        "label": "Final actual MainWindow actions",
+        "elapsedMs": 2796,
+        "evidence": "audit/command-center-host-final-tests.txt",
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "fixtureCorrections": [
+      "Settle prior dialog events before explicit offscreen activation, use a visible target, assert the real shortcut opens a visible dialog, and check every returned center before use",
+      "Wait for the exact file-query request and result, then boundedly acquire DELETE-sharing readiness and perform one same-handle fixture-root rename; the stale physical identity must still prevent opening the replacement. The exact transient holder behind the prior QDir rename failure was not instrumented."
+    ]
+  },
+  "files": [
+    {
+      "path": "src/ui/CommandCenter.h",
+      "sha256": "90c4b6805e2be05988ac203e45601e0c9fb9b31d70e7820af22e26dab65bd823"
+    },
+    {
+      "path": "src/ui/CommandCenter.cpp",
+      "sha256": "e80e828a2cbc50fb70210e7d43fc9946bae6a592b706b669043fbe15d3df3ca8"
+    },
+    {
+      "path": "src/ui/CommandFileSearch.h",
+      "sha256": "4e69aca39fee0cedabdf2a9611ccfbe733287ef6065e6dcdf1253d14ff85b465"
+    },
+    {
+      "path": "src/ui/CommandFileSearch.cpp",
+      "sha256": "c9c730c8329247738fa54bde316f0a3390f7d6f82de1094e7874a18001c55393"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "sha256": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55"
+    },
+    {
+      "path": "tests/test_command_center.cpp",
+      "sha256": "5fe61845a33ec67b3ef37345510cc1f739d2f366d867f78a223d5d57206e3d68"
+    },
+    {
+      "path": "tests/test_command_file_search.cpp",
+      "sha256": "165c4efd62e77f5e03ab110c4fe8efa636e796d7af8b495c0bc964277e751370"
+    },
+    {
+      "path": "tests/test_command_center_host.cpp",
+      "sha256": "8ba89bb5c0c806ff59c6b20ef9eea259f2b9ab79238ad0e81c1487891a8be146"
+    }
+  ],
+  "hashNormalization": "SHA-256 of UTF-8 text with CRLF normalized to LF and no BOM",
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

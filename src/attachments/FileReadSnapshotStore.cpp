@@ -19,6 +19,9 @@ QString digest(const QByteArray& data){return QString::fromLatin1(QCryptographic
 bool pathValid(const QString& path){
     const auto parts=path.split('/');
     if(path.size()>4096||path.contains('\\')||path.contains(':')||path.contains(QChar::Null)||parts.contains("")||parts.contains(".")||parts.contains(".."))return false;
+    if(parts.first()=="shells"){
+        return parts.size()==1||(parts.size()==2&&QRegularExpression("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.shell\\.log$").match(parts.last()).hasMatch());
+    }
     if(parts.first()=="att"){
         if(parts.size()==1)return true;
         const auto name=parts.last();
@@ -77,6 +80,8 @@ bool validate(const FileReadCapture& capture,QByteArray* payload,QString* error)
     if(!pathValid(capture.descriptor.mountedPath)||capture.descriptor.originalFileName.size()>1024||capture.descriptor.originalFileName.contains(QChar::Null))return fail(error,"Invalid captured virtual file descriptor.");
     if((capture.descriptor.mountedPath=="att"||capture.descriptor.mountedPath.startsWith("att/"))
         &&((capture.descriptor.mountedPath=="att")!=capture.directory))return fail(error,"Attachment capture kind does not match its flat namespace.");
+    if((capture.descriptor.mountedPath=="shells"||capture.descriptor.mountedPath.startsWith("shells/"))
+        &&((capture.descriptor.mountedPath=="shells")!=capture.directory))return fail(error,"Shell capture kind does not match its flat namespace.");
     FileReadParams normalized;
     if(!paramsFromJson(capture.tool,capture.params.toJson(),&normalized,error)||normalized!=capture.params)return fail(error,"Invalid or unnormalized captured read parameters.");
     if(capture.tool=="ls"&&!capture.directory)return fail(error,"Listing capture must be a directory.");
@@ -87,7 +92,7 @@ bool validate(const FileReadCapture& capture,QByteArray* payload,QString* error)
         *payload=QJsonDocument(QJsonObject{{"schema",1},{"kind","directory"},{"depth",capture.capturedDepth},{"entries",entries}}).toJson(QJsonDocument::Compact);
         if(payload->size()>MaxManifestBytes)return fail(error,"Directory snapshot exceeds its encoded byte limit.");
     }else{
-        if(capture.bytes.size()>MaxFileBytes||capture.descriptor.size!=capture.bytes.size()||!capture.entries.isEmpty())return fail(error,"Invalid captured file byte count or body.");
+        if(capture.bytes.size()>(capture.descriptor.mountedPath.startsWith("shells/")?50*1024*1024+64:MaxFileBytes)||capture.descriptor.size!=capture.bytes.size()||!capture.entries.isEmpty())return fail(error,"Invalid captured file byte count or body.");
         *payload=capture.bytes;
     }
     return true;

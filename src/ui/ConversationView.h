@@ -2,6 +2,7 @@
 #include <QJsonArray>
 #include <QWidget>
 #include <QUrl>
+#include <QImage>
 #include <memory>
 
 namespace ade {
@@ -17,12 +18,14 @@ public:
     QString toPlainText() const;
     QString conversationId() const;
     bool followsOutput() const;
+    bool provideImage(quint64 requestId,const QImage &image,const QString &error={});
 public slots:
     void scrollToBottom();
 signals:
     void linkActivated(QUrl url);
     void scopedLinkActivated(QString conversationId,QString messageId,QString partId,QUrl url);
     void approvalDecided(QString conversationId,QString messageId,QString partId,QString toolCallId,bool allowed);
+    void imageRequested(quint64 requestId,QString conversationId,QString messageId,QString partId,QUrl url);
 protected:
     bool eventFilter(QObject *object,QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

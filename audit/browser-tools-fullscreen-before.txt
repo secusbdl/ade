@@ -1,0 +1,8 @@
+********* Start testing of BrowserToolsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserToolsTest::initTestCase()
+FAIL!  : BrowserToolsTest::fullscreenPolicyGatesNativeWindowRequest() 'focusForFullscreen(browser,bridge,tab)' returned FALSE. (Fullscreen fixture must own native foreground and document focus before requesting fullscreen.)
+D:/age/ADE/tests/test_browser_tools.cpp(453) : failure location
+PASS   : BrowserToolsTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 3480ms
+********* Finished testing of BrowserToolsTest *********

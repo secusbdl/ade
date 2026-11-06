@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeSources": [
+    "src/mutations/FileMutationDiff.h",
+    "src/ui/FileDiffView.cpp",
+    "src/ui/TrustedImage.h",
+    "src/ui/ImagePreview.cpp",
+    "src/ui/MainWindowLinks.cpp",
+    "src/links/TranscriptLinkProvenanceCodec.h"
+  ],
+  "implemented": [
+    "Successful journaled mutations retain host-only before/after fileDiff metadata. AgentPresentation projects it into stable tool rows; four provider serializers exclude it from outbound requests.",
+    "Readonly native colored line diffs preserve selection across streaming refresh, distinguish empty creation/deletion, show newline changes and bound oversized previews.",
+    "Raster attachment/file links open native fit/100-percent/zoom/pan previews. Inline images use the same conversation-owned resolver and validated raster decoder.",
+    "Message-to-workspace provenance persists outside model content. Restart restores physical-directory authority; replaced roots, missing historical bindings and foreign owners are rejected.",
+    "Forked workspace provenance is rebound only after matching the physical root; saved attachment context remains per chat. Shell links open only sessions known to their owning host."
+  ],
+  "bounds": {
+    "diffFiles": 8,
+    "diffCharacters": 131072,
+    "diffLines": 1200,
+    "diffLcsCells": 1000000,
+    "encodedImageBytes": 16777216,
+    "sourceImagePixels": 33554432,
+    "decodedImageEdge": 2048,
+    "inlineImagesPerView": 32,
+    "provenanceRows": 8192,
+    "provenanceBytes": 2097152
+  },
+  "tests": [
+    "native_file_diff",
+    "native_image_preview",
+    "native_link_provenance_codec",
+    "native_transcript_links",
+    "native_transcript_link_ui",
+    "native_side_chat_host"
+  ],
+  "aggregateEvidence": "audit/continuation-integration.json",
+  "limits": [
+    "Diff previews accept strict UTF-8 text and omit binary/oversized data; mutation storage still retains exact bytes within its own bounds.",
+    "PNG/JPEG/GIF/WebP/BMP/ICO/AVIF signatures are accepted only when the static Qt decoder is present. SVG, remote URLs and implicit file/data resource loads are rejected.",
+    "Animated media displays its first decoded frame. PDF/Office/media viewers and full source Monaco/LSP/diff editing are not implemented by this slice.",
+    "Imported legacy rows without trusted mount provenance cannot authorize current-workspace links. Hosted app and shell-log transcript previews are separate from ordinary file mount previews."
+  ],
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

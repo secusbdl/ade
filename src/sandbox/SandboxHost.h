@@ -28,6 +28,7 @@ public:
     QJsonArray definitions() const;
     bool handles(const QString& name) const;
     bool isRunning() const;
+    QString requestOwnerId(const QString& rpcRequestId)const;
 
 public slots:
     void execute(const QString& id, const QString& name, const QJsonObject& arguments);

@@ -56,6 +56,7 @@
 #include "SidebarSplitter.h"
 #include "SidebarNavigation.h"
 #include "FlowLayout.h"
+#include "links/TranscriptLinkProvenanceCodec.h"
 #include "apps/MiniAppPage.h"
 #include <QTabWidget>
 #include <QTabBar>
@@ -77,13 +78,14 @@ MainWindow::MainWindow(QString dataDirectory,QWidget* parent):QMainWindow(parent
     buildUi();applyPreferences();refreshModels();refreshAgents();
     QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);
     const auto lastId=settings.value("lastConversationId").toString();
-    if(const auto* saved=find(lastId);saved&&!saved->archived)selectConversation(lastId);
-    if(m_currentId.isEmpty())for(const auto& s:m_sessions)if(!s.archived){selectConversation(s.id);break;}
+    if(const auto* saved=find(lastId);saved&&!saved->archived&&saved->sideChatParentId.isEmpty())selectConversation(lastId);
+    if(m_currentId.isEmpty())for(const auto& s:m_sessions)if(!s.archived&&s.sideChatParentId.isEmpty()){selectConversation(s.id);break;}
     if(m_currentId.isEmpty())newConversation();
     if(!error.isEmpty())m_status->setText(error);
     else QTimer::singleShot(0,this,&MainWindow::retryConversationCleanup);
     if(settings.contains("geometry"))restoreGeometry(settings.value("geometry").toByteArray());
     if(settings.contains("splitter"))m_splitter->restoreLegacyState(settings.value("splitter").toByteArray());
+    initializeSideChats();
 }
 void MainWindow::buildUi() {
     m_browserBridge=new BrowserToolBridge(this);
@@ -95,7 +97,7 @@ void MainWindow::buildUi() {
     auto* side=new QVBoxLayout(m_sidebar);side->setContentsMargins(10,12,10,12);side->setSpacing(10);
     auto* collapse=button("sidebar","Toggle sidebar");collapse->setObjectName("sidebarToggleButton");side->addWidget(collapse);side->addSpacing(18);
     auto* newAgent=new QPushButton(icon("new"),"New Agent");newAgent->setObjectName("newAgentButton");newAgent->setCursor(Qt::PointingHandCursor);newAgent->setMinimumHeight(36);side->addWidget(newAgent);
-    m_search=new QLineEdit;m_search->setObjectName("agentSearch");m_search->addAction(icon("search"),QLineEdit::LeadingPosition);m_search->setPlaceholderText("Search agents…       Ctrl K");side->addWidget(m_search);side->addSpacing(8);
+    m_search=new QLineEdit;m_search->setObjectName("agentSearch");m_search->addAction(icon("search"),QLineEdit::LeadingPosition);m_search->setPlaceholderText("Search agents…");side->addWidget(m_search);side->addSpacing(8);
     auto* section=new QHBoxLayout;auto* agentsLabel=new QLabel("Agents");agentsLabel->setProperty("muted",true);section->addWidget(agentsLabel);section->addStretch();
     auto* grouping=new ChevronToolButton;grouping->setText("Group by Age");grouping->setAutoRaise(true);section->addWidget(grouping);side->addLayout(section);
     m_agents=new QListWidget;m_agents->setObjectName("agentList");m_agents->setContextMenuPolicy(Qt::CustomContextMenu);m_agents->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);m_agents->setTextElideMode(Qt::ElideRight);side->addWidget(m_agents,1);
@@ -106,6 +108,7 @@ void MainWindow::buildUi() {
     connect(m_sidebarReopen,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
     connect(m_sidebarSplitter,&SidebarSplitter::collapsedChanged,m_sidebarReopen,&QWidget::setVisible);
     m_transcript=new ConversationView;m_transcript->setObjectName("conversationView");m_chat->setHistoryWidget(m_transcript);
+    connect(m_transcript,&ConversationView::imageRequested,this,[this](quint64 request,const QString& id,const QString& row,const QString& part,const QUrl& url){provideTranscriptImage(request,id,row,part,url);});
     m_transcriptRefresh=new QTimer(this);m_transcriptRefresh->setSingleShot(true);m_transcriptRefresh->setInterval(16);
     connect(m_transcriptRefresh,&QTimer::timeout,this,&MainWindow::renderConversation);
     m_status=new QLabel;m_status->setObjectName("sessionStatus");m_status->setWordWrap(true);m_status->setProperty("muted",true);chatLayout->addWidget(m_status);
@@ -167,7 +170,7 @@ void MainWindow::buildUi() {
     connect(m_stop,&QToolButton::clicked,this,[this]{if(m_engines.contains(m_currentId))m_engines[m_currentId]->cancel();});
     connect(m_composer,&Composer::stopRequested,m_stop,&QToolButton::click);
     connect(m_workspace,&QToolButton::clicked,this,&MainWindow::chooseWorkspace);
-    connect(m_transcript,&ConversationView::scopedLinkActivated,this,&MainWindow::routeTranscriptLink);
+    connect(m_transcript,&ConversationView::scopedLinkActivated,this,[this](const QString& id,const QString& row,const QString& part,const QUrl& url){routeTranscriptLink(id,row,part,url);});
     connect(m_transcript,&ConversationView::approvalDecided,this,[this](const QString& conversationId,const QString& rowId,const QString& partId,const QString& toolCallId,bool allowed){
         // Render updates are coalesced. A visible button can therefore refer to
         // an older round even when a provider reuses its tool-call identifier.
@@ -189,6 +192,7 @@ void MainWindow::buildUi() {
     connect(m_files,&QTreeView::doubleClicked,this,[this](const QModelIndex& index){if(!m_fileModel->isDir(index))openFile(m_fileModel->filePath(index));});
     connect(m_tabs,&QTabWidget::tabCloseRequested,this,[this](int index){
         auto* page=m_tabs->widget(index);if(!page)return;
+        const auto sideId=page->property("sideChatAgentId").toString();if(!sideId.isEmpty()){discardSideChat(sideId);return;}
         if(auto* editor=qobject_cast<EditorWidget*>(page);editor&&!editor->requestClose())return;
         const auto instance=page->property("appInstanceId").toString();
         if(!instance.isEmpty())if(auto* host=m_toolHosts.value(page->property("appAgentId").toString())){
@@ -199,7 +203,6 @@ void MainWindow::buildUi() {
     connect(m_tabs,&QTabWidget::currentChanged,this,[this](int index){refreshWorkbench();if(auto* page=m_tabs->widget(index)){if(m_fullscreenBrowser&&!page->isAncestorOf(m_fullscreenBrowser))setBrowserFullscreen(m_fullscreenBrowser,false);const auto id=page->property("browserTabId").toString();if(!id.isEmpty())m_browserBridge->setActiveTab(id);}});
     connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
     new QShortcut(QKeySequence("Ctrl+N"),this,[this]{newConversation();});
-    new QShortcut(QKeySequence("Ctrl+K"),this,[this]{m_sidebarSplitter->setCollapsed(false);m_search->setFocus();m_search->selectAll();});
     new QShortcut(QKeySequence("Ctrl+B"),this,[this]{m_sidebarSplitter->toggle();if(m_sidebarSplitter->isCollapsed())m_sidebarReopen->setFocus();else m_search->setFocus();});
     new QShortcut(QKeySequence("Ctrl+,"),this,[this]{showSettings();});
     new QShortcut(QKeySequence("Ctrl+Shift+O"),this,[this]{chooseWorkspace();});
@@ -223,6 +226,7 @@ void MainWindow::buildUi() {
     connect(m_settings,&SettingsPage::pluginCredentialsChanged,this,&MainWindow::refreshPluginConfiguration);
     connect(m_settings,&SettingsPage::restoreConversationRequested,this,[this](const QString& id){restoreConversation(id);});
     connect(m_settings,&SettingsPage::deleteConversationRequested,this,&MainWindow::requestDeleteConversation);
+    initializeAgentControls();initializeCompletions();initializeCommandCenter();
     const auto startup=m_settings->preference("browsing.startupUrl").toString();
     if(!startup.isEmpty())addBrowserTab(QUrl(startup));
 }
@@ -256,12 +260,12 @@ void MainWindow::restoreModelSelection(){
     else {m_models->addItem("Saved provider unavailable",saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
 }
 void MainWindow::selectConversation(const QString& id){
-    auto* s=find(id);if(!s)return;
+    auto* s=find(id);if(!s||!s->sideChatParentId.isEmpty())return;
     if(auto* previous=current();previous&&previous->id!=id){
         previous->draft=m_composer->toPlainText();
         if(!saveSessions()){refreshAgents();return;}
     }
-    m_currentId=id;if(!s->archived)m_liveConversationOwners.insert(id);restoreModelSelection();
+    m_currentId=id;m_fileChangesAgent.clear();if(!s->archived)m_liveConversationOwners.insert(id);restoreModelSelection();
     {const QSignalBlocker blocker(m_permissions);m_permissions->setCurrentIndex(s->alwaysAllow?1:0);}
     {const QSignalBlocker block(m_composer);m_composer->setPlainText(s->draft);}
     refreshAttachments();
@@ -271,23 +275,29 @@ void MainWindow::selectConversation(const QString& id){
     const bool busy=m_engines.contains(id)&&m_engines[id]->isBusy();m_models->setEnabled(!busy&&!s->archived);m_permissions->setEnabled(!busy&&!s->archived);m_workspace->setEnabled(!busy&&!s->archived);m_composer->setReadOnly(s->archived);updateComposerState();
     m_sidebarSplitter->showWorkbench();m_status->clear();renderConversation();refreshAgents();
     if(!s->archived){QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("lastConversationId",id);}
-    updateGitContext();
+    updateGitContext();refreshCompletionContext();refreshAgentControls();refreshFileChanges();refreshSideChats();
 }
 void MainWindow::renderConversation(){
     m_transcriptRefresh->stop();
-    const auto* session=current();if(!session){m_transcript->clear();m_chat->setHistoryPresent(false);refreshWorkbench();return;}
+    const auto* session=current();if(!session){m_transcript->clear();m_chat->setHistoryPresent(false);refreshWorkbench();refreshAgentControls();return;}
     const auto* engine=m_engines.value(session->id);
     updateTranscriptLinkRows(session->id);
     const auto rows=engine?engine->displayMessages():AgentEngine::displayHistory(session->messages);
-    m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());
-    m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();
+    const QPointer<MainWindow> self(this);m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());if(!self)return;
+    m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();refreshAgentControls();
 }
 bool MainWindow::saveSessions(){QString error;if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);return false;}return true;}
 AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))return m_engines[id];
     if(const auto* session=find(id);session&&!session->archived)m_liveConversationOwners.insert(id);
-    auto* engine=new AgentEngine(this);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
+    auto* engine=new AgentEngine(this);engine->setQuestionToolEnabled(true);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
     auto* host=new AgentToolHost(engine,m_browserBridge,id,m_store.directory(),engine);m_toolHosts.insert(id,host);host->setWorkspace(engine->workspace());
-    m_linkKnownRows[id].clear();m_linkProvenance[id].clear();m_linkTurnContext.remove(id);
+    connectMutationControls(id,host);
+    connect(engine,&AgentEngine::turnAboutToStart,this,[this,id,engine](const QJsonObject& message){
+        const QPointer<MainWindow> self(this);const QPointer<AgentEngine> safe(engine);QString error;
+        if(!configureTurnContext(id,message["content"].toString(),&error)){if(self)m_status->setText(error);if(safe)safe->cancel();return;}
+        if(self&&safe){beginTranscriptLinkTurn(id,true);if(!saveSessions()&&safe)safe->cancel();}
+    });
+    m_linkKnownRows[id].clear();m_linkProvenance[id]=find(id)?decodeLinkProvenance(find(id)->transcriptLinkProvenance):QHash<QString,TranscriptLinkProvenance>{};m_linkTurnContext.remove(id);
     updateTranscriptLinkRows(id);
     connect(host,&QObject::destroyed,this,[this,id,host]{if(m_toolHosts.value(id)==host)m_toolHosts.remove(id);});
     connectAppTabs(host);
@@ -301,76 +311,70 @@ AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))
     connect(engine,&AgentEngine::busyChanged,this,[this,id](bool busy){if(id==m_currentId){m_models->setEnabled(!busy);m_permissions->setEnabled(!busy);m_workspace->setEnabled(!busy);updateComposerState();}refreshAgents();});
     connect(engine,&AgentEngine::failed,this,[this,id](const QString& error){if(id==m_currentId)m_status->setText(error);});
     connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->updated=QDateTime::currentMSecsSinceEpoch();if(!s->messages.isEmpty())s->lastMessageAt=s->updated;}if(engine->lastTurnSucceeded())generateTitle(id);saveSessions();refreshAgents();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
+    connectAgentControls(id,engine);
     updateGitContext();
     return engine;
 }
 void MainWindow::send(){
-    auto* s=current();if(!s||s->archived||(m_composer->toPlainText().trimmed().isEmpty()&&s->draftAttachments.isEmpty()))return;
-    if(gitPathBusy(s->workspace)){m_status->setText("Wait for the workspace operation to finish before running this agent.");return;}
-    if(m_composer->toPlainText().trimmed()=="/compact"&&s->draftAttachments.isEmpty()){compressContext();return;}
-    auto* engine=engineFor(s->id);if(engine->isBusy())return;
-    const auto selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());ProviderConfig provider;
-    if(!selection.resolve(m_providers,&provider)){showProviders();return;}
-    if(m_models->currentText()!=m_models->itemText(m_models->currentIndex())){m_status->setText("Select a model from the search results before sending.");return;}
-    engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray()),selection.presetId);engine->setWorkspace(s->workspace);engine->setAlwaysAllow(s->alwaysAllow);
-    if(auto* host=m_toolHosts.value(s->id)){QString workspaceError;if(!host->setWorkspace(s->workspace,&workspaceError)){m_status->setText(workspaceError);return;}}
-    if(auto* host=m_toolHosts.value(s->id)){
-        const QPointer<MainWindow> self(this);const QPointer<AgentToolHost> owner(host);
-        QString pluginError;
-        const auto agentId=host->agentId();
-        const bool configured=m_pluginCatalog.configureAgent(*host->network(),agentId,m_store.directory(),m_settings->preferences(),&pluginError);
-        if(!self||!owner)return;
-        if(!configured){
-            m_status->setText("Plugin configuration: "+pluginError);return;
+    auto* session=current();
+    if(!session||session->archived||(m_composer->toPlainText().trimmed().isEmpty()&&session->draftAttachments.isEmpty()))return;
+    if(gitPathBusy(session->workspace)){m_status->setText("Wait for the workspace operation to finish before running this agent.");return;}
+    if(m_composer->toPlainText().trimmed()=="/compact"&&session->draftAttachments.isEmpty()){compressContext();return;}
+    const auto id=session->id;const QPointer<MainWindow> self(this);const QPointer<AgentEngine> engine(engineFor(id));
+    if(!self||!engine)return;
+    session=find(id);if(!session||session->archived)return;
+    const bool wasBusy=engine->isBusy();ProviderConfig provider=engine->provider();ModelSelection selection{session->providerId,session->model,session->presetId,{},{}};
+    if(!wasBusy){
+        selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());
+        if(!selection.resolve(m_providers,&provider)){showProviders();return;}
+        if(m_models->currentText()!=m_models->itemText(m_models->currentIndex())){m_status->setText("Select a model from the search results before sending.");return;}
+        engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray()),selection.presetId);
+        engine->setWorkspace(session->workspace);engine->setAlwaysAllow(session->alwaysAllow);
+        const QPointer<AgentToolHost> host=m_toolHosts.value(id);
+        if(host){
+            QString error;if(!host->setWorkspace(session->workspace,&error)){m_status->setText(error);return;}
         }
-        const auto pluginContext=PluginCatalog::context(m_store.directory(),m_settings->preferences(),&pluginError);
-        if(!pluginError.isEmpty()){m_status->setText("Plugin context: "+pluginError);return;}
-        configureAppRoots(host,pluginContext);
-        if(!self||!owner)return;
-        auto options=contextOptionsFor(m_settings->preferences(),s->workspace,QDir::homePath());
-        options.pluginsDirectory=pluginContext.pluginsDirectory;options.disabledPluginIds=pluginContext.disabledPluginIds;
-        const auto snapshot=host->configureContext(options);
-        const auto command=m_composer->toPlainText().trimmed().section(QRegularExpression("\\s+"),0,0);
-        if(command.startsWith('/'))for(const auto& skill:snapshot.skills)if(skill.userInvocable&&(skill.name.compare(command.mid(1),Qt::CaseInsensitive)==0||skill.id==command.mid(1))){options.invokedSkillIds.append(skill.id);break;}
-        if(!options.invokedSkillIds.isEmpty())host->configureContext(options);
     }
-    QString attachmentError;QJsonObject metadata;
-    if(auto* host=m_toolHosts.value(s->id))metadata=host->captureAttachments(s->draftAttachments,&attachmentError);
-    if(!attachmentError.isEmpty()){m_status->setText("Attachment: "+attachmentError);return;}
-    auto previous=*s;previous.draft=m_composer->toPlainText();const auto text=previous.draft.trimmed();
-    s->providerId=provider.id;s->model=provider.model;s->presetId=selection.presetId;
-    s->draft.clear();s->draftAttachments={};
-    if(s->messages.isEmpty()&&!s->titleLocked)s->title=text.isEmpty()?"Attached files":text.simplified().left(55);
-    QJsonObject message{{"role","user"},{"content",text}};
-    if(!metadata["attachments"].toArray().isEmpty())message["metadata"]=metadata;
-    s->lastMessageAt=QDateTime::currentMSecsSinceEpoch();s->messages.append(message);
-    if(!saveSessions()){*s=previous;return;}
-    {const QSignalBlocker blocker(m_composer);m_composer->clear();}
-    refreshAttachments();m_status->setText("Working…");renderConversation();refreshAgents();
-    const QPointer<MainWindow> self(this);const QPointer<AgentEngine> owner(engine);const auto history=engine->messages();
-    beginTranscriptLinkTurn(previous.id);
-    const bool accepted=engine->submitWithAttachments(text,metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject());
-    if(!self||!owner)return;
-    // A validation rejection emits finished without accepting this draft. Keep
-    // its exact text and attachment references; do not undo an accepted turn or
-    // a replacement submission started by an observer.
-    if(!accepted&&!owner->isBusy()&&owner->messages()==history){
-        auto* rejected=find(previous.id);if(!rejected)return;
-        *rejected=previous;
-        if(m_currentId==previous.id){
-            const QSignalBlocker blocker(m_composer);m_composer->setPlainText(previous.draft);
-            refreshAttachments();renderConversation();refreshAgents();restoreModelSelection();
+    session=find(id);if(!session||session->archived||id!=m_currentId)return;
+    QString error;QJsonObject metadata;
+    if(auto* host=m_toolHosts.value(id))metadata=host->captureAttachments(session->draftAttachments,&error);
+    if(!error.isEmpty()){m_status->setText("Attachment: "+error);return;}
+    auto previous=*session;previous.draft=m_composer->toPlainText();const auto submittedDraft=previous.draft;const auto text=submittedDraft.trimmed();
+    const auto history=engine->messages(),queue=engine->queuedMessages();
+    if(!wasBusy){session->providerId=provider.id;session->model=provider.model;session->presetId=selection.presetId;}
+    session->draft.clear();session->draftAttachments={};
+    if(session->messages.isEmpty()&&!session->titleLocked)session->title=text.isEmpty()?"Attached files":text.simplified().left(55);
+    // No optimistic user row: the committer publishes history + queue together.
+    const bool accepted=engine->sendUserMessage(text,metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject());
+    if(!self||!engine)return;
+    if(!accepted&&engine->messages()==history&&engine->queuedMessages()==queue){
+        if(auto* rejected=find(id)){
+            *rejected=previous;
+            // Preacceptance failed/finished observers may have saved the staged
+            // draft clear. Persist the exact restoration, surfacing CAS errors.
+            QString restoreError;if(!m_store.save(m_sessions,&restoreError))conversationError(m_status->text()+"\nThe draft is retained here, but could not be saved: "+restoreError);
         }
-        QString recoveryError;
-        if(!m_store.save(m_sessions,&recoveryError))conversationError(m_status->text()+"\nThe draft is retained here, but could not be saved: "+recoveryError);
+        if(id==m_currentId){refreshAttachments();renderConversation();refreshAgents();}
+        return;
     }
+    if(accepted&&id==m_currentId&&m_composer->toPlainText()==submittedDraft){
+        const QSignalBlocker blocker(m_composer);m_composer->clear();
+    }
+    if(id==m_currentId){refreshAttachments();renderConversation();refreshAgentControls();}
+    refreshAgents();
 }
+
 void MainWindow::refreshAttachments(){if(m_attachments)m_attachments->setAttachments(current()?current()->draftAttachments:QJsonArray{});updateComposerState();}
 void MainWindow::updateComposerState(){
     if(!m_send||!m_stop||!m_composer)return;
     const auto* session=current();const bool busy=session&&m_engines.value(session->id)&&m_engines.value(session->id)->isBusy();
     m_stop->setEnabled(busy);m_stop->setVisible(busy);
-    m_send->setEnabled(session&&!session->archived&&!busy&&(!m_composer->toPlainText().trimmed().isEmpty()||!session->draftAttachments.isEmpty()));
+    const auto* host=session?m_toolHosts.value(session->id):nullptr;
+    const bool undoing=(host&&host->mutationBusy())||(session&&m_mutationUndoAgent==session->id&&!m_mutationUndoId.isEmpty());
+    const bool active=session&&!session->archived;
+    m_models->setEnabled(active&&!busy&&!undoing);m_permissions->setEnabled(active&&!busy&&!undoing);m_workspace->setEnabled(active&&!busy&&!undoing);
+    m_send->setToolTip(busy?"Add message to queue":"Send message");
+    m_send->setEnabled(session&&!session->archived&&!undoing&&(!m_composer->toPlainText().trimmed().isEmpty()||!session->draftAttachments.isEmpty()));
 }
 void MainWindow::attachFiles(const QStringList& paths){
     auto* session=current();if(!session||paths.isEmpty())return;
@@ -481,7 +485,7 @@ void MainWindow::applyPreferences(){
     for(auto* pane:findChildren<WorktreeSettingsPane*>())pane->setDarkTheme(dark);
     const QPointer<MainWindow> self(this);refreshPluginConfiguration();if(!self)return;
     if(current())renderConversation();
-    updateAppThemes();if(!self)return;refreshAgents();
+    updateAppThemes();if(!self)return;refreshAgents();refreshCompletionContext();refreshSideChats();
 }
 void MainWindow::importKeys(const QString& path){QString error;auto providers=m_providerRepository.load(&error);if(!error.isEmpty()){m_status->setText(error);return;}const auto imported=ProviderStore::importKeyFile(path,&error);if(imported.isEmpty()&&!error.isEmpty()){m_status->setText(error);return;}for(const auto& p:imported){auto it=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& a){return a.id==p.id;});if(it==providers.end())providers.append(p);else *it=p;}if(!m_providerRepository.save(providers,&error)){m_status->setText(error);return;}m_providers=providers;refreshModels();}
 void MainWindow::chooseWorkspace(){const auto path=QFileDialog::getExistingDirectory(this,"Connect workspace",current()?current()->workspace:QString());if(!path.isEmpty())connectWorkspace(path);}
@@ -511,7 +515,7 @@ void MainWindow::connectWorkspace(const QString& path){
     m_liveConversationOwners.insert(s->id);
     if(auto* host=m_toolHosts.value(s->id)){QString error;if(!host->setWorkspace(s->workspace,&error)){s->workspace=previous;s->draftAttachments=previousAttachments;saveSessions();m_status->setText(error);return;}}
     if(m_engines.contains(s->id))m_engines[s->id]->setWorkspace(s->workspace);
-    m_files->setModel(m_fileModel);m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));m_workspace->setText(QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();refreshWorkbench();
+    m_files->setModel(m_fileModel);m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));m_workspace->setText(QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();refreshWorkbench();refreshCompletionContext();refreshFileChanges();
 }
 void MainWindow::addBrowserTab(const QUrl& url){
     const QPointer<MainWindow> self(this);const QPointer<BrowserToolBridge> bridge(m_browserBridge);
@@ -527,7 +531,8 @@ void MainWindow::addBrowserTab(const QUrl& url){
     browser->setProfileDirectory(m_store.directory()+"/browser");const auto tabId=bridge->registerTab(browser);
     if(!owned()){if(preview)preview->deleteLater();return;}
     page->setProperty("browserTabId",tabId);if(!owned())return;
-    layout->addWidget(browser,1);if(!owned())return;
+    auto* viewport=configureBrowserTools(page,browser,nav);if(!owned())return;
+    layout->addWidget(viewport,1);if(!owned())return;
     int index=-1;
     {
         // Qt's insertTab continues touching its tab bar after currentChanged.
@@ -654,8 +659,9 @@ void MainWindow::setBrowserFullscreen(BrowserWidget* browser,bool enabled){
         m_fullscreenHidden.clear();m_fullscreenBrowser.clear();setWindowState(m_beforeFullscreenState);m_splitter->setWorkbenchFullscreen(false);m_sidebarSplitter->setWorkbenchFullscreen(false);return;
     }
     if(!browser||m_fullscreenBrowser==browser)return;
-    auto* page=browser->parentWidget();
-    if(m_tabs->currentWidget()!=page||m_pages->currentIndex()!=0){browser->executeScript("document.exitFullscreen().catch(()=>{})");return;}
+    QWidget* page=browser;
+    while(page&&m_tabs->indexOf(page)<0)page=page->parentWidget();
+    if(!page||m_tabs->currentWidget()!=page||m_pages->currentIndex()!=0){browser->executeScript("document.exitFullscreen().catch(()=>{})");return;}
     if(m_fullscreenBrowser)setBrowserFullscreen(m_fullscreenBrowser,false);
     m_beforeFullscreenState=windowState();m_fullscreenBrowser=browser;
     m_fullscreenExit->setEnabled(true);

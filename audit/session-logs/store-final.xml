@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SessionLogTests" timestamp="2026&#x002D;11&#x002D;06T14:47:11" hostname="VOID" tests="16" failures="0" errors="0" skipped="0" time="0.391">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SessionLogTests" time="0.000"/>
+  <testcase name="appendReadAndRestart" classname="SessionLogTests" time="0.011"/>
+  <testcase name="formattedLeaseIsRevoked" classname="SessionLogTests" time="0.015"/>
+  <testcase name="ownerLockAndPin" classname="SessionLogTests" time="0.017"/>
+  <testcase name="invalidPaths(shells/../other)" classname="SessionLogTests" time="0.013"/>
+  <testcase name="invalidPaths(shells/x.shell.log)" classname="SessionLogTests" time="0.015"/>
+  <testcase name="invalidPaths(shells/11111111&#x002D;1111&#x002D;1111&#x002D;1111&#x002D;111111111111.shell.log:stream)" classname="SessionLogTests" time="0.006"/>
+  <testcase name="invalidPaths(shells\11111111&#x002D;1111&#x002D;1111&#x002D;1111&#x002D;111111111111.shell.log)" classname="SessionLogTests" time="0.006"/>
+  <testcase name="invalidPaths(other/11111111&#x002D;1111&#x002D;1111&#x002D;1111&#x002D;111111111111.shell.log)" classname="SessionLogTests" time="0.017"/>
+  <testcase name="noPartialReadAndCancellation" classname="SessionLogTests" time="0.006"/>
+  <testcase name="truncationHasOneVisibleMarker" classname="SessionLogTests" time="0.143"/>
+  <testcase name="invalidUtf8StopsWriter" classname="SessionLogTests" time="0.006"/>
+  <testcase name="cloneAndDeleteAreOwnerScoped" classname="SessionLogTests" time="0.025"/>
+  <testcase name="unexpectedEntriesAndHardlinksFailClosed" classname="SessionLogTests" time="0.080"/>
+  <testcase name="aliasProfileRejected" classname="SessionLogTests" time="0.029"/>
+  <testcase name="cleanupTestCase" classname="SessionLogTests" time="0.000"/>
+</testsuite>

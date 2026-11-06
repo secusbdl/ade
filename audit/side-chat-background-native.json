@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "status": "Named focused evidence retained; final shared integration passed80/80 suites.",
+  "upstream": {
+    "commit": "17a0123a0e896885465df36169457199d5225eb5",
+    "sources": [
+      "apps/browser/src/ui/screens/main/content/_components/per-tab-content.tsx:63-66",
+      "apps/browser/src/ui/screens/main/agent-chat/index.tsx:131"
+    ],
+    "contract": "Side-chat tab wraps the same chat panel in bg-background; the main chat also uses bg-background."
+  },
+  "defect": "The pane corner had the expected content color while auto-filled child scroll bodies painted the application Window blue. Grabbing only the pane could hide some inherited host-background differences.",
+  "before": {
+    "report": "audit/side-chat-background/before.txt",
+    "result": "2 passed,1 failed; controls background #eff4fa, expected #fdfdfd",
+    "capture": "audit/side-chat-background/before-light-1100.png"
+  },
+  "correction": {
+    "source": "SideChatPane::setUiScale (called after theme refresh) maps Window brushes to current application Base for active/inactive/disabled palettes and makes QScrollArea container/viewport/body layers transparent, as already used in ConversationView.",
+    "scope": "Background-only; no control sizing, queue/question lifecycle, routing or provider changes.",
+    "intermediateEvidence": "audit/side-chat-background/full-after.txt demonstrates palette-only change was insufficient: 15 passed,1 failed until scroll-body auto-fill was removed."
+  },
+  "regression": {
+    "suite": "test_side_chat_host",
+    "passed": 16,
+    "failed": 0,
+    "milliseconds": 6878,
+    "report": "audit/side-chat-background/full-final.txt",
+    "xml": "audit/side-chat-background/full-final.xml",
+    "assertions": "Positive blank interior pixels from whole MainWindow render: header action margin, transcript viewport, outer controls viewport and nested question body; light\u2192dark\u2192light at1100 and350 pixel widths. Existing visibility, answer/control behavior, queue and isolation assertions retained.",
+    "visualInspection": [
+      "audit/side-chat-background/side-question-queue-light-1100.png",
+      "audit/side-chat-background/side-question-queue-dark-1100.png",
+      "audit/side-chat-background/side-question-queue-light-350.png"
+    ]
+  },
+  "limits": [
+    "Offscreen Qt renders on this Windows/Qt6.11.2 setup; no universal DPI/platform/pixel-perfect parity claim.",
+    "Representative positive background samples plus visual inspection, not exhaustive per-pixel reference image equivalence.",
+    "Aggregate all-target integration and final executable deployment inspection are tracked separately."
+  ],
+  "sourceHashEncoding": "SHA-256 of source bytes with CRLF normalized to LF; no other byte changes.",
+  "sha256": {
+    "src/ui/SideChatPane.cpp": "0c776ff9e6e2adcfd667cfc52217ac1005b208e357eab4ae60e00a1861ab0903",
+    "tests/test_side_chat_host.cpp": "2d0fd3d3daeb54c618e1bdcef09ee0b60b234f66d048ae719ee911ce14130d36"
+  },
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

@@ -1,0 +1,48 @@
+********* Start testing of MainChromeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MainChromeTest::initTestCase()
+QWARN  : MainChromeTest::repeatedShownWindowTeardownPreservesStyleObservers() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : MainChromeTest::repeatedShownWindowTeardownPreservesStyleObservers()
+PASS   : MainChromeTest::sidebarReallyCollapses()
+QWARN  : MainChromeTest::newlyOpenedContentUsesSourceDefault() This plugin does not support setting window masks
+PASS   : MainChromeTest::newlyOpenedContentUsesSourceDefault()
+PASS   : MainChromeTest::idleStopAndEmptySendReflectState()
+PASS   : MainChromeTest::persistedSidebarAndZoomPreserveCollapsedState()
+QWARN  : MainChromeTest::restoredInnerSplitIsNotReplacedByFreshDefault() This plugin does not support setting window masks
+QWARN  : MainChromeTest::restoredInnerSplitIsNotReplacedByFreshDefault() This plugin does not support setting window masks
+PASS   : MainChromeTest::restoredInnerSplitIsNotReplacedByFreshDefault()
+PASS   : MainChromeTest::sidebarHalfWindowLimitPreservesPreferredWidth()
+QWARN  : MainChromeTest::narrowSelectorsRemainInsideComposer(70) This plugin does not support setting window masks
+QWARN  : MainChromeTest::narrowSelectorsRemainInsideComposer(70) This plugin does not support setting window masks
+PASS   : MainChromeTest::narrowSelectorsRemainInsideComposer(70)
+QWARN  : MainChromeTest::narrowSelectorsRemainInsideComposer(100) This plugin does not support setting window masks
+QWARN  : MainChromeTest::narrowSelectorsRemainInsideComposer(100) This plugin does not support setting window masks
+PASS   : MainChromeTest::narrowSelectorsRemainInsideComposer(100)
+QWARN  : MainChromeTest::narrowSelectorsRemainInsideComposer(130) This plugin does not support setting window masks
+PASS   : MainChromeTest::narrowSelectorsRemainInsideComposer(130)
+QWARN  : MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed() This plugin does not support raise()
+QWARN  : MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed() This plugin does not support propagateSizeHints()
+PASS   : MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed()
+PASS   : MainChromeTest::busyStopIsVisibleAndEscapeCancels()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::composerGrowsForWrappedTextAndCaps() This plugin does not support propagateSizeHints()
+PASS   : MainChromeTest::composerGrowsForWrappedTextAndCaps()
+PASS   : MainChromeTest::shortWrappedDraftHasNoScrollbars()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+QWARN  : MainChromeTest::enterAndShiftEnterPreserveInputContract() This plugin does not support propagateSizeHints()
+PASS   : MainChromeTest::enterAndShiftEnterPreserveInputContract()
+PASS   : MainChromeTest::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 2721ms
+********* Finished testing of MainChromeTest *********

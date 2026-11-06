@@ -1,4 +1,5 @@
 #include "AgentPresentation.h"
+#include "mutations/FileMutationDiff.h"
 #include <QCryptographicHash>
 #include <QJsonDocument>
 #include <QSet>
@@ -158,7 +159,9 @@ QJsonArray AgentPresentation::history(const QJsonArray& messages){
             if(!completed.contains(callId))for(int i=0;i<parts.size();++i){auto part=parts[i].toObject();if(part["type"]!="tool"||part["toolCallId"]!=callId)continue;
                 const auto output=contentText(message["content"]);const auto stored=message["metadata"].toObject()["display"].toObject();auto state=stored["version"]==1?stored["toolState"].toString():QString();
                 if(!QStringList{"output-available","output-error","output-denied","canceled"}.contains(state))state=output.startsWith("Error:")?"output-error":"output-available";
-                part["state"]=state;part["output"]=output;if(state!="output-available")part["errorText"]=output;parts[i]=part;completed.insert(callId);break;
+                part["state"]=state;part["output"]=output;if(state!="output-available")part["errorText"]=output;
+                const auto diff=message["metadata"].toObject()["fileDiff"].toObject();if(state=="output-available"&&validMutationDiff(diff))part["fileDiff"]=diff;else part.remove("fileDiff");
+                parts[i]=part;completed.insert(callId);break;
             }
             row["parts"]=parts;const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty()){auto all=row["attachments"].toArray();for(const auto& entry:attachments)all.append(entry);row["attachments"]=all;}result[assistant]=row;continue;
         }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="GitWatcherTests" timestamp="2026&#x002D;11&#x002D;06T15:32:44" hostname="VOID" tests="5" failures="0" errors="0" skipped="0" time="5.573">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="GitWatcherTests" time="0.000"/>
+  <testcase name="atomicReplacementSharesDeleteWithReaders" classname="GitWatcherTests" time="0.335">
+    <system-err>
+      <![CDATA[Atomic fixture ReplaceFileW failed: C:/Users/secus/AppData/Local/Temp/test_git_watcher-HhVKYz/repository with spaces/.git/HEAD native error 32]]>
+    </system-err>
+  </testcase>
+  <testcase name="scansDoNotBlockAtomicMetadataChurn" classname="GitWatcherTests" time="3.750"/>
+  <testcase name="realGitUpdatesWhileMetadataScansRun" classname="GitWatcherTests" time="1.476"/>
+  <testcase name="cleanupTestCase" classname="GitWatcherTests" time="0.000"/>
+</testsuite>

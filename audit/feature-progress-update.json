@@ -1,0 +1,756 @@
+{
+  "schemaVersion": 1,
+  "reviewedUtc": "2026-11-06T14:04:33.223659+00:00",
+  "baselineInventory": "audit/upstream-feature-inventory.json",
+  "baselineSha256": "aad5e04c2862d5cb90c6677aee51951edaeeaba1f5896e4fcabdd1df251218e9",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "inventoryRows": 701,
+  "scopePreserved": true,
+  "overlayRowCount": 40,
+  "rowsNotReassessedHere": 661,
+  "accounting": "All701 original rows remain in scope and their baseline statuses are unchanged. This overlay updates only named semantic subsets; rows not reassessed here retain earlier evidence/gaps, not a new unimplemented classification. No percent-complete or parity claim.",
+  "finalIntegration": "All targets built and one final80/80 CTest run passed; first75/80 run retained. See audit/continuation-integration.json. Full701-feature parity and current publication are not implied.",
+  "rows": [
+    {
+      "inventoryId": "tool.write",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "Local Windows scopes and bounded transactions; filesystem metadata/ACL parity absent; model _diff remains null while root UI-only fileDiff is available."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 629,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L629"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.multiEdit",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "Local Windows scopes and bounded transactions; filesystem metadata/ACL parity absent; model _diff remains null while root UI-only fileDiff is available."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 635,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L635"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.copy",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "Local Windows scopes and bounded transactions; filesystem metadata/ACL parity absent; model _diff remains null while root UI-only fileDiff is available."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 637,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L637"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.delete",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "Local Windows scopes and bounded transactions; filesystem metadata/ACL parity absent; model _diff remains null while root UI-only fileDiff is available."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 632,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L632"
+        }
+      ]
+    },
+    {
+      "inventoryId": "editor.undo",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "Local Windows scopes and bounded transactions; filesystem metadata/ACL parity absent; model _diff remains null while root UI-only fileDiff is available."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/diff-history/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/diff-history/index.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.history-edit",
+      "nativeAssessment": "partial_undo_subset",
+      "scope": "Production journal-first file/directory mutations and user undo; immutable before/after bytes, recovery, conflicts, agent ownership, fork and cleanup. This does not imply full transcript retry/edit/revert.",
+      "evidence": [
+        "audit/mutations-native.json"
+      ],
+      "remaining": [
+        "User-selected durable file undo is implemented; editing/retrying/reverting previous messages with linked history checkpoints remains unimplemented."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/history.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/history.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.createShellSession",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native persistent PowerShell PTY sessions, exact-request cancellation, persisted logs, per-round system manifest and process-local watcher wakes through fixed-owner host.",
+      "evidence": [
+        "audit/persistent-shell-native.json",
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Windows PowerShell only, process-local sessions/watchers; logs survive restart. Failed watcher persistence has bounded in-memory retry, not crash durability. Smart approval/local-server discovery and complete shell variants remain gaps."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 662,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L662"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.executeShellCommand",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native persistent PowerShell PTY sessions, exact-request cancellation, persisted logs, per-round system manifest and process-local watcher wakes through fixed-owner host.",
+      "evidence": [
+        "audit/persistent-shell-native.json",
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Windows PowerShell only, process-local sessions/watchers; logs survive restart. Failed watcher persistence has bounded in-memory retry, not crash durability. Smart approval/local-server discovery and complete shell variants remain gaps."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 678,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L678"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.createWatcherSession",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native persistent PowerShell PTY sessions, exact-request cancellation, persisted logs, per-round system manifest and process-local watcher wakes through fixed-owner host.",
+      "evidence": [
+        "audit/persistent-shell-native.json",
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Windows PowerShell only, process-local sessions/watchers; logs survive restart. Failed watcher persistence has bounded in-memory retry, not crash durability. Smart approval/local-server discovery and complete shell variants remain gaps."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 668,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L668"
+        }
+      ]
+    },
+    {
+      "inventoryId": "terminal.shell-engine",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native persistent PowerShell PTY sessions, exact-request cancellation, persisted logs, per-round system manifest and process-local watcher wakes through fixed-owner host.",
+      "evidence": [
+        "audit/persistent-shell-native.json",
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Windows PowerShell only, process-local sessions/watchers; logs survive restart. Failed watcher persistence has bounded in-memory retry, not crash durability. Smart approval/local-server discovery and complete shell variants remain gaps."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-shell/src/engine/session-manager.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "workspace.mounts",
+      "nativeAssessment": "extended_with_tested_subset",
+      "scope": "Readonly per-chat shells/ logs now work through formatted read/ls and QuickJS fs reads/listing without a workspace; other existing mounts are retained.",
+      "evidence": [
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Complete simultaneous workspace/mount and Node filesystem/importModule parity remains outside this slice."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/mount-manager/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/mount-manager/index.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.executeSandboxJs",
+      "nativeAssessment": "extended_with_tested_subset",
+      "scope": "Readonly per-chat shells/ logs now work through formatted read/ls and QuickJS fs reads/listing without a workspace; other existing mounts are retained.",
+      "evidence": [
+        "audit/session-logs-native.json"
+      ],
+      "remaining": [
+        "Complete simultaneous workspace/mount and Node filesystem/importModule parity remains outside this slice."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 649,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L649"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.queue",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/queue.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/queue.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.questions",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "tool.askUserQuestions",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/toolbox/index.ts",
+          "line": 655,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/toolbox/index.ts#L655"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.interruptQuestionWithMessage",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 563,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L563"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.flushQueue",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 615,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L615"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.clearQueue",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 621,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L621"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.deleteQueuedMessage",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 624,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L624"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.moveQueuedMessage",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native durable queue controls and typed multi-step question form; source-associated tool results and active-chat controls.",
+      "evidence": [
+        "audit/conversation-controls-native.json"
+      ],
+      "remaining": [
+        "Read native audit scope and final integration gate; no blanket mapping of all upstream state fields or RPC transport."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 630,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L630"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.composer",
+      "nativeAssessment": "extended_with_tested_subset",
+      "scope": "Rich slash/@ completion and typed transcript rendering, source-owned request identity and scoped file completion; component/actual MainWindow focused tests.",
+      "evidence": [
+        "audit/rich-transcript-composer-native.json"
+      ],
+      "remaining": [
+        "No full Markdown/math/Mermaid/checkpoint/virtualization or exact pixel parity claim."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.stream",
+      "nativeAssessment": "extended_with_tested_subset",
+      "scope": "Rich slash/@ completion and typed transcript rendering, source-owned request identity and scoped file completion; component/actual MainWindow focused tests.",
+      "evidence": [
+        "audit/rich-transcript-composer-native.json"
+      ],
+      "remaining": [
+        "No full Markdown/math/Mermaid/checkpoint/virtualization or exact pixel parity claim."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/state-mutations/streaming.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shell.command-center",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/screens/main/command-center/command-center.tsx",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/screens/main/command-center/command-center.tsx#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.open_command_center",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 56,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L56"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_rename_agent",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 59,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L59"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_toggle_agent_pin",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 60,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L60"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_copy_tab_url",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 61,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L61"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_delete_agent",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 62,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L62"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_toggle_gitignored",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 63,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L63"
+        }
+      ]
+    },
+    {
+      "inventoryId": "shortcut.command_center_toggle_search_in_content",
+      "nativeAssessment": "implemented_with_tested_limits",
+      "scope": "Native command center/query/action source is present; owner is finishing callback and async search fixtures.",
+      "evidence": [
+        "src/ui/CommandCenter.cpp",
+        "src/ui/MainWindowCommandCenter.cpp"
+      ],
+      "remaining": [
+        "Do not promote to final verified merely from this inventory overlay."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/shared/hotkeys.ts",
+          "line": 64,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/shared/hotkeys.ts#L64"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.createSideChat",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Independent child Engine/Host/Composer/transcript, durable parent relation, isolated context and promotion/discard/parent lifecycle; final actual-host fixtures pass within the full80-suite run.",
+      "evidence": [
+        "audit/side-chat-native.json"
+      ],
+      "remaining": [
+        "Single native workspace, shared global tab layout and no /side builtin; exact source title/tab persistence behavior not claimed."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 543,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L543"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.promoteSideChat",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Independent child Engine/Host/Composer/transcript, durable parent relation, isolated context and promotion/discard/parent lifecycle; final actual-host fixtures pass within the full80-suite run.",
+      "evidence": [
+        "audit/side-chat-native.json"
+      ],
+      "remaining": [
+        "Single native workspace, shared global tab layout and no /side builtin; exact source title/tab persistence behavior not claimed."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 546,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L546"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agent_command.agents.discardSideChat",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Independent child Engine/Host/Composer/transcript, durable parent relation, isolated context and promotion/discard/parent lifecycle; final actual-host fixtures pass within the full80-suite run.",
+      "evidence": [
+        "audit/side-chat-native.json"
+      ],
+      "remaining": [
+        "Single native workspace, shared global tab layout and no /side builtin; exact source title/tab persistence behavior not claimed."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+          "line": 549,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/agent-manager/agent-manager.ts#L549"
+        }
+      ]
+    },
+    {
+      "inventoryId": "procedure.browser.createSideChatTab",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Independent child Engine/Host/Composer/transcript, durable parent relation, isolated context and promotion/discard/parent lifecycle; final actual-host fixtures pass within the full80-suite run.",
+      "evidence": [
+        "audit/side-chat-native.json"
+      ],
+      "remaining": [
+        "Single native workspace, shared global tab layout and no /side builtin; exact source title/tab persistence behavior not claimed."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/window-layout/ui-controller.ts",
+          "line": 757,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/ui-controller.ts#L757"
+        }
+      ]
+    },
+    {
+      "inventoryId": "browser.cdp",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Native selected-element CDP capture, chat-owned PNG screenshot and ten pinned device presets/custom viewport with cancellation/reentry guards.",
+      "evidence": [
+        "audit/native-browser-controls.json"
+      ],
+      "remaining": [
+        "No React/Vue component source ancestry; separate PNG is not source per-element WebP capture; full developer toolbar and restoration remain partial."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "browser.toolbar",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Native selected-element CDP capture, chat-owned PNG screenshot and ten pinned device presets/custom viewport with cancellation/reentry guards.",
+      "evidence": [
+        "audit/native-browser-controls.json"
+      ],
+      "remaining": [
+        "No React/Vue component source ancestry; separate PNG is not source per-element WebP capture; full developer toolbar and restoration remain partial."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/web-content-preload",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/web-content-preload#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "procedure.browser.devTools.getScreenshot",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Native selected-element CDP capture, chat-owned PNG screenshot and ten pinned device presets/custom viewport with cancellation/reentry guards.",
+      "evidence": [
+        "audit/native-browser-controls.json"
+      ],
+      "remaining": [
+        "No React/Vue component source ancestry; separate PNG is not source per-element WebP capture; full developer toolbar and restoration remain partial."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/dev-tool-api/index.ts",
+          "line": 129,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/dev-tool-api/index.ts#L129"
+        }
+      ]
+    },
+    {
+      "inventoryId": "procedure.browser.setDeviceEmulation",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Native selected-element CDP capture, chat-owned PNG screenshot and ten pinned device presets/custom viewport with cancellation/reentry guards.",
+      "evidence": [
+        "audit/native-browser-controls.json"
+      ],
+      "remaining": [
+        "No React/Vue component source ancestry; separate PNG is not source per-element WebP capture; full developer toolbar and restoration remain partial."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/backend/services/window-layout/ui-controller.ts",
+          "line": 906,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/backend/services/window-layout/ui-controller.ts#L906"
+        }
+      ]
+    },
+    {
+      "inventoryId": "editor.media",
+      "nativeAssessment": "extended_native_subset",
+      "scope": "Trusted bounded raster previews and inline images with chat-owned resolver; UI-only readonly mutation diffs.",
+      "evidence": [
+        "audit/native-file-previews.json"
+      ],
+      "remaining": [
+        "No PDF/Office/audio/video viewer, animated playback or complete Monaco/Markdown editing parity."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "apps/browser/src/ui/components/file-preview",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/apps/browser/src/ui/components/file-preview#L1"
+        }
+      ]
+    },
+    {
+      "inventoryId": "agents.compression",
+      "nativeAssessment": "existing_manual_subset_automatic_gap",
+      "scope": "Main-chat /compact uses configured UtilityService compression and retains complete saved history. This foundation predates the current batch; documentation corrected to avoid implying compression is absent.",
+      "evidence": [
+        "src/ui/MainWindow.cpp",
+        "src/core/UtilityService.cpp",
+        "src/core/AgentEngine.cpp",
+        "tests/test_core.cpp",
+        "audit/continuation-integration/final-full-run/native_core.txt"
+      ],
+      "remaining": [
+        "Source-equivalent automatic compression/token accounting incomplete.",
+        "Side-chat /compact interception is absent; text is sent as an ordinary message."
+      ],
+      "upstreamContracts": [
+        {
+          "path": "packages/agent-core/src/agents/shared/history-compression/index.ts",
+          "line": 1,
+          "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/agents/shared/history-compression/index.ts#L1"
+        }
+      ],
+      "evidenceDistinction": "Existing compression fixture passes in the final native_core suite. Manual main-chat invocation is implemented; automatic parity and side-chat interception remain gaps.",
+      "testCase": "CoreTest::compressionPreservesHistoryAndTools"
+    }
+  ],
+  "baselineHashBasis": "canonical_git_text_LF",
+  "finalAggregate": "audit/continuation-integration.json"
+}

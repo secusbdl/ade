@@ -29,6 +29,8 @@ bool containsPath(const QString& root,const QString& path){
 }
 bool MainWindow::gitPathBusy(const QString& path) const {
     if(path.isEmpty())return false;
+    for(auto* host:m_toolHosts)if(host&&host->mutationBusy())
+        for(const auto& chat:m_sessions)if(chat.id==host->agentId()&&(containsPath(chat.workspace,path)||containsPath(path,chat.workspace)))return true;
     for(const auto& root:m_gitMutatingPaths)if(containsPath(root,path)||containsPath(path,root))return true;
     for(const auto& root:m_worktreesRemoving)if(containsPath(root,path)||containsPath(path,root))return true;
     for(const auto& root:m_worktreeSetups)if(containsPath(root,path)||containsPath(path,root))return true;
@@ -124,6 +126,10 @@ bool MainWindow::prepareGitMutation(const QString& path,GitOperation operation){
     if(gitPathBusy(path)){m_status->setText("Wait for this workspace operation to finish.");return false;}
     for(auto* engine:m_engines)if(engine->isBusy()&&(containsPath(path,engine->workspace())||containsPath(engine->workspace(),path))){m_status->setText("Stop agents using this workspace before changing its Git state.");return false;}
     if(operation==GitOperation::CreateWorktree)return true;
+    for(auto* host:m_toolHosts)for(const auto& value:host->shells()->snapshot()["sessions"].toArray()){
+        const auto shell=value.toObject();const auto cwd=shell["cwd"].toString();
+        if(shell["running"].toBool()&&(containsPath(path,cwd)||containsPath(cwd,path))&&(operation==GitOperation::RemoveWorktree||shell["commandActive"].toBool())){m_status->setText("Stop the agent shell using this workspace before changing its Git state.");return false;}
+    }
     if(operation==GitOperation::RemoveWorktree)for(auto* terminal:findChildren<TerminalWidget*>())
         if(terminal->isRunning()&&containsPath(path,terminal->workingDirectory())){m_status->setText("Close the terminal using this worktree before removing it.");return false;}
     QList<EditorWidget*> editors;

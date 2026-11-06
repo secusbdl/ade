@@ -1,0 +1,3 @@
+[1/4] Automatic MOC for target test_git_watcher
+[2/3] Building CXX object CMakeFiles/test_git_watcher.dir/D_/age/ADE/tests/test_git_watcher.cpp.obj
+[3/3] Linking CXX executable test_git_watcher.exe

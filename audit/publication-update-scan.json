@@ -1,0 +1,2335 @@
+{
+  "reviewedUtc": "2026-11-06T14:05:21.866737+00:00",
+  "scope": "Changed/new intended source and text audits at this observation; high-confidence token shapes and private-state paths, not a proof of all secrets. No credential files/profile data opened. Fresh exact export still requires final scan. This report excludes its own digest.",
+  "textFiles": 384,
+  "highConfidenceCandidatePaths": [],
+  "unexpectedOrPrivateStatePaths": [],
+  "excludedBinaryOrRasterPaths": [
+    "audit/conversation-controls/question-form-final.png",
+    "audit/persistent-shell/borrowed-shell-before-scroll-fix.png",
+    "audit/persistent-shell/borrowed-shell.png",
+    "audit/side-chat-background/before-light-1100.png",
+    "audit/side-chat-background/side-question-queue-dark-1100.png",
+    "audit/side-chat-background/side-question-queue-dark-350.png",
+    "audit/side-chat-background/side-question-queue-light-1100.png",
+    "audit/side-chat-background/side-question-queue-light-350.png"
+  ],
+  "knownSyntheticFixturePaths": [
+    "audit/continuation-integration.json",
+    "audit/conversation-controls-native.json",
+    "audit/mutations-native.json",
+    "audit/publication-review.json",
+    "audit/reference-readiness.json",
+    "tests/test_agent_control_ui.cpp",
+    "tests/test_conversation_control.cpp",
+    "tests/test_shell_engine.cpp",
+    "tests/test_shell_runtime.cpp",
+    "tests/test_transcript_link_ui.cpp"
+  ],
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "f1a05a43f51727fa0905bb13f37fc9bb7c6e4d0adef74fde30a1034b21e895e3",
+      "bytes": 40970,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "README.md",
+      "sha256": "59fa3e22514c272d284dec5a9b088a054fdbde215ceaee8f288f4d076ab79081",
+      "bytes": 10272,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/agent-controls-geometry-tests.txt",
+      "sha256": "0cb28d918ea8203367ce08fce11b11e75260f2b39218dbf23da8973387d0c989",
+      "bytes": 789,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/browser-fullscreen-fixture-focus.json",
+      "sha256": "c96369360a90c2f4e65b3dd164ea29bf366dc7d664aedf36fd6e5a58fd58a8d3",
+      "bytes": 1569,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/browser-tools-before-focus-investigation.txt",
+      "sha256": "c0d9b330fdbc4fc10f0f6a2539914f9868e13c6e06ddaf62a1c207100ba0d5bf",
+      "bytes": 2101,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/browser-tools-fullscreen-after.txt",
+      "sha256": "cbc41751b330d1074ae166782db608bdf011e912128a50710ff546b67664d1a6",
+      "bytes": 452,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/browser-tools-fullscreen-before.txt",
+      "sha256": "945d1b149bcaef7905fd4d70870a1623caad9fe340e5141dac273dca463b269a",
+      "bytes": 671,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/browser-tools-fullscreen-fixed-suite.txt",
+      "sha256": "7b44d429e298085e37e5a563513ce4ed64476a8b0470b921c0dff471ccdf58d0",
+      "bytes": 1883,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-before-activation.txt",
+      "sha256": "ae5239956d6b24f4b7b334aca7eb4675998dd09072da119bfc44ce6cb9c2c060",
+      "bytes": 1823,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-before-reopen-activation.txt",
+      "sha256": "444a3038f91391483d561aae7ebee46c6f069efd627ae3e94f4476c95b8aeb30",
+      "bytes": 3389,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-before-visible-focus.txt",
+      "sha256": "45471b089780b95b769b0c3ddf667ba59fa2ca453b13eb2f09ed0193e891668d",
+      "bytes": 3141,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-before-window-focus.txt",
+      "sha256": "244df5e2e341e0d59b6832de409447fd906c1206a7c0bc67139ab558e743c18e",
+      "bytes": 3317,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-final-tests.txt",
+      "sha256": "9e9d1d2660b975c4d067832f12f584d72902f8c5e4d73e8ed1a0fd50d36705ae",
+      "bytes": 3235,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-host-focus-diagnostic.txt",
+      "sha256": "b44835c3c65e6030c92ee8ff7d883b2300afcd04f4424b9a0a8df094f6918734",
+      "bytes": 1209,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/command-center-native.json",
+      "sha256": "fb3073bd53ff8a9359abc6dd1cd10e3dc0fcb6aa7a2a76abb21cc8429c40e722",
+      "bytes": 7764,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-deployment.json",
+      "sha256": "7e9a99aa7cf9e5195377dcfa5840bd86ac64166757216e7f9cc2210971bcf305",
+      "bytes": 15209,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration.json",
+      "sha256": "40727b10ebd07c79313cea2dc6c1e5ac2b98da9c70d645148c99656bb1bcd27d",
+      "bytes": 55550,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/browser-reentry-after.txt",
+      "sha256": "754bb911175882919c36bc73dc202f2b0de73a6e5312752fa65ce33e4386b6b9",
+      "bytes": 1163,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/browser-reentry-before.txt",
+      "sha256": "f6c700bbe6fff2378632d4676d3ccb01c6b4f58480fec17c3f5859958e533090",
+      "bytes": 956,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/command-shell-host-before.txt",
+      "sha256": "444a3038f91391483d561aae7ebee46c6f069efd627ae3e94f4476c95b8aeb30",
+      "bytes": 3389,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/build-output.txt",
+      "sha256": "9108e39b2676e87e0dc82018e4b020476ffa75a3f03702ad50e7901e2e75a0ce",
+      "bytes": 1367,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/ctest-output.txt",
+      "sha256": "68f4ba28535ea6089900a5541314c057cb3c4c1e72354e7ecaac929df7c6e03e",
+      "bytes": 8907,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/ctest.xml",
+      "sha256": "62ee838ee6f488b3419f3501f8f5a17d7ca012013745624238ed2025fec182ec",
+      "bytes": 13167,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_agent_control_ui.txt",
+      "sha256": "e6bcd745b6b3e48411b4812dc6da49b81247bebbe4180e3051020ebee6c1f690",
+      "bytes": 789,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_app_resources.txt",
+      "sha256": "05f20332a0510b103ac5439aaae89603fd35b3cc47344a5eeb646b3ded18827e",
+      "bytes": 626,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_archive_transformer.txt",
+      "sha256": "9205fda9024a661147f5e6ce00b407beaacf3625b22ed5e96a43bf78e6bdf3cd",
+      "bytes": 2218,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_attachment_mount.txt",
+      "sha256": "70473070b3bbff8bf219311d2c9893225cf3f610d526051a5031df532186ac10",
+      "bytes": 1381,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_attachments.txt",
+      "sha256": "5a27ab7f2d2e343fecad4a74d2e4fb7a75d2c03a5f1755941cc743e0206d44d3",
+      "bytes": 1701,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_browser.txt",
+      "sha256": "e000ebeea2a7f4c8412d5c02993ecf17bd9798082f4106b6d5604185328e9ab3",
+      "bytes": 977,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_browser_inspector.txt",
+      "sha256": "7531d313cab31744ca4e157d95b1303adccd26344855079dfdc6e3c7cbc79713",
+      "bytes": 1163,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_browser_tools.txt",
+      "sha256": "c379fcb102d61a42c6389010d6c2b5ff8e31356b483bf745c983a3035202255e",
+      "bytes": 1883,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_chevron.txt",
+      "sha256": "0b51e56fadfc730b96372fc03bb7ca2ec20107ee134b4218923660cab0d77a2b",
+      "bytes": 725,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_command_center.txt",
+      "sha256": "b4be3856638b8c4e0efaa7d690042ec5cb856a97dd00bee0b043de3ede8a19c4",
+      "bytes": 3334,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_command_center_host.txt",
+      "sha256": "00e866ec7b8b5f30d3e4a7c3047d2024c238dc5f1ddedfa824bed059e5a09194",
+      "bytes": 3235,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_command_file_search.txt",
+      "sha256": "06cc4177a412086a5ffa212e5781404cba8a6593e1e2d5fb44857b8f079ef38c",
+      "bytes": 670,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_composer_completion.txt",
+      "sha256": "11223e29d4b6a5219998c069596c447d66dfc29ac994205e8d1cfe5c822d89b5",
+      "bytes": 13045,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_composer_host.txt",
+      "sha256": "72437dde68b793efed6ca5cf2e714265b125ba6539655837b676870bef6bc921",
+      "bytes": 2124,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_composer_search.txt",
+      "sha256": "009aff3ac722c63a5d7208d1c55ab50962561d8bd2113aa970226a7a0c3fd49a",
+      "bytes": 1178,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_context.txt",
+      "sha256": "89207baf84b8b7f5f832f935c9dbb38d45c50c35c7520e00bea91fd759be28fb",
+      "bytes": 742,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_conversation_control.txt",
+      "sha256": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+      "bytes": 2353,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_conversations.txt",
+      "sha256": "a24872259f06a9d5a2dac56c91d4e10de2dcb02564da433a51b21d4ff6a8c500",
+      "bytes": 8709,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_core.txt",
+      "sha256": "48cf824e4fd50b063aa4abcbe43e3ab4edbac6016d82196e3bdb836dbba03baa",
+      "bytes": 2674,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_downloads.txt",
+      "sha256": "09ddd062577e8a15220b094cfd29605daae8102e4cb3def33df82337b88673fc",
+      "bytes": 924,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_editor.txt",
+      "sha256": "2d5f69bce7ad84c06f31649433029886f1af70fcff60f6f2158057f9f5e4fd92",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_engine_observers.txt",
+      "sha256": "4a3faed4ff6551232df724108d0c1d71839a505be782204d610bdc837e62c1b7",
+      "bytes": 3940,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_file_diff.txt",
+      "sha256": "f002ac21e497e63f18727f9aa767dfff73cda5d955056ae835e4c84b9b4c38e2",
+      "bytes": 1266,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_file_mutations.txt",
+      "sha256": "ef0895b510c78afab3caea6cfe23e9ce45462c4597c9bd52b2f769e0ce30073e",
+      "bytes": 4355,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_file_tools.txt",
+      "sha256": "beb68e84533b26bcfe626dfa7cb26705cba8a3bb16d735252224ec3427093575",
+      "bytes": 1518,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_file_tools_races.txt",
+      "sha256": "263786647cf08449c980dbb1288dff6beac54e575cbe7aef6dcd6e840806cd10",
+      "bytes": 1045,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_file_transformer.txt",
+      "sha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d",
+      "bytes": 2304,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_fonts.txt",
+      "sha256": "96c431dd70b886b94c14cda618a1d9441e7fdc462d86953b6331371011a476ad",
+      "bytes": 563,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_formatted_att.txt",
+      "sha256": "60a0a1166d6019e9048f256ecfe70441d86595fb0e57b3da59462f2b9f6b7a16",
+      "bytes": 2578,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_git.txt",
+      "sha256": "25c2620906b22b4bdccee87827b8f8a81f11fdf21c00beb588ff0ce265c07777",
+      "bytes": 1164,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_git_host.txt",
+      "sha256": "12e6ac3663e9d78c54eebc8c56335ce65b060eaa89509c863d5ab5dac0b21518",
+      "bytes": 2517,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_git_ui.txt",
+      "sha256": "fddc3dd6e5fd07549e969f6a59bd8d8bc879361f8f5abcc7d646ec675d04f238",
+      "bytes": 1466,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_git_watcher.txt",
+      "sha256": "7f8edbebb0142c8e9e696b791b07b55a990cc5d35d3a5426f92f2b67e8444841",
+      "bytes": 2637,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_git_watcher_ui.txt",
+      "sha256": "50ab7012baaba17b7266a1d5e92771b0ff03b4acb334b4d4f63d02b9b5730ee4",
+      "bytes": 541,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_history_recovery.txt",
+      "sha256": "fe6b5549f35b0490ef776c7556811367006225dc0f7310992d23b977eb503e24",
+      "bytes": 2542,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_image_preview.txt",
+      "sha256": "51b31a77f2cc8d5d15c00866e718abf0891187d13306129be52baf1e47ea8f65",
+      "bytes": 991,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_link_provenance_codec.txt",
+      "sha256": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc",
+      "bytes": 621,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_main_chrome.txt",
+      "sha256": "f8691415c0e47d1bc44c9622369dd9f5568a2910b102f83cdac102bcaba5b297",
+      "bytes": 4548,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_mini_apps.txt",
+      "sha256": "a37d833cbc87cf81549371dbc7732cbafac7d222d552a1f7334c14416a434e43",
+      "bytes": 626,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_mutation_runtime.txt",
+      "sha256": "40f11b88b5cff6469ebbbb63487483c5efd13357fc2f40115dd26c815f14b8bc",
+      "bytes": 1022,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_network.txt",
+      "sha256": "592c893f58ec93cb0fe9bbdbae22495ec69c9dd2e24e8c258cfbcd26c7705686",
+      "bytes": 1383,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_plugins.txt",
+      "sha256": "df0272c9bb01d678f2e29547394d1278595bf52994f56636317e58c99429a37c",
+      "bytes": 1717,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_presentation.txt",
+      "sha256": "11cd889f043920b5bb1e3fee7a7a043a26fd9e1f0d79b16e8ccaf31d57057190",
+      "bytes": 5530,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_question_panel.txt",
+      "sha256": "146c396373b85b52234af578bb1919f62eefb705ea291d4c0c46fd3d8c526566",
+      "bytes": 1594,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_raw_enumeration_races.txt",
+      "sha256": "f0beffed5f0df3264e47fd48a3a4d31d0833e3dd44066d05cdf54fdc29af16af",
+      "bytes": 1244,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_read_lifecycle.txt",
+      "sha256": "133af47c258de1026005849c7ea64e45e3462dca28d64f1d339f5a898dd36266",
+      "bytes": 1712,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_read_runtime.txt",
+      "sha256": "8250dcfc0a85c5f5f3e8fb2ba00d34f9beb4d5a5a1f61f074730801179e76947",
+      "bytes": 1391,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_reference_controls.txt",
+      "sha256": "a147b9d26a9354b13f709922043a118fa3a74920f1df96499f2793595904da43",
+      "bytes": 715,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_runtime.txt",
+      "sha256": "3816ceee7e1cfdfd191d6c661609aa6370e2fb4d56964c79793c5d6d8773bba6",
+      "bytes": 1806,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_runtime_apps.txt",
+      "sha256": "0b8d1ab70f2b6b863b5e67efd62011bd5d0dbc8655929b94cf9c4eb5e90567bf",
+      "bytes": 2284,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_sandbox.txt",
+      "sha256": "68b563f8b6ce2bf65ad6bf4699d1623c54b823535f11d49c29c2a4d3864f78da",
+      "bytes": 2081,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_sandbox_apps.txt",
+      "sha256": "d3d5dd51ceaea96fe91d590a4ce8c53963cc188fc589e0388535d3dc811979b6",
+      "bytes": 536,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_sandbox_network.txt",
+      "sha256": "758903e61e7c52b6145d1e192d018c3e57904948bef75e8d29be9aec1365fcc2",
+      "bytes": 1158,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_session_cleanup.txt",
+      "sha256": "d81c7b6e3e64ddd0ac507468880d19682c173037e2e30bdf4d2afd9091d3e6d6",
+      "bytes": 1854,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_session_logs.txt",
+      "sha256": "ca0cf6418150612daf2015ae47d0a0ac9181372f8926efc9b93b4818f07fed75",
+      "bytes": 1267,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_settings.txt",
+      "sha256": "808a11804e45baaada0074f8421e1aab54d167abb9d6dc3d63712fe183519b05",
+      "bytes": 3319,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_settings_audit.txt",
+      "sha256": "1a3bab3eb6c916eb954ee4cd935f7ea0eadce74c8cbc81400cea0750c6b59e73",
+      "bytes": 1393,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_shell_engine.txt",
+      "sha256": "94e47a723ed76eee84b8a7265c39faeb6a9adbff474421c5f1d9313461dd0087",
+      "bytes": 1247,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_shell_log_mount.txt",
+      "sha256": "bca5dc187f2b60aaf580f07d69e0e3b526b229054574306692a6b09465dddb35",
+      "bytes": 671,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_shell_runtime.txt",
+      "sha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_shell_service.txt",
+      "sha256": "1700159e2c76cc738e6046322d0076327c08df586edbfc55112f393e65cfbc04",
+      "bytes": 1589,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_shell_view.txt",
+      "sha256": "d5e742b6c0e459928d0416f414378461db5dff8a05b7192428033917b844608b",
+      "bytes": 572,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_side_chat.txt",
+      "sha256": "7834970d8e8d953ca132c253b4f452a9730c022d934f96dc2588be1d5ee603b4",
+      "bytes": 1675,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_side_chat_host.txt",
+      "sha256": "0e139370c15fc141222f9641788b7034d2d07d4e45f8147998a6a4c61c2fdaea",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_sidebar_model.txt",
+      "sha256": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899",
+      "bytes": 1354,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_sidebar_navigation.txt",
+      "sha256": "d18227f90119e1d812531349b960e67c0cbf9550755ba2846c56b6f7a360de68",
+      "bytes": 1612,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_terminal.txt",
+      "sha256": "7a79d9a3d40b7407deafc79c170b87514d9f525cec9e5c7a7202fd6fead5209a",
+      "bytes": 1227,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript.txt",
+      "sha256": "4164f027e32d7f81283322dec16ad60a7b86aee2976d2fa90729426f93090e28",
+      "bytes": 5694,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript_link_ui.txt",
+      "sha256": "0bd692ed847e9a62fa01599a7bb8260f5b148890871432309516973fd27c1f7a",
+      "bytes": 1637,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript_links.txt",
+      "sha256": "6c926d5411e9700a3f4e8929149f44facac02e18594981f247cfe86677c3bb1a",
+      "bytes": 2497,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript_rich.txt",
+      "sha256": "c5033d14c377f1ee36acb80bf8e892ee505cacf60a87e350c8233f8f5135c9f1",
+      "bytes": 1494,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript_tabs_real.txt",
+      "sha256": "3905c2db582a9aa199e17daf3a4ce1df326cfb97805d0361fe2ee6184779eddc",
+      "bytes": 872,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_transcript_ui.txt",
+      "sha256": "a69c089c1d4d931c398f0e40dc23985c2446c16e9f42aa885bb4d506e87bd2ad",
+      "bytes": 565,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_ui.txt",
+      "sha256": "486b32c81d43797422a3a6bbed47edd0419cafa8540de7416119e1e1cd6d942f",
+      "bytes": 965,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_ui_audit.txt",
+      "sha256": "11ea7f4b45123dfb78a98351aa0c62c48b972d35f690d4909b2233c9241531e9",
+      "bytes": 2349,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_workbench_helpers.txt",
+      "sha256": "6c9ef6f38e3040b3be48517037c7c42e54b1e657f479d078d2c1e98b2c93d07c",
+      "bytes": 773,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_workbench_layout.txt",
+      "sha256": "b463623ba0c3b515c4331440a777fa63c45d867e32dc586eaa3423d21a4936f3",
+      "bytes": 5677,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/native_worktree_settings.txt",
+      "sha256": "df724b2c23fdf38e0fdbf7990fc066b5840ed81dc77b9035a9d974fe028f570a",
+      "bytes": 1543,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/reference_file_mutations.txt",
+      "sha256": "7be1ea8f2d6676cf8ff11024ef3db2eb7b04212ffd22725319d1ad12f83e6aae",
+      "bytes": 2950,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/final-full-run/reference_git_usage.txt",
+      "sha256": "f8653a011353a9267a46f5d93d64738b1b0dc53812ceb1a0a0b6d2b688e76a53",
+      "bytes": 2223,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/continuation-tests.xml",
+      "sha256": "98c29b25ebf550d4306c84643e4eefcb3e6287e691d60012bd2d677b2cfba75d",
+      "bytes": 13329,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/ctest-output.txt",
+      "sha256": "1244e082551cbc0c2c7ba3e40c560ba09b48a46fce64d6c6a9c97178838661e8",
+      "bytes": 9166,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_agent_control_ui.txt",
+      "sha256": "2a835583b64d91dec8cd6dc678836492e4fc912b407c54a1802baa2d13a6a3cc",
+      "bytes": 713,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_app_resources.txt",
+      "sha256": "00b81086a25f612e7c236eac85b129c4d78a2e9106d675113ba17820d6bf882c",
+      "bytes": 626,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_archive_transformer.txt",
+      "sha256": "aa0d32770cc083e5bcad24049d3a0901752410f7278f8a66184650d182deda34",
+      "bytes": 2218,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_attachment_mount.txt",
+      "sha256": "c58abfba5984cfc26e3c4a098426f7013f4531a638ba7209a91b39a695fbb357",
+      "bytes": 1381,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_attachments.txt",
+      "sha256": "107c652a2dcf299b807e7bdd29bdbac660b8c355dd869202c5cb815942b16272",
+      "bytes": 1701,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_browser.txt",
+      "sha256": "eca38c3fd681476f7d9af10c52a06ebc9bd441cf8f8f27c6d9c57450809f4166",
+      "bytes": 977,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_browser_inspector.txt",
+      "sha256": "eacdfe7e1644e573460c328ce81fb4134763b686e5a3c8f8b1ef61b6d2fd7cbb",
+      "bytes": 1163,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_browser_tools.txt",
+      "sha256": "c0d9b330fdbc4fc10f0f6a2539914f9868e13c6e06ddaf62a1c207100ba0d5bf",
+      "bytes": 2101,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_chevron.txt",
+      "sha256": "6878cccb38c0ceca07cecc40607e075641a6bf3e7cfa89809756c8883dfaa7c9",
+      "bytes": 725,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_command_center.txt",
+      "sha256": "3a5ad4fbeecd7a4fcf62efa05ed487a995ea56decc5aeab0dbbcdfa3e2cb8f70",
+      "bytes": 3334,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_command_center_host.txt",
+      "sha256": "444a3038f91391483d561aae7ebee46c6f069efd627ae3e94f4476c95b8aeb30",
+      "bytes": 3389,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_command_file_search.txt",
+      "sha256": "06cc4177a412086a5ffa212e5781404cba8a6593e1e2d5fb44857b8f079ef38c",
+      "bytes": 670,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_composer_completion.txt",
+      "sha256": "c8978bb3c38f00b296230b11fd7f2f622c35219fd19f3aa64eb1cafe0f866108",
+      "bytes": 13045,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_composer_host.txt",
+      "sha256": "d7b315d06a08a22a0899864215cb7c46c0a68e8ad2a161cbfdd7ace0bc935053",
+      "bytes": 2124,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_composer_search.txt",
+      "sha256": "88e6c2fa17780110db06e0dfb39ced87eeba12e38ad8d3d8c9c80d69e2003c29",
+      "bytes": 1178,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_context.txt",
+      "sha256": "ea445384d5bdc13fa67796215d12f8f864918332f54b4f547ea206bc1bcd0cc0",
+      "bytes": 742,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_conversation_control.txt",
+      "sha256": "3bb7a88c7ace5d24280ce0d6e3b737d379fa114978f26e8bd7d1ed8ed100a6ca",
+      "bytes": 2003,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_conversations.txt",
+      "sha256": "3d49b1477c23fdb0456cc9e7ec9396e2d189ea8e25f1708acdf061dc6cd809e5",
+      "bytes": 8709,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_core.txt",
+      "sha256": "a0a03516ac16ed479c3c3f5d6c24e924602256dd3a4a5d2e5b2281244455846e",
+      "bytes": 3025,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_downloads.txt",
+      "sha256": "bc042a4bcf4791f05523859bac12f9b5e539e27a90189de90e01563a4d08d6f6",
+      "bytes": 924,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_editor.txt",
+      "sha256": "1c26a5d0c1ed9ac8bb0833e7b37aafb56e2a9f006e23e95432047a65bc4de9bf",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_engine_observers.txt",
+      "sha256": "e12982aae2a6b9ced4be6579052a93f262cde41ae1f3c598d9395ae2b73d1d8d",
+      "bytes": 3940,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_file_diff.txt",
+      "sha256": "91776fc9b50195b1849895cf7636cb85a2aadb0c7b739e3915eae3f319e56223",
+      "bytes": 1266,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_file_mutations.txt",
+      "sha256": "7b677ef44ddd5eb9ae0c6d7b759f88d4d3abf93f8cbf3e69d95d09d3b220a740",
+      "bytes": 4355,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_file_tools.txt",
+      "sha256": "23ad642ab4081be5fd08b0255a04e59374c1472efd9a418c540ac4d2e8bb170d",
+      "bytes": 1518,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_file_tools_races.txt",
+      "sha256": "94c9a79ad38501de111f81d4af7ab6d79c6b4e075972b6ee1060cbebfbabca77",
+      "bytes": 1045,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_file_transformer.txt",
+      "sha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d",
+      "bytes": 2304,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_fonts.txt",
+      "sha256": "ce2330ed9e1da72121194492a638dce6fd5a2363c97b3f6188495a31fddc5d54",
+      "bytes": 563,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_formatted_att.txt",
+      "sha256": "f4f5cadf6047f40efcaa190801eb8f1aeb0110d9d3d383ad1587ec4b72e23906",
+      "bytes": 2578,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_git.txt",
+      "sha256": "6a293998744dc22d6c83f55653ca3a1ff538368a669de49b12c8471ee94b99c1",
+      "bytes": 1164,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_git_host.txt",
+      "sha256": "c01c831e1d85d8b7eae5c06f5c95a1ca2ad19e2f56ff911afffef140597e1900",
+      "bytes": 2517,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_git_ui.txt",
+      "sha256": "aebfb2bfe145171bd5375f88a5b67f6d14a5b2c566d4e5b867641772756b0cf4",
+      "bytes": 1466,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_git_watcher.txt",
+      "sha256": "6f2c0e352203da58a1993fce2014b10ad1c7d7080575ccdf03153767d6dfce16",
+      "bytes": 2392,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_git_watcher_ui.txt",
+      "sha256": "c2b4e1d842117c4cc649347041d76175ef31b43426b88c3b94b60a1daf657d9b",
+      "bytes": 541,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_history_recovery.txt",
+      "sha256": "4468af95776a8008977d87ebf00cdabe7bd3786a1a0afd454754c9ec60e57181",
+      "bytes": 2542,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_image_preview.txt",
+      "sha256": "07afa33e1373c05ffc5a33492c87f4c9da1180a57f6fea68f2a9d15f25dd0241",
+      "bytes": 991,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_link_provenance_codec.txt",
+      "sha256": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc",
+      "bytes": 621,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_main_chrome.txt",
+      "sha256": "221b51193bc8efeee3c5a1b691c02b74ff4f6be50dc46ad07d57ccc633a4e44f",
+      "bytes": 4548,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_mini_apps.txt",
+      "sha256": "04529ce9e1ef1bcf6d815741e269ea80345a590370ec0e14d06b95ba3f11499b",
+      "bytes": 626,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_mutation_runtime.txt",
+      "sha256": "e8c00616e78916e6c300355c60f6372183be567f552353c2f1b0fb8bd724001f",
+      "bytes": 1022,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_network.txt",
+      "sha256": "867b8ebcb1f76033e1e79eb303bc0a6f298fe7fa5d2d7ba50f3d8d3d4ffde175",
+      "bytes": 1383,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_plugins.txt",
+      "sha256": "dc9d3a1133a92ffb0efbeaaa1395a8795743e8ffda05d6fe79a9640297f3b43f",
+      "bytes": 1717,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_presentation.txt",
+      "sha256": "3f761942260ef7818b19e829a6c26c3f3351f680d8afc0f4895ee8cc3b785432",
+      "bytes": 5530,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_question_panel.txt",
+      "sha256": "146c396373b85b52234af578bb1919f62eefb705ea291d4c0c46fd3d8c526566",
+      "bytes": 1594,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_raw_enumeration_races.txt",
+      "sha256": "b57f8d9688e3c67e99f9897c938131bdcf2cb6bdf82c2d5af4a4777b2084ef6b",
+      "bytes": 1244,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_read_lifecycle.txt",
+      "sha256": "1a32049a4459d51cf8efb9bb25d6dae40db129ea99a3695ca4d78b9bb869ce54",
+      "bytes": 1712,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_read_runtime.txt",
+      "sha256": "d3ff644254c18b85b5b8abb37cb6da603fd5237a18ad220a4144b11fc3fd4b77",
+      "bytes": 1391,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_reference_controls.txt",
+      "sha256": "996c667201b896f6fe1faf07650a9734ca820db3bb5950ab5246b9d3efd5ec31",
+      "bytes": 715,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_runtime.txt",
+      "sha256": "660dae728e2f2b185fb7f512fde05a13a4b22490fa115285c111f5204f962080",
+      "bytes": 1806,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_runtime_apps.txt",
+      "sha256": "65f327a6016526a49c0f8e8160afb1c7933b947b381f3a248753cf36c8771842",
+      "bytes": 2284,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_sandbox.txt",
+      "sha256": "c17e33f16625049ce9f815001796cd29f34455af87ab38f144386c836fa171a0",
+      "bytes": 2081,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_sandbox_apps.txt",
+      "sha256": "cd09006a57a80bfcbec02efce15945972ae2bb734e7ef49b7c17a45215b2c87f",
+      "bytes": 536,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_sandbox_network.txt",
+      "sha256": "83690f244be0f778c8b8fc53e66dcb89c2812900e7715cdeaf8ed92b722d7e9f",
+      "bytes": 1158,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_session_cleanup.txt",
+      "sha256": "49ea51165dee7a8fa0be3a7dc906aa109fe42877bf50953ca145ace7f29b9447",
+      "bytes": 1854,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_session_logs.txt",
+      "sha256": "4a4c5406800b9883d0db6f5c642d771a6cbdf5145772424f1915467a8ea645e1",
+      "bytes": 1267,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_settings.txt",
+      "sha256": "808a11804e45baaada0074f8421e1aab54d167abb9d6dc3d63712fe183519b05",
+      "bytes": 3319,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_settings_audit.txt",
+      "sha256": "7b7b5710d7c699d8080b6edf8f1726ed92ebe6c0d80410b4bb38f699893ba191",
+      "bytes": 1393,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_shell_engine.txt",
+      "sha256": "922dfcbd7d4d453fd89024026226e7183ddba406870852e9b619beff5a9efc21",
+      "bytes": 1247,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_shell_log_mount.txt",
+      "sha256": "712e000dde2df523605f350aa0494b8df379c1ca922eaf36978bddea6e9ab2af",
+      "bytes": 671,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_shell_runtime.txt",
+      "sha256": "e6d8249308441e09fdf5ae4546ee6fcc781d3c1ee6d138410dd5534c993dc61e",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_shell_service.txt",
+      "sha256": "4004e2d2ecceded4156b10b508d31eb5b8d2194a5e004cf727fc6cbb33c4cbda",
+      "bytes": 1589,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_shell_view.txt",
+      "sha256": "2c9ea903d4a75170b73f8529fbca698f313aea068c21adbc923687547551e43b",
+      "bytes": 572,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_side_chat.txt",
+      "sha256": "a0989af0dba8ee64eb517bf6858533a09539f26e3e67570d03d58aa1e94b3638",
+      "bytes": 1213,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_side_chat_host.txt",
+      "sha256": "f1d299cb62668a88f2d35796f29574cd2f77dc2ae21440a3e494135a00996e88",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_sidebar_model.txt",
+      "sha256": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899",
+      "bytes": 1354,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_sidebar_navigation.txt",
+      "sha256": "dc43710356a043ae659ac74292487c4a27a26ef87dd4c3f48dbc278052b03b49",
+      "bytes": 1612,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_terminal.txt",
+      "sha256": "a4dc07ecfcaefafd9f1030af04044efa0cb74f5f51031c28fa74e23b586e3217",
+      "bytes": 1227,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript.txt",
+      "sha256": "c500f3c356547fde10188b7dbfab777c52000ca8fcb794191d0031c725448c72",
+      "bytes": 5694,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript_link_ui.txt",
+      "sha256": "24a799b39158c2ee014fca7ae63f00209ed52adf0a0a8451c17fc5e143306af9",
+      "bytes": 1637,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript_links.txt",
+      "sha256": "98a5c3574b6e78f467b78e6dd8dbb9877d69229343356714eb784c885c4d2274",
+      "bytes": 2497,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript_rich.txt",
+      "sha256": "2382604a62d1038382b5d1b4306f7bec68bdd02bd8b56264d7d5f53b6fe11dcd",
+      "bytes": 1494,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript_tabs_real.txt",
+      "sha256": "a1a73d236928f385dc98c920703d13b83e6699f9bed3db53ea9a92f3f7c98e24",
+      "bytes": 872,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_transcript_ui.txt",
+      "sha256": "d1820d65f814f7d3ad02b7b8a22b8bc4d93464019416c441114ffacfb7756234",
+      "bytes": 565,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_ui.txt",
+      "sha256": "e752e86ee06ee62155d5551d6eee6cc42dcafb6c96605ba9c7110136b7a29c7c",
+      "bytes": 965,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_ui_audit.txt",
+      "sha256": "25c59d56a01d0cb165f45474850ceb5068ca495d2d52e93ea8e382a3c13fb00f",
+      "bytes": 2349,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_workbench_helpers.txt",
+      "sha256": "b235bc8c682fcbeac8b1072421a3367c772542533f9d712b2ce634a4d9ac2093",
+      "bytes": 773,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_workbench_layout.txt",
+      "sha256": "2eb01cf3be40baec3c63a642dd8191463176b46e9f85131c718b6ff87f61e5f5",
+      "bytes": 5823,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/native_worktree_settings.txt",
+      "sha256": "0c5bc692c59510ac6972dd6fa6cb8d91567f8d4e7d813be3e1e00491a1fd4291",
+      "bytes": 1543,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/reference_file_mutations.txt",
+      "sha256": "8974a776fde7244926b640d3753c5a85bc9e2dbd02acb70463026e654e7077b5",
+      "bytes": 2950,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/first-full-run/reference_git_usage.txt",
+      "sha256": "52728ab782a870f6738d3bf77e08886bdf5778a4b9f3e46479ba0323ec8858ad",
+      "bytes": 2223,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/repaired-focused/ctest-output.txt",
+      "sha256": "7cbb76c11e3d4c377da88c19ce14b1d043f3e616b9f87f2cc80676ab4d25a60d",
+      "bytes": 2626,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/repaired-focused/native_command_center_host.txt",
+      "sha256": "45471b089780b95b769b0c3ddf667ba59fa2ca453b13eb2f09ed0193e891668d",
+      "bytes": 3141,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/continuation-integration/workbench-fullscreen-before.txt",
+      "sha256": "2eb01cf3be40baec3c63a642dd8191463176b46e9f85131c718b6ff87f61e5f5",
+      "bytes": 5823,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls-native.json",
+      "sha256": "394195e1e9db9163698d6dfa3b6ed3197dfcb34955c833e7832967b2bc9b7260",
+      "bytes": 11946,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/conversation_control-before.txt",
+      "sha256": "9ec0cff8c5743e434a5ad27e8deaa86027d9b521f7440d186fc43503007ad89f",
+      "bytes": 11954,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/conversation_control-final.txt",
+      "sha256": "1f3fcc73ba97b8696bc784da18574866f2371a111223331f1c3469b630ecff93",
+      "bytes": 2003,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/conversation_control-final.xml",
+      "sha256": "dbd24c7f0460fede11404b44af6f02bc8934877f6d51d621203cc86a8b161e1e",
+      "bytes": 2924,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/engine_observers-final.txt",
+      "sha256": "60eecff71473132c51b8167e801b981eab2d144d144a280ff56d8df29b1874cc",
+      "bytes": 3940,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/final-shared/native_agent_control_ui.txt",
+      "sha256": "e6bcd745b6b3e48411b4812dc6da49b81247bebbe4180e3051020ebee6c1f690",
+      "bytes": 789,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/final-shared/native_conversation_control.txt",
+      "sha256": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+      "bytes": 2353,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/final-shared/native_question_panel.txt",
+      "sha256": "146c396373b85b52234af578bb1919f62eefb705ea291d4c0c46fd3d8c526566",
+      "bytes": 1594,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/final-shared/native_side_chat.txt",
+      "sha256": "7834970d8e8d953ca132c253b4f452a9730c022d934f96dc2588be1d5ee603b4",
+      "bytes": 1675,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/final-shared/native_side_chat_host.txt",
+      "sha256": "0e139370c15fc141222f9641788b7034d2d07d4e45f8147998a6a4c61c2fdaea",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/history_recovery-final.txt",
+      "sha256": "2dd327090236ee27d9529bc24e160673265d1e128199cd77a46b11b338486573",
+      "bytes": 2542,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/presentation-final.txt",
+      "sha256": "6db00c90ba1aa45d9013ca5ddde6dd7f14fff5e3f5f648615282e975e89e7aa8",
+      "bytes": 5530,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/question_panel-final.txt",
+      "sha256": "69ab150845263ca3cc2ed6d496a0f383df78f97e42783ee717c5f777ac1834cd",
+      "bytes": 1879,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/conversation-controls/question_panel-final.xml",
+      "sha256": "1d2b7bd7bdaf122533c802a45fa7e23188889c21eec7c1a7524aa4ddba4d2643",
+      "bytes": 2206,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/feature-progress-update.json",
+      "sha256": "0e357aa3329ad6482385ff02eaee6fa00c9b99a772bbaf2428afc22865a04c20",
+      "bytes": 36103,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement.json",
+      "sha256": "dd76851fa021e22427516ff3b92ce53980bfbfe7d5cda3587a8470e83a0f38b3",
+      "bytes": 4545,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/build-final2.txt",
+      "sha256": "36eeb58bdb75615bc09d99e75506d43cdb98a3915dff2edda9972628916b7300",
+      "bytes": 198,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/contention-first.txt",
+      "sha256": "f1389c4c2325d99a4e126eb6c24a97b60c583e63003d99a4dbe9e8fd91250c63",
+      "bytes": 887,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/contention-first.xml",
+      "sha256": "6d7403efa3841e5762e62eac864588bdd8f0ae62059a4671b0c2574dda9b4960",
+      "bytes": 1195,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/full-after.txt",
+      "sha256": "d776c0d566b8f1858292864a114464f0f9e10da8b8ab25b9940043612b719bf9",
+      "bytes": 2405,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/full-after.xml",
+      "sha256": "4b9410238080742d208258a7e7c64072981a5b4f854426a83d7f9221eba7133e",
+      "bytes": 3510,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/full-suite-before.txt",
+      "sha256": "6f2c0e352203da58a1993fce2014b10ad1c7d7080575ccdf03153767d6dfce16",
+      "bytes": 2392,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/native-replacement-probe.json",
+      "sha256": "afaa1df8e957831aab5b92a09b3d8ef2470441dcdd0306183dbb270092bf9f61",
+      "bytes": 1136,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/sharing-final.txt",
+      "sha256": "63f442f35bb3ee4aefea1eb515facc38e96297bbe8c9d310914b4b2ffa3d308d",
+      "bytes": 787,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/git-watcher-atomic-replacement/sharing-final.xml",
+      "sha256": "ce4651c8dd11e65664cc5368dfd48d96cb97d31f251f8c48eda466c680329345",
+      "bytes": 1127,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations-native.json",
+      "sha256": "148d58e6cd64f05db6197d9f172c2718d127344846e638ee0c02571772c2849a",
+      "bytes": 20967,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/cleanup-visibility-before.txt",
+      "sha256": "89cd1042c03258480c3cd241265982c5cfa39d5694803546b66c30e7f8e14ebe",
+      "bytes": 576,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/mutations-final.txt",
+      "sha256": "1e7691ac454f037efa2e0684b980817006de490c6809c0fd5b8e53e7bbff2b3f",
+      "bytes": 4355,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/mutations-final.xml",
+      "sha256": "6e8c8752a6aa99aad25923c9e0bf32d12fc27ad80ad3ee2b588767cd68b7f16f",
+      "bytes": 6879,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/revocation-before.txt",
+      "sha256": "7fe539155dbdb57431a066e5d17124a5975e03121ca274df981892478cd277a6",
+      "bytes": 719,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/runtime-final.txt",
+      "sha256": "8ef205e0872037d95617868765fce3b4864f16ff6493ed74719d58810081ac86",
+      "bytes": 1022,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/runtime-final.xml",
+      "sha256": "dc8bc9533811ca1ded67c71f52d3e19f24a505d4ddefc286573cef44df9b8a86",
+      "bytes": 1573,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/structural-before.txt",
+      "sha256": "400001a78b2db95f6ef22c8532226ffdb3516b30065b55ae1a57811f1638067d",
+      "bytes": 3798,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/mutations/undo-lane-before.txt",
+      "sha256": "186ce9610f5e528fda0755734cdb36723622e5c7bbb6091f6fc2fd617afce24c",
+      "bytes": 624,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/native-browser-controls.json",
+      "sha256": "e6db7857eeab6e30be2fb7b85516aba8564e6f83a8483c23c3e23246f3299988",
+      "bytes": 2918,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/native-file-previews.json",
+      "sha256": "c8714068aa3cac11e7991d26f8b750dd2348da1df5402ef9d0594c6ee80a15dd",
+      "bytes": 2987,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell-native.json",
+      "sha256": "e56fe7e0f0fca5898a029064275e6ff9323ab60941d7056ea6f193d67b6c46f2",
+      "bytes": 16708,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/engine-final.txt",
+      "sha256": "0febd6a24a7fe84ed601503525f8d0bbb6a0e4b58a8b0e28b3f34c8abbda93b8",
+      "bytes": 1247,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/engine-final.xml",
+      "sha256": "7eee863f54c02b199201323d31d183093aead999eee04e09f1b5f949c745dcf3",
+      "bytes": 1982,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_engine.txt",
+      "sha256": "94e47a723ed76eee84b8a7265c39faeb6a9adbff474421c5f1d9313461dd0087",
+      "bytes": 1247,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_runtime.txt",
+      "sha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_service.txt",
+      "sha256": "1700159e2c76cc738e6046322d0076327c08df586edbfc55112f393e65cfbc04",
+      "bytes": 1589,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_shell_view.txt",
+      "sha256": "d5e742b6c0e459928d0416f414378461db5dff8a05b7192428033917b844608b",
+      "bytes": 572,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/final-shared/native_terminal.txt",
+      "sha256": "7a79d9a3d40b7407deafc79c170b87514d9f525cec9e5c7a7202fd6fead5209a",
+      "bytes": 1227,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/service-after.txt",
+      "sha256": "fe7a28252e411ab52568bed91403736a5c8e2698d70cc6dda398230a2802b01c",
+      "bytes": 3948,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/service-boundary-before.txt",
+      "sha256": "b7a5cec6f59a9b9b51dce43c3da2a27574789c031d1fa37bbb4612f158f9da1c",
+      "bytes": 1405,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/service-final.txt",
+      "sha256": "23c6589cc78b87fee1e2e6abf7951391f55a86eb6ff3bb354ff37544884e6b3d",
+      "bytes": 1872,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/service-final.xml",
+      "sha256": "b00a492e1c95d3b81686ec6667eb57a15c26bba9d20ef79f16ba3a3e78c23985",
+      "bytes": 2756,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/tall-view-before.txt",
+      "sha256": "b7201ae74c9d4d4670837b5ab18a97c730aadd95f1e5974298d18fb380486ba7",
+      "bytes": 824,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/terminal-observer-before.txt",
+      "sha256": "08688e591d08cdd82c948658dc84b8496cdce4aa9e003974957dcf012e9bd767",
+      "bytes": 712,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/terminal-regression.txt",
+      "sha256": "8fbd5e82f6b8a5f9822ec4448ff17d10f1467f37f41e29ec7d1b32bdcd2282fd",
+      "bytes": 1486,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/terminal-regression.xml",
+      "sha256": "7661802fa43bb063511b1a685cf00cf38f2d1c538e3cc04ed1f553363892d35c",
+      "bytes": 2252,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/view-final.txt",
+      "sha256": "67effd07e026ba43aa8f222116112cab24ba43323ab5fe5977f36e4dd8c99ab2",
+      "bytes": 848,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/persistent-shell/view-final.xml",
+      "sha256": "2a436265923e82817032d527093072ac951f14d4c0902af267a595302147fa5c",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/publication-review.json",
+      "sha256": "813080c6eb916bf178d957f72ec824bd131fe899c4c915ba9b090934e3eb1201",
+      "bytes": 51846,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/reference-readiness.json",
+      "sha256": "545f93c35be316074ba2362ba2906e69ddeb33fda6c93d02827a59071df96b63",
+      "bytes": 168227,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-host-tests.txt",
+      "sha256": "d7b315d06a08a22a0899864215cb7c46c0a68e8ad2a161cbfdd7ace0bc935053",
+      "bytes": 2124,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-integration/native_composer_completion.txt",
+      "sha256": "c8978bb3c38f00b296230b11fd7f2f622c35219fd19f3aa64eb1cafe0f866108",
+      "bytes": 13045,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-integration/native_composer_host.txt",
+      "sha256": "d7b315d06a08a22a0899864215cb7c46c0a68e8ad2a161cbfdd7ace0bc935053",
+      "bytes": 2124,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-integration/native_composer_search.txt",
+      "sha256": "88e6c2fa17780110db06e0dfb39ced87eeba12e38ad8d3d8c9c80d69e2003c29",
+      "bytes": 1178,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-integration/native_transcript.txt",
+      "sha256": "c500f3c356547fde10188b7dbfab777c52000ca8fcb794191d0031c725448c72",
+      "bytes": 5694,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-integration/native_transcript_rich.txt",
+      "sha256": "2382604a62d1038382b5d1b4306f7bec68bdd02bd8b56264d7d5f53b6fe11dcd",
+      "bytes": 1494,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/rich-transcript-composer-native.json",
+      "sha256": "99ae2efbf4004b0f51a605986843d8cc90d576fb0f2eb42ce53ff6516831d7b6",
+      "bytes": 7916,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs-native.json",
+      "sha256": "00efc8119e0189f2262eee8496b61b20bde1a9e8ebbe9593b60838787ce16abf",
+      "bytes": 17493,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/mount-final.txt",
+      "sha256": "537e6f1df68ec275448f216015a1060659fbedeeaf4a84867244459a4efc4267",
+      "bytes": 671,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/mount-final.xml",
+      "sha256": "a64c205cb1d40ab208df152a1b24b1ee013d9e3dd9d2c334ec8bd2591379fb14",
+      "bytes": 1046,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/runtime-before.txt",
+      "sha256": "2623ef8143bcbac840de0b251c8dc20ac1ba6451431d12ea28deaa84623e0ce1",
+      "bytes": 1659,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/runtime-final.txt",
+      "sha256": "eb9f3150ba418f11d7babcec8fdab45c1140e1ba89f37a10819c0ff0f69915fa",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/runtime-final.xml",
+      "sha256": "c8dbd5b7383f6d732b81fc859cf30a1f979712fa06560b8d74884bac8ad2e3e4",
+      "bytes": 1809,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/store-final.txt",
+      "sha256": "63fa840f2ce0ded67e8b32617e91154d2119417d1b06b16d5444d79a0f3f3949",
+      "bytes": 1267,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/store-final.xml",
+      "sha256": "9e4b613af9612eabbdce263ca063aff4e369c412b8d6cb168efac429192ef65e",
+      "bytes": 2079,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/watcher-retry-before.txt",
+      "sha256": "2ebf77f3e8f7ad113f0c7eee936312e1195d4fbb3ed38934e6801f38802bd446",
+      "bytes": 662,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-background-native.json",
+      "sha256": "5b8caa61bcccd84d06e05a08050a41e3c111b67209ac1a765ae4b05e3b8f5d88",
+      "bytes": 3435,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-background/before.txt",
+      "sha256": "13dd62bb97a9b7915251e9bc49c50dee866b042aec1618072baaafd934b4cb4c",
+      "bytes": 891,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-background/full-after.txt",
+      "sha256": "a89d212bb91deb33a160428b7b76d7c2a9bcde4e39d117dd5a4cd602527756ea",
+      "bytes": 2911,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-background/full-final.txt",
+      "sha256": "b891f6d1bde373e952cf8bc55dff22384361d92258e05b61955e0c1c13c54d1d",
+      "bytes": 2761,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-background/full-final.xml",
+      "sha256": "dedcdcb70f0b29caa489beb663b3f5a00746bfec260d57c40d4f1349e0e6b29b",
+      "bytes": 3166,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-component-tests.txt",
+      "sha256": "c7157c1bf352aac7283725d38b9dad52117568da73265647cc46730ae69b0056",
+      "bytes": 1675,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-controls-before.txt",
+      "sha256": "899569f47fcd83433711c22f90bfd79a00bc1b7acc755cabac59a36481e774df",
+      "bytes": 1235,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-host-final-tests.txt",
+      "sha256": "b891f6d1bde373e952cf8bc55dff22384361d92258e05b61955e0c1c13c54d1d",
+      "bytes": 2761,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-host-initial-tests.txt",
+      "sha256": "f1d299cb62668a88f2d35796f29574cd2f77dc2ae21440a3e494135a00996e88",
+      "bytes": 2488,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/side-chat-native.json",
+      "sha256": "b6fea7e62ac47ee088c04ec9635a7b7ec864f08f0d2d31882e74e61923dad045",
+      "bytes": 8766,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/FileReadSnapshotStore.cpp",
+      "sha256": "a93367e800f596184e850c3c4a8f5ba9978723af33a35f00db18be0857ae45d5",
+      "bytes": 19997,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserInspector.cpp",
+      "sha256": "73c775ae5f09fe13fdae4bb483ab77609456294999e51788feea6df39addf902",
+      "bytes": 20257,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserInspector.h",
+      "sha256": "9be26825fc74c3ea0b504e2dcd32f96683c19532a69ebb931e802a0d335a24dd",
+      "bytes": 1965,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "sha256": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd",
+      "bytes": 61518,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngine.h",
+      "sha256": "deb340449e1a6bb9da6fe616106d6e8d9c06c54c740f8e14fadcc21029a97ba2",
+      "bytes": 8883,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngineControl.cpp",
+      "sha256": "2b462c3733f8093d0098e132c9a9cfc07bbafe771e8f63841a9bb8a2a05994b8",
+      "bytes": 10254,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentPresentation.cpp",
+      "sha256": "c3b927c2402f69316f0c7ba8c7c93457a8d9926ea4289698631b2fad2e7123cb",
+      "bytes": 15308,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/QuestionForm.cpp",
+      "sha256": "f1c8c1cfa9d870b92ac3ba85426094f7c628993a783052c0884461ddf9cea0f9",
+      "bytes": 15881,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/QuestionForm.h",
+      "sha256": "ba0a7025e1a1655ce705d8f1a339f1ef6538586726d93d4838172769e761e497",
+      "bytes": 1294,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/QueuedMessages.cpp",
+      "sha256": "8e7ea61a7d79ce51b3831138cb10cdecf74546bbcf9b478e33ca60b5bc6b7d0d",
+      "bytes": 3382,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/QueuedMessages.h",
+      "sha256": "d22ef6e3d1cfe24db3936212d13f9db294b7a08e09f5e4dea809e5d5e3f1ef62",
+      "bytes": 770,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256": "885bc3672d6604952d51f632ccdc2870d402ec4617ec235421d81785ce5e77ff",
+      "bytes": 44749,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.h",
+      "sha256": "468a9c94b511c9454e04a9657030f664dcabe7f9fb4ea0b37c8b30d9b1ab6d9f",
+      "bytes": 2909,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkProvenanceCodec.h",
+      "sha256": "acf4101073d76babbe5678927e242973d6058e86192b5540561a1936927eba7f",
+      "bytes": 3869,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.cpp",
+      "sha256": "495159d7128784ce9bfcc6f56faa1ae79d737dea1104bd3a4828ad671d797bab",
+      "bytes": 19266,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/links/TranscriptLinkResolver.h",
+      "sha256": "6c3ac453fc86993935fcc2c91b7b4b3fad66c934280c12d963aec6898364e1d6",
+      "bytes": 2579,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationDiff.h",
+      "sha256": "368ca16b70228248313d4793b7a6dac12b7bb58d974dc7f6c72f88043c9ffe08",
+      "bytes": 2544,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationExecutor.h",
+      "sha256": "bb2ce58fc5e72944666fb6de04b02c93def1fe7d41545c3dabbd734739405947",
+      "bytes": 801,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.cpp",
+      "sha256": "fdf8227402e855962db4e9ce2546f96e6a6a4fcde258db743a1fea48cd2d1e95",
+      "bytes": 11243,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.h",
+      "sha256": "7419163d24d7fe6ae3b32c64e28d0de7e0dfd02406e5d6f984d4a369d6c28ddb",
+      "bytes": 1288,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.cpp",
+      "sha256": "e2b4a24985cf0b27136c54591612145faaa3279f406954b946816c676acc1305",
+      "bytes": 52934,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.h",
+      "sha256": "e18aec8b4487b2785e5f610406332a8e708dc1dc22991cc5157bc054415f78e4",
+      "bytes": 2983,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256": "4b089f2e3d7d0674960292e86dae9b5189a95458e6cc6d23f788f1fcb591e32f",
+      "bytes": 25953,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "3274bcacf7a27c31cb1f7054b71c3ad87c0d22365e42950df5e161b183dd3afb",
+      "bytes": 3845,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.cpp",
+      "sha256": "b743aae3e41ddc7853ff51508a60ef67d5fa7e7925a8c269c6ae9a08265c8c3a",
+      "bytes": 31352,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.h",
+      "sha256": "c60dbb3496f1f10d0c097aab7f1df93726914c1accd98b2dcd49e48927a702ed",
+      "bytes": 4864,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/SessionLogStore.cpp",
+      "sha256": "177bae3972520f96cc508b0573caca089a9a113919a5659b74f8fa728402225e",
+      "bytes": 18793,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/SessionLogStore.h",
+      "sha256": "3e3d9aca553b825392e099c68ae27884103995cf764f5f317b499e7d3755a2e4",
+      "bytes": 1496,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellProtocol.cpp",
+      "sha256": "62b1c2a441a73422540d415d6f29bd48460ccb1bf3f6b5272110f410e7cca5b9",
+      "bytes": 10976,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellProtocol.h",
+      "sha256": "7322bdea6554396165f05502ab93f9f230aa1d0d2030190cd1632db5590dc028",
+      "bytes": 1318,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellService.cpp",
+      "sha256": "4f8a7c443f36923a9a6319d65d182aae008d9dde31529d4040796fa6d80cd984",
+      "bytes": 33098,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellService.h",
+      "sha256": "80cab36ae597a140e31dd430a54e8bfe1633230b6aa445c5249ef82eadcffe62",
+      "bytes": 2489,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/ConPtyProcess.cpp",
+      "sha256": "1266d01490ec6d3fdf1485da572af546da81ab9f91ccab8e79227e1c20a56484",
+      "bytes": 13268,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/ConPtyProcess.h",
+      "sha256": "043b14eb8d170e50fc025f7508bece74c03308ca589e2117ac2be55590e818b0",
+      "bytes": 1022,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalModel.cpp",
+      "sha256": "1eb480767cf9d6856fda189b6c55c5b551705fb51e3d5f7e13f64f48389a3a2a",
+      "bytes": 11615,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalModel.h",
+      "sha256": "962504aa8820e3807aba4d8920b4b6f8bfbc2584e13f4902f561bf18439b3f92",
+      "bytes": 2704,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalWidget.cpp",
+      "sha256": "0ce84daabe393bd3afd49cf6ece43414541480b46021e902b8ee67980f4604ee",
+      "bytes": 14394,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/terminal/TerminalWidget.h",
+      "sha256": "5c53fb7c21713d50c6130f0f8b068801461011079727e0e7ae686192bc3dc1b5",
+      "bytes": 2758,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/AppStyle.cpp",
+      "sha256": "42e166fd930b0e939c09e92df95d5ebc400d833c1782821fb5801cc3064f0afe",
+      "bytes": 3066,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/BrowserViewport.h",
+      "sha256": "ac8b821b397b0b84116abce67ee6f68bb96aae0aa9c7ef1f0e07ccb0191886b1",
+      "bytes": 1831,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandCenter.cpp",
+      "sha256": "e80e828a2cbc50fb70210e7d43fc9946bae6a592b706b669043fbe15d3df3ca8",
+      "bytes": 15327,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandCenter.h",
+      "sha256": "90c4b6805e2be05988ac203e45601e0c9fb9b31d70e7820af22e26dab65bd823",
+      "bytes": 1884,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandFileSearch.cpp",
+      "sha256": "c9c730c8329247738fa54bde316f0a3390f7d6f82de1094e7874a18001c55393",
+      "bytes": 5398,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandFileSearch.h",
+      "sha256": "4e69aca39fee0cedabdf2a9611ccfbe733287ef6065e6dcdf1253d14ff85b465",
+      "bytes": 429,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/Composer.cpp",
+      "sha256": "5b18faa312de207bf681d32db9be97f8b876d7a5a44504b6ae0ed1d57cb466b1",
+      "bytes": 11992,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "sha256": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265",
+      "bytes": 5281,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ComposerWorkspaceSearch.cpp",
+      "sha256": "6acb8e26f11771f092bd5bb3cfd4bc06e029cb23cff8c9c39ba66f7ed144b63a",
+      "bytes": 9196,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ComposerWorkspaceSearch.h",
+      "sha256": "0e1a5b89f2b4444491cc73b70d94e87ff3f5cb2046213cb8a2311855ec35a347",
+      "bytes": 921,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ContentControlsScrollArea.h",
+      "sha256": "dbc4c9d0a5ab6050c687d3e228b2c2e22fda79d539ac32f76112e54fed40250c",
+      "bytes": 1188,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "sha256": "b7ff97509229e7dd337dbfb707522a3ee2e4b9fe220bec95b5f5e5938fdf82b0",
+      "bytes": 39649,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ConversationView.h",
+      "sha256": "0e924cbeaebb4d9747f6f70ebef2cc64dd206c0ca0fc1359dbd45a20ffdd28fd",
+      "bytes": 1384,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/FileChangesPanel.cpp",
+      "sha256": "3c7ee600aebc4b0cf3879e0b07e3495309bb42be8ebe808e836c3c233ae9b482",
+      "bytes": 6953,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/FileChangesPanel.h",
+      "sha256": "b7c1c08d7927102f747376e70615e53543246486bd5e00c5498ae3a85ea084a8",
+      "bytes": 1121,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/FileDiffView.cpp",
+      "sha256": "c859f3d70787e2eb780fd44fd4e003a11d4382c3d9a59dce3502b4646daccd9e",
+      "bytes": 6421,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/FileDiffView.h",
+      "sha256": "635f583a2d8db1eeec8b1eee5fde615b87743b9220dd955b492b13692dadfbe3",
+      "bytes": 403,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/Icons.cpp",
+      "sha256": "f26823546be10114e41959bb24befefea5871aba149f9d733ef4a2d612db09bb",
+      "bytes": 4523,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ImagePreview.cpp",
+      "sha256": "16064c5a181f8d9d258721de5a16bc6a92ef2c313e395525de5d186e05180598",
+      "bytes": 3984,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/ImagePreview.h",
+      "sha256": "bc9d0c1264c2eb0e14c692aea5fe98dc9a9d4f5e4fe9b750ddd487b877ac4213",
+      "bytes": 533,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256": "92f0091e3fed6bbc8fb503e47a90a0ad32e3c32560119db678509a5d8b985c4b",
+      "bytes": 66030,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256": "1ecb0722a1d4b1643f78ca93aae6f5d1b37077214a23f5c013b219c4fd5252d4",
+      "bytes": 8811,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowBrowserTools.cpp",
+      "sha256": "63317bd9f89765b287a674bdf7dedd3906b63bc32bd745fdaa76c1149037dbfe",
+      "bytes": 9342,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "sha256": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55",
+      "bytes": 13373,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "sha256": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648",
+      "bytes": 13532,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowControl.cpp",
+      "sha256": "4001e37672a507b45a4c809bea604e46b1e27a7d626885a49c71e4f48531f2c4",
+      "bytes": 10517,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "83c48254c189c669acea4a5add317a36681135f724ce1c472bd5ff454808297b",
+      "bytes": 14541,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "sha256": "ec93e2cd7bd9c8784f14a664b3a0fda8e32236ada6c16377489b3c85d6d25b7e",
+      "bytes": 10297,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowLinks.cpp",
+      "sha256": "2c17aa406721ddbc5be579e9f339e0ebfb0b956c4a98b38191fe42d0a1e4e6f7",
+      "bytes": 13793,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowMutations.cpp",
+      "sha256": "4398fce5ab3dbe29506bddb452c0999003a61ffd69a0d8bba23d1cdb95738eca",
+      "bytes": 7162,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowShells.cpp",
+      "sha256": "8950ab2ae3e67951beb2e29e42e42c786aa757100cd23066097f19dc79ebf485",
+      "bytes": 4266,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowSideChats.cpp",
+      "sha256": "6e9a2e33e0af26d1cb59fc7624b70f80975de19c5f9b550d7f90107aa397b087",
+      "bytes": 18355,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256": "deefd1a9d07ab040a004274208dc18fb338f950525c0347edbdac76c77544ead",
+      "bytes": 6144,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MarkdownParts.cpp",
+      "sha256": "8034948c41c04eb2c8edc24016e74f8e903ec7cbb443acda9b8b9c50eed611a5",
+      "bytes": 17395,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MarkdownParts.h",
+      "sha256": "e1999bedbba1974be07eca843a9fd6a05dd344aea11597e89b345b4486aac53c",
+      "bytes": 2456,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MessageQueuePanel.cpp",
+      "sha256": "c5218044bbee9a67e12742dda27d145941f23b85ead9509eb02113b40e030982",
+      "bytes": 4614,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MessageQueuePanel.h",
+      "sha256": "b0d6fa946ed3da4b6a8b25575f3dff42e67c862e8bc97c1da86b2171ac789b4c",
+      "bytes": 695,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/QuestionPanel.cpp",
+      "sha256": "fc0740ead3f74ff3d8c041d940e2e5ed6a6ce2208fb15c188c98d64f3043982b",
+      "bytes": 10054,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/QuestionPanel.h",
+      "sha256": "4947141869aacb3ef67bc6188679b6de817cadafadca0d8096c9c36774f7659e",
+      "bytes": 1158,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677",
+      "bytes": 15185,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "sha256": "bca2ec27bcfa6035537a98910c8957b631cf95b3c0f8ee7e4c6cea03b06edd0b",
+      "bytes": 1745,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SideChatPane.cpp",
+      "sha256": "0c776ff9e6e2adcfd667cfc52217ac1005b208e357eab4ae60e00a1861ab0903",
+      "bytes": 10128,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SideChatPane.h",
+      "sha256": "14e5db969d4de99f857dbf2c0b0b5b390966069c1efd6112f26e1a2f6626fb96",
+      "bytes": 2072,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SidebarModel.cpp",
+      "sha256": "5401f5cbb239de81972da35de05d556ea58c9ea5c04f15bb7cb1208d2819e7b4",
+      "bytes": 8585,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/TrustedImage.h",
+      "sha256": "b7e5ac6234ab752f928cdd1c8cd9090ce6dfbd13ba1b179718190d6ae7327d37",
+      "bytes": 2118,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_agent_control_ui.cpp",
+      "sha256": "a82ad4997fa1c45aa41ab91bea9d6f18a5e420efe0bf1e8d096e14ac38636487",
+      "bytes": 11508,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_inspector.cpp",
+      "sha256": "9b5be15fde3b00c2642065ac687e965858d07d48bd13c51fe4735fa774a90b5c",
+      "bytes": 15380,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_browser_tools.cpp",
+      "sha256": "dd221120766961ab3db512753cdb1821cf65c86bb30b57965fc441c5a9ef192f",
+      "bytes": 39212,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_command_center.cpp",
+      "sha256": "5fe61845a33ec67b3ef37345510cc1f739d2f366d867f78a223d5d57206e3d68",
+      "bytes": 6303,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_command_center_host.cpp",
+      "sha256": "8ba89bb5c0c806ff59c6b20ef9eea259f2b9ab79238ad0e81c1487891a8be146",
+      "bytes": 12212,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_command_file_search.cpp",
+      "sha256": "165c4efd62e77f5e03ab110c4fe8efa636e796d7af8b495c0bc964277e751370",
+      "bytes": 3514,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_composer_completion.cpp",
+      "sha256": "b447fffeb451162c717264135f09eff6efa55d24124bda02882f68c86907307c",
+      "bytes": 8116,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_composer_host.cpp",
+      "sha256": "2e63a5f5e041adf5ff41b789caa2be63bd4461dab616e0c3227c8e53e299192c",
+      "bytes": 8155,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_composer_search.cpp",
+      "sha256": "16dea270b85dd67e29a7d0863957e2f887bf7ba24c8aa35979d47f4031664fab",
+      "bytes": 4120,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_conversation_control.cpp",
+      "sha256": "296c0cff6d19ffc7d33b5506841323b527d69ba904b8b987157e1604a6ee6227",
+      "bytes": 31096,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_file_diff.cpp",
+      "sha256": "a6f1e96a0b08decce35b982e3bc3c7dd252eae86ccd247dbb8048085310bef8d",
+      "bytes": 5375,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_file_mutations.cpp",
+      "sha256": "bf6898ab0aa3c98d533e84ac0c29915a80454091e5aa74bd3f1a3776c982a197",
+      "bytes": 34159,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_git_watcher.cpp",
+      "sha256": "fbf5e84878a8f3d1539068b21c4c3c943eacad7eaeeaba508b2c40f57947acb6",
+      "bytes": 26403,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_image_preview.cpp",
+      "sha256": "2f073c9b5eb7f8a66d211449b1f00ef379e84f46c4c81fbf97a7b89e4be120f8",
+      "bytes": 2953,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_link_provenance_codec.cpp",
+      "sha256": "772c55f08504aa17dd32e37369be3c2b63f304fde9ac20b844a9eb90820ec56d",
+      "bytes": 2621,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_main_chrome.cpp",
+      "sha256": "b1947d083e48dd2688fa028085ef2904daf7e5adb479f7e9b258bb3fc59e2aee",
+      "bytes": 13205,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_mutation_runtime.cpp",
+      "sha256": "e42d3e953ab0443bb96abbf8af035cf8f169bba53b2a08d99cd644bff4f968e9",
+      "bytes": 14102,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_question_panel.cpp",
+      "sha256": "b34be41010d9502a04934760e1b2b1773e3bb618581332c22098462a85f6b31a",
+      "bytes": 7835,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_reference_controls.cpp",
+      "sha256": "03e0004fa4f319c8c7af7445779e36a21cdc562cd98141445d8968beec0b23e2",
+      "bytes": 7826,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_session_logs.cpp",
+      "sha256": "bc59ca5e4b7719972f2daefc174e3d995ae42771ff554212f64f7b20f225f9b1",
+      "bytes": 7492,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_engine.cpp",
+      "sha256": "856daefaec8d45353d285cdb5bc53b246a26541602a41a734ee061202bdbd050",
+      "bytes": 21875,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_log_mount.cpp",
+      "sha256": "b19797e5ac30ed0a11c1da6496aab10aeedde7746a8625a8f91cb5776bf1123f",
+      "bytes": 5442,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_runtime.cpp",
+      "sha256": "b0d0203712a1feddb8d902a8a021befe6c9b2ba202092beef5e9ee2020b1e0e4",
+      "bytes": 19036,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_service.cpp",
+      "sha256": "170b1d942bfe9f2606c54d1b06bfaf202c970a4dd1e78bbea88342f305604e0b",
+      "bytes": 24630,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_view.cpp",
+      "sha256": "7be18ce7878629cd21abef43518043e5c1f707d772cfdf089b74c3b11bff7c49",
+      "bytes": 5734,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_side_chat.cpp",
+      "sha256": "c7ad770c3a8041c7fe6fc890a5e0ef42a64caa4156d649c43c0cded39adf9ea5",
+      "bytes": 6993,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_side_chat_host.cpp",
+      "sha256": "2d0fd3d3daeb54c618e1bdcef09ee0b60b234f66d048ae719ee911ce14130d36",
+      "bytes": 23210,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript.cpp",
+      "sha256": "d68c0f3c7ad7cf7a8c0fc3d058ade7f4f3d857aa7c86fb2556071abae73df347",
+      "bytes": 22511,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_link_ui.cpp",
+      "sha256": "357fa60e81c0c2c8d01f6f6fef09beb96b8636eb08a710824757a1d4b42e344a",
+      "bytes": 23483,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_links.cpp",
+      "sha256": "796c63e3aff76651605b512d187959af0a686573886cf26f170c4bf620556c66",
+      "bytes": 13787,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_transcript_rich.cpp",
+      "sha256": "ee80d90c25b59a6a5baa36d0e3408a9c5227f3d629021cd7a61e0a111a129a1e",
+      "bytes": 7181,
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ]
+}

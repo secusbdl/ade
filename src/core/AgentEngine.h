@@ -5,6 +5,7 @@
 #include "SseParser.h"
 #include "ToolExecutor.h"
 #include "AgentPresentation.h"
+#include "QuestionForm.h"
 #include <QJsonArray>
 #include <QMap>
 #include <QNetworkAccessManager>
@@ -27,14 +28,40 @@ public:
     void setWorkspace(const QString &path);
     bool setAppsDirectory(const QString &path);
     void setSystemContext(const QString &context);
+    void setDynamicSystemContext(std::function<QString()> context);
     void submit(const QString &prompt);
     // True once the user message is accepted into history, even if that turn
     // then fails or is cancelled synchronously by an observer.
     bool submitWithAttachments(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences = {}, const QJsonObject &pathMetadata = {});
+    // Durable UI send: accepts into the queue while working. A question is
+    // interrupted by a normal send; Stop and final failures retain the queue.
+    bool sendUserMessage(const QString& text,const QJsonArray& attachments={},const QJsonObject& references={},const QJsonObject& pathMetadata={},bool queueIfBlocked=false);
+    QJsonArray queuedMessages() const {return m_queuedMessages;}
+    bool setQueuedMessages(const QJsonArray& messages,QString* error=nullptr);
+    bool editQueuedMessage(const QString& id,const QString& text);
+    bool removeQueuedMessage(const QString& id);
+    bool moveQueuedMessage(const QString& id,int index);
+    bool flushQueuedMessage(const QString& id = {});
+    bool resumeQueue();
+    // Called synchronously before publishing queue changes or dispatching a
+    // dequeued message. The host atomically saves both arrays or returns false.
+    // This callback must not pump events or mutate the engine.
+    using QueueCommitter=std::function<bool(const QJsonArray& history,const QJsonArray& queue,QString* error)>;
+    void setQueueCommitter(QueueCommitter committer);
+    QJsonObject pendingQuestion() const;
+    // Hosts with a question presenter opt in. Validation/headless engines must
+    // neither advertise questions nor wait for an unavailable UI.
+    void setQuestionToolEnabled(bool enabled) { if (!m_busy) m_questionToolEnabled = enabled; }
+    bool submitQuestionStep(const QString& token,int expectedStep,const QJsonObject& answers);
+    bool updateQuestionDraft(const QString& token,int expectedStep,const QJsonObject& answers);
+    bool goBackQuestion(const QString& token,int expectedStep);
+    bool cancelQuestion(const QString& token,const QJsonObject& draft={});
     using MessagePreparer = std::function<QJsonArray(const QJsonArray &, const ProviderConfig &, QString *)>;
     void setMessagePreparer(MessagePreparer preparer);
     void setFileReadCommitter(FileReadCommitter committer);
+    void setFileMutationExecutor(FileMutationExecutor executor);
     void setAttachmentReadSource(FileReadSource source);
+    void setShellReadSource(FileReadSource source);
     void cancel();
     void approveTool(const QString &id, bool allow);
     void setAlwaysAllow(bool enabled) { m_alwaysAllow = enabled; }
@@ -48,10 +75,13 @@ public:
     ProviderConfig provider() const { return m_provider; }
     QString actualModel() const { return m_actualModel; }
     void setExternalTools(const QJsonArray &definitions);
+    void setExternalToolTimeout(const QString& name,int milliseconds);
     void completeExternalTool(const QString &requestId, const QString &output, bool error);
     // UI-only bounded preview, accepted only for the currently running opaque
     // external request token. The final canonical tool result replaces it.
     bool appendExternalToolOutput(const QString &requestId,const QString &text);
+    bool replaceExternalToolOutput(const QString &requestId,const QString &text);
+    QString externalToolCallId(const QString& requestId) const;
     void completeExternalToolWithAttachments(const QString &requestId, const QString &output, bool error,
                                              const QJsonArray &references, const QJsonObject &pathReferences = {}, const QJsonObject &pathMetadata = {});
 
@@ -69,9 +99,20 @@ signals:
     void externalToolRequested(QString requestId, QString name, QJsonObject arguments);
     void externalToolCancellationRequested(QString requestId);
     void effectiveProviderChanged(QString providerId, QString modelId, int index);
+    void queuedMessagesChanged();
+    void queueError(QString error);
+    void questionChanged();
+    void questionError(QString token,QString error);
+    void turnAboutToStart(QJsonObject acceptedUserMessage);
 
 private:
     struct ToolCall { QString id, name, arguments; };
+    bool startUserMessage(const QString&,const QJsonArray&,const QJsonObject&,const QJsonObject&,const QString& queuedId={},const QJsonObject& immediateMessage={});
+    bool commitQueue(const QJsonArray& history,const QJsonArray& queue,QString* error);
+    bool replaceQueue(const QJsonArray& queue);
+    void scheduleQueue();
+    void beginQuestion(const ToolCall&,const QJsonObject&);
+    void finishQuestion(const QString& reason);
     void requestModel();
     void readReply();
     void finishReply();
@@ -95,6 +136,7 @@ private:
     QList<ModelConfig> m_models;
     QString m_presetId;
     QString m_systemContext;
+    std::function<QString()> m_dynamicSystemContext;
     MessagePreparer m_messagePreparer;
     ModelFallback m_fallback;
     QNetworkAccessManager m_network;
@@ -104,6 +146,14 @@ private:
     QTimer m_externalDeadline;
     SseParser m_parser;
     QJsonArray m_messages;
+    QJsonArray m_queuedMessages;
+    QueueCommitter m_queueCommitter;
+    bool m_committingQueue=false,m_queuePaused=true;
+    bool m_configuringTurn=false;
+    quint64 m_queueResumeSerial=0;
+    QuestionForm m_question;
+    bool m_questionToolEnabled = false;
+    QString m_questionToken,m_questionCallId,m_questionStopReason;
     AgentPresentation m_display;
     int m_displayHistoryIndex = -1;
     QMap<int, ToolCall> m_streamCalls;
@@ -111,6 +161,7 @@ private:
     QJsonArray m_googleParts;
     QJsonArray m_externalDefinitions;
     QStringList m_externalNames;
+    QMap<QString,int> m_externalTimeouts;
     QString m_externalRequestId;
     bool m_externalOutputTruncated = false;
     QList<ToolCall> m_pendingTools;

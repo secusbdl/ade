@@ -88,10 +88,11 @@ AgentEngine::AgentEngine(QObject *parent)
     connect(&m_externalDeadline, &QTimer::timeout, this, [this] {
         if (m_externalRequestId.isEmpty()) return;
         const auto request = m_externalRequestId;
+        const int deadlineMilliseconds=m_externalDeadline.interval();
         const auto generation=m_generation;const QPointer<AgentEngine> self(this);
         emit externalToolCancellationRequested(request);
         if(!self||generation!=m_generation)return;
-        completeExternalTool(request, "External tool exceeded its 120-second deadline.", true);
+        completeExternalTool(request, QString("External tool exceeded its %1-second deadline.").arg(deadlineMilliseconds/1000.0), true);
     });
     connect(&m_deadline, &QTimer::timeout, this, [this] {
         fail(QStringLiteral("The model request exceeded its 180-second deadline."));
@@ -135,10 +136,13 @@ void AgentEngine::setWorkspace(const QString &path) {
     if (!m_busy) m_tools.setWorkspace(path);
 }
 
-bool AgentEngine::setAppsDirectory(const QString &path) {return !m_busy&&m_tools.setAppsDirectory(path);}
+bool AgentEngine::setAppsDirectory(const QString &path) {return (!m_busy||m_configuringTurn)&&m_tools.setAppsDirectory(path);}
 
 void AgentEngine::setSystemContext(const QString &context) {
-    if (!m_busy) m_systemContext = context;
+    if (!m_busy||m_configuringTurn) m_systemContext = context;
+}
+void AgentEngine::setDynamicSystemContext(std::function<QString()> context) {
+    if(!m_busy)m_dynamicSystemContext=std::move(context);
 }
 
 void AgentEngine::setMessages(const QJsonArray &messages) {
@@ -182,8 +186,15 @@ void AgentEngine::setFileReadCommitter(FileReadCommitter committer) {
 void AgentEngine::setAttachmentReadSource(FileReadSource source) {
     if(!m_busy)m_tools.setAttachmentReadSource(std::move(source));
 }
+void AgentEngine::setShellReadSource(FileReadSource source) {
+    if(!m_busy)m_tools.setShellReadSource(std::move(source));
+}
 
 bool AgentEngine::submitWithAttachments(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata) {
+    return startUserMessage(prompt,references,pathReferences,pathMetadata);
+}
+bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata,const QString& queuedId,const QJsonObject& immediateMessage) {
+    if(m_committingQueue)return false;
     if (m_busy) { emit failed(QStringLiteral("This agent is already running.")); return false; }
     const QPointer<AgentEngine> self(this);const auto initialGeneration=m_generation;
     m_lastTurnSucceeded = false;
@@ -221,7 +232,19 @@ bool AgentEngine::submitWithAttachments(const QString &prompt, const QJsonArray 
     if (!references.isEmpty()) {QJsonObject metadata{{"attachments", references}, {"pathReferences", pathReferences}};if(!pathMetadata.isEmpty())metadata["pathMetadata"]=pathMetadata;message["metadata"]=metadata;}
     const auto displayId=QUuid::createUuid().toString(QUuid::WithoutBraces);
     message=AgentPresentation::withMetadata(message,QJsonObject{{"version",1},{"id",displayId},{"parts",QJsonArray{QJsonObject{{"id",displayId+"/0"},{"type","text"},{"text",prompt},{"state","done"}}}}});
-    recovered.append(message);m_messages=std::move(recovered);
+    auto remaining=m_queuedMessages;
+    if(!immediateMessage.isEmpty()){message=immediateMessage;message.remove("id");}
+    if(!queuedId.isEmpty()){
+        if(remaining.isEmpty()||remaining.first().toObject()["id"]!=queuedId)return false;
+        message=remaining.takeAt(0).toObject();message.remove("id");
+    }
+    recovered.append(message);
+    if(!queuedId.isEmpty()||!immediateMessage.isEmpty()){
+        QString error;const bool saved=commitQueue(recovered,remaining,&error);
+        if(!self||initialGeneration!=m_generation||m_busy)return false;
+        if(!saved){emit queueError(error);return false;}
+    }
+    m_messages=std::move(recovered);m_queuedMessages=remaining;
     m_busy = true;
     const auto generation=++m_generation;
     m_round = 0;
@@ -233,6 +256,12 @@ bool AgentEngine::submitWithAttachments(const QString &prompt, const QJsonArray 
     // The accepted user row can notify observers before requestModel resets the
     // next round. Cancellation at that notification must not retain an old round.
     m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;
+    m_configuringTurn=true;
+    emit turnAboutToStart(message);
+    if(!self)return true;
+    m_configuringTurn=false;
+    if(generation!=m_generation||!m_busy)return true;
+    if(!queuedId.isEmpty()){emit queuedMessagesChanged();if(!self||generation!=m_generation||!m_busy)return true;}
     emit displayChanged();
     if(!self||generation!=m_generation||!m_busy)return true;
     emit busyChanged(true);
@@ -284,15 +313,24 @@ void AgentEngine::requestModel() {
         "If executeSandboxJs is available, its JavaScript worker exposes only the explicitly documented native broker APIs; "
         "do not assume a Node.js server, Node modules, or an unrestricted operating-system API. ");
     if (!m_systemContext.isEmpty()) instructions += "\n\n<local_workspace_context>\n" + m_systemContext + "\n</local_workspace_context>";
+    if(m_dynamicSystemContext){
+        const auto context=m_dynamicSystemContext;
+        const auto dynamic=context();
+        if(!self||generation!=m_generation||!m_busy)return;
+        if(dynamic.size()>256*1024){fail("Dynamic system context exceeded its size limit.");return;}
+        if(!dynamic.isEmpty())instructions+="\n\n"+dynamic;
+    }
     if(!m_tools.appsDirectory().isEmpty())instructions+=QStringLiteral("\nThe apps/ mount is a writable directory owned by this chat and is available without a workspace. Create apps/<appId>/index.html and relative assets there, then use API.openApp(appId) to preview it. Unprefixed file paths still require a workspace; app files never belong to another chat.");
     QJsonArray definitions;
     if(m_tools.hasAttachmentReadSource())instructions+=QStringLiteral("\nThe att/ mount contains this chat's original attachment blobs. Use read or ls for formatted file context; it is read-only and available without a workspace. Historical snapshots are separate and cannot be listed through att/.");
-    if(!m_tools.workspace().isEmpty()||!m_tools.appsDirectory().isEmpty()||m_tools.hasAttachmentReadSource())for(const auto& value:ToolExecutor::definitions()){
+    if(m_tools.hasShellReadSource())instructions+=QStringLiteral("\nThe shells/ mount contains this chat's retained terminal logs; read and ls access it without a workspace. It is read-only. Running sessions are process-local; restored log files do not restart a shell.");
+    if(!m_tools.workspace().isEmpty()||!m_tools.appsDirectory().isEmpty()||m_tools.hasAttachmentReadSource()||m_tools.hasShellReadSource())for(const auto& value:ToolExecutor::definitions()){
         const auto name=value.toObject()["function"].toObject()["name"].toString();
         if(m_tools.workspace().isEmpty()&&m_tools.appsDirectory().isEmpty()&&name!="read"&&name!="ls")continue;
         if(name!="runCommand"||!m_tools.workspace().isEmpty())definitions.append(value);
     }
-    for (const auto &definition : m_externalDefinitions) definitions.append(definition);
+    if(m_questionToolEnabled)definitions.append(QuestionForm::toolDefinition());
+    for (const auto &definition : m_externalDefinitions) if(definition.toObject()["function"].toObject()["name"]!="askUserQuestions")definitions.append(definition);
     QJsonArray requestHistory;
     int boundary = 0;
     for (int i = m_messages.size() - 1; i > 0; --i) {
@@ -797,7 +835,8 @@ void AgentEngine::runNextTool() {
     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
     emit toolStarted(call.id, call.name, document.object());
     if(!self||generation!=m_generation||!m_busy)return;
-    const bool readOnlyExternal = call.name == "getBrowserTabs" || call.name == "readConsoleLogs" || call.name == "readContext";
+    const bool readOnlyExternal = call.name == "getBrowserTabs" || call.name == "readConsoleLogs" || call.name == "readContext" || call.name == "askUserQuestions"
+        || call.name=="createShellSession" || (call.name=="executeShellCommand"&&document.object()["kill"]==true);
     if (ToolExecutor::requiresApproval(call.name) && !readOnlyExternal && !m_alwaysAllow) {
         const auto approvalIndex=m_toolIndex;
         m_waitingApproval = call.id;
@@ -815,10 +854,15 @@ void AgentEngine::dispatchTool(const ToolCall &call, const QJsonObject &argument
     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
     m_display.toolState(call.id,"running");syncDisplayMetadata();emit displayChanged();
     if(!self||generation!=m_generation||!m_busy)return;
+    if(call.name=="askUserQuestions"){
+        if(m_questionToolEnabled)beginQuestion(call,arguments);
+        else recordToolResult(call.id,"The question tool is unavailable in this host.",true);
+        return;
+    }
     if (m_externalNames.contains(call.name)) {
         m_externalRequestId = QUuid::createUuid().toString(QUuid::WithoutBraces);
         m_externalOutputTruncated = false;
-        m_externalDeadline.start(120000);
+        m_externalDeadline.start(m_externalTimeouts.value(call.name,120000));
         emit externalToolRequested(m_externalRequestId, call.name, arguments);
     } else m_tools.execute(call.id, call.name, arguments);
 }
@@ -868,6 +912,23 @@ bool AgentEngine::appendExternalToolOutput(const QString& requestId,const QStrin
     return true; // An observer may have canceled/replaced/deleted this engine.
 }
 
+bool AgentEngine::replaceExternalToolOutput(const QString& requestId,const QString& text) {
+    if(!m_busy||requestId.isEmpty()||requestId!=m_externalRequestId||m_toolIndex>=m_pendingTools.size())return false;
+    const auto callId=m_pendingTools[m_toolIndex].id;
+    constexpr int maximum=64*1024;
+    auto safe=redact(text.left(maximum));const auto utf8=safe.toUtf8();
+    m_externalOutputTruncated=text.size()>maximum||utf8.size()>maximum;
+    if(m_externalOutputTruncated){
+        const QString marker="\n[Output truncated at 64 KiB.]";
+        int end=qMin<qsizetype>(utf8.size(),maximum-marker.toUtf8().size());
+        while(end>0&&end<utf8.size()&&(static_cast<unsigned char>(utf8[end])&0xc0)==0x80)--end;
+        safe=QString::fromUtf8(utf8.constData(),end)+marker;
+    }
+    if(!m_display.setToolOutput(callId,safe))return false;
+    syncDisplayMetadata();emit displayChanged();
+    return true; // Observers may destroy this engine.
+}
+
 void AgentEngine::recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata,const QString& displayState) {
     if (!m_busy || m_toolIndex >= m_pendingTools.size() || m_pendingTools[m_toolIndex].id != id) return;
     const auto safeOutput = redact(output);const auto completedId=id;
@@ -899,10 +960,14 @@ void AgentEngine::settleOutstandingTools(const QString &reason) {
     m_pendingTools.clear();
     m_toolIndex = 0;
     m_waitingApproval.clear();
+    const auto questionId=m_questionCallId;
+    const bool hadQuestion=!m_questionToken.isEmpty();
+    const auto questionOutput=QString::fromUtf8(QJsonDocument(m_question.result(m_questionStopReason.isEmpty()?QString("agent_stopped"):m_questionStopReason)).toJson(QJsonDocument::Compact));
+    m_questionToken.clear();m_questionCallId.clear();m_questionStopReason.clear();
     // Settle the whole protocol block before observers may start a new turn.
     const auto terminal=reason=="Action cancelled by the user."?QStringLiteral("canceled"):QStringLiteral("output-error");
     for(const auto& call:pending){
-        m_messages.append(AgentPresentation::withMetadata(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",reason}},QJsonObject{{"version",1},{"toolState",terminal}}));
+        m_messages.append(AgentPresentation::withMetadata(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",hadQuestion&&call.id==questionId?questionOutput:reason}},QJsonObject{{"version",1},{"toolState",terminal}}));
         m_display.toolState(call.id,terminal);
     }
     syncDisplayMetadata();
@@ -912,9 +977,10 @@ void AgentEngine::settleOutstandingTools(const QString &reason) {
         if(!self||generation!=m_generation)return;
     }
     for(const auto& call:pending){
-        emit toolFinished(call.id,reason,true);
+        emit toolFinished(call.id,hadQuestion&&call.id==questionId?questionOutput:reason,!(hadQuestion&&call.id==questionId));
         if(!self||generation!=m_generation)return;
     }
+    if(hadQuestion)emit questionChanged();
 }
 
 void AgentEngine::stopNetwork() {
@@ -942,11 +1008,14 @@ void AgentEngine::complete() {
     emit busyChanged(false);
     if(!self||generation!=m_generation)return;
     emit finished();
+    if(!self||generation!=m_generation)return;
+    scheduleQueue();
 }
 
 void AgentEngine::fail(const QString &message) {
     if (!m_busy) return;
     m_lastTurnSucceeded = false;
+    m_queuePaused=true;++m_queueResumeSerial;
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);const auto safeMessage=redact(message).left(2000);
     m_busy=false;
     stopNetwork();
@@ -967,6 +1036,7 @@ void AgentEngine::fail(const QString &message) {
 }
 
 void AgentEngine::cancel() {
+    m_queuePaused=true;++m_queueResumeSerial;
     m_lastTurnSucceeded = false;
     m_fallback.reset();
     if (!m_busy) return;

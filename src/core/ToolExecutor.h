@@ -8,6 +8,7 @@
 #include <atomic>
 #include <memory>
 #include "attachments/FileReadCapture.h"
+#include "mutations/FileMutationExecutor.h"
 
 namespace ade {
 
@@ -25,8 +26,12 @@ public:
     static QJsonArray definitions();
     void setFileReadCommitter(FileReadCommitter committer) { if(m_id.isEmpty())m_fileReadCommitter=std::move(committer); }
     void setAttachmentReadSource(FileReadSource source) { if(m_id.isEmpty())m_attachmentReadSource=std::move(source); }
+    void setFileMutationExecutor(FileMutationExecutor executor) { if(m_id.isEmpty())m_fileMutationExecutor=std::move(executor); }
+    void setShellReadSource(FileReadSource source) { if(m_id.isEmpty())m_shellReadSource=std::move(source); }
+    bool hasShellReadSource() const { return bool(m_shellReadSource); }
     bool hasAttachmentReadSource() const { return bool(m_attachmentReadSource); }
-    void execute(const QString &id, const QString &name, const QJsonObject &arguments);
+    void execute(const QString &id, const QString &name, const QJsonObject &arguments){executeWithProvenance(id,name,arguments,{});}
+    void executeWithProvenance(const QString &id, const QString &name, const QJsonObject &arguments,const QString& mutationProvenanceId);
     void cancel();
 
 signals:
@@ -44,6 +49,7 @@ private:
     QString m_workspace;
     QString m_appsDirectory;
     QString m_id;
+    QString m_mutationProvenanceId;
     QProcess *m_process = nullptr;
     QTimer m_processTimeout;
     QByteArray m_processOutput;
@@ -53,6 +59,8 @@ private:
     std::shared_ptr<std::atomic_bool> m_fileReadCancelled;
     FileReadCommitter m_fileReadCommitter;
     FileReadSource m_attachmentReadSource;
+    FileReadSource m_shellReadSource;
+    FileMutationExecutor m_fileMutationExecutor;
     void *m_job = nullptr;
 };
 

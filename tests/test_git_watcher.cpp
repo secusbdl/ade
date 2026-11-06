@@ -8,6 +8,7 @@
 #include <QSignalSpy>
 #include <QStandardPaths>
 #include <QTemporaryDir>
+#include <QTemporaryFile>
 #include "git/GitRepositoryWatcher.h"
 #include "git/GitService.h"
 #include "git/ProcessRunner.h"
@@ -20,8 +21,46 @@ bool write(const QString &path,const QByteArray &bytes) {
     if(!QDir().mkpath(QFileInfo(path).absolutePath()))return false;
     QFile file(path);return file.open(QIODevice::WriteOnly)&&file.write(bytes)==bytes.size()&&file.flush();
 }
-bool atomicWrite(const QString &path,const QByteArray &bytes) {
-    QSaveFile file(path);return file.open(QIODevice::WriteOnly)&&file.write(bytes)==bytes.size()&&file.commit();
+bool atomicWrite(const QString &path,const QByteArray &bytes,quint32* nativeFailure=nullptr) {
+    if(nativeFailure)*nativeFailure=0;
+#ifdef Q_OS_WIN
+    // QSaveFile uses MoveFileExW, which can fail with ERROR_ACCESS_DENIED
+    // while a reader is open even when it grants FILE_SHARE_DELETE. Use one
+    // same-directory replacement that actually supports those readers. No
+    // retry is used: an incompatible reader must still fail this fixture.
+    QString replacementPath;
+    {
+        QTemporaryFile file(path+".atomic-XXXXXX");
+        if(!file.open()||file.write(bytes)!=bytes.size()||!file.flush()) {
+            qWarning().noquote()<<"Atomic fixture preparation failed:"<<path<<file.errorString();
+            return false;
+        }
+        replacementPath=file.fileName();
+        file.setAutoRemove(false);
+        // QTemporaryFile may retain its native handle after close() so it can
+        // reopen safely. Destroy it before the native replacement operation.
+    }
+    const auto replacement=QDir::toNativeSeparators(replacementPath).toStdWString();
+    const auto destination=QDir::toNativeSeparators(path).toStdWString();
+    if(!ReplaceFileW(destination.c_str(),replacement.c_str(),nullptr,0,nullptr,nullptr)) {
+        const DWORD nativeError=GetLastError();
+        if(nativeFailure)*nativeFailure=nativeError;
+        QFile::remove(replacementPath);
+        qWarning().noquote()<<"Atomic fixture ReplaceFileW failed:"<<path<<"native error"<<nativeError;
+        return false;
+    }
+    return true;
+#else
+    QSaveFile file(path);
+    const auto failed=[&](const char* stage){
+        qWarning().noquote()<<"Atomic fixture write failed:"<<stage<<path<<"Qt error"<<file.error()<<file.errorString();
+        return false;
+    };
+    if(!file.open(QIODevice::WriteOnly))return failed("open");
+    if(file.write(bytes)!=bytes.size())return failed("write");
+    if(!file.commit())return failed("commit");
+    return true;
+#endif
 }
 struct Fixture {
     QTemporaryDir base;QString root,common,git,error;
@@ -80,6 +119,33 @@ private slots:
         QVERIFY(watcher.acquire("main",f.snapshot()));QTRY_COMPARE_WITH_TIMEOUT(ready.size(),1,5000);
         for(int i=0;i<3;++i){QVERIFY(atomicWrite(f.common+"/HEAD","ref: refs/heads/burst"+QByteArray::number(i)+"\n"));QTest::qWait(50);}
         QTRY_COMPARE_WITH_TIMEOUT(changed.size(),1,5000);QTest::qWait(300);QCOMPARE(changed.size(),1);
+    }
+    void atomicReplacementSharesDeleteWithReaders(){
+#ifdef Q_OS_WIN
+        Fixture f;QVERIFY2(f.error.isEmpty(),qPrintable(f.error));const auto path=f.common+"/HEAD";const auto native=QDir::toNativeSeparators(path).toStdWString();
+        const auto close=[](void* handle){if(handle&&handle!=INVALID_HANDLE_VALUE)CloseHandle(handle);};
+        std::unique_ptr<void,decltype(close)> reader(CreateFileW(native.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr),close);QVERIFY(reader.get()!=INVALID_HANDLE_VALUE);
+        // This is the Windows sharing contract used by the production scanner:
+        // an opened immutable read must coexist with a first-attempt replacement.
+        QVERIFY(atomicWrite(path,"ref: refs/heads/shared-reader\n"));char bytes[128];DWORD count=0;QVERIFY(ReadFile(reader.get(),bytes,sizeof(bytes),&count,nullptr));QCOMPARE(QByteArray(bytes,int(count)),QByteArray("ref: refs/heads/main\n"));reader.reset();
+        reader.reset(CreateFileW(native.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr));QVERIFY(reader.get()!=INVALID_HANDLE_VALUE);
+        quint32 failure=0;QVERIFY(!atomicWrite(path,"must not replace\n",&failure));QCOMPARE(failure,quint32(ERROR_SHARING_VIOLATION));
+        reader.reset();QFile unchanged(path);QVERIFY(unchanged.open(QIODevice::ReadOnly));QCOMPARE(unchanged.readAll(),QByteArray("ref: refs/heads/shared-reader\n"));unchanged.close();QVERIFY(atomicWrite(path,"ref: refs/heads/recovered\n"));
+#else
+        QSKIP("Windows atomic replacement sharing contract.");
+#endif
+    }
+    void scansDoNotBlockAtomicMetadataChurn(){
+        Fixture f;QVERIFY2(f.error.isEmpty(),qPrintable(f.error));auto options=fast();options.scanDelayMs=1;options.maxHeadBytes=128*1024;options.maxTotalHeadBytes=128*1024;GitRepositoryWatcher watcher(options);QSignalSpy ready(&watcher,&GitRepositoryWatcher::ready),changed(&watcher,&GitRepositoryWatcher::topologyChanged);
+        QVERIFY(watcher.acquire("main",f.snapshot()));QTRY_COMPARE_WITH_TIMEOUT(ready.size(),1,5000);QByteArray payload(96*1024,'x');
+        for(int i=0;i<200;++i){const auto bytes="ref: refs/heads/churn-"+QByteArray::number(i)+"\n"+payload;QVERIFY2(atomicWrite(f.common+"/HEAD",bytes),qPrintable(QString("First-attempt atomic replacement %1 failed while metadata scans were active.").arg(i)));watcher.refresh();QTest::qWait(2);}
+        QVERIFY(atomicWrite(f.common+"/HEAD","ref: refs/heads/final\n"));QTRY_VERIFY_WITH_TIMEOUT(!changed.isEmpty(),5000);QFile final(f.common+"/HEAD");QVERIFY(final.open(QIODevice::ReadOnly));QCOMPARE(final.readAll(),QByteArray("ref: refs/heads/final\n"));
+    }
+    void realGitUpdatesWhileMetadataScansRun(){
+        Fixture f;QVERIFY2(f.error.isEmpty(),qPrintable(f.error));auto options=fast();options.scanDelayMs=1;GitRepositoryWatcher watcher(options);QSignalSpy ready(&watcher,&GitRepositoryWatcher::ready),changed(&watcher,&GitRepositoryWatcher::topologyChanged);
+        QVERIFY(watcher.acquire("main",f.snapshot()));QTRY_COMPARE_WITH_TIMEOUT(ready.size(),1,5000);
+        for(int i=0;i<20;++i){watcher.refresh();QTest::qWait(2);QVERIFY2(f.run({"symbolic-ref","HEAD","refs/heads/git-churn-"+QString::number(i)}),qPrintable(f.error));}
+        QTRY_VERIFY_WITH_TIMEOUT(!changed.isEmpty(),5000);QFile final(f.common+"/HEAD");QVERIFY(final.open(QIODevice::ReadOnly));QCOMPARE(final.readAll(),QByteArray("ref: refs/heads/git-churn-19\n"));
     }
     void indexChurnDoesNotStarveHead(){
         Fixture f;QVERIFY2(f.error.isEmpty(),qPrintable(f.error));GitRepositoryWatcher watcher(fast());QSignalSpy ready(&watcher,&GitRepositoryWatcher::ready),changed(&watcher,&GitRepositoryWatcher::topologyChanged);

@@ -1,0 +1,11 @@
+********* Start testing of ShellViewTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellViewTest::initTestCase()
+QWARN  : ShellViewTest::tallBorrowedViewPaintsHistoryBeyondFixedGrid() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : ShellViewTest::tallBorrowedViewPaintsHistoryBeyondFixedGrid()
+PASS   : ShellViewTest::borrowedViewSharesInputAndSurvivesClosure()
+PASS   : ShellViewTest::ownerDeletionMakesBorrowedViewInert()
+PASS   : ShellViewTest::cleanupTestCase()
+Totals: 5 passed, 0 failed, 0 skipped, 0 blacklisted, 1213ms
+********* Finished testing of ShellViewTest *********

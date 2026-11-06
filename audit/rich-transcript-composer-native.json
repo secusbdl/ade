@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "Named focused evidence retained; final shared integration passed80/80 suites.",
+  "contracts": [
+    {
+      "feature": "Code fences",
+      "source": "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx:309-370",
+      "behavior": "Source hides code-copy controls for the whole streaming text part; existing native behavior retained. Split-fence regression checks each character boundary and stable prior code selection."
+    },
+    {
+      "feature": "Images",
+      "source": "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx:639-716",
+      "behavior": "Source uses responsive inline images with open/download actions. Native now displays explicitly host-resolved path images using a custom QTextObjectInterface; no QTextDocument/network/local-image fallback. Per-request chat/row/part/widget/epoch validation rejects retired replies."
+    },
+    {
+      "feature": "Tool script/result",
+      "source": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/execute-sandbox-js.tsx:90-101",
+      "behavior": "Shell/JavaScript preview shows real command/script, source-provided explanation labels and separate persistent Arguments/Result disclosures. Copy returns complete original data; rendered bodies are bounded and visibly labelled when truncated."
+    },
+    {
+      "feature": "Slash picker",
+      "source": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text/slash/provider.ts:1-135",
+      "behavior": "Enabled user-invocable skills grouped as builtin/workspace/plugin, global mapped to workspace. Nonbuiltin groups show three items and a functional Show more. Source slash:id Markdown serialization is recognized at actual turn configuration."
+    },
+    {
+      "feature": "File mentions",
+      "source": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/rich-text/mentions/mention-extension.ts:117-153",
+      "behavior": "Selection imports a real workspace file reference before candidate draft/attachment state is saved and UI insertion is committed. Windows handle enumeration/pinning, physical root identity, stale query/context checks, and browser ownership checks enforce host scope."
+    }
+  ],
+  "validation": {
+    "privateCompiler": "Qt6.11.2 static MinGW; private one-job component evidence and later shared integration logs",
+    "suites": {
+      "native_transcript": 33,
+      "native_transcript_rich": 13,
+      "native_composer_completion": 19,
+      "native_composer_search": 14,
+      "native_composer_host": 8
+    },
+    "failed": 0,
+    "skipped": 0,
+    "hostObjectCompile": "Private object compile and parent full integrated build passed",
+    "pending": [
+      "Parent final80-suite aggregate regression"
+    ],
+    "reproducedDefect": "Attribute-only file handle allowed rename; private/rich-transcript-stage/search-before-file-pin.txt retains 13 pass / 1 failure. FILE_READ_DATA pin fixes the actual rename regression; final search suite 14/14.",
+    "hostEvidence": "audit/rich-transcript-composer-host-tests.txt",
+    "integratedEvidenceDirectory": "audit/rich-transcript-composer-integration"
+  },
+  "visualEvidence": {
+    "directory": "private/rich-transcript-stage/render",
+    "fixtures": 8,
+    "inspected": [
+      "transcript-light-768.png",
+      "transcript-dark-350.png",
+      "picker-light-350.png",
+      "picker-dark-768.png"
+    ],
+    "scope": "Component harness with actual AppStyle/embedded fonts and same theme palette colors, not a full MainWindow or exact-pixel parity certification. Font-independent readable tool status fixed after render exposed the prior missing check glyph. Final images and picker remain usable at 350 logical pixels."
+  },
+  "bounds": {
+    "imageRequestsPerChat": 32,
+    "storedImageBytes": 67108864,
+    "storedImageMaxDimension": 2048,
+    "renderedImageMaxHeight": 384,
+    "renderedToolTextChars": 65536,
+    "completionResults": 128,
+    "fileResults": 64,
+    "enumeratedEntries": 4096,
+    "directoryDepth": 8,
+    "fileSearchBudgetMs": 750,
+    "concurrentSearchPerComposer": 1,
+    "aggregateSearchLimit": "One active worker plus latest pending per live composer; no global window-wide completion worker cap"
+  },
+  "remainingDifferences": [
+    "Remote/data/file images remain blocked; native host routes permit explicitly scoped local attachments and bounded image previews. Attachment chips have no direct thumbnail/open/download UI in this slice.",
+    "This slice does not claim Mermaid, math, complete Streamdown table controls or specialised app attachment rendering. Subsequent bounded native file-diff and image preview integration is parent-owned.",
+    "Composer inserts source Markdown references in a native text editor, rather than TipTap rich chips.",
+    "File completion uses bounded local Windows enumeration and simple relevance scoring, not upstream edit-history scoring/full gitignore processing; UNC/reparse aliases are omitted.",
+    "Mention side previews/screenshots and keyboard side panels are not implemented here.",
+    "Command center and side-chat now have separate implementation/evidence audits: audit/command-center-native.json and audit/side-chat-native.json. Their remaining scope limits still apply."
+  ],
+  "files": [
+    {
+      "path": "src/ui/Composer.h",
+      "sha256": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265"
+    },
+    {
+      "path": "src/ui/Composer.cpp",
+      "sha256": "5b18faa312de207bf681d32db9be97f8b876d7a5a44504b6ae0ed1d57cb466b1"
+    },
+    {
+      "path": "src/ui/ComposerWorkspaceSearch.h",
+      "sha256": "0e1a5b89f2b4444491cc73b70d94e87ff3f5cb2046213cb8a2311855ec35a347"
+    },
+    {
+      "path": "src/ui/ComposerWorkspaceSearch.cpp",
+      "sha256": "6acb8e26f11771f092bd5bb3cfd4bc06e029cb23cff8c9c39ba66f7ed144b63a"
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "sha256": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648"
+    },
+    {
+      "path": "src/ui/ConversationView.h",
+      "sha256": "0e924cbeaebb4d9747f6f70ebef2cc64dd206c0ca0fc1359dbd45a20ffdd28fd"
+    },
+    {
+      "path": "src/ui/ConversationView.cpp",
+      "sha256": "b7ff97509229e7dd337dbfb707522a3ee2e4b9fe220bec95b5f5e5938fdf82b0"
+    },
+    {
+      "path": "src/ui/MarkdownParts.h",
+      "sha256": "e1999bedbba1974be07eca843a9fd6a05dd344aea11597e89b345b4486aac53c"
+    },
+    {
+      "path": "src/ui/MarkdownParts.cpp",
+      "sha256": "8034948c41c04eb2c8edc24016e74f8e903ec7cbb443acda9b8b9c50eed611a5"
+    },
+    {
+      "path": "tests/test_transcript.cpp",
+      "sha256": "d68c0f3c7ad7cf7a8c0fc3d058ade7f4f3d857aa7c86fb2556071abae73df347"
+    },
+    {
+      "path": "tests/test_transcript_rich.cpp",
+      "sha256": "ee80d90c25b59a6a5baa36d0e3408a9c5227f3d629021cd7a61e0a111a129a1e"
+    },
+    {
+      "path": "tests/test_composer_completion.cpp",
+      "sha256": "b447fffeb451162c717264135f09eff6efa55d24124bda02882f68c86907307c"
+    },
+    {
+      "path": "tests/test_composer_search.cpp",
+      "sha256": "16dea270b85dd67e29a7d0863957e2f887bf7ba24c8aa35979d47f4031664fab"
+    },
+    {
+      "path": "tests/test_composer_host.cpp",
+      "sha256": "2e63a5f5e041adf5ff41b789caa2be63bd4461dab616e0c3227c8e53e299192c"
+    }
+  ],
+  "hashNormalization": "SHA-256 of UTF-8 text with CRLF normalized to LF and no BOM",
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

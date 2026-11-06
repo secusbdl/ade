@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ShellViewTest" timestamp="2026&#x002D;11&#x002D;06T15:10:00" hostname="VOID" tests="5" failures="0" errors="0" skipped="0" time="1.213">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ShellViewTest" time="0.001"/>
+  <testcase name="tallBorrowedViewPaintsHistoryBeyondFixedGrid" classname="ShellViewTest" time="0.064">
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+    </system-err>
+  </testcase>
+  <testcase name="borrowedViewSharesInputAndSurvivesClosure" classname="ShellViewTest" time="0.661"/>
+  <testcase name="ownerDeletionMakesBorrowedViewInert" classname="ShellViewTest" time="0.485"/>
+  <testcase name="cleanupTestCase" classname="ShellViewTest" time="0.000"/>
+</testsuite>

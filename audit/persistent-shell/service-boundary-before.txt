@@ -1,0 +1,19 @@
+********* Start testing of ShellServiceTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellServiceTest::initTestCase()
+FAIL!  : ShellServiceTest::timeoutDoesNotDiscardPacedInput() 'f.result("poll")["output"].toString().contains("LENGTH:4096")' returned FALSE. ({
+    "exit_code": null,
+    "output": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "recent_output": "PS C:\\Users\\secus\\AppData\\Local\\Temp\\test_shell_service-RDGQuu\\workspace> $longFixture = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "resolved_by": "timeout",
+    "session_exited": false,
+    "session_id": "4799763b-f569-41f0-b4bb-1212b28cbe8e",
+    "timed_out": true
+}
+)
+D:/age/ADE/tests/test_shell_service.cpp(66) : failure location
+FAIL!  : ShellServiceTest::reentrantReplacementOwnsItsWait() '!f.result("inner").isEmpty()' returned FALSE. ()
+D:/age/ADE/tests/test_shell_service.cpp(71) : failure location
+PASS   : ShellServiceTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 32683ms
+********* Finished testing of ShellServiceTest *********

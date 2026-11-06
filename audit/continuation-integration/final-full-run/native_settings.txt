@@ -1,0 +1,31 @@
+********* Start testing of SettingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SettingsTest::initTestCase()
+PASS   : SettingsTest::persistsIndependentSectionsAndSignals()
+PASS   : SettingsTest::invalidStorageIsPreserved()
+PASS   : SettingsTest::validatesSearchEngineAndUrls()
+QWARN  : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() qt.svg: Cannot open file ':/plugin-icons/figma.svg', because: No such file or directory
+QWARN  : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() qt.svg: Cannot open file ':/plugin-icons/github.svg', because: No such file or directory
+QWARN  : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() qt.svg: Cannot open file ':/plugin-icons/posthog.svg', because: No such file or directory
+QWARN  : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() qt.svg: Cannot open file ':/plugin-icons/supabase.svg', because: No such file or directory
+QWARN  : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() qt.svg: Cannot open file ':/plugin-icons/vercel.svg', because: No such file or directory
+PASS   : SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions()
+QWARN  : SettingsTest::pluginCredentialsAreEncryptedAndSeparate() qt.svg: Cannot open file ':/plugin-icons/figma.svg', because: No such file or directory
+QWARN  : SettingsTest::pluginCredentialsAreEncryptedAndSeparate() qt.svg: Cannot open file ':/plugin-icons/github.svg', because: No such file or directory
+QWARN  : SettingsTest::pluginCredentialsAreEncryptedAndSeparate() qt.svg: Cannot open file ':/plugin-icons/posthog.svg', because: No such file or directory
+QWARN  : SettingsTest::pluginCredentialsAreEncryptedAndSeparate() qt.svg: Cannot open file ':/plugin-icons/supabase.svg', because: No such file or directory
+QWARN  : SettingsTest::pluginCredentialsAreEncryptedAndSeparate() qt.svg: Cannot open file ':/plugin-icons/vercel.svg', because: No such file or directory
+PASS   : SettingsTest::pluginCredentialsAreEncryptedAndSeparate()
+PASS   : SettingsTest::externalEditsAndInvalidFieldsArePreserved()
+PASS   : SettingsTest::keyboardZoomPersistsAndRetiredControlsCannotSave()
+QWARN  : SettingsTest::corruptPluginStoreIsNotOverwritten() qt.svg: Cannot open file ':/plugin-icons/figma.svg', because: No such file or directory
+QWARN  : SettingsTest::corruptPluginStoreIsNotOverwritten() qt.svg: Cannot open file ':/plugin-icons/github.svg', because: No such file or directory
+QWARN  : SettingsTest::corruptPluginStoreIsNotOverwritten() qt.svg: Cannot open file ':/plugin-icons/posthog.svg', because: No such file or directory
+QWARN  : SettingsTest::corruptPluginStoreIsNotOverwritten() qt.svg: Cannot open file ':/plugin-icons/supabase.svg', because: No such file or directory
+QWARN  : SettingsTest::corruptPluginStoreIsNotOverwritten() qt.svg: Cannot open file ':/plugin-icons/vercel.svg', because: No such file or directory
+PASS   : SettingsTest::corruptPluginStoreIsNotOverwritten()
+PASS   : SettingsTest::sitePermissionsValidateAndPersist()
+PASS   : SettingsTest::historyOpensThroughNativeHost()
+PASS   : SettingsTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 278ms
+********* Finished testing of SettingsTest *********

@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "Named focused evidence retained; final shared integration passed80/80 suites.",
+  "sourceContracts": [
+    {
+      "path": "packages/agent-core/src/services/agent-manager/agent-manager.ts",
+      "lines": [
+        1422,
+        1479,
+        1493,
+        1559
+      ],
+      "behavior": "Clone chat history/model/approval/attachments/workspaces into separate side child; prohibit nested side forks; idle promotion clears parent; close discards; parent archive unloads children without marking children archived; parent deletion cascades."
+    },
+    {
+      "path": "apps/browser/src/ui/hooks/use-open-side-chat.ts",
+      "behavior": "Create agent then real content tab; failure discards child."
+    },
+    {
+      "path": "apps/browser/src/ui/screens/main/content/_components/per-tab-content.tsx",
+      "behavior": "Side content renders independent live ChatPanel by child agent identity."
+    },
+    {
+      "path": "apps/browser/src/backend/services/window-layout/index.ts",
+      "lines": [
+        1735,
+        1757
+      ],
+      "behavior": "Closing a side tab discards its side agent before removing the tab."
+    }
+  ],
+  "implemented": [
+    "Separate native Composer/ConversationView/question/queue/model/approval controls; same AgentEngine/AgentToolHost pipeline and sole MainWindow SessionStore writer",
+    "Source-shaped optional persisted sideChatParentId, linear validation rejects missing/nested/cyclic parents; sidebar and root startup exclude children",
+    "Cloned file-read/attachment/shell context and link provenance via existing clone path; clears drafts and queued messages",
+    "Scoped completion controllers reuse file-pin/import/commit behavior per child without changing current main chat",
+    "Source parent archive retains child history but unloads host/pane; restore/restart reopens retained active children",
+    "Parent delete stages whole family pending cleanup in one session commit; refuses active undo; revalidates family after cancellation callbacks",
+    "Promotion requires idle, preserves history/draft/runtime while moving to sidebar; discard stops child and uses durable cleanup",
+    "Scoped question IDs and inline approval row/part/chat validation; trusted images and link actions pass target view to root resolver",
+    "Header file-change action delegates to child-aware root history/undo panel"
+  ],
+  "validation": {
+    "component": "audit/side-chat-component-tests.txt",
+    "componentPassed": 13,
+    "initialIntegratedHost": "audit/side-chat-host-initial-tests.txt",
+    "initialHostPassed": 16,
+    "pendingHostCases": [],
+    "renderEnv": "ADE_SIDE_RENDER_DIRECTORY",
+    "renderFiles": "side-question-queue-{light,dark}-{1100,350}.png",
+    "finalIntegratedHost": "audit/side-chat-host-final-tests.txt",
+    "finalHostPassed": 16,
+    "mainControls": {
+      "evidence": "audit/agent-controls-geometry-tests.txt",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    "aggregate": "Parent final80-suite run pending; focused results establish only their tested scope",
+    "historicalRuns": [
+      {
+        "evidence": "private/side-chat-stage/component-final.txt",
+        "passed": 12,
+        "label": "Initial component slice before geometry regression"
+      },
+      {
+        "evidence": "audit/side-chat-host-initial-tests.txt",
+        "passed": 16,
+        "label": "Integrated side host before allocation and interior-background assertions"
+      },
+      {
+        "evidence": "audit/side-chat-controls-before.txt",
+        "failed": 1,
+        "passed": 2,
+        "label": "Reproduced initial controls size-hint failure"
+      },
+      {
+        "evidence": "audit/side-chat-background-native.json",
+        "label": "Background mismatch before palette repair",
+        "status": "Historical actual-host interior pixel failure"
+      }
+    ]
+  },
+  "limits": [
+    "Native existing single workspace per chat; source multi-mount behavior is not implemented.",
+    "Native content tabs remain shared in the current global workbench; upstream per-parent tab ordering/visibility and last-active tab persistence are not fully matched.",
+    "Builtin slash command /side is not added in this slice; genuine toolbar and content controls create side chats. Child skills and @context work through the shared completion implementation.",
+    "Side title-generation inheritance follows existing native fork flags, not a claim of exact upstream automatic title policy.",
+    "Component tests do not prove all filesystem fault or callback schedules; final integrated regression is parent-owned."
+  ],
+  "files": [
+    {
+      "path": "src/ui/SideChatPane.h",
+      "sha256": "14e5db969d4de99f857dbf2c0b0b5b390966069c1efd6112f26e1a2f6626fb96"
+    },
+    {
+      "path": "src/ui/SideChatPane.cpp",
+      "sha256": "0c776ff9e6e2adcfd667cfc52217ac1005b208e357eab4ae60e00a1861ab0903"
+    },
+    {
+      "path": "src/ui/MainWindowSideChats.cpp",
+      "sha256": "6e9a2e33e0af26d1cb59fc7624b70f80975de19c5f9b550d7f90107aa397b087"
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "sha256": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648"
+    },
+    {
+      "path": "src/ui/SessionStore.h",
+      "sha256": "bca2ec27bcfa6035537a98910c8957b631cf95b3c0f8ee7e4c6cea03b06edd0b"
+    },
+    {
+      "path": "src/ui/SessionStore.cpp",
+      "sha256": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677"
+    },
+    {
+      "path": "src/ui/MainWindowConversations.cpp",
+      "sha256": "83c48254c189c669acea4a5add317a36681135f724ce1c472bd5ff454808297b"
+    },
+    {
+      "path": "src/ui/SidebarModel.cpp",
+      "sha256": "5401f5cbb239de81972da35de05d556ea58c9ea5c04f15bb7cb1208d2819e7b4"
+    },
+    {
+      "path": "tests/test_side_chat.cpp",
+      "sha256": "c7ad770c3a8041c7fe6fc890a5e0ef42a64caa4156d649c43c0cded39adf9ea5"
+    },
+    {
+      "path": "tests/test_side_chat_host.cpp",
+      "sha256": "2d0fd3d3daeb54c618e1bdcef09ee0b60b234f66d048ae719ee911ce14130d36"
+    },
+    {
+      "path": "src/ui/ContentControlsScrollArea.h",
+      "sha256": "dbc4c9d0a5ab6050c687d3e228b2c2e22fda79d539ac32f76112e54fed40250c"
+    },
+    {
+      "path": "src/ui/QuestionPanel.cpp",
+      "sha256": "fc0740ead3f74ff3d8c041d940e2e5ed6a6ce2208fb15c188c98d64f3043982b"
+    },
+    {
+      "path": "src/ui/MainWindowControl.cpp",
+      "sha256": "4001e37672a507b45a4c809bea604e46b1e27a7d626885a49c71e4f48531f2c4"
+    },
+    {
+      "path": "src/ui/AppStyle.cpp",
+      "sha256": "42e166fd930b0e939c09e92df95d5ebc400d833c1782821fb5801cc3064f0afe"
+    },
+    {
+      "path": "tests/test_agent_control_ui.cpp",
+      "sha256": "a82ad4997fa1c45aa41ab91bea9d6f18a5e420efe0bf1e8d096e14ac38636487"
+    }
+  ],
+  "controlsAllocation": {
+    "integrated": "Main controls7/7 and final side host16/16 pass; input/Submit/message action/queue header visible in light/dark at1100/350 widths; component retains bounded250-height scroll coverage",
+    "fix": "Header-only ContentControlsScrollArea reads current layout hints and retains a small minimum plus bounded overflow; reused by main/side outer controls and QuestionPanel fields",
+    "cause": "QScrollArea retained its initial child size hint both in the initially empty controls area and before Markdown label measurement",
+    "component": "13/13 passed after both outer and inner cached-hint corrections; actual input/Submit/queue visible at350x750; scrolling reaches Submit at350x250",
+    "before": "audit/side-chat-controls-before.txt"
+  },
+  "visualEvidence": {
+    "scope": "Actual MainWindow with loopback streamed reasoning/code/tool call, question and queued message. Final full-window interior pixel checks cover header, transcript, controls and question body through light/dark/light changes; backgrounds now match main chat content and controls are usable. No universal pixel-parity claim.",
+    "backgroundAudit": "audit/side-chat-background-native.json",
+    "inspected": [
+      "side-question-queue-light-1100.png",
+      "side-question-queue-dark-350.png",
+      "side-question-queue-light-350.png"
+    ],
+    "directory": "private/side-background-repair/renders",
+    "fixtures": 4
+  },
+  "hashNormalization": "SHA-256 of UTF-8 text with CRLF normalized to LF and no BOM",
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

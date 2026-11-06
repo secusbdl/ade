@@ -73,7 +73,7 @@ class TranscriptLinksTest : public QObject {
     void malformedLinks_data() {
         QTest::addColumn<QString>("href");
         const QStringList values = {"file:///C:/secret",   "javascript:alert(1)",
-                                    "data:text/plain,x",   "shell:missing",
+                                    "data:text/plain,x",   "shell:../missing",
                                     "path:C:/secret",      "path:/absolute",
                                     "path:ws1/../outside", "path:ws1/%2e%2e/outside",
                                     "path:ws1/%5coutside", "path:ws1/a%00.txt",
@@ -92,6 +92,22 @@ class TranscriptLinksTest : public QObject {
         QString error;
         QCOMPARE(Resolver::parse(href, &error).kind, Resolver::Kind::Invalid);
         QVERIFY(!error.isEmpty());
+    }
+    void shellLinksRequireLiveOwnerAndRevocableScope() {
+        Fixture f;
+        f.options.liveShellIds = {"owned-shell"};
+        QString error;
+        auto scope = f.scope(&error);
+        const auto action = Resolver::resolve(scope, "chat-a", "shell:owned-shell", {}, nullptr, &error);
+        QCOMPARE(action.kind, Resolver::Kind::ActivateShell);
+        QCOMPARE(action.shellId, "owned-shell");
+        QCOMPARE(Resolver::resolve(scope, "chat-a", "shell:foreign-shell", {}, nullptr, &error).kind, Resolver::Kind::Invalid);
+        QCOMPARE(Resolver::resolve(scope, "chat-b", "shell:owned-shell", {}, nullptr, &error).kind, Resolver::Kind::Invalid);
+        scope.revoke();
+        QVERIFY(!action.isCurrent("chat-a"));
+        QCOMPARE(Resolver::resolve(scope, "chat-a", "shell:owned-shell", {}, nullptr, &error).kind, Resolver::Kind::Invalid);
+        f.options.liveShellIds.clear();
+        QCOMPARE(Resolver::resolve(f.scope(), "chat-a", "shell:owned-shell", {}, nullptr, &error).kind, Resolver::Kind::Invalid);
     }
     void malformedUnicodeAndRelativeHostMountAreRejected() {
         QString error;

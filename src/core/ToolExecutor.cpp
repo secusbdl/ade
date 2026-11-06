@@ -143,12 +143,12 @@ bool walkScopedDirectory(const QString& path,const QString& root,int limit,
     return true;
 }
 struct FormattedRead {QString output;bool error=false;QJsonObject metadata={};};
-FormattedRead formattedAttachmentRead(const FileReadSource& source,const QString& name,const QString& path,
+FormattedRead formattedMountedRead(const FileReadSource& source,const QString& name,const QString& path,
     const FileReadParams& params,const std::atomic_bool* cancelled,const FileReadCommitter& committer,const QString& inputHash){
     try{
         FileReadCapture capture;QString error;
-        if(!source(name,path,params,&capture,cancelled,&error))return {error.isEmpty()?QStringLiteral("Attachment capture failed."):error,true};
-        if(cancelled&&cancelled->load())return {"Attachment read canceled.",true};
+        if(!source(name,path,params,&capture,cancelled,&error))return {error.isEmpty()?QStringLiteral("Mounted file capture failed."):error,true};
+        if(cancelled&&cancelled->load())return {"Mounted file read canceled.",true};
         capture.tool=name;capture.params=params;capture.inputHash=inputHash;
         if(committer){
             const auto metadata=committer(capture,cancelled,&error);
@@ -163,7 +163,28 @@ FormattedRead formattedAttachmentRead(const FileReadSource& source,const QString
             output+=part.toObject()["text"].toString();
         }
         return {output,false};
-    }catch(...){return {"The attachment capture could not be completed.",true,{}};}
+    }catch(...){return {"The mounted file capture could not be completed.",true,{}};}
+}
+FormattedRead rawMountedRead(const FileReadSource& source,const QString& name,const QString& path,const std::atomic_bool* cancelled) {
+    try {
+        FileReadCapture capture;QString error;
+        if(!source(name=="readDirectory"?"ls":"read",path,{},&capture,cancelled,&error))return {error.isEmpty()?QStringLiteral("Mounted file capture failed."):error,true};
+        if(cancelled&&cancelled->load())return {"Mounted file read canceled.",true};
+        if(name=="readDirectory"){
+            if(!capture.directory)return {"The requested path is not a directory.",true};
+            QJsonArray names;for(const auto& entry:capture.entries){if(entry.isDirectory||!entry.children.isEmpty())return {"The mounted log namespace must remain flat.",true};names.append(entry.name);}
+            const auto output=QString::fromUtf8(QJsonDocument(names).toJson(QJsonDocument::Compact));
+            return output.size()>65536?FormattedRead{"Directory listing exceeds64Ki characters; no partial result was returned.",true}:FormattedRead{output,false};
+        }
+        if(capture.directory)return {"The requested path is not a file.",true};
+        if(capture.bytes.size()>4*1024*1024)return {"Raw file read exceeds4MiB; use formatted read with line ranges.",true};
+        if(name=="readBytes")return {QString::fromLatin1(capture.bytes.toBase64()),false};
+        QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::ConvertInitialBom|QStringConverter::Flag::Stateless);
+        const QString output=decoder(capture.bytes);
+        if(decoder.hasError())return {"File is not valid UTF-8; request Buffer bytes instead.",true};
+        if(output.size()>65536)return {"Raw text exceeds64Ki characters; no partial result was returned.",true};
+        return {output,false};
+    }catch(...){return {"The raw mounted read could not be completed.",true};}
 }
 FormattedRead formattedRead(const QString& name,const QString& path,const QString& root,const QString& requested,
                             const FileReadParams& params,const std::atomic_bool* cancelled,const FileReadCommitter& committer,const QString& inputHash) {
@@ -316,7 +337,7 @@ bool ToolExecutor::requiresApproval(const QString &name) {
 
 QJsonArray ToolExecutor::definitions() {
     const auto path = prop("string", "Path under the connected workspace (ws1/ or w1/) or the host-owned apps/ mount. Unprefixed paths use the workspace.");
-    const auto readPath = prop("string", "Path under the workspace (ws1/ or w1/), chat-owned apps/, or read-only att/ attachment mount. att/ is a flat blob directory. Unprefixed paths use the workspace.");
+    const auto readPath = prop("string", "Path under the workspace (ws1/ or w1/), chat-owned apps/, or read-only att/ attachment and shells/ session-log mounts. These are flat directories. Unprefixed paths use the workspace.");
     const auto edits = QJsonObject{{"type", "array"}, {"minItems", 1}, {"items", QJsonObject{
         {"type", "object"}, {"properties", QJsonObject{{"old_string", prop("string", "Exact text to find.")},
         {"new_string", prop("string", "Replacement text.")}, {"replace_all", prop("boolean", "Replace all matches; default false.")}}},
@@ -330,10 +351,13 @@ QJsonArray ToolExecutor::definitions() {
                     {"preview", prop("boolean", "Request a structural preview; default false.")}}, {"path"}),
         definition("ls", "List a directory as a bounded tree with metadata. Includes hidden entries; does not follow directory links.",
                    {{"path", readPath}, {"depth", prop("number", "Nonnegative recursion depth, default 0; native maximum 32.")}}, {"path"}),
-        definition("write", "Write a UTF-8 file atomically. Creates parent directories; overwrites existing content.",
+        definition("write", "Write a UTF-8 file with durable recovery and undo history. Creates parents; strips surrounding code fences for model writes.",
                    {{"path", path}, {"content", prop("string", "Complete new file content.")}}, {"path", "content"}),
-        definition("multiEdit", "Apply exact replacements sequentially to a file, then save atomically. No write if any edit fails.",
+        definition("multiEdit", "Apply exact replacements sequentially with durable undo history. Unmatched edits are skipped; reports editsApplied. Empty search strings are unsupported.",
                    {{"path", path}, {"edits", edits}}, {"path", "edits"}),
+        definition("copy", "Copy a scoped file or directory; move=true removes the source after capturing durable recovery history. Both sides are checked independently.",
+                   {{"input_path",readPath},{"output_path",path},{"move",prop("boolean","Required: true moves, false copies.")}}, {"input_path","output_path","move"}),
+        definition("delete", "Delete a scoped file or directory with durable recovery and conflict-aware undo history.", {{"path",path}}, {"path"}),
         definition("mkdir", "Create a directory and missing parent directories.", {{"path", path}}, {"path"}),
         definition("glob", "Find files by workspace-relative glob pattern, supporting *, ** and ?. Traversal is bounded to 10000 entries and depth 64; limits are reported.",
                    {{"pattern", prop("string", "Glob pattern, e.g. **/*.cpp.")}, {"mount_prefix", prop("string", "Workspace mount; ws1.")}}, {"pattern"}),
@@ -347,12 +371,13 @@ QJsonArray ToolExecutor::definitions() {
     };
 }
 
-void ToolExecutor::execute(const QString &id, const QString &name, const QJsonObject &arguments) {
+void ToolExecutor::executeWithProvenance(const QString &id, const QString &name, const QJsonObject &arguments,const QString& mutationProvenanceId) {
     if (!m_id.isEmpty()) {
         emit completed(id, QStringLiteral("A tool is already running."), true);
         return;
     }
     m_id = id;
+    m_mutationProvenanceId=mutationProvenanceId.isEmpty()?id:mutationProvenanceId;
     const auto generation = ++m_generation;
     QTimer::singleShot(0, this, [this, name, arguments, generation] {
         if (generation != m_generation || m_id.isEmpty()) return;
@@ -370,15 +395,33 @@ void ToolExecutor::finish(const QString &output, bool error, bool truncate,const
 
 void ToolExecutor::executeFileTool(const QString &name, const QJsonObject &args) {
     QString error;
+    if(m_fileMutationExecutor&&QStringList{"write","multiEdit","writeBytes","copy","delete"}.contains(name)){
+        const auto generation=m_generation;const auto id=m_id;const auto executor=m_fileMutationExecutor;
+        const FileMutationInvocation invocation{m_mutationProvenanceId,name,m_workspace,m_appsDirectory,args};
+        const auto canceled=std::make_shared<std::atomic_bool>(false);m_fileReadCancelled=canceled;
+        auto* watcher=new QFutureWatcher<FileMutationOutcome>(this);
+        connect(watcher,&QFutureWatcher<FileMutationOutcome>::finished,this,[this,watcher,generation,id]{
+            const auto result=watcher->result();watcher->deleteLater();
+            if(generation!=m_generation||id!=m_id)return;
+            m_fileReadCancelled.reset();const QPointer<ToolExecutor> self(this);
+            for(const auto& change:result.changes){emit fileChanged(change.path,change.before,change.after);if(!self||generation!=m_generation||id!=m_id)return;}
+            finish(result.output,result.error,false,result.metadata);
+        });
+        watcher->setFuture(QtConcurrent::run([executor,invocation,canceled]{return executor(invocation,canceled.get());}));return;
+    }
+    if(name=="copy"||name=="delete"){finish("A durable mutation host must be connected for this operation.",true);return;}
     if((name=="read"||name=="ls")&&(!args["path"].isString()||args["path"].toString().isEmpty())){finish("A nonempty string path is required.",true);return;}
     QString requested=args["path"].toString(".");
     const bool attachment=requested=="att"||requested.startsWith("att/")||requested.startsWith("att\\");
-    if(attachment){
-        if((name!="read"&&name!="ls")||args["raw"].toBool()){finish("The att/ mount allows formatted read and ls only; raw reads use the attachment broker.",true);return;}
-        if(!m_attachmentReadSource){finish("The att/ mount is unavailable.",true);return;}
+    const bool shell=requested=="shells"||requested.startsWith("shells/")||requested.startsWith("shells\\");
+    if(attachment||shell){
+        const bool raw=shell&&(name=="readBytes"||name=="readDirectory"||(name=="read"&&args["raw"].toBool()));
+        if(!raw&&((name!="read"&&name!="ls")||args["raw"].toBool())){finish("This mount allows read and list operations only.",true);return;}
+        const auto source=attachment?m_attachmentReadSource:m_shellReadSource;
+        if(!source){finish("The requested read-only mount is unavailable.",true);return;}
         FileReadParams params;
-        if(!(name=="ls"?FileTransformer::listParams(args,&params,&error):FileTransformer::readParams(args,&params,&error))){finish(error,true);return;}
-        const auto generation=m_generation;const auto id=m_id;const auto source=m_attachmentReadSource;
+        if(!raw&&!(name=="ls"?FileTransformer::listParams(args,&params,&error):FileTransformer::readParams(args,&params,&error))){finish(error,true);return;}
+        const auto generation=m_generation;const auto id=m_id;
         const auto committer=m_fileReadCommitter;const auto inputHash=fileReadInputHash(name,args);
         const auto cancelled=std::make_shared<std::atomic_bool>(false);m_fileReadCancelled=cancelled;
         auto* watcher=new QFutureWatcher<FormattedRead>(this);
@@ -387,7 +430,7 @@ void ToolExecutor::executeFileTool(const QString &name, const QJsonObject &args)
             if(generation!=m_generation||id!=m_id)return;
             m_fileReadCancelled.reset();finish(result.output,result.error,false,result.metadata);
         });
-        watcher->setFuture(QtConcurrent::run([source,name,requested,params,cancelled,committer,inputHash]{return formattedAttachmentRead(source,name,requested,params,cancelled.get(),committer,inputHash);}));
+        watcher->setFuture(QtConcurrent::run([source,name,requested,params,cancelled,committer,inputHash,raw]{return raw?rawMountedRead(source,name,requested,cancelled.get()):formattedMountedRead(source,name,requested,params,cancelled.get(),committer,inputHash);}));
         return;
     }
     if((name=="glob"||name=="grepSearch")&&args.contains("mount_prefix")){

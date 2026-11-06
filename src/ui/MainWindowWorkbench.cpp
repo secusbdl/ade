@@ -41,6 +41,7 @@ void MainWindow::initializeWorkbench() {
     auto* menu = new QMenu(more);
     menu->addAction(icon("download"), "Downloads", this, &MainWindow::showDownloads);
     menu->addAction(icon("branch"), "Source control", this, &MainWindow::showGit);
+    menu->addAction(icon("document"), "File changes and undo", this, &MainWindow::showFileChanges);
     more->setMenu(menu);
     more->setPopupMode(QToolButton::InstantPopup);
     auto* hide = control("hideContentPanelButton", "sidebar", "Hide content panel (Ctrl+Alt+B)",

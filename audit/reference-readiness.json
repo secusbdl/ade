@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "reviewDate": "2026-11-06",
   "purpose": "Critical reference architecture for another ADE app; preservation and implementation are separate. Not a complete port/parity certificate.",
-  "nativeHead": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
+  "nativeHead": "f29c9ee8fda5c746312bc4133863f114399ef345",
   "inventory": {
     "path": "audit/upstream-feature-inventory.json",
-    "sha256": "03ef48e438fdb459a77c5fbbe9d14fb939daf4994ae81b2ee04e3a0f9ad379e1",
+    "sha256": "aad5e04c2862d5cb90c6677aee51951edaeeaba1f5896e4fcabdd1df251218e9",
     "rows": 701,
     "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
     "version": "1.31.1",
@@ -34,7 +34,8 @@
       "tool": 18,
       "workspace": 6
     },
-    "scope": "All701 rows remain in scope. Their original native_status fields are initial baseline values. This map does not promote236 UI contracts or203 procedures to implemented."
+    "scope": "All701 rows remain in scope. Their original native_status fields are initial baseline values. This map does not promote236 UI contracts or203 procedures to implemented.",
+    "hashBasis": "canonical_git_text_LF"
   },
   "evidencePolicy": [
     "Current source plus named tests and retained dated results support implemented claims.",
@@ -148,7 +149,7 @@
       ],
       "remainingGaps": [
         "Four protocols do not imply every one of the 26 provider types, reasoning parameters or subscription authentication.",
-        "Complete upstream queue, compression/accounting and external agent semantics remain separate."
+        "Complete automatic context compression/accounting and external agent semantics remain separate; durable queue and typed questions are implemented in the current batch."
       ],
       "referenceAcceptance": [
         "Local protocol fixtures must retain native signatures/attachments and reject late canceled callbacks.",
@@ -157,39 +158,60 @@
       "currentIntegratedTests": [
         {
           "suite": "native_core",
-          "report": "audit/reference-integration-details/suites/native_core.txt",
-          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_core.txt",
+          "reportSha256": "48cf824e4fd50b063aa4abcbe43e3ab4edbac6016d82196e3bdb836dbba03baa",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 48,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_core.txt"
+          "skipped": 0
         },
         {
           "suite": "native_engine_observers",
-          "report": "audit/reference-integration-details/suites/native_engine_observers.txt",
-          "reportSha256": "c086f7e4a9006f616b2a598e2d9318381b7a77bb11bac9842cdf001426ce7613",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_engine_observers.txt",
+          "reportSha256": "4a3faed4ff6551232df724108d0c1d71839a505be782204d610bdc837e62c1b7",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 56,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_engine_observers.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_history_recovery",
+          "report": "audit/continuation-integration/final-full-run/native_history_recovery.txt",
+          "reportSha256": "fe6b5549f35b0490ef776c7556811367006225dc0f7310992d23b977eb503e24",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0
         },
         {
           "suite": "native_presentation",
-          "report": "audit/reference-integration-details/suites/native_presentation.txt",
-          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_presentation.txt",
+          "reportSha256": "11cd889f043920b5bb1e3fee7a7a043a26fd9e1f0d79b16e8ccaf31d57057190",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 89,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_conversation_control",
+          "report": "audit/continuation-integration/final-full-run/native_conversation_control.txt",
+          "reportSha256": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_engine",
+          "report": "audit/continuation-integration/final-full-run/native_shell_engine.txt",
+          "reportSha256": "94e47a723ed76eee84b8a7265c39faeb6a9adbff474421c5f1d9313461dd0087",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "conversations",
@@ -241,7 +263,9 @@
       "retainedEvidence": [
         "audit/conversations-native.json",
         "audit/session-cleanup-native.json",
-        "audit/history-recovery-native.json"
+        "audit/history-recovery-native.json",
+        "audit/conversation-controls-native.json",
+        "audit/side-chat-native.json"
       ],
       "savedCheckpointTests": [
         {
@@ -272,10 +296,12 @@
       "implemented": [
         "Create/select/rename/archive/restore/fork/delete, exact drafts and attachment references, last-selection restart, per-chat approval.",
         "Revision-locked atomic JSON persistence and durable cleanup markers; invalid roots/concurrent saves fail closed.",
-        "Inherited unfinished tool calls normalized without execution; file context cloned independently."
+        "Inherited unfinished tool calls normalized without execution; file context cloned independently.",
+        "Durable queued-message edit/reorder/delete/resume and native typed multi-step questions have focused Engine/actual MainWindow coverage; watcher wake preserves paused/question state.",
+        "Independent side-chat engines/hosts/panes, promotion/discard and parent archive/delete lifecycle are implemented; the final side-chat host suite passes within the full80-suite run."
       ],
       "remainingGaps": [
-        "Side chats, queued-message editing, revert/replace/retry with tool undo, attention/unread and full mid-stream fork/checkpoints incomplete.",
+        "Full transcript retry/edit/revert, attention/unread and mid-stream checkpoints remain gaps. Side chats and user file undo are implemented within their documented native limits.",
         "Native JSON is not an upstream SQLite migration implementation."
       ],
       "referenceAcceptance": [
@@ -285,72 +311,60 @@
       "currentIntegratedTests": [
         {
           "suite": "native_conversations",
-          "report": "audit/reference-integration-details/suites/native_conversations.txt",
-          "reportSha256": "af883162f0264457890e79fd29952004ffd8e3abe1aa1a56d6aa114efa23c67f",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_conversations.txt",
+          "reportSha256": "a24872259f06a9d5a2dac56c91d4e10de2dcb02564da433a51b21d4ff6a8c500",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 26,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_conversations.txt"
+          "skipped": 0
         },
         {
           "suite": "native_session_cleanup",
-          "report": "audit/reference-integration-details/suites/native_session_cleanup.txt",
-          "reportSha256": "0d7e46378cfca5c9ecda33d9c2e1c5fbc5d4f1c87025c39743c454397aab6ad3",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_session_cleanup.txt",
+          "reportSha256": "d81c7b6e3e64ddd0ac507468880d19682c173037e2e30bdf4d2afd9091d3e6d6",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 25,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_session_cleanup.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_history_recovery",
-          "report": "audit/reference-integration-details/suites/native_history_recovery.txt",
-          "reportSha256": "2bd55c1d1588c50127a29ca7463e23c983315832a03e1f0bf563a416793299c1",
-          "available": true,
-          "passed": 28,
+          "suite": "native_conversation_control",
+          "report": "audit/continuation-integration/final-full-run/native_conversation_control.txt",
+          "reportSha256": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 26,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_history_recovery.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_runtime_apps",
-          "report": "audit/reference-integration-details/suites/native_runtime_apps.txt",
-          "reportSha256": "0e13fa42625d90dd93adaf5391181bda8af497ca836955e1310233565d0812ce",
-          "available": true,
-          "passed": 15,
+          "suite": "native_agent_control_ui",
+          "report": "audit/continuation-integration/final-full-run/native_agent_control_ui.txt",
+          "reportSha256": "e6bcd745b6b3e48411b4812dc6da49b81247bebbe4180e3051020ebee6c1f690",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 7,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_runtime_apps.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_sidebar_model",
-          "report": "audit/reference-integration-details/suites/native_sidebar_model.txt",
-          "reportSha256": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e",
-          "available": true,
-          "passed": 19,
+          "suite": "native_side_chat",
+          "report": "audit/continuation-integration/final-full-run/native_side_chat.txt",
+          "reportSha256": "7834970d8e8d953ca132c253b4f452a9730c022d934f96dc2588be1d5ee603b4",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sidebar_model.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_sidebar_navigation",
-          "report": "audit/reference-integration-details/suites/native_sidebar_navigation.txt",
-          "reportSha256": "de4e24d893c0bc07d902885cf4569a753576683fe4ccbdef884091f4188b5130",
-          "available": true,
-          "passed": 9,
+          "suite": "native_side_chat_host",
+          "report": "audit/continuation-integration/final-full-run/native_side_chat_host.txt",
+          "reportSha256": "0e139370c15fc141222f9641788b7034d2d07d4e45f8147998a6a4c61c2fdaea",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sidebar_navigation.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "approval",
@@ -393,7 +407,8 @@
       ],
       "retainedEvidence": [
         "audit/conversations-native.json",
-        "audit/presentation-native.json"
+        "audit/presentation-native.json",
+        "audit/conversation-controls-native.json"
       ],
       "savedCheckpointTests": [
         {
@@ -416,10 +431,12 @@
         }
       ],
       "implemented": [
-        "Ask and Always allow, persisted per-chat bool and inline per-call approval with reentrant decision guards."
+        "Ask and Always allow, persisted per-chat bool and inline per-call approval with reentrant decision guards.",
+        "Native typed multi-step askUserQuestions forms, interruption and queue preservation have focused Engine/MainWindow coverage.",
+        "Questions require explicit host opt-in. MainWindow enables the native presenter; standalone Engine defaults do not advertise or wait for question tools, including unexpected model calls."
       ],
       "remainingGaps": [
-        "Smart approval and askUserQuestions forms/interruption are not implemented.",
+        "Smart shell approval classification remains incomplete; typed askUserQuestions is implemented.",
         "Native runCommand uses user OS privileges, not filesystem sandboxing."
       ],
       "referenceAcceptance": [
@@ -428,40 +445,34 @@
       ],
       "currentIntegratedTests": [
         {
-          "suite": "native_presentation",
-          "report": "audit/reference-integration-details/suites/native_presentation.txt",
-          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
-          "available": true,
-          "passed": 89,
+          "suite": "native_question_panel",
+          "report": "audit/continuation-integration/final-full-run/native_question_panel.txt",
+          "reportSha256": "146c396373b85b52234af578bb1919f62eefb705ea291d4c0c46fd3d8c526566",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 8,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_transcript_ui",
-          "report": "audit/reference-integration-details/suites/native_transcript_ui.txt",
-          "reportSha256": "2e4a1a6896d1278ff74f102449d72e478ddb4563771c63c1fc1cdc01eff29be5",
-          "available": true,
-          "passed": 4,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript_ui.txt"
-        },
-        {
-          "suite": "native_conversations",
-          "report": "audit/reference-integration-details/suites/native_conversations.txt",
-          "reportSha256": "af883162f0264457890e79fd29952004ffd8e3abe1aa1a56d6aa114efa23c67f",
-          "available": true,
+          "suite": "native_conversation_control",
+          "report": "audit/continuation-integration/final-full-run/native_conversation_control.txt",
+          "reportSha256": "f41104d064804f5d6147a733af29fe37489a96582ced48e9bf027a8d7e9ff2eb",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 26,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_conversations.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_agent_control_ui",
+          "report": "audit/continuation-integration/final-full-run/native_agent_control_ui.txt",
+          "reportSha256": "e6bcd745b6b3e48411b4812dc6da49b81247bebbe4180e3051020ebee6c1f690",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "read-context",
@@ -542,7 +553,7 @@
       ],
       "implemented": [
         "Exact captured originals with per-call ranges/hash metadata, compact saved tool acknowledgements, later request reinjection and independent fork.",
-        "Text/Markdown/directory/ZIP/ZIP64/TAR/TGZ preview without archive extraction; workspace/apps/read-only att sources."
+        "Text/Markdown/directory/ZIP/ZIP64/TAR/TGZ preview without archive extraction; workspace/apps/read-only att sources. Read-only shells logs now use the same immutable capture/reinjection path with a separate bounded50MiB log cap."
       ],
       "remainingGaps": [
         "PDF/Office/rich-media transforms remain unsupported or placeholders.",
@@ -555,61 +566,51 @@
       "currentIntegratedTests": [
         {
           "suite": "native_read_lifecycle",
-          "report": "audit/reference-integration-details/suites/native_read_lifecycle.txt",
-          "reportSha256": "caeb4d572a8ceca8f5e04e396404157d1e27d7f2ad42f702818108b78ed17fe9",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_read_lifecycle.txt",
+          "reportSha256": "133af47c258de1026005849c7ea64e45e3462dca28d64f1d339f5a898dd36266",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 21,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_read_lifecycle.txt"
+          "skipped": 0
         },
         {
           "suite": "native_read_runtime",
-          "report": "audit/reference-integration-details/suites/native_read_runtime.txt",
-          "reportSha256": "3c2f4a9f5e4d62340e42fa5b18d5e76ff0f623ca7e12a72df1bc75eb98847d40",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_read_runtime.txt",
+          "reportSha256": "8250dcfc0a85c5f5f3e8fb2ba00d34f9beb4d5a5a1f61f074730801179e76947",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 15,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_read_runtime.txt"
+          "skipped": 0
         },
         {
           "suite": "native_formatted_att",
-          "report": "audit/reference-integration-details/suites/native_formatted_att.txt",
-          "reportSha256": "09c97d70ed90e0122cd09183d9ed71c3609d7f787c7584977e8878bd7924e0aa",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_formatted_att.txt",
+          "reportSha256": "60a0a1166d6019e9048f256ecfe70441d86595fb0e57b3da59462f2b9f6b7a16",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 33,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_formatted_att.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_log_mount",
+          "report": "audit/continuation-integration/final-full-run/native_shell_log_mount.txt",
+          "reportSha256": "bca5dc187f2b60aaf580f07d69e0e3b526b229054574306692a6b09465dddb35",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
         },
         {
           "suite": "native_file_tools",
-          "report": "audit/reference-integration-details/suites/native_file_tools.txt",
-          "reportSha256": "85101f3739fbcf4a9a9bbe4571168e21d2a3d825999de78b61b0cd3ee9831ab7",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_file_tools.txt",
+          "reportSha256": "beb68e84533b26bcfe626dfa7cb26705cba8a3bb16d735252224ec3427093575",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 20,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_file_tools.txt"
-        },
-        {
-          "suite": "native_archive_transformer",
-          "report": "audit/reference-integration-details/suites/native_archive_transformer.txt",
-          "reportSha256": "4423cd01c2a027d01de990e1746fb31901347ecb6a844a96f621e4543e90e41c",
-          "available": true,
-          "passed": 37,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_archive_transformer.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "filesystem",
@@ -655,7 +656,8 @@
       "retainedEvidence": [
         "audit/scoped-directory-enumeration.json",
         "audit/attachment-mount-native.json",
-        "audit/directory-scope-regression.json"
+        "audit/directory-scope-regression.json",
+        "audit/session-logs-native.json"
       ],
       "savedCheckpointTests": [
         {
@@ -679,10 +681,10 @@
       ],
       "implemented": [
         "Retained validated Windows directory handles, bounded traversal/no child-link following, same-handle binary/text capture.",
-        "One ws1/w1 workspace, host-owned per-chat apps and read-only att; unsupported reserved mounts fail explicitly."
+        "One ws1/w1 workspace, host-owned per-chat apps, read-only att and persisted read-only shells logs; unsupported reserved mounts fail explicitly."
       ],
       "remainingGaps": [
-        "Multiple workspace mounts/permissions and logs/shells/memory mounts absent.",
+        "Simultaneous workspace mounts/permissions and general logs/memory domains remain absent.",
         "Non-Windows fallback does not have tested Windows handle-pinning guarantees."
       ],
       "referenceAcceptance": [
@@ -691,44 +693,65 @@
       ],
       "currentIntegratedTests": [
         {
-          "suite": "native_raw_enumeration_races",
-          "report": "audit/reference-integration-details/suites/native_raw_enumeration_races.txt",
-          "reportSha256": "eb52fdd5d8be474287ff7773d80afd6d66e6e1cd2247507e10f511a7d782afcb",
-          "available": true,
-          "passed": 13,
+          "suite": "native_file_tools",
+          "report": "audit/continuation-integration/final-full-run/native_file_tools.txt",
+          "reportSha256": "beb68e84533b26bcfe626dfa7cb26705cba8a3bb16d735252224ec3427093575",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 20,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_raw_enumeration_races.txt"
+          "skipped": 0
         },
         {
           "suite": "native_file_tools_races",
-          "report": "audit/reference-integration-details/suites/native_file_tools_races.txt",
-          "reportSha256": "1233edc279d530628c5a551af53dbf74caae1179a6861ac7c08d467051c65f49",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_file_tools_races.txt",
+          "reportSha256": "263786647cf08449c980dbb1288dff6beac54e575cbe7aef6dcd6e840806cd10",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 9,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_file_tools_races.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_raw_enumeration_races",
+          "report": "audit/continuation-integration/final-full-run/native_raw_enumeration_races.txt",
+          "reportSha256": "f0beffed5f0df3264e47fd48a3a4d31d0833e3dd44066d05cdf54fdc29af16af",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
         },
         {
           "suite": "native_attachment_mount",
-          "report": "audit/reference-integration-details/suites/native_attachment_mount.txt",
-          "reportSha256": "38fd0017eacbb6beca9098a92fb23976c6a4a3f5804ab97d3af938378d13c9e5",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_attachment_mount.txt",
+          "reportSha256": "70473070b3bbff8bf219311d2c9893225cf3f610d526051a5031df532186ac10",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 15,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_attachment_mount.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_session_logs",
+          "report": "audit/continuation-integration/final-full-run/native_session_logs.txt",
+          "reportSha256": "ca0cf6418150612daf2015ae47d0a0ac9181372f8926efc9b93b4818f07fed75",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_log_mount",
+          "report": "audit/continuation-integration/final-full-run/native_shell_log_mount.txt",
+          "reportSha256": "bca5dc187f2b60aaf580f07d69e0e3b526b229054574306692a6b09465dddb35",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "mutations",
-      "title": "Write, multiEdit and durable undo gap",
+      "title": "Durable file mutations, history and undo",
       "status": "implemented_with_limits",
       "inventoryIds": [
         "tool.write",
@@ -760,7 +783,8 @@
         "src/core/ToolExecutor.cpp"
       ],
       "retainedEvidence": [
-        "audit/structured-file-tools.json"
+        "audit/structured-file-tools.json",
+        "audit/mutations-native.json"
       ],
       "savedCheckpointTests": [
         {
@@ -771,12 +795,14 @@
         }
       ],
       "implemented": [
-        "Atomic UTF-8 write, sequential exact multiEdit, mkdir and before/after fileChanged bytes."
+        "Production journal-first write/multiEdit/copy(move)/delete, bounded recursive tree/parent handling, exact binary snapshots and user-selected durable undo.",
+        "Per-agent ownership locks/revocable leases, restart recovery/conflict protection, cleanup and independent fork authority; actual four-protocol AgentToolHost and QuickJS raw writes tested.",
+        "Root adds bounded UI-only fileDiff metadata/rendering; provider output _diff remains null."
       ],
       "remainingGaps": [
-        "Copy/delete/move and durable diff-history/undo are not production integrated.",
-        "Current writes are not a durable mutation journal or interprocess compare-and-swap.",
-        "The 40-case single-file journal prototype is now preserved and optionally buildable under reference/native-experiments/file-mutations. Recursive, production tool/host/UI/clone/delete integration remains pending."
+        "No full filesystem metadata/ACL or power-loss guarantee; local Windows scopes and explicit transaction limits apply.",
+        "Unconfigured standalone ToolExecutor fallback is not durable; actual AgentToolHost always installs journal.",
+        "Full upstream diff-summary/import and transcript retry/edit/revert semantics are not implied."
       ],
       "referenceAcceptance": [
         "Complete editing-reference claims require scoped journal-first operations, preserved preimages, conflict-safe undo and crash-boundary fixtures.",
@@ -784,29 +810,34 @@
       ],
       "currentIntegratedTests": [
         {
-          "suite": "native_core",
-          "report": "audit/reference-integration-details/suites/native_core.txt",
-          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
-          "available": true,
-          "passed": 48,
+          "suite": "native_file_mutations",
+          "report": "audit/continuation-integration/final-full-run/native_file_mutations.txt",
+          "reportSha256": "ef0895b510c78afab3caea6cfe23e9ce45462c4597c9bd52b2f769e0ce30073e",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 60,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_core.txt"
+          "skipped": 0
         },
         {
-          "suite": "reference_file_mutations",
-          "report": "audit/reference-integration-details/suites/reference_file_mutations.txt",
-          "reportSha256": "824e3d6171f109d3dbd13d7f130ca5566a9a36336703db406aa51eb7a3f95da7",
-          "available": true,
-          "passed": 40,
+          "suite": "native_mutation_runtime",
+          "report": "audit/continuation-integration/final-full-run/native_mutation_runtime.txt",
+          "reportSha256": "40f11b88b5cff6469ebbbb63487483c5efd13357fc2f40115dd26c815f14b8bc",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 11,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/reference_file_mutations.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_file_diff",
+          "report": "audit/continuation-integration/final-full-run/native_file_diff.txt",
+          "reportSha256": "f002ac21e497e63f18727f9aa767dfff73cda5d955056ae835e4c84b9b4c38e2",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "sandbox",
@@ -878,39 +909,60 @@
       "currentIntegratedTests": [
         {
           "suite": "native_sandbox",
-          "report": "audit/reference-integration-details/suites/native_sandbox.txt",
-          "reportSha256": "c0bdbbba83d45e23de7fad49967b0b2c852545521896efeaacde3ac35d0f482f",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_sandbox.txt",
+          "reportSha256": "68b563f8b6ce2bf65ad6bf4699d1623c54b823535f11d49c29c2a4d3864f78da",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 27,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sandbox.txt"
+          "skipped": 0
         },
         {
           "suite": "native_sandbox_network",
-          "report": "audit/reference-integration-details/suites/native_sandbox_network.txt",
-          "reportSha256": "b145d486390b98a76176ba493e334fe0b755d00d89f933ef642259227f13426c",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_sandbox_network.txt",
+          "reportSha256": "758903e61e7c52b6145d1e192d018c3e57904948bef75e8d29be9aec1365fcc2",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 12,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sandbox_network.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_sandbox_apps",
+          "report": "audit/continuation-integration/final-full-run/native_sandbox_apps.txt",
+          "reportSha256": "d3d5dd51ceaea96fe91d590a4ce8c53963cc188fc589e0388535d3dc811979b6",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0
         },
         {
           "suite": "native_runtime",
-          "report": "audit/reference-integration-details/suites/native_runtime.txt",
-          "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_runtime.txt",
+          "reportSha256": "3816ceee7e1cfdfd191d6c661609aa6370e2fb4d56964c79793c5d6d8773bba6",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 10,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_runtime.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_runtime_apps",
+          "report": "audit/continuation-integration/final-full-run/native_runtime_apps.txt",
+          "reportSha256": "0b8d1ab70f2b6b863b5e67efd62011bd5d0dbc8655929b94cf9c4eb5e90567bf",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_runtime",
+          "report": "audit/continuation-integration/final-full-run/native_shell_runtime.txt",
+          "reportSha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "context",
@@ -995,10 +1047,12 @@
         }
       ],
       "implemented": [
-        "Bounded scoped AGENTS and skill discovery/context injection; native title/compression utility calls and settings consumers."
+        "Bounded scoped AGENTS/skill discovery and context injection; configurable title/compression utility models.",
+        "Manual /compact in the main chat invokes UtilityService and applies a summary boundary to future model context while retaining full saved history; stale/busy results do not replace newer history."
       ],
       "remainingGaps": [
-        "Complete memory/plans/environment domains, skill install/update, slash commands and automatic context accounting incomplete."
+        "Source-equivalent automatic context compression/token accounting, complete memory/plans/environment domains, skill install/update and every source slash command remain incomplete.",
+        "Side-chat panes currently send /compact as an ordinary message; they do not intercept it to run the main-window compression action."
       ],
       "referenceAcceptance": [
         "Fixture instructions/skills must reach intended requests and refresh after workspace changes without stale scope.",
@@ -1007,39 +1061,24 @@
       "currentIntegratedTests": [
         {
           "suite": "native_context",
-          "report": "audit/reference-integration-details/suites/native_context.txt",
-          "reportSha256": "a9557e10287063c47dd8ff553aa219f8c0c757985adfc504b0375d496666f427",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_context.txt",
+          "reportSha256": "89207baf84b8b7f5f832f935c9dbb38d45c50c35c7520e00bea91fd759be28fb",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 9,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_context.txt"
+          "skipped": 0
         },
         {
           "suite": "native_core",
-          "report": "audit/reference-integration-details/suites/native_core.txt",
-          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_core.txt",
+          "reportSha256": "48cf824e4fd50b063aa4abcbe43e3ab4edbac6016d82196e3bdb836dbba03baa",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 48,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_core.txt"
-        },
-        {
-          "suite": "native_ui_audit",
-          "report": "audit/reference-integration-details/suites/native_ui_audit.txt",
-          "reportSha256": "0838a6db4b97d0e6809f2a4d5cb38c9e7d3ba7ebb9ea1182d4b6760ff5547a39",
-          "available": true,
-          "passed": 17,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_ui_audit.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "attachments",
@@ -1102,39 +1141,42 @@
       "currentIntegratedTests": [
         {
           "suite": "native_attachments",
-          "report": "audit/reference-integration-details/suites/native_attachments.txt",
-          "reportSha256": "363bd111638a2a7b9624511498e66e5f33500072d882d00e9e4eab109d805288",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_attachments.txt",
+          "reportSha256": "5a27ab7f2d2e343fecad4a74d2e4fb7a75d2c03a5f1755941cc743e0206d44d3",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 23,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_attachments.txt"
-        },
-        {
-          "suite": "native_formatted_att",
-          "report": "audit/reference-integration-details/suites/native_formatted_att.txt",
-          "reportSha256": "09c97d70ed90e0122cd09183d9ed71c3609d7f787c7584977e8878bd7924e0aa",
-          "available": true,
-          "passed": 33,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_formatted_att.txt"
+          "skipped": 0
         },
         {
           "suite": "native_file_transformer",
-          "report": "audit/reference-integration-details/suites/native_file_transformer.txt",
-          "reportSha256": "786805dffe1b274e04d0a2d1ba6ed5fff1565ccbff9b05982357dc49e88616a6",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_file_transformer.txt",
+          "reportSha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 32,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_file_transformer.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_archive_transformer",
+          "report": "audit/continuation-integration/final-full-run/native_archive_transformer.txt",
+          "reportSha256": "9205fda9024a661147f5e6ce00b407beaacf3625b22ed5e96a43bf78e6bdf3cd",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 37,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_image_preview",
+          "report": "audit/continuation-integration/final-full-run/native_image_preview.txt",
+          "reportSha256": "51b31a77f2cc8d5d15c00866e718abf0891187d13306129be52baf1e47ea8f65",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 7,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "browser",
@@ -1185,7 +1227,8 @@
       ],
       "retainedEvidence": [
         "audit/browser-regressions.json",
-        "audit/browser-tool-bridge.json"
+        "audit/browser-tool-bridge.json",
+        "audit/native-browser-controls.json"
       ],
       "savedCheckpointTests": [
         {
@@ -1202,10 +1245,11 @@
         }
       ],
       "implemented": [
-        "Real WebView2 navigation/history/title/loading, JS, CDP/events, console and PNG screenshots with stable IDs and agent ownership."
+        "Real WebView2 navigation/history/title/loading, JS, CDP/events, console and PNG screenshots with stable IDs and agent ownership.",
+        "Selected-element .swdomelement capture, originating-chat PNG screenshots, ten device presets/custom dimensions and rotation are implemented and reentry tested."
       ],
       "remainingGaps": [
-        "Selected-element overlays, full developer toolbar/device emulation, complete tab restoration and browser auth/certificate behavior incomplete.",
+        "Complete developer toolbar, React/Vue source ancestry, per-element WebP capture, full tab restoration and browser auth/certificate behavior remain incomplete.",
         "Canceling a CDP waiter cannot undo an issued page action."
       ],
       "referenceAcceptance": [
@@ -1215,28 +1259,33 @@
       "currentIntegratedTests": [
         {
           "suite": "native_browser",
-          "report": "audit/reference-integration-details/suites/native_browser.txt",
-          "reportSha256": "1f3b3241b98a598d13ccb9698772a8ba304a56a80677b84887509271ed77a1ca",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_browser.txt",
+          "reportSha256": "e000ebeea2a7f4c8412d5c02993ecf17bd9798082f4106b6d5604185328e9ab3",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 14,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_browser.txt"
+          "skipped": 0
         },
         {
           "suite": "native_browser_tools",
-          "report": "audit/reference-integration-details/browser-tools-full-final.txt",
-          "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+          "report": "audit/continuation-integration/final-full-run/native_browser_tools.txt",
+          "reportSha256": "c379fcb102d61a42c6389010d6c2b5ff8e31356b483bf745c983a3035202255e",
           "reportHashBasis": "canonical_git_text_LF",
-          "originalLocalReport": "private/browser-tools-resume/full-final.txt",
           "passed": 24,
           "failed": 0,
-          "skipped": 0,
-          "scope": "Full suite"
+          "skipped": 0
+        },
+        {
+          "suite": "native_browser_inspector",
+          "report": "audit/continuation-integration/final-full-run/native_browser_inspector.txt",
+          "reportSha256": "7531d313cab31744ca4e157d95b1303adccd26344855079dfdc6e3c7cbc79713",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "browser-data",
@@ -1323,39 +1372,33 @@
       "currentIntegratedTests": [
         {
           "suite": "native_browser",
-          "report": "audit/reference-integration-details/suites/native_browser.txt",
-          "reportSha256": "1f3b3241b98a598d13ccb9698772a8ba304a56a80677b84887509271ed77a1ca",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_browser.txt",
+          "reportSha256": "e000ebeea2a7f4c8412d5c02993ecf17bd9798082f4106b6d5604185328e9ab3",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 14,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_browser.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_browser_tools",
+          "report": "audit/continuation-integration/final-full-run/native_browser_tools.txt",
+          "reportSha256": "c379fcb102d61a42c6389010d6c2b5ff8e31356b483bf745c983a3035202255e",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 24,
+          "failed": 0,
+          "skipped": 0
         },
         {
           "suite": "native_downloads",
-          "report": "audit/reference-integration-details/suites/native_downloads.txt",
-          "reportSha256": "c1dd7fbd510823e19a6acfabd59521419c87b9bfff284f5a90b942f898c1664d",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_downloads.txt",
+          "reportSha256": "09ddd062577e8a15220b094cfd29605daae8102e4cb3def33df82337b88673fc",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 10,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_downloads.txt"
-        },
-        {
-          "suite": "native_settings",
-          "report": "audit/reference-integration-details/suites/native_settings.txt",
-          "reportSha256": "f0f40e82c42a357c6f7a4fa0c82508fa99603b74319f21bae5fb422586d095a8",
-          "available": true,
-          "passed": 12,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_settings.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "apps",
@@ -1451,50 +1494,42 @@
       "currentIntegratedTests": [
         {
           "suite": "native_app_resources",
-          "report": "audit/reference-integration-details/suites/native_app_resources.txt",
-          "reportSha256": "3a77d47af55b9c69137e3a4904da4b7f64aeebad44d73af195209e00d9a64c5c",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_app_resources.txt",
+          "reportSha256": "05f20332a0510b103ac5439aaae89603fd35b3cc47344a5eeb646b3ded18827e",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 6,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_app_resources.txt"
+          "skipped": 0
         },
         {
           "suite": "native_mini_apps",
-          "report": "audit/reference-integration-details/suites/native_mini_apps.txt",
-          "reportSha256": "1c83b8d5cd7d6bd66415ea70474094e1dccb53cb470e05bc2f73b4904e7ab3a5",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_mini_apps.txt",
+          "reportSha256": "a37d833cbc87cf81549371dbc7732cbafac7d222d552a1f7334c14416a434e43",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 6,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_mini_apps.txt"
+          "skipped": 0
         },
         {
           "suite": "native_sandbox_apps",
-          "report": "audit/reference-integration-details/suites/native_sandbox_apps.txt",
-          "reportSha256": "0e210374489c36ad2c1a63791e82c88473302126d467c1b539f11d328cda7c29",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_sandbox_apps.txt",
+          "reportSha256": "d3d5dd51ceaea96fe91d590a4ce8c53963cc188fc589e0388535d3dc811979b6",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 4,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sandbox_apps.txt"
+          "skipped": 0
         },
         {
           "suite": "native_runtime_apps",
-          "report": "audit/reference-integration-details/suites/native_runtime_apps.txt",
-          "reportSha256": "0e13fa42625d90dd93adaf5391181bda8af497ca836955e1310233565d0812ce",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_runtime_apps.txt",
+          "reportSha256": "0b8d1ab70f2b6b863b5e67efd62011bd5d0dbc8655929b94cf9c4eb5e90567bf",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 15,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_runtime_apps.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "network-plugins",
@@ -1577,43 +1612,37 @@
       "currentIntegratedTests": [
         {
           "suite": "native_network",
-          "report": "audit/reference-integration-details/suites/native_network.txt",
-          "reportSha256": "e3fac4aa370809410057a009fe4aa52fdcfd4771d4042c54b756b6063375c53f",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_network.txt",
+          "reportSha256": "592c893f58ec93cb0fe9bbdbae22495ec69c9dd2e24e8c258cfbcd26c7705686",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 19,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_network.txt"
+          "skipped": 0
         },
         {
           "suite": "native_plugins",
-          "report": "audit/reference-integration-details/suites/native_plugins.txt",
-          "reportSha256": "de61f9b58116d0a1a6fc1274cf9d83bc962fda0b6a4e8d90ccf05a695205b05a",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_plugins.txt",
+          "reportSha256": "df0272c9bb01d678f2e29547394d1278595bf52994f56636317e58c99429a37c",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 20,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_plugins.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_runtime",
-          "report": "audit/reference-integration-details/suites/native_runtime.txt",
-          "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
-          "available": true,
-          "passed": 10,
+          "suite": "native_sandbox_network",
+          "report": "audit/continuation-integration/final-full-run/native_sandbox_network.txt",
+          "reportSha256": "758903e61e7c52b6145d1e192d018c3e57904948bef75e8d29be9aec1365fcc2",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 12,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_runtime.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "terminal",
-      "title": "Interactive terminal and shell tool gap",
+      "title": "Interactive terminal and persistent agent shells",
       "status": "implemented_with_limits",
       "inventoryIds": [
         "terminal.interactive",
@@ -1661,7 +1690,9 @@
         "src/core/ToolExecutor.cpp"
       ],
       "retainedEvidence": [
-        "audit/terminal-implementation.json"
+        "audit/terminal-implementation.json",
+        "audit/session-logs-native.json",
+        "audit/persistent-shell-native.json"
       ],
       "savedCheckpointTests": [
         {
@@ -1678,11 +1709,12 @@
         }
       ],
       "implemented": [
-        "Native Windows ConPTY terminal/libvterm rendering, input/resize/process lifecycle and bounded approved runCommand."
+        "Native Windows ConPTY terminal/libvterm rendering, input/resize/process lifecycle and bounded approved runCommand.",
+        "Native persistent PowerShell sessions, commands/stdin/polls/cancel, process-local watchers, readonly persisted per-chat logs and dynamic model system manifest; actual four-provider host fixtures pass."
       ],
       "remainingGaps": [
-        "runCommand is not upstream persistent shell-session/watcher/executeShellCommand semantics.",
-        "Local server discovery, Smart classification and complete VT/IME/selection/session restoration parity remain gaps."
+        "No automatic restoration of live processes after restart; log history survives independently.",
+        "Local-server discovery, smart command approval classification, full shell variants/VT/IME/UI popover parity remain gaps."
       ],
       "referenceAcceptance": [
         "Publish OS shell/ConPTY dependencies and privilege boundary.",
@@ -1691,28 +1723,69 @@
       "currentIntegratedTests": [
         {
           "suite": "native_terminal",
-          "report": "audit/reference-integration-details/suites/native_terminal.txt",
-          "reportSha256": "cd823f7ee9bfd4b501d562a6569e544be5e8d5023a163f2844c5104fc5bc5b43",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_terminal.txt",
+          "reportSha256": "7a79d9a3d40b7407deafc79c170b87514d9f525cec9e5c7a7202fd6fead5209a",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 17,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_terminal.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_core",
-          "report": "audit/reference-integration-details/suites/native_core.txt",
-          "reportSha256": "414e636a441dd439be2617c621143d545436635ef42f8dc58f3876851d60eed8",
-          "available": true,
-          "passed": 48,
+          "suite": "native_shell_service",
+          "report": "audit/continuation-integration/final-full-run/native_shell_service.txt",
+          "reportSha256": "1700159e2c76cc738e6046322d0076327c08df586edbfc55112f393e65cfbc04",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 21,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_core.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_engine",
+          "report": "audit/continuation-integration/final-full-run/native_shell_engine.txt",
+          "reportSha256": "94e47a723ed76eee84b8a7265c39faeb6a9adbff474421c5f1d9313461dd0087",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_view",
+          "report": "audit/continuation-integration/final-full-run/native_shell_view.txt",
+          "reportSha256": "d5e742b6c0e459928d0416f414378461db5dff8a05b7192428033917b844608b",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_session_logs",
+          "report": "audit/continuation-integration/final-full-run/native_session_logs.txt",
+          "reportSha256": "ca0cf6418150612daf2015ae47d0a0ac9181372f8926efc9b93b4818f07fed75",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_log_mount",
+          "report": "audit/continuation-integration/final-full-run/native_shell_log_mount.txt",
+          "reportSha256": "bca5dc187f2b60aaf580f07d69e0e3b526b229054574306692a6b09465dddb35",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_shell_runtime",
+          "report": "audit/continuation-integration/final-full-run/native_shell_runtime.txt",
+          "reportSha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "editor",
@@ -1778,7 +1851,8 @@
       ],
       "retainedEvidence": [
         "audit/editor-implementation.json",
-        "audit/editor-theme-parity.json"
+        "audit/editor-theme-parity.json",
+        "audit/native-file-previews.json"
       ],
       "savedCheckpointTests": [
         {
@@ -1799,7 +1873,7 @@
       ],
       "remainingGaps": [
         "The original UTF16 save denial did not recur in 30 focused and 10 full repeated runs; its external cause is unresolved. Controlled non-delete-sharing Windows handle tests verify safe denial and success after handle release; no speculative production workaround was introduced.",
-        "LSP, semantic completion/diagnostics, advanced cursors/folding/actions, full Monaco diff/Markdown/media behavior remain incomplete.",
+        "Advanced semantic editor behavior, cursors/folding/actions, full Monaco diff/Markdown/media behavior remain incomplete; this audit does not add an unsupported LSP requirement to the pinned inventory.",
         "Optimistic save check is not an external-writer compare-and-swap."
       ],
       "referenceAcceptance": [
@@ -1809,28 +1883,33 @@
       "currentIntegratedTests": [
         {
           "suite": "native_editor",
-          "report": "audit/reference-integration-details/suites/native_editor.txt",
-          "reportSha256": "20a073a3abf3fd999bea39ea82399b8b298841aa26a05cace9cce75e3acf233b",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_editor.txt",
+          "reportSha256": "2d5f69bce7ad84c06f31649433029886f1af70fcff60f6f2158057f9f5e4fd92",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 29,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_editor.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_ui_audit",
-          "report": "audit/reference-integration-details/suites/native_ui_audit.txt",
-          "reportSha256": "0838a6db4b97d0e6809f2a4d5cb38c9e7d3ba7ebb9ea1182d4b6760ff5547a39",
-          "available": true,
-          "passed": 17,
+          "suite": "native_image_preview",
+          "report": "audit/continuation-integration/final-full-run/native_image_preview.txt",
+          "reportSha256": "51b31a77f2cc8d5d15c00866e718abf0891187d13306129be52baf1e47ea8f65",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 7,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_ui_audit.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_file_diff",
+          "report": "audit/continuation-integration/final-full-run/native_file_diff.txt",
+          "reportSha256": "f002ac21e497e63f18727f9aa767dfff73cda5d955056ae835e4c84b9b4c38e2",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "git",
@@ -1922,83 +2001,69 @@
       "currentIntegratedTests": [
         {
           "suite": "native_git",
-          "report": "audit/reference-integration-details/suites/native_git.txt",
-          "reportSha256": "792ac8fe1e9ed38deb04d9af0f4014146a9a2110fa946ff0b6b9e0820c4295fb",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_git.txt",
+          "reportSha256": "25c2620906b22b4bdccee87827b8f8a81f11fdf21c00beb588ff0ce265c07777",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 20,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_git.txt"
+          "skipped": 0
         },
         {
           "suite": "native_git_ui",
-          "report": "audit/reference-integration-details/suites/native_git_ui.txt",
-          "reportSha256": "951c4906d26523a911e96349efb4f68439891e03f5f8ba05226ab1cfa518724e",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_git_ui.txt",
+          "reportSha256": "fddc3dd6e5fd07549e969f6a59bd8d8bc879361f8f5abcc7d646ec675d04f238",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 12,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_git_ui.txt"
+          "skipped": 0
         },
         {
           "suite": "native_git_host",
-          "report": "audit/reference-integration-details/suites/native_git_host.txt",
-          "reportSha256": "d7e673fd190a5f3cf8f9c3d32cc49262e489bef50c219c38a64ad33c7a449c44",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_git_host.txt",
+          "reportSha256": "12e6ac3663e9d78c54eebc8c56335ce65b060eaa89509c863d5ab5dac0b21518",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 16,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_git_host.txt"
+          "skipped": 0
         },
         {
           "suite": "native_git_watcher",
-          "report": "audit/reference-integration-details/suites/native_git_watcher.txt",
-          "reportSha256": "6e4624646c72838318346d00663e87036127add526c7aad6e4bdcc7896132f27",
-          "available": true,
-          "passed": 24,
+          "report": "audit/continuation-integration/final-full-run/native_git_watcher.txt",
+          "reportSha256": "7f8edbebb0142c8e9e696b791b07b55a990cc5d35d3a5426f92f2b67e8444841",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 27,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_git_watcher.txt"
+          "skipped": 0
         },
         {
           "suite": "native_git_watcher_ui",
-          "report": "audit/reference-integration-details/suites/native_git_watcher_ui.txt",
-          "reportSha256": "3b23fd4b870b432d1460bfebb0f674817142bee93a42947cdba4e0176a60c3d4",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_git_watcher_ui.txt",
+          "reportSha256": "50ab7012baaba17b7266a1d5e92771b0ff03b4acb334b4d4f63d02b9b5730ee4",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 4,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_git_watcher_ui.txt"
+          "skipped": 0
         },
         {
           "suite": "native_worktree_settings",
-          "report": "audit/reference-integration-details/suites/native_worktree_settings.txt",
-          "reportSha256": "d1ba9ca3ac882d58ba4bda7b3db59a445e5db2cec3cd1ca467effa9fb7e92412",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_worktree_settings.txt",
+          "reportSha256": "df724b2c23fdf38e0fdbf7990fc066b5840ed81dc77b9035a9d974fe028f570a",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 16,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_worktree_settings.txt"
+          "skipped": 0
         },
         {
           "suite": "reference_git_usage",
-          "report": "audit/reference-integration-details/suites/reference_git_usage.txt",
-          "reportSha256": "2794e480f28ea362f6b8e4cf1bf12a27126a0ed17abef580f6742fe0f927f723",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/reference_git_usage.txt",
+          "reportSha256": "f8653a011353a9267a46f5d93d64738b1b0dc53812ceb1a0a0b6d2b688e76a53",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 30,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/reference_git_usage.txt"
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "presentation",
@@ -2056,7 +2121,10 @@
         "audit/reference-integration-details/workbench-contract.json",
         "audit/reference-integration-details/workbench-before.txt",
         "audit/reference-integration-details/short-draft-before.txt",
-        "audit/reference-integration-details/links-handoff.json"
+        "audit/reference-integration-details/links-handoff.json",
+        "audit/rich-transcript-composer-native.json",
+        "audit/command-center-native.json",
+        "audit/native-file-previews.json"
       ],
       "savedCheckpointTests": [
         {
@@ -2089,14 +2157,15 @@
         "Native Markdown/code and a compact growing composer with a scale-adjusted 256px maximum and available-height adaptation.",
         "Integrated age/workspace grouping, global persisted pins and context pin/reorder; service/topology invalidation and current-selection behavior have shared fixture coverage.",
         "Integrated persisted content/file-tree split state, explicit browser/terminal/file-tree controls, chat-only view, centered 768px footer/history and responsive 350x250 native workbench.",
-        "Typed transcript file/attachment/tab/color/external links with per-chat leases, same-handle file capture and current-mount provenance. Only host-observed new rows acquire workspace/apps authority; restarted/forked rows do not silently gain it. Closed ordinary tabs reopen only from host-captured HTTP(S) URLs; mini-app/cross-chat targets fail closed."
+        "Typed conversation-scoped file/attachment/tab/color/external links and persisted/forked physical-mount provenance; missing legacy provenance does not authorize workspace access. Closed ordinary tabs reopen only from captured HTTP(S) URLs; mini-app/cross-chat targets fail closed.",
+        "Rich slash/@ composer and improved typed tool rendering are component/host tested; root added trusted image/file-diff presentation and persisted typed-link provenance in the current integration batch."
       ],
       "remainingGaps": [
-        "Sidebar drag/drop, worktree pagination, attention/unread and full multi-workspace grouping are incomplete.",
-        "Window-scoped content tabs do not implement complete per-agent visibility/restoration; source recent-workspace suggestions, side chats, watcher/local-server popovers and full file-tree search/diff behavior remain absent.",
-        "Typed link authority is not persisted across restart; shell links and rich binary/image/PDF/archive previews remain unsupported.",
-        "Rich slash/@ composer, command center, trusted inline images, math/Mermaid, full tool cards/checkpoints and virtualization remain incomplete.",
-        "No exact pixel/DPI parity claim. Native sizing adaptations are explicit in the retained workbench contract."
+        "Full sidebar drag/drop/worktree pagination/attention and simultaneous-workspace behavior remain incomplete.",
+        "Command center, side chats and bounded image/diff previews have final aggregate coverage; their owner reports retain source-behavior and media/layout limits.",
+        "Owned shell-session links and raster/image/diff previews are now implemented; full PDF/archive/media interaction remains partial. Persisted typed-link codec does not grant uncaptured row authority.",
+        "Math/Mermaid, complete checkpoint cards and transcript virtualization remain incomplete.",
+        "No exact pixel/DPI parity claim; native sizing adaptations stay explicit."
       ],
       "referenceAcceptance": [
         "Projection must preserve canonical replay and reject forged uiOnly suppression.",
@@ -2105,149 +2174,186 @@
       "currentIntegratedTests": [
         {
           "suite": "native_presentation",
-          "report": "audit/reference-integration-details/suites/native_presentation.txt",
-          "reportSha256": "728ba68c9dbda3fa69ecca80d2319a53a34f94faf29a7fb6d357617551c7e95f",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_presentation.txt",
+          "reportSha256": "11cd889f043920b5bb1e3fee7a7a043a26fd9e1f0d79b16e8ccaf31d57057190",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 89,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_presentation.txt"
+          "skipped": 0
         },
         {
           "suite": "native_transcript",
-          "report": "audit/reference-integration-details/suites/native_transcript.txt",
-          "reportSha256": "79bd3e485cd436c3adfac65cf100fed4bf6ccaa3aed7ef55263f2515e6a6de7c",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_transcript.txt",
+          "reportSha256": "4164f027e32d7f81283322dec16ad60a7b86aee2976d2fa90729426f93090e28",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 33,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript.txt"
+          "skipped": 0
         },
         {
           "suite": "native_transcript_ui",
-          "report": "audit/reference-integration-details/suites/native_transcript_ui.txt",
-          "reportSha256": "2e4a1a6896d1278ff74f102449d72e478ddb4563771c63c1fc1cdc01eff29be5",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_transcript_ui.txt",
+          "reportSha256": "a69c089c1d4d931c398f0e40dc23985c2446c16e9f42aa885bb4d506e87bd2ad",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 4,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript_ui.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_main_chrome",
-          "report": "audit/reference-integration-details/suites/native_main_chrome.txt",
-          "reportSha256": "21f24366d7575a1916f9701c41056ec079a768b85c03808ecd14e1c65a14069f",
-          "available": true,
-          "passed": 17,
+          "suite": "native_transcript_rich",
+          "report": "audit/continuation-integration/final-full-run/native_transcript_rich.txt",
+          "reportSha256": "c5033d14c377f1ee36acb80bf8e892ee505cacf60a87e350c8233f8f5135c9f1",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 13,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_main_chrome.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_sidebar_model",
-          "report": "audit/reference-integration-details/suites/native_sidebar_model.txt",
-          "reportSha256": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e",
-          "available": true,
+          "suite": "native_composer_completion",
+          "report": "audit/continuation-integration/final-full-run/native_composer_completion.txt",
+          "reportSha256": "11223e29d4b6a5219998c069596c447d66dfc29ac994205e8d1cfe5c822d89b5",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 19,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sidebar_model.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_sidebar_navigation",
-          "report": "audit/reference-integration-details/suites/native_sidebar_navigation.txt",
-          "reportSha256": "de4e24d893c0bc07d902885cf4569a753576683fe4ccbdef884091f4188b5130",
-          "available": true,
-          "passed": 9,
+          "suite": "native_composer_search",
+          "report": "audit/continuation-integration/final-full-run/native_composer_search.txt",
+          "reportSha256": "009aff3ac722c63a5d7208d1c55ab50962561d8bd2113aa970226a7a0c3fd49a",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 14,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_sidebar_navigation.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_workbench_layout",
-          "report": "audit/reference-integration-details/suites/native_workbench_layout.txt",
-          "reportSha256": "8299f22eb362fa114ca531c43992e320002ae267be34d321a507d6b7af16ae90",
-          "available": true,
-          "passed": 34,
+          "suite": "native_composer_host",
+          "report": "audit/continuation-integration/final-full-run/native_composer_host.txt",
+          "reportSha256": "72437dde68b793efed6ca5cf2e714265b125ba6539655837b676870bef6bc921",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 8,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_workbench_layout.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_workbench_helpers",
-          "report": "audit/reference-integration-details/suites/native_workbench_helpers.txt",
-          "reportSha256": "4b52c66593d2ea0f3ad7bacdaf123586ff166f33aaa27e703a55a92d2db96341",
-          "available": true,
-          "passed": 4,
+          "suite": "native_link_provenance_codec",
+          "report": "audit/continuation-integration/final-full-run/native_link_provenance_codec.txt",
+          "reportSha256": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 5,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_workbench_helpers.txt"
-        },
-        {
-          "suite": "native_chevron",
-          "report": "audit/reference-integration-details/suites/native_chevron.txt",
-          "reportSha256": "5d6b74e3d5d27c1ecd8a311e17da0d9141688de1eb1de44dbe978ee9807c9e51",
-          "available": true,
-          "passed": 9,
-          "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_chevron.txt"
+          "skipped": 0
         },
         {
           "suite": "native_transcript_links",
-          "report": "audit/reference-integration-details/suites/native_transcript_links.txt",
-          "reportSha256": "4b27c5f86e79f1e989dcc70524a355231d99aa408eb48e28e4ed0a9d233f44bc",
-          "available": true,
-          "passed": 39,
+          "report": "audit/continuation-integration/final-full-run/native_transcript_links.txt",
+          "reportSha256": "6c926d5411e9700a3f4e8929149f44facac02e18594981f247cfe86677c3bb1a",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 40,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript_links.txt"
+          "skipped": 0
         },
         {
           "suite": "native_transcript_link_ui",
-          "report": "audit/reference-integration-details/suites/native_transcript_link_ui.txt",
-          "reportSha256": "913dfbba7e57c91a180adab62a6c431fb71818f4e4e87878b7773863c438854b",
-          "available": true,
-          "passed": 11,
+          "report": "audit/continuation-integration/final-full-run/native_transcript_link_ui.txt",
+          "reportSha256": "0bd692ed847e9a62fa01599a7bb8260f5b148890871432309516973fd27c1f7a",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 14,
           "failed": 0,
-          "skipped": 1,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript_link_ui.txt"
+          "skipped": 1
         },
         {
           "suite": "native_transcript_tabs_real",
-          "report": "audit/reference-integration-details/suites/native_transcript_tabs_real.txt",
-          "reportSha256": "be3f864b676e3fc88b5961ecc45e3be102eb08594645f1b36d092b416bceeac3",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_transcript_tabs_real.txt",
+          "reportSha256": "3905c2db582a9aa199e17daf3a4ce1df326cfb97805d0361fe2ee6184779eddc",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 3,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_transcript_tabs_real.txt"
+          "skipped": 0
         },
         {
-          "suite": "native_ui",
-          "report": "audit/reference-integration-details/suites/native_ui.txt",
-          "reportSha256": "1ddaaca35e38c6006a9f23ccb170dba26c8fd934c6ec1046083fd30b3809ff1e",
-          "available": true,
-          "passed": 11,
+          "suite": "native_workbench_layout",
+          "report": "audit/continuation-integration/final-full-run/native_workbench_layout.txt",
+          "reportSha256": "b463623ba0c3b515c4331440a777fa63c45d867e32dc586eaa3423d21a4936f3",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 34,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_ui.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_workbench_helpers",
+          "report": "audit/continuation-integration/final-full-run/native_workbench_helpers.txt",
+          "reportSha256": "6c9ef6f38e3040b3be48517037c7c42e54b1e657f479d078d2c1e98b2c93d07c",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_main_chrome",
+          "report": "audit/continuation-integration/final-full-run/native_main_chrome.txt",
+          "reportSha256": "f8691415c0e47d1bc44c9622369dd9f5568a2910b102f83cdac102bcaba5b297",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_sidebar_model",
+          "report": "audit/continuation-integration/final-full-run/native_sidebar_model.txt",
+          "reportSha256": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 19,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_sidebar_navigation",
+          "report": "audit/continuation-integration/final-full-run/native_sidebar_navigation.txt",
+          "reportSha256": "d18227f90119e1d812531349b960e67c0cbf9550755ba2846c56b6f7a360de68",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_command_center",
+          "report": "audit/continuation-integration/final-full-run/native_command_center.txt",
+          "reportSha256": "b4be3856638b8c4e0efaa7d690042ec5cb856a97dd00bee0b043de3ede8a19c4",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_command_file_search",
+          "report": "audit/continuation-integration/final-full-run/native_command_file_search.txt",
+          "reportSha256": "06cc4177a412086a5ffa212e5781404cba8a6593e1e2d5fb44857b8f079ef38c",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_command_center_host",
+          "report": "audit/continuation-integration/final-full-run/native_command_center_host.txt",
+          "reportSha256": "00e866ec7b8b5f30d3e4a7c3047d2024c238dc5f1ddedfa824bed059e5a09194",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "native_side_chat_host",
+          "report": "audit/continuation-integration/final-full-run/native_side_chat_host.txt",
+          "reportSha256": "0e139370c15fc141222f9641788b7034d2d07d4e45f8147998a6a4c61c2fdaea",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "settings",
@@ -2318,28 +2424,33 @@
       "currentIntegratedTests": [
         {
           "suite": "native_settings",
-          "report": "audit/reference-integration-details/suites/native_settings.txt",
-          "reportSha256": "f0f40e82c42a357c6f7a4fa0c82508fa99603b74319f21bae5fb422586d095a8",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_settings.txt",
+          "reportSha256": "808a11804e45baaada0074f8421e1aab54d167abb9d6dc3d63712fe183519b05",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 12,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_settings.txt"
+          "skipped": 0
         },
         {
           "suite": "native_settings_audit",
-          "report": "audit/reference-integration-details/suites/native_settings_audit.txt",
-          "reportSha256": "a78d9f743ffe1c02064b61f3a4e93977a5d7b3ec08ea0c05e73f5021d6811cfc",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/native_settings_audit.txt",
+          "reportSha256": "1a3bab3eb6c916eb954ee4cd935f7ea0eadce74c8cbc81400cea0750c6b59e73",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 15,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/native_settings_audit.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_reference_controls",
+          "report": "audit/continuation-integration/final-full-run/native_reference_controls.txt",
+          "reportSha256": "a147b9d26a9354b13f709922043a118fa3a74920f1df96499f2793595904da43",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "external",
@@ -2409,7 +2520,7 @@
         "Use controlled local adapter fixtures before live authentication/service claims."
       ],
       "currentIntegratedTests": [],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     },
     {
       "id": "distribution",
@@ -2463,51 +2574,56 @@
       "remainingGaps": [
         "No clean-machine toolchain bootstrap/CI or signed updater/installer is demonstrated; Linux/macOS native ports are unverified.",
         "Static Qt does not mean a dependency-free single executable. WebView2 runtime/loader, system Git/shell and binary distribution license obligations remain.",
-        "Final exact exported-tree build and source scan remain publication gates; current55-suite passing coverage is assembled from the first full run plus repaired browser-suite evidence."
+        "The previous55-suite checkpoint and Desktop publication are recorded in audit/source-publication.json. Current continuation passed its final aggregate; exact curated export/build/scan and another publication commit remain required."
       ],
       "referenceAcceptance": [
         "Clean checkout build/test recipe, required runtime checks and third-party/source materials must be reproducible before binary release."
       ],
-      "workingTreeRemediation": "Root parameterized paths and verified ConfigureOnly in a spaced path; shared ade_ui/ADE/sidebar build successful. Final export and all-suite run pending.",
+      "workingTreeRemediation": "Configurable dependency paths/shared ade_ui/static ade_shell and opt-in experiments passed the final all-target build and80 suites on the installed toolchain. Clean-machine provisioning and current curated export remain separate.",
       "currentIntegratedTests": [
         {
           "suite": "reference_file_mutations",
-          "report": "audit/reference-integration-details/suites/reference_file_mutations.txt",
-          "reportSha256": "824e3d6171f109d3dbd13d7f130ca5566a9a36336703db406aa51eb7a3f95da7",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/reference_file_mutations.txt",
+          "reportSha256": "7be1ea8f2d6676cf8ff11024ef3db2eb7b04212ffd22725319d1ad12f83e6aae",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 40,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/reference_file_mutations.txt"
+          "skipped": 0
         },
         {
           "suite": "reference_git_usage",
-          "report": "audit/reference-integration-details/suites/reference_git_usage.txt",
-          "reportSha256": "2794e480f28ea362f6b8e4cf1bf12a27126a0ed17abef580f6742fe0f927f723",
-          "available": true,
+          "report": "audit/continuation-integration/final-full-run/reference_git_usage.txt",
+          "reportSha256": "f8653a011353a9267a46f5d93d64738b1b0dc53812ceb1a0a0b6d2b688e76a53",
+          "reportHashBasis": "canonical_git_text_LF",
           "passed": 30,
           "failed": 0,
-          "skipped": 0,
-          "blacklisted": 0,
-          "originalLocalReport": "build-next/Testing/reference_git_usage.txt"
+          "skipped": 0
+        },
+        {
+          "suite": "native_fonts",
+          "report": "audit/continuation-integration/final-full-run/native_fonts.txt",
+          "reportSha256": "96c431dd70b886b94c14cda618a1d9441e7fdc462d86953b6331371011a476ad",
+          "reportHashBasis": "canonical_git_text_LF",
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
         }
       ],
-      "evidenceDistinction": "savedCheckpointTests are historical Nov5 results. Current coverage combines54 passing suites from the Nov6 first full run with the repaired browser-tools suite; no single all-green55-suite run is claimed."
+      "evidenceDistinction": "savedCheckpointTests remain historical. currentIntegratedTests refer to the single final80-suite run in audit/continuation-integration.json. Passing these cases is not a complete upstream parity claim."
     }
   ],
   "privateStageHandoff": {
     "sidebar": "Integrated in production working tree; shared model19/navigation9 cases pass. Historical before failures and contract retained in audit/sidebar-navigation-native.json and audit/reference-integration-details.",
     "workbench": "Integrated in production working tree; layout34/helpers4/chevron9 cases pass. Historical private handoff is preserved as provenance, not current integration status.",
-    "mutations": "Preserved optional experimental library/test; current root build passes40 cases. Not linked into ADE and no production mutation adapter.",
+    "mutations": "Original optional experimental sources remain unchanged/unlinked. Separate production src/mutations now implements durable operations/undo, with60 store and11 actual-host fixtures; current aggregate is separate.",
     "gitUsage": "Preserved optional experimental library/test; current root build passes30 cases. Not linked into ADE and no production cleanup UI.",
-    "typedLinks": "Integrated in production working tree; resolver39, UI11 plus one offscreen skip, and separate native-Windows closed-tab fixture3 pass. No durable restart authority or rich media preview claim."
+    "typedLinks": "Published typed-link foundation extended by current persisted provenance codec, fork/restart binding checks, trusted raster preview and owned-shell navigation; see audit/native-file-previews.json. Final current80-suite aggregate passed."
   },
   "finiteReferenceAcceptance": [
     {
       "id": "R1",
       "criterion": "A frozen source commit has retained passing coverage for every configured suite, with exact hashes and explicit run aggregation/before-after evidence; commit/export identity remains parent-owned.",
-      "state": "55_suite_passing_coverage_from_54_initial_plus_1_repaired_final_commit_pending"
+      "state": "single_final80suite_pass_source_hashes_verified_export_commit_pending"
     },
     {
       "id": "R2",
@@ -2531,21 +2647,21 @@
     },
     {
       "id": "R6",
-      "criterion": "Durable mutation/undo, shell-session, multi-mount, editor and authentication gaps remain explicit until separately implemented.",
+      "criterion": "Remaining multi-mount, sandbox API, history editing, media/authentication and other gaps stay explicit; durable file undo and persistent shell subsets have separate implementation evidence.",
       "state": "documented_no_parity_claim"
     },
     {
       "id": "R7",
       "criterion": "Publication blockers and final export/history secret/assets review are resolved before push; binary release has additional dependency-license/build gates.",
-      "state": "desktop_authenticated_export_final_scan_and_push_pending"
+      "state": "previous_desktop_publication_verified_current_update_export_scan_push_pending"
     }
   ],
   "fullParityScope": "Reference publication need not wait for every feature if clearly labeled partial; it does not cancel the remaining full native implementation goal.",
   "sourceManifest": [
     {
       "path": "CMakeLists.txt",
-      "sha256": "31ebe8ec56385d6240048652cf7698e67533c1e516e999a17784d1344f6fb285",
-      "bytes": 33484,
+      "sha256": "f1a05a43f51727fa0905bb13f37fc9bb7c6e4d0adef74fde30a1034b21e895e3",
+      "bytes": 40970,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2604,8 +2720,8 @@
     },
     {
       "path": "src/attachments/FileReadSnapshotStore.cpp",
-      "sha256": "d02a7c5a6cf0335a5607fb8cb8b8cdc8701018f3198460f46d0d5c8f031b976b",
-      "bytes": 19451,
+      "sha256": "a93367e800f596184e850c3c4a8f5ba9978723af33a35f00db18be0857ae45d5",
+      "bytes": 19997,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2628,14 +2744,14 @@
     },
     {
       "path": "src/core/AgentEngine.cpp",
-      "sha256": "56512082e02253b933b28bd5c6a2cd5eac76b24b5512cd6a3dd4b715b7a63432",
-      "bytes": 56995,
+      "sha256": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd",
+      "bytes": 61518,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/core/AgentPresentation.cpp",
-      "sha256": "376a17ad5bcc16ca7fed30544f08bdef0e545b44e91ce62fe37952dc60c1b5ab",
-      "bytes": 15059,
+      "sha256": "c3b927c2402f69316f0c7ba8c7c93457a8d9926ea4289698631b2fad2e7123cb",
+      "bytes": 15308,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2670,8 +2786,8 @@
     },
     {
       "path": "src/core/ToolExecutor.cpp",
-      "sha256": "5da22a4d0b801a633d257d6a49df906b56b20e98c7fb723a0fc0fa0b726ee34f",
-      "bytes": 40534,
+      "sha256": "885bc3672d6604952d51f632ccdc2870d402ec4617ec235421d81785ce5e77ff",
+      "bytes": 44749,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2718,14 +2834,14 @@
     },
     {
       "path": "src/links/TranscriptLinkResolver.cpp",
-      "sha256": "78b21bf3eda201fb8140776b3bcec966f6d11237e90fd80c35eeaf45ea07d56f",
-      "bytes": 18658,
+      "sha256": "495159d7128784ce9bfcc6f56faa1ae79d737dea1104bd3a4828ad671d797bab",
+      "bytes": 19266,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/links/TranscriptLinkResolver.h",
-      "sha256": "676480d875a4ba62cb9657b31940b0706f0c7c2c80e6057eb174f891c714c4e1",
-      "bytes": 2532,
+      "sha256": "6c3ac453fc86993935fcc2c91b7b4b3fad66c934280c12d963aec6898364e1d6",
+      "bytes": 2579,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2742,14 +2858,14 @@
     },
     {
       "path": "src/runtime/AgentToolHost.cpp",
-      "sha256": "2a5edebb61e11da5346b50ad869ad53d97cdd29d6288717dea31b9c00692d87e",
-      "bytes": 16654,
+      "sha256": "4b089f2e3d7d0674960292e86dae9b5189a95458e6cc6d23f788f1fcb591e32f",
+      "bytes": 25953,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/runtime/AgentToolHost.h",
-      "sha256": "e7f974acaeb2ae71cf0e24639b18a22d7e91bac6057553a03d5a2bfd423ba158",
-      "bytes": 2688,
+      "sha256": "3274bcacf7a27c31cb1f7054b71c3ad87c0d22365e42950df5e161b183dd3afb",
+      "bytes": 3845,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2760,8 +2876,8 @@
     },
     {
       "path": "src/sandbox/SandboxHost.cpp",
-      "sha256": "6972a0e0b5188501f9f0ba26db7c18d67d1bcfb56e3ffd054b1836ecc9444e7a",
-      "bytes": 30414,
+      "sha256": "b743aae3e41ddc7853ff51508a60ef67d5fa7e7925a8c269c6ae9a08265c8c3a",
+      "bytes": 31352,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2778,20 +2894,20 @@
     },
     {
       "path": "src/terminal/ConPtyProcess.cpp",
-      "sha256": "6add614d9f3d27123a793a8cc0f0d7f09271805628c242a6195119c09899d51d",
-      "bytes": 13174,
+      "sha256": "1266d01490ec6d3fdf1485da572af546da81ab9f91ccab8e79227e1c20a56484",
+      "bytes": 13268,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/terminal/TerminalWidget.cpp",
-      "sha256": "9105824e9c2356fc0a663012b826e9de1fc48b950bd58d234bebabbcf77882bd",
-      "bytes": 12065,
+      "sha256": "0ce84daabe393bd3afd49cf6ece43414541480b46021e902b8ee67980f4604ee",
+      "bytes": 14394,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/AppStyle.cpp",
-      "sha256": "ab83d3e1898ab0687f9de743c3d47301c5dbb34389138d0c891e76a483fd5457",
-      "bytes": 3013,
+      "sha256": "42e166fd930b0e939c09e92df95d5ebc400d833c1782821fb5801cc3064f0afe",
+      "bytes": 3066,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2808,20 +2924,20 @@
     },
     {
       "path": "src/ui/Composer.h",
-      "sha256": "0fc9339645e34e105cb0f482601b37dce714403dea5aa26392eff428bf42a788",
-      "bytes": 3744,
+      "sha256": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265",
+      "bytes": 5281,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/ConversationView.cpp",
-      "sha256": "b55e1d74e13497b60105ee631bedebfc2982c66eb3d46011f2e813575f2fa824",
-      "bytes": 33113,
+      "sha256": "b7ff97509229e7dd337dbfb707522a3ee2e4b9fe220bec95b5f5e5938fdf82b0",
+      "bytes": 39649,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/ConversationView.h",
-      "sha256": "43d2163d092f051191d2c21144885a806450ee85ac7fa414d3d9bed58792374e",
-      "bytes": 1171,
+      "sha256": "0e924cbeaebb4d9747f6f70ebef2cc64dd206c0ca0fc1359dbd45a20ffdd28fd",
+      "bytes": 1384,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2832,56 +2948,56 @@
     },
     {
       "path": "src/ui/MainWindow.cpp",
-      "sha256": "01585c8dda089e1d3e3b6587663822740d74c1ba501c566134bae9fb156d3191",
-      "bytes": 65215,
+      "sha256": "92f0091e3fed6bbc8fb503e47a90a0ad32e3c32560119db678509a5d8b985c4b",
+      "bytes": 66030,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MainWindow.h",
-      "sha256": "57c9d6379634e9e5b60185c31c7818d6605183827a04846b5ef78321dc821bef",
-      "bytes": 6147,
+      "sha256": "1ecb0722a1d4b1643f78ca93aae6f5d1b37077214a23f5c013b219c4fd5252d4",
+      "bytes": 8811,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MainWindowConversations.cpp",
-      "sha256": "ac1f966111430060bd6ca42ac2c5b012d2ec654719261f53f30b70a694075724",
-      "bytes": 11099,
+      "sha256": "83c48254c189c669acea4a5add317a36681135f724ce1c472bd5ff454808297b",
+      "bytes": 14541,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MainWindowGit.cpp",
-      "sha256": "6fd03acc7045d0d21772db165491c88baf2433bb083586c360a9b5ab4273b595",
-      "bytes": 9617,
+      "sha256": "ec93e2cd7bd9c8784f14a664b3a0fda8e32236ada6c16377489b3c85d6d25b7e",
+      "bytes": 10297,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MainWindowLinks.cpp",
-      "sha256": "5abfefef43aa6fad5a5e437a233b83f261d1719baca24e099ad64c398ac1aac7",
-      "bytes": 8179,
+      "sha256": "2c17aa406721ddbc5be579e9f339e0ebfb0b956c4a98b38191fe42d0a1e4e6f7",
+      "bytes": 13793,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MainWindowWorkbench.cpp",
-      "sha256": "96a59786c7f38ea7019c5d06d83ee937140a1c131d8b9d374e10390071447b2c",
-      "bytes": 6044,
+      "sha256": "deefd1a9d07ab040a004274208dc18fb338f950525c0347edbdac76c77544ead",
+      "bytes": 6144,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/MarkdownParts.cpp",
-      "sha256": "f3aeb059727e5dfd91b06332385ffbd9072b23972d3f75ae8ebd7ff9fe49da71",
-      "bytes": 14676,
+      "sha256": "8034948c41c04eb2c8edc24016e74f8e903ec7cbb443acda9b8b9c50eed611a5",
+      "bytes": 17395,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/SessionStore.cpp",
-      "sha256": "5b9bb835959c165e38976581ea4047b64b381c443aafdcf1d52598de633b4879",
-      "bytes": 13212,
+      "sha256": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677",
+      "bytes": 15185,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "src/ui/SessionStore.h",
-      "sha256": "39d85383bfbced72ac8d016526c016293d18f042fdfbd42ea219ee8e177b438a",
-      "bytes": 1646,
+      "sha256": "bca2ec27bcfa6035537a98910c8957b631cf95b3c0f8ee7e4c6cea03b06edd0b",
+      "bytes": 1745,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2892,8 +3008,8 @@
     },
     {
       "path": "src/ui/SidebarModel.cpp",
-      "sha256": "2f4399e0fd885291cecbc946e4ec94a3edd478c3d6ee536e48df1cc571a6b51a",
-      "bytes": 8535,
+      "sha256": "5401f5cbb239de81972da35de05d556ea58c9ea5c04f15bb7cb1208d2819e7b4",
+      "bytes": 8585,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2934,8 +3050,8 @@
     },
     {
       "path": "tests/test_browser_tools.cpp",
-      "sha256": "148c2df7480f2531c51cf8230c79daf4066aec8b7bce6b141a5a6f9213822d29",
-      "bytes": 38389,
+      "sha256": "dd221120766961ab3db512753cdb1821cf65c86bb30b57965fc441c5a9ef192f",
+      "bytes": 39212,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2970,14 +3086,14 @@
     },
     {
       "path": "tests/test_transcript_link_ui.cpp",
-      "sha256": "9a66b05cdec18ce1c1e6943ebf6398966c03422a280fd03dede1f399adeb185d",
-      "bytes": 20467,
+      "sha256": "357fa60e81c0c2c8d01f6f6fef09beb96b8636eb08a710824757a1d4b42e344a",
+      "bytes": 23483,
       "hashBasis": "canonical_git_text_LF"
     },
     {
       "path": "tests/test_transcript_links.cpp",
-      "sha256": "ea72e4a6bd3dd8ec4d3e90bd95a9fb7b0316783790d6eff90256615cccc35672",
-      "bytes": 12754,
+      "sha256": "796c63e3aff76651605b512d187959af0a686573886cf26f170c4bf620556c66",
+      "bytes": 13787,
       "hashBasis": "canonical_git_text_LF"
     },
     {
@@ -2997,6 +3113,132 @@
       "sha256": "925ef52401577f57ab3825d5a58d9cff4157ef62dea72db82068154e9d71b829",
       "bytes": 20192,
       "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationDiff.h",
+      "sha256": "368ca16b70228248313d4793b7a6dac12b7bb58d974dc7f6c72f88043c9ffe08",
+      "bytes": 2544,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationExecutor.h",
+      "sha256": "bb2ce58fc5e72944666fb6de04b02c93def1fe7d41545c3dabbd734739405947",
+      "bytes": 801,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.cpp",
+      "sha256": "fdf8227402e855962db4e9ce2546f96e6a6a4fcde258db743a1fea48cd2d1e95",
+      "bytes": 11243,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationJournal.h",
+      "sha256": "7419163d24d7fe6ae3b32c64e28d0de7e0dfd02406e5d6f984d4a369d6c28ddb",
+      "bytes": 1288,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.cpp",
+      "sha256": "e2b4a24985cf0b27136c54591612145faaa3279f406954b946816c676acc1305",
+      "bytes": 52934,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/mutations/FileMutationStore.h",
+      "sha256": "e18aec8b4487b2785e5f610406332a8e708dc1dc22991cc5157bc054415f78e4",
+      "bytes": 2983,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/SessionLogStore.cpp",
+      "sha256": "177bae3972520f96cc508b0573caca089a9a113919a5659b74f8fa728402225e",
+      "bytes": 18793,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/SessionLogStore.h",
+      "sha256": "3e3d9aca553b825392e099c68ae27884103995cf764f5f317b499e7d3755a2e4",
+      "bytes": 1496,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellProtocol.cpp",
+      "sha256": "62b1c2a441a73422540d415d6f29bd48460ccb1bf3f6b5272110f410e7cca5b9",
+      "bytes": 10976,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellProtocol.h",
+      "sha256": "7322bdea6554396165f05502ab93f9f230aa1d0d2030190cd1632db5590dc028",
+      "bytes": 1318,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellService.cpp",
+      "sha256": "4f8a7c443f36923a9a6319d65d182aae008d9dde31529d4040796fa6d80cd984",
+      "bytes": 33098,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/ShellService.h",
+      "sha256": "80cab36ae597a140e31dd430a54e8bfe1633230b6aa445c5249ef82eadcffe62",
+      "bytes": 2489,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SideChatPane.cpp",
+      "sha256": "0c776ff9e6e2adcfd667cfc52217ac1005b208e357eab4ae60e00a1861ab0903",
+      "bytes": 10128,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/SideChatPane.h",
+      "sha256": "14e5db969d4de99f857dbf2c0b0b5b390966069c1efd6112f26e1a2f6626fb96",
+      "bytes": 2072,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowSideChats.cpp",
+      "sha256": "6e9a2e33e0af26d1cb59fc7624b70f80975de19c5f9b550d7f90107aa397b087",
+      "bytes": 18355,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandCenter.cpp",
+      "sha256": "e80e828a2cbc50fb70210e7d43fc9946bae6a592b706b669043fbe15d3df3ca8",
+      "bytes": 15327,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/CommandCenter.h",
+      "sha256": "90c4b6805e2be05988ac203e45601e0c9fb9b31d70e7820af22e26dab65bd823",
+      "bytes": 1884,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "sha256": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55",
+      "bytes": 13373,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowBrowserTools.cpp",
+      "sha256": "63317bd9f89765b287a674bdf7dedd3906b63bc32bd745fdaa76c1149037dbfe",
+      "bytes": 9342,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserInspector.cpp",
+      "sha256": "73c775ae5f09fe13fdae4bb483ab77609456294999e51788feea6df39addf902",
+      "bytes": 20257,
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/browser/BrowserInspector.h",
+      "sha256": "9be26825fc74c3ea0b504e2dcd32f96683c19532a69ebb931e802a0d335a24dd",
+      "bytes": 1965,
+      "hashBasis": "canonical_git_text_LF"
     }
   ],
   "sourceReference": {
@@ -3015,10 +3257,368 @@
     "workbench": "Integrated: responsive content/sidebar/file-tree controls, centered compact composer/history, preserved draft and split state; layout34/helpers4/chevron9 pass.",
     "typedLinks": "Integrated scoped resolver and host UI routing;39/11+1skip/nativeWindows3 pass.",
     "build": "Parameterized paths/shared ade_ui; optional source experiments actually built and tested40/30. Clean-machine/bootstrap and final export verification remain separate.",
-    "publication": "Public empty secusbdl/ade exists. GitHub Desktop is signed in as secusbdl; no source push performed. Final new export destination is out/publish-ade-reference; existing out/publish-ade scaffold is preserved."
+    "publication": "Prior curated main336a033 was published and independently verified. Existing out/publish-ade-reference remains the update target; current continuation export/commit/Desktop push is pending. The unrelated old out/publish-ade scaffold stays untouched."
   },
-  "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
+  "reviewedUtc": "2026-11-06T14:05:21.866737+00:00",
   "currentIntegratedCheckpoint": {
+    "state": "single_final_full_run_80_of80_passed_publication_pending",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "aggregate": "audit/continuation-integration.json",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "passedCasesIncludingLifecycle": 1466,
+    "qtSkippedCases": 1,
+    "skipExplanation": "Offscreen transcript link suite skips the real browser-tab case; native_transcript_tabs_real executes and passes that exact case on the Windows platform.",
+    "firstRun": {
+      "passedSuites": 75,
+      "failedSuites": 5,
+      "retainedDirectory": "audit/continuation-integration/first-full-run"
+    },
+    "sourceHashBasis": "canonical_git_text_LF",
+    "publication": "Final curated export/build/scan/update commit and GitHub Desktop push remain separate gates."
+  },
+  "resumedFailureReview": {
+    "report": "audit/reference-integration-details/resumed-failure-review.json",
+    "productionSourceChangedForFourFailureReview": false,
+    "results": {
+      "native_attachments": {
+        "suite": "native_attachments",
+        "report": "audit/reference-integration-details/suites/native_attachments.txt",
+        "reportSha256": "363bd111638a2a7b9624511498e66e5f33500072d882d00e9e4eab109d805288",
+        "available": true,
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_attachments.txt"
+      },
+      "native_runtime": {
+        "suite": "native_runtime",
+        "report": "audit/reference-integration-details/suites/native_runtime.txt",
+        "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
+        "available": true,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_runtime.txt"
+      },
+      "native_ui": {
+        "suite": "native_ui",
+        "report": "audit/reference-integration-details/suites/native_ui.txt",
+        "reportSha256": "1ddaaca35e38c6006a9f23ccb170dba26c8fd934c6ec1046083fd30b3809ff1e",
+        "available": true,
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_ui.txt"
+      },
+      "native_editor": {
+        "suite": "native_editor",
+        "report": "audit/reference-integration-details/suites/native_editor.txt",
+        "reportSha256": "20a073a3abf3fd999bea39ea82399b8b298841aa26a05cace9cce75e3acf233b",
+        "available": true,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "originalLocalReport": "build-next/Testing/native_editor.txt"
+      }
+    },
+    "scope": "Assertions were updated to compare exact captured metadata separately from versioned display metadata; composer enforces the source cap. Editor old cause remains unproven; controlled sharing-denial regression demonstrates correct failure semantics."
+  },
+  "sourceManifestPolicy": "Selected native source observed during integration; canonical Git text LF except explicit exact preserved bytes. Historical test/report hashes are preserved. Root final continuation report/commit defines the frozen build identity.",
+  "packagedBuildObservation": {
+    "report": "audit/continuation-integration.json",
+    "scope": "Current local ready test bundle; unsigned, not a public binary release.",
+    "hashBasis": "exact_binary_bytes",
+    "directory": "out/agentic-reference-checkpoint",
+    "versionSmoke": "ADE 0.1.0",
+    "files": [
+      {
+        "path": "ADE.exe",
+        "bytes": 80769977,
+        "sha256": "9443d5a7cd72174f35e2d2a169a5afdc0439547f72ff0fab173954ef4fb7fd19",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "bcrypt.dll",
+          "comdlg32.dll",
+          "CRYPT32.dll",
+          "d3d11.dll",
+          "d3d12.dll",
+          "d3d9.dll",
+          "DNSAPI.dll",
+          "dwmapi.dll",
+          "DWrite.dll",
+          "dxgi.dll",
+          "GDI32.dll",
+          "IMM32.dll",
+          "IPHLPAPI.DLL",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "ncrypt.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ODBC32.dll",
+          "ole32.dll",
+          "OLEAUT32.dll",
+          "api-ms-win-core-winrt-l1-1-0.dll",
+          "api-ms-win-core-winrt-string-l1-1-0.dll",
+          "Secur32.dll",
+          "SETUPAPI.dll",
+          "SHCORE.dll",
+          "SHELL32.dll",
+          "SHLWAPI.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "UxTheme.dll",
+          "VERSION.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll",
+          "WTSAPI32.dll"
+        ]
+      },
+      {
+        "path": "ADE-sandbox-worker.exe",
+        "bytes": 19775944,
+        "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+        "peImports": [
+          "ADVAPI32.dll",
+          "AUTHZ.dll",
+          "KERNEL32.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-private-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "NETAPI32.dll",
+          "ntdll.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "api-ms-win-core-synch-l1-2-0.dll",
+          "USER32.dll",
+          "USERENV.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ]
+      },
+      {
+        "path": "WebView2Loader.dll",
+        "bytes": 194912,
+        "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+        "peImports": [
+          "KERNEL32.dll"
+        ]
+      }
+    ]
+  },
+  "browserFixtureRepair": {
+    "productionSourceChanged": false,
+    "changedFile": "tests/test_browser_tools.cpp",
+    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
+    "fullSuite": {
+      "suite": "native_browser_tools",
+      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
+      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
+      "reportHashBasis": "canonical_git_text_LF",
+      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Full suite"
+    },
+    "focusedRepeats": [
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
+        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      },
+      {
+        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
+        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
+        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
+        "reportHashBasis": "canonical_git_text_LF",
+        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "scope": "Focused regression including init/cleanup"
+      }
+    ],
+    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+  },
+  "postPublicationUpdate": {
+    "status": "Final all-target build and single full80-suite run passed; current curated export/build/scan/commit/Desktop push pending. Full parity is not claimed.",
+    "featureMap": "audit/feature-progress-update.json",
+    "sourceScope": "All701 rows retained.",
+    "previousPublication": "audit/source-publication.json",
+    "scan": "audit/publication-update-scan.json",
+    "newEvidence": [
+      "audit/mutations-native.json",
+      "audit/session-logs-native.json",
+      "audit/conversation-controls-native.json",
+      "audit/rich-transcript-composer-native.json",
+      "audit/persistent-shell-native.json",
+      "audit/side-chat-native.json",
+      "audit/command-center-native.json",
+      "audit/native-browser-controls.json",
+      "audit/native-file-previews.json"
+    ],
+    "aggregateReport": "audit/continuation-integration.json",
+    "watcherRetry": "Actual-host loss reproduced before fix; final13/13 host cases cover retained retry, exactly-once paused acceptance, host destruction and malformed/Unicode bounds. Failed filesystem writes are not crash-durable.",
+    "currentValidation": {
+      "state": "single_final_full_run_80_of80_passed_publication_pending",
+      "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+      "aggregate": "audit/continuation-integration.json",
+      "suites": 80,
+      "passedSuites": 80,
+      "failedSuites": 0,
+      "passedCasesIncludingLifecycle": 1466,
+      "qtSkippedCases": 1,
+      "skipExplanation": "Offscreen transcript link suite skips the real browser-tab case; native_transcript_tabs_real executes and passes that exact case on the Windows platform.",
+      "firstRun": {
+        "passedSuites": 75,
+        "failedSuites": 5,
+        "retainedDirectory": "audit/continuation-integration/first-full-run"
+      },
+      "sourceHashBasis": "canonical_git_text_LF",
+      "publication": "Final curated export/build/scan/update commit and GitHub Desktop push remain separate gates."
+    },
+    "readyBuild": {
+      "directory": "out/agentic-reference-checkpoint",
+      "versionSmoke": "ADE 0.1.0",
+      "files": [
+        {
+          "path": "ADE.exe",
+          "bytes": 80769977,
+          "sha256": "9443d5a7cd72174f35e2d2a169a5afdc0439547f72ff0fab173954ef4fb7fd19",
+          "peImports": [
+            "ADVAPI32.dll",
+            "AUTHZ.dll",
+            "bcrypt.dll",
+            "comdlg32.dll",
+            "CRYPT32.dll",
+            "d3d11.dll",
+            "d3d12.dll",
+            "d3d9.dll",
+            "DNSAPI.dll",
+            "dwmapi.dll",
+            "DWrite.dll",
+            "dxgi.dll",
+            "GDI32.dll",
+            "IMM32.dll",
+            "IPHLPAPI.DLL",
+            "KERNEL32.dll",
+            "api-ms-win-crt-convert-l1-1-0.dll",
+            "api-ms-win-crt-environment-l1-1-0.dll",
+            "api-ms-win-crt-filesystem-l1-1-0.dll",
+            "api-ms-win-crt-heap-l1-1-0.dll",
+            "api-ms-win-crt-locale-l1-1-0.dll",
+            "api-ms-win-crt-math-l1-1-0.dll",
+            "api-ms-win-crt-private-l1-1-0.dll",
+            "api-ms-win-crt-runtime-l1-1-0.dll",
+            "api-ms-win-crt-stdio-l1-1-0.dll",
+            "api-ms-win-crt-string-l1-1-0.dll",
+            "api-ms-win-crt-time-l1-1-0.dll",
+            "api-ms-win-crt-utility-l1-1-0.dll",
+            "ncrypt.dll",
+            "NETAPI32.dll",
+            "ntdll.dll",
+            "ODBC32.dll",
+            "ole32.dll",
+            "OLEAUT32.dll",
+            "api-ms-win-core-winrt-l1-1-0.dll",
+            "api-ms-win-core-winrt-string-l1-1-0.dll",
+            "Secur32.dll",
+            "SETUPAPI.dll",
+            "SHCORE.dll",
+            "SHELL32.dll",
+            "SHLWAPI.dll",
+            "api-ms-win-core-synch-l1-2-0.dll",
+            "USER32.dll",
+            "USERENV.dll",
+            "UxTheme.dll",
+            "VERSION.dll",
+            "WINHTTP.dll",
+            "WINMM.dll",
+            "WS2_32.dll",
+            "WTSAPI32.dll"
+          ]
+        },
+        {
+          "path": "ADE-sandbox-worker.exe",
+          "bytes": 19775944,
+          "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+          "peImports": [
+            "ADVAPI32.dll",
+            "AUTHZ.dll",
+            "KERNEL32.dll",
+            "api-ms-win-crt-convert-l1-1-0.dll",
+            "api-ms-win-crt-environment-l1-1-0.dll",
+            "api-ms-win-crt-filesystem-l1-1-0.dll",
+            "api-ms-win-crt-heap-l1-1-0.dll",
+            "api-ms-win-crt-locale-l1-1-0.dll",
+            "api-ms-win-crt-math-l1-1-0.dll",
+            "api-ms-win-crt-private-l1-1-0.dll",
+            "api-ms-win-crt-runtime-l1-1-0.dll",
+            "api-ms-win-crt-stdio-l1-1-0.dll",
+            "api-ms-win-crt-string-l1-1-0.dll",
+            "api-ms-win-crt-time-l1-1-0.dll",
+            "api-ms-win-crt-utility-l1-1-0.dll",
+            "NETAPI32.dll",
+            "ntdll.dll",
+            "ole32.dll",
+            "SHELL32.dll",
+            "api-ms-win-core-synch-l1-2-0.dll",
+            "USER32.dll",
+            "USERENV.dll",
+            "VERSION.dll",
+            "WINMM.dll",
+            "WS2_32.dll"
+          ]
+        },
+        {
+          "path": "WebView2Loader.dll",
+          "bytes": 194912,
+          "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+          "peImports": [
+            "KERNEL32.dll"
+          ]
+        }
+      ]
+    }
+  },
+  "previousPublishedIntegratedCheckpoint": {
     "status": "all_55_suites_have_passing_coverage_from_initial_run_plus_repaired_suite",
     "reviewedUtc": "2026-11-06T11:19:16.680976+00:00",
     "sourceBaseCommit": "c88379578aa7f016296cd9eb7587d7b91c3a1b5b",
@@ -3085,103 +3685,11 @@
     },
     "coverageReport": "audit/reference-integration.json"
   },
-  "resumedFailureReview": {
-    "report": "audit/reference-integration-details/resumed-failure-review.json",
-    "productionSourceChangedForFourFailureReview": false,
-    "results": {
-      "native_attachments": {
-        "suite": "native_attachments",
-        "report": "audit/reference-integration-details/suites/native_attachments.txt",
-        "reportSha256": "363bd111638a2a7b9624511498e66e5f33500072d882d00e9e4eab109d805288",
-        "available": true,
-        "passed": 23,
-        "failed": 0,
-        "skipped": 0,
-        "blacklisted": 0,
-        "originalLocalReport": "build-next/Testing/native_attachments.txt"
-      },
-      "native_runtime": {
-        "suite": "native_runtime",
-        "report": "audit/reference-integration-details/suites/native_runtime.txt",
-        "reportSha256": "83613900a84b775fce3145762bc043abdd0bb3bb8cd3debae74ced68cd0b2012",
-        "available": true,
-        "passed": 10,
-        "failed": 0,
-        "skipped": 0,
-        "blacklisted": 0,
-        "originalLocalReport": "build-next/Testing/native_runtime.txt"
-      },
-      "native_ui": {
-        "suite": "native_ui",
-        "report": "audit/reference-integration-details/suites/native_ui.txt",
-        "reportSha256": "1ddaaca35e38c6006a9f23ccb170dba26c8fd934c6ec1046083fd30b3809ff1e",
-        "available": true,
-        "passed": 11,
-        "failed": 0,
-        "skipped": 0,
-        "blacklisted": 0,
-        "originalLocalReport": "build-next/Testing/native_ui.txt"
-      },
-      "native_editor": {
-        "suite": "native_editor",
-        "report": "audit/reference-integration-details/suites/native_editor.txt",
-        "reportSha256": "20a073a3abf3fd999bea39ea82399b8b298841aa26a05cace9cce75e3acf233b",
-        "available": true,
-        "passed": 29,
-        "failed": 0,
-        "skipped": 0,
-        "blacklisted": 0,
-        "originalLocalReport": "build-next/Testing/native_editor.txt"
-      }
-    },
-    "scope": "Assertions were updated to compare exact captured metadata separately from versioned display metadata; composer enforces the source cap. Editor old cause remains unproven; controlled sharing-denial regression demonstrates correct failure semantics."
-  },
-  "sourceManifestPolicy": "Native Git text hashes use canonical LF bytes (CRLF -> LF) for the planned fresh export. Files marked -text, including reference sources, retain exact byte hashes. Working tree base commit alone does not identify this integrated state.",
-  "packagedBuildObservation": {
+  "previousPackagedBuildObservation": {
     "report": "audit/reference-integration.json",
     "path": "out/reference-checkpoint/ADE.exe",
     "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0",
-    "scope": "Parent-built local native test package, not a signed/public binary release. Final exported source build on current toolchain remains parent-owned; clean-machine provisioning is not demonstrated."
-  },
-  "browserFixtureRepair": {
-    "productionSourceChanged": false,
-    "changedFile": "tests/test_browser_tools.cpp",
-    "cause": "The hidden/unfocused fixture could be rejected by Chromium before the application permission policy. The fixture now waits boundedly for native-window and DOM focus before each Block/Ask/Allow check. All original policy assertions remain.",
-    "fullSuite": {
-      "suite": "native_browser_tools",
-      "report": "audit/reference-integration-details/browser-tools-full-final.txt",
-      "reportSha256": "221fa931769cef91d2c63a6c77506b94f85d4451a7d6d44134a3cc15025e4458",
-      "reportHashBasis": "canonical_git_text_LF",
-      "originalLocalReport": "private/browser-tools-resume/full-final.txt",
-      "passed": 24,
-      "failed": 0,
-      "skipped": 0,
-      "scope": "Full suite"
-    },
-    "focusedRepeats": [
-      {
-        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
-        "report": "audit/reference-integration-details/browser-tools-focused-final-1.txt",
-        "reportSha256": "c690c093f1629c0c03c21dc651752b2061038f0eab893f3aa1b03af45d4dfb03",
-        "reportHashBasis": "canonical_git_text_LF",
-        "originalLocalReport": "private/browser-tools-resume/focused-final-1.txt",
-        "passed": 3,
-        "failed": 0,
-        "skipped": 0,
-        "scope": "Focused regression including init/cleanup"
-      },
-      {
-        "suite": "native_browser_tools::fullscreenPolicyGatesNativeWindowRequest",
-        "report": "audit/reference-integration-details/browser-tools-focused-final-2.txt",
-        "reportSha256": "cecf9f2843da8c9506df1be0ac69e2b87af913e29473c53c0735df9b67c8ac01",
-        "reportHashBasis": "canonical_git_text_LF",
-        "originalLocalReport": "private/browser-tools-resume/focused-final-2.txt",
-        "passed": 3,
-        "failed": 0,
-        "skipped": 0,
-        "scope": "Focused regression including init/cleanup"
-      }
-    ],
-    "evidenceOwner": "Parent retains copies under audit/reference-integration-details and records final source hashes in audit/reference-integration.json."
+    "scope": "Historical parent-built local test package from the previously published checkpoint, not the current continuation bundle or a signed/public binary release.",
+    "hashBasis": "exact_binary_bytes"
   }
 }

@@ -1,0 +1,26 @@
+********* Start testing of ConversationControlTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ConversationControlTest::initTestCase()
+PASS   : ConversationControlTest::queueEditsAreDurableAndDrainInOrder()
+PASS   : ConversationControlTest::stopAndRestartKeepQueuePaused()
+PASS   : ConversationControlTest::failurePreservesQueueAndDoesNotRetryIt()
+PASS   : ConversationControlTest::failedSaveDoesNotDropOrSend()
+PASS   : ConversationControlTest::idleInvalidHistoryAndFailedCommitDoNotAcceptOrQueue()
+PASS   : ConversationControlTest::sendNowCancelsCurrentAndPrioritizesSelected()
+PASS   : ConversationControlTest::stoppedAtFinishedCancelsScheduledDrain()
+PASS   : ConversationControlTest::contextHookRunsForEachAcceptedTurn()
+PASS   : ConversationControlTest::appMountMayRefreshOnlyInsideActualTurnHook()
+PASS   : ConversationControlTest::queueObserversCanCancelOrDelete()
+PASS   : ConversationControlTest::questionCompletesWithExactProtocolAssociation(openai)
+PASS   : ConversationControlTest::questionCompletesWithExactProtocolAssociation(anthropic)
+PASS   : ConversationControlTest::questionCompletesWithExactProtocolAssociation(google)
+PASS   : ConversationControlTest::questionCompletesWithExactProtocolAssociation(responses)
+PASS   : ConversationControlTest::questionsValidateBacktrackingAndStaleStepTokens()
+PASS   : ConversationControlTest::normalMessageInterruptsQuestionBeforeNextRequest()
+PASS   : ConversationControlTest::stopQuestionUsesStructuredResultAndKeepsQueue()
+PASS   : ConversationControlTest::reusedToolIdGetsFreshQuestionTokenAndObserversMayDelete()
+PASS   : ConversationControlTest::sessionQueueAndOpaqueLinkProvenanceRoundTrip()
+PASS   : ConversationControlTest::questionSchemaBoundsAndAnswerTypes()
+PASS   : ConversationControlTest::cleanupTestCase()
+Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 3501ms
+********* Finished testing of ConversationControlTest *********

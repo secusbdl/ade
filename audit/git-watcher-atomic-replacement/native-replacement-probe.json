@@ -1,0 +1,66 @@
+[
+  {
+    "operation": "MoveFileExW",
+    "access": 0,
+    "share": 3,
+    "success": false,
+    "win32Error": 5,
+    "target": "old"
+  },
+  {
+    "operation": "MoveFileExW",
+    "access": 0,
+    "share": 7,
+    "success": false,
+    "win32Error": 5,
+    "target": "old"
+  },
+  {
+    "operation": "MoveFileExW",
+    "access": 2147483648,
+    "share": 3,
+    "success": false,
+    "win32Error": 5,
+    "target": "old"
+  },
+  {
+    "operation": "MoveFileExW",
+    "access": 2147483648,
+    "share": 7,
+    "success": false,
+    "win32Error": 5,
+    "target": "old"
+  },
+  {
+    "operation": "ReplaceFileW",
+    "access": 0,
+    "share": 3,
+    "success": true,
+    "win32Error": 0,
+    "target": "new"
+  },
+  {
+    "operation": "ReplaceFileW",
+    "access": 0,
+    "share": 7,
+    "success": true,
+    "win32Error": 0,
+    "target": "new"
+  },
+  {
+    "operation": "ReplaceFileW",
+    "access": 2147483648,
+    "share": 3,
+    "success": false,
+    "win32Error": 32,
+    "target": "old"
+  },
+  {
+    "operation": "ReplaceFileW",
+    "access": 2147483648,
+    "share": 7,
+    "success": true,
+    "win32Error": 0,
+    "target": "new"
+  }
+]

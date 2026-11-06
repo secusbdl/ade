@@ -15,6 +15,7 @@
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QTextFragment>
+#include <QTextImageFormat>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWheelEvent>
@@ -22,6 +23,14 @@
 
 namespace ade {
 namespace {
+QUrl scopedImageUrl(const QString &name) {
+    const QUrl url(name);
+    if(url.scheme().compare("path",Qt::CaseInsensitive)==0)return url;
+    // Relative mounted paths are handed to the host, never opened here. All
+    // filesystem/network authorization remains with its captured resolver.
+    if(url.isRelative()&&!name.startsWith('/')&&!name.startsWith('\\')&&!name.isEmpty())return QUrl("path:"+name);
+    return {};
+}
 class TranscriptDocument final : public QTextDocument {
 public:
     explicit TranscriptDocument(QObject *parent):QTextDocument(parent){setResourceProvider([](const QUrl&){return QVariant();});}
@@ -148,7 +157,8 @@ TranscriptText::TranscriptText(QWidget *parent):QTextBrowser(parent) {
     setDocument(new TranscriptDocument(this));
     // Qt's built-in image object handler separately retries QImageReader(name)
     // after document resource denial. Replace it before parsing any Markdown.
-    document()->documentLayout()->registerHandler(QTextFormat::ImageObject,new TranscriptImagePlaceholder(document()));
+    m_imageHandler=new TranscriptImagePlaceholder(document());
+    document()->documentLayout()->registerHandler(QTextFormat::ImageObject,m_imageHandler);
     setObjectName("markdownSegment");setProperty("segmentKind","markdown");setFrameShape(QFrame::NoFrame);
     setOpenLinks(false);setOpenExternalLinks(false);setReadOnly(true);setUndoRedoEnabled(false);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -156,8 +166,19 @@ TranscriptText::TranscriptText(QWidget *parent):QTextBrowser(parent) {
     document()->setDocumentMargin(0);document()->setDefaultStyleSheet("pre,code{font-family:'Roboto Mono';}p{margin-top:0;margin-bottom:7px;}h1{font-size:18px;}h2{font-size:16px;}h3{font-size:15px;}");
     connect(document(),&QTextDocument::contentsChanged,this,&TranscriptText::measure);
 }
-QSizeF TranscriptImagePlaceholder::intrinsicSize(QTextDocument *document,int,const QTextFormat &format){const QString label="Image: "+format.property(QTextFormat::ImageAltText).toString();const QFontMetricsF metrics(document->defaultFont());return {qBound(50.0,metrics.horizontalAdvance(label)+12,220.0),metrics.height()+8};}
-void TranscriptImagePlaceholder::drawObject(QPainter *painter,const QRectF &rect,QTextDocument *document,int,const QTextFormat &format){painter->save();painter->setFont(document->defaultFont());painter->setPen(QColor("#808896"));painter->drawRoundedRect(rect.adjusted(0.5,0.5,-0.5,-0.5),3,3);const auto label="Image: "+format.property(QTextFormat::ImageAltText).toString();painter->drawText(rect.adjusted(6,0,-6,0),Qt::AlignVCenter|Qt::AlignLeft,painter->fontMetrics().elidedText(label,Qt::ElideRight,qMax(1,int(rect.width()-12))));painter->restore();}
+QSizeF TranscriptImagePlaceholder::intrinsicSize(QTextDocument *document,int,const QTextFormat &format){
+    const auto image=m_images.value(format.property(QTextFormat::ImageName).toString());
+    if(!image.isNull()){
+        const QSizeF natural=image.size(),limit(qMax(1.0,document->textWidth()),384);
+        return natural.width()>limit.width()||natural.height()>limit.height()?natural.scaled(limit,Qt::KeepAspectRatio):natural;
+    }
+    const QString label="Image: "+format.property(QTextFormat::ImageAltText).toString();const QFontMetricsF metrics(document->defaultFont());return {qBound(50.0,metrics.horizontalAdvance(label)+12,220.0),metrics.height()+8};
+}
+void TranscriptImagePlaceholder::drawObject(QPainter *painter,const QRectF &rect,QTextDocument *document,int,const QTextFormat &format){
+    const auto image=m_images.value(format.property(QTextFormat::ImageName).toString());
+    if(!image.isNull()){painter->save();painter->setRenderHint(QPainter::SmoothPixmapTransform);painter->drawImage(rect,image);painter->restore();return;}
+    painter->save();painter->setFont(document->defaultFont());painter->setPen(QColor("#808896"));painter->drawRoundedRect(rect.adjusted(0.5,0.5,-0.5,-0.5),3,3);const auto label="Image: "+format.property(QTextFormat::ImageAltText).toString();painter->drawText(rect.adjusted(6,0,-6,0),Qt::AlignVCenter|Qt::AlignLeft,painter->fontMetrics().elidedText(label,Qt::ElideRight,qMax(1,int(rect.width()-12))));painter->restore();
+}
 void TranscriptText::setSource(const QString &source,bool markdown) {
     if(m_initialized&&m_source==source&&m_markdown==markdown)return;
     const auto old=textCursor();const auto selected=old.selectedText();
@@ -165,6 +186,26 @@ void TranscriptText::setSource(const QString &source,bool markdown) {
     if(markdown)document()->setMarkdown(source,QTextDocument::MarkdownFeatures(QTextDocument::MarkdownDialectGitHub)|QTextDocument::MarkdownNoHTML);
     else document()->setPlainText(source);
     refreshColors();restoreSelection(this,old,selected);measure();
+    m_imageUrls.clear();
+    for(auto block=document()->begin();block.isValid();block=block.next())for(auto it=block.begin();!it.atEnd();++it){
+        const auto fragment=it.fragment();if(!fragment.isValid()||!fragment.charFormat().isImageFormat())continue;
+        const auto name=fragment.charFormat().toImageFormat().name();const auto url=scopedImageUrl(name);
+        if(!url.isEmpty()&&m_imageUrls.size()<32)m_imageUrls.insert(name,url);
+    }
+    const auto revision=++m_imageRevision;
+    QTimer::singleShot(0,this,[this,revision]{
+        if(revision!=m_imageRevision)return;
+        const auto urls=m_imageUrls.values();const QPointer<TranscriptText> self(this);
+        for(const auto &url:urls){const auto key=url.toString(QUrl::FullyEncoded);if(m_requestedImages.contains(key))continue;m_requestedImages.insert(key);emit imageRequested(url);if(!self||revision!=m_imageRevision)return;}
+    });
+}
+bool TranscriptText::containsImage(const QUrl &url) const{return m_imageUrls.values().contains(url);}
+bool TranscriptText::setTrustedImage(const QUrl &url,const QImage &image){
+    if(image.isNull()||!containsImage(url))return false;
+    for(auto it=m_imageUrls.cbegin();it!=m_imageUrls.cend();++it)if(it.value()==url)m_imageHandler->setImage(it.key(),image);
+    document()->setProperty("trustedImageCount",document()->property("trustedImageCount").toInt()+1);
+    const QPointer<TranscriptText> self(this);document()->markContentsDirty(0,document()->characterCount());
+    if(self){viewport()->update();measure();}return true;
 }
 QVariant TranscriptText::loadResource(int,const QUrl &) {setProperty("blockedResourceLoads",property("blockedResourceLoads").toInt()+1);return {};}
 void TranscriptText::refreshColors(){
@@ -206,6 +247,7 @@ void MarkdownParts::updateText(const QString &text,bool streaming) {
                     const auto scheme=url.scheme().toLower();
                     if(QStringList{"http","https","path","tab","color"}.contains(scheme))emit linkActivated(url);
                 });
+                connect(browser,&TranscriptText::imageRequested,this,&MarkdownParts::imageRequested);
             }
             m_segments.insert(index,widget);m_layout->insertWidget(index,widget);
         }

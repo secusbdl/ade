@@ -9,6 +9,8 @@
 #include "core/AgentEngine.h"
 #include "core/UtilityService.h"
 #include "runtime/AgentToolHost.h"
+#include "mutations/FileMutationJournal.h"
+#include "shell/SessionLogStore.h"
 #include <QComboBox>
 #include <QAction>
 #include <QDateTime>
@@ -81,13 +83,23 @@ bool MainWindow::renameConversation(const QString& id,const QString& title) {
     refreshAgents();if(m_settings->currentSection()=="archived-agents")m_settings->reload();return true;
 }
 bool MainWindow::forkConversation(const QString& id) {
+    return cloneConversation(id,false);
+}
+bool MainWindow::createSideChat(const QString& sourceId) {
+    const auto id=sourceId.isEmpty()?m_currentId:sourceId;
+    if(const auto* source=find(id);!source||source->archived)return false;
+    return cloneConversation(id,true);
+}
+bool MainWindow::cloneConversation(const QString& id,bool sideChat) {
     const auto* source=find(id);if(!source)return false;
+    if((m_toolHosts.value(id)&&m_toolHosts.value(id)->mutationBusy())||(m_mutationUndoAgent==id&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before forking this chat.");return false;}
+    if(!source->sideChatParentId.isEmpty()){conversationError("Move this side chat to the sidebar before forking it again.");return false;}
     const bool temporarySourceHost=source->archived&&!m_engines.contains(id);
     Conversation fork=*source;
     if(const auto* engine=m_engines.value(id))fork.messages=engine->messages();
     fork.id=QUuid::createUuid().toString(QUuid::WithoutBraces);
-    fork.title="Fork: "+(source->title.isEmpty()?QString("New chat"):source->title);fork.titleLocked=true;
-    fork.archived=false;fork.archivedAt=0;fork.draft.clear();fork.draftAttachments={};fork.created=fork.updated=QDateTime::currentMSecsSinceEpoch();
+    fork.title=(sideChat?"Side chat: ":"Fork: ")+(source->title.isEmpty()?QString("New chat"):source->title);fork.titleLocked=!sideChat;fork.sideChatParentId=sideChat?id:QString();
+    fork.archived=false;fork.archivedAt=0;fork.draft.clear();fork.draftAttachments={};fork.queuedMessages={};fork.created=fork.updated=QDateTime::currentMSecsSinceEpoch();
     const QPointer<MainWindow> self(this);engineFor(id);
     const QPointer<AgentToolHost> host=m_toolHosts.value(id);QString error;
     if(!host||!host->cloneFileContext(fork.id,&error)) {
@@ -96,17 +108,19 @@ bool MainWindow::forkConversation(const QString& id) {
         return false;
     }
     if(!self)return false;
+    fork.transcriptLinkProvenance=forkTranscriptLinkProvenance(id,fork.id,fork.workspace);
     if(temporarySourceHost)disposeConversation(id);
     if(!self)return false;
     auto next=m_sessions;next.prepend(fork);
     if(!commitConversationState(next,m_store.pendingCleanup())) {
-        QString readError,attachmentError;
+        QString readError,attachmentError,shellError;
         const bool readsRemoved=FileReadSnapshotStore(m_store.directory()).removeAgent(fork.id,&readError);
         const bool attachmentsRemoved=AttachmentStore(m_store.directory()).removeAgent(fork.id,&attachmentError);
-        if(!readsRemoved||!attachmentsRemoved)conversationError(m_status->text()+" Fork context cleanup failed: "+readError+attachmentError);
+        const bool shellRemoved=SessionLogStore::removeAgent(m_store.directory(),fork.id,&shellError);
+        if(!readsRemoved||!attachmentsRemoved||!shellRemoved)conversationError(m_status->text()+" Fork context cleanup failed: "+readError+attachmentError+shellError);
         return false;
     }
-    m_agents->setProperty("showArchived",false);refreshAgents();selectConversation(fork.id);return true;
+    m_agents->setProperty("showArchived",false);refreshAgents();if(sideChat)openSideChat(fork.id);else selectConversation(fork.id);return true;
 }
 void MainWindow::disposeConversation(const QString& id) {
     m_linkKnownRows.remove(id);m_linkProvenance.remove(id);m_linkTurnContext.remove(id);
@@ -118,7 +132,7 @@ void MainWindow::disposeConversation(const QString& id) {
 void MainWindow::selectAfterConversationRemoval(const QString& id) {
     if(m_currentId!=id){refreshAgents();updateGitContext();return;}
     m_currentId.clear();
-    for(const auto& session:m_sessions)if(!session.archived){const auto nextId=session.id;selectConversation(nextId);return;}
+    for(const auto& session:m_sessions)if(!session.archived&&session.sideChatParentId.isEmpty()){const auto nextId=session.id;selectConversation(nextId);return;}
     // Retain no editable selection if creating the replacement cannot be saved.
     m_currentId.clear();m_send->setEnabled(false);m_stop->setEnabled(false);m_composer->clear();m_transcript->clear();
     newConversation();refreshAgents();updateGitContext();
@@ -126,12 +140,18 @@ void MainWindow::selectAfterConversationRemoval(const QString& id) {
 bool MainWindow::archiveConversation(const QString& id) {
     if(!find(id))return false;
     const QPointer<MainWindow> self(this);
+    QStringList children;for(const auto& session:m_sessions)if(session.sideChatParentId==id)children.append(session.id);
+    for(const auto& target:QStringList(children)<<id)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before archiving this chat family.");return false;}
+    for(const auto& child:children){if(auto* engine=m_engines.value(child);engine&&engine->isBusy())engine->cancel();if(!self)return false;}
     if(auto* engine=m_engines.value(id);engine&&engine->isBusy())engine->cancel();
     if(!self||!find(id))return false;
+    QStringList currentChildren;for(const auto& session:m_sessions)if(session.sideChatParentId==id)currentChildren.append(session.id);
+    if(currentChildren!=children){conversationError("The chat family changed while stopping. Retry the archive action.");return false;}
     auto next=m_sessions;for(auto& session:next)if(session.id==id){session.archived=true;session.archivedAt=QDateTime::currentMSecsSinceEpoch();if(id==m_currentId)session.draft=m_composer->toPlainText();}
     if(!commitConversationState(next,m_store.pendingCleanup()))return false;
     if(m_sidebarNavigation)m_sidebarNavigation->forgetPinned(id);
     if(!self)return true;
+    for(const auto& child:children){closeSideChatPane(child);if(!self)return true;disposeConversation(child);if(!self)return true;}
     disposeConversation(id);if(!self)return true;
     selectAfterConversationRemoval(id);if(m_settings->currentSection()=="archived-agents")m_settings->reload();return true;
 }
@@ -140,6 +160,7 @@ bool MainWindow::restoreConversation(const QString& id) {
     auto next=m_sessions;for(auto& session:next)if(session.id==id){session.archived=false;session.archivedAt=0;}
     if(!commitConversationState(next,m_store.pendingCleanup()))return false;
     if(m_currentId==id)selectConversation(id);else {refreshAgents();updateGitContext();}
+    refreshSideChats();
     if(m_settings->currentSection()=="archived-agents")m_settings->reload();
     return true;
 }
@@ -153,13 +174,17 @@ void MainWindow::requestDeleteConversation(const QString& id) {
 bool MainWindow::deleteConversation(const QString& id) {
     if(!find(id))return false;
     if(auto* engine=m_engines.value(id);engine&&engine->isBusy()){conversationError("Stop this chat before deleting it.");return false;}
-    auto next=m_sessions;next.removeIf([&](const Conversation& session){return session.id==id;});
-    auto pending=m_store.pendingCleanup();pending.append(id);
+    const QPointer<MainWindow> self(this);QStringList deleted{id};for(const auto& session:m_sessions)if(session.sideChatParentId==id)deleted.append(session.id);
+    for(const auto& target:deleted)if((m_toolHosts.value(target)&&m_toolHosts.value(target)->mutationBusy())||(m_mutationUndoAgent==target&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before deleting this chat family.");return false;}
+    for(const auto& child:deleted){if(child==id)continue;if(auto* engine=m_engines.value(child);engine&&engine->isBusy())engine->cancel();if(!self)return false;}
+    QStringList currentFamily{id};for(const auto& session:m_sessions)if(session.sideChatParentId==id)currentFamily.append(session.id);
+    if(!find(id)||currentFamily!=deleted){conversationError("The chat family changed while stopping. Retry the delete action.");return false;}
+    auto next=m_sessions;next.removeIf([&](const Conversation& session){return deleted.contains(session.id);});
+    auto pending=m_store.pendingCleanup();for(const auto& target:deleted)if(!pending.contains(target))pending.append(target);
     if(!commitConversationState(next,pending))return false;
-    const QPointer<MainWindow> self(this);
     if(m_sidebarNavigation)m_sidebarNavigation->forgetPinned(id);
     if(!self)return true;
-    disposeConversation(id);if(!self)return true;
+    for(const auto& target:deleted){closeSideChatPane(target);if(!self)return true;disposeConversation(target);if(!self)return true;}
     selectAfterConversationRemoval(id);if(!self)return true;
     if(m_settings->currentSection()=="archived-agents")m_settings->reload();
     retryConversationCleanup();return true;
@@ -168,11 +193,13 @@ void MainWindow::retryConversationCleanup() {
     if(m_store.pendingCleanup().isEmpty())return;
     QString error;
     const bool complete=m_store.processPendingCleanup(m_sessions,[](const QString& id,const QString& directory,QString* failure){
-        QString readError,attachmentError;
+        QString readError,attachmentError,mutationError,shellError;
         const bool readsRemoved=FileReadSnapshotStore(directory).removeAgent(id,&readError);
         const bool attachmentsRemoved=AttachmentStore(directory).removeAgent(id,&attachmentError);
-        if(failure)*failure=readError.isEmpty()?attachmentError:readError;
-        return readsRemoved&&attachmentsRemoved;
+        const bool mutationsRemoved=FileMutationJournal::removeAgent(directory,id,&mutationError);
+        const bool shellRemoved=SessionLogStore::removeAgent(directory,id,&shellError);
+        if(failure)*failure=QStringList{readError,attachmentError,mutationError,shellError}.join(" ").trimmed();
+        return readsRemoved&&attachmentsRemoved&&mutationsRemoved&&shellRemoved;
     },&error);
     if(!complete)conversationError("The chat was deleted. File cleanup remains pending and will retry when the app opens: "+error);
 }

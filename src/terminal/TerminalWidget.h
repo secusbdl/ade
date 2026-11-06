@@ -1,6 +1,7 @@
 #pragma once
 #include <QAbstractScrollArea>
 #include <QTimer>
+#include <QPointer>
 #include "TerminalModel.h"
 #include "ConPtyProcess.h"
 
@@ -9,11 +10,15 @@ class TerminalWidget final : public QAbstractScrollArea {
     Q_OBJECT
 public:
     explicit TerminalWidget(QWidget *parent=nullptr);
+    // A chat shell already owns both transport connections and its fixed grid.
+    // Closing this borrowed view never stops or resizes that session.
+    TerminalWidget(TerminalModel* model,ConPtyProcess* process,QWidget* parent=nullptr);
     ~TerminalWidget() override;
     bool start(const QString &workingDirectory,QString *error=nullptr,const QStringList &command={});
     void stop();
-    bool isRunning()const{return m_process->isRunning();}
-    quint32 processId()const{return m_process->processId();}
+    bool isRunning()const{return m_process&&m_process->isRunning();}
+    quint32 processId()const{return m_process?m_process->processId():0;}
+    bool borrowsSession()const{return m_borrowed;}
     TerminalModel *terminalModel()const{return m_model;}
     ConPtyProcess *process()const{return m_process;}
     QString workingDirectory()const{return m_cwd;}
@@ -46,8 +51,9 @@ protected:
     bool event(QEvent*)override;
     bool focusNextPrevChild(bool)override{return false;}
 private:
-    TerminalModel *m_model;
-    ConPtyProcess *m_process;
+    QPointer<TerminalModel> m_model;
+    QPointer<ConPtyProcess> m_process;
+    bool m_borrowed=false;
     QString m_cwd;
     QSize m_cell;
     QTimer m_blink;
@@ -56,6 +62,8 @@ private:
     int m_zoom=100,m_padding=8;
     quint64 m_historyRevision=0;
     void fit();
+    int visibleRows()const;
+    int contentEnd()const;
     void refresh();
     QPoint position(const QPointF &point)const;
     bool selected(int row,int column)const;

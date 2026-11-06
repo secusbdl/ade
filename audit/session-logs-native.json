@@ -1,0 +1,279 @@
+{
+  "status": "Production log store, readonly shell mount and actual AgentToolHost wiring implemented and independently tested. Root aggregate/UI verification is separate; full upstream shell/runtime parity is not claimed.",
+  "date": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": [
+    "Append-only per-chat UTF-8 session logs at shells/<canonical-UUID>.shell.log; exact bytes supplied by ShellService after its terminal-control filtering.",
+    "Fixed-owner log writer lock, locally pinned directory ancestors, CREATE_NEW log ownership, same-handle reads and deletion; no directory traversal/reparse/hardlink following.",
+    "Restart retains logs; a fork copies current log bytes under a separate owner and does not clone processes. Log cleanup revokes copied callbacks before deleting only that owner's validated files.",
+    "Formatted read/ls capture full bounded immutable bytes/manifests and preserve per-call line ranges through FileReadSnapshotStore and AttachmentPipeline; raw QuickJS fs read/readdir use the readonly ToolExecutor source.",
+    "AgentToolHost routes shell tools, exact-request cancellation, replacement output preview, dynamic per-round system manifest, workspace change termination, per-chat cleanup/fork and bounded owner-checked watcher queue wakes."
+  ],
+  "storage": {
+    "directory": "<profile>/shell-logs-v1/<agent-id>",
+    "writer": "One QLockFile owner per case-folded agent identity; file handles forbid external writes/deletes while open. Profile and ancestor handles remain pinned during lease lifetime.",
+    "append": "Synchronous append of complete UTF-8 chunks. Explicit flush/close uses FlushFileBuffers; disk errors stop writer and return failure.",
+    "logCapBytes": 52428800,
+    "truncation": "Source-style whole-chunk rejection with one explicit newline [log truncated: exceeded 50MB] newline marker; subsequent appends do not add bytes. stats exposes bytesWritten/lineCount/truncated/closed.",
+    "logCountLimit": 10000,
+    "cloneCombinedBytesLimit": 268435456,
+    "cleanup": "Preflight all strict flat log entries and open validated file handles before deletion; unexpected children/links/hardlinks fail closed. Empty owned storage directories may remain."
+  },
+  "readBounds": {
+    "formattedShellBytes": 52428864,
+    "otherFormattedMountFileBytes": 4194304,
+    "rawFileBytes": 4194304,
+    "rawUtf8Characters": 65536,
+    "rawDirectoryCharacters": 65536,
+    "meaning": "Reads over a bound fail without returning partial bytes; large shell logs remain available through formatted read line ranges. Logical captures are immutable after log append."
+  },
+  "watcherHostContract": {
+    "ownership": "Only an existing watcher session in this host and matching agentId can wake this Engine. Other chat events and unknown outcomes are ignored.",
+    "deduplication": "Per-session retained payload and delivery reservation are recorded before queue/persistence callbacks. Reentrant duplicates cannot append twice; failed acceptance releases only the delivery reservation, retaining the payload for retry. Accepted-event IDs are pruned against retained owned service sessions, so repeated finished watchers cannot grow the dedup set indefinitely; pending failed-save payloads survive session pruning independently.",
+    "message": "Bounded JSON with session_id/title/outcome/exit_code/output, explicitly labeled as untrusted observed data, passed as user context rather than system instructions. exit_code is restricted to an integer or null before bounding serialized size.",
+    "queue": "Engine sendUserMessage(...,queueIfBlocked=true) preserves explicit Stop/failure/restored pause and does not interrupt pending question/approval. Existing QueueCommitter handles durable persistence; rejected persistence is not reported as accepted.",
+    "lifetime": "Watchers are process-local. Host teardown or genuine sole-workspace rebinding closes processes. Context reset does not independently discard persistent shell sessions. No automatic process restart from old log files.",
+    "retry": "At most16 pending events, each encoded JSON bounded to64KiB plus a fixed untrusted-data label. Failed queue saves emit existing Engine queueError and retry with250ms to30s backoff. Successful acceptance removes the pending payload. A full retention buffer reports failure and points to the retained shell log.",
+    "durability": "A successfully persisted Engine queue entry is durable through the existing QueueCommitter. An event whose filesystem save failed is retained only in host memory; process/host deletion discards it. No crash durability is claimed for a failed write."
+  },
+  "verification": [
+    {
+      "suite": "SessionLogTests",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 391,
+      "report": "audit/session-logs/store-final.txt",
+      "cases": "Append/read while writer open, exact UTF-8 bytes/CRLF, restart, immutable owner readers, owner lock and profile pin, traversal/ADS/backslash invalid direct paths, no-partial bound/cancel,50MiB truncation once, invalid UTF-8 writer failure, clone/delete isolation, hardlink and profile junction refusal."
+    },
+    {
+      "suite": "ShellLogMountTests",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 533,
+      "report": "audit/session-logs/mount-final.txt",
+      "cases": "Actual ToolExecutor exact BOM/CRLF/base64 reads and readonly enforcement; per-call range/snapshot persistence/reinjection and other-agent denial;5MiB shell capture while workspace4MiB unchanged; raw limit/cancel/revocation."
+    },
+    {
+      "suite": "ShellRuntimeTests",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 11703,
+      "report": "audit/session-logs/runtime-final.txt",
+      "cases": "Actual ConPTY + AgentToolHost + AgentEngine four-protocol local-provider rounds create/reuse persistent variable, dynamic system manifest, formatted/read snapshots and QuickJS raw logs; workspace swap and fork logs without processes; selected-session cancel preserves another session; real watcher preserves pending question; paused wake durable queue, cross-agent filter and reentrant duplicate suppression. Failed first queue commit then successful retry yields exactly one queued paused event; deleting host cancels pending retry. Malformed exit code rejected and large Unicode watcher JSON bounded to64KiB."
+    }
+  ],
+  "reproducedIntegrationFix": {
+    "before": "audit/session-logs/runtime-before.txt",
+    "failedRows": 5,
+    "cause": "SandboxHost workspacePath rejected shells/ before the new reader, including cloned logs with no workspace.",
+    "fix": "Explicit readonly shells/ path routing independent of workspace, plus early write/mkdir denial and updated advertised sandbox contract. All original actual-host assertions retained."
+  },
+  "build": {
+    "platform": "Windows 11 x64",
+    "qt": "6.11.2 static",
+    "compiler": "GCC 16.2.0 MinGW",
+    "guiFixtures": "Offscreen Qt; native child ConPTY PowerShell processes use temporary directories only.",
+    "network": "Controlled127.0.0.1 provider fixtures; no live provider or external service accessed.",
+    "projects": [
+      "private/session-log-integration",
+      "private/mutation-runtime-integration"
+    ],
+    "warningCheck": "SessionLogStore compiled clean with -Wall -Wextra -Wpedantic."
+  },
+  "limitsAndGaps": [
+    "Shell processes deliberately have the current user's OS permissions; the mounted-log boundary is not an operating-system sandbox for commands.",
+    "Windows local drive implementation only; inherited OS ACLs and ordinary user profile protection apply. UNC/reparse/hardlink scopes are rejected.",
+    "Raw QuickJS log reads retain existing4MiB/64Ki-character transfer limits; use formatted line reads for larger logs. Glob/grep of shells is not implemented by this slice. Root separately adds owned-session transcript navigation and a borrowed native terminal view.",
+    "Cloning is a bounded snapshot of captured source files, not an atomic filesystem-wide transaction. On a clone failure only still-owned created file handles are removed; foreign destination entries are preserved.",
+    "Explicit fs flush is tested as a return-path contract, not universal power-loss durability. No crash-resumable partial log append or process resurrection is claimed.",
+    "ShellService protocol/live-terminal parsing, input pacing, waits, watcher command execution, Engine deadline and background queue policy are independently owned and reported by the service audit. Passing these fixtures is not a universal zero-defect guarantee."
+  ],
+  "upstreamReferences": [
+    {
+      "path": "packages/agent-shell/src/engine/session-logger.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-logger.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/engine/session-logger.ts"
+    },
+    {
+      "path": "packages/agent-shell/src/engine/session-manager.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/session-manager.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/engine/session-manager.ts"
+    },
+    {
+      "path": "packages/agent-shell/src/engine/shell-service.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/engine/shell-service.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/engine/shell-service.ts"
+    },
+    {
+      "path": "packages/agent-shell/src/env/shells-domain-adapter.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/env/shells-domain-adapter.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/env/shells-domain-adapter.ts"
+    },
+    {
+      "path": "packages/agent-shell/src/tools/create-shell-session.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/tools/create-shell-session.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/tools/create-shell-session.ts"
+    },
+    {
+      "path": "packages/agent-shell/src/tools/execute-shell-command.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-shell/src/tools/execute-shell-command.ts",
+      "preservedPath": "reference/stagewise/packages/agent-shell/src/tools/execute-shell-command.ts"
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "url": "https://github.com/stagewise-io/stagewise/blob/17a0123a0e896885465df36169457199d5225eb5/packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "preservedPath": "reference/stagewise/packages/agent-core/src/services/toolbox/path-resolution.ts"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/shell/SessionLogStore.h",
+      "sha256": "3e3d9aca553b825392e099c68ae27884103995cf764f5f317b499e7d3755a2e4",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/shell/SessionLogStore.cpp",
+      "sha256": "177bae3972520f96cc508b0573caca089a9a113919a5659b74f8fa728402225e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.h",
+      "sha256": "468a9c94b511c9454e04a9657030f664dcabe7f9fb4ea0b37c8b30d9b1ab6d9f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/ToolExecutor.cpp",
+      "sha256": "885bc3672d6604952d51f632ccdc2870d402ec4617ec235421d81785ce5e77ff",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/attachments/FileReadSnapshotStore.cpp",
+      "sha256": "a93367e800f596184e850c3c4a8f5ba9978723af33a35f00db18be0857ae45d5",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.h",
+      "sha256": "3274bcacf7a27c31cb1f7054b71c3ad87c0d22365e42950df5e161b183dd3afb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256": "4b089f2e3d7d0674960292e86dae9b5189a95458e6cc6d23f788f1fcb591e32f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/sandbox/SandboxHost.cpp",
+      "sha256": "b743aae3e41ddc7853ff51508a60ef67d5fa7e7925a8c269c6ae9a08265c8c3a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_session_logs.cpp",
+      "sha256": "bc59ca5e4b7719972f2daefc174e3d995ae42771ff554212f64f7b20f225f9b1",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_log_mount.cpp",
+      "sha256": "b19797e5ac30ed0a11c1da6496aab10aeedde7746a8625a8f91cb5776bf1123f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_shell_runtime.cpp",
+      "sha256": "b0d0203712a1feddb8d902a8a021befe6c9b2ba202092beef5e9ee2020b1e0e4",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "audit/session-logs/runtime-before.txt",
+      "sha256": "2623ef8143bcbac840de0b251c8dc20ac1ba6451431d12ea28deaa84623e0ce1",
+      "copiedFromIgnored": "private/session-log-integration/runtime-first.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/runtime-final.txt",
+      "sha256": "eb9f3150ba418f11d7babcec8fdab45c1140e1ba89f37a10819c0ff0f69915fa",
+      "copiedFromIgnored": "private/session-log-integration/runtime-final-retention.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/runtime-final.xml",
+      "sha256": "c8dbd5b7383f6d732b81fc859cf30a1f979712fa06560b8d74884bac8ad2e3e4",
+      "copiedFromIgnored": "private/session-log-integration/runtime-final-retention.xml",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/store-final.txt",
+      "sha256": "63fa840f2ce0ded67e8b32617e91154d2119417d1b06b16d5444d79a0f3f3949",
+      "copiedFromIgnored": "private/session-log-integration/store-final.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/store-final.xml",
+      "sha256": "9e4b613af9612eabbdce263ca063aff4e369c412b8d6cb168efac429192ef65e",
+      "copiedFromIgnored": "private/session-log-integration/store-final.xml",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/mount-final.txt",
+      "sha256": "537e6f1df68ec275448f216015a1060659fbedeeaf4a84867244459a4efc4267",
+      "copiedFromIgnored": "private/session-log-integration/mount-final.txt",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/mount-final.xml",
+      "sha256": "a64c205cb1d40ab208df152a1b24b1ee013d9e3dd9d2c334ec8bd2591379fb14",
+      "copiedFromIgnored": "private/session-log-integration/mount-final.xml",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/session-logs/watcher-retry-before.txt",
+      "sha256": "2ebf77f3e8f7ad113f0c7eee936312e1195d4fbb3ed38934e6801f38802bd446",
+      "copiedFromIgnored": "private/session-log-integration/watcher-retry-before.txt",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "peerReview": "qt_port_review bounded read-only pass over pins/openLog/readAll/clone/revoke/remove found no additional concrete defect; no independent fault-injection claim.",
+  "watcherRetryRegression": {
+    "before": "audit/session-logs/watcher-retry-before.txt",
+    "beforeResult": "One failed regression: failed queue commit lost the event (queuedMessages0, expected1). Copied previous host implementation linked with the current fixture; production sources were not reverted.",
+    "after": "audit/session-logs/runtime-final.txt",
+    "result": "Final full actual-host suite13/13 passed, including retry/dedup/pause, destruction and payload-bound cases."
+  },
+  "sourceObservation": "File hashes describe the final integration sources using canonical LF. sharedFinalIntegration records the final80-suite exact-source coverage; retained focused reports remain their named earlier runs, not relabeled new runs.",
+  "sharedFinalIntegration": {
+    "aggregate": "audit/continuation-integration.json",
+    "singleFullRunSuites": 80,
+    "rows": [
+      {
+        "suite": "native_session_logs",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 383,
+        "report": "audit/continuation-integration/final-full-run/native_session_logs.txt",
+        "reportSha256": "ca0cf6418150612daf2015ae47d0a0ac9181372f8926efc9b93b4818f07fed75"
+      },
+      {
+        "suite": "native_shell_log_mount",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 558,
+        "report": "audit/continuation-integration/final-full-run/native_shell_log_mount.txt",
+        "reportSha256": "bca5dc187f2b60aaf580f07d69e0e3b526b229054574306692a6b09465dddb35"
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 11245,
+        "report": "audit/continuation-integration/final-full-run/native_shell_runtime.txt",
+        "reportSha256": "48ebbb8c0b19f9d148e4e66b21fb1a94c81853a10be519bd7357af0118b941f1"
+      }
+    ]
+  }
+}

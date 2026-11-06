@@ -235,6 +235,13 @@ TranscriptLinkResolver::Parsed TranscriptLinkResolver::parse(const QString& href
         result.kind = Kind::CopyColor;
         return result;
     }
+    if (scheme == "shell") {
+        if (!QRegularExpression("^[A-Za-z0-9_-]{1,128}$").match(rest).hasMatch())
+            return reject("Invalid shell identifier.");
+        result.kind = Kind::ActivateShell;
+        result.shellId = rest;
+        return result;
+    }
     if (scheme == "tab") {
         if (rest.isEmpty() || rest.size() > 512)
             return reject("Invalid tab identifier.");
@@ -317,6 +324,12 @@ TranscriptLinkResolver::Action TranscriptLinkResolver::resolve(const Scope& scop
     }
     if (parsed.kind == Kind::CopyColor) {
         result.color = parsed.color;
+        return current() ? result : reject("Transcript link context was revoked.");
+    }
+    if (parsed.kind == Kind::ActivateShell) {
+        if (!state->options.liveShellIds.contains(parsed.shellId))
+            return reject("The referenced shell is unavailable or belongs to another chat.");
+        result.shellId = parsed.shellId;
         return current() ? result : reject("Transcript link context was revoked.");
     }
     if (parsed.kind == Kind::ActivateTab) {

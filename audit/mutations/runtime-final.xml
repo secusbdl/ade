@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="MutationRuntimeTest" timestamp="2026&#x002D;11&#x002D;06T14:47:10" hostname="VOID" tests="11" failures="0" errors="0" skipped="0" time="3.495">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="MutationRuntimeTest" time="0.000"/>
+  <testcase name="actualEngineToolsPersistAndUndo(openai)" classname="MutationRuntimeTest" time="0.333"/>
+  <testcase name="actualEngineToolsPersistAndUndo(responses)" classname="MutationRuntimeTest" time="0.390"/>
+  <testcase name="actualEngineToolsPersistAndUndo(anthropic)" classname="MutationRuntimeTest" time="0.653"/>
+  <testcase name="actualEngineToolsPersistAndUndo(google)" classname="MutationRuntimeTest" time="0.514"/>
+  <testcase name="restartConflictAndForkAuthority" classname="MutationRuntimeTest" time="0.453"/>
+  <testcase name="sandboxRawWritesAreExactAndAttributed" classname="MutationRuntimeTest" time="0.406"/>
+  <testcase name="cancellationBeforeQueuedSandboxMutationDoesNotWrite" classname="MutationRuntimeTest" time="0.321"/>
+  <testcase name="mutationActionsHaveOneHostLane" classname="MutationRuntimeTest" time="0.164"/>
+  <testcase name="undoObserverMayDestroyHost" classname="MutationRuntimeTest" time="0.259"/>
+  <testcase name="cleanupTestCase" classname="MutationRuntimeTest" time="0.000"/>
+</testsuite>

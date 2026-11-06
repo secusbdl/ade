@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="GitWatcherTests" timestamp="2026&#x002D;11&#x002D;06T15:33:15" hostname="VOID" tests="27" failures="0" errors="0" skipped="0" time="26.307">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="GitWatcherTests" time="0.000"/>
+  <testcase name="sharedMainAndLinkedOwners" classname="GitWatcherTests" time="1.177"/>
+  <testcase name="externalAddAndRemove" classname="GitWatcherTests" time="1.004">
+    <system-err>
+      <![CDATA[QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_git_watcher-JnaNcc\repository with spaces\.git\worktrees"  (Access is denied.)]]>
+    </system-err>
+  </testcase>
+  <testcase name="atomicHeadReplacementReattaches" classname="GitWatcherTests" time="0.863"/>
+  <testcase name="unrelatedMetadataDoesNotPublish" classname="GitWatcherTests" time="1.003"/>
+  <testcase name="changedFingerprintDebouncesBurst" classname="GitWatcherTests" time="1.059"/>
+  <testcase name="atomicReplacementSharesDeleteWithReaders" classname="GitWatcherTests" time="0.317">
+    <system-err>
+      <![CDATA[Atomic fixture ReplaceFileW failed: C:/Users/secus/AppData/Local/Temp/test_git_watcher-UBxgos/repository with spaces/.git/HEAD native error 32]]>
+    </system-err>
+  </testcase>
+  <testcase name="scansDoNotBlockAtomicMetadataChurn" classname="GitWatcherTests" time="3.843"/>
+  <testcase name="realGitUpdatesWhileMetadataScansRun" classname="GitWatcherTests" time="1.617"/>
+  <testcase name="indexChurnDoesNotStarveHead" classname="GitWatcherTests" time="0.605"/>
+  <testcase name="rejectedRetargetPreservesSubscription" classname="GitWatcherTests" time="0.394"/>
+  <testcase name="repositoryLimitAllowsSoleOwnerRetarget" classname="GitWatcherTests" time="0.731"/>
+  <testcase name="canonicalAliasSharesExistingRepository" classname="GitWatcherTests" time="0.390"/>
+  <testcase name="releaseAndReacquireRejectsStaleScan" classname="GitWatcherTests" time="0.672"/>
+  <testcase name="boundsReportIncompleteAndRecover" classname="GitWatcherTests" time="0.547"/>
+  <testcase name="combinedBudgetIncludesOversizedHeads" classname="GitWatcherTests" time="0.371"/>
+  <testcase name="repositoryDisappearsAndReturns" classname="GitWatcherTests" time="1.511"/>
+  <testcase name="observersCanDeleteOrRelease" classname="GitWatcherTests" time="0.665"/>
+  <testcase name="replacedRootReattachesEvenWhenHeadTextIsIdentical" classname="GitWatcherTests" time="1.408"/>
+  <testcase name="availabilityProbeDoesNotPollHeadContents" classname="GitWatcherTests" time="1.386"/>
+  <testcase name="availabilityCoversMoreRepositoriesThanWorkerSlots" classname="GitWatcherTests" time="0.881"/>
+  <testcase name="junctionMetadataIsNotFollowed" classname="GitWatcherTests" time="0.401"/>
+  <testcase name="serviceSharesAuthorizedOwners" classname="GitWatcherTests" time="2.570"/>
+  <testcase name="serviceRetargetRejectsStaleInspection" classname="GitWatcherTests" time="1.411"/>
+  <testcase name="serviceRevocationDropsPendingAndActiveOwners" classname="GitWatcherTests" time="1.169"/>
+  <testcase name="observerCanDeleteServiceOnWatchError" classname="GitWatcherTests" time="0.312"/>
+  <testcase name="cleanupTestCase" classname="GitWatcherTests" time="0.000"/>
+</testsuite>

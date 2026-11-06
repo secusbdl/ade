@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "scope": "Windows Git metadata watcher atomic replacement fixture; no production code changed",
+  "environment": {
+    "qt": "6.11.2 static",
+    "compiler": "GCC 16.2.0 MinGW64",
+    "os": "Windows 11",
+    "git": "2.55.0.windows.2"
+  },
+  "originalFailure": {
+    "test": "changedFingerprintDebouncesBurst",
+    "result": "23 passed, 1 failed",
+    "evidence": "audit/git-watcher-atomic-replacement/full-suite-before.txt",
+    "limitation": "Original helper returned only bool, so its precise failing stage/error and the overlapping handle owner cannot be recovered from that log."
+  },
+  "reproduction": {
+    "boundedFocusedBurstRunsBeforeCorrection": {
+      "runs": 12,
+      "allPassed": true,
+      "location": "private/git-watcher-repair/audit/burst-{1..12}.txt",
+      "meaning": "Separate reproduction runs, not retries inside a test and not converted historical failures."
+    },
+    "deterministicQtFailure": "Holding GENERIC_READ with FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE makes QSaveFile::commit fail RenameError / Access is denied / Win32 5 in this environment.",
+    "evidence": "audit/git-watcher-atomic-replacement/contention-first.txt",
+    "nativeProbe": "audit/git-watcher-atomic-replacement/native-replacement-probe.json",
+    "nativeProbeConclusion": "MoveFileExW(MOVEFILE_REPLACE_EXISTING) fails with Win32 5 while the destination handle is open, including desired access 0 and delete sharing. ReplaceFileW succeeds with GENERIC_READ plus read/write/delete sharing; denying delete sharing produces Win32 32.",
+    "productionInspection": "GitRepositoryWatcher readHead/rootProbe and gitdetail::canonical already grant read/write/delete sharing; no missing-delete-share defect was found."
+  },
+  "change": {
+    "files": [
+      "tests/test_git_watcher.cpp"
+    ],
+    "helper": "Windows: write and flush same-directory QTemporaryFile, destroy its handle, then call ReplaceFileW exactly once; preserve diagnostic error. Other platforms retain QSaveFile. No retry or non-atomic fallback.",
+    "regressions": [
+      "Replacement succeeds while old shared reader retains its original bytes; incompatible no-delete reader fails with Win32 32 and target remains unchanged.",
+      "200 first-attempt 96KiB metadata replacements while active watcher scans run; final contents and topology notification checked.",
+      "20 real git symbolic-ref HEAD commands while scans run, without fixture retries; final contents and notification checked."
+    ],
+    "preserved": "Original burst/debounce, watch reattachment, bounds, identity, cancellation, service integration and lifetime assertions remain."
+  },
+  "verification": {
+    "focused": {
+      "passed": 5,
+      "failed": 0,
+      "milliseconds": 5563,
+      "evidence": "audit/git-watcher-atomic-replacement/sharing-final.txt"
+    },
+    "full": {
+      "passed": 27,
+      "failed": 0,
+      "milliseconds": 26307,
+      "evidence": "audit/git-watcher-atomic-replacement/full-after.txt"
+    },
+    "sharedBuild": "Root integration rerun pending; this evidence is an isolated build of current production Git sources and the amended test."
+  },
+  "limits": [
+    "Does not prove universal freedom from Windows filesystem contention, antivirus or third-party handles.",
+    "Native probe identifies a fixture operation incompatibility; exact handle ownership at the original full-suite failure was not recorded.",
+    "Actual Git may implement its own normal platform retry policy; the fixture does not retry any Git command.",
+    "Windows replacement/share behavior was exercised on this machine; non-Windows branch was not executed."
+  ],
+  "sourceHashes": {
+    "tests/test_git_watcher.cpp": "fbf5e84878a8f3d1539068b21c4c3c943eacad7eaeeaba508b2c40f57947acb6",
+    "src/git/GitRepositoryWatcher.cpp": "39915e05d4cfcbadecdcf40b3d0bf3b37d3466ff7cea1f84af2dc56244ee5494",
+    "src/git/GitRepositoryWatcher.h": "1c93ac27a831bbaac0a24d66f5c8f5b0dd790e22827715835379625a75e4cf6f",
+    "src/git/ProcessRunner.cpp": "e1b7c9a8f1346cdfb3b3f349575ecfe25a24f00eda299c469c56143ece6b99bd"
+  },
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

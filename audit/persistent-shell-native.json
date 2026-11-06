@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "status": "Named focused evidence retained; final shared integration passed80/80 suites.",
+  "upstream": {
+    "version": "1.31.1",
+    "commit": "17a0123a0e896885465df36169457199d5225eb5",
+    "license": "AGPL-3.0; adaptation covered by repository license/attribution",
+    "sources": [
+      "packages/agent-shell/src/schemas/index.ts",
+      "packages/agent-shell/src/tools/execute-shell-command.ts",
+      "packages/agent-shell/src/engine/session-manager.ts",
+      "packages/agent-shell/src/engine/osc-parser.ts",
+      "packages/agent-shell/src/engine/session-logger.ts",
+      "packages/agent-shell/src/engine/sanitize-env.ts",
+      "packages/agent-shell/src/env/shells-domain-adapter.ts",
+      "packages/agent-shell/src/engine/session-logger.ts321-326 (disposed headless terminal on close)"
+    ]
+  },
+  "implemented": [
+    "Three native tools: createShellSession, executeShellCommand, createWatcherSession; chat-owned session UUIDs and configured cwd mounts",
+    "Persistent Windows PowerShell ConPTY sessions retain variables/cwd/processes; command/raw stdin/empty poll/owned kill; five active sessions",
+    "Source-paced256-byte writes independent of wait snapshots; bounded256KiB session input FIFO",
+    "Default/capped timeout, idle and regex snapshots retain process; explicit cancellation kills selected process tree",
+    "OSC133 private-token command completion plus authenticated prompt cwd window; PSReadLine execution guard prevents prompt redraw false completion",
+    "UTF8/ANSI log capture via SessionLogStore, historical readonly shells/ namespace and clone/delete handled by separate session-log audit",
+    "Dynamic per-provider-round system manifest (including executable and active watcher attributes) without changing saved history or signed native payload",
+    "One-shot watcher trigger/failure/timeout, no automatic process restart; background event enqueued before dispatch and preserved on stop/failure/restored pause/preflight denial",
+    "Engine per-tool timeout up to310000ms; UI-only UTF8-bounded64KiB snapshot replacement preserves ordinary append behavior and provider wire",
+    "Borrowed native TerminalWidget shares one service model/process without duplicate feed, supports keyboard/copy/paste/history scrolling, and never stops/resizes owner on close; inert after owner deletion",
+    "At most32 exited in-memory sessions, each reduced to200 history rows; oldest exited QObjects released, all disk logs retained, active sessions excluded"
+  ],
+  "tests": {
+    "service": {
+      "passed": 21,
+      "report": "audit/persistent-shell/final-shared/native_shell_service.txt",
+      "details": [
+        "real persistent vars/cwd/logs",
+        "chunk boundaries and spoofed OSC cwd",
+        "timeout/poll/raw stdin",
+        "long paced input after1ms timeout",
+        "same-session reentrant replacement",
+        "pattern and idle retain process",
+        "watcher once/cancel/10s deadline/manifest",
+        "five-session limit and scope change",
+        "actual owned descendant process killed",
+        "terminal output observer cancel/delete/replace",
+        "fake credential env isolation and Unicode",
+        "33 real exited sessions: trim200 rows, prune oldest at32, preserve disk log/active process/recent borrowed view, allow new creation"
+      ]
+    },
+    "engine": {
+      "passed": 16,
+      "report": "audit/persistent-shell/final-shared/native_shell_engine.txt",
+      "details": [
+        "all four provider adapters",
+        "100 append chunks retained and snapshot replaced",
+        "wire unchanged by display metadata",
+        "dynamic context every round but absent history",
+        "cancel/replacement/destruction observers",
+        "background event queued during approval/question",
+        "stop/failure/restart remain paused",
+        "dispatch commit denial retains durable event",
+        "idle-only bounded deadline diagnostic"
+      ]
+    },
+    "borrowedView": {
+      "passed": 5,
+      "report": "audit/persistent-shell/final-shared/native_shell_view.txt",
+      "details": [
+        "actual input shared once across two views",
+        "close/stop does not kill borrowed process",
+        "owner deletion safely disables view",
+        "pixel and selection beyond row24",
+        "short view keeps prompt/cursor visible",
+        "rendered screenshot visually inspected"
+      ]
+    },
+    "existingTerminal": {
+      "passed": 17,
+      "report": "audit/persistent-shell/final-shared/native_terminal.txt"
+    },
+    "hostIntegration": "See audit/session-logs-native.json for separate actual AgentToolHost four-protocol/log/clone/watcher fixtures.",
+    "hostIntegrationFinalShared": {
+      "suite": "native_shell_runtime",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "milliseconds": 11245,
+      "report": "audit/persistent-shell/final-shared/native_shell_runtime.txt",
+      "reportSha256": "ebe1691a5b72eafb2b5c254ea3e75bf3183dc2a7fe84ffca8e173665774608ba"
+    }
+  },
+  "reproducedFixes": [
+    {
+      "defect": "Timeout canceled the unsent tail of a paced long command.",
+      "before": "audit/persistent-shell/service-boundary-before.txt",
+      "fix": "Session-owned input FIFO continues after wait timeout."
+    },
+    {
+      "defect": "Old replacement dispatch overwrote a newer request installed in completion observer.",
+      "before": "audit/persistent-shell/service-boundary-before.txt",
+      "fix": "Per-session waitSerial arbitration and explicit superseded result."
+    },
+    {
+      "defect": "PSReadLine redraw emitted a false command end while typing long input.",
+      "before": "audit/persistent-shell/service-after.txt",
+      "fix": "Source-style IsInExecution/initialization guard with PSReadLine import/hook; original prompt preserved."
+    },
+    {
+      "defect": "TerminalModel changed observer could start a new wait and match old output against it.",
+      "before": "audit/persistent-shell/terminal-observer-before.txt",
+      "fix": "Revalidate waitSerial after feed; retain shared log bytes without touching replacement wait."
+    },
+    {
+      "defect": "Fixed24-row rendering/scroll clamp hid history in taller borrowed view.",
+      "before": "audit/persistent-shell/tall-view-before.txt",
+      "fix": "Use viewport row count for rendering, scroll and selection."
+    },
+    {
+      "defect": "Short borrowed view scrolled into unused blank grid rows below prompt.",
+      "before": "audit/persistent-shell/borrowed-shell-before-scroll-fix.png",
+      "fix": "Compute meaningful content extent including cursor; verified visible screenshot audit/persistent-shell/borrowed-shell.png."
+    }
+  ],
+  "limits": [
+    "Windows PowerShell native implementation; no Bash/Zsh/fish or source sentinel fallback when OSC integration cannot initialize. Startup fails closed after10s.",
+    "PowerShell completion follows source success/failure0/1 policy; inspect LASTEXITCODE explicitly for native subprocess codes.",
+    "Native policy currently Always Ask/Always Allow. Source Smart shell command classifier is not implemented. Owned create/kill bypass approval; command/stdin/poll/watcher use current policy.",
+    "Dynamic current full manifest is implemented; source environment snapshot revision/delta history representation is not reproduced.",
+    "Watchers use the same interactive native session and stop it on completion; source stages a temporary watcher script. Both are process-local; durable process restart is not claimed.",
+    "Regex uses bounded PCRE2 rather than JavaScript RegExp; syntax and edge behavior can differ.",
+    "Native bounds:32 retained exited sessions/chat with200 history rows each, plus up to5 active sessions,64KiB command/stdin,256KiB pending input,1MiB UTF8 match tail,64KiB display preview,16KiB streamed grid snapshot,head100/tail300 result lines. Logs independently cap50MiB plus marker.",
+    "Borrowed viewer retains service120x24 grid and uses scrollbars; it does not resize shared model/process.",
+    "Environment sanitization is a source-derived key-name heuristic, not proof all possible encoded credentials are absent. Shell commands retain user OS permissions and are not a filesystem sandbox.",
+    "No live provider keys or external service actions used; tests use loopback provider fixtures and dedicated temporary workspace directories.",
+    "Offscreen Qt emitted font-directory warning; fixture loads packaged Roboto Mono and the final screenshot was visually inspected readable.",
+    "Focused passing checks establish exercised behavior, not complete parity or universal defect absence.",
+    "Pinned source retains exited session records but disposes its headless terminal in SessionLogger.close(); native retains a bounded200-row recent grid so borrowed exit views remain readable, pruning beyond32. This is an explicit native retention choice."
+  ],
+  "build": {
+    "private": "private/shell-service-stage",
+    "jobs": 1,
+    "toolchain": "Qt6.11.2 MinGW static",
+    "additionalRuntimeDependencies": [],
+    "sharedTargets": [
+      "ade_shell",
+      "test_shell_service",
+      "test_shell_engine",
+      "test_shell_view"
+    ],
+    "notes": "Existing ade_terminal provides native ConPTY and bundled MIT libvterm; no new dependency or proprietary artwork introduced."
+  },
+  "sha256": {
+    "src/core/AgentEngine.cpp": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd",
+    "src/core/AgentEngine.h": "deb340449e1a6bb9da6fe616106d6e8d9c06c54c740f8e14fadcc21029a97ba2",
+    "src/core/AgentEngineControl.cpp": "2b462c3733f8093d0098e132c9a9cfc07bbafe771e8f63841a9bb8a2a05994b8",
+    "src/shell/ShellProtocol.cpp": "62b1c2a441a73422540d415d6f29bd48460ccb1bf3f6b5272110f410e7cca5b9",
+    "src/shell/ShellProtocol.h": "7322bdea6554396165f05502ab93f9f230aa1d0d2030190cd1632db5590dc028",
+    "src/shell/ShellService.cpp": "4f8a7c443f36923a9a6319d65d182aae008d9dde31529d4040796fa6d80cd984",
+    "src/shell/ShellService.h": "80cab36ae597a140e31dd430a54e8bfe1633230b6aa445c5249ef82eadcffe62",
+    "src/terminal/ConPtyProcess.cpp": "1266d01490ec6d3fdf1485da572af546da81ab9f91ccab8e79227e1c20a56484",
+    "src/terminal/ConPtyProcess.h": "043b14eb8d170e50fc025f7508bece74c03308ca589e2117ac2be55590e818b0",
+    "src/terminal/TerminalModel.cpp": "1eb480767cf9d6856fda189b6c55c5b551705fb51e3d5f7e13f64f48389a3a2a",
+    "src/terminal/TerminalModel.h": "962504aa8820e3807aba4d8920b4b6f8bfbc2584e13f4902f561bf18439b3f92",
+    "src/terminal/TerminalWidget.cpp": "0ce84daabe393bd3afd49cf6ece43414541480b46021e902b8ee67980f4604ee",
+    "src/terminal/TerminalWidget.h": "5c53fb7c21713d50c6130f0f8b068801461011079727e0e7ae686192bc3dc1b5",
+    "tests/test_shell_engine.cpp": "856daefaec8d45353d285cdb5bc53b246a26541602a41a734ee061202bdbd050",
+    "tests/test_shell_runtime.cpp": "b0d0203712a1feddb8d902a8a021befe6c9b2ba202092beef5e9ee2020b1e0e4",
+    "tests/test_shell_service.cpp": "170b1d942bfe9f2606c54d1b06bfaf202c970a4dd1e78bbea88342f305604e0b",
+    "tests/test_shell_view.cpp": "7be18ce7878629cd21abef43518043e5c1f707d772cfdf089b74c3b11bff7c49"
+  },
+  "sourceHashEncoding": "SHA-256 of source bytes with CRLF normalized to LF; no other byte changes.",
+  "sourceHashScope": "Current production/test source snapshot at this refresh. Earlier focused reports remain historical; latestSharedVerification identifies the retained completed shared reports. Later source edits require another hash refresh.",
+  "latestSharedVerification": {
+    "recordedAtUtc": "2026-11-06T14:04:15.930325+00:00",
+    "reports": [
+      {
+        "suite": "native_shell_service",
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 41635,
+        "report": "audit/persistent-shell/final-shared/native_shell_service.txt",
+        "reportSha256": "c718a141761aa9fdb0e58e9972f51c60a4da43e8f8f61421dc898a9c293d4b2f"
+      },
+      {
+        "suite": "native_shell_engine",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 4785,
+        "report": "audit/persistent-shell/final-shared/native_shell_engine.txt",
+        "reportSha256": "ced3e2814b6ea39c87b0247f7156c6e815bc72cdaf1ab352a68dd4bc9899cbbb"
+      },
+      {
+        "suite": "native_shell_view",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 1278,
+        "report": "audit/persistent-shell/final-shared/native_shell_view.txt",
+        "reportSha256": "f10a0172e808ebdbf8c7be857b631cee2c1995956b87b75090d0c203a4b6534f"
+      },
+      {
+        "suite": "native_terminal",
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 2919,
+        "report": "audit/persistent-shell/final-shared/native_terminal.txt",
+        "reportSha256": "8e7c2faf690ef63f9c282d033d215d68f1780cd2567fc41978ffb85c49e5abae"
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 11245,
+        "report": "audit/persistent-shell/final-shared/native_shell_runtime.txt",
+        "reportSha256": "ebe1691a5b72eafb2b5c254ea3e75bf3183dc2a7fe84ffca8e173665774608ba"
+      }
+    ],
+    "scope": "Only the listed completed shared suites; no claim about the aggregate all-suite run, release export, complete parity or universal defect absence."
+  },
+  "historicalFocusedTests": {
+    "service": {
+      "passed": 21,
+      "report": "audit/persistent-shell/service-final.txt",
+      "details": [
+        "real persistent vars/cwd/logs",
+        "chunk boundaries and spoofed OSC cwd",
+        "timeout/poll/raw stdin",
+        "long paced input after1ms timeout",
+        "same-session reentrant replacement",
+        "pattern and idle retain process",
+        "watcher once/cancel/10s deadline/manifest",
+        "five-session limit and scope change",
+        "actual owned descendant process killed",
+        "terminal output observer cancel/delete/replace",
+        "fake credential env isolation and Unicode",
+        "33 real exited sessions: trim200 rows, prune oldest at32, preserve disk log/active process/recent borrowed view, allow new creation"
+      ]
+    },
+    "engine": {
+      "passed": 16,
+      "report": "audit/persistent-shell/engine-final.txt",
+      "details": [
+        "all four provider adapters",
+        "100 append chunks retained and snapshot replaced",
+        "wire unchanged by display metadata",
+        "dynamic context every round but absent history",
+        "cancel/replacement/destruction observers",
+        "background event queued during approval/question",
+        "stop/failure/restart remain paused",
+        "dispatch commit denial retains durable event",
+        "idle-only bounded deadline diagnostic"
+      ]
+    },
+    "borrowedView": {
+      "passed": 5,
+      "report": "audit/persistent-shell/view-final.txt",
+      "details": [
+        "actual input shared once across two views",
+        "close/stop does not kill borrowed process",
+        "owner deletion safely disables view",
+        "pixel and selection beyond row24",
+        "short view keeps prompt/cursor visible",
+        "rendered screenshot visually inspected"
+      ]
+    },
+    "existingTerminal": {
+      "passed": 17,
+      "report": "audit/persistent-shell/terminal-regression.txt"
+    },
+    "hostIntegration": "See audit/session-logs-native.json for separate actual AgentToolHost four-protocol/log/clone/watcher fixtures."
+  },
+  "questionCapabilityPolicy": {
+    "nativeDefault": "Disabled in standalone/headless AgentEngine; setQuestionToolEnabled(true) is an idle-only opt-in.",
+    "gui": "MainWindow explicitly enables structured questions for its chat engines.",
+    "disabledBehavior": "askUserQuestions is omitted from tool definitions; unsolicited calls return a tool error instead of waiting for a nonexistent form. An opt-in attempted during an active turn has no effect.",
+    "regression": "headlessQuestionsAreNotAdvertisedOrWaitedOn covers OpenAI-compatible chat, Responses, Anthropic and Google; existing explicit question completion cases retain exact provider associations."
+  },
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

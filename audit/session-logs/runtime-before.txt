@@ -1,0 +1,18 @@
+********* Start testing of ShellRuntimeTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellRuntimeTests::initTestCase()
+FAIL!  : ShellRuntimeTests::persistentSessionsAndReadMount(openai) 'results[4]["content"].toString().contains("true")' returned FALSE. ()
+D:/age/ADE/tests/test_shell_runtime.cpp(102) : failure location
+FAIL!  : ShellRuntimeTests::persistentSessionsAndReadMount(responses) 'results[4]["content"].toString().contains("true")' returned FALSE. ()
+D:/age/ADE/tests/test_shell_runtime.cpp(102) : failure location
+FAIL!  : ShellRuntimeTests::persistentSessionsAndReadMount(anthropic) 'results[4]["content"].toString().contains("true")' returned FALSE. ()
+D:/age/ADE/tests/test_shell_runtime.cpp(102) : failure location
+FAIL!  : ShellRuntimeTests::persistentSessionsAndReadMount(google) 'results[4]["content"].toString().contains("true")' returned FALSE. ()
+D:/age/ADE/tests/test_shell_runtime.cpp(102) : failure location
+FAIL!  : ShellRuntimeTests::workspaceSwapClosesSessionsAndForkCopiesLogsOnly() '!raw[0][2].toBool()' returned FALSE. ({"error":"Error: No workspace is mounted. Use apps/ for this chat's mini-app files.","message":"Sandbox JavaScript failed","output":""})
+D:/age/ADE/tests/test_shell_runtime.cpp(107) : failure location
+PASS   : ShellRuntimeTests::engineCancellationKillsOnlyOwnedSession()
+PASS   : ShellRuntimeTests::watcherWakeRespectsPausedQueueAndOwner()
+PASS   : ShellRuntimeTests::cleanupTestCase()
+Totals: 4 passed, 5 failed, 0 skipped, 0 blacklisted, 7250ms
+********* Finished testing of ShellRuntimeTests *********

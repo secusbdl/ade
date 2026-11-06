@@ -1,0 +1,12 @@
+********* Start testing of BrowserInspectorTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserInspectorTest::initTestCase()
+FAIL!  : BrowserInspectorTest::cancellationInsideBusyObservers(starting) '!inspector.isSelecting()' returned FALSE. ()
+D:/age/ADE/tests/test_browser_inspector.cpp(88) : failure location
+FAIL!  : BrowserInspectorTest::cancellationInsideBusyObservers(ready) '!signal[0].toBool()' returned FALSE. ()
+D:/age/ADE/tests/test_browser_inspector.cpp(88) : failure location
+FAIL!  : BrowserInspectorTest::replacementSelectionRetiresOldCompletionSignals() 'busy.last()[0].toBool()' returned FALSE. ()
+D:/age/ADE/tests/test_browser_inspector.cpp(93) : failure location
+PASS   : BrowserInspectorTest::cleanupTestCase()
+Totals: 2 passed, 3 failed, 0 skipped, 0 blacklisted, 1847ms
+********* Finished testing of BrowserInspectorTest *********

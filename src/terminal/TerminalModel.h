@@ -16,6 +16,7 @@ public:
     void feed(const QByteArray &bytes);
     bool resize(QSize cells);
     void reset();
+    void trimHistory(int maximumLines);
     QSize size()const{return m_size;}
     int historyLines()const{return int(m_history.size());}
     quint64 historyRevision()const{return m_historyRevision;}

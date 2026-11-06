@@ -1,0 +1,37 @@
+{
+  "verifiedUtc": "2026-11-06T11:29:28.019589+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "commit": "336a033b94da68ba10eaba96e3833accb45d6536",
+  "method": "GitHub Desktop: added reviewed existing local repository, verified origin and main commit, Publish branch, observed push complete and clean state.",
+  "independentRemoteVerification": {
+    "command": "git ls-remote https://github.com/secusbdl/ade.git HEAD refs/heads/main",
+    "HEAD": "336a033b94da68ba10eaba96e3833accb45d6536",
+    "refs/heads/main": "336a033b94da68ba10eaba96e3833accb45d6536"
+  },
+  "localDevelopmentCommit": "9ab76d626cd79bf5ae343d49ff6ec484351d9ebe",
+  "publicationCheckout": "out/publish-ade-reference",
+  "publicationHistoryCommits": 1,
+  "committedFiles": 2371,
+  "committedFileHashMismatches": 0,
+  "sourceFiles": 2370,
+  "excludedHistoricalAuditImages": 41,
+  "publicationManifestSha256": "57a5e900ca8e98ac14b3867afb839defccf32dc9fd4dc6b1201c2323cea1fc44",
+  "validation": {
+    "freshExportBuild": "ADE and native worker built from clean source export using installed toolchain; version/import checks passed.",
+    "suiteCoverage": "55 suites with passing coverage:54 from full run plus repaired browser suite24/24; focused fullscreen repeats3/3 twice. One intentional offscreen WebView skip is covered by a separate Windows suite.",
+    "sourceVerification": "1400 upstream and33 experimental preserved files hash-verified;76 native source audit hashes match export.",
+    "exportScan": "No high-confidence provider/service-token, private-key, JWT or private-state filename candidates.18 generic matches reviewed as synthetic test contexts; bounded scan, not a universal guarantee."
+  },
+  "localReadyBuild": {
+    "path": "out/reference-checkpoint/ADE.exe",
+    "bytes": 78490452,
+    "sha256": "a6aa289c742338acf20941f2ea700ccc7187aaf4461cb5d6a96ec823a98a17c0"
+  },
+  "scope": "Reference checkpoint for future ADE work. Full native Stagewise UI, reasoning output and tool parity remain incomplete and documented in audit/reference-readiness.json.",
+  "records": [
+    "audit/reference-integration.json",
+    "audit/source-export-verification.json",
+    "audit/final-export-scan.json"
+  ]
+}

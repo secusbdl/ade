@@ -9,6 +9,7 @@ void initializeAppStyle(QApplication& app){
         QWidget { color:#292a2d; }
         QWidget#appSurface,QWidget#sidebar { background:#eff4fa; }
         QWidget#chatSurface { background:#fdfdfd; border-top-left-radius:14px; }
+        QWidget#sideChatPane { background:#fdfdfd; }
         QTextBrowser,QPlainTextEdit { background:transparent; border:0; selection-background-color:#dbe6ff; }
         QListWidget#agentList { background:transparent; border:0; outline:0; }
         QListWidget#agentList::item { padding:2px 6px; border-radius:6px; }

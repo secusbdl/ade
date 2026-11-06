@@ -1,6 +1,9 @@
 #include "ConversationView.h"
 #include "MarkdownParts.h"
+#include "FileDiffView.h"
+#include "editor/CodeEditor.h"
 #include <QApplication>
+#include <QClipboard>
 #include <QElapsedTimer>
 #include <QFrame>
 #include <QFontInfo>
@@ -47,6 +50,7 @@ struct Callbacks {
     std::function<std::optional<bool>(const QString&)> disclosure;
     std::function<void(const QString&,bool)> remember;
     std::function<QString(const QString&)> displayPath;
+    std::function<void(const QString&,const QString&,const QUrl&,MarkdownParts*)> image;
 };
 
 class CompactScroll final : public QScrollArea {
@@ -90,7 +94,7 @@ public:
         body=new QWidget(this);body->setObjectName("disclosureBody");bodyLayout=new QVBoxLayout(body);bodyLayout->setContentsMargins(15,2,4,4);bodyLayout->setSpacing(6);
         scroll=new CompactScroll(body,this);layout->addWidget(trigger);layout->addWidget(scroll);
         manual=callbacks.disclosure(key);
-        connect(trigger,&QToolButton::clicked,this,[this](bool value){if(compactOnly)return;manual=value;apply(value);this->callbacks.remember(this->key,value);});
+        connect(trigger,&QToolButton::clicked,this,[this](bool value){if(compactOnly)return;manual=value;const QPointer<Disclosure> self(this);apply(value);if(self)this->callbacks.remember(this->key,value);});
         smallFont();
     }
     void policy(bool automatic){apply(manual.value_or(automatic));}
@@ -120,8 +124,16 @@ public:
             connect(markdown,&MarkdownParts::linkActivated,this,[this](const QUrl &url){const auto callback=this->callbacks.link;const auto message=this->messageId;const auto part=this->partId;callback(message,part,url);});
         } else if(type=="tool") {
             disclosure=new Disclosure(key,callbacks,this);layout->addWidget(disclosure);
-            input=new TranscriptText(disclosure->body);input->setObjectName("toolInput");disclosure->bodyLayout->addWidget(input);
-            output=new TranscriptText(disclosure->body);output->setObjectName("toolOutput");disclosure->bodyLayout->addWidget(output);
+            preview=new CodeEditor(disclosure->body);preview->setObjectName("toolCodePreview");preview->setReadOnly(true);preview->setFrameShape(QFrame::NoFrame);preview->setLineWrapMode(QPlainTextEdit::NoWrap);preview->hide();disclosure->bodyLayout->addWidget(preview);
+            inputSection=new Disclosure(key+"/arguments",callbacks,disclosure->body);inputSection->trigger->setObjectName("toolArgumentsToggle");disclosure->bodyLayout->addWidget(inputSection);
+            input=new TranscriptText(inputSection->body);input->setObjectName("toolInput");inputSection->bodyLayout->addWidget(input);
+            auto *copyInput=new QPushButton("Copy arguments",inputSection->body);copyInput->setObjectName("copyToolArguments");inputSection->bodyLayout->addWidget(copyInput,0,Qt::AlignRight);
+            outputSection=new Disclosure(key+"/result",callbacks,disclosure->body);outputSection->trigger->setObjectName("toolResultToggle");disclosure->bodyLayout->addWidget(outputSection);
+            output=new TranscriptText(outputSection->body);output->setObjectName("toolOutput");outputSection->bodyLayout->addWidget(output);
+            fileDiff=new FileDiffView(disclosure->body);disclosure->bodyLayout->insertWidget(1,fileDiff);fileDiff->hide();
+            auto *copyOutput=new QPushButton("Copy result",outputSection->body);copyOutput->setObjectName("copyToolResult");outputSection->bodyLayout->addWidget(copyOutput,0,Qt::AlignRight);
+            connect(copyInput,&QPushButton::clicked,this,[this]{const auto value=rawInput;QApplication::clipboard()->setText(value);});
+            connect(copyOutput,&QPushButton::clicked,this,[this]{const auto value=rawOutput;QApplication::clipboard()->setText(value);});
             approvalBar=new QWidget(disclosure->body);auto *buttons=new QHBoxLayout(approvalBar);buttons->setContentsMargins(0,2,0,2);
             deny=new QPushButton("Deny",approvalBar);approve=new QPushButton("Approve",approvalBar);
             deny->setObjectName("denyTool");approve->setObjectName("approveTool");buttons->addStretch();buttons->addWidget(deny);buttons->addWidget(approve);
@@ -130,6 +142,7 @@ public:
         } else {
             error=new TranscriptText(this);error->setObjectName("transcriptError");layout->addWidget(error);
         }
+        if(markdown)connect(markdown,&MarkdownParts::imageRequested,this,[this](const QUrl &url){const auto callback=this->callbacks.image;callback(this->messageId,this->partId,url,this->markdown);});
     }
     void updatePart(const QJsonObject &part,bool last,bool busy) {
         const auto state=part["state"].toString();const bool active=!settled(state)&&busy;
@@ -144,8 +157,8 @@ public:
         } else if(type=="tool") {
             callId=part["toolCallId"].toString();const auto name=part["name"].toString("Tool");
             QString prefix;
-            if(state=="output-available")prefix="✓ ";
-            else if(state=="output-error")prefix="× ";
+            if(state=="output-available")prefix="Completed · ";
+            else if(state=="output-error")prefix="Error · ";
             else if(state=="output-denied")prefix="Skipped · ";
             else if(state=="canceled")prefix="Canceled · ";
             else if(state=="approval-requested")prefix="Approval required · ";
@@ -154,13 +167,29 @@ public:
             else prefix="Ready · ";
             const auto diagnostic=part["errorText"].toString();
             auto inputText=part["inputText"].toString();if(inputText.isEmpty()&&part["input"].isObject())inputText=QString::fromUtf8(QJsonDocument(part["input"].toObject()).toJson(QJsonDocument::Indented));
+            auto arguments=part["input"].toObject();if(arguments.isEmpty())arguments=QJsonDocument::fromJson(inputText.toUtf8()).object();
             const bool compactRead=name=="read"&&state!="approval-requested";
             disclosure->compact(compactRead);
             QString title=prefix+name+((state=="output-error"&&!diagnostic.isEmpty())?" · "+diagnostic:QString());
-            if(compactRead){auto args=part["input"].toObject();if(args.isEmpty())args=QJsonDocument::fromJson(inputText.toUtf8()).object();const auto path=callbacks.displayPath(args["path"].toString());if(state=="output-available")title="Read "+path;else if(state=="output-error")title="× "+(diagnostic.isEmpty()?QString("Could not read ")+path:diagnostic);else if(!settled(state))title=path.isEmpty()?QStringLiteral("Reading file..."):"Reading "+path+"...";}
+            if((name=="executeSandboxJs"||name=="executeShellCommand")&&!arguments["explanation"].toString().isEmpty())title=(state=="output-available"?QString():prefix)+arguments["explanation"].toString();
+            if(compactRead){auto args=part["input"].toObject();if(args.isEmpty())args=QJsonDocument::fromJson(inputText.toUtf8()).object();const auto path=callbacks.displayPath(args["path"].toString());if(state=="output-available")title="Read "+path;else if(state=="output-error")title="Error · "+(diagnostic.isEmpty()?QString("Could not read ")+path:diagnostic);else if(!settled(state))title=path.isEmpty()?QStringLiteral("Reading file..."):"Reading "+path+"...";}
             disclosure->title(title);disclosure->policy(active||last||state=="approval-requested");
-            input->setSource(inputText,false);input->setVisible(!inputText.isEmpty());
-            const auto value=part["output"].toString(part["errorText"].toString());output->setSource(value,false);output->setVisible(!value.isEmpty());
+            const auto script=name=="executeSandboxJs"?arguments["script"].toString():name=="executeShellCommand"?arguments["command"].toString():QString();
+            preview->setVisible(!script.isEmpty());
+            if(!script.isEmpty()){
+                const auto code=script.left(65536);const auto cursor=preview->textCursor();
+                if(preview->sourceText()!=code){preview->setPlainText(code);auto restored=preview->textCursor();restored.setPosition(qMin(cursor.anchor(),code.size()));restored.setPosition(qMin(cursor.position(),code.size()),QTextCursor::KeepAnchor);preview->setTextCursor(restored);}
+                preview->setFileName(name=="executeSandboxJs"?"tool.js":"tool.sh");preview->setDarkTheme(darkFor(this));
+                preview->setFixedHeight(qBound(28,preview->blockCount()*preview->fontMetrics().lineSpacing()+14,180));
+                preview->setToolTip(script.size()>65536?QStringLiteral("Preview shows the first 65,536 characters; copy arguments for the full input."):QString());
+            }
+            rawInput=inputText;input->setSource(inputText.left(65536),false);inputSection->setVisible(!inputText.isEmpty());
+            inputSection->title(inputText.size()>65536?QStringLiteral("Arguments · first 65,536 characters"):QStringLiteral("Arguments"));inputSection->policy(script.isEmpty());
+            rawOutput=part["output"].toString(part["errorText"].toString());output->setSource(rawOutput.right(65536),false);outputSection->setVisible(!rawOutput.isEmpty());
+            fileDiff->setDiff(part["fileDiff"].toObject());
+            QString resultLabel=state=="output-error"?"Error":active?"Live output":"Result";
+            if(rawOutput.size()>65536)resultLabel+=" · last 65,536 characters";
+            outputSection->title(resultLabel);outputSection->policy(true);
             if(previousState!=state)decisionPending=false;
             const bool requested=state=="approval-requested";approvalBar->setVisible(requested);
             canDecide=requested&&!decisionPending&&!callId.isEmpty()&&busy;
@@ -173,8 +202,10 @@ public:
     }
 private:
     void decide(bool allowed){if(!canDecide||decisionPending||callId.isEmpty()||previousState!="approval-requested")return;decisionPending=true;canDecide=false;approve->setEnabled(false);deny->setEnabled(false);const auto id=callId;callbacks.approval(messageId,partId,id,allowed);}
-    QString type,messageId,partId,callId,previousState;Callbacks callbacks;bool decisionPending=false,canDecide=false;
+    QString type,messageId,partId,callId,previousState,rawInput,rawOutput;Callbacks callbacks;bool decisionPending=false,canDecide=false;
     MarkdownParts *markdown=nullptr;Disclosure *disclosure=nullptr;TranscriptText *input=nullptr,*output=nullptr,*error=nullptr;
+    Disclosure *inputSection=nullptr,*outputSection=nullptr;CodeEditor *preview=nullptr;
+    FileDiffView* fileDiff=nullptr;
     QWidget *approvalBar=nullptr;QPushButton *approve=nullptr,*deny=nullptr;
 };
 
@@ -262,6 +293,8 @@ struct ConversationView::Private {
     ConversationView *q;QScrollArea *scroll;QWidget *content,*tail;QVBoxLayout *layout;QToolButton *jump;QLabel *activity;
     QHash<QString,MessageRow*> rows;QHash<QString,ScrollState> states;QHash<QString,QString> attachmentNames;QStringList order;QString id;QJsonArray messages;bool busy=false;
     bool updating=false,pending=false;quint64 epoch=0,contextEpoch=0;int previousValue=0;QTimer stallTimer,scrollEnd;QElapsedTimer lastChange;
+    struct ImageRequest {quint64 epoch;QString messageId,partId;QUrl url;QPointer<MarkdownParts> target;};
+    QHash<quint64,ImageRequest> imageRequests;QSet<QByteArray> requestedImages;quint64 imageRequestSequence=0;qint64 imageBytes=0;
     explicit Private(ConversationView *view):q(view){}
     ScrollState capture() const {
         auto state=states.value(id);auto *bar=scroll->verticalScrollBar();state.absolute=bar->value();state.anchor.clear();
@@ -269,7 +302,7 @@ struct ConversationView::Private {
         return state;
     }
     void remember(){if(!id.isEmpty())states[id]=capture();}
-    void clearRows(){qDeleteAll(rows);rows.clear();order.clear();}
+    void clearRows(){imageRequests.clear();requestedImages.clear();imageBytes=0;qDeleteAll(rows);rows.clear();order.clear();}
     void scheduleScroll(bool force=false){
         if(pending&&!force)return;
         pending=true;const auto generation=++epoch;const auto owner=id;const auto anchor=states.value(id);
@@ -348,6 +381,15 @@ void ConversationView::setConversation(const QString &id,const QJsonArray &messa
         if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch||!self->d->busy)return;
         for(const auto &value:self->d->messages){const auto message=value.toObject();if(message["id"]!=messageId)continue;for(const auto &entry:message["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==partId&&part["type"]=="tool"&&part["toolCallId"]==call&&part["state"]=="approval-requested"){emit self->approvalDecided(id,messageId,partId,call,allowed);return;}}}
     };
+    callbacks.image=[self,id,contextEpoch](const QString &messageId,const QString &partId,const QUrl &url,MarkdownParts *target){
+        if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch||!target)return;
+        if(self->d->requestedImages.size()>=32)return;
+        const auto key=QJsonDocument(QJsonArray{messageId,partId,url.toString(QUrl::FullyEncoded)}).toJson(QJsonDocument::Compact);
+        if(self->d->requestedImages.contains(key))return;
+        self->d->requestedImages.insert(key);const auto requestId=++self->d->imageRequestSequence;
+        self->d->imageRequests.insert(requestId,{contextEpoch,messageId,partId,url,target});
+        emit self->imageRequested(requestId,id,messageId,partId,url);
+    };
     callbacks.disclosure=[this,id](const QString &key)->std::optional<bool>{const auto state=d->states.value(id);const auto it=state.disclosures.constFind(key);if(it==state.disclosures.cend())return {};return *it;};
     callbacks.remember=[this,id](const QString &key,bool expanded){d->states[id].disclosures[key]=expanded;};
     callbacks.displayPath=[this](const QString &raw){if(d->attachmentNames.contains(raw))return d->attachmentNames.value(raw);QString path=raw;path.replace('\\','/');for(const auto &prefix:{QString("att/"),QString("plugins/"),QString("apps/")})if(path.startsWith(prefix))return path.mid(prefix.size());path.remove(QRegularExpression("^(?:ws1|w[0-9a-f]{1,8})/"));return path;};
@@ -366,6 +408,22 @@ void ConversationView::clear(){d->remember();++d->epoch;++d->contextEpoch;d->pen
 QString ConversationView::toPlainText() const {QStringList text;for(const auto &value:d->messages){const auto row=value.toObject();for(const auto &part:row["parts"].toArray())text.append(partPlain(part.toObject()));for(const auto &attachment:row["attachments"].toArray()){const auto ref=attachment.toObject();text.append("Attachment: "+ref["originalFileName"].toString(ref["path"].toString()));}}return text.join('\n');}
 QString ConversationView::conversationId() const{return d->id;}
 bool ConversationView::followsOutput() const{return d->states.value(d->id).follow;}
+bool ConversationView::provideImage(quint64 requestId,const QImage &image,const QString &error){
+    const auto it=d->imageRequests.find(requestId);if(it==d->imageRequests.end())return false;
+    const auto request=*it;d->imageRequests.erase(it);
+    if(request.epoch!=d->contextEpoch||!request.target)return false;
+    bool present=false;for(const auto &value:d->messages){const auto row=value.toObject();if(row["id"]!=request.messageId)continue;for(const auto &entry:row["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==request.partId&&(part["type"]=="text"||part["type"]=="reasoning"))present=true;}}
+    if(!present)return false;
+    if(!error.isEmpty()||image.isNull()){request.target->setProperty("imageError",error.left(512));return false;}
+    if(image.width()>16384||image.height()>16384||image.sizeInBytes()>64*1024*1024)return false;
+    const auto bounded=image.width()>2048||image.height()>2048?image.scaled(2048,2048,Qt::KeepAspectRatio,Qt::SmoothTransformation):image;
+    if(d->imageBytes+bounded.sizeInBytes()>64*1024*1024)return false;
+    QList<QPointer<TranscriptText>> texts;for(auto *text:request.target->findChildren<TranscriptText*>())if(text->containsImage(request.url))texts.append(text);
+    if(texts.isEmpty())return false;
+    d->imageBytes+=bounded.sizeInBytes();const QPointer<ConversationView> self(this);const auto context=d->contextEpoch;
+    for(const auto &text:texts){if(text)text->setTrustedImage(request.url,bounded);if(!self||context!=self->d->contextEpoch)return true;}
+    return true;
+}
 void ConversationView::scrollToBottom(){if(d->id.isEmpty())return;d->states[d->id].follow=true;d->scheduleScroll(true);}
 bool ConversationView::eventFilter(QObject *object,QEvent *event){
     if(object==d->scroll->viewport()&&event->type()==QEvent::Resize)d->updateMargins();

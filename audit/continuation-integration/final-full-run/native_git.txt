@@ -1,0 +1,24 @@
+********* Start testing of GitTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : GitTest::initTestCase()
+PASS   : GitTest::nulDelimitedParsers()
+PASS   : GitTest::regularUnbornAndLinkedRoots()
+PASS   : GitTest::statusDiffAndRawBytes()
+PASS   : GitTest::renameAndStagedDeletionRecreated()
+PASS   : GitTest::dirtyCheckoutProtection()
+PASS   : GitTest::branchAndWorktreeNames()
+PASS   : GitTest::removalPolicies()
+PASS   : GitTest::cleanupRules()
+PASS   : GitTest::detachedUnmanagedAndLockedWorktrees()
+PASS   : GitTest::remoteRefreshAndSourceFetch()
+PASS   : GitTest::remoteUrlsAndEnvironment()
+PASS   : GitTest::postMutationRefreshFailure()
+PASS   : GitTest::junctionEscape()
+PASS   : GitTest::queuedMutationsAndCancellation()
+PASS   : GitTest::processBoundsAndTeardown()
+PASS   : GitTest::setupPersistenceAndExecution()
+PASS   : GitTest::setupCodexFallbackAndErrors()
+PASS   : GitTest::setupCancellationAndOutputTails()
+PASS   : GitTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 88805ms
+********* Finished testing of GitTest *********

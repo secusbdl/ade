@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "status": "Named focused evidence retained; final shared integration passed80/80 suites.",
+  "sources": [
+    "packages/agent-core/src/agents/base-agent.ts:788-860,938-1040,2220-2330,2690-2880",
+    "packages/agent-core/src/services/agent-manager/state-mutations/queue.ts",
+    "packages/agent-core/src/services/agent-manager/state-mutations/lifecycle.ts",
+    "apps/browser/src/shared/karton-contracts/ui/agent/tools/ask-user-questions.ts",
+    "apps/browser/src/backend/services/toolbox/tools/user-interaction/ask-user-questions.ts",
+    "apps/browser/src/ui/screens/main/agent-chat/chat/_components/footer-status-card/user-question-section.tsx",
+    "apps/browser/src/ui/screens/main/agent-chat/chat/_components/footer-status-card/message-queue-section.tsx"
+  ],
+  "queue": {
+    "bounds": "100 entries, 16 MiB compact queue JSON; 32 attachment references per message",
+    "metadata": "Original attachment refs/pathReferences/pathMetadata retained; queue host IDs removed from provider messages",
+    "behavior": "Enqueue while busy; remove/edit/reorder; Send now stops current turn and prioritizes selected entry; successful completion drains one at a time; Stop/final failure retain queue paused; restart requires explicit continuation",
+    "durability": "QueueCommitter saves candidate history and queue before publication or provider dispatch; SessionStore revision guard and atomic save apply",
+    "nativeExtensions": [
+      "Editing queued text is an explicit native control in addition to pinned reorder/remove/Send now UI",
+      "Restored queued messages deliberately wait for explicit Resume or new send",
+      "Per-turn host configuration hook refreshes context and app mounts before network dispatch"
+    ]
+  },
+  "questions": {
+    "restart": "Pending form UI/draft is ephemeral like source pending question state; restored unresolved tool calls use inherited-history recovery before next submission, not automatic replay",
+    "interruption": "User message returns completed=false/cancelled=false and partial answers plus notice before following user history; user cancel and Stop return structured cancellation reasons",
+    "rendering": "Native Qt controls, bounded host scroll wrapper, explicit Write a message instead/Back to questions; shared protected Markdown renderer denies implicit local or remote image access",
+    "correlation": "Unique host phase token plus turn lifetime; token rotates after Next/Back, so stale answers from a previous visit to the same step cannot apply",
+    "schema": "1-5 steps; 1-10 fields per step; input/radio-group/checkbox/checkbox-group; defaults, constraints, optional Other",
+    "bounds": "256 KiB form, 8192-character strings, 100 options per field, 128 KiB draft/step answer object"
+  },
+  "tests": {
+    "questionPanel": 8,
+    "historyRecovery": 28,
+    "actualMainWindow": {
+      "suite": "native_agent_control_ui",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "milliseconds": 2226,
+      "report": "audit/conversation-controls/final-shared/native_agent_control_ui.txt",
+      "reportSha256": "3d08b2e72eebb2a040d47efc890857432ee122043487be116208f6d3851faa21"
+    },
+    "presentation": 89,
+    "conversationControl": 26,
+    "streamObservers": 56,
+    "sideChatFormGeometry": {
+      "suite": "native_side_chat",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "milliseconds": 231,
+      "report": "audit/conversation-controls/final-shared/native_side_chat.txt",
+      "reportSha256": "10bdffc95e3bd84d4080c589238c9c3079d5de0f3ed526b3851db687e71e3f49"
+    },
+    "actualSideChatHost": {
+      "suite": "native_side_chat_host",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "milliseconds": 6886,
+      "report": "audit/conversation-controls/final-shared/native_side_chat_host.txt",
+      "reportSha256": "b0002f382bcdd2e539de76e5e1a5d7ec1583ee79a361b89fbb721885b7a885b0"
+    }
+  },
+  "findings": [
+    "Queue reorder initially held QJsonValueRef across removeAt, invalidating the moved value; two meaningful queue cases failed before fix and pass after explicit value copy",
+    "Four initial protocol fixture assertions incorrectly required UI display metadata to remain running; corrected to assert identical canonical/native payload, stable display ID, and output-available terminal state",
+    "Peer review identified QTextBrowser-only resource denial insufficient; QuestionPanel now reuses the protected transcript document and image-object handler, with actual local sentinel image regression"
+  ],
+  "remaining": [
+    "No live provider/service credentials or network APIs were used; fixtures use loopback servers and synthetic values",
+    "Partial in-progress form drafts are not durable across application restart",
+    "No claim of full Stagewise parity or universal defect absence"
+  ],
+  "sha256": {
+    "src/core/AgentEngine.cpp": "9975ff70c17045610fc96bb8452848762b029b41447adb6692c462bf5ee14ddd",
+    "src/core/AgentEngine.h": "deb340449e1a6bb9da6fe616106d6e8d9c06c54c740f8e14fadcc21029a97ba2",
+    "src/core/AgentEngineControl.cpp": "2b462c3733f8093d0098e132c9a9cfc07bbafe771e8f63841a9bb8a2a05994b8",
+    "src/core/QuestionForm.cpp": "f1c8c1cfa9d870b92ac3ba85426094f7c628993a783052c0884461ddf9cea0f9",
+    "src/core/QuestionForm.h": "ba0a7025e1a1655ce705d8f1a339f1ef6538586726d93d4838172769e761e497",
+    "src/ui/ContentControlsScrollArea.h": "dbc4c9d0a5ab6050c687d3e228b2c2e22fda79d539ac32f76112e54fed40250c",
+    "src/ui/MainWindow.cpp": "92f0091e3fed6bbc8fb503e47a90a0ad32e3c32560119db678509a5d8b985c4b",
+    "src/ui/MainWindowControl.cpp": "4001e37672a507b45a4c809bea604e46b1e27a7d626885a49c71e4f48531f2c4",
+    "src/ui/MessageQueuePanel.cpp": "c5218044bbee9a67e12742dda27d145941f23b85ead9509eb02113b40e030982",
+    "src/ui/MessageQueuePanel.h": "b0d6fa946ed3da4b6a8b25575f3dff42e67c862e8bc97c1da86b2171ac789b4c",
+    "src/ui/QuestionPanel.cpp": "fc0740ead3f74ff3d8c041d940e2e5ed6a6ce2208fb15c188c98d64f3043982b",
+    "src/ui/QuestionPanel.h": "4947141869aacb3ef67bc6188679b6de817cadafadca0d8096c9c36774f7659e",
+    "src/ui/SessionStore.cpp": "997a18c3d0c47a3f0302b2624191252dc93f63cf61f7e911aba2718e46a7d677",
+    "src/ui/SessionStore.h": "bca2ec27bcfa6035537a98910c8957b631cf95b3c0f8ee7e4c6cea03b06edd0b",
+    "src/ui/SideChatPane.cpp": "0c776ff9e6e2adcfd667cfc52217ac1005b208e357eab4ae60e00a1861ab0903",
+    "src/ui/SideChatPane.h": "14e5db969d4de99f857dbf2c0b0b5b390966069c1efd6112f26e1a2f6626fb96",
+    "tests/test_agent_control_ui.cpp": "a82ad4997fa1c45aa41ab91bea9d6f18a5e420efe0bf1e8d096e14ac38636487",
+    "tests/test_conversation_control.cpp": "296c0cff6d19ffc7d33b5506841323b527d69ba904b8b987157e1604a6ee6227",
+    "tests/test_question_panel.cpp": "b34be41010d9502a04934760e1b2b1773e3bb618581332c22098462a85f6b31a",
+    "tests/test_side_chat.cpp": "c7ad770c3a8041c7fe6fc890a5e0ef42a64caa4156d649c43c0cded39adf9ea5",
+    "tests/test_side_chat_host.cpp": "2d0fd3d3daeb54c618e1bdcef09ee0b60b234f66d048ae719ee911ce14130d36"
+  },
+  "sourceHashEncoding": "SHA-256 of source bytes with CRLF normalized to LF; no other byte changes.",
+  "sourceHashScope": "Current production/test source snapshot at this refresh. Earlier focused reports remain historical; latestSharedVerification identifies the retained completed shared reports. Later source edits require another hash refresh.",
+  "latestSharedVerification": {
+    "recordedAtUtc": "2026-11-06T14:04:15.936907+00:00",
+    "reports": [
+      {
+        "suite": "native_conversation_control",
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 4264,
+        "report": "audit/conversation-controls/final-shared/native_conversation_control.txt",
+        "reportSha256": "c487e003d5b63e30c24b86ce3e0aaf4995bb8fb4d26866f1e45e5724b795fd2e"
+      },
+      {
+        "suite": "native_question_panel",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 152,
+        "report": "audit/conversation-controls/final-shared/native_question_panel.txt",
+        "reportSha256": "1e64ee8c489eb513906169fb4d4c8a99f02b603ce53bccfedf322a9e47d18938"
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 2226,
+        "report": "audit/conversation-controls/final-shared/native_agent_control_ui.txt",
+        "reportSha256": "3d08b2e72eebb2a040d47efc890857432ee122043487be116208f6d3851faa21"
+      },
+      {
+        "suite": "native_side_chat",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 231,
+        "report": "audit/conversation-controls/final-shared/native_side_chat.txt",
+        "reportSha256": "10bdffc95e3bd84d4080c589238c9c3079d5de0f3ed526b3851db687e71e3f49"
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "milliseconds": 6886,
+        "report": "audit/conversation-controls/final-shared/native_side_chat_host.txt",
+        "reportSha256": "b0002f382bcdd2e539de76e5e1a5d7ec1583ee79a361b89fbb721885b7a885b0"
+      }
+    ],
+    "scope": "Only the listed completed shared suites; no claim about the aggregate all-suite run, release export, complete parity or universal defect absence."
+  },
+  "historicalFocusedTests": {
+    "questionPanel": 8,
+    "historyRecovery": 28,
+    "actualMainWindow": "6/6 passed in root shared build (reported by parent); includes busy queue restart/Resume, question answer/cross-chat guard, partial-answer interruption/narrow layout, and save conflict",
+    "presentation": 89,
+    "conversationControl": 22,
+    "streamObservers": 56
+  },
+  "questionCapabilityPolicy": {
+    "nativeDefault": "Disabled in standalone/headless AgentEngine; setQuestionToolEnabled(true) is an idle-only opt-in.",
+    "gui": "MainWindow explicitly enables structured questions for its chat engines.",
+    "disabledBehavior": "askUserQuestions is omitted from tool definitions; unsolicited calls return a tool error instead of waiting for a nonexistent form. An opt-in attempted during an active turn has no effect.",
+    "regression": "headlessQuestionsAreNotAdvertisedOrWaitedOn covers OpenAI-compatible chat, Responses, Anthropic and Google; existing explicit question completion cases retain exact provider associations."
+  },
+  "formGeometryCorrection": {
+    "cause": "QScrollArea cached the initially empty or pre-measure child hint; deferred protected Markdown measurement could leave controls unnecessarily clipped.",
+    "implementation": "ContentControlsScrollArea uses the current child layout/height-for-width and updates geometry after layout requests; overflow remains scrollable at minimum window size.",
+    "regressions": [
+      "Actual MainWindow at350x750 shows answer and Submit in the current controls viewport; at350x250 it remains resizable, scrolls to Submit, and sends the entered answer to the next loopback provider request.",
+      "SideChatPane at350x750 retains answer/Submit/queue controls; at350x250 it exposes bounded scrolling.",
+      "Actual side-chat host verifies question/queue control centers in the viewport for light/dark themes and1100/350 widths."
+    ]
+  },
+  "finalSharedIntegration": {
+    "report": "audit/continuation-integration.json",
+    "verifiedUtc": "2026-11-06T14:04:15.838484+00:00",
+    "suites": 80,
+    "passedSuites": 80,
+    "failedSuites": 0,
+    "scope": "Named suite reports and exact tested source hashes are retained in the final aggregate. Focused/historical evidence above remains scoped to its original observation; full upstream parity is not implied."
+  }
+}

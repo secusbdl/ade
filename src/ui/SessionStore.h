@@ -1,5 +1,6 @@
 #pragma once
 #include <QJsonArray>
+#include <QJsonObject>
 #include <QList>
 #include <QString>
 #include <QByteArray>
@@ -7,8 +8,9 @@
 #include <functional>
 namespace ade {
 struct Conversation {
-    QString id, title, workspace, providerId, model, presetId, draft;
-    QJsonArray messages, draftAttachments;
+    QString id, title, workspace, providerId, model, presetId, draft, sideChatParentId;
+    QJsonArray messages, draftAttachments, queuedMessages;
+    QJsonObject transcriptLinkProvenance;
     qint64 created = 0, updated = 0, archivedAt = 0, lastMessageAt = 0;
     bool archived = false;
     bool alwaysAllow = false;

@@ -1,0 +1,21 @@
+********* Start testing of QuestionPanelTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionPanelTest::initTestCase()
+QWARN  : QuestionPanelTest::validatesExplicitSubmissionAndCollectsTypedValues() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : QuestionPanelTest::validatesExplicitSubmissionAndCollectsTypedValues() This plugin does not support propagateSizeHints()
+QWARN  : QuestionPanelTest::validatesExplicitSubmissionAndCollectsTypedValues() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::validatesExplicitSubmissionAndCollectsTypedValues()
+QWARN  : QuestionPanelTest::cancellationPreservesCurrentDraftAndContext() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::cancellationPreservesCurrentDraftAndContext()
+QWARN  : QuestionPanelTest::callbackMayDeletePanel() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::callbackMayDeletePanel()
+QWARN  : QuestionPanelTest::queueControlsRetainScopedIds() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::queueControlsRetainScopedIds()
+QWARN  : QuestionPanelTest::nativeFormRendersAllControls() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::nativeFormRendersAllControls()
+QWARN  : QuestionPanelTest::markdownCannotLoadLocalImageBytes() This plugin does not support propagateSizeHints()
+PASS   : QuestionPanelTest::markdownCannotLoadLocalImageBytes()
+PASS   : QuestionPanelTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 102ms
+********* Finished testing of QuestionPanelTest *********

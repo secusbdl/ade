@@ -1,0 +1,32 @@
+********* Start testing of SideChatHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SideChatHostTest::initTestCase()
+QWARN  : SideChatHostTest::forkIsIndependentAndHiddenThenPromotes() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : SideChatHostTest::forkIsIndependentAndHiddenThenPromotes()
+PASS   : SideChatHostTest::sideStreamsAndQueuesWithoutChangingParent()
+PASS   : SideChatHostTest::questionAnswersStayInChild()
+QWARN  : SideChatHostTest::fileCompletionTargetsChildOnly() This plugin does not support propagateSizeHints()
+QWARN  : SideChatHostTest::fileCompletionTargetsChildOnly() This plugin does not support raise()
+PASS   : SideChatHostTest::fileCompletionTargetsChildOnly()
+PASS   : SideChatHostTest::closeDiscardsBusyChildAndKeepsParent()
+QWARN  : SideChatHostTest::archiveUnloadsChildrenAndRestoreReopens() This plugin does not support raise()
+QWARN  : SideChatHostTest::archiveUnloadsChildrenAndRestoreReopens() This plugin does not support grabbing the keyboard
+PASS   : SideChatHostTest::archiveUnloadsChildrenAndRestoreReopens()
+QWARN  : SideChatHostTest::deleteParentCascadesWithSaveConflictProtection() This plugin does not support raise()
+QWARN  : SideChatHostTest::deleteParentCascadesWithSaveConflictProtection() This plugin does not support grabbing the keyboard
+QWARN  : SideChatHostTest::deleteParentCascadesWithSaveConflictProtection() This plugin does not support propagateSizeHints()
+PASS   : SideChatHostTest::deleteParentCascadesWithSaveConflictProtection()
+PASS   : SideChatHostTest::restartRestoresChildWithoutSelectingItAsMain()
+QWARN  : SideChatHostTest::confirmedParentDeletionRemovesChild() This plugin does not support raise()
+QWARN  : SideChatHostTest::confirmedParentDeletionRemovesChild() This plugin does not support grabbing the keyboard
+QWARN  : SideChatHostTest::confirmedParentDeletionRemovesChild() This plugin does not support propagateSizeHints()
+PASS   : SideChatHostTest::confirmedParentDeletionRemovesChild()
+PASS   : SideChatHostTest::promotionSaveConflictLeavesPaneAndParentIdentity()
+PASS   : SideChatHostTest::rejectedHistoryKeepsChildDraftAndAttachment()
+PASS   : SideChatHostTest::inlineApprovalUsesChildRowAndChatIdentity()
+PASS   : SideChatHostTest::integratedThemesQuestionQueueAndCompactGeometry()
+PASS   : SideChatHostTest::hiddenChildImagesResolveOnlyOwnedBytes()
+PASS   : SideChatHostTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 6878ms
+********* Finished testing of SideChatHostTest *********

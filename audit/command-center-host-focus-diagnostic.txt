@@ -1,0 +1,13 @@
+********* Start testing of CommandHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CommandHostTest::initTestCase()
+QWARN  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() This plugin does not support propagateSizeHints()
+QWARN  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() This plugin does not support raise()
+QWARN  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() Command shortcut focus gate activeWindowMatch false targetVisible true targetIsComposer true composerFocus false focusName "commandMode_global" focusClass QToolButton
+FAIL!  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() Fixture shortcut target must be visible in the active window
+D:/age/ADE/tests/test_command_center_host.cpp(43) : failure location
+FAIL!  : CommandHostTest::ownedShellOpensReusesAndSurvivesViewClose() 'center' returned FALSE. ()
+D:/age/ADE/tests/test_command_center_host.cpp(93) : failure location
+PASS   : CommandHostTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 749ms
+********* Finished testing of CommandHostTest *********

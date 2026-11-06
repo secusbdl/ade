@@ -12,6 +12,8 @@
 class QComboBox; class QFileSystemModel; class QLabel; class QLineEdit; class QListWidget;
 class QPlainTextEdit; class QSplitter; class QStackedWidget; class QTabWidget; class QTextBrowser;
 class QToolButton; class QTreeView;
+class QHBoxLayout;
+class QScrollArea;
 class QShortcut; class QTimer;
 class QImage;
 namespace ade {
@@ -21,6 +23,11 @@ class AttachmentStrip;
 class SidebarSplitter;class SidebarNavigation;class WorkbenchSplitter;class ChatSurface;
 class ConversationView;
 class GitPanel;class WorktreeSetupRunner;class WorktreeSettingsController;enum class GitOperation;
+class ComposerCompletionController;
+class CommandCenterController;
+class FileChangesPanel;
+class QuestionPanel;class MessageQueuePanel;
+class SideChatPane;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -40,6 +47,13 @@ private:
     void requestDeleteConversation(const QString& id);
     bool renameConversation(const QString& id,const QString& title);
     bool forkConversation(const QString& id);
+    bool cloneConversation(const QString& id,bool sideChat);
+    bool createSideChat(const QString& sourceId={});
+    bool promoteSideChat(const QString& id);
+    bool discardSideChat(const QString& id);
+    void initializeSideChats();void refreshSideChats();void refreshSideChat(const QString& id);
+    void openSideChat(const QString& id);void closeSideChatPane(const QString& id);void sendSideChat(const QString& id);
+    QHash<QString,QPointer<SideChatPane>> m_sideChats;
     bool archiveConversation(const QString& id);
     bool restoreConversation(const QString& id);
     bool deleteConversation(const QString& id);
@@ -51,13 +65,19 @@ private:
     void refreshAgents(); void refreshModels(); void restoreModelSelection(); void renderConversation(); bool saveSessions();
     void send();void showProviders();void showSettings();void applyPreferences();void chooseWorkspace();void openFile(const QString& path);
     void addBrowserTab(const QUrl& url=QUrl("about:blank")); void showTerminal();
+    void showAgentShell(const QString& agentId,const QString& sessionId);
+    QWidget* configureBrowserTools(QWidget* page,BrowserWidget* browser,QHBoxLayout* navigation);
+    void attachBrowserContext(const QString& agentId,const QString& name,const QByteArray& bytes);
     void showDownloads();
     void initializeWorkbench();void refreshWorkbench();void revealContent();
     void refreshPluginConfiguration();
     void connectAppTabs(AgentToolHost* host);
-    void beginTranscriptLinkTurn(const QString& id);
+    void beginTranscriptLinkTurn(const QString& id,bool acceptedUserMessage=false);
+    QJsonObject forkTranscriptLinkProvenance(const QString& sourceId,const QString& targetId,const QString& workspace);
     void updateTranscriptLinkRows(const QString& id);
-    void routeTranscriptLink(const QString& id,const QString& rowId,const QString& partId,const QUrl& url);
+    bool visibleTranscript(const QString& id,ConversationView* view,bool requireCurrentTab=true) const;
+    void routeTranscriptLink(const QString& id,const QString& rowId,const QString& partId,const QUrl& url,ConversationView* target=nullptr);
+    void provideTranscriptImage(quint64 requestId,const QString& id,const QString& rowId,const QString& partId,const QUrl& url,ConversationView* target=nullptr);
     QHash<QString,QSet<QString>> m_linkKnownRows;
     QHash<QString,QHash<QString,TranscriptLinkProvenance>> m_linkProvenance;
     QHash<QString,TranscriptLinkProvenance> m_linkTurnContext;
@@ -73,6 +93,28 @@ private:
     void attachImage(const QImage& image);
     void refreshAttachments();
     void updateComposerState();
+    void initializeCompletions();
+    void initializeComposerCompletions(Composer* composer,const QString& fixedChat);
+    QHash<QString,QPointer<ComposerCompletionController>> m_sideCompletionControllers;
+    void initializeCommandCenter();
+    void openCommandCenter(const QString& mode="global",bool searchContents=false);
+    QPointer<CommandCenterController> m_commandCenterController;
+    void refreshCompletionContext();
+    bool configureTurnContext(const QString& id,const QString& userMessage,QString* error=nullptr);
+    QPointer<ComposerCompletionController> m_completionController;
+    void showFileChanges();void refreshFileChanges();
+    void connectMutationControls(const QString& id,AgentToolHost* host);
+    void undoFileChanges(const QString& id,const QStringList& mutationIds);
+    void recoverFileChanges(const QString& id);
+    QPointer<FileChangesPanel> m_fileChanges;
+    QString m_mutationUndoAgent,m_mutationUndoId,m_fileChangesAgent;
+    void initializeAgentControls();
+    void connectAgentControls(const QString& id,AgentEngine* engine);
+    void refreshAgentControls();
+    QuestionPanel* m_questionPanel=nullptr;
+    MessageQueuePanel* m_queuePanel=nullptr;
+    QScrollArea* m_agentControlsScroll=nullptr;
+    QString m_questionMessageToken;
     void recordBrowserHistory(const QUrl& url,const QString& title);
     void clearBrowsingData(const QJsonObject& options);
     void finishBrowsingDataClear(bool success,const QString& error);

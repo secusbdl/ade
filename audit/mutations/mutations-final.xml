@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="MutationTests" timestamp="2026&#x002D;11&#x002D;06T14:51:02" hostname="VOID" tests="60" failures="0" errors="0" skipped="0" time="3.479">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="MutationTests" time="0.000"/>
+  <testcase name="writeUndoPreservesEmptyAndBinary(text)" classname="MutationTests" time="0.034"/>
+  <testcase name="writeUndoPreservesEmptyAndBinary(empty)" classname="MutationTests" time="0.029"/>
+  <testcase name="writeUndoPreservesEmptyAndBinary(binary)" classname="MutationTests" time="0.029"/>
+  <testcase name="newFileUndoRestoresMissing" classname="MutationTests" time="0.027"/>
+  <testcase name="multiEditSkipsUnmatchedAndCountsSequentially" classname="MutationTests" time="0.027"/>
+  <testcase name="multiEditCountsNonOverlappingOccurrences" classname="MutationTests" time="0.020"/>
+  <testcase name="copyMoveDeleteUndo(copy)" classname="MutationTests" time="0.032"/>
+  <testcase name="copyMoveDeleteUndo(move)" classname="MutationTests" time="0.037"/>
+  <testcase name="copyMoveDeleteUndo(delete)" classname="MutationTests" time="0.029"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(after&#x002D;prepare)" classname="MutationTests" time="0.030"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(after&#x002D;stage)" classname="MutationTests" time="0.032"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(after&#x002D;backup)" classname="MutationTests" time="0.032"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(after&#x002D;publish)" classname="MutationTests" time="0.033"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(before&#x002D;commit)" classname="MutationTests" time="0.032"/>
+  <testcase name="interruptedWriteRecoversAcrossRestart(after&#x002D;commit)" classname="MutationTests" time="0.030"/>
+  <testcase name="failuresRollbackBothMoveSides(before&#x002D;source)" classname="MutationTests" time="0.041"/>
+  <testcase name="failuresRollbackBothMoveSides(source&#x002D;backed&#x002D;up)" classname="MutationTests" time="0.029"/>
+  <testcase name="conflictIsPreserved" classname="MutationTests" time="0.035"/>
+  <testcase name="undoAgentAndExternalConflict" classname="MutationTests" time="0.030"/>
+  <testcase name="cancellationAndDuplicateIdDoNotMutate" classname="MutationTests" time="0.032"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;prepare)" classname="MutationTests" time="0.107"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;stage&#x002D;created)" classname="MutationTests" time="0.104"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;stage&#x002D;chunk)" classname="MutationTests" time="0.092"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;backup)" classname="MutationTests" time="0.077"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;publish)" classname="MutationTests" time="0.089"/>
+  <testcase name="abruptProcessExitRecovery(after&#x002D;commit)" classname="MutationTests" time="0.089"/>
+  <testcase name="pinnedAncestorsAndLateDestinationConflict" classname="MutationTests" time="0.049"/>
+  <testcase name="junctionAndReplacementMountFailClosed" classname="MutationTests" time="0.098"/>
+  <testcase name="readOnlyCopyAndAppsWithoutWorkspace" classname="MutationTests" time="0.036"/>
+  <testcase name="corruptSnapshotPreventsMutationAndUndo" classname="MutationTests" time="0.031"/>
+  <testcase name="immutableAgentIdentityAndSnapshotIsolation" classname="MutationTests" time="0.038"/>
+  <testcase name="anotherLiveOwnerCannotRecoverPreparedWork" classname="MutationTests" time="0.025"/>
+  <testcase name="multiEditExpansionRejectedBeforeLargeAllocation" classname="MutationTests" time="0.067"/>
+  <testcase name="partialStagedWriteRollsBackCleanly" classname="MutationTests" time="0.026"/>
+  <testcase name="rollbackRestorationSurvivesAnotherProcessExit(rollback&#x002D;after&#x002D;restore&#x002D;created)" classname="MutationTests" time="0.098"/>
+  <testcase name="rollbackRestorationSurvivesAnotherProcessExit(rollback&#x002D;after&#x002D;restore&#x002D;chunk)" classname="MutationTests" time="0.096"/>
+  <testcase name="rollbackRestorationSurvivesAnotherProcessExit(rollback&#x002D;after&#x002D;restore)" classname="MutationTests" time="0.097"/>
+  <testcase name="originalMountAndReadOnlyRights" classname="MutationTests" time="0.026"/>
+  <testcase name="parentsAreJournaledAndUndoRemovesOnlyOwnedEmptyDirectories" classname="MutationTests" time="0.036"/>
+  <testcase name="recursiveMergeMoveDeleteAndUndo(copy)" classname="MutationTests" time="0.063"/>
+  <testcase name="recursiveMergeMoveDeleteAndUndo(move)" classname="MutationTests" time="0.084"/>
+  <testcase name="recursiveMergeMoveDeleteAndUndo(delete)" classname="MutationTests" time="0.054"/>
+  <testcase name="recursiveFailureRollsBackTopology(after&#x002D;directory&#x002D;create)" classname="MutationTests" time="0.039"/>
+  <testcase name="recursiveFailureRollsBackTopology(after&#x002D;directory&#x002D;delete)" classname="MutationTests" time="0.054"/>
+  <testcase name="directoryUndoPreservesUnrelatedUserFiles" classname="MutationTests" time="0.036"/>
+  <testcase name="sourceBasenameAndGroupedUndo" classname="MutationTests" time="0.054"/>
+  <testcase name="deletionKeepsOtherAgentHistory" classname="MutationTests" time="0.039"/>
+  <testcase name="rawWriteKeepsFencesAndBinaryExactly" classname="MutationTests" time="0.035"/>
+  <testcase name="directoryProcessExitRecovers(after&#x002D;directory&#x002D;create)" classname="MutationTests" time="0.113"/>
+  <testcase name="directoryProcessExitRecovers(after&#x002D;directory&#x002D;delete)" classname="MutationTests" time="0.100"/>
+  <testcase name="directoryProcessExitRecovers(after&#x002D;publish)" classname="MutationTests" time="0.122"/>
+  <testcase name="directoryProcessExitRecovers(after&#x002D;commit)" classname="MutationTests" time="0.103"/>
+  <testcase name="directoryEntryLimitRejectsBeforeMutation" classname="MutationTests" time="0.456"/>
+  <testcase name="revokeAndCleanupRejectOldExecutorWithoutTouchingFiles" classname="MutationTests" time="0.061"/>
+  <testcase name="journalPinsProfileAndRejectsMountReplacement" classname="MutationTests" time="0.017"/>
+  <testcase name="recursiveDeletePreservesChildCreatedAfterPlanning" classname="MutationTests" time="0.030"/>
+  <testcase name="committedCleanupIsVisibleThroughHostHistory" classname="MutationTests" time="0.055"/>
+  <testcase name="revocationStopsApplyButMustAllowDurableRollback" classname="MutationTests" time="0.062"/>
+  <testcase name="cleanupTestCase" classname="MutationTests" time="0.000"/>
+</testsuite>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ShellRuntimeTests" timestamp="2026&#x002D;11&#x002D;06T15:13:48" hostname="VOID" tests="13" failures="0" errors="0" skipped="0" time="11.703">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ShellRuntimeTests" time="0.000"/>
+  <testcase name="persistentSessionsAndReadMount(openai)" classname="ShellRuntimeTests" time="1.173"/>
+  <testcase name="persistentSessionsAndReadMount(responses)" classname="ShellRuntimeTests" time="1.125"/>
+  <testcase name="persistentSessionsAndReadMount(anthropic)" classname="ShellRuntimeTests" time="1.047"/>
+  <testcase name="persistentSessionsAndReadMount(google)" classname="ShellRuntimeTests" time="1.099"/>
+  <testcase name="workspaceSwapClosesSessionsAndForkCopiesLogsOnly" classname="ShellRuntimeTests" time="0.787"/>
+  <testcase name="engineCancellationKillsOnlyOwnedSession" classname="ShellRuntimeTests" time="1.059"/>
+  <testcase name="failedWatcherQueueCommitRetriesOnceWithoutResuming" classname="ShellRuntimeTests" time="1.638"/>
+  <testcase name="deletingHostCancelsFailedWatcherRetry" classname="ShellRuntimeTests" time="1.467"/>
+  <testcase name="malformedWatcherExitCodeCannotEscapePayloadBound" classname="ShellRuntimeTests" time="0.516"/>
+  <testcase name="watcherWakeDoesNotInterruptActualPendingQuestion" classname="ShellRuntimeTests" time="0.954"/>
+  <testcase name="watcherWakeRespectsPausedQueueAndOwner" classname="ShellRuntimeTests" time="0.836"/>
+  <testcase name="cleanupTestCase" classname="ShellRuntimeTests" time="0.000"/>
+</testsuite>
