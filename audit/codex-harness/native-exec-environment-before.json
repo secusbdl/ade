@@ -1,0 +1,1 @@
+{"commandStderr":"","commandStdout":"","credentialsReadByProbe":false,"diagnosticMessage":"exec failed: windows sandbox: registered Core launch requires an installed app","errorCode":-32603,"exactRead":false,"exit":4,"modelRequests":0,"registeredCoreFailure":true,"removedRuntimeVariableCount":0,"rpcError":true,"sandboxError":true,"sanitizedParent":false}

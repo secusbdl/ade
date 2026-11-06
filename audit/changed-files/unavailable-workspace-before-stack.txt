@@ -1,0 +1,52 @@
+[New Thread 29144.0x7af0]
+[New Thread 29144.0x31f0]
+[New Thread 29144.0xaa90]
+warning: could not convert 'main' from the host encoding (CP65001) to UTF-32.
+This normally should not happen, please file a bug report.
+warning: ********* Start testing of SidebarNavigationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+warning: PASS   : SidebarNavigationTest::initTestCase()
+warning: QWARN  : SidebarNavigationTest::groupsAndPinsPersistAcrossRestart() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+[New Thread 29144.0xd3ac]
+[New Thread 29144.0x7cbc]
+[New Thread 29144.0x2e1c]
+[New Thread 29144.0x5550]
+
+Thread 1 received signal SIGSEGV, Segmentation fault.
+0x00007ffc04fb2416 in ntdll!RtlAllocateHeap () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#0  0x00007ffc04fb2416 in ntdll!RtlAllocateHeap () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#1  0x00007ffc04fb200b in ntdll!RtlAllocateHeap () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#2  0x00007ffc04fe6a50 in ntdll!RtlNtStatusToDosErrorNoTeb () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#3  0x00007ffc04fd5036 in ntdll!LdrFindEntryForAddress () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#4  0x00007ffc04fb2431 in ntdll!RtlAllocateHeap () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#5  0x00007ffc04fb200b in ntdll!RtlAllocateHeap () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#6  0x00007ffc04fc919a in ntdll!RtlDeleteBoundaryDescriptor () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#7  0x00007ffc0505627f in ntdll!RtlDosPathNameToRelativeNtPathName_U_WithStatus () from C:\WINDOWS\SYSTEM32\ntdll.dll
+#8  0x00007ffc026b5fe3 in KERNELBASE!GetDriveTypeW () from C:\WINDOWS\System32\KernelBase.dll
+#9  0x00007ffc026b7887 in KERNELBASE!CreateFileW () from C:\WINDOWS\System32\KernelBase.dll
+#10 0x00007ff6ea6a52ab in ade::gitdetail::canonical(QString const&) ()
+#11 0x00007ff6ea40b5dd in ade::GitService::canonicalPath(QString const&) ()
+#12 0x00007ff6ea682705 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#13 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#14 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#15 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#16 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#17 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#18 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#19 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#20 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#21 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#22 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#23 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#24 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#25 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#26 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#27 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#28 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#29 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#30 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#31 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()
+#32 0x00007ff6e982c4eb in void doActivate<false>(QObject*, int, void**) ()
+#33 0x00007ff6ea682332 in ade::WorkspaceChangesController::setWorkspace(QString const&) ()
+#34 0x00007ff6ea42965e in ade::MainWindow::refreshWorkbench() ()

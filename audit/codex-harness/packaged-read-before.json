@@ -1,0 +1,59 @@
+{
+  "recordedUtc": "2026-11-06T18:19:05.034768+00:00",
+  "packageSha256": "f8caefee745b7cd1f6af6e7f2ee191a2f10103b24343272cd80e33a34ce6c008",
+  "provider": "Codex installed native CLI, managed ChatGPT subscription",
+  "credentialsReadByRunnerOrADE": false,
+  "model": "gpt-6.1-sol",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "exactMarker": false,
+  "toolNames": [
+    "commandExecution"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 28158,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 32,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "256c8600ccebbb556b0e4c3120dc85e516007d117d2a986fd1b4e747f9706905",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "4202000722d98a02a57a0ec031daf368a035ab0f3ee5bfaa79d0429712fcc9f5",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-text.png",
+        "sha256": "32725c8923eeecde88a23c3186b4dd4c43136770592b2dc8ce2f79a9c8381196",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-completed.png",
+        "sha256": "c7cc7985a96a0266a3dd57d8dae36a18fa687cfd64682c476a52f7d668584acf",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 7.1641,
+    "meanSetConversationMs": 1.65545,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 8,
+    "textDeltas": 19,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "usagePresent": false,
+  "scope": "Actual packaged native AgentEngine+AgentToolHost, live managed Codex, one read-only turn. Hidden transcript renders; not main-window input, native mutation-journal coverage, or complete parity."
+}

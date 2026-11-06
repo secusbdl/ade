@@ -191,6 +191,9 @@ void SandboxHost::receive(const QJsonObject& message) {
     }
     const QString wireId = message.value("id").toString();
     const QString id = m_wireToId.value(wireId);
+    // Idle event callbacks deliberately use an empty wire ID. A nonempty ID
+    // whose execution has already settled must never gain background authority.
+    if(!wireId.isEmpty()&&id.isEmpty())return;
     const QString agent=id.isEmpty()?message.value("agentId").toString():m_pending.value(id).agentId;
     const QString context=id.isEmpty()?message.value("contextId").toString():m_pending.value(id).contextId;
     const bool live=!context.isEmpty()&&m_contextIds.value(agent)==context;

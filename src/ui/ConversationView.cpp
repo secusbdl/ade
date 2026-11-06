@@ -1,6 +1,7 @@
 #include "ConversationView.h"
 #include "MarkdownParts.h"
 #include "FileDiffView.h"
+#include "TurnFileEdits.h"
 #include "editor/CodeEditor.h"
 #include <QApplication>
 #include <QClipboard>
@@ -51,6 +52,8 @@ struct Callbacks {
     std::function<void(const QString&,bool)> remember;
     std::function<QString(const QString&)> displayPath;
     std::function<void(const QString&,const QString&,const QUrl&,MarkdownParts*)> image;
+    std::function<void(const QString&,const QStringList&,const QString&,bool)> turnFile;
+    std::function<void(const QString&)> retryTurn;
 };
 
 class CompactScroll final : public QScrollArea {
@@ -261,6 +264,22 @@ public:
         outer->addWidget(body);
         chips=new AttachmentChips(body);layout->addWidget(chips);colors();
     }
+    void fileSummary(bool visible,const QJsonObject& summary={},const QString& error={}){
+        if(!visible&&!turnFiles)return;
+        if(!turnFiles){
+            turnFiles=new TurnFileEdits(body);layout->addWidget(turnFiles);
+            connect(turnFiles,&TurnFileEdits::fileRequested,this,[this](const QString& path,const QStringList& ids){callbacks.turnFile(id,ids,path,false);});
+            connect(turnFiles,&TurnFileEdits::reviewRequested,this,[this](const QStringList& ids){callbacks.turnFile(id,ids,{},false);});
+            connect(turnFiles,&TurnFileEdits::savedFileRequested,this,[this](const QString& path,const QStringList& ids){callbacks.turnFile(id,ids,path,true);});
+            connect(turnFiles,&TurnFileEdits::undoReviewRequested,this,[this](const QStringList& ids){callbacks.turnFile(id,ids,{},true);});
+            connect(turnFiles,&TurnFileEdits::retryRequested,this,[this]{callbacks.retryTurn(id);});
+            connect(turnFiles,&TurnFileEdits::folderExpansionChanged,this,[this](const QString& key,bool expanded){callbacks.remember(id+"/files/"+key,expanded);});
+        }
+        turnFiles->setVisible(visible);if(!visible)return;
+        if(summary.isEmpty()&&error.isEmpty())turnFiles->setPending();else turnFiles->setSummary(summary,error);
+        QSet<QString> collapsed;for(const auto& entry:summary["files"].toArray()){const auto path=entry.toObject()["path"].toString();QString key;const auto pieces=path.split('/');for(int i=0;i+1<pieces.size();++i){key+=(key.isEmpty()?QString():"/")+pieces[i];if(callbacks.disclosure(id+"/files/"+key)==false)collapsed.insert(key);}}
+        turnFiles->setCollapsedFolders(collapsed);
+    }
     void updateRow(const QJsonObject &row,bool busy,bool lastRow) {
         const bool active=busy&&lastRow;
         if(initialized&&data==row&&lastBusy==active&&lastPosition==lastRow)return;
@@ -284,7 +303,7 @@ protected:
 private:
     void colors(){if(role=="user")body->setStyleSheet("QFrame#messageBody{background:"+QString(darkFor(this)?"#2c313b":"#f1f3f6")+";border:1px solid "+QString(darkFor(this)?"#3c424c":"#dfe3e8")+";border-radius:8px;}");}
     void measure(){if(role!="user")return;int desired=72;for(const auto &value:data["parts"].toArray())for(const auto &line:value.toObject()["text"].toString().split('\n'))desired=qMax(desired,fontMetrics().horizontalAdvance(line.left(1000))+24);if(!data["attachments"].toArray().isEmpty())desired=qMax(desired,250);body->setMaximumWidth(qMin(qMax(60,width()-16),qMin(736,desired)));}
-    QString id,role;Callbacks callbacks;QFrame *body;QVBoxLayout *layout;AttachmentChips *chips;QHash<QString,QWidget*> items;QJsonObject data;bool initialized=false,lastBusy=false,lastPosition=false;
+    QString id,role;Callbacks callbacks;QFrame *body;QVBoxLayout *layout;AttachmentChips *chips;TurnFileEdits* turnFiles=nullptr;QHash<QString,QWidget*> items;QJsonObject data;bool initialized=false,lastBusy=false,lastPosition=false;
 };
 } // namespace
 
@@ -295,6 +314,10 @@ struct ConversationView::Private {
     bool updating=false,pending=false;quint64 epoch=0,contextEpoch=0;int previousValue=0;QTimer stallTimer,scrollEnd;QElapsedTimer lastChange;
     struct ImageRequest {quint64 epoch;QString messageId,partId;QUrl url;QPointer<MarkdownParts> target;};
     QHash<quint64,ImageRequest> imageRequests;QSet<QByteArray> requestedImages;quint64 imageRequestSequence=0;qint64 imageBytes=0;
+    struct TurnRequest {quint64 epoch;QString chat,row;QStringList ids;QByteArray key;};
+    struct TurnSummary {QJsonObject value;QString error;};
+    QHash<quint64,TurnRequest> turnRequests;QHash<QByteArray,TurnSummary> turnCache;QList<QByteArray> turnCacheOrder;quint64 turnSequence=0;
+    QByteArray turnKey(const QStringList& ids)const{return QJsonDocument(QJsonArray{id,QJsonArray::fromStringList(ids)}).toJson(QJsonDocument::Compact);}
     explicit Private(ConversationView *view):q(view){}
     ScrollState capture() const {
         auto state=states.value(id);auto *bar=scroll->verticalScrollBar();state.absolute=bar->value();state.anchor.clear();
@@ -302,7 +325,7 @@ struct ConversationView::Private {
         return state;
     }
     void remember(){if(!id.isEmpty())states[id]=capture();}
-    void clearRows(){imageRequests.clear();requestedImages.clear();imageBytes=0;qDeleteAll(rows);rows.clear();order.clear();}
+    void clearRows(){imageRequests.clear();requestedImages.clear();imageBytes=0;turnRequests.clear();qDeleteAll(rows);rows.clear();order.clear();}
     void scheduleScroll(bool force=false){
         if(pending&&!force)return;
         pending=true;const auto generation=++epoch;const auto owner=id;const auto anchor=states.value(id);
@@ -337,7 +360,7 @@ struct ConversationView::Private {
         const int inset=qMax(qRound(6*scale),(available-qRound(768*scale))/2+qRound(6*scale));
         layout->setContentsMargins(inset,qRound(16*scale),inset,qRound(8*scale));
     }
-    void updateJump(){auto *bar=scroll->verticalScrollBar();jump->setVisible(bar->maximum()-bar->value()>2);}
+    void updateJump(){auto *bar=scroll->verticalScrollBar();jump->setVisible(bar->maximum()-bar->value()>100);}
 };
 
 ConversationView::ConversationView(QWidget *parent):QWidget(parent),d(std::make_unique<Private>(this)) {
@@ -390,23 +413,75 @@ void ConversationView::setConversation(const QString &id,const QJsonArray &messa
         self->d->imageRequests.insert(requestId,{contextEpoch,messageId,partId,url,target});
         emit self->imageRequested(requestId,id,messageId,partId,url);
     };
+    callbacks.turnFile=[self,id,contextEpoch](const QString& row,const QStringList& ids,const QString& path,bool historical){
+        if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch)return;
+        const auto projected=self->turnMutationIds(row);
+        if(projected.isEmpty()||projected.size()!=ids.size()||QSet<QString>(projected.cbegin(),projected.cend())!=QSet<QString>(ids.cbegin(),ids.cend()))return;
+        const auto key=self->d->turnKey(projected);const auto cached=self->d->turnCache.value(key);
+        if(!cached.error.isEmpty()||!TurnFileEdits::validSummary(cached.value))return;
+        if(path.isEmpty()){if(historical)emit self->turnUndoReviewRequested(id,row,projected);else emit self->turnFilesReviewRequested(id,row,projected);return;}
+        for(const auto& file:cached.value["files"].toArray())if(file.toObject()["path"]==path){if(historical)emit self->savedTurnFileRequested(id,row,projected,path);else emit self->turnFileRequested(id,row,projected,path);return;}
+    };
+    callbacks.retryTurn=[self,id,contextEpoch](const QString& row){
+        if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch)return;
+        const auto ids=self->turnMutationIds(row);if(ids.isEmpty())return;
+        const auto key=self->d->turnKey(ids);self->d->turnCache.remove(key);self->d->turnCacheOrder.removeAll(key);
+        for(const auto& request:self->d->turnRequests)if(request.key==key)return;
+        if(auto* widget=self->d->rows.value(row))widget->fileSummary(true);
+        const auto request=++self->d->turnSequence;self->d->turnRequests.insert(request,{contextEpoch,id,row,ids,key});
+        emit self->turnFileEditsRequested(request,id,row,ids);
+    };
     callbacks.disclosure=[this,id](const QString &key)->std::optional<bool>{const auto state=d->states.value(id);const auto it=state.disclosures.constFind(key);if(it==state.disclosures.cend())return {};return *it;};
     callbacks.remember=[this,id](const QString &key,bool expanded){d->states[id].disclosures[key]=expanded;};
     callbacks.displayPath=[this](const QString &raw){if(d->attachmentNames.contains(raw))return d->attachmentNames.value(raw);QString path=raw;path.replace('\\','/');for(const auto &prefix:{QString("att/"),QString("plugins/"),QString("apps/")})if(path.startsWith(prefix))return path.mid(prefix.size());path.remove(QRegularExpression("^(?:ws1|w[0-9a-f]{1,8})/"));return path;};
+    const auto selections=TurnFileEdits::selections(messages);QList<quint64> requestIds;
     QSet<QString> keep;d->order.clear();int position=0;
     for(qsizetype index=0;index<messages.size();++index){
         const auto row=messages[index].toObject();const auto key=row["id"].toString();const auto role=row["role"].toString();
         if(key.isEmpty()||keep.contains(key)||role=="system"||role=="tool")continue;
         keep.insert(key);d->order.append(key);auto *widget=d->rows.value(key);
         if(!widget){widget=new MessageRow(key,role,callbacks,d->content);d->rows.insert(key,widget);}
-        if(d->layout->indexOf(widget)!=position){d->layout->removeWidget(widget);d->layout->insertWidget(position,widget);}++position;widget->updateRow(row,busy,index==messages.size()-1);
+        const auto* layoutItem=d->layout->itemAt(position);
+        if(!layoutItem||layoutItem->widget()!=widget){d->layout->removeWidget(widget);d->layout->insertWidget(position,widget);}++position;widget->updateRow(row,busy,index==messages.size()-1);
+        const bool show=selections.contains(key)&&!(busy&&index==messages.size()-1);
+        if(!show)widget->fileSummary(false);
+        else{
+            const auto selection=selections.value(key);const auto cacheKey=d->turnKey(selection.mutationIds);
+            if(selection.incomplete)widget->fileSummary(true,{},"This turn exceeds the saved-change selection limit; review changes from the File changes panel.");
+            else if(d->turnCache.contains(cacheKey)){const auto cached=d->turnCache.value(cacheKey);widget->fileSummary(true,cached.value,cached.error);}
+            else{
+                widget->fileSummary(true);bool pending=false;for(const auto& request:d->turnRequests)if(request.key==cacheKey&&request.row==key)pending=true;
+                if(!pending){const auto request=++d->turnSequence;d->turnRequests.insert(request,{contextEpoch,id,key,selection.mutationIds,cacheKey});requestIds.append(request);}
+            }
+        }
     }
     const auto keys=d->rows.keys();for(const auto &key:keys)if(!keep.contains(key))delete d->rows.take(key);
     d->scheduleScroll(switched);
+    for(const auto requestId:requestIds){if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch)return;const auto request=self->d->turnRequests.value(requestId);if(request.chat==id&&self->turnMutationIds(request.row)==request.ids)emit self->turnFileEditsRequested(requestId,id,request.row,request.ids);}
 }
 void ConversationView::clear(){d->remember();++d->epoch;++d->contextEpoch;d->pending=false;d->updating=true;d->scrollEnd.stop();d->clearRows();d->messages={};d->id.clear();d->busy=false;d->activity->hide();d->stallTimer.stop();d->tail->setFixedHeight(0);d->jump->hide();d->updating=false;}
 QString ConversationView::toPlainText() const {QStringList text;for(const auto &value:d->messages){const auto row=value.toObject();for(const auto &part:row["parts"].toArray())text.append(partPlain(part.toObject()));for(const auto &attachment:row["attachments"].toArray()){const auto ref=attachment.toObject();text.append("Attachment: "+ref["originalFileName"].toString(ref["path"].toString()));}}return text.join('\n');}
 QString ConversationView::conversationId() const{return d->id;}
+QStringList ConversationView::turnMutationIds(const QString& rowId)const{
+    const auto selection=TurnFileEdits::selections(d->messages).value(rowId);
+    if(selection.incomplete||(d->busy&&!d->messages.isEmpty()&&d->messages.last().toObject()["id"]==rowId))return {};
+    return selection.mutationIds;
+}
+bool ConversationView::provideTurnFileEdits(quint64 requestId,const QJsonObject& summary,const QString& error){
+    const auto it=d->turnRequests.find(requestId);if(it==d->turnRequests.end())return false;
+    const auto request=*it;d->turnRequests.erase(it);
+    if(request.epoch!=d->contextEpoch||request.chat!=d->id||turnMutationIds(request.row)!=request.ids)return false;
+    QString issue=error;
+    if(issue.isEmpty()){
+        QSet<QString> returned;for(const auto& id:summary["mutationIds"].toArray())returned.insert(id.toString());
+        const QSet<QString> expected(request.ids.cbegin(),request.ids.cend());
+        if(!TurnFileEdits::validSummary(summary)||summary["agentId"]!=request.chat||returned!=expected)issue="Saved-change response does not match this chat and turn.";
+    }
+    const auto value=issue.isEmpty()?summary:QJsonObject{};d->turnCache.insert(request.key,{value,issue});d->turnCacheOrder.removeAll(request.key);d->turnCacheOrder.append(request.key);
+    while(d->turnCacheOrder.size()>200)d->turnCache.remove(d->turnCacheOrder.takeFirst());
+    if(auto* row=d->rows.value(request.row))row->fileSummary(true,value,issue);
+    d->scheduleScroll();return true;
+}
 bool ConversationView::followsOutput() const{return d->states.value(d->id).follow;}
 bool ConversationView::provideImage(quint64 requestId,const QImage &image,const QString &error){
     const auto it=d->imageRequests.find(requestId);if(it==d->imageRequests.end())return false;

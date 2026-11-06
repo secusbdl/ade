@@ -1,0 +1,12 @@
+********* Start testing of ProviderPickerTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ProviderPickerTest::initTestCase()
+PASS   : ProviderPickerTest::customEndpointCardUsesFullSectionWidth(350-all)
+PASS   : ProviderPickerTest::customEndpointCardUsesFullSectionWidth(350-filtered)
+FAIL!  : ProviderPickerTest::customEndpointCardUsesFullSectionWidth(512-all) 'card->width()>=card->parentWidget()->width()-2' returned FALSE. (Custom card width 225; section width 450.)
+D:/age/ADE/private/provider-edit-routing-stage/test_provider_picker.cpp(58) : failure location
+FAIL!  : ProviderPickerTest::customEndpointCardUsesFullSectionWidth(512-filtered) 'card->width()>=card->parentWidget()->width()-2' returned FALSE. (Custom card width 230; section width 459.)
+D:/age/ADE/private/provider-edit-routing-stage/test_provider_picker.cpp(58) : failure location
+PASS   : ProviderPickerTest::cleanupTestCase()
+Totals: 4 passed, 2 failed, 0 skipped, 0 blacklisted, 38024ms
+********* Finished testing of ProviderPickerTest *********

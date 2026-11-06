@@ -2,6 +2,7 @@
 #include "ui/AppStyle.h"
 #include "ui/ContextPreferences.h"
 #include "ui/SettingsPage.h"
+#include "ui/SmokeTranscriptCapture.h"
 #include "core/AgentEngine.h"
 #include "core/ProviderStore.h"
 #include "plugins/PluginCatalog.h"
@@ -96,6 +97,7 @@ int main(int argc,char** argv) {
     parser.addOption({"report","Write smoke evidence (without credentials)","path"});
     parser.addOption({"attach","Attach a local file to a smoke message (repeatable)","file"});
     parser.addOption({"max-output","Bound output tokens for a smoke session","tokens"});
+    parser.addOption({"capture-transcript","Save bounded native transcript renders during a smoke run (new/empty directory)","directory"});
     parser.process(app);
     const auto directory=parser.isSet("data-dir")?QDir(parser.value("data-dir")).absolutePath():QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if(!QDir().mkpath(directory)){QTextStream(stderr)<<"Cannot create application data directory\n";return 2;}
@@ -105,6 +107,7 @@ int main(int argc,char** argv) {
         auto selected=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& p){return parser.value("provider").isEmpty()||p.id.compare(parser.value("provider"),Qt::CaseInsensitive)==0||p.name.compare(parser.value("provider"),Qt::CaseInsensitive)==0;});
         if(selected==providers.end()){QTextStream(stderr)<<"Requested provider is not configured. "<<error<<"\n";return 2;}
         auto provider=*selected;if(parser.isSet("model"))provider.model=parser.value("model");
+        QStringList smokeSecrets;for(const auto& configured:providers)if(!configured.apiKey.isEmpty())smokeSecrets.append(configured.apiKey);
         if(parser.isSet("reasoning"))provider.reasoningEffort=parser.value("reasoning");
         if(parser.isSet("thinking"))provider.thinkingMode=parser.value("thinking");
         if(parser.isSet("max-output"))provider.maxOutputTokens=qBound(16,parser.value("max-output").toInt(),32768);
@@ -132,11 +135,38 @@ int main(int argc,char** argv) {
             browser->navigate(QUrl(parser.value("browser-url")));browser->show();
         }
         QString response,failure;QJsonArray tools;bool done=false;QElapsedTimer elapsed;elapsed.start();
+        std::unique_ptr<SmokeTranscriptCapture> capture;
+        if(parser.isSet("capture-transcript"))capture=std::make_unique<SmokeTranscriptCapture>(&engine,parser.value("capture-transcript"),smokeSecrets);
         QObject::connect(&engine,&AgentEngine::textDelta,&app,[&](const QString& text){response+=text;});
         QObject::connect(&engine,&AgentEngine::toolStarted,&app,[&](const QString& id,const QString& name,const QJsonObject&){tools.append(QJsonObject{{"id",id},{"name",name}});});
         QObject::connect(&engine,&AgentEngine::approvalRequired,&app,[&](const QString& id,const QString&,const QJsonObject&){engine.approveTool(id,false);});
         QObject::connect(&engine,&AgentEngine::failed,&app,[&](const QString& message){failure=message;});
-        auto finish=[&](bool timeout){if(done)return;done=true;if(timeout){failure="Session timed out";engine.cancel();}QJsonObject report{{"native",true},{"provider",provider.publicJson()},{"actualModel",engine.actualModel()},{"success",failure.isEmpty()&&!response.isEmpty()},{"error",failure},{"response",response},{"tools",tools},{"messages",engine.messages()},{"elapsedMs",elapsed.elapsed()}};if(parser.isSet("report")){QSaveFile file(parser.value("report"));if(file.open(QIODevice::WriteOnly)){file.write(QJsonDocument(report).toJson());file.commit();}}QTextStream(stdout)<<"Native session: "<<(failure.isEmpty()?"finished":"failed")<<"; tools="<<tools.size()<<"; responseChars="<<response.size()<<"\n";app.exit(failure.isEmpty()&&!response.isEmpty()?0:1);};
+        auto finish=[&](bool timeout){
+            if(done)return;
+            done=true;
+            if(timeout){failure="Session timed out";engine.cancel();}
+            const auto writeReport=[&]{
+            QJsonObject report{{"native",true},{"provider",provider.publicJson()},{"actualModel",engine.actualModel()},
+                {"success",failure.isEmpty()&&!response.isEmpty()},{"error",failure},{"response",response},
+                {"tools",tools},{"messages",engine.messages()},{"elapsedMs",elapsed.elapsed()}};
+            if(capture)report["transcriptCapture"]=capture->finish();
+            report=redactSmokeEvidence(report,smokeSecrets).toObject();
+            if(parser.isSet("report")){
+                QSaveFile file(parser.value("report"));
+                const auto bytes=QJsonDocument(report).toJson();
+                if(!file.open(QIODevice::WriteOnly)||file.write(bytes)!=bytes.size()||!file.commit()){
+                    failure="Cannot save the smoke evidence report.";
+                    QTextStream(stderr)<<failure<<'\n';
+                }
+            }
+            QTextStream(stdout)<<"Native session: "<<(failure.isEmpty()?"finished":"failed")<<"; tools="<<tools.size()<<"; responseChars="<<response.size()<<"\n";
+            app.exit(failure.isEmpty()&&!response.isEmpty()?0:1);
+            };
+            if(capture){
+                capture->prepareFinish();
+                QTimer::singleShot(0,&app,[&app,writeReport]{QTimer::singleShot(0,&app,writeReport);});
+            }else writeReport();
+        };
         QObject::connect(&engine,&AgentEngine::finished,&app,[&]{finish(false);});
         QTimer::singleShot(qBound(5,parser.value("timeout").toInt(),600)*1000,&app,[&]{finish(true);});
         auto submit=[&]{engine.submitWithAttachments(parser.value("prompt"),attachmentMetadata["attachments"].toArray(),attachmentMetadata["pathReferences"].toObject(),attachmentMetadata["pathMetadata"].toObject());};

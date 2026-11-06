@@ -150,10 +150,11 @@ bool AgentPresentation::isUiOnly(const QJsonObject& message){
     const auto metadata=message["metadata"].toObject();if((metadata.contains("attachments")&&(!metadata["attachments"].isArray()||!metadata["attachments"].toArray().isEmpty()))||metadata.contains("fileReads"))return false;
     bool reasoning=false;for(const auto& value:display["parts"].toArray()){const auto part=value.toObject();if(part["type"]=="reasoning")reasoning=true;else if(part["type"]!="error")return false;if(part["state"]!="error"&&part["state"]!="canceled"&&part["state"]!="done")return false;}return reasoning;
 }
-QJsonArray AgentPresentation::history(const QJsonArray& messages){
+namespace {
+struct HistoryProjectionState {
     QJsonArray result;QHash<QString,int> occurrences;int assistant=-1;QSet<QString> completed,rowIds;
-    for(const auto& value:messages){
-        const auto message=value.toObject();const auto role=message["role"].toString();if(role=="system")continue;
+    void append(const QJsonValue& value){
+        const auto message=value.toObject();const auto role=message["role"].toString();if(role=="system")return;
         if(role=="tool"&&assistant>=0){
             auto row=result[assistant].toObject();auto parts=row["parts"].toArray();const auto callId=message["tool_call_id"].toString();
             if(!completed.contains(callId))for(int i=0;i<parts.size();++i){auto part=parts[i].toObject();if(part["type"]!="tool"||part["toolCallId"]!=callId)continue;
@@ -161,9 +162,25 @@ QJsonArray AgentPresentation::history(const QJsonArray& messages){
                 if(!QStringList{"output-available","output-error","output-denied","canceled"}.contains(state))state=output.startsWith("Error:")?"output-error":"output-available";
                 part["state"]=state;part["output"]=output;if(state!="output-available")part["errorText"]=output;
                 const auto diff=message["metadata"].toObject()["fileDiff"].toObject();if(state=="output-available"&&validMutationDiff(diff))part["fileDiff"]=diff;else part.remove("fileDiff");
-                parts[i]=part;completed.insert(callId);break;
+                parts[i]=part;completed.insert(callId);
+                // Journal identities are presentation references, never authority.
+                // The host must verify their owner and committed snapshots before
+                // resolving a summary or action. Unmatched/duplicate tool results
+                // cannot attach records to another assistant batch.
+                const auto records=message["metadata"].toObject()["mutations"].toArray();
+                auto mutations=row["mutations"].toArray();QSet<QString> seen;
+                for(const auto& existing:mutations){const auto item=existing.toObject();seen.insert(item["agentId"].toString()+":"+item["mutationId"].toString());}
+                const auto validId=[](const QJsonValue& value){if(!value.isString())return false;const auto text=value.toString();if(text.isEmpty()||text.size()>128)return false;for(const auto c:text)if(!((c>='a'&&c<='z')||(c>='A'&&c<='Z')||(c>='0'&&c<='9')||c=='_'||c=='-'))return false;return true;};
+                for(const auto& record:records){
+                    const auto item=record.toObject();if(!record.isObject()||!validId(item["mutationId"])||!validId(item["agentId"])||!item["committed"].isBool()||!item["recoveryRequired"].isBool())continue;
+                    const auto key=item["agentId"].toString()+":"+item["mutationId"].toString();if(seen.contains(key))continue;
+                    if(mutations.size()>=512){row["mutationsIncomplete"]=true;break;}
+                    seen.insert(key);mutations.append(QJsonObject{{"mutationId",item["mutationId"]},{"agentId",item["agentId"]},{"committed",item["committed"]},{"recoveryRequired",item["recoveryRequired"]}});
+                }
+                if(!mutations.isEmpty())row["mutations"]=mutations;
+                break;
             }
-            row["parts"]=parts;const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty()){auto all=row["attachments"].toArray();for(const auto& entry:attachments)all.append(entry);row["attachments"]=all;}result[assistant]=row;continue;
+            row["parts"]=parts;const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty()){auto all=row["attachments"].toArray();for(const auto& entry:attachments)all.append(entry);row["attachments"]=all;}result[assistant]=row;return;
         }
         assistant=-1;completed.clear();const auto display=message["metadata"].toObject()["display"].toObject();const bool saved=displayMatches(display,message)&&!rowIds.contains(display["id"].toString());auto id=saved?display["id"].toString():legacyId(message,&occurrences);
         const auto baseId=id;int collision=1;while(rowIds.contains(id))id=baseId+'~'+QString::number(collision++);rowIds.insert(id);
@@ -171,6 +188,35 @@ QJsonArray AgentPresentation::history(const QJsonArray& messages){
         const auto attachments=message["metadata"].toObject()["attachments"].toArray();if(!attachments.isEmpty())row["attachments"]=attachments;
         result.append(row);if(role=="assistant")assistant=result.size()-1;
     }
-    return result;
+};
+}
+QJsonArray AgentPresentation::history(const QJsonArray& messages){
+    HistoryProjectionState state;for(const auto& value:messages)state.append(value);return state.result;
+}
+struct AgentHistoryProjection::Data {
+    QJsonArray snapshot,rows;
+    HistoryProjectionState frozen;
+    qsizetype prefix=0;
+    quint64 processed=0;
+    bool initialized=false;
+};
+AgentHistoryProjection::AgentHistoryProjection():d(std::make_unique<Data>()){}
+AgentHistoryProjection::~AgentHistoryProjection()=default;
+quint64 AgentHistoryProjection::processedMessages() const{return d->processed;}
+QJsonArray AgentHistoryProjection::project(const QJsonArray& messages){
+    if(d->initialized&&d->snapshot==messages)return d->rows;
+    // The latest assistant can acquire tool state, streamed output, results and
+    // attachments. Keep that whole batch mutable, including its ID bookkeeping.
+    qsizetype boundary=messages.size();
+    for(qsizetype i=messages.size();i>0;--i)if(messages.at(i-1).toObject()["role"]=="assistant"){boundary=i-1;break;}
+    bool valid=d->initialized&&boundary>=d->prefix&&messages.size()>=d->prefix;
+    if(valid)for(qsizetype i=0;i<d->prefix;++i)if(messages.at(i)!=d->snapshot.at(i)){valid=false;break;}
+    if(!valid){d->frozen={};d->prefix=0;}
+    for(qsizetype i=d->prefix;i<boundary;++i){d->frozen.append(messages.at(i));++d->processed;}
+    d->prefix=boundary;
+    auto tail=d->frozen;
+    for(qsizetype i=boundary;i<messages.size();++i){tail.append(messages.at(i));++d->processed;}
+    d->snapshot=messages;d->rows=tail.result;d->initialized=true;
+    return d->rows;
 }
 }

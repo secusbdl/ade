@@ -56,13 +56,17 @@ identical model reasoning or output.
   [`audit/source-publication.json`](audit/source-publication.json) describe the
   earlier verified and published checkpoint.
 - [`audit/parity-integration.json`](audit/parity-integration.json) records the
-  newest integrated build, test results, package hashes and remaining limits.
+  preceding 91-suite checkpoint, package hashes and remaining limits.
+  [`audit/parity-next-integration.json`](audit/parity-next-integration.json) records
+  the subsequent provider-picker, coding-agent, changed-files and transcript work,
+  including failures found during integration and the final verified scope.
 
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
 | --- | --- | --- |
 | Agent engine | Four provider wire protocols, streaming, cancellation, fallback, durable message queue and typed multi-step questions | `src/core` |
+| Coding agents | Installed Codex app-server, CLI-managed sign-in, model discovery, session resume, streamed tools/approvals and isolated fallback conversation files | `src/harness`, `src/core/AgentEngineHarness.cpp`, `src/runtime/HarnessFileContext*` |
 | Transcript | Stable rows, incremental Markdown/code/tool cards, inline approval, trusted image and bounded file-diff presentation, per-chat scroll state | `src/ui/ConversationView*`, `src/core/AgentPresentation*` |
 | Transcript links | Conversation-scoped file, attachment and browser links; persisted/forked provenance remains checked against current mount identity | `src/links`, `src/ui/MainWindowLinks.cpp` |
 | Conversations | Atomic persistence, drafts, fork, archive/restore, restart selection, durable deletion cleanup and isolated side-chat promotion/discard | `src/ui/SessionStore*`, `src/ui/MainWindowConversations.cpp`, `src/ui/MainWindowSideChats.cpp` |
@@ -73,6 +77,7 @@ identical model reasoning or output.
 | Editor and terminal | Native text editor, encoding/EOL preservation, conflict-aware saving, ConPTY/libvterm terminal | `src/editor`, `src/terminal` |
 | Agent shells | Persistent PowerShell sessions, commands/stdin/polls, process-local watchers, per-chat logs and readonly `shells/` mount | `src/shell`, `src/runtime/AgentToolHost*` |
 | Git and worktrees | Branch/worktree actions, repository watches, setup settings/execution, durable usage tracking and explicitly reviewed cleanup with fresh identity/status checks | `src/git` |
+| Changed files | Repository status tree and current Git diff tabs; per-turn native file snapshots, conflict-aware undo and durable mutation settlement | `src/ui/WorkspaceChanges*`, `src/ui/GitDiffTab*`, `src/ui/TurnFileEdits*`, `src/mutations` |
 | Navigation/settings | Grouping/pins, command center and file search, rich slash/@ completion, direct tab/agent/focus shortcuts and provider/plugin configuration | `src/ui` |
 | Network/integrations | Credential redaction, per-host authorization and packaged integration instructions | `src/network`, `src/plugins`, `assets/plugins` |
 
@@ -84,7 +89,7 @@ limit; this does not remove every path constraint. See the
 
 CMake exports reusable static targets including `ade_core`, `ade_attachments`,
 `ade_file_transformer`, `ade_transcript_links`, `ade_network`, `ade_plugins`, `ade_host`, `ade_editor`,
-`ade_terminal`, `ade_shell`, `ade_git_ui`, and `ade_ui`. The application and its UI tests share
+`ade_terminal`, `ade_shell`, `ade_git_ui`, `ade_harness`, and `ade_ui`. The application and its UI tests share
 `ade_ui`, so they exercise the same compiled implementation. These are internal
 components, not a versioned SDK. Preserve their cancellation, ownership, mount
 validation and persistence boundaries when reusing them.
@@ -153,9 +158,24 @@ provider validation must use disposable workspaces and ignored report paths.
 
 Use the labeled **Settings** button or **Ctrl+,**. In **Models & Providers**,
 **Import API key file…** reads dotenv-style entries such as
-`PROVIDER_API_KEY=value`; **Add Provider** opens manual provider configuration.
+`PROVIDER_API_KEY=value`; **Add Provider** opens a searchable provider picker with
+API, coding-plan, local Ollama, custom-endpoint and Codex choices. Selecting a
+template fills its endpoint and protocol; it does not inherit another provider's
+key or model. A configured card is not a claim that its credentials were verified.
 Imports report their result on the Settings page and refresh the model selector.
 Providers without a known endpoint or model require configuration before use.
+
+The **Codex** coding-agent choice uses an installed native `codex.exe` and its
+existing sign-in, or opens its supported sign-in flow. Subscription credentials
+remain managed by that CLI. ADE uses the app-server protocol for models, sessions,
+streamed messages, tools and approvals. Inherited Codex desktop launch identity is
+removed from the child environment while retaining the CLI's auth-home location.
+Its own tools run in the connected workspace or a private per-conversation fallback
+directory. Fork/delete operations copy or remove only ADE-owned fallback files;
+they do not copy or delete the connected workspace. Native ADE mutation journals
+do not yet capture every filesystem change made by an external coding agent.
+Other coding-agent adapters remain separate gaps unless an integration report
+explicitly records their implemented and tested scope.
 
 The provider editor's optional **Model context limit** applies to that
 provider's default model. Changing its model, endpoint or protocol clears the

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="CodexHarnessTest" timestamp="2026&#x002D;11&#x002D;06T20:02:45" hostname="VOID" tests="27" failures="0" errors="0" skipped="0" time="4.848">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="managedEnvironmentDoesNotForwardKeys" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="loginOrigins(official)" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="loginOrigins(plain&#x002D;http)" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="loginOrigins(lookalike)" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="loginOrigins(userinfo)" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="loginOrigins(port)" classname="CodexHarnessTest" time="0.000"/>
+  <testcase name="accountDiscoveryAndManagedLogin" classname="CodexHarnessTest" time="0.408"/>
+  <testcase name="cancelPendingLogin" classname="CodexHarnessTest" time="0.186"/>
+  <testcase name="invalidLoginUrlNeverOpens" classname="CodexHarnessTest" time="0.188"/>
+  <testcase name="malformedAndOversized(malformed)" classname="CodexHarnessTest" time="0.112"/>
+  <testcase name="malformedAndOversized(oversize)" classname="CodexHarnessTest" time="0.129"/>
+  <testcase name="streamedTurnAndResume" classname="CodexHarnessTest" time="0.258"/>
+  <testcase name="signedOutNeverStartsTurn" classname="CodexHarnessTest" time="0.170"/>
+  <testcase name="approvalIsCorrelatedAndSingleUse(accept)" classname="CodexHarnessTest" time="0.239"/>
+  <testcase name="approvalIsCorrelatedAndSingleUse(decline)" classname="CodexHarnessTest" time="0.228"/>
+  <testcase name="questionUsesExactIds" classname="CodexHarnessTest" time="0.246"/>
+  <testcase name="cancelRetainsPartialAndRejectsLateAnswers" classname="CodexHarnessTest" time="0.237"/>
+  <testcase name="forkCreatesDifferentThread" classname="CodexHarnessTest" time="0.357"/>
+  <testcase name="retargetedWorkspaceCannotResumeOldThread" classname="CodexHarnessTest" time="0.474"/>
+  <testcase name="replacedPhysicalRootCannotResumeOldThread" classname="CodexHarnessTest" time="0.371"/>
+  <testcase name="resumeFailureCreatesOneFreshThread(fresh&#x002D;thread&#x002D;success)" classname="CodexHarnessTest" time="0.408"/>
+  <testcase name="resumeFailureCreatesOneFreshThread(fresh&#x002D;thread&#x002D;failure&#x002D;is&#x002D;terminal)" classname="CodexHarnessTest" time="0.366"/>
+  <testcase name="deleteDuringStream" classname="CodexHarnessTest" time="0.169"/>
+  <testcase name="cancelFromStreamObserver" classname="CodexHarnessTest" time="0.167"/>
+  <testcase name="ownedChildStopsWithTransport" classname="CodexHarnessTest" time="0.128"/>
+  <testcase name="cleanupTestCase" classname="CodexHarnessTest" time="0.000"/>
+</testsuite>

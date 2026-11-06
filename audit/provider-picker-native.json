@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "status": "integrated_focused_and_parent_full_110_suite_gates_pass",
+  "referenceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+      "line": 1077,
+      "contract": "Searchable grouped provider grid; coding agents separate from agent model sources; two columns; explicit choice before credential setup."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+      "line": 560,
+      "contract": "Provider labels, help links, official default endpoints."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/coding-plans.ts",
+      "line": 53,
+      "contract": "Six plan identities, dedicated/default endpoints; Qwen Token Plan permits a user-supplied HTTPS endpoint."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/official-api.ts",
+      "line": 47,
+      "contract": "OpenAI uses Responses; Anthropic Messages; Google Gemini; remaining listed vendors use OpenAI Chat Completions."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/shared.ts",
+      "line": 78,
+      "contract": "SDK request factories; explicit Anthropic and Bearer model-discovery headers at247/294."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/coding-plan.ts",
+      "line": 130,
+      "contract": "Runtime plan traffic delegates to its official vendor adapter; quota validation/fallback catalogs are separate behaviors."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/ollama.ts",
+      "line": 82,
+      "contract": "Chat traffic resolves root endpoint to /v1; pinned native discovery uses /api/tags, unlike this template."
+    }
+  ],
+  "implementation": [
+    "21 actionable choices: Codex, six coding plans, 12 API templates, Ollama, custom endpoint. No inert entries for unsupported coding-agent adapters.",
+    "Search, standard keyboard activation, 2-column desktop / 1-column narrow layout, exact template selection and unique instance IDs. No API keys or models copied from existing providers.",
+    "Explicit provider editor fetch/test/Save controls remain responsible for actual connection behavior. Card selection makes no network request.",
+    "Optional bounded templateId round-trips in existing encrypted provider store; it is display provenance only and never changes endpoint/auth. Old configs have no guessed type. Counts say configured, not verified.",
+    "Changing a fixed template route clears its provenance; the pinned configurable Qwen Token Plan keeps its chosen identity for a valid custom HTTPS endpoint.",
+    "Picker layers over the operation-lifetime fix: active requests prevent Add, rejected/stale picker callbacks cannot append into another selection, owner deletion and dialog closure retire owned UI.",
+    "MainWindow Add and empty-list setup open the picker; Edit carries the exact instance ID and rejects a stale card. Modal parent deletion is guarded.",
+    "Provider repository compare-and-swap preserves concurrent changes; settings reload occurs before outcome reporting so errors remain visible.",
+    "The custom endpoint card spans the full wide section; ordinary cards remain two-column at512 and one-column at350."
+  ],
+  "verification": {
+    "historicalPrivateGates": {
+      "component": {
+        "passed": 33,
+        "failed": 0
+      },
+      "providerEditor": {
+        "passed": 13,
+        "failed": 0
+      },
+      "operationCompatibility": {
+        "passed": 12,
+        "failed": 0
+      },
+      "codexCompatibility": {
+        "passed": 6,
+        "failed": 0
+      }
+    },
+    "reproducedDefects": [
+      {
+        "id": "edit-exact-instance",
+        "before": "Actual hidden MainWindow: second Google card opened first DeepSeek configuration.",
+        "beforeResult": {
+          "passed": 2,
+          "failed": 1
+        },
+        "fix": "Carry explicit instance ID through Settings, MainWindow and ProviderDialog; reject removed instances.",
+        "after": "Passed in the parent rebuilt focused gate; exact totals and evidence listed in integratedFocusedGates."
+      },
+      {
+        "id": "custom-full-width",
+        "before": "512px picker custom card width225 vs section450; filtered230 vs459.350px rows passed.",
+        "beforeResult": {
+          "passed": 4,
+          "failed": 2
+        },
+        "fix": "Span two grid columns for custom choice at wide widths.",
+        "after": "Passed in the parent rebuilt focused gate; exact totals and evidence listed in integratedFocusedGates."
+      },
+      {
+        "id": "settings-error-visible",
+        "before": "Actual MainWindow CAS conflict preserved provider file but Settings reload cleared the visible error.",
+        "beforeResult": {
+          "passed": 8,
+          "failed": 1
+        },
+        "fix": "Reload before reporting outcome, with owner lifetime checks.",
+        "after": "Passed in the parent rebuilt focused gate; exact totals and evidence listed in integratedFocusedGates."
+      }
+    ],
+    "pending": [],
+    "testScope": "All credentials are synthetic fixture strings; actual Qt widgets/DPAPI and loopback provider tests. No live provider endpoint, subscription quota, or real key was used.",
+    "integratedFocusedGates": {
+      "native_provider_picker": {
+        "passed": 37,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "audit/provider-picker/native_provider_picker-repaired.txt"
+      },
+      "native_provider_picker_host": {
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "audit/provider-picker/native_provider_picker_host-repaired.txt"
+      },
+      "native_provider_picker_window": {
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "audit/provider-picker/native_provider_picker_window-repaired.txt"
+      },
+      "native_provider_operations": {
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "audit/provider-picker/native_provider_operations-repaired.txt"
+      },
+      "native_codex_provider_ui": {
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "audit/provider-picker/native_codex_provider_ui-repaired.txt"
+      }
+    },
+    "parentFullGate": {
+      "suitesPassed": 110,
+      "suitesFailed": 0,
+      "nativeSuites": 108,
+      "referenceSuites": 2,
+      "qtRows": 1948,
+      "seconds": 853.54,
+      "reportedBy": "root",
+      "reports": "audit/parity-next-integration/final",
+      "intentionalSkip": "One offscreen WebView case; its Windows counterpart passed.",
+      "scope": "Aggregate regression evidence; does not establish full Stagewise parity or live provider quota/model availability."
+    }
+  },
+  "visualEvidence": {
+    "status": "Initial light/dark512/350 renders inspected; repaired custom-only512 light/dark renders inspected, confirming full-width card and readable contrast.",
+    "images": [
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-dark-350-filtered.png",
+        "sha256": "699425e63de17a5ec57b9280b729dd9028f3dd06cbd60b1ac908555f7fb2b2aa"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-dark-350.png",
+        "sha256": "db6b25da6ce381d5914b41171d888242e8719e7add1efe768b9064847eaadf05"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-dark-512-filtered.png",
+        "sha256": "67eb92a29c4ba84df308b22eb8c70dd7bdbdc8b914f21435edf86797ab5b3bde"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-dark-512.png",
+        "sha256": "221e2630caa44a3a34c6ec004a8bf1bedd826a629370c81eef7342b592cf4036"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-light-350-filtered.png",
+        "sha256": "bfa7a1d2ae3f08cb8171847f1e4ac8a845a21def19d5570889b89ff294500ea1"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-light-350.png",
+        "sha256": "0b254d1693d5fbb0e2793f87ce7de43e46c6b3df70b72ac9af64ffb9821f166b"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-light-512-filtered.png",
+        "sha256": "4c1f8fbd773b24f2d6230a4bd90401715f27717597a212632a306ce606cc5ea7"
+      },
+      {
+        "path": "private/provider-picker-stage/renders/provider-picker-light-512.png",
+        "sha256": "55f1e7ef275b68f142968010527a57ca4671e6690cd582b4e57ad0d10cbc2c9c"
+      },
+      {
+        "path": "private/provider-edit-routing-stage/renders/provider-custom-dark-512.png",
+        "sha256": "7aed84ef72238c92de87b98a23b62d0aae4d68b92473abd57cdcb235722c7cd5",
+        "observation": "Custom choice spans the section; no clipping at512; bounded offscreen native render with actual AppStyle and embedded fonts."
+      },
+      {
+        "path": "private/provider-edit-routing-stage/renders/provider-custom-light-512.png",
+        "sha256": "4fd3010df5a474bac61e5f3ccbf0465bbd01731afa8346fdd446216eadce8cee",
+        "observation": "Custom choice spans the section; no clipping at512; bounded offscreen native render with actual AppStyle and embedded fonts."
+      }
+    ],
+    "claim": "Readability and bounded geometry only; no screenshot-exact parity claim."
+  },
+  "limits": [
+    "No live provider validation or model availability claim; no actual API keys used.",
+    "No OpenCode, Claude Code, Codex-via-native-model OAuth, Azure, Bedrock, Vertex or managed Stagewise inference card until their native runtime path is implemented.",
+    "MiniMax plan Test connection is actual inference, not the source quota endpoint. Plan model fallback catalogs/usage quotas are not implemented here.",
+    "Ollama uses the supported OpenAI-compatible /v1/models endpoint and sends no dummy credential; pinned source uses richer /api/tags metadata and a dummy Bearer ollama token for chat.",
+    "User-visible native initials replace brand logos; existing full provider editor layout is retained. These renders establish readability/geometry, not screenshot-exact parity.",
+    "Exact-instance provider removal and per-provider model enable/disable remain separate followups.",
+    "Card counts mean configured, not live verified."
+  ],
+  "evidence": [
+    {
+      "path": "audit/provider-picker/component-initial.txt",
+      "sha256CanonicalLF": "cdde3b82bda1610ea0102728e30f319d1e81c425dff5c55c00cdad15f38b0efc"
+    },
+    {
+      "path": "audit/provider-picker/editor-initial.txt",
+      "sha256CanonicalLF": "4c6def851e1b090c631b1a9575d024b1dfe88f39c5c6b7e6704ce4930e062eb5"
+    },
+    {
+      "path": "audit/provider-picker/operations-initial.txt",
+      "sha256CanonicalLF": "807878af6456caab50b4c451e38ce2d6306a690a0be213e31c7049a01c06970c"
+    },
+    {
+      "path": "audit/provider-picker/codex-initial.txt",
+      "sha256CanonicalLF": "591c2be33923406b9ead0f16393cd9004ebc936a30941aff394c85036c48e03d"
+    },
+    {
+      "path": "audit/provider-picker/edit-routing-before.txt",
+      "sha256CanonicalLF": "6443ba9d3bc150b9dba39d9163cc9de44206a679a106cea7a38897c4f74e881e"
+    },
+    {
+      "path": "audit/provider-picker/edit-routing-before.xml",
+      "sha256CanonicalLF": "8ffd66767dd841f9fb28b776a5116182827a84316603add7a5c42f2720965423"
+    },
+    {
+      "path": "audit/provider-picker/custom-width-before.txt",
+      "sha256CanonicalLF": "831760d9496fe0a38b3a01bc869466ae780f0e4eaac73d1d88349eef870f1da5"
+    },
+    {
+      "path": "audit/provider-picker/custom-width-before.xml",
+      "sha256CanonicalLF": "621d762aaf3401c00287a5b52971474c806c9b5caeab2da224e03c9f5e61a368"
+    },
+    {
+      "path": "audit/provider-picker/settings-error-before.txt",
+      "sha256CanonicalLF": "5545340bb85a6ecd05faa7566d1524ed1ebb23f256eab2305fd31c54ccf46d6d"
+    },
+    {
+      "path": "audit/provider-picker/native_provider_picker-repaired.txt",
+      "sha256CanonicalLF": "4766f65f5e8ea4435e58f79dad4022cb13bd0645e342b4e8b19f776be4eb946d"
+    },
+    {
+      "path": "audit/provider-picker/native_provider_picker_host-repaired.txt",
+      "sha256CanonicalLF": "bfcb987c74dcaecc5aac707712f09fcf0e0225b9bcbd67219e0b1acc4cfbb7c9"
+    },
+    {
+      "path": "audit/provider-picker/native_provider_picker_window-repaired.txt",
+      "sha256CanonicalLF": "a1b39fb57c0c35fc6d2b1a57a068b609218ab2538b5f4eeca4de3213afc5ef2d"
+    },
+    {
+      "path": "audit/provider-picker/native_provider_operations-repaired.txt",
+      "sha256CanonicalLF": "e347100940500ced6734a01e0f12e491a3fe5d0c2d75bda46aa8b40ea7d1e369"
+    },
+    {
+      "path": "audit/provider-picker/native_codex_provider_ui-repaired.txt",
+      "sha256CanonicalLF": "63a2a0c5edaf353ab7bfc06a2b1cc228836e9ec21385fb921a02cb4ea25f4c67"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "src/core/ProviderConfig.h",
+      "sha256CanonicalLF": "1480fcb7ec425741f38adb4baec62d03bb2d6dbad259801102fbc1e85a374357"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "sha256CanonicalLF": "acdbbe7ba05ba61e17635f4009947cd82ec1f13a74dd6db0772ef6741f52cdc3"
+    },
+    {
+      "path": "src/ui/ProviderCatalog.h",
+      "sha256CanonicalLF": "e885d1b808800de54f39802fab8fa6afd3d3395d640696dd7eab2cbf1b196593"
+    },
+    {
+      "path": "src/ui/ProviderCatalog.cpp",
+      "sha256CanonicalLF": "c85d44981f7aced367b026f57d0fd10b58944227a51311bdd87e92ef8940df45"
+    },
+    {
+      "path": "src/ui/AddProviderDialog.h",
+      "sha256CanonicalLF": "24cd547cbc2486df7668cfbb1e4f07a9ee99df1382b7a7dd42432f2001790790"
+    },
+    {
+      "path": "src/ui/AddProviderDialog.cpp",
+      "sha256CanonicalLF": "82deb4126f717d346afbd637ec38a665fe92287baa834e4348ee6605f390c6de"
+    },
+    {
+      "path": "src/ui/ProviderDialog.h",
+      "sha256CanonicalLF": "e1b767e54473624a1bb3bd7e2d7e01be4949f7ef5ac16c2aaaea6b516c901b6e"
+    },
+    {
+      "path": "src/ui/ProviderDialog.cpp",
+      "sha256CanonicalLF": "c8bcd96177c1bae7327ef4ab631404a6ada53fedd42f472a05fe993d672ede3e"
+    },
+    {
+      "path": "src/ui/SettingsPage.h",
+      "sha256CanonicalLF": "9e2233f96e07af195d3aae5ca014ec5e3814c099944a7f56c73e3c1b554bded0"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "sha256CanonicalLF": "0958c5d8464eacd04679507ba6adbe1dc8c5c5f8bb26963b93ea4a4ea96040e3"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256CanonicalLF": "e747982eae5abfbf218d4358bed202a72be10d546a9eb1ecd236fc311db30251"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256CanonicalLF": "11cc27daadecb1d719de738ac9bafec047c10e46020240baffc26fd7a2b3a36f"
+    },
+    {
+      "path": "tests/test_provider_picker.cpp",
+      "sha256CanonicalLF": "a2d99926821a2aa2c26a5994577c2b3e8336843d328bc8ffaff92572ef75c16f"
+    },
+    {
+      "path": "tests/test_provider_picker_host.cpp",
+      "sha256CanonicalLF": "45aaadbd0857a5c614ba7474b3cf1284071d7f1463c54905957e3dea03877465"
+    },
+    {
+      "path": "tests/test_provider_picker_window.cpp",
+      "sha256CanonicalLF": "636d9134f1170245d5ae38cbbe8ccbb087572038135dcad3ed2474c570278099"
+    },
+    {
+      "path": "tests/test_settings.cpp",
+      "sha256CanonicalLF": "66f99de0a7bb6b205c85526af4c9a2b67686a74def7cd8314329306d66c069b7"
+    }
+  ],
+  "package": {
+    "path": "out/parity-integration-2/ADE.exe",
+    "sha256": "dec71f4d19e0cfba8054bba5b799c4e1142791080170de4e8afeffde413d6a42",
+    "actualPackagedGui": "Parent verification is running separately; no result claimed here."
+  }
+}

@@ -18,6 +18,7 @@
 
 namespace ade {
 class UtilityService;
+class CodexHarnessSession;
 
 class AgentEngine final : public QObject {
     Q_OBJECT
@@ -25,6 +26,7 @@ public:
     explicit AgentEngine(QObject *parent = nullptr);
     ~AgentEngine() override;
     void setProvider(const ProviderConfig &provider);
+    void setHarnessContext(const QString& ownerId,const QString& fallbackWorkspace);
     void setModelChain(const QList<ModelConfig> &models, const QString &presetId);
     bool applyCompression(int boundaryIndex, const QString &briefing);
     // Automatic compression uses the configured model context window only.
@@ -67,6 +69,10 @@ public:
     void setMessagePreparer(MessagePreparer preparer);
     void setFileReadCommitter(FileReadCommitter committer);
     void setFileMutationExecutor(FileMutationExecutor executor);
+    using MutationRecovery=std::function<QJsonArray(const QStringList&,QString*)>;
+    void setMutationContext(const QString& agentId,MutationRecovery recovery);
+    bool registerExternalMutation(const QString& invocationId,const QString& requestId);
+    void settleExternalMutation(const QString& invocationId,const QJsonObject& metadata);
     void setAttachmentReadSource(FileReadSource source);
     void setShellReadSource(FileReadSource source);
     void cancel();
@@ -90,7 +96,7 @@ public:
     bool replaceExternalToolOutput(const QString &requestId,const QString &text);
     QString externalToolCallId(const QString& requestId) const;
     void completeExternalToolWithAttachments(const QString &requestId, const QString &output, bool error,
-                                             const QJsonArray &references, const QJsonObject &pathReferences = {}, const QJsonObject &pathMetadata = {});
+                                             const QJsonArray &references, const QJsonObject &pathReferences = {}, const QJsonObject &pathMetadata = {}, const QJsonArray &mutations = {});
 
 signals:
     void textDelta(QString text);
@@ -124,6 +130,11 @@ private:
     void beginQuestion(const ToolCall&,const QJsonObject&);
     void finishQuestion(const QString& reason);
     void requestModel();
+    void requestHarness();
+    void stopHarness();
+    void retainHarnessResponse();
+    void consumeHarnessEvent(const QJsonObject& event);
+    void finishHarnessQuestion(const QString& reason);
     void readReply();
     void finishReply();
     void consumeEvent(const QByteArray &event);
@@ -135,6 +146,11 @@ private:
     void runNextTool();
     void recordToolResult(const QString &id, const QString &output, bool error, const QJsonObject &metadata = {}, const QString &displayState = {});
     void syncDisplayMetadata();
+    bool registerMutation(const QString& invocationId,const QString& callId,bool external);
+    void settleMutation(const QString& invocationId,const QString& output,bool error,const QJsonObject& metadata,bool recovering=false);
+    QJsonObject mutationToolMessage(const QString& callId,const QJsonObject& fallback) const;
+    void storeToolMessage(const QString& callId,const QJsonObject& message);
+    void reconcileMutationHistory();
     void retainPartialResponse();
     void settleOutstandingTools(const QString &reason);
     void complete();
@@ -145,6 +161,12 @@ private:
     void stopCompression();
     QJsonObject currentUsageRecord() const;
 
+    QPointer<CodexHarnessSession> m_harness;
+    QString m_harnessOwnerId,m_harnessFallbackWorkspace,m_harnessQuestionToken;
+    QJsonObject m_harnessState,m_harnessUsage;
+    QMap<QString,QString> m_harnessText,m_harnessReasoning,m_harnessApprovals;
+    QMap<QString,int> m_harnessTools;
+    QStringList m_harnessOrder;
     ProviderConfig m_provider;
     QList<ModelConfig> m_models;
     QList<ModelConfig> m_compressionModels;
@@ -165,8 +187,12 @@ private:
     QTimer m_externalDeadline;
     SseParser m_parser;
     QJsonArray m_messages;
+    mutable AgentHistoryProjection m_historyProjection;
     QJsonArray m_queuedMessages;
     QueueCommitter m_queueCommitter;
+    QString m_mutationAgentId;
+    MutationRecovery m_mutationRecovery;
+    bool m_mutationHistoryDirty=false;
     bool m_committingQueue=false,m_queuePaused=true;
     bool m_configuringTurn=false;
     quint64 m_queueResumeSerial=0;

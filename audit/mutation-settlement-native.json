@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "status": "shared_mutation_background_and_retired_wire_repair_suites_pass_full_candidate_pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "problem": "A file worker committed but cancellation from fileChanged discarded its mutation metadata before ordinary tool completion. A second reproduced case lost a committed sandbox write after restart when the outer script never returned.",
+  "implementation": [
+    "Host-created invocation UUID is persisted with its exact assistant batch before the worker starts; journal schema migration stores the UUID separately from the model tool-call ID.",
+    "A settlement notification precedes fileChanged, remains correlated after cancel/replacement, and never advances to the next tool. Direct committed output is retained; cancellation still stops remaining work.",
+    "Sandbox inner mutations bind to the original native outer request. Restart recovery creates an interrupted outer result when required, preserving actual file-change metadata without claiming that the script completed.",
+    "Fixed-agent journal lookup and exact invocation identity prevent a reused model call ID or forked chat from inheriting another turn mutation authority.",
+    "Failed dispatch persistence prevents filesystem mutation. Recovered history is persisted when a later UI queue committer is installed.",
+    "Direct/background sandbox calls without a current model invocation remain journaled without inventing an assistant turn; nonempty retired wire IDs are rejected before dispatch instead of being reclassified as idle background calls."
+  ],
+  "validation": {
+    "platform": "Windows 11, static Qt 6.11.2, GCC 16.2.0, offscreen QtTest",
+    "target": "test_mutation_runtime",
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "elapsedMs": 5020,
+    "scope": "Actual AgentEngine + AgentToolHost + native QuickJS worker, controlled loopback model fixtures, temporary filesystem/journal fixtures only.",
+    "focusedCases": [
+      "cancelFromCommittedChangeNotificationRetainsMutationIdentity",
+      "lateCommittedResultCannotAttachToReusedModelId",
+      "persistedInvocationRecoversAfterOwnerDiesBeforeDelivery",
+      "failedDispatchPersistencePreventsMutation",
+      "restartedSandboxCommitDoesNotClaimOuterCompletion"
+    ],
+    "sharedFollowup": {
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 5552,
+      "report": "audit/mutation-settlement/runtime-shared-20.txt",
+      "addedCases": [
+        "rejectedDispatchObserverCannotCancelReplacementMutation",
+        "rejectedSandboxDispatchCannotCancelReplacementRpc"
+      ],
+      "sourceBasis": "Current sources after direct Engine generation and external RPC ownership rejection guards; before background sandbox owner classification correction."
+    },
+    "historical": true,
+    "repairGate": {
+      "passedSuites": 13,
+      "failedSuites": 0,
+      "elapsedSeconds": 97.32,
+      "report": "audit/changed-files/repaired-13-ctest.txt",
+      "scope": "Focused repair run after background owner classification and retired-wire guards. Not a full all-suite run."
+    },
+    "repairedSuites": [
+      {
+        "target": "native_mutation_runtime",
+        "passed": 20,
+        "failed": 0,
+        "elapsedMs": 5888,
+        "report": "audit/mutation-settlement/runtime-repaired-20.txt"
+      },
+      {
+        "target": "native_attachment_mount",
+        "passed": 16,
+        "failed": 0,
+        "elapsedMs": 748,
+        "report": "audit/mutation-settlement/attachment-repaired-16.txt"
+      },
+      {
+        "target": "native_runtime_apps",
+        "passed": 15,
+        "failed": 0,
+        "elapsedMs": 6910,
+        "report": "audit/mutation-settlement/apps-repaired-15.txt"
+      },
+      {
+        "target": "native_retired_wire",
+        "passed": 3,
+        "failed": 0,
+        "elapsedMs": 187,
+        "report": "audit/mutation-settlement/retired-wire-repaired-3.txt"
+      }
+    ],
+    "startupHost": {
+      "target": "native_turn_files_host",
+      "passed": 12,
+      "failed": 0,
+      "elapsedMs": 15428,
+      "report": "audit/mutation-settlement/turn-files-host-shared-12.txt",
+      "scope": "Observed earlier shared run, not part of13-suite repair command; contains restart direct-unsettled and sandbox-settled-missing-result hydration cases."
+    }
+  },
+  "limits": [
+    "Process lifetime/restart fixtures establish these transitions, not universal power-loss guarantees. Pending prepared/recovery-required journal operations retain existing explicit recovery behavior.",
+    "Idle sandbox callbacks without an active outer model request remain visible through the chat journal; this does not invent an earlier model-turn owner.",
+    "Mutation dispatch binding requires the host durable history callback for restart attribution; standalone engines without persistence retain only in-memory history.",
+    "Current combined full-candidate integration remains pending; focused passing suites establish their tested scenarios only."
+  ],
+  "hashBasis": "canonical_git_text_LF",
+  "sources": {
+    "src/core/ToolExecutor.h": "fddd6291ca8160aa658cc750da8e37be81003fe4a300267716d9efcafbf9a856",
+    "src/core/ToolExecutor.cpp": "da3d0459ec4952d98ca11eb8510ab02b36a1c36851f5b5b72a565765705fe40e",
+    "src/core/AgentEngine.h": "03760a5b2b1d5d1bc7a99f0fdedb1e4ef78de07ad7a0ad3c2016003be38a8fda",
+    "src/core/AgentEngine.cpp": "94a4917921e6510212802cb7d3dfa6bbb5c277ebaf25a6bd44f703934f4ae89d",
+    "src/core/AgentEngineControl.cpp": "040f63f9972f1a0f37ca8eb82057ba655376bea9c8f07d81c62041cb204981db",
+    "src/core/AgentEngineMutations.cpp": "ad061cebbb67bb8cb5fea6024808373a7e73e4fc7e7568ec0b4ac6368c547e27",
+    "src/runtime/AgentToolHost.cpp": "e27fde219fb73ee8e9f58a1e626554e92c5c23dfe274347bee41881a6c3a034b",
+    "src/runtime/AgentToolHost.h": "cade96f8448720a05a77a6630342b983bb444ac58b83134f9255584f1df71db1",
+    "src/mutations/FileMutationExecutor.h": "4dec738ac0b2164ee414c0790bd1390501e51000b999e53be5885a77cb0c0755",
+    "src/mutations/FileMutationJournal.h": "efa61653a5760401c002ce41f1fe1ab36f4af909d65e9af049cc33e03943e1ab",
+    "src/mutations/FileMutationJournal.cpp": "367ad78ee994c2069ff7b0a795c9c6c4483d5e1c8cd0edca13b45583a2653e72",
+    "src/mutations/FileMutationStore.h": "c37ed0d5a7c93a65c7416e3f2bf792762c40eaa6620dd8c75e431605444420a5",
+    "src/mutations/FileMutationStore.cpp": "63fd4bbe498713c69bc1a946c9371200055896d896e4b0452e2686a252041531",
+    "src/mutations/TurnFileSnapshots.cpp": "4a6c692feff918309450d5d43eaca6863fffde88ff24c5fe7126d663b0107dec",
+    "tests/test_mutation_runtime.cpp": "6f73bcbb8360bc130080207e53eada0098e2383972a7cccb48c0bc7bf797c92b",
+    "src/sandbox/SandboxHost.cpp": "e270c622288794b18ff714c146070b1dfceb2b6ba405e81e4338e19b67dbd5d0",
+    "tests/test_attachment_mount.cpp": "f63439fc05b6c4a26f692e893cea489906568a76de5b44fa4324beba7acaddec",
+    "tests/test_retired_wire.cpp": "3390e5ef780897e6e82681e4e21d21d3e842e4f4519b5bb9e1e1488766e50726"
+  },
+  "reports": {
+    "audit/mutation-settlement/direct-cancel-before.txt": "e1029cbe27bf2acc67e81c85f20e770dc369bf4acb90955eb5baa1c192c6099a",
+    "audit/mutation-settlement/sandbox-restart-before.txt": "a2caf60188e5b545e4a3807ba41c90bfeeea9879ce494608b1a03576ae057aab",
+    "audit/mutation-settlement/runtime-final.txt": "a9d54a8aa0230057aaa9542b5ee2af71a8151283ed2e7ac543a2031ed5ee35b5",
+    "audit/mutation-settlement/runtime-final.xml": "cb36355ff7035e63639071c37b797faf1fb531e1aa52da74a9f6fa7324fca056",
+    "audit/mutation-settlement/runtime-shared-20.txt": "2aa77e1c3e77d0af5ea26e946d25465fb482382fc1ff5019f38fbe48dbd63116",
+    "audit/mutation-settlement/apps-initial-gate.txt": "e73c6a7881e2f2f7c68f2661522339923ef80513fe4b78b63f838642351bf93b",
+    "audit/mutation-settlement/apps-repaired-15.txt": "cf228666c00c3d1c8c1025aa782592310c20e1693559463ecdf49babbe2fc674",
+    "audit/mutation-settlement/attachment-initial-gate.txt": "f49fd19e4e4b169e7c8c9df93ce6b79caf70875ff8a4706813c965eaad879993",
+    "audit/mutation-settlement/attachment-repaired-16.txt": "ba036b6306fc0af2dfa0844a1848834ab4493ce8cc5b3e32c923872bcc50e55e",
+    "audit/mutation-settlement/retired-wire-repaired-3.txt": "b87c0d21216c8cfa93912b748431ee271a7aca14c2b7520a3f8c021e164b4bc1",
+    "audit/mutation-settlement/runtime-repaired-20.txt": "ed2d0b8d169fced816b9ff879c0ea4ed3441d25079fff19eb30cb9fff5a71f0c",
+    "audit/mutation-settlement/turn-files-host-shared-12.txt": "b496843742f73408cba61ca4cb28392b1aa2dd38c89677d0c188029562d008b2"
+  },
+  "warnings": [
+    "Runtime-app temporary-directory cleanup warnings remain visible in the retained passing report; they are not converted into an assertion of cleanup completeness."
+  ],
+  "sourceHashScope": "Canonical LF observation of current integration sources. Concurrent fallback/picker integration is separate; retained reports, not these hashes alone, identify tested scope."
+}

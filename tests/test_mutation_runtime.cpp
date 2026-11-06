@@ -4,10 +4,13 @@
 #include <QApplication>
 #include <QBuffer>
 #include <QDir>
+#include <QElapsedTimer>
+#include <QEventLoop>
 #include <QFile>
 #include <QImage>
 #include <QJsonDocument>
 #include <QSemaphore>
+#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -106,6 +109,85 @@ private slots:
  }
  void undoObserverMayDestroyHost(){
     QTemporaryDir data,workspace;QVERIFY(write(workspace.filePath("file.txt"),"before"));Model model;model.replies={response("openai",{{"call","write",{{"path","file.txt"},{"content","after"}}}})};AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());auto* host=new AgentToolHost(&engine,nullptr,"chat",data.path());QPointer<AgentToolHost> guard(host);QVERIFY(host->setWorkspace(workspace.path()));QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("Write");QTRY_COMPARE(done.size(),1);QString error;const auto id=host->mutationHistory(&error)[0].toObject()["mutationId"].toString();connect(host,&AgentToolHost::fileChanged,&engine,[host]{delete host;});host->undoMutations("undo",{id});QTRY_VERIFY_WITH_TIMEOUT(guard.isNull(),10000);QCOMPARE(read(workspace.filePath("file.txt")),QByteArray("before"));
+ }
+ void repeatedToolIdsRetainExactSavedTurnIdentity(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"reused","write",{{"path","file.txt"},{"content","first\n"},{"raw",true}}}}),response("openai"),response("openai",{{"reused","write",{{"path","file.txt"},{"content","second\n"},{"raw",true}}}}),response("openai")};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("First turn");QTRY_COMPARE(done.size(),1);engine.submit("Second turn");QTRY_COMPARE(done.size(),2);
+    const auto results=toolResults(engine.messages());QCOMPARE(results.size(),2);QStringList ids;for(const auto& result:results)ids.append(result["metadata"].toObject()["mutations"].toArray().first().toObject()["mutationId"].toString());QVERIFY(ids[0]!=ids[1]);
+    QJsonArray projected;for(const auto& value:engine.displayMessages())for(const auto& record:value.toObject()["mutations"].toArray())projected.append(record);QCOMPARE(projected.size(),2);QCOMPARE(projected[0].toObject()["mutationId"],ids[0]);QCOMPARE(projected[1].toObject()["mutationId"],ids[1]);
+    QSignalSpy summaries(&host,&AgentToolHost::turnFilesReady);host.requestTurnFiles(1,{ids[0]},"ws1/file.txt");host.requestTurnFiles(2,{ids[1]},"ws1/file.txt");QTRY_COMPARE(summaries.size(),2);
+    for(const auto& reply:summaries){QVERIFY(reply[2].toString().isEmpty());const auto preview=reply[1].toJsonObject()["preview"].toObject()["files"].toArray().first().toObject();QCOMPARE(preview["after"].toString(),reply[0].toULongLong()==1?QString("first\n"):QString("second\n"));}
+ }
+ void sandboxOuterResultRetainsAllCommittedMutationIds(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"same-model-id","executeSandboxJs",{{"explanation","Saved change fixture"},{"script","await fsPromises.writeFile('ws1/a.txt','first\\n');await fsPromises.writeFile('ws1/b.txt','second\\n');throw new Error('after committed writes');"}}}})};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("Sandbox commits then errors");QTRY_COMPARE_WITH_TIMEOUT(done.size(),1,15000);
+    const auto results=toolResults(engine.messages());QVERIFY(!results.isEmpty());const auto mutations=results[0]["metadata"].toObject()["mutations"].toArray();QCOMPARE(mutations.size(),2);QStringList ids;for(const auto& value:mutations){QCOMPARE(value.toObject()["agentId"],"chat");QVERIFY(value.toObject()["committed"].toBool());ids.append(value.toObject()["mutationId"].toString());}QVERIFY(ids[0]!=ids[1]);
+    QSignalSpy summary(&host,&AgentToolHost::turnFilesReady);host.requestTurnFiles(1,ids);QTRY_COMPARE(summary.size(),1);QVERIFY(summary[0][2].toString().isEmpty());QCOMPARE(summary[0][1].toJsonObject()["files"].toArray().size(),2);QVERIFY(!serialized(model.requests.last()).contains("mutationId"));
+ }
+ void cancelFromCommittedChangeNotificationRetainsMutationIdentity(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"write-call","write",{{"path","file.txt"},{"content","committed"}}}})};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));connect(&engine,&AgentEngine::fileChanged,&engine,[&]{engine.cancel();});QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("Commit and stop");QTRY_COMPARE(done.size(),1);QCOMPARE(read(workspace.filePath("file.txt")),QByteArray("committed"));QString error;const auto journal=host.mutationHistory(&error);QCOMPARE(journal.size(),1);QJsonArray recorded;for(const auto& value:engine.messages())for(const auto& record:value.toObject()["metadata"].toObject()["mutations"].toArray())recorded.append(record);QCOMPARE(recorded.size(),1);QCOMPARE(recorded[0].toObject()["mutationId"],journal[0].toObject()["mutationId"]);
+ }
+ void lateCommittedResultCannotAttachToReusedModelId(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"same","write",{{"path","first.txt"},{"content","first"}}}}),response("openai",{{"same","write",{{"path","second.txt"},{"content","second"}}}}),response("openai")};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));
+    FileMutationJournal journal(data.path(),"chat");QString error;QVERIFY(journal.bindMount("ws1",workspace.path(),true,&error));QVERIFY(journal.bindMount("apps",host.apps()->agentAppsDirectory(),true,&error));
+    struct Hold {QSemaphore entered,release;};auto hold=std::make_shared<Hold>();auto release=qScopeGuard([hold]{hold->release.release();});const auto apply=journal.executor();
+    engine.setFileMutationExecutor([apply,hold](const FileMutationInvocation& input,const std::atomic_bool* canceled){auto result=apply(input,canceled);if(input.arguments["path"]=="first.txt"){hold->entered.release();hold->release.acquire();}return result;});
+    QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("First");QTRY_VERIFY_WITH_TIMEOUT(hold->entered.available(),10000);engine.cancel();QCOMPARE(done.size(),1);QCOMPARE(read(workspace.filePath("first.txt")),QByteArray("first"));
+    engine.submit("Second");QTRY_COMPARE_WITH_TIMEOUT(done.size(),2,10000);auto results=toolResults(engine.messages());QCOMPARE(results.size(),2);QVERIFY(results[0]["metadata"].toObject()["mutations"].toArray().isEmpty());QCOMPARE(results[1]["metadata"].toObject()["mutations"].toArray().size(),1);
+    const auto second=results[1]["metadata"].toObject()["mutations"].toArray().first().toObject()["mutationId"].toString();hold->release.release();
+    QTRY_COMPARE(toolResults(engine.messages())[0]["metadata"].toObject()["mutations"].toArray().size(),1);results=toolResults(engine.messages());QCOMPARE(results.size(),2);const auto first=results[0]["metadata"].toObject()["mutations"].toArray().first().toObject()["mutationId"].toString();QVERIFY(first!=second);QCOMPARE(results[1]["metadata"].toObject()["mutations"].toArray().first().toObject()["mutationId"].toString(),second);
+    QVERIFY(!results[0]["content"].toString().contains("cancelled"));QCOMPARE(done.size(),2);QTest::qWait(50);QCOMPARE(model.requests.size(),3);
+ }
+ void persistedInvocationRecoversAfterOwnerDiesBeforeDelivery(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"same","write",{{"path","file.txt"},{"content","durable"}}}})};
+    auto* engine=new AgentEngine;engine->setProvider(model.provider());engine->setAlwaysAllow(true);engine->setWorkspace(workspace.path());auto* host=new AgentToolHost(engine,nullptr,"chat",data.path(),engine);QVERIFY(host->setWorkspace(workspace.path()));
+    QJsonArray persisted;engine->setQueueCommitter([&](const QJsonArray& history,const QJsonArray&,QString*){persisted=history;return true;});
+    FileMutationJournal journal(data.path(),"chat");QString error;QVERIFY(journal.bindMount("ws1",workspace.path(),true,&error));QVERIFY(journal.bindMount("apps",host->apps()->agentAppsDirectory(),true,&error));
+    struct Hold {QSemaphore entered,release,finished;};auto hold=std::make_shared<Hold>();auto release=qScopeGuard([hold]{hold->release.release();});const auto apply=journal.executor();
+    engine->setFileMutationExecutor([apply,hold](const FileMutationInvocation& input,const std::atomic_bool* canceled){auto result=apply(input,canceled);hold->entered.release();hold->release.acquire();hold->finished.release();return result;});
+    engine->submit("Commit then close");QTRY_VERIFY_WITH_TIMEOUT(hold->entered.available(),10000);QVERIFY(!persisted.isEmpty());QVERIFY(toolResults(persisted).isEmpty());QCOMPARE(persisted.last().toObject()["metadata"].toObject()["mutationInvocations"].toArray().size(),1);delete engine;hold->release.release();QTRY_VERIFY(hold->finished.available());
+    AgentEngine restored;restored.setMessages(persisted);AgentToolHost restoredHost(&restored,nullptr,"chat",data.path());const auto results=toolResults(restored.messages());QCOMPARE(results.size(),1);QCOMPARE(results[0]["metadata"].toObject()["mutations"].toArray().size(),1);QVERIFY(!results[0]["content"].toString().contains("interrupted"));QCOMPARE(read(workspace.filePath("file.txt")),QByteArray("durable"));
+    QJsonArray savedRecovery;restored.setQueueCommitter([&](const QJsonArray& history,const QJsonArray&,QString*){savedRecovery=history;return true;});QCOMPARE(savedRecovery,restored.messages());
+    AgentEngine fork;fork.setMessages(persisted);AgentToolHost forkHost(&fork,nullptr,"different-chat",data.path());QVERIFY(toolResults(fork.messages()).isEmpty());
+ }
+ void failedDispatchPersistencePreventsMutation(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"call","write",{{"path","file.txt"},{"content","must not write"}}}})};AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));
+    engine.setQueueCommitter([](const QJsonArray& history,const QJsonArray&,QString* error){for(const auto& value:history)if(!value.toObject()["metadata"].toObject()["mutationInvocations"].toArray().isEmpty()){*error="Synthetic persistence failure";return false;}return true;});
+    QSignalSpy errors(&engine,&AgentEngine::queueError),done(&engine,&AgentEngine::finished);engine.submit("Denied durable dispatch");QTRY_COMPARE(done.size(),1);QCOMPARE(errors.size(),1);QVERIFY(!QFile::exists(workspace.filePath("file.txt")));QString error;QVERIFY(host.mutationHistory(&error).isEmpty());
+ }
+ void restartedSandboxCommitDoesNotClaimOuterCompletion(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"sandbox","executeSandboxJs",{{"explanation","Commit then keep waiting"},{"script","await fsPromises.writeFile('ws1/file.txt','committed');await new Promise(()=>{});"}}}})};
+    auto* engine=new AgentEngine;engine->setProvider(model.provider());engine->setAlwaysAllow(true);engine->setWorkspace(workspace.path());auto* host=new AgentToolHost(engine,nullptr,"chat",data.path(),engine);QVERIFY(host->setWorkspace(workspace.path()));
+    QJsonArray persisted;engine->setQueueCommitter([&](const QJsonArray& history,const QJsonArray&,QString*){persisted=history;return true;});QSignalSpy changed(host,&AgentToolHost::fileChanged);engine->submit("Sandbox remains running");QTRY_COMPARE_WITH_TIMEOUT(changed.size(),1,15000);QVERIFY(engine->isBusy());QVERIFY(toolResults(persisted).isEmpty());const auto entry=persisted.last().toObject()["metadata"].toObject()["mutationInvocations"].toArray().first().toObject();QVERIFY(entry["external"].toBool());QVERIFY(entry["settled"].toBool());delete engine;
+    AgentEngine restored;restored.setMessages(persisted);AgentToolHost recovered(&restored,nullptr,"chat",data.path());const auto results=toolResults(restored.messages());QCOMPARE(results.size(),1);QVERIFY(results[0]["content"].toString().contains("interrupted"));QCOMPARE(results[0]["metadata"].toObject()["display"].toObject()["toolState"],"canceled");QCOMPARE(results[0]["metadata"].toObject()["mutations"].toArray().size(),1);QCOMPARE(restored.displayMessages().last().toObject()["mutations"].toArray().size(),1);QCOMPARE(read(workspace.filePath("file.txt")),QByteArray("committed"));
+ }
+ void rejectedDispatchObserverCannotCancelReplacementMutation(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"old","write",{{"path","old.txt"},{"content","not permitted"}}}}),response("openai",{{"replacement","write",{{"path","replacement.txt"},{"content","kept"}}}}),response("openai")};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));
+    FileMutationJournal journal(data.path(),"chat");QString error;QVERIFY(journal.bindMount("ws1",workspace.path(),true,&error));QVERIFY(journal.bindMount("apps",host.apps()->agentAppsDirectory(),true,&error));
+    struct Hold {QSemaphore entered,release;};auto hold=std::make_shared<Hold>();auto release=qScopeGuard([hold]{hold->release.release();});const auto apply=journal.executor();
+    engine.setFileMutationExecutor([apply,hold](const FileMutationInvocation& input,const std::atomic_bool* canceled){auto result=apply(input,canceled);hold->entered.release();hold->release.acquire();return result;});
+    bool reject=true,reentered=false,replacementReached=false;engine.setQueueCommitter([&](const QJsonArray& history,const QJsonArray&,QString* failure){if(reject)for(const auto& value:history)if(!value.toObject()["metadata"].toObject()["mutationInvocations"].toArray().isEmpty()){reject=false;*failure="Synthetic first dispatch failure";return false;}return true;});
+    connect(&engine,&AgentEngine::queueError,&engine,[&]{if(reentered)return;reentered=true;engine.cancel();engine.submit("Replacement");QElapsedTimer timer;timer.start();while(!hold->entered.available()&&timer.elapsed()<10000)QTest::qWait(1);replacementReached=hold->entered.available()>0;});
+    QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("Rejected first dispatch");QTRY_VERIFY_WITH_TIMEOUT(replacementReached,15000);QTest::qWait(100);QCOMPARE(done.size(),1);QVERIFY(engine.isBusy());QCOMPARE(model.requests.size(),2);QVERIFY(!QFile::exists(workspace.filePath("old.txt")));QCOMPARE(read(workspace.filePath("replacement.txt")),QByteArray("kept"));
+    hold->release.release();QTRY_COMPARE_WITH_TIMEOUT(done.size(),2,10000);QCOMPARE(toolResults(engine.messages()).size(),2);QCOMPARE(toolResults(engine.messages())[1]["metadata"].toObject()["mutations"].toArray().size(),1);
+ }
+ void rejectedSandboxDispatchCannotCancelReplacementRpc(){
+    QTemporaryDir data,workspace;Model model;model.replies={response("openai",{{"old","executeSandboxJs",{{"explanation","Rejected"},{"script","await fsPromises.writeFile('ws1/old.txt','not permitted');"}}}}),response("openai",{{"replacement","executeSandboxJs",{{"explanation","Replacement"},{"script","await fsPromises.writeFile('ws1/new.txt','kept');return 'replacement-complete';"}}}}),response("openai")};
+    AgentEngine engine;engine.setProvider(model.provider());engine.setAlwaysAllow(true);engine.setWorkspace(workspace.path());AgentToolHost host(&engine,nullptr,"chat",data.path());QVERIFY(host.setWorkspace(workspace.path()));
+    bool reject=true,reentered=false,replacementRegistered=false;QEventLoop nested;
+    engine.setQueueCommitter([&](const QJsonArray& history,const QJsonArray&,QString* failure){
+        if(!history.isEmpty())for(const auto& value:history.last().toObject()["metadata"].toObject()["mutationInvocations"].toArray()){
+            const auto entry=value.toObject();if(reject){reject=false;*failure="Synthetic sandbox dispatch failure";return false;}
+            if(entry["toolCallId"]=="replacement"&&!entry["settled"].toBool()){replacementRegistered=true;nested.quit();}
+        }
+        return true;
+    });
+    connect(&engine,&AgentEngine::queueError,&engine,[&]{if(reentered)return;reentered=true;engine.cancel();engine.submit("Replacement");QTimer timeout;timeout.setSingleShot(true);connect(&timeout,&QTimer::timeout,&nested,&QEventLoop::quit);timeout.start(10000);nested.exec();});
+    QSignalSpy done(&engine,&AgentEngine::finished);engine.submit("Reject old sandbox write");QTRY_COMPARE_WITH_TIMEOUT(done.size(),2,15000);QVERIFY(replacementRegistered);QVERIFY(!QFile::exists(workspace.filePath("old.txt")));QCOMPARE(read(workspace.filePath("new.txt")),QByteArray("kept"));
+    const auto results=toolResults(engine.messages());QCOMPARE(results.size(),2);QVERIFY2(results[1]["content"].toString().contains("replacement-complete"),qPrintable(results[1]["content"].toString()));QVERIFY(!results[1]["content"].toString().startsWith("Error:"));QCOMPARE(results[1]["metadata"].toObject()["mutations"].toArray().size(),1);
  }
 };
 QTEST_MAIN(MutationRuntimeTest)

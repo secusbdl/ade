@@ -1,0 +1,188 @@
+[0/2] Re-checking globbed directories...
+[1/161] Automatic MOC and UIC for target render_settings
+[2/161] Automatic MOC and UIC for target ade_ui
+[3/161] Automatic MOC and UIC for target test_settings_audit
+[4/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AddProviderDialog.cpp.obj
+[5/161] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[6/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowApps.cpp.obj
+[7/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowBrowserSession.cpp.obj
+[8/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowBrowserTools.cpp.obj
+[9/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[10/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCommandCenter.cpp.obj
+[11/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowControl.cpp.obj
+[12/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCompletions.cpp.obj
+[13/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowConversations.cpp.obj
+[14/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowGit.cpp.obj
+[15/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowLinks.cpp.obj
+[16/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowMutations.cpp.obj
+[17/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowPlugins.cpp.obj
+[18/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShells.cpp.obj
+[19/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShortcuts.cpp.obj
+[20/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowSideChats.cpp.obj
+[21/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowTurnFiles.cpp.obj
+[22/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowWorkbench.cpp.obj
+[23/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderDialog.cpp.obj
+[24/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SidebarNavigation.cpp.obj
+[25/161] Automatic MOC and UIC for target test_settings
+[26/161] Building CXX object CMakeFiles/render_settings.dir/render_settings_autogen/mocs_compilation.cpp.obj
+[27/161] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SettingsPage.cpp.obj
+[28/161] Linking CXX static library libade_ui.a
+[29/161] Building CXX object CMakeFiles/render_settings.dir/tests/render_settings.cpp.obj
+[30/161] Automatic MOC and UIC for target test_codex_provider_ui
+[31/160] Building CXX object CMakeFiles/ADE.dir/src/main.cpp.obj
+[32/160] Automatic MOC and UIC for target test_codex_host
+[33/159] Automatic MOC and UIC for target test_provider_operations
+[34/158] Automatic MOC and UIC for target test_navigation_shortcuts
+[35/157] Linking CXX executable bin\ADE.exe
+[36/157] Automatic MOC and UIC for target test_browser_session_host
+[37/156] Automatic MOC and UIC for target test_usage_settings
+[38/155] Automatic MOC and UIC for target test_composer_host
+[39/154] Automatic MOC and UIC for target test_reference_controls
+[40/153] Automatic MOC and UIC for target test_agent_control_ui
+[41/152] Automatic MOC and UIC for target test_command_center_host
+[42/151] Automatic MOC and UIC for target test_side_chat_host
+[43/150] Automatic MOC and UIC for target test_transcript_link_ui
+[44/149] Automatic MOC and UIC for target test_workbench_layout
+[45/148] Automatic MOC and UIC for target test_sidebar_navigation
+[46/147] Automatic MOC and UIC for target test_workspace_changes_host
+[47/146] Automatic MOC and UIC for target test_turn_files_host
+[48/145] Automatic MOC and UIC for target test_transcript_ui
+[49/144] Automatic MOC and UIC for target test_main_chrome
+[50/143] Automatic MOC and UIC for target test_conversations
+[51/142] Automatic MOC and UIC for target test_git_host
+[52/141] Automatic MOC and UIC for target test_plugin_settings
+[53/140] Automatic MOC and UIC for target test_ui
+[54/139] Automatic MOC and UIC for target test_ui_audit
+[55/138] Automatic MOC and UIC for target test_provider_picker
+[56/137] Automatic MOC and UIC for target test_provider_picker_host
+[57/136] Automatic MOC and UIC for target test_provider_picker_window
+[58/135] Building CXX object CMakeFiles/test_codex_provider_ui.dir/tests/test_codex_provider_ui.cpp.obj
+[59/135] Building CXX object CMakeFiles/render_settings.dir/src/ui/SettingsPage.cpp.obj
+[60/135] Building CXX object CMakeFiles/test_codex_host.dir/tests/test_codex_host.cpp.obj
+[61/135] Building CXX object CMakeFiles/test_provider_operations.dir/tests/test_provider_operations.cpp.obj
+[62/135] Building CXX object CMakeFiles/test_navigation_shortcuts.dir/tests/test_navigation_shortcuts.cpp.obj
+D:/age/ADE/tests/test_navigation_shortcuts.cpp: In function 'void {anonymous}::activate(ade::MainWindow&)':
+D:/age/ADE/tests/test_navigation_shortcuts.cpp:46:34: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   46 |     QApplication::setActiveWindow(&window);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_navigation_shortcuts.cpp:10:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[63/135] Building CXX object CMakeFiles/test_browser_session_host.dir/tests/test_browser_session_host.cpp.obj
+[64/135] Building CXX object CMakeFiles/test_usage_settings.dir/tests/test_usage_settings.cpp.obj
+[65/135] Building CXX object CMakeFiles/test_composer_host.dir/tests/test_composer_host.cpp.obj
+[66/135] Building CXX object CMakeFiles/test_reference_controls.dir/tests/test_reference_controls.cpp.obj
+D:/age/ADE/tests/test_reference_controls.cpp: In member function 'void ReferenceControlsTest::persistedMutationCanBeReviewedAndUndoneFromWindow()':
+D:/age/ADE/tests/test_reference_controls.cpp:157:29: warning: missing initializer for member 'ade::FileMutationInvocation::invocationId' [-Wmissing-field-initializers]
+  157 |           journal.executor()({"fixture",
+      |           ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  158 |                               "write",
+      |                               ~~~~~~~~
+  159 |                               workspace.path(),
+      |                               ~~~~~~~~~~~~~~~~~
+  160 |                               {},
+      |                               ~~~
+  161 |                               {{"path", "file.txt"}, {"content", "after"}}},
+      |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  162 |                              nullptr);
+      |                              ~~~~~~~~
+[67/135] Building CXX object CMakeFiles/test_agent_control_ui.dir/tests/test_agent_control_ui.cpp.obj
+[68/135] Building CXX object CMakeFiles/test_command_center_host.dir/tests/test_command_center_host.cpp.obj
+D:/age/ADE/tests/test_command_center_host.cpp: In function 'void {anonymous}::expose(ade::MainWindow&)':
+D:/age/ADE/tests/test_command_center_host.cpp:39:169: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   39 | void expose(MainWindow& window){window.setAttribute(Qt::WA_DontShowOnScreen);window.resize(1000,700);window.show();window.activateWindow();QApplication::setActiveWindow(&window);window.findChild<Composer*>()->setFocus();QCoreApplication::processEvents();QCOMPARE(QApplication::activeWindow(),&window);QVERIFY(window.findChild<Composer*>()->hasFocus());}
+      |                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_command_center_host.cpp:15:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_command_center_host.cpp: In function 'ade::CommandCenter* {anonymous}::open(ade::MainWindow&, const QString&)':
+D:/age/ADE/tests/test_command_center_host.cpp:45:58: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   45 |     window.activateWindow();QApplication::setActiveWindow(&window);target->setFocus();
+      |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[69/135] Building CXX object CMakeFiles/test_transcript_link_ui.dir/tests/test_transcript_link_ui.cpp.obj
+[70/135] Building CXX object CMakeFiles/test_side_chat_host.dir/tests/test_side_chat_host.cpp.obj
+[71/135] Building CXX object CMakeFiles/test_workbench_layout.dir/tests/test_workbench_layout.cpp.obj
+[72/135] Building CXX object CMakeFiles/test_sidebar_navigation.dir/tests/test_sidebar_navigation.cpp.obj
+[73/135] Building CXX object CMakeFiles/test_workspace_changes_host.dir/tests/test_workspace_changes_host.cpp.obj
+[74/135] Building CXX object CMakeFiles/test_turn_files_host.dir/tests/test_turn_files_host.cpp.obj
+[75/135] Building CXX object CMakeFiles/test_transcript_ui.dir/tests/test_transcript_ui.cpp.obj
+[76/135] Building CXX object CMakeFiles/test_main_chrome.dir/tests/test_main_chrome.cpp.obj
+D:/age/ADE/tests/test_main_chrome.cpp: In member function 'void MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed()':
+D:/age/ADE/tests/test_main_chrome.cpp:181:158: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+  181 |         QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);window.activateWindow();QApplication::setActiveWindow(&window);auto* input=window.findChild<Composer*>();input->setFocus();QCoreApplication::processEvents();
+      |                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestkeyboard.h:27,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestevent.h:14,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_gui.h:17,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_widgets.h:15,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest.h:282,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/QtTest:11,
+                 from D:/age/ADE/tests/test_main_chrome.cpp:27:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[77/135] Building CXX object CMakeFiles/test_conversations.dir/tests/test_conversations.cpp.obj
+[78/135] Building CXX object CMakeFiles/test_git_host.dir/tests/test_git_host.cpp.obj
+[79/135] Building CXX object CMakeFiles/test_settings_audit.dir/test_settings_audit_autogen/mocs_compilation.cpp.obj
+[80/135] Building CXX object CMakeFiles/test_plugin_settings.dir/tests/test_plugin_settings.cpp.obj
+[81/135] Building CXX object CMakeFiles/test_settings_audit.dir/tests/test_settings_audit.cpp.obj
+[82/135] Building CXX object CMakeFiles/test_ui.dir/tests/test_ui.cpp.obj
+[83/135] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/SettingsPage.cpp.obj
+[84/135] Building CXX object CMakeFiles/test_settings.dir/test_settings_autogen/mocs_compilation.cpp.obj
+[85/135] Building CXX object CMakeFiles/test_ui_audit.dir/tests/test_ui_audit.cpp.obj
+[86/135] Building CXX object CMakeFiles/test_settings.dir/tests/test_settings.cpp.obj
+[87/135] Building CXX object CMakeFiles/test_provider_picker.dir/tests/test_provider_picker.cpp.obj
+[88/135] Building CXX object CMakeFiles/test_settings.dir/src/ui/SettingsPage.cpp.obj
+[89/135] Building CXX object CMakeFiles/test_provider_picker_host.dir/tests/test_provider_picker_host.cpp.obj
+[90/135] Linking CXX executable bin\test_codex_provider_ui.exe
+[91/135] Building CXX object CMakeFiles/test_provider_picker_window.dir/tests/test_provider_picker_window.cpp.obj
+[92/135] Linking CXX executable bin\test_codex_host.exe
+[93/135] Linking CXX executable bin\test_provider_operations.exe
+[94/135] Linking CXX executable bin\test_navigation_shortcuts.exe
+[95/135] Linking CXX executable bin\test_browser_session_host.exe
+[96/135] Linking CXX executable bin\test_usage_settings.exe
+[97/135] Linking CXX executable bin\test_question_panel.exe
+[98/135] Linking CXX executable bin\test_transcript_rich.exe
+[99/135] Linking CXX executable bin\test_composer_completion.exe
+[100/135] Linking CXX executable bin\test_composer_search.exe
+[101/135] Linking CXX executable bin\test_composer_host.exe
+[102/135] Linking CXX executable bin\test_reference_controls.exe
+[103/135] Linking CXX executable bin\test_agent_control_ui.exe
+[104/135] Linking CXX executable bin\test_command_center.exe
+[105/135] Linking CXX executable bin\test_command_file_search.exe
+[106/135] Linking CXX executable bin\test_command_center_host.exe
+[107/135] Linking CXX executable bin\test_side_chat.exe
+[108/135] Linking CXX executable bin\test_side_chat_host.exe
+[109/135] Linking CXX executable bin\test_transcript_link_ui.exe
+[110/135] Linking CXX executable bin\test_workbench_layout.exe
+[111/135] Linking CXX executable bin\test_workbench_helpers.exe
+[112/135] Linking CXX executable bin\test_chevron.exe
+[113/135] Linking CXX executable bin\test_sidebar_navigation.exe
+[114/135] Linking CXX executable bin\test_workspace_changes.exe
+[115/135] Linking CXX executable bin\test_workspace_changes_host.exe
+[116/135] Linking CXX executable bin\test_smoke_capture.exe
+[117/135] Linking CXX executable bin\test_turn_files.exe
+[118/135] Linking CXX executable bin\test_turn_files_host.exe
+[119/135] Linking CXX executable bin\test_transcript_ui.exe
+[120/135] Linking CXX executable bin\test_main_chrome.exe
+[121/135] Linking CXX executable bin\test_conversations.exe
+[122/135] Linking CXX executable bin\test_git_host.exe
+[123/135] Linking CXX executable render_settings.exe
+[124/135] Linking CXX executable bin\test_plugin_connections.exe
+[125/135] Linking CXX executable bin\test_plugin_runtime.exe
+[126/135] Linking CXX executable bin\test_plugin_settings.exe
+[127/135] Linking CXX executable test_settings_audit.exe
+[128/135] Linking CXX executable bin\test_ui.exe
+[129/135] Linking CXX executable bin\test_ui_audit.exe
+[130/135] Linking CXX executable test_settings.exe
+[131/135] Linking CXX executable bin\test_provider_picker.exe
+[132/135] Linking CXX executable bin\test_provider_picker_host.exe
+[133/135] Linking CXX executable bin\test_provider_picker_window.exe
+[134/135] Linking CXX executable bin\test_transcript_polish.exe

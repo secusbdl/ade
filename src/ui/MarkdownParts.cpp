@@ -214,8 +214,16 @@ void TranscriptText::refreshColors(){
     // Qt's fallback link blue is unreadable on the dark surface. Color anchor
     // runs without reparsing or disturbing selected text; resources stay denied.
     const QColor color(dark?"#93b7ff":"#225bb7");
-    struct Span{int start,length;};QList<Span> spans;
-    for(auto block=document()->begin();block.isValid();block=block.next())for(auto it=block.begin();!it.atEnd();++it){const auto fragment=it.fragment();if(fragment.isValid()&&fragment.charFormat().isAnchor())spans.append({fragment.position(),fragment.length()});}
+    struct Span{int start,length;};QList<Span> spans,codeSpans;
+    for(auto block=document()->begin();block.isValid();block=block.next())for(auto it=block.begin();!it.atEnd();++it){
+        const auto fragment=it.fragment();if(!fragment.isValid())continue;
+        if(fragment.charFormat().isAnchor())spans.append({fragment.position(),fragment.length()});
+        // Qt's Markdown importer writes the generic "monospace" family and
+        // does not apply the HTML code CSS. Bind code runs to the bundled face.
+        if(fragment.charFormat().fontFixedPitch())codeSpans.append({fragment.position(),fragment.length()});
+    }
+    QTextCharFormat codeFormat;codeFormat.setFontFamilies({"Roboto Mono"});
+    for(const auto& span:codeSpans){QTextCursor cursor(document());cursor.setPosition(span.start);cursor.setPosition(span.start+span.length,QTextCursor::KeepAnchor);cursor.mergeCharFormat(codeFormat);}
     QTextCharFormat format;format.setForeground(color);
     for(const auto &span:spans){QTextCursor cursor(document());cursor.setPosition(span.start);cursor.setPosition(span.start+span.length,QTextCursor::KeepAnchor);cursor.mergeCharFormat(format);}
 }

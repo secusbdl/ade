@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "feature": "Per-turn changed-file tree and scoped change actions",
+  "status": "focused_shared_components_runtime_and_host_verified_full_aggregate_pending",
+  "referenceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeCheckpointBase": "8ad7d25",
+  "upstream": [
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/turn-file-edits.tsx",
+      "contracts": [
+        "Bounded 200-entry summary cache and in-flight deduplication",
+        "Settled assistant turn exposes changed files",
+        "Folders initially expanded, collapse/expand all, per-folder and overall line totals",
+        "File click opens CURRENT workspace diff summary, matches path or oldPath, opens staged/unstaged diff, falls back to ordinary file; deleted file leaves diff sidebar visible",
+        "Header diff action opens current changed-files sidebar"
+      ]
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/turn-file-edits-utils.ts",
+      "contracts": [
+        "Folders before files, locale-aware names, descendant totals",
+        "Mount-relative display with mount identity retained in folder keys"
+      ]
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/services/diff-history/index.ts",
+      "line": 1109,
+      "contracts": [
+        "Net first selected preimage to last selected postimage per path",
+        "Selection excludes operations outside selected tool calls",
+        "External/binary/large files use created/deleted/modified rather than invented line counts"
+      ]
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/services/diff-history/utils/diff.ts",
+      "line": 494,
+      "contracts": [
+        "Complete line comparison using diffLines with oneChangePerToken"
+      ]
+    }
+  ],
+  "native": {
+    "identity": "Unique host invocation token and durable mutation nonce; model toolCallId remains provenance only and may repeat. Fixed-agent journal query and exact projected turn membership are rechecked for actions.",
+    "summary": "SQLite read transaction loads first-before/last-after selected snapshots, verifies SHA-256, counts complete lines including final-newline and BOM identity, includes every net path within explicit bounds. No current working-file reads.",
+    "display": "Adjacent assistant rounds form one settled-turn tree. Folder expansion survives same-chat updates and chat switches. Ordinary text messages allocate no hidden tree. A 200-entry per-view cache and stale request epochs protect asynchronous responses.",
+    "defaultActions": "Current Git diff/sidebar behavior follows pinned source; saved diff and undo review are explicitly named optional actions.",
+    "savedActions": "Saved diff uses independently revalidated journal endpoints. Review turn for undo populates existing conflict-checked mutation panel with exact selected records and original absolute paths, including changes older than the ordinary 200-row history window.",
+    "binaryAndLarge": "Explicit created/deleted/modified badges and unavailable-count text. Bounded text preview refusal never substitutes current files for missing or oversized snapshots.",
+    "rename": "Moves retain both removed and created paths, matching the pinned per-path ToolCallFileEdit summary shape. The current Git opener separately handles oldPath rename matching.",
+    "paths": [
+      "src/ui/TurnFileEdits.h",
+      "src/ui/TurnFileEdits.cpp",
+      "src/ui/ConversationView.h",
+      "src/ui/ConversationView.cpp",
+      "src/ui/MainWindowTurnFiles.cpp",
+      "src/ui/FileChangesPanel.h",
+      "src/ui/FileChangesPanel.cpp",
+      "src/mutations/TurnFileSnapshots.cpp",
+      "src/mutations/FileMutationStore.h",
+      "src/mutations/FileMutationStore.cpp",
+      "src/mutations/FileMutationJournal.h",
+      "src/mutations/FileMutationJournal.cpp",
+      "src/runtime/AgentToolHost.h",
+      "src/runtime/AgentToolHost.cpp"
+    ],
+    "durability": "Journal schema stores an optional host invocation UUID independently of raw model tool IDs. Engine persists exact assistant-batch bindings before dispatch and reconciles fixed-agent terminal records after restart. Sandbox inner writes attach to their original outer request without claiming the script completed.",
+    "sideChatOwnership": "Current Git sidebar/default file actions pass the originating main or side-chat owner and revalidate it. A different-workspace child does not rebind its parent; actual host regression passed in the shared run."
+  },
+  "bounds": {
+    "mutationIdsPerSummary": 100,
+    "netFilesPerSummary": 1000,
+    "selectedFileEntries": 20000,
+    "endpointBytesTotal": 67108864,
+    "bytesPerSnapshot": 4194304,
+    "bytesPerTextCount": 2097152,
+    "combinedLinesPerCount": 200000,
+    "previewCombinedUtf16Characters": 131072,
+    "previewCombinedEncodedBytes": 524288,
+    "renderedPreviewLines": 1200,
+    "cachedSummariesPerView": 200,
+    "pendingQueriesPerHost": 200,
+    "concurrentQueriesPerHost": 2,
+    "durableInvocationReconciliationIds": 256,
+    "myersWorkStepsPerFile": 8000000
+  },
+  "verification": {
+    "componentSnapshots": {
+      "result": "passed",
+      "cases": 19,
+      "failed": 0,
+      "elapsedMs": 593,
+      "path": "audit/turn-file-edits/snapshots-final.txt"
+    },
+    "componentTree": {
+      "result": "passed",
+      "cases": 16,
+      "failed": 0,
+      "elapsedMs": 316,
+      "path": "audit/turn-file-edits/tree-final.txt"
+    },
+    "initialHost": {
+      "result": "8 passed, 1 failed",
+      "path": "private/parity-next-focused-first.txt",
+      "failure": "Saved-diff test searched CodeEditor; actual FileDiffView uses QPlainTextEdit fileDiffText. Lookup corrected, exact-content assertions retained; rerun pending.",
+      "note": "Historical initial run; corrected fixture searches the actual FileDiffView QPlainTextEdit while retaining before/saved/outside assertions."
+    },
+    "committedCancellation": {
+      "result": "reproduced then fixed",
+      "before": "audit/mutation-settlement/direct-cancel-before.txt",
+      "after": "audit/mutation-settlement/runtime-final.txt",
+      "latestSharedPath": "build-next/Testing/native_mutation_runtime.txt",
+      "cases": 20,
+      "elapsedMs": 5552,
+      "scope": "Actual AgentEngine + AgentToolHost + native QuickJS worker with loopback model fixtures; direct commit/cancel, reused model ID, owner destruction/restart, rejected durable dispatch, sandbox committed inner write with missing outer result, and direct/sandbox rejection observers starting replacement requests."
+    },
+    "visual": {
+      "kind": "Actual Qt offscreen component renders; no pixel-exact upstream parity claim",
+      "directory": "private/turn-files-stage/renders",
+      "files": [
+        "turn-files-light-768.png",
+        "turn-files-light-350.png",
+        "turn-files-dark-768.png",
+        "turn-files-dark-350.png"
+      ],
+      "observed": "Initial light render exposed transparent palette inference; opaque host palette resolution and dynamic light/dark/light regression now pass.",
+      "screenshots": [
+        {
+          "path": "private/turn-files-stage/renders/turn-files-dark-350.png",
+          "sha256": "a4d2af4154b12927157607d7967ce2c63ddbe526962c2b46e71cf2967d812add"
+        },
+        {
+          "path": "private/turn-files-stage/renders/turn-files-dark-768.png",
+          "sha256": "f247d86207245494e4d0c526214575ba6eb6222d5e7bcc3e7c0f003555ff2d56"
+        },
+        {
+          "path": "private/turn-files-stage/renders/turn-files-light-350.png",
+          "sha256": "a1762e0196d5d6a7c3c3a0be5abf34851010514bc3f23c7b993f4088343e61e4"
+        },
+        {
+          "path": "private/turn-files-stage/renders/turn-files-light-768.png",
+          "sha256": "6d328bb4069e29b84090d216cc87a52505210540d2c2d825535f4efc55853273"
+        }
+      ]
+    },
+    "fullIntegratedSuite": "pending",
+    "sharedSnapshots": {
+      "result": "passed",
+      "cases": 19,
+      "failed": 0,
+      "elapsedMs": 689,
+      "path": "audit/turn-file-edits/native_turn_file_snapshots.txt"
+    },
+    "sharedTree": {
+      "result": "passed",
+      "cases": 16,
+      "failed": 0,
+      "elapsedMs": 329,
+      "path": "audit/turn-file-edits/native_turn_files.txt"
+    },
+    "sharedHost": {
+      "result": "passed",
+      "cases": 12,
+      "failed": 0,
+      "elapsedMs": 15428,
+      "path": "audit/turn-file-edits/native_turn_files_host.txt",
+      "scope": "Actual hidden MainWindow: direct and sandbox interrupted dispatch restart hydration/persistence, current Git row/header routing, explicit immutable saved preview, stale/foreign callbacks, selected mutations older than 200 rows, original-workspace dirty editor undo refusal, missing-ID coverage, and different-workspace side-chat ownership without rebinding parent."
+    }
+  },
+  "remaining": [
+    "Broader final aggregate suite is pending; focused shared components, actual host and new rejection observer-race regression passed.",
+    "Current Git default actions support the chat connected workspace (ws1). Other mounts retain explicitly named saved preview and original-path undo review rather than inventing current Git ownership.",
+    "Historical records without a verifiable saved journal are explicitly unavailable; raw repeated model tool IDs are never used to guess ownership.",
+    "Explicit bounds can make totals or text previews unavailable; these are reported, not silently truncated into exact totals.",
+    "The saved preview renderer has its own 1200-line display cap; full summary totals come from complete verified endpoints within summary bounds.",
+    "This slice does not establish full Stagewise feature or screenshot parity."
+  ],
+  "hashBasis": "canonical_git_text_LF",
+  "sourceSha256": {
+    "src/ui/TurnFileEdits.h": "fd7c7b9962711c0dc1c3f45e73c9298e39a17a6bbf4c3a538b9944667ba103b5",
+    "src/ui/TurnFileEdits.cpp": "78d5fe421b7fd10f8e0179be579b486cf68f0eaa956d84ca87459171762411aa",
+    "src/ui/ConversationView.h": "8a03e8b78bd0d077ed46adaee45728285415c21230874a4b7b996fd78ba14e84",
+    "src/ui/ConversationView.cpp": "62540ee72584d495a953a88534704832056e9e418289ad1f7e9793157b168a7f",
+    "src/ui/MainWindowTurnFiles.cpp": "ef76f519c741c4c96df690f2bdbd08fbf7b91dea9327fd36820c301f96f07404",
+    "src/ui/FileChangesPanel.h": "10b46a8fd3b8e9507cc112ead7d5d4a5b5232df6a789009f1f0377a809698658",
+    "src/ui/FileChangesPanel.cpp": "6223ffb26d42acb530778dde6ad8a019ca457877b7c86081b14ad3347d3aced8",
+    "src/mutations/TurnFileSnapshots.cpp": "4a6c692feff918309450d5d43eaca6863fffde88ff24c5fe7126d663b0107dec",
+    "src/mutations/FileMutationStore.h": "c37ed0d5a7c93a65c7416e3f2bf792762c40eaa6620dd8c75e431605444420a5",
+    "src/mutations/FileMutationStore.cpp": "63fd4bbe498713c69bc1a946c9371200055896d896e4b0452e2686a252041531",
+    "src/mutations/FileMutationJournal.h": "efa61653a5760401c002ce41f1fe1ab36f4af909d65e9af049cc33e03943e1ab",
+    "src/mutations/FileMutationJournal.cpp": "367ad78ee994c2069ff7b0a795c9c6c4483d5e1c8cd0edca13b45583a2653e72",
+    "src/runtime/AgentToolHost.h": "973718924092cf5b1d0620ed48bac93e750d95004c2e7381a237178c48168518",
+    "src/runtime/AgentToolHost.cpp": "0fb91d1ace9716b1253934b4865d8b0c3c9a7aac85f7f84ee99bc00de24b2bfd",
+    "src/mutations/FileMutationExecutor.h": "4dec738ac0b2164ee414c0790bd1390501e51000b999e53be5885a77cb0c0755",
+    "tests/test_turn_files.cpp": "10bdc2f7a0680d36766a01c019ed48f82b0153f402bc43b5bfe25282bb017cd0",
+    "tests/test_turn_file_snapshots.cpp": "c4d1f4eca79bc6c8d6018c25f5c6dff7c15778a284c8e170b1a67371e7f6cd09",
+    "tests/test_turn_files_host.cpp": "996320bc89d31f5984f6d91b5cc14e7405c93ce8b0df9cf07151a7a75eff89c8"
+  },
+  "evidenceSha256": {
+    "audit/turn-file-edits/native_turn_file_snapshots.txt": "879df4efeef6a7d6d5def445af72a10469d4033f4b979aa001329aa9714fc8ef",
+    "audit/turn-file-edits/native_turn_files.txt": "bfd20be5403bb70f412b305b4ea013fb97bd5ddb131361f21949a4748babf3c1",
+    "audit/turn-file-edits/native_turn_files_host.txt": "b496843742f73408cba61ca4cb28392b1aa2dd38c89677d0c188029562d008b2",
+    "audit/turn-file-edits/snapshots-final.txt": "02a1d00c9e93555aa355071854b694708d39e57f639bdb7546b7b3be8d32e98f",
+    "audit/turn-file-edits/snapshots-final.xml": "7dbc15521144a7c7c783145865e7abaa3887cfd4282415bc5a36035d8459c54c",
+    "audit/turn-file-edits/tree-final.txt": "dcce6f058d8163d106728b0a21f60e30035d4227ebe21d81154dfd9b10ce56fe",
+    "audit/turn-file-edits/tree-final.xml": "fb0dca1d00c227655ee3c2cb918269bf8a64dfd0b850a3fee1697198318fe5ec"
+  },
+  "evidenceSanitization": "Canonical LF; XML machine hostname replaced with redacted. Temporary test/source path references retained; no user credentials, real profiles or remote responses are included."
+}

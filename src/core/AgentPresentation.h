@@ -3,6 +3,7 @@
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <memory>
 
 namespace ade {
 // Presentation data is deliberately independent of the provider-native payload.
@@ -40,5 +41,19 @@ private:
     QHash<int,qint64> m_started;
     QElapsedTimer m_clock;
     bool m_limitExceeded = false;
+};
+
+// Reuses the immutable historical prefix while the latest assistant/tool batch
+// changes. Replacements and imported history are checked against the snapshot;
+// a changed prefix is projected from scratch, preserving legacy ID semantics.
+class AgentHistoryProjection final {
+public:
+    AgentHistoryProjection();
+    ~AgentHistoryProjection();
+    QJsonArray project(const QJsonArray& messages);
+    quint64 processedMessages() const;
+private:
+    struct Data;
+    std::unique_ptr<Data> d;
 };
 }

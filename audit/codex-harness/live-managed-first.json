@@ -1,0 +1,20 @@
+{
+  "credentialsReadByADE": false,
+  "elapsedMs": 10256,
+  "eventCounts": {
+    "partState": 2,
+    "text": 4,
+    "usage": 1
+  },
+  "exactReply": true,
+  "kind": "native-codex-managed-subscription",
+  "model": "gpt-6.1-sol",
+  "modelCount": 8,
+  "reasoningEffort": "low",
+  "scratchWorkspace": true,
+  "status": "passed",
+  "subscriptionConnected": true,
+  "transport": "installed CLI stdio",
+  "turnStatus": "completed",
+  "usagePresent": true
+}

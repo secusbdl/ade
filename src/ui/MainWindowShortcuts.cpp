@@ -47,7 +47,7 @@ void MainWindow::initializeNavigationShortcuts() {
         if (m_splitter->exclusiveContent()) m_splitter->setContentCollapsed(true);
         if (!self || !models) return;
         models->setFocus(Qt::ShortcutFocusReason);
-        if (self && models) models->showPopup();
+        if (self && models && self->isVisible() && models->hasFocus()) models->showPopup();
     });
     bind("focus_url_bar", {"Alt+D", "F6", "Ctrl+Alt+L"}, [this] {
         const auto* page = m_tabs->currentWidget();

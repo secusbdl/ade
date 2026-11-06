@@ -1,0 +1,25 @@
+********* Start testing of ReadLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ReadLifecycleTest::initTestCase()
+PASS   : ReadLifecycleTest::filesRangesRestartAndDedup()
+PASS   : ReadLifecycleTest::emptyFileAndDistinctVersions()
+PASS   : ReadLifecycleTest::directoryRootDepthAndStableOrdering()
+PASS   : ReadLifecycleTest::isolationCloneRemoveAndLeaseEpoch()
+PASS   : ReadLifecycleTest::malformedMetadataAndCorruptSnapshot()
+PASS   : ReadLifecycleTest::preCanceledAndRevoked()
+PASS   : ReadLifecycleTest::failedClonePreservesDestinationLease()
+PASS   : ReadLifecycleTest::emptySourceCannotCloneIntoPopulatedDestination()
+PASS   : ReadLifecycleTest::staleRevocationCannotInvalidateReplacementLease()
+PASS   : ReadLifecycleTest::windowsAgentCaseAliasesShareAuthority()
+PASS   : ReadLifecycleTest::sameCapturedBytesDespiteSourceDeletionAndLegacySlot()
+PASS   : ReadLifecycleTest::rawReadsAndStandaloneInlineRemainCompatible()
+PASS   : ReadLifecycleTest::cancelThenReuseToolIdDiscardsOldMetadata()
+PASS   : ReadLifecycleTest::ownerDeletionAndRevocationNeverRecreatesChat()
+PASS   : ReadLifecycleTest::pipelinePerCallRangesOrderingAndHistoryIdentity()
+PASS   : ReadLifecycleTest::imageReadAndFourProtocolToolAssociations()
+PASS   : ReadLifecycleTest::pipelineLeaseCannotCrossChatIdentity()
+PASS   : ReadLifecycleTest::explicitReadThenUserMentionDedupAndCompressionWindow()
+PASS   : ReadLifecycleTest::snapshotDirectoryPinsAndJunctionRefusal()
+PASS   : ReadLifecycleTest::cleanupTestCase()
+Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 497ms
+********* Finished testing of ReadLifecycleTest *********

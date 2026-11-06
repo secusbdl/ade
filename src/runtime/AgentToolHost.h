@@ -10,6 +10,7 @@
 #include "attachments/AttachmentPipeline.h"
 #include "apps/MiniAppHost.h"
 #include "AttachmentFileBroker.h"
+#include "HarnessFileContext.h"
 #include "mutations/FileMutationJournal.h"
 #include "shell/ShellService.h"
 #include "shell/SessionLogStore.h"
@@ -29,6 +30,7 @@ public:
     bool cloneFileContext(const QString& targetAgentId,QString* error=nullptr);
     bool removeFileContext(QString* error=nullptr);
     QJsonArray mutationHistory(QString* error=nullptr,int limit=200)const;
+    void requestTurnFiles(quint64 requestId,const QStringList& mutationIds,const QString& path={});
     void undoMutations(const QString& requestId,const QStringList& mutationIds);
     void recoverMutations(const QString& requestId);
     void cancelUndo(const QString& requestId);
@@ -45,11 +47,13 @@ signals:
     void fileChanged(QString path,QByteArray before,QByteArray after);
     void attachmentCreated(QString requestId,QString path,QString mimeType);
     void mutationUndoCompleted(QString requestId,QString output,bool error,QJsonObject metadata);
+    void turnFilesReady(quint64 requestId,QJsonObject summary,QString error);
 private:
     QPointer<AgentEngine> m_engine;
     QPointer<BrowserToolBridge> m_browser;
     QString m_agentId;
     QString m_dataDirectory;
+    HarnessFileContext m_harnessFiles;
     FileMutationJournal m_mutations;
     QHash<QString,std::shared_ptr<std::atomic_bool>> m_undoRequests;
     std::shared_ptr<SessionLogStore> m_shellLogs;
@@ -64,6 +68,14 @@ private:
     FileReadSnapshotStore::Lease m_readLease;
     AttachmentMounts m_attachmentMounts;
     QHash<QString,QJsonArray> m_toolAttachments;
+    QHash<QString,QJsonArray> m_toolMutations;
+    QHash<QString,QString> m_sandboxFileOwners;
+    QSet<QString> m_pendingFileMutations;
+    QSet<quint64> m_turnFileRequests;
+    struct TurnFileQuery {quint64 id;QStringList mutations;QString path;};
+    QList<TurnFileQuery> m_turnFileQueue;
+    int m_activeTurnFileQueries=0;
+    void startTurnFileQueries();
     QHash<QString,QString> m_attachmentErrors;
     AttachmentFileBroker m_attachmentFiles;
     NetworkBroker m_network;

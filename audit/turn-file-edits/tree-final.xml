@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TurnFilesTest" timestamp="2026&#x002D;11&#x002D;06T20:09:00" hostname="redacted" tests="16" failures="0" errors="0" skipped="0" time="0.316">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="TurnFilesTest" time="0.000"/>
+  <testcase name="treeFoldersFirstWithFullPathsAndCounts" classname="TurnFilesTest" time="0.086">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="collapseAllAndIndividualStateSurviveUpdates" classname="TurnFilesTest" time="0.033">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="externalTypesAreExplicitAndDoNotInventCounts" classname="TurnFilesTest" time="0.030">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="invalidSummaryDoesNotExposeActions" classname="TurnFilesTest" time="0.032">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="adjacentRoundsGroupOnlyWithinOneUserTurn" classname="TurnFilesTest" time="0.000"/>
+  <testcase name="unsettledTurnRequestsOnlyAfterCompletion" classname="TurnFilesTest" time="0.034">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="staleResponseCannotCrossChatOrReplacementTurn" classname="TurnFilesTest" time="0.003"/>
+  <testcase name="actionsCarryExactIdentityAndCanDeleteView" classname="TurnFilesTest" time="0.027">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="failedQueryCanRetryAndDoesNotLoopOnTextUpdate" classname="TurnFilesTest" time="0.002"/>
+  <testcase name="collapseSurvivesChatSwitchAndRetainsOtherRows" classname="TurnFilesTest" time="0.004"/>
+  <testcase name="treeHeightIsBoundedAndNarrowControlsAccessible" classname="TurnFilesTest" time="0.026">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="transparentSurfaceUsesExplicitThemeColors" classname="TurnFilesTest" time="0.034"/>
+  <testcase name="ordinaryRowsDoNotAllocateHiddenTrees" classname="TurnFilesTest" time="0.001"/>
+  <testcase name="chronologicalSummaryIdsKeepProjectedActionOrder" classname="TurnFilesTest" time="0.002"/>
+  <testcase name="cleanupTestCase" classname="TurnFilesTest" time="0.000"/>
+</testsuite>

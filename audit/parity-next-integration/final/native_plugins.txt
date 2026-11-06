@@ -1,0 +1,24 @@
+********* Start testing of PluginsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PluginsTest::initTestCase()
+PASS   : PluginsTest::resourcesAndContextMatchPinnedMetadata()
+PASS   : PluginsTest::figmaAssetsArePinnedAndModifiedFilesArePreserved()
+PASS   : PluginsTest::extractionNeverOverwritesOrIncludesUnexpectedContent()
+PASS   : PluginsTest::failedInstallPreservesTargetAndCleansTemporaryFile()
+PASS   : PluginsTest::extractionRejectsJunctionEscapes()
+PASS   : PluginsTest::encryptedCredentialsAreScopedAndRoutingIsSourceOwned()
+PASS   : PluginsTest::refreshRevokesHandlesAndMalformedStoreFailsClosed()
+PASS   : PluginsTest::providerKeysAndMalformedPreferencesAreRejected()
+PASS   : PluginsTest::cacheDoesNotSurviveBrokerDestruction()
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(malformed-broker)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(malformed-catalog)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(malformed-both)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(reload-broker)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(reload-catalog)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(reload-both)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(allowlist-broker)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(allowlist-catalog)
+PASS   : PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner(allowlist-both)
+PASS   : PluginsTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 900ms
+********* Finished testing of PluginsTest *********

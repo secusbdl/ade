@@ -1,0 +1,320 @@
+{
+  "schema": 1,
+  "status": "native_managed_codex_packaged_read_tool_verified_fallback_file_lifecycle_private_pending",
+  "baseCommit": "8ad7d25fb8e080de436b6e2d1b45ab11480a560f",
+  "referenceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceAnchors": [
+    "apps/browser/src/backend/agents/providers/codex/app-server-client.ts",
+    "apps/browser/src/backend/agents/providers/codex/acp-adapter.ts",
+    "apps/browser/src/backend/agents/acp/runtime.ts:205",
+    "apps/browser/src/backend/agents/acp/runtime.ts:279",
+    "apps/browser/src/backend/agents/acp/prompt-builder.ts:46",
+    "apps/browser/src/backend/agents/providers/codex/stagewise-harness.ts:151",
+    "apps/browser/src/shared/coding-plans.ts:55"
+  ],
+  "scope": [
+    "Optional external installed Codex coding agent; native Qt stdio JSON-RPC transport and Windows job cleanup. No required Node sidecar added.",
+    "Real CLI-managed ChatGPT login/account/model catalog connection; ADE does not open or import subscription credential files. Login correlation and cancellation do not call logout.",
+    "Native streamed text/reasoning/tool presentation, command/file approvals, structured request-user-input form, stop, queue, canonical history persistence, same-workspace resume/fork and HTTP replay separation through reviewed private Engine patch.",
+    "Physical workspace handle/identity fencing; retargeted alias and replaced root cannot resume the old thread.",
+    "Prior transcript only for thread/start, user/assistant text only, latest compression boundary; resume/fork retains CLI context without duplicating prior text.",
+    "One failed thread/resume falls back to one fresh thread/start; canonical prior history is inserted once and a failed replacement remains terminal.",
+    "AgentToolHost configures a per-owner checked fallback workspace beneath the profile. Actual MainWindow Send/queue/Stop/reopen/ownership tests added; actual shared host suite passed 5/5."
+  ],
+  "verification": {
+    "focusedReports": [
+      {
+        "path": "audit/codex-harness/harness-final.txt",
+        "canonicalLfSha256": "a83ae85e445e91190b13b492295780ab40a2aaf42021b45dc8ac1309fa347998",
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/harness-final.xml",
+        "canonicalLfSha256": "1740b93c34d764b576f7902632fda9bd48cbb874f62e9d5d8da1d7db3dce93c3"
+      },
+      {
+        "path": "audit/codex-harness/engine-final.txt",
+        "canonicalLfSha256": "9b8be32efc8a1cc3086c895098441bd97be4da657b8aba392ef058219f1c10bb",
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/engine-final.xml",
+        "canonicalLfSha256": "c1bd2a5ac6d3134bf59ffb4f05a63da14a8308debc86c18f39833ba7e31d6a3a"
+      },
+      {
+        "path": "audit/codex-harness/provider-ui-final.txt",
+        "canonicalLfSha256": "c887241e60adaf5b016aa947e6fc2eae3add3f285d767b73ff50ced9c9899076",
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/provider-ui-final.xml",
+        "canonicalLfSha256": "92802f983f42e87cade487d94417a833a9ca6427bcc756cab9bf3a7420795824"
+      },
+      {
+        "path": "audit/codex-harness/harness-recovery.txt",
+        "canonicalLfSha256": "668744e04db9bf3be044d0c34a340b0d9cfb51c57e32db876c7ac4a30c2ecce0",
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/harness-recovery.xml",
+        "canonicalLfSha256": "5a31925a19ee45387c3d83bf121f452fbf358f96883e00210af7327396cb25ca"
+      },
+      {
+        "path": "audit/codex-harness/engine-recovery.txt",
+        "canonicalLfSha256": "433ce7961113d75fb54e62c9eb973c8d0ad329fbf4c132e2d5ea008ba1a1efae",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/engine-recovery.xml",
+        "canonicalLfSha256": "d015bdd20afcd2de231a33e184e7cfa8605902c1e02f16a8428fbcbc6b2dbc02"
+      },
+      {
+        "path": "audit/codex-harness/host-first.txt",
+        "canonicalLfSha256": "b5bbb7bda66e323458a8855ef0ccc4f81f7d712d12bef12407121fed53832839",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/harness-environment-integrated.txt",
+        "canonicalLfSha256": "1a27f67bb694c0a45d5801d5a1ac6d35daf2eec5b165e932d49465c9fecd7af9",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/native_harness_files-integrated.txt",
+        "canonicalLfSha256": "ec1b595407c7ec4f843252939febb73788bbb5bc7944ab4558c627704fa2071c",
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/codex-harness/native_codex_files_runtime-integrated.txt",
+        "canonicalLfSha256": "a7aeded1423a2ad661e9635f589bdac42bc44316de7ec0ef6844ce8a1b76cbfc",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "live": {
+      "credentialsReadByADE": false,
+      "elapsedMs": 10256,
+      "eventCounts": {
+        "partState": 2,
+        "text": 4,
+        "usage": 1
+      },
+      "exactReply": true,
+      "kind": "native-codex-managed-subscription",
+      "model": "gpt-6.1-sol",
+      "modelCount": 8,
+      "reasoningEffort": "low",
+      "scratchWorkspace": true,
+      "status": "passed",
+      "subscriptionConnected": true,
+      "transport": "installed CLI stdio",
+      "turnStatus": "completed",
+      "usagePresent": true
+    },
+    "liveProbeSha256": "c7226a2eb7388eb37f8acbe86fbd35ac5bae5142980ba6a7234319776a74fb5a",
+    "liveLimit": "Earlier standalone one-turn subscription inference predates final history/identity refinements. A later packaged native AgentEngine+AgentToolHost read-only tool turn passed and is recorded separately. Actual interactive MainWindow input/login flow remains unverified; the CLI account was already managed/authenticated.",
+    "hostRegression": {
+      "path": "tests/test_codex_host.cpp",
+      "status": "actual_mainwindow_shared_fixture_passed",
+      "noLiveServices": true
+    },
+    "packagedLive": {
+      "status": "passed",
+      "report": {
+        "path": "audit/codex-harness/packaged-read-after.json",
+        "canonicalLfSha256": "67e7b29edc447ce1fd651a0f6d99920ddf6235e805360758ff64396a79d97cd8"
+      },
+      "binaryPath": "out/parity-integration-smoke-3/ADE.exe",
+      "binarySha256": "8646f5e3901e0d620e1ff8f5b8b245fffb399fef75dd5dbd98c33582602a8383",
+      "provider": "Installed Codex CLI0.166.0 managed ChatGPT subscription",
+      "model": "gpt-6.1-sol",
+      "exactMarker": true,
+      "commandExecutionCount": 1,
+      "usagePresent": true,
+      "workspaceUnchanged": true,
+      "elapsedMs": 15068,
+      "credentialsReadByRunnerOrADE": false,
+      "capture": {
+        "frames": 4,
+        "displayNotifications": 20,
+        "textDeltas": 7,
+        "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test"
+      },
+      "limits": "One actual packaged AgentEngine+AgentToolHost read-only tool turn; hidden ConversationView renders from actual events, not interactive MainWindow login/input or mutation-journal parity. No complete provider/ACP/Stagewise parity claim."
+    },
+    "environmentRepair": {
+      "initialPackagedFailure": {
+        "path": "audit/codex-harness/packaged-read-before.json",
+        "canonicalLfSha256": "64ebba0332394930788836a4ad625952350f58ebfd3d728d2b55a0c35dbf54da"
+      },
+      "cause": "Parent Codex desktop runtime identity variables inherited by the optional external app-server made commandExecution choose a registered Core launcher belonging to the parent app. ADE is not that registered desktop app.",
+      "fix": "Remove inherited CODEX_* identity/routing values except CODEX_HOME; remove inherited SHELL when parent desktop identity markers are present. Preserve HOME, USERPROFILE and managed CLI authentication location. No subscription token extraction or global sandbox/config changes.",
+      "zeroInferenceNativeExec": {
+        "before": {
+          "path": "audit/codex-harness/native-exec-environment-before.json",
+          "canonicalLfSha256": "53472dc231fe4ad5cf1f2babc566f5227500700fe81b5fd8ceb573c80f450e61"
+        },
+        "after": {
+          "path": "audit/codex-harness/native-exec-environment-after.json",
+          "canonicalLfSha256": "a8ebc317a5a8fa7f5f0ddb6f2a67931334e2e532a0f6fa3d11e26aadfc044693"
+        },
+        "modelRequests": 0,
+        "exactSyntheticFileRead": true,
+        "sandboxPolicy": "readOnly with networkAccess false",
+        "extraFlagNote": "The final probe sanitizedParent=false field denotes that its redundant --clean-parent diagnostic flag was absent; the compiled transport already applies the production environment filtering. It does not mean filtering was disabled."
+      },
+      "diagnosticFixtureCorrection": "QTemporaryDir creates a restricted scratch ACL unavailable to the external Windows sandbox account. The final synthetic scratch used normal inherited ACL via exclusive QDir mkdir. No real user directory ACL, sandbox permission profile, or global configuration was changed.",
+      "usageCheckerCorrection": "Historical packaged-read-before summary reported usagePresent=false because its reporter checked HTTP metadata.usage only. Codex stores metadata.harnessUsage; root verified the original report already had that payload. This reporter correction is distinct from the genuine command launcher failure.",
+      "latestFixtureReport": "audit/codex-harness/harness-environment-integrated.txt"
+    }
+  },
+  "reviewCorrections": [
+    {
+      "finding": "Prior transcript was repeated on resumed CLI turns and included old tool rows.",
+      "evidence": "Root source review, fixed before handoff; new wire assertions exercise new/second/restarted/forked/moved-workspace turns and summary boundary. No retained before-failure log is claimed."
+    },
+    {
+      "finding": "QFileInfo canonicalFilePath is insufficient for Windows junction identity binding.",
+      "evidence": "Peer source review based on an established Windows limitation; replaced by same-handle physical path/file identity, with two real filesystem regression cases."
+    },
+    {
+      "finding": "Synchronous start failure could settle a reentrant replacement turn.",
+      "evidence": "Peer source-path review; added generation barrier. This exact rare start-failure path was not independently reproduced."
+    },
+    {
+      "finding": "Optional external Codex inherited parent desktop managed-launch identity and failed command tool creation.",
+      "evidence": "Actual packaged failure, zero-inference command/exec before/after,28/28 harness regression suite, then actual packaged read-only live tool success; reports retained separately."
+    }
+  ],
+  "sourceCanonicalLfSha256": {
+    "src/harness/CodexAppServer.cpp": "0d1a89fe132ec481522941a4ce79986b5ef521c0eed557290d44042c37b314dc",
+    "src/harness/CodexAppServer.h": "54fff373e9947a41dedb819f7e6e9a556d37c16f86c4e62a6070af5e82cc122c",
+    "src/harness/CodexHarnessSession.cpp": "76e53dfe549f97766e81263c16faab79194bd8ca58e98859008f52f864b3a425",
+    "src/harness/CodexHarnessSession.h": "c8488ca85afba98c412667a07c3898fd5ee84effd9e900066297e95f6a7b24f4",
+    "src/harness/HarnessWorkspace.cpp": "ea61d760ddbc4e2e1890d685c8644f89ae303c562173442ef7eb05e97d22c8d1",
+    "src/harness/HarnessWorkspace.h": "68f9dce0724d1d455d0f101f522ad43afc28135ebfb46845105004bca00653a2",
+    "src/harness/JsonRpcProcess.cpp": "a65056fd5fdeebabd4eb4dbb0d6a7267fff250cb213e0f92dfc66c2154e0091d",
+    "src/harness/JsonRpcProcess.h": "2577cce3503cf53d3d1f56583cf353b88ba73334dbaf1aa01ef2e9928ed38dda",
+    "src/core/ProviderConfig.h": "1480fcb7ec425741f38adb4baec62d03bb2d6dbad259801102fbc1e85a374357",
+    "src/core/ProviderStore.cpp": "acdbbe7ba05ba61e17635f4009947cd82ec1f13a74dd6db0772ef6741f52cdc3",
+    "src/ui/ProviderDialog.h": "e1b767e54473624a1bb3bd7e2d7e01be4949f7ef5ac16c2aaaea6b516c901b6e",
+    "src/ui/ProviderDialog.cpp": "c8bcd96177c1bae7327ef4ab631404a6ada53fedd42f472a05fe993d672ede3e",
+    "src/ui/ModelSelection.cpp": "bd94ecfc2bed655e35c3322a92a521cb745b925e8bbc31a33a2e2f317946ebff",
+    "tests/test_codex_harness.cpp": "828f1fab5432a649bb7ab9d768a741d19fee71d0e1247c9a32727ebf01d8eb5c",
+    "tests/test_codex_engine.cpp": "a4a485fadaba33be07a3db1cd718a111815e8ef039baa96dbf1716cff32bb72f",
+    "tests/test_codex_provider_ui.cpp": "1a2edd48ad45d4c1c8ec6197f3813eb4782ede978c2c0cc00dd0f5c1f35c500c",
+    "tests/support/HarnessFixture.cpp": "fd9f7aa719bae332c73a765de267e26b0f5e750bcfa6ec76027785acbca39b5e",
+    "src/core/AgentEngineHarness.cpp": "9ce365e4f37667c30473dcca7bea85db42afdf813212fdb253f9e1896bc5f0d5",
+    "src/runtime/AgentToolHost.cpp": "e27fde219fb73ee8e9f58a1e626554e92c5c23dfe274347bee41881a6c3a034b",
+    "tests/test_codex_host.cpp": "e77a7e62c9c8a61adaafec9bacd16c080b5e3a28263f9ad494866a2f3cd22d35",
+    "src/runtime/HarnessFileContext.cpp": "0672159dca5baa476cb6e5bb858215816387fb216cfc6b0001f18d7fb4e66441",
+    "src/runtime/HarnessFileContext.h": "e96557c7c79ae3852b6df84a41ffd62a2d15eb6edb3cd368abe2705ba0ab5da1",
+    "src/runtime/AgentToolHost.h": "cade96f8448720a05a77a6630342b983bb444ac58b83134f9255584f1df71db1",
+    "tests/test_harness_files.cpp": "d88623525dbb94b16845f9b93d45d1184ef07d5e2be163b5d47d4abfa04b7346",
+    "tests/test_codex_files_runtime.cpp": "2a62fa72745b9c90c16c8a0772be02c46d028daa9501339511ce4205c08a624b"
+  },
+  "privateIntegrationPatch": {
+    "path": "private/provider-harness-plan/engine-integration.patch",
+    "canonicalLfSha256": "77fdf42878e6dea231a64dc173091f86ee8440a6dc6923c50712715cc58d5d91",
+    "newSource": "private/provider-harness-plan/AgentEngineHarness.cpp",
+    "appliedByRoot": true
+  },
+  "remainingGaps": [
+    "Codex (Stagewise) inference-only subscription path is distinct and not implemented by this external-harness slice.",
+    "Claude Code/OpenCode native adapters and newly requested Cursor ACP extension remain separate work; Cursor is not a pinned provider.",
+    "Six source coding-plan connection schemas/UX remain separate from OAuth and external agents.",
+    "Generalized permission-profile grants are explicitly denied pending a typed permission-grant UI; unknown server interactions are rejected.",
+    "Native requestUserInput fixture exercises the installed schema, not a live model-issued question. Pinned Node MCP stagewise_request_user_input bridge is not copied or advertised.",
+    "Codex-owned file mutations do not become ADE mutation-journal transactions automatically.",
+    "Only same-physical-workspace fork is currently proven; a different per-chat fallback directory conservatively creates a new CLI thread with canonical transcript.",
+    "CLI accounts, entitlements and model availability may change; installed codex-cli0.166.0, one standalone gpt-6.1-sol/low text turn and one later packaged gpt-6.1-sol read-only tool turn were verified.",
+    "Authentication/transport tests establish exercised behavior, not universal OAuth/provider/ACP/Stagewise parity.",
+    "Per-chat fallback workspace clone/delete now has bounded Windows helper12/12 and actual-host5/5 coverage. Different physical fork workspaces start a fresh CLI thread with canonical history; busy file writers can cause a clean fork refusal."
+  ],
+  "recordedUtc": "2026-11-06T19:24:29.427574+00:00",
+  "sourceHashScope": "Current production source snapshot after lifecycle and provider-picker integration, covered by the full110-suite gate recorded separately below. Historical reports/live binaries retain their original source scope. Private ACP code is excluded.",
+  "privateFallbackLifecycle": {
+    "status": "production_helper_and_actual_host_runtime_verified",
+    "handoff": "private/provider-harness-plan/lifecycle/handoff.json",
+    "helperPassed": 12,
+    "helperFailed": 0,
+    "foreignStageBeforeFailed": 1,
+    "productionApplied": true,
+    "limits": "Actual shared host fork/delete/failed-target preservation/selected workspace protection passed5/5; helper12/12 passed. Earlier packaged-live read binary predates this lifecycle migration. Current full integration gate remains separate.",
+    "hostRuntimePassed": 5
+  },
+  "latestIntegratedGate": {
+    "status": "passed",
+    "reportedBy": "root combined CTest run; scoped Qt reports independently counted below",
+    "suitesPassed": 110,
+    "suitesTotal": 110,
+    "qtRowsReportedByRoot": 1948,
+    "elapsedSecondsReportedByRoot": 853.54,
+    "evidenceDirectory": "audit/parity-next-integration/final",
+    "scopedReports": [
+      {
+        "path": "audit/parity-next-integration/final/native_codex_harness.txt",
+        "canonicalLfSha256": "f3afff0c6030f85c064e3caeae85174f80408977e6e358f9647c4d540f6aadf5",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/parity-next-integration/final/native_codex_engine.txt",
+        "canonicalLfSha256": "0ebaf237b9779bc983c2e2869efb4473f23648de1a8e08fcf4db70297cf3ad81",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/parity-next-integration/final/native_codex_host.txt",
+        "canonicalLfSha256": "5a61ac24ae37ccca927e2579e88d5cde0d2cfbd953e39ffdf9ea80e51e08d91d",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/parity-next-integration/final/native_codex_provider_ui.txt",
+        "canonicalLfSha256": "63a2a0c5edaf353ab7bfc06a2b1cc228836e9ec21385fb921a02cb4ea25f4c67",
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/parity-next-integration/final/native_harness_files.txt",
+        "canonicalLfSha256": "d4a155b4b9e8483d691868cc58ff69ddfc58163087a76b751ce54365b2642e5d",
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "path": "audit/parity-next-integration/final/native_codex_files_runtime.txt",
+        "canonicalLfSha256": "61554827a0bfb8a1a2060fa2c7e92b01b12ae1e00f7f69cb777405c3cea6cd95",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "packagedExecutable": {
+      "path": "out/parity-integration-2/ADE.exe",
+      "sha256": "dec71f4d19e0cfba8054bba5b799c4e1142791080170de4e8afeffde413d6a42"
+    },
+    "limits": "The gate covers the integrated production checkpoint. ACP/OpenCode remains private and is not included. The previous packaged live Codex read used the distinct binary hash retained in live evidence; this new package has not been used for another paid request by this agent. One offscreen WebView skip had a passing native counterpart according to root."
+  }
+}

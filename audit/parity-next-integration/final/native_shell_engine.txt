@@ -1,0 +1,20 @@
+********* Start testing of ShellEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellEngineTest::initTestCase()
+PASS   : ShellEngineTest::snapshotsAndDynamicContext(openai)
+PASS   : ShellEngineTest::snapshotsAndDynamicContext(anthropic)
+PASS   : ShellEngineTest::snapshotsAndDynamicContext(google)
+PASS   : ShellEngineTest::snapshotsAndDynamicContext(responses)
+PASS   : ShellEngineTest::replacementObserver(cancel)
+PASS   : ShellEngineTest::replacementObserver(replace)
+PASS   : ShellEngineTest::replacementObserver(destroy)
+PASS   : ShellEngineTest::dynamicContextObserver(cancel)
+PASS   : ShellEngineTest::dynamicContextObserver(destroy)
+PASS   : ShellEngineTest::backgroundWakeHonorsPauseAndApproval()
+PASS   : ShellEngineTest::backgroundWakeAfterFailureAndRestart()
+PASS   : ShellEngineTest::backgroundWakeDoesNotInterruptQuestion()
+PASS   : ShellEngineTest::backgroundWakeSurvivesDispatchCommitDenial()
+PASS   : ShellEngineTest::externalTimeoutIsBoundedAndIdleConfigured()
+PASS   : ShellEngineTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 4671ms
+********* Finished testing of ShellEngineTest *********

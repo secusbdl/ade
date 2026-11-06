@@ -17,8 +17,10 @@ void AgentEngine::setFileMutationExecutor(FileMutationExecutor executor) {
     m_tools.setFileMutationExecutor(std::move(executor));
 }
 void AgentEngine::setQueueCommitter(QueueCommitter committer) {
-  if (!m_busy && !m_committingQueue)
+  if (!m_busy && !m_committingQueue) {
     m_queueCommitter = std::move(committer);
+    reconcileMutationHistory();
+  }
 }
 bool AgentEngine::setQueuedMessages(const QJsonArray &queue, QString *error) {
   if (m_busy || m_committingQueue) {
@@ -277,6 +279,7 @@ bool AgentEngine::cancelQuestion(const QString &token,
   return true;
 }
 void AgentEngine::finishQuestion(const QString &reason) {
+  if(!m_harnessQuestionToken.isEmpty()){finishHarnessQuestion(reason);return;}
   const auto id = m_questionCallId;
   const auto output = QString::fromUtf8(
       QJsonDocument(m_question.result(reason)).toJson(QJsonDocument::Compact));

@@ -609,10 +609,10 @@ void SettingsPage::buildProviders(QVBoxLayout *layout) {
         auto *edit = new QPushButton("›");
         edit->setAccessibleName("Configure "+provider.name);
         row->addWidget(edit);
-        connect(edit,&QPushButton::clicked,this,&SettingsPage::providersRequested);
+        connect(edit,&QPushButton::clicked,this,[this,id=provider.id]{emit providerEditRequested(id);});
     }
     if (providers.isEmpty()) card(layout,"No providers configured","Connect your own provider to start an agent session.");
-    connect(action(layout,"+ Add Provider","settingsAddProvider",Qt::AlignRight),&QPushButton::clicked,this,&SettingsPage::providersRequested);
+    connect(action(layout,"+ Add Provider","settingsAddProvider",Qt::AlignRight),&QPushButton::clicked,this,&SettingsPage::addProviderRequested);
     connect(action(layout,"Import API key file…","settingsImportProviderKeys"),&QPushButton::clicked,this,&SettingsPage::providerKeyImportRequested);
     heading(layout,"Default utility models","These models are used for background tasks when no preset-specific configuration is set. The agent tries each model in order until one succeeds.");
     buildUtilityModels(layout,"utilityModels.titleGeneration","Title generation");

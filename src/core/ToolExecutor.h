@@ -35,6 +35,11 @@ public:
     void cancel();
 
 signals:
+    // Host-created identity for one mutation worker, including a late commit
+    // after its ordinary request has been cancelled or replaced.
+    void mutationStarted(QString invocationId, QString requestId);
+    void mutationSettled(QString invocationId, QString requestId, QString output,
+                         bool error, QJsonObject metadata);
     void completed(QString id, QString output, bool error, QJsonObject metadata = {});
     void fileChanged(QString path, QByteArray before, QByteArray after);
     void processOutput(QString id, QString output);

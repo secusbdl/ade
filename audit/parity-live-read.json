@@ -1,0 +1,54 @@
+{
+  "recordedUtc": "2026-11-06T17:32:40.545302+00:00",
+  "packageSha256": "022bcf8162739c861e94c746f5fa1922fe3a5b36380c49bf9a6414d983da2776",
+  "mode": "actual packaged ADE --smoke; no main window",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-flash",
+  "actualModel": "deepseek-flash",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "markerMatched": true,
+  "toolNames": [
+    "read"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 2443,
+  "error": "",
+  "usageSnapshots": [
+    {
+      "actualModel": "deepseek-flash",
+      "baseUrl": "https://api.deepseek.com/v1",
+      "complete": true,
+      "counters": {
+        "cachedInputTokens": 0,
+        "inputTokens": 4582,
+        "outputTokens": 41,
+        "reasoningTokens": 0,
+        "totalTokens": 4623
+      },
+      "id": "57f26496-6729-438f-bd5d-b5ff160ce0af",
+      "model": "deepseek-flash",
+      "protocol": "openai",
+      "providerId": "deepseek",
+      "version": 1
+    },
+    {
+      "actualModel": "deepseek-flash",
+      "baseUrl": "https://api.deepseek.com/v1",
+      "complete": true,
+      "counters": {
+        "cachedInputTokens": 4480,
+        "inputTokens": 4708,
+        "outputTokens": 7,
+        "reasoningTokens": 0,
+        "totalTokens": 4715
+      },
+      "id": "40b5e451-6ff4-4f5d-b380-db8ad6924d96",
+      "model": "deepseek-flash",
+      "protocol": "openai",
+      "providerId": "deepseek",
+      "version": 1
+    }
+  ],
+  "scope": "Bounded live read-only tool round and real provider response. Does not verify UI rendering, all providers, or complete parity."
+}

@@ -1,0 +1,11 @@
+********* Start testing of WorkspaceChangesHostTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceChangesHostTests::initTestCase()
+PASS   : WorkspaceChangesHostTests::sidebarOpensExactStagedRenameAndClosesTab()
+FAIL!  : WorkspaceChangesHostTests::modeRestoresAndNonGitReturnsToFiles() QTestLib: This test case check ("window.findChild<WorkspaceChangesController *>()->hasSnapshot()") failed because the requested timeout (5000 ms) was too short, 5200 ms would have been sufficient this time.
+D:/age/ADE/tests/test_workspace_changes_host.cpp(123) : failure location
+PASS   : WorkspaceChangesHostTests::sourceControlUsesSharedDiffTab()
+PASS   : WorkspaceChangesHostTests::currentGitRowsRefreshAndRender()
+PASS   : WorkspaceChangesHostTests::cleanupTestCase()
+Totals: 5 passed, 1 failed, 0 skipped, 0 blacklisted, 33209ms
+********* Finished testing of WorkspaceChangesHostTests *********

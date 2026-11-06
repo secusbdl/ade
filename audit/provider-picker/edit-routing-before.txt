@@ -1,0 +1,9 @@
+********* Start testing of ProviderPickerWindowTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ProviderPickerWindowTest::initTestCase()
+QWARN  : ProviderPickerWindowTest::settingsSecondCardEditsExactProvider() This plugin does not support propagateSizeHints()
+FAIL!  : ProviderPickerWindowTest::settingsSecondCardEditsExactProvider() 'result.handled&&result.error.isEmpty()' returned FALSE. (Second card selected name 'DeepSeek API' and model 'fixture-model' instead of 'Google API' / 'fixture-google-model'.)
+D:/age/ADE/private/provider-edit-routing-stage/test_provider_picker_window.cpp(88) : failure location
+PASS   : ProviderPickerWindowTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 269ms
+********* Finished testing of ProviderPickerWindowTest *********

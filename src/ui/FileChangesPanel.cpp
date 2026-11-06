@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSet>
+#include <QRegularExpression>
+#include <QPointer>
 #include <QSignalBlocker>
 #include <QTreeWidget>
 #include <QVBoxLayout>
@@ -93,13 +95,31 @@ QStringList FileChangesPanel::selectedMutations() const {
   return result;
 }
 void FileChangesPanel::refreshActions() {
+  const QPointer<FileChangesPanel> self(this);
   const auto count = selectedMutations().size();
   m_undo->setText(count ? QString("Undo selected (%1)").arg(count)
                         : "Undo selected");
+  if(!self)return;
   m_undo->setEnabled(!m_busy && !m_pending && count > 0 && count <= 100);
+  if(!self)return;
   m_cancel->setVisible(m_pending);
+  if(!self)return;
   m_recover->setVisible(m_hasIncomplete);
+  if(!self)return;
   m_recover->setEnabled(!m_busy && !m_pending);
+}
+bool FileChangesPanel::selectMutations(const QStringList& ids) {
+  QSet<QString> found;const QSignalBlocker blocker(m_tree);
+  for(int i=0;i<m_tree->topLevelItemCount();++i){auto* item=m_tree->topLevelItem(i);const auto id=item->data(0,Qt::UserRole).toString();item->setSelected(ids.contains(id));if(ids.contains(id))found.insert(id);}
+  refreshActions();return found.size()==ids.size();
+}
+bool FileChangesPanel::pathsForMutations(const QStringList& ids,QStringList* paths,QString* error) const {
+  if(paths)paths->clear();if(error)error->clear();QSet<QString> found;QStringList result;
+  const auto fail=[&]{if(error)*error="Selected saved changes are missing complete original-path information. Refresh the review before undoing.";return false;};
+  if(ids.isEmpty()||ids.size()>100||QSet<QString>(ids.cbegin(),ids.cend()).size()!=ids.size())return fail();
+  for(int i=0;i<m_tree->topLevelItemCount();++i){const auto* item=m_tree->topLevelItem(i);const auto id=item->data(0,Qt::UserRole).toString();if(!ids.contains(id))continue;if(!item->data(0,Qt::UserRole+1).toBool())return fail();found.insert(id);
+    for(int j=0;j<item->childCount();++j){const auto* child=item->child(j);if(!child->data(0,Qt::UserRole+3).toBool())continue;const auto path=child->data(0,Qt::UserRole+2).toString();if(!QRegularExpression("^[A-Za-z]:/").match(path).hasMatch()||path.contains(QRegularExpression("[\\x00-\\x1f]"))||path.split('/').contains(".."))return fail();if(!result.contains(path))result.append(path);}}
+  if(found.size()!=ids.size())return fail();if(paths)*paths=result;return true;
 }
 void FileChangesPanel::setHistory(const QString &agent, const QJsonArray &rows,
                                   bool busy, const QString &message) {
@@ -144,6 +164,8 @@ void FileChangesPanel::setHistory(const QString &agent, const QJsonArray &rows,
                                                {}});
       child->setFlags(child->flags() & ~Qt::ItemIsSelectable);
       child->setToolTip(0, file["path"].toString());
+      child->setData(0,Qt::UserRole+2,file["absolutePath"].toString());
+      child->setData(0,Qt::UserRole+3,true);
     }
     if (row["directoryCount"].toInt() > 0) {
       auto *child = new QTreeWidgetItem(

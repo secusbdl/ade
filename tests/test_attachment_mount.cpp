@@ -71,6 +71,13 @@ private slots:
         QCOMPARE(run(host,"return 42;").value(),"42");
     }
 
+    void directSandboxWriteHasDurableJournalWithoutInventingModelTurn(){
+        QTemporaryDir data;AgentEngine engine;const QJsonArray prior{QJsonObject{{"role","user"},{"content","Earlier question"}},QJsonObject{{"role","assistant"},{"content","Earlier answer"}}};engine.setMessages(prior);AgentToolHost host(&engine,nullptr,"chat",data.path());
+        const auto result=run(host,"await fsPromises.writeFile('apps/background.bin',Buffer.from([0,255,128,10]));return 'written';","native-direct-operation");QVERIFY2(!result.error,qPrintable(result.output));QCOMPARE(result.value(),QString("written"));QCOMPARE(read(host.apps()->agentAppsDirectory()+"/background.bin"),QByteArray::fromHex("00ff800a"));QCOMPARE(engine.messages(),prior);QVERIFY(!engine.isBusy());
+        QString error;const auto records=host.mutationHistory(&error);QVERIFY2(error.isEmpty(),qPrintable(error));QCOMPARE(records.size(),1);const auto record=records.first().toObject();QCOMPARE(record["state"],"committed");QVERIFY(!record["mutationId"].toString().isEmpty());QVERIFY(record["toolCallId"].toString().startsWith("background-"));QCOMPARE(record["entries"].toArray().first().toObject()["path"],"apps/background.bin");
+        AgentEngine restored;restored.setMessages(prior);AgentToolHost restoredHost(&restored,nullptr,"chat",data.path());QCOMPARE(restored.messages(),prior);QCOMPARE(restoredHost.mutationHistory(&error).first().toObject()["mutationId"],record["mutationId"]);
+    }
+
     void mutationsAndEscapePathsNeverTouchBlobs(){
         QTemporaryDir data;AttachmentStore store(data.path());QString error;const auto ref=store.write("chat","original.bin","unchanged",&error);QVERIFY(!ref.isEmpty());
         AgentEngine engine;AgentToolHost host(&engine,nullptr,"chat",data.path());QSignalSpy ordinaryFiles(host.sandbox(),&SandboxHost::fileRequest);

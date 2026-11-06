@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-06T19:28:01.338672+00:00",
+  "status": "passed_named_packaged_windows_checks",
+  "package": "out/parity-integration-2",
+  "exeSha256": "dec71f4d19e0cfba8054bba5b799c4e1142791080170de4e8afeffde413d6a42",
+  "profile": "Isolated synthetic profile; no real credentials, network requests or model inference.",
+  "steps": [
+    {
+      "screenshotFile": "01-main.jpg",
+      "sha256": "3e7a6a9d6b147e339bdd28ccb2a88cf427f834815ea1df54c4ee53e6977e85f0",
+      "observed": "Main window opens with Settings visible."
+    },
+    {
+      "screenshotFile": "02-settings.jpg",
+      "sha256": "0856e1dc08cee3bef872e202fe9861d0b94feda4e1d364c5aca828ad19c56e84",
+      "observed": "Settings lists both synthetic providers and the direct API-key import entry."
+    },
+    {
+      "screenshotFile": "03-second-provider.jpg",
+      "sha256": "5640ca0a4bf3ea4a9483a9cac3005a254035c40e8bb08636924c6dfb96856ef8",
+      "observed": "Clicking the second card opens Google API, its protocol and its own model."
+    },
+    {
+      "screenshotFile": "04-provider-picker.jpg",
+      "sha256": "8048a77fe0adee1056326b299b127e1ec5702beae596ad36e416f15d5a4c9f2f",
+      "observed": "Add Provider opens the grouped native picker."
+    },
+    {
+      "screenshotFile": "05-custom-search.jpg",
+      "sha256": "0cfecc5cbb7c542dfa0fc71cf7ced3d2ec038142ca3beb9599c9879733201821",
+      "observed": "Typing custom filters to a full-width custom endpoint card."
+    },
+    {
+      "screenshotFile": "06-custom-editor.jpg",
+      "sha256": "adad6d7025d29cf8f8780efe041d39720b45d89089f9fb3fcdc2b0b45aa6ef17",
+      "observed": "Selecting custom opens a draft with blank URL, key and model; no inherited credentials."
+    },
+    {
+      "screenshotFile": "07-settings-after-cancel.jpg",
+      "sha256": "171adeaced8fd88ca2582420bb1214751239c22211b48bebc571ec0791d3a3e5",
+      "observed": "Cancel returns to the original two providers with no custom entry persisted."
+    }
+  ],
+  "screenshots": "Retained in the local wake-up-review gallery; not published.",
+  "cancelPersistence": {
+    "providerIds": [
+      "qa-first",
+      "qa-second"
+    ],
+    "providerCount": 2,
+    "emptyCredentials": true
+  },
+  "actualTitlebarClose": {
+    "pid": 48536,
+    "exitCode": 0,
+    "runnerFinished": true,
+    "clickToExitLatencyMeasured": false
+  },
+  "limits": [
+    "This exact binary received the listed provider/close checks, not a complete manual parity audit.",
+    "Earlier package GUI streaming, API-key import, browser restart and busy-close evidence remains separately identified.",
+    "Provider removal and model enable/disable are still private next-stage work."
+  ],
+  "fullNativeParity": false
+}

@@ -182,20 +182,25 @@ private slots:
         key(terminal, Qt::Key_L, Qt::ControlModifier);
         QVERIFY(input->isVisible()); QCOMPARE(QApplication::focusWidget(), input); QVERIFY(split->contentCollapsed());
     }
-    void modelFocusObserverCanDeleteWindow() {
+    void modelFocusObserverCanCloseWindow() {
         QTemporaryDir data; QVERIFY(seed(data.path())); QString error;
         const ProviderConfig provider{"fixture", "Fixture", "http://127.0.0.1:1/v1", "synthetic-test-only", "fixture-model", "openai"};
         QVERIFY(ProviderStore::save(data.filePath("providers.json"), {provider}, &error));
         QPointer<MainWindow> window = new MainWindow(data.path()); activate(*window);
+        window->setAttribute(Qt::WA_DeleteOnClose);
         auto* input = window->findChild<Composer*>("composerInput");
         auto* models = window->findChild<QComboBox*>("modelSelector"); QVERIFY(input && models);
         input->setFocus();
         const auto observer = connect(qApp, &QApplication::focusChanged, qApp, [&window, models](QWidget*, QWidget* next) {
-            if (next == models && window) delete window.data();
+            // Qt owns the active focus dispatch. Closing schedules destruction;
+            // deleting a widget synchronously inside QWidget::setFocus is invalid.
+            if (next == models && window) window->close();
         });
         auto* shortcut = window->findChild<QShortcut*>("shortcut_open_model_select"); QVERIFY(shortcut);
         emit shortcut->activated();
-        disconnect(observer); QVERIFY(window.isNull());
+        disconnect(observer);
+        QVERIFY(!QApplication::activePopupWidget());
+        QTRY_VERIFY(window.isNull());
     }
 };
 int main(int argc, char** argv) {

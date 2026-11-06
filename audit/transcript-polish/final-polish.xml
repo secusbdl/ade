@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="PolishTests" timestamp="2026&#x002D;11&#x002D;06T20:38:01" hostname="VOID" tests="6" failures="0" errors="0" skipped="0" time="1.904">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="PolishTests" time="0.000"/>
+  <testcase name="inlineCodeUsesApplicationMono" classname="PolishTests" time="0.312">
+    <system-out>
+      <![CDATA[inline code font QVariant(QStringList, QList("Roboto Mono")) "Roboto Mono" fixed true]]>
+    </system-out>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="completedShortTurnKeepsFollowingAfterLayout(normal)" classname="PolishTests" time="0.538">
+    <system-out>
+      <![CDATA[scroll 6 6 jump false viewport QSize(1486, 1200)]]>
+    </system-out>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="completedShortTurnKeepsFollowingAfterLayout(large)" classname="PolishTests" time="0.540">
+    <system-out>
+      <![CDATA[scroll 13 13 jump false viewport QSize(1486, 1200)]]>
+    </system-out>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="jumpUsesSourceBottomThreshold" classname="PolishTests" time="0.511">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="PolishTests" time="0.000"/>
+</testsuite>

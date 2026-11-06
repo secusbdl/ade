@@ -19,6 +19,8 @@ public:
     QString conversationId() const;
     bool followsOutput() const;
     bool provideImage(quint64 requestId,const QImage &image,const QString &error={});
+    bool provideTurnFileEdits(quint64 requestId,const QJsonObject& summary,const QString& error={});
+    QStringList turnMutationIds(const QString& rowId)const;
 public slots:
     void scrollToBottom();
 signals:
@@ -26,6 +28,11 @@ signals:
     void scopedLinkActivated(QString conversationId,QString messageId,QString partId,QUrl url);
     void approvalDecided(QString conversationId,QString messageId,QString partId,QString toolCallId,bool allowed);
     void imageRequested(quint64 requestId,QString conversationId,QString messageId,QString partId,QUrl url);
+    void turnFileEditsRequested(quint64 requestId,QString conversationId,QString rowId,QStringList mutationIds);
+    void turnFileRequested(QString conversationId,QString rowId,QStringList mutationIds,QString path);
+    void turnFilesReviewRequested(QString conversationId,QString rowId,QStringList mutationIds);
+    void savedTurnFileRequested(QString conversationId,QString rowId,QStringList mutationIds,QString path);
+    void turnUndoReviewRequested(QString conversationId,QString rowId,QStringList mutationIds);
 protected:
     bool eventFilter(QObject *object,QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

@@ -120,7 +120,8 @@ bool FileMutationStore::open(QString* error){
         query(m_db,"PRAGMA journal_mode=WAL");query(m_db,"PRAGMA synchronous=FULL");query(m_db,"PRAGMA foreign_keys=ON");
         query(m_db,"CREATE TABLE IF NOT EXISTS snapshots(hash TEXT PRIMARY KEY, bytes BLOB NOT NULL)");
         query(m_db,"CREATE TABLE IF NOT EXISTS mutations(nonce TEXT PRIMARY KEY, agent TEXT NOT NULL, tool_call TEXT NOT NULL, tool TEXT NOT NULL, undo_of TEXT NOT NULL, state TEXT NOT NULL, error TEXT NOT NULL, output TEXT NOT NULL,cleaned INTEGER NOT NULL DEFAULT 0)");
-        {QSqlQuery columns(m_db);if(!columns.exec("PRAGMA table_info(mutations)"))fail(columns.lastError().text());bool hasTime=false;while(columns.next())if(columns.value(1).toString()=="created_at")hasTime=true;columns.finish();if(!hasTime)query(m_db,"ALTER TABLE mutations ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0");}
+        {QSqlQuery columns(m_db);if(!columns.exec("PRAGMA table_info(mutations)"))fail(columns.lastError().text());bool hasTime=false,hasInvocation=false;while(columns.next()){if(columns.value(1).toString()=="created_at")hasTime=true;if(columns.value(1).toString()=="invocation_id")hasInvocation=true;}columns.finish();if(!hasTime)query(m_db,"ALTER TABLE mutations ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0");if(!hasInvocation)query(m_db,"ALTER TABLE mutations ADD COLUMN invocation_id TEXT NOT NULL DEFAULT ''");}
+        query(m_db,"CREATE UNIQUE INDEX IF NOT EXISTS mutation_invocation_owner ON mutations(agent,invocation_id) WHERE invocation_id<>''");
         query(m_db,"CREATE TABLE IF NOT EXISTS entries(nonce TEXT NOT NULL REFERENCES mutations(nonce), ordinal INTEGER NOT NULL, logical TEXT NOT NULL, root TEXT NOT NULL, root_id TEXT NOT NULL, before_exists INTEGER NOT NULL,before_hash TEXT NOT NULL,before_id TEXT NOT NULL,after_exists INTEGER NOT NULL,after_hash TEXT NOT NULL,after_id TEXT NOT NULL,backup TEXT NOT NULL,stage TEXT NOT NULL,restore_id TEXT NOT NULL DEFAULT '',PRIMARY KEY(nonce,ordinal))");
         query(m_db,"CREATE TABLE IF NOT EXISTS directories(nonce TEXT NOT NULL REFERENCES mutations(nonce),ordinal INTEGER NOT NULL,logical TEXT NOT NULL,root TEXT NOT NULL,root_id TEXT NOT NULL,before_exists INTEGER NOT NULL,after_exists INTEGER NOT NULL,before_id TEXT NOT NULL,after_id TEXT NOT NULL,restore_id TEXT NOT NULL DEFAULT '',PRIMARY KEY(nonce,ordinal))");
         return true;
@@ -136,7 +137,7 @@ QString FileMutationStore::mountIdentity(const QString& prefix)const{return m_mo
 bool FileMutationStore::status(const QString& nonce,const QString& value,const QString& message,QString* error){try{query(m_db,"UPDATE mutations SET state=?,error=? WHERE nonce=?",{value,message,nonce});return true;}catch(const Failure& e){if(error)*error=e.text;return false;}}
 Result FileMutationStore::execute(const Request& request,const std::atomic_bool* cancelled){
     Result result;result.mutationId=request.nonce;try{
-        if(!m_db.isOpen()||request.agentId!=m_agentId||!validToken(request.agentId)||!validToken(request.nonce)||request.toolCallId.isEmpty()||request.toolCallId.size()>512)fail("Invalid mutation identity or unopened store");
+        if(!m_db.isOpen()||request.agentId!=m_agentId||!validToken(request.agentId)||!validToken(request.nonce)||request.toolCallId.isEmpty()||request.toolCallId.size()>512||(!request.invocationId.isEmpty()&&!validToken(request.invocationId)))fail("Invalid mutation identity or unopened store");
         auto owner=ownerLock(m_directory,m_agentId);
         if(cancelled&&cancelled->load())fail("Mutation canceled before preparation");
         QList<Handle> retainedRoots;
@@ -211,7 +212,7 @@ Result FileMutationStore::apply(const Request& request,QList<MutationEntry> entr
         QSqlQuery capacity(m_db);if(!capacity.exec("SELECT COALESCE(SUM(length(bytes)),0) FROM snapshots")||!capacity.next())fail("Cannot inspect mutation storage budget");qint64 growth=0;for(const auto& e:entries)growth+=e.before.bytes.size()+e.after.bytes.size();if(capacity.value(0).toLongLong()+growth>512ll*1024*1024)fail("Durable mutation journal reached512MiB; no history was evicted and no files changed");
         if(!m_db.transaction())fail(m_db.lastError().text());
         try{
-            query(m_db,"INSERT INTO mutations(nonce,agent,tool_call,tool,undo_of,state,error,output) VALUES(?,?,?,?,?,?,?,?)",{request.nonce,request.agentId,request.toolCallId,request.tool,undoOf,"prepared","",QString::fromUtf8(QJsonDocument(output).toJson(QJsonDocument::Compact))});
+            query(m_db,"INSERT INTO mutations(nonce,agent,tool_call,tool,undo_of,state,error,output,invocation_id) VALUES(?,?,?,?,?,?,?,?,?)",{request.nonce,request.agentId,request.toolCallId,request.tool,undoOf,"prepared","",QString::fromUtf8(QJsonDocument(output).toJson(QJsonDocument::Compact)),request.invocationId});
             query(m_db,"UPDATE mutations SET created_at=? WHERE nonce=?",{QDateTime::currentMSecsSinceEpoch(),request.nonce});
             for(int i=0;i<entries.size();++i){const auto& e=entries[i];for(const auto* snapshot:{&e.before,&e.after})if(snapshot->exists){
                     query(m_db,"INSERT OR IGNORE INTO snapshots VALUES(?,?)",{snapshot->hash(),snapshot->bytes});
@@ -337,8 +338,8 @@ QJsonArray FileMutationStore::history(QString* error,int limit){
     QSqlQuery q(m_db);q.prepare("SELECT nonce,tool_call,tool,undo_of,state,error,output,created_at,cleaned FROM mutations WHERE agent=? ORDER BY rowid DESC LIMIT ?");q.addBindValue(m_agentId);q.addBindValue(qBound(1,limit,1000));
     if(!q.exec()){if(error)*error=q.lastError().text();return {};}
     while(q.next()){
-        QJsonArray entries;QSqlQuery details(m_db);details.prepare("SELECT logical,before_exists,after_exists,COALESCE(length(b.bytes),0),COALESCE(length(a.bytes),0) FROM entries e LEFT JOIN snapshots b ON b.hash=e.before_hash LEFT JOIN snapshots a ON a.hash=e.after_hash WHERE nonce=? ORDER BY ordinal");details.addBindValue(q.value(0));if(!details.exec()){if(error)*error=details.lastError().text();return {};}
-        while(details.next())entries.append(QJsonObject{{"path",details.value(0).toString()},{"beforeExists",details.value(1).toBool()},{"afterExists",details.value(2).toBool()},{"beforeBytes",details.value(3).toLongLong()},{"afterBytes",details.value(4).toLongLong()}});
+        QJsonArray entries;QSqlQuery details(m_db);details.prepare("SELECT logical,before_exists,after_exists,COALESCE(length(b.bytes),0),COALESCE(length(a.bytes),0),root FROM entries e LEFT JOIN snapshots b ON b.hash=e.before_hash LEFT JOIN snapshots a ON a.hash=e.after_hash WHERE nonce=? ORDER BY ordinal");details.addBindValue(q.value(0));if(!details.exec()){if(error)*error=details.lastError().text();return {};}
+        while(details.next())entries.append(QJsonObject{{"path",details.value(0).toString()},{"absolutePath",QDir::cleanPath(details.value(5).toString()+'/'+details.value(0).toString().section('/',1))},{"beforeExists",details.value(1).toBool()},{"afterExists",details.value(2).toBool()},{"beforeBytes",details.value(3).toLongLong()},{"afterBytes",details.value(4).toLongLong()}});
         QSqlQuery directories(m_db);directories.prepare("SELECT COUNT(*) FROM directories WHERE nonce=?");directories.addBindValue(q.value(0));if(!directories.exec()||!directories.next()){if(error)*error=directories.lastError().text();return {};}
         const auto phase=q.value(4).toString();
         const bool recoveryRequired=QStringList{"prepared","applying","rolling_back","recovery_required"}.contains(phase)||(phase=="committed"&&!q.value(8).toBool());

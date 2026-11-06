@@ -20,6 +20,10 @@
 namespace ade {
 namespace {
 constexpr qint64 MaxConfigBytes = 4 * 1024 * 1024;
+bool validTemplateId(const QString& id) {
+    static const QRegularExpression pattern(QStringLiteral("^[a-z0-9][a-z0-9-]{0,79}$"));
+    return id.isEmpty() || pattern.match(id).hasMatch();
+}
 QByteArray protect(const QByteArray &plain, bool encrypt, bool *ok) {
     *ok = false;
     if (plain.isEmpty()) { *ok = true; return {}; }
@@ -78,7 +82,7 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
                 return {};
             }
         }
-        for (const auto &field : {"reasoningEffort", "thinkingMode"}) {
+        for (const auto &field : {"reasoningEffort", "thinkingMode", "kind", "harnessExecutable", "templateId"}) {
             if (object.contains(field) && !object[field].isString()) {
                 if (error) *error = QStringLiteral("Invalid provider option field.");
                 return {};
@@ -92,6 +96,18 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
             }
         }
         ProviderConfig provider = ProviderConfig::fromPublicJson(object);
+        if (!validTemplateId(provider.templateId)) {
+            if (error) *error = QStringLiteral("Invalid provider template identifier.");
+            return {};
+        }
+        if ((provider.kind != "api" && provider.kind != "codex")
+            || (provider.isCodexHarness() && (provider.protocol != "codex-app-server" || !provider.baseUrl.isEmpty()
+                || !object["encryptedApiKey"].toString().isEmpty()))
+            || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
+            || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
+            if (error) *error = QStringLiteral("Invalid coding-agent provider configuration.");
+            return {};
+        }
         if (provider.contextWindowTokens > 100000000) {
             if (error) *error = QStringLiteral("Provider context window exceeds its limit.");
             return {};
@@ -123,6 +139,17 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
     QSet<QString> ids;
     qint64 approximateBytes = 0;
     for (const auto &provider : providers) {
+        if (!validTemplateId(provider.templateId)) {
+            if (error) *error = QStringLiteral("Invalid provider template identifier.");
+            return false;
+        }
+        if ((provider.kind != "api" && provider.kind != "codex")
+            || (provider.isCodexHarness() && (provider.protocol != "codex-app-server" || !provider.baseUrl.isEmpty() || !provider.apiKey.isEmpty()))
+            || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
+            || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
+            if (error) *error = QStringLiteral("Invalid coding-agent provider configuration.");
+            return false;
+        }
         if (provider.id.isEmpty() || ids.contains(provider.id)) {
             if (error) *error = QStringLiteral("Provider IDs must be nonempty and unique.");
             return false;

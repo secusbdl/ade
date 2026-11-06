@@ -2,7 +2,9 @@
 #include "ChevronToolButton.h"
 #include "SidebarNavigation.h"
 #include "Icons.h"
+#include "GitDiffTab.h"
 #include "SettingsPage.h"
+#include "SideChatPane.h"
 #include "core/AgentEngine.h"
 #include "core/ToolExecutor.h"
 #include "runtime/AgentToolHost.h"
@@ -80,11 +82,7 @@ void MainWindow::initializeGit(){
         connectWorkspace(path);if(!current()||GitService::pathKey(current()->workspace)!=GitService::pathKey(path))return;
         if(!setup.workspacePath.isEmpty()){m_worktreeSetups.insert(GitService::pathKey(path));m_worktreeSetup->startAfterMount(setup);}
     });
-    connect(m_git,&GitPanel::openDiffRequested,this,[this](const QString& workspace,const QString& file,bool staged,const QString&){
-        if(staged)return;
-        ToolExecutor scope;QString error;if(!scope.setWorkspace(workspace))return;
-        const auto path=scope.resolvePath(file,&error);if(!error.isEmpty()){m_status->setText(error);return;}openFile(path);
-    });
+    connect(m_git,&GitPanel::openDiffRequested,this,&MainWindow::openWorkspaceDiff);
     connect(m_git,&GitPanel::worktreeRemoved,this,[this](const QString& path){
         m_worktreeSetup->cancel(path);
         const auto affected=m_removalAffectedSessions.value(GitService::pathKey(path));
@@ -116,6 +114,58 @@ void MainWindow::configureWorktreeSettingsPage(){
 }
 void MainWindow::showGit(){
     updateGitContext();int index=m_tabs->indexOf(m_git);if(index<0)index=m_tabs->addTab(m_git,icon("branch"),"Source control");m_tabs->setCurrentIndex(index);revealContent();m_git->refresh();
+}
+void MainWindow::openWorkspaceDiff(const QString& workspace,const QString& path,bool staged,const QString& oldPath){
+    if(!m_git||workspace.isEmpty()||path.isEmpty())return;
+    const auto canonical=GitService::canonicalPath(workspace);if(canonical.isEmpty())return;
+    bool authorized=false;
+    for(const auto& session:m_sessions)if(!session.archived&&!session.workspace.isEmpty()
+        &&GitService::pathKey(GitService::canonicalPath(session.workspace))==GitService::pathKey(canonical)){authorized=true;break;}
+    if(!authorized){m_status->setText("The comparison workspace is no longer connected.");return;}
+    const auto key=GitDiffTab::tabKey(canonical,path,staged,oldPath);
+    const QPointer<MainWindow> self(this);
+    for(int i=0;i<m_tabs->count();++i)if(auto* tab=qobject_cast<GitDiffTab*>(m_tabs->widget(i));tab&&tab->tabKey()==key){
+        const QPointer<GitDiffTab> guarded(tab);m_tabs->setCurrentIndex(i);if(!self||!guarded)return;
+        revealContent();if(!self||!guarded)return;guarded->refresh();return;
+    }
+    auto* tab=new GitDiffTab(m_git->service());const QPointer<GitDiffTab> guarded(tab);
+    tab->load(canonical,path,staged,oldPath);if(!self||!guarded)return;
+    const int index=m_tabs->addTab(tab,icon("document"),QFileInfo(path).fileName()+(staged?" · Staged":" · Diff"));
+    if(!self||!guarded||m_tabs->indexOf(tab)<0)return;
+    m_tabs->setTabToolTip(index,(oldPath.isEmpty()?path:oldPath+" → "+path)+"\n"+canonical);
+    m_tabs->setCurrentWidget(tab);if(!self||!guarded||m_tabs->indexOf(tab)<0)return;revealContent();
+}
+void MainWindow::openWorkspaceChangedFile(const QString& workspace,const QString& relativePath,std::function<bool()> stillValid,const QString& ownerChat){
+    if(!m_git||workspace.isEmpty()||relativePath.isEmpty())return;
+    const auto canonical=GitService::canonicalPath(workspace);
+    const auto owner=ownerChat.isEmpty()?m_currentId:ownerChat;const auto primary=m_currentId;
+    if(canonical.isEmpty()||!find(owner)||find(owner)->archived||(owner!=primary&&!m_sideChats.value(owner))||GitService::canonicalPath(find(owner)->workspace).compare(canonical,Qt::CaseInsensitive)!=0)return;
+    const QPointer<MainWindow> self(this);const auto epoch=++m_changedFileOpenEpoch;
+    const auto valid=[self,owner,primary,epoch,canonical,stillValid]{
+        const auto validOwner=[&]{return self&&self->m_currentId==primary&&self->m_changedFileOpenEpoch==epoch&&self->find(owner)&&!self->find(owner)->archived&&(owner==primary||self->m_sideChats.value(owner))&&GitService::canonicalPath(self->find(owner)->workspace).compare(canonical,Qt::CaseInsensitive)==0;};
+        if(!validOwner())return false;
+        if(stillValid&&!stillValid())return false;
+        return validOwner();
+    };
+    if(!valid())return;
+    showWorkspaceChanges(canonical,owner);if(!valid())return;
+    const QPointer<GitService> service=m_git->service();
+    const auto request=service->diff(canonical);
+    auto connection=std::make_shared<QMetaObject::Connection>();
+    *connection=connect(service,&GitService::completed,this,[this,self,service,connection,valid,request,canonical,relativePath](quint64 id,const GitResult& result){
+        if(id!=request)return;
+        QObject::disconnect(*connection);
+        if(!valid()||!service)return;
+        if(!result.ok&&result.error.code!=GitErrorCode::NotRepository){m_status->setText(result.error.message);return;}
+        for(const auto& entry:result.diff.entries)if(entry.path==relativePath||entry.oldPath==relativePath){
+            if(entry.status!='D')openWorkspaceDiff(canonical,entry.path,entry.staged,entry.oldPath);
+            return;
+        }
+        ToolExecutor scope;QString error;if(!scope.setWorkspace(canonical))return;
+        const auto path=scope.resolvePath(relativePath,&error);
+        if(!error.isEmpty()){m_status->setText(error);return;}
+        if(valid())openFile(path);
+    });
 }
 void MainWindow::updateGitContext(){
     if(!m_git)return;

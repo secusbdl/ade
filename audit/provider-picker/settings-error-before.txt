@@ -1,0 +1,25 @@
+********* Start testing of ProviderPickerWindowTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ProviderPickerWindowTest::initTestCase()
+QWARN  : ProviderPickerWindowTest::settingsAddOpensPickerAndCancelPreservesProviders(empty) This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::settingsAddOpensPickerAndCancelPreservesProviders(empty)
+QWARN  : ProviderPickerWindowTest::settingsAddOpensPickerAndCancelPreservesProviders(existing) This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::settingsAddOpensPickerAndCancelPreservesProviders(existing)
+QWARN  : ProviderPickerWindowTest::settingsEditKeepsEditorWithoutOpeningPicker() This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::settingsEditKeepsEditorWithoutOpeningPicker()
+QWARN  : ProviderPickerWindowTest::emptyGenericProviderRequestStartsPicker() This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::emptyGenericProviderRequestStartsPicker()
+QWARN  : ProviderPickerWindowTest::templateSavePersistsExactNewInstanceAndKeepsExistingKey() This plugin does not support propagateSizeHints()
+QWARN  : ProviderPickerWindowTest::templateSavePersistsExactNewInstanceAndKeepsExistingKey() This plugin does not support propagateSizeHints()
+QWARN  : ProviderPickerWindowTest::templateSavePersistsExactNewInstanceAndKeepsExistingKey() This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::templateSavePersistsExactNewInstanceAndKeepsExistingKey()
+QWARN  : ProviderPickerWindowTest::concurrentProviderChangeIsPreservedAndReportedInSettings() This plugin does not support propagateSizeHints()
+QWARN  : ProviderPickerWindowTest::concurrentProviderChangeIsPreservedAndReportedInSettings() This plugin does not support propagateSizeHints()
+QWARN  : ProviderPickerWindowTest::concurrentProviderChangeIsPreservedAndReportedInSettings() This plugin does not support propagateSizeHints()
+FAIL!  : ProviderPickerWindowTest::concurrentProviderChangeIsPreservedAndReportedInSettings() 'status->text().contains("another window")' returned FALSE. ()
+D:/age/ADE/tests/test_provider_picker_window.cpp(91) : failure location
+QWARN  : ProviderPickerWindowTest::providerModalOwnerCanBeDestroyedWithoutReloadingDeletedSettings() This plugin does not support propagateSizeHints()
+PASS   : ProviderPickerWindowTest::providerModalOwnerCanBeDestroyedWithoutReloadingDeletedSettings()
+PASS   : ProviderPickerWindowTest::cleanupTestCase()
+Totals: 8 passed, 1 failed, 0 skipped, 0 blacklisted, 1071ms
+********* Finished testing of ProviderPickerWindowTest *********

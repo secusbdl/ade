@@ -1,0 +1,25 @@
+********* Start testing of RuntimeAppTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : RuntimeAppTests::initTestCase()
+PASS   : RuntimeAppTests::nativeToolsAuthorAppsWithoutWorkspace()
+FAIL!  : RuntimeAppTests::authoredSiblingAssetsLoadAndReloadInActualApp() '!result.error' returned FALSE. ({"error":"Error: Tool cancelled by user.","message":"Sandbox JavaScript failed","output":""})
+D:/age/ADE/tests/test_runtime_apps.cpp(126) : failure location
+FAIL!  : RuntimeAppTests::authoringRootsAreAgentScopedAndSurviveWorkspaceChanges() '!result.error' returned FALSE. ({"error":"Error: Tool cancelled by user.","message":"Sandbox JavaScript failed","output":""})
+D:/age/ADE/tests/test_runtime_apps.cpp(142) : failure location
+PASS   : RuntimeAppTests::cancelQueuedBinaryAppWritePreventsDiskMutation()
+PASS   : RuntimeAppTests::cancelQueuedSandboxWritePreventsDiskMutation()
+PASS   : RuntimeAppTests::workspaceChangeResetsIdleRealmAndOldCallbacks()
+FAIL!  : RuntimeAppTests::workspaceSwapDuringQueuedFileKeepsFileAndAttachmentRootsAligned() '!fresh.error' returned FALSE. ({"error":"Error: Tool cancelled by user.","message":"Sandbox JavaScript failed","output":""})
+D:/age/ADE/tests/test_runtime_apps.cpp(195) : failure location
+PASS   : RuntimeAppTests::sameCanonicalWorkspacePreservesPersistentState()
+PASS   : RuntimeAppTests::invalidWorkspaceDoesNotSilentlyReplaceAcceptedRoot()
+QWARN  : RuntimeAppTests::contextResetCanDeleteHostFromActualAppClose() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-QpMRdT" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::contextResetCanDeleteHostFromActualAppClose()
+PASS   : RuntimeAppTests::synchronousBrowserCancellationCanDeleteItsHost()
+QWARN  : RuntimeAppTests::idleAppCallbackCompletesThroughActualHost() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-nqMvDS" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::idleAppCallbackCompletesThroughActualHost()
+QWARN  : RuntimeAppTests::otherAgentCannotAccessAppThroughDirectOrSandboxBrowserTools() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-mStksk" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::otherAgentCannotAccessAppThroughDirectOrSandboxBrowserTools()
+PASS   : RuntimeAppTests::cleanupTestCase()
+Totals: 12 passed, 3 failed, 0 skipped, 0 blacklisted, 5021ms
+********* Finished testing of RuntimeAppTests *********

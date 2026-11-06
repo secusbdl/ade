@@ -13,6 +13,7 @@
 #include <QStandardPaths>
 #include <QStringDecoder>
 #include <QTimeZone>
+#include <QUuid>
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
 #include <vector>
@@ -397,16 +398,26 @@ void ToolExecutor::executeFileTool(const QString &name, const QJsonObject &args)
     QString error;
     if(m_fileMutationExecutor&&QStringList{"write","multiEdit","writeBytes","copy","delete"}.contains(name)){
         const auto generation=m_generation;const auto id=m_id;const auto executor=m_fileMutationExecutor;
-        const FileMutationInvocation invocation{m_mutationProvenanceId,name,m_workspace,m_appsDirectory,args};
+        const auto invocationId=QUuid::createUuid().toString(QUuid::WithoutBraces);
+        const FileMutationInvocation invocation{m_mutationProvenanceId,name,m_workspace,m_appsDirectory,args,invocationId};
         const auto canceled=std::make_shared<std::atomic_bool>(false);m_fileReadCancelled=canceled;
         auto* watcher=new QFutureWatcher<FileMutationOutcome>(this);
-        connect(watcher,&QFutureWatcher<FileMutationOutcome>::finished,this,[this,watcher,generation,id]{
+        connect(watcher,&QFutureWatcher<FileMutationOutcome>::finished,this,[this,watcher,generation,id,invocationId]{
             const auto result=watcher->result();watcher->deleteLater();
-            if(generation!=m_generation||id!=m_id)return;
-            m_fileReadCancelled.reset();const QPointer<ToolExecutor> self(this);
+            const QPointer<ToolExecutor> self(this);
+            emit mutationSettled(invocationId,id,result.output,result.error,result.metadata);
+            if(!self||generation!=m_generation||id!=m_id)return;
+            m_fileReadCancelled.reset();
             for(const auto& change:result.changes){emit fileChanged(change.path,change.before,change.after);if(!self||generation!=m_generation||id!=m_id)return;}
             finish(result.output,result.error,false,result.metadata);
         });
+        const QPointer<ToolExecutor> self(this);
+        emit mutationStarted(invocationId,id);
+        if(!self)return;
+        if(generation!=m_generation||id!=m_id){
+            watcher->deleteLater();
+            emit mutationSettled(invocationId,id,"Mutation cancelled before dispatch.",true,{});return;
+        }
         watcher->setFuture(QtConcurrent::run([executor,invocation,canceled]{return executor(invocation,canceled.get());}));return;
     }
     if(name=="copy"||name=="delete"){finish("A durable mutation host must be connected for this operation.",true);return;}

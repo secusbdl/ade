@@ -20,6 +20,7 @@ struct Request {
     bool move=false;
     QByteArray bytes;
     bool raw=false;
+    QString invocationId;
 };
 struct Result {
     bool success=false,recoveryRequired=false;
@@ -46,6 +47,10 @@ public:
     QList<Result> recover();
     QJsonObject describe(const QString& nonce,QString* error);
     QJsonArray history(QString* error,int limit=200);
+    // Read only: exact owner/nonce selection, independent of current files.
+    // A path requests a bounded text preview in addition to the full summary.
+    QJsonObject turnFiles(const QStringList& mutationIds,const QString& path,QString* error);
+    QJsonArray settledInvocations(const QStringList& invocationIds,QString* error);
     bool removeAgent(QString* error);
     void setFaultHook(FaultHook hook){m_fault=std::move(hook);}
 private:

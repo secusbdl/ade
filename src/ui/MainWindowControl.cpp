@@ -172,6 +172,11 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
         !error.isEmpty())
       m_status->setText(error);
   }
+  connect(engine, &AgentEngine::queueError, this,
+          [this, id](const QString &error) {
+            if (id == m_currentId)
+              m_status->setText("Queue: " + error);
+          });
   engine->setQueueCommitter([self, owner, id](const QJsonArray &history,
                                               const QJsonArray &queue,
                                               QString *error) {
@@ -217,11 +222,6 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
             if (!self)
               return;
             refreshAgents();
-          });
-  connect(engine, &AgentEngine::queueError, this,
-          [this, id](const QString &error) {
-            if (id == m_currentId)
-              m_status->setText("Queue: " + error);
           });
   connect(engine, &AgentEngine::questionChanged, this, [this, id] {
     if (id == m_currentId)

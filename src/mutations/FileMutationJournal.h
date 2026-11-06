@@ -16,6 +16,8 @@ public:
     FileMutationOutcome undo(const QStringList& mutationIds,const QString& requestId,const std::atomic_bool* canceled=nullptr) const;
     FileMutationOutcome recover(const std::atomic_bool* canceled=nullptr)const;
     QJsonArray history(QString* error=nullptr,int limit=200) const;
+    QJsonObject turnFiles(const QStringList& mutationIds,const QString& path={},QString* error=nullptr) const;
+    QJsonArray settledInvocations(const QStringList& invocationIds,QString* error=nullptr) const;
     void revoke();
     // Deterministic timing seam for local crash/lifetime fixtures. It receives
     // no filesystem authority and is never exposed through a model or page API.

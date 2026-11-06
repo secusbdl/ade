@@ -40,8 +40,9 @@ void MainWindow::refreshSideChats(){
 void MainWindow::refreshSideChat(const QString& id){
     const QPointer<SideChatPane> pane=m_sideChats.value(id);const auto* session=find(id);if(!pane||!session)return;const auto* engine=m_engines.value(id);const Conversation snapshot=*session;
     QJsonArray models;for(const auto& selection:availableModelSelections(m_providers,m_settings->preference("modelCatalogs").toObject(),m_settings->preference("modelPresets").toArray()))models.append(selection.toJson());
-    const QPointer<MainWindow> self(this);updateTranscriptLinkRows(id);
-    pane->setState(snapshot,engine?engine->displayMessages():AgentEngine::displayHistory(snapshot.messages),engine&&engine->isBusy(),models,engine?engine->pendingQuestion():QJsonObject(),engine?engine->queuedMessages():snapshot.queuedMessages);
+    const QPointer<MainWindow> self(this);const auto rows=engine?engine->displayMessages():AgentEngine::displayHistory(snapshot.messages);
+    if(engine)updateTranscriptLinkRows(id,rows);
+    pane->setState(snapshot,rows,engine&&engine->isBusy(),models,engine?engine->pendingQuestion():QJsonObject(),engine?engine->queuedMessages():snapshot.queuedMessages);
     if(!self||!pane)return;
     pane->setUiScale(m_settings->preference("personalization.uiZoom").toInt(100)/100.0);const int index=m_tabs->indexOf(pane);if(index>=0){m_tabs->setTabText(index,snapshot.title.left(36));m_tabs->setTabToolTip(index,snapshot.title);}
 }
@@ -50,6 +51,7 @@ void MainWindow::openSideChat(const QString& id){
     if(const auto existing=m_sideChats.value(id)){m_tabs->setCurrentWidget(existing);revealContent();return;}
     const auto initialTitle=session->title;
     const QPointer<MainWindow> self(this);auto* rawPane=new SideChatPane(id,m_tabs);const QPointer<SideChatPane> pane(rawPane);m_sideChats.insert(id,pane);
+    connectTurnFileControls(pane->transcript());
     const QPointer<AgentEngine> engine(engineFor(id));if(!self||!pane||!engine)return;
     initializeComposerCompletions(pane->composer(),id);
     connect(pane,&QObject::destroyed,this,[this,id,pane]{if(m_sideChats.value(id)==pane)m_sideChats.remove(id);});

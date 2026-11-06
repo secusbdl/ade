@@ -2,13 +2,21 @@
 #include "Icons.h"
 #include "MainWindow.h"
 #include "WorkbenchSplitter.h"
+#include "WorkspaceChangesController.h"
+#include "WorkspaceChangesView.h"
+#include "SideChatPane.h"
+#include "git/GitPanel.h"
+#include "git/GitService.h"
+#include <QButtonGroup>
 #include <QFileInfo>
+#include <QFileSystemModel>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
 #include <QShortcut>
+#include <QSettings>
 #include <QTabWidget>
 #include <QToolButton>
 #include <QTreeView>
@@ -96,6 +104,7 @@ void MainWindow::initializeWorkbench() {
         if (m_splitter->contentVisible() && m_tabs->currentIndex() >= 0)
             emit m_tabs->tabCloseRequested(m_tabs->currentIndex());
     });
+    initializeWorkspaceChanges();
     refreshWorkbench();
 }
 void MainWindow::refreshWorkbench() {
@@ -110,13 +119,82 @@ void MainWindow::refreshWorkbench() {
     findChild<QToolButton*>("toggleFileTreeButton")->setVisible(!content && !files);
     findChild<QToolButton*>("workbenchMenuButton")->setVisible(!content);
     findChild<QToolButton*>("contentFileTreeButton")->setVisible(!files);
-    const auto* session = current();
+    auto* session = current();
+    const auto selectedOwner=m_fileTreePanel->property("changedFilesOwner").toString();
+    if(!selectedOwner.isEmpty()){
+        const auto* selected=find(selectedOwner);
+        const bool primary=m_fileTreePanel->property("changedFilesMainOwner").toString()==m_currentId;
+        const bool available=selected&&!selected->archived&&(selectedOwner==m_currentId||m_sideChats.value(selectedOwner));
+        const auto expected=m_fileTreePanel->property("changedFilesWorkspace").toString();
+        if(primary&&available&&GitService::canonicalPath(selected->workspace).compare(expected,Qt::CaseInsensitive)==0)session=find(selectedOwner);
+        else m_fileTreePanel->setProperty("changedFilesOwner",QString());
+    }
     const bool connected = session && !session->workspace.isEmpty();
-    m_files->setVisible(connected);
+    const auto owner=session?session->id:QString();const auto primaryOwner=m_currentId;
+    const auto workspace=connected?session->workspace:QString();
+    const auto valid=[this,owner,primaryOwner,workspace]{const auto* selected=find(owner);return m_currentId==primaryOwner&&(!owner.isEmpty()?selected&&!selected->archived&&selected->workspace==workspace:!current());};
+    if(m_workspaceChanges){
+        const QPointer<MainWindow> self(this);
+        m_workspaceChanges->setWorkspace(workspace);if(!self||!valid())return;
+        m_workspaceChanges->setActive(files);if(!self||!valid())return;
+    }
+    const bool changes=m_fileTreePanel->property("changedFilesMode").toBool();
+    m_files->setVisible(connected&&!changes);
+    if(m_workspaceChangesView){
+        m_workspaceChangesView->setVisible(connected&&changes);
+        const auto* controller=m_workspaceChanges.data();
+        if(controller){
+            const QPointer<MainWindow> self(this);
+            m_workspaceChangesView->setSnapshot(controller->workspace(),controller->phase(),controller->summary(),controller->hasSnapshot(),controller->error(),controller->busy());if(!self||!valid())return;
+        }
+    }
+    if(connected&&m_fileModel->rootPath()!=workspace){
+        const QPointer<MainWindow> self(this);m_files->setModel(m_fileModel);const auto index=m_fileModel->setRootPath(workspace);if(!self||!valid())return;m_files->setRootIndex(index);
+    }
     m_fileTreePanel->findChild<QWidget*>("fileTreeEmpty")->setVisible(!connected);
     auto* title = m_fileTreePanel->findChild<QLabel*>("fileTreeTitle");
-    title->setText(connected ? QFileInfo(session->workspace).fileName() : "Files");
-    title->setToolTip(connected ? session->workspace : QString());
+    title->setText(connected ? QFileInfo(workspace).fileName() : "Files");
+    title->setToolTip(workspace);
+}
+void MainWindow::initializeWorkspaceChanges(){
+    auto* layout=qobject_cast<QVBoxLayout*>(m_fileTreePanel->layout());
+    auto* modes=new QHBoxLayout;modes->setSpacing(2);
+    auto* files=new QToolButton;files->setObjectName("fileTreeFilesMode");files->setText("Files");files->setCheckable(true);files->setAutoRaise(true);
+    auto* changes=new QToolButton;changes->setObjectName("fileTreeChangesMode");changes->setText("Changed files");changes->setToolTip("Changed files");changes->setCheckable(true);changes->setAutoRaise(true);
+    auto* group=new QButtonGroup(m_fileTreePanel);group->addButton(files);group->addButton(changes);group->setExclusive(true);
+    modes->addWidget(files);modes->addWidget(changes);modes->addStretch();layout->insertLayout(1,modes);
+    auto* totals=new QLabel;totals->setObjectName("fileTreeChangesTotals");totals->setTextFormat(Qt::PlainText);totals->setWordWrap(true);layout->insertWidget(2,totals);totals->hide();
+    m_workspaceChangesView=new WorkspaceChangesView(m_fileTreePanel);layout->addWidget(m_workspaceChangesView,1);
+    m_workspaceChanges=new WorkspaceChangesController(m_git->service(),this);
+    QSettings preferences(m_store.directory()+"/window.ini",QSettings::IniFormat);
+    const bool mode=preferences.value("fileTreeViewMode").toString()=="diff";
+    m_fileTreePanel->setProperty("changedFilesMode",mode);files->setChecked(!mode);changes->setChecked(mode);
+    const auto select=[this,files,changes](bool diff){
+        m_fileTreePanel->setProperty("changedFilesMode",diff);files->setChecked(!diff);changes->setChecked(diff);
+        QSettings preferences(m_store.directory()+"/window.ini",QSettings::IniFormat);preferences.setValue("fileTreeViewMode",diff?"diff":"files");
+        refreshWorkbench();
+    };
+    connect(files,&QToolButton::clicked,this,[select]{select(false);});connect(changes,&QToolButton::clicked,this,[select]{select(true);});
+    connect(m_workspaceChanges,&WorkspaceChangesController::changed,this,[this,select,changes,totals]{
+        const auto phase=m_workspaceChanges->phase();
+        if(phase==WorkspaceChangesController::Phase::NotRepository){select(false);return;}
+        const auto& summary=m_workspaceChanges->summary();
+        changes->setText(summary.entries.isEmpty()?"Changed files":QString("Changes %1").arg(summary.entries.size()));
+        changes->setToolTip(QString("Changed files · +%1 −%2").arg(summary.added).arg(summary.deleted));
+        totals->setText(QString("+%1 −%2").arg(summary.added).arg(summary.deleted));totals->setVisible(!summary.entries.isEmpty());
+        changes->setAccessibleName(changes->toolTip());refreshWorkbench();
+    });
+    connect(m_workspaceChangesView,&WorkspaceChangesView::openRequested,this,&MainWindow::openWorkspaceDiff);
+}
+void MainWindow::refreshWorkspaceChanges(){if(m_workspaceChanges)m_workspaceChanges->requestRefresh();}
+void MainWindow::showWorkspaceChanges(const QString& workspace,const QString& ownerChat){
+    const auto owner=ownerChat.isEmpty()?m_currentId:ownerChat;const auto* session=find(owner);
+    const auto canonical=GitService::canonicalPath(workspace);
+    if(!session||session->archived||canonical.isEmpty()||(owner!=m_currentId&&!m_sideChats.value(owner))||GitService::canonicalPath(session->workspace).compare(canonical,Qt::CaseInsensitive)!=0)return;
+    const auto primary=m_currentId;const auto expectedWorkspace=session->workspace;const QPointer<MainWindow> self(this);
+    m_fileTreePanel->setProperty("changedFilesOwner",owner);m_fileTreePanel->setProperty("changedFilesMainOwner",primary);m_fileTreePanel->setProperty("changedFilesWorkspace",canonical);
+    m_splitter->setFileTreeVisible(true);if(!self||m_currentId!=primary||!find(owner)||find(owner)->workspace!=expectedWorkspace)return;
+    if(auto* button=m_fileTreePanel->findChild<QToolButton*>("fileTreeChangesMode"))button->click();
 }
 void MainWindow::revealContent() {
     m_splitter->setHasContent(m_tabs->count() > 0);

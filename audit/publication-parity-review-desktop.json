@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-06T17:24:36.870374+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "commit": "5e22a6b2c92dc968064d423efdd810642d7ae365",
+  "parent": "ecb2db018a5c4724c8426a55f6e08bc6dd3f348a",
+  "method": "GitHub Desktop UI Push origin",
+  "preflight": {
+    "localClean": true,
+    "oneOutgoingCommit": true,
+    "localCommitMatches": true,
+    "remoteParentMatches": true
+  },
+  "observedSequence": [
+    "Push origin, 1 outgoing",
+    "Pushing to origin",
+    "Refreshing repository",
+    "push complete",
+    "Fetch origin, Last fetched just now",
+    "No local changes, no outgoing count, no error"
+  ],
+  "remoteAfter": "5e22a6b2c92dc968064d423efdd810642d7ae365",
+  "remoteMatches": true,
+  "screenshots": [
+    {
+      "privateFilename": "01-github-desktop-approved-5e22a6b-before-push.png",
+      "sha256": "861813e53f7b10895188517d256e690504229d684055ea36acc6bde2866be526"
+    },
+    {
+      "privateFilename": "02-github-desktop-5e22a6b-push-result.png",
+      "sha256": "0d3ebd9486e4f70599de3072a30235e3b072b0cc15877ea6c2f59fb47c584f43"
+    },
+    {
+      "privateFilename": "03-github-desktop-5e22a6b-push-complete.png",
+      "sha256": "11a13c8e9c532b0ae81f30bd6512c963d524869116dd98823c1a03ceff412c74"
+    }
+  ],
+  "scope": "Only approved curated ADE checkout pushed. No CLI push, force push, or unrelated repository modification."
+}

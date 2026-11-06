@@ -43,6 +43,8 @@ public slots:
 signals:
     void backRequested();
     void providersRequested();
+    void providerEditRequested(const QString& providerId);
+    void addProviderRequested();
     void providerKeyImportRequested();
     void preferencesChanged();
     void restoreConversationRequested(const QString &id);

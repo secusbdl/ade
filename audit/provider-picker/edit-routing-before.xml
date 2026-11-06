@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ProviderPickerWindowTest" timestamp="2026&#x002D;11&#x002D;06T20:57:12" hostname="VOID" tests="3" failures="1" errors="0" skipped="0" time="0.269">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ProviderPickerWindowTest" time="0.000"/>
+  <testcase name="settingsSecondCardEditsExactProvider" classname="ProviderPickerWindowTest" time="0.266">
+    <failure type="fail" message="&apos;result.handled&amp;&amp;result.error.isEmpty()&apos; returned FALSE. (Second card selected name &apos;DeepSeek API&apos; and model &apos;fixture&#x002D;model&apos; instead of &apos;Google API&apos; / &apos;fixture&#x002D;google&#x002D;model&apos;.)"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="ProviderPickerWindowTest" time="0.000"/>
+</testsuite>

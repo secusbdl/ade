@@ -82,7 +82,7 @@ FileMutationExecutor FileMutationJournal::executor()const{
         for(auto it=mounts.cbegin();it!=mounts.cend();++it)if(!store.bindMount(it.key(),it->root,it->writable,&error,it->identity))return rejected(error);
         store.setFaultHook([state,observer](const QString& boundary,int index){if(observer)observer(boundary,index);return state->revoked&&!boundary.startsWith("rollback-")?mutations::Fault::Fail:mutations::Fault::None;});
         for(const auto& recovered:store.recover())if(!recovered.success)return rejected("Pending mutation recovery requires attention: "+recovered.error);
-        mutations::Request request;request.agentId=state->agent;request.nonce=nonce();request.toolCallId=input.requestId;request.tool=input.tool;request.raw=input.arguments["raw"].toBool();
+        mutations::Request request;request.agentId=state->agent;request.nonce=nonce();request.toolCallId=input.requestId;request.invocationId=input.invocationId;request.tool=input.tool;request.raw=input.arguments["raw"].toBool();
         const auto& args=input.arguments;
         const auto rawPath=args.value(input.tool=="copy"?"input_path":"path");if(!rawPath.isString())return rejected("Mutation path must be a string.");
         request.path=logicalPath(rawPath.toString(),mounts,&error);if(!error.isEmpty())return rejected(error);
@@ -99,7 +99,11 @@ FileMutationExecutor FileMutationJournal::executor()const{
             if(!args["edits"].isArray()||args["edits"].toArray().isEmpty()||args["edits"].toArray().size()>1000)return rejected("multiEdit requires one to1000 edits.");
             for(const auto& value:args["edits"].toArray()){const auto edit=value.toObject();if(!edit["old_string"].isString()||!edit["new_string"].isString()||(edit.contains("replace_all")&&!edit["replace_all"].isBool()))return rejected("Invalid multiEdit item.");request.edits.append({edit["old_string"].toString(),edit["new_string"].toString(),edit["replace_all"].toBool()});}
         }
-        return outcome(store.execute(request,canceled),state->agent);
+        const auto result=store.execute(request,canceled);auto response=outcome(result,state->agent);
+        // No-op writes and failures before preparation do not create a durable
+        // journal record. Never advertise an ID that cannot be queried later.
+        QString lookupError;if(store.describe(result.mutationId,&lookupError).isEmpty())response.metadata.remove("mutations");
+        return response;
     };
 }
 FileMutationOutcome FileMutationJournal::undo(const QStringList& ids,const QString& requestId,const std::atomic_bool* canceled)const{
@@ -116,6 +120,22 @@ QJsonArray FileMutationJournal::history(QString* error,int limit)const{
     if(!m_state->initialError.isEmpty()){if(error)*error=m_state->initialError;return {};}
     if(m_state->revoked){if(error)*error="Mutation context was revoked.";return {};}
     mutations::FileMutationStore store(m_state->directory,m_state->agent);if(!store.open(error))return {};return store.history(error,limit);
+}
+QJsonObject FileMutationJournal::turnFiles(const QStringList& ids,const QString& path,QString* error)const{
+    if(error)error->clear();
+    if(m_state->revoked||!m_state->initialError.isEmpty()){if(error)*error=m_state->initialError.isEmpty()?QString("Mutation context was revoked."):m_state->initialError;return {};}
+    mutations::FileMutationStore store(m_state->directory,m_state->agent);if(!store.open(error))return {};
+    auto result=store.turnFiles(ids,path,error);
+    if(m_state->revoked){if(error)*error="Mutation context was revoked.";return {};}
+    return result;
+}
+QJsonArray FileMutationJournal::settledInvocations(const QStringList& ids,QString* error)const{
+    if(error)error->clear();
+    if(m_state->revoked||!m_state->initialError.isEmpty()){if(error)*error=m_state->initialError.isEmpty()?QString("Mutation context was revoked."):m_state->initialError;return {};}
+    mutations::FileMutationStore store(m_state->directory,m_state->agent);if(!store.open(error))return {};
+    auto result=store.settledInvocations(ids,error);
+    if(m_state->revoked){if(error)*error="Mutation context was revoked.";return {};}
+    return result;
 }
 FileMutationOutcome FileMutationJournal::recover(const std::atomic_bool* canceled)const{
     const auto state=m_state;if(!state->initialError.isEmpty())return rejected(state->initialError);

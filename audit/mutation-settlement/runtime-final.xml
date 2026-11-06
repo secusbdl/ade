@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="MutationRuntimeTest" timestamp="2026&#x002D;11&#x002D;06T20:10:20" hostname="VOID" tests="18" failures="0" errors="0" skipped="0" time="5.020">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="MutationRuntimeTest" time="0.000"/>
+  <testcase name="actualEngineToolsPersistAndUndo(openai)" classname="MutationRuntimeTest" time="0.403"/>
+  <testcase name="actualEngineToolsPersistAndUndo(responses)" classname="MutationRuntimeTest" time="0.396"/>
+  <testcase name="actualEngineToolsPersistAndUndo(anthropic)" classname="MutationRuntimeTest" time="0.332"/>
+  <testcase name="actualEngineToolsPersistAndUndo(google)" classname="MutationRuntimeTest" time="0.396"/>
+  <testcase name="restartConflictAndForkAuthority" classname="MutationRuntimeTest" time="0.388"/>
+  <testcase name="sandboxRawWritesAreExactAndAttributed" classname="MutationRuntimeTest" time="0.399"/>
+  <testcase name="cancellationBeforeQueuedSandboxMutationDoesNotWrite" classname="MutationRuntimeTest" time="0.269"/>
+  <testcase name="mutationActionsHaveOneHostLane" classname="MutationRuntimeTest" time="0.082"/>
+  <testcase name="undoObserverMayDestroyHost" classname="MutationRuntimeTest" time="0.266"/>
+  <testcase name="repeatedToolIdsRetainExactSavedTurnIdentity" classname="MutationRuntimeTest" time="0.461"/>
+  <testcase name="sandboxOuterResultRetainsAllCommittedMutationIds" classname="MutationRuntimeTest" time="0.394"/>
+  <testcase name="cancelFromCommittedChangeNotificationRetainsMutationIdentity" classname="MutationRuntimeTest" time="0.146"/>
+  <testcase name="lateCommittedResultCannotAttachToReusedModelId" classname="MutationRuntimeTest" time="0.479"/>
+  <testcase name="persistedInvocationRecoversAfterOwnerDiesBeforeDelivery" classname="MutationRuntimeTest" time="0.168"/>
+  <testcase name="failedDispatchPersistencePreventsMutation" classname="MutationRuntimeTest" time="0.220"/>
+  <testcase name="restartedSandboxCommitDoesNotClaimOuterCompletion" classname="MutationRuntimeTest" time="0.217"/>
+  <testcase name="cleanupTestCase" classname="MutationRuntimeTest" time="0.000"/>
+</testsuite>

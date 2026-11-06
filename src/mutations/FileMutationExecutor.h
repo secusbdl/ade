@@ -11,6 +11,7 @@ namespace ade {
 struct FileMutationInvocation {
     QString requestId, tool, workspace, appsDirectory;
     QJsonObject arguments;
+    QString invocationId;
 };
 struct FileMutationChange {
     QString path;

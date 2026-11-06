@@ -115,7 +115,7 @@ void MainWindow::buildUi() {
     m_sidebarReopen=button("sidebar","Show sidebar");m_sidebarReopen->setObjectName("sidebarReopenButton");m_sidebarReopen->setVisible(m_sidebarSplitter->isCollapsed());m_chat->headerLayout()->addWidget(m_sidebarReopen);m_chat->headerLayout()->addStretch();
     connect(m_sidebarReopen,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
     connect(m_sidebarSplitter,&SidebarSplitter::collapsedChanged,m_sidebarReopen,&QWidget::setVisible);
-    m_transcript=new ConversationView;m_transcript->setObjectName("conversationView");m_chat->setHistoryWidget(m_transcript);
+    m_transcript=new ConversationView;m_transcript->setObjectName("conversationView");m_chat->setHistoryWidget(m_transcript);connectTurnFileControls(m_transcript);
     connect(m_transcript,&ConversationView::imageRequested,this,[this](quint64 request,const QString& id,const QString& row,const QString& part,const QUrl& url){provideTranscriptImage(request,id,row,part,url);});
     m_transcriptRefresh=new QTimer(this);m_transcriptRefresh->setSingleShot(true);m_transcriptRefresh->setInterval(16);
     connect(m_transcriptRefresh,&QTimer::timeout,this,&MainWindow::renderConversation);
@@ -224,7 +224,9 @@ void MainWindow::buildUi() {
     connect(m_sidebarNavigation,&SidebarNavigation::errorOccurred,this,&MainWindow::conversationError);
     configureWorktreeSettingsPage();
     connect(m_settings,&SettingsPage::backRequested,this,[this]{m_pages->setCurrentIndex(0);});
-    connect(m_settings,&SettingsPage::providersRequested,this,[this]{showProviders();m_settings->reload();});
+    connect(m_settings,&SettingsPage::providersRequested,this,[this]{showProviders();});
+    connect(m_settings,&SettingsPage::addProviderRequested,this,[this]{showProviders(true);});
+    connect(m_settings,&SettingsPage::providerEditRequested,this,[this](const QString& id){showProviders(false,id);});
     connect(m_settings,&SettingsPage::preferencesChanged,this,&MainWindow::applyPreferences);
     connect(qApp->styleHints(),&QStyleHints::colorSchemeChanged,this,[this]{
         if(m_settings->preference("personalization.appearance").toString()=="system")applyPreferences();
@@ -288,8 +290,31 @@ void MainWindow::renderConversation(){
     m_transcriptRefresh->stop();
     const auto* session=current();if(!session){m_transcript->clear();m_chat->setHistoryPresent(false);refreshWorkbench();refreshAgentControls();return;}
     const auto* engine=m_engines.value(session->id);
-    updateTranscriptLinkRows(session->id);
+    if(!engine&&!session->archived&&!m_pendingMutationHydration.contains(session->id)){
+        bool pending=false;
+        for(int i=0;i<session->messages.size();++i)for(const auto& value:session->messages[i].toObject()["metadata"].toObject()["mutationInvocations"].toArray()){
+            const auto invocation=value.toObject();
+            if(invocation["agentId"]!=session->id||QUuid(invocation["invocationId"].toString()).isNull())continue;
+            bool resultPresent=false;
+            for(int next=i+1;next<session->messages.size()&&session->messages[next].toObject()["role"]=="tool";++next)
+                resultPresent|=session->messages[next].toObject()["tool_call_id"]==invocation["toolCallId"];
+            pending|=!invocation["settled"].toBool()||!resultPresent;
+        }
+        if(pending){
+            const auto id=session->id;m_pendingMutationHydration.insert(id);
+            // A committed write may outlive the previous window. Hydrate after
+            // selection finishes so recovery can save through the normal chat
+            // committer without invalidating the selection's session pointers.
+            QTimer::singleShot(0,this,[this,id]{
+                m_pendingMutationHydration.remove(id);
+                const auto* selected=find(id);if(!selected||selected->archived||m_currentId!=id)return;
+                const QPointer<MainWindow> self(this);engineFor(id);
+                if(self&&m_currentId==id)renderConversation();
+            });
+        }
+    }
     const auto rows=engine?engine->displayMessages():AgentEngine::displayHistory(session->messages);
+    if(engine)updateTranscriptLinkRows(session->id,rows);
     const QPointer<MainWindow> self(this);m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());if(!self)return;
     m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();refreshAgentControls();
 }
@@ -463,7 +488,39 @@ void MainWindow::compressContext(){
     if(m_composer->toPlainText().trimmed()=="/compact")m_composer->clear();
     m_status->setText("Compressing context…");utility->compressHistory(prefix);
 }
-void MainWindow::showProviders(){QString error;const auto latest=m_providerRepository.load(&error);if(!error.isEmpty()){m_status->setText(error);return;}m_providers=latest;ProviderDialog dialog(m_providers,m_settings->preference("modelCatalogs").toObject(),this);if(dialog.exec()!=QDialog::Accepted)return;auto providers=dialog.providers();if(!m_providerRepository.save(providers,&error)){m_status->setText(error);return;}m_providers=providers;if(!m_settings->setPreference("modelCatalogs",dialog.modelCatalogs()))m_status->setText("Provider saved, but the discovered catalog could not be saved.");refreshModels();}
+void MainWindow::showProviders(bool add,const QString& providerId){
+    const QPointer<MainWindow> self(this);
+    // Reload before reporting an outcome: reload clears the settings status.
+    const auto finish=[self](const QString& error={}){
+        if(!self)return;
+        self->m_settings->reload();
+        if(!self||error.isEmpty())return;
+        self->m_status->setText(error);self->m_settings->reportProviderImportResult(error,true);
+    };
+    QString error;const auto latest=m_providerRepository.load(&error);
+    if(!error.isEmpty()){finish(error);return;}
+    m_providers=latest;
+    if(!providerId.isEmpty()&&std::none_of(m_providers.cbegin(),m_providers.cend(),[&](const ProviderConfig& provider){return provider.id==providerId;})){
+        finish(QStringLiteral("This provider is no longer configured. The provider list has been refreshed."));return;
+    }
+    QPointer<ProviderDialog> dialog=new ProviderDialog(m_providers,m_settings->preference("modelCatalogs").toObject(),this);
+    if(!providerId.isEmpty()&&!dialog->selectProviderId(providerId)){
+        if(dialog)dialog->deleteLater();
+        finish(QStringLiteral("The selected provider could not be opened."));return;
+    }
+    if(!self||!dialog)return;
+    if(add||m_providers.isEmpty())QTimer::singleShot(0,dialog.data(),&ProviderDialog::startAddProvider);
+    const auto result=dialog->exec();
+    if(!self||!dialog)return;
+    if(result!=QDialog::Accepted){dialog->deleteLater();finish();return;}
+    const auto providers=dialog->providers();const auto catalogs=dialog->modelCatalogs();dialog->deleteLater();
+    if(!m_providerRepository.save(providers,&error)){finish(error);return;}
+    m_providers=providers;
+    const bool savedCatalog=m_settings->setPreference("modelCatalogs",catalogs);
+    if(!self)return;
+    finish(savedCatalog?QString():QStringLiteral("Provider saved, but the discovered catalog could not be saved."));
+    if(self)refreshModels();
+}
 void MainWindow::showSettings(){m_settings->setContextWorkspace(current()?current()->workspace:QString());m_settings->reload();m_pages->setCurrentWidget(m_settings);}
 void MainWindow::applyPreferences(){
     if(!m_settings)return;
@@ -622,7 +679,7 @@ void MainWindow::openFile(const QString& path){
     if(!editor->openFile(path,&error)){m_status->setText(error);delete editor;return;}
     editor->setProperty("filePath",editor->filePath());
     connect(editor,&EditorWidget::modifiedChanged,this,[this,editor](bool modified){const auto index=m_tabs->indexOf(editor);if(index>=0)m_tabs->setTabText(index,QFileInfo(editor->filePath()).fileName()+(modified?" •":""));});
-    connect(editor,&EditorWidget::fileSaved,this,[this](const QString& file){m_status->setText("Saved "+QFileInfo(file).fileName());});
+    connect(editor,&EditorWidget::fileSaved,this,[this](const QString& file){m_status->setText("Saved "+QFileInfo(file).fileName());refreshWorkspaceChanges();});
     connect(editor,&EditorWidget::errorOccurred,this,[this](const QString& message){m_status->setText(message);});
     m_tabs->setCurrentIndex(m_tabs->addTab(editor,QFileInfo(path).fileName()));revealContent();
 }

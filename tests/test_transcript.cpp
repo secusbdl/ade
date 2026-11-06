@@ -16,6 +16,8 @@
 #include <QTextDocument>
 #include <QToolButton>
 #include <QWheelEvent>
+#include <QElapsedTimer>
+#include <algorithm>
 
 using namespace ade;
 namespace {
@@ -60,6 +62,8 @@ private slots:
     void completedReadBeforeReadyIsCompact();
     void queuedApprovalKeepsOriginalIdentity();
     void retiredApprovalCannotEmitAgain();
+    void shortCodeBlocksFitWithoutVerticalScrolling();
+    void longHistoryStreamingRetainsSelectionAndReportsCost();
 };
 
 void TranscriptTest::orderedPartsRetainWidgetsAndSelection(){
@@ -129,6 +133,34 @@ void TranscriptTest::provisionalRetentionDoesNotDuplicate(){ConversationView vie
 void TranscriptTest::removedRowsAreDestroyed(){ConversationView view;view.setConversation("chat",longHistory(),false);expose(view);QPointer<QWidget> removed=part(view,"p1");view.setConversation("chat",{message("a","assistant",{text("p","Remaining")})},false);QVERIFY(removed.isNull());view.clear();QCOMPARE(view.toPlainText(),QString());QCOMPARE(view.conversationId(),QString());QCOMPARE(view.findChildren<TranscriptText*>().size(),0);QTest::qWait(30);}
 void TranscriptTest::attachmentChipsAndPlainText(){ConversationView view;auto row=message("u","user",{text("p","Review this file")});row["attachments"]=QJsonArray{QJsonObject{{"path","/private/path/notes.txt"},{"originalFileName","notes.txt"}},QJsonObject{{"path","/other/report.pdf"},{"originalFileName","report.pdf"}}};view.setConversation("chat",{row},false);expose(view,320,400);QCOMPARE(view.findChildren<QLabel*>("attachmentChip").size(),2);QVERIFY(view.toPlainText().contains("notes.txt"));QVERIFY(view.toPlainText().contains("report.pdf"));for(auto *chip:view.findChildren<QLabel*>("attachmentChip"))QVERIFY(chip->width()<=view.width());}
 void TranscriptTest::themeChangesCodePalette(){ConversationView view;auto palette=view.palette();palette.setColor(QPalette::Window,QColor("#fafafa"));palette.setColor(QPalette::Text,QColor("#222222"));view.setPalette(palette);view.setConversation("chat",{message("a","assistant",{text("p","```cpp\nconst int value = 2;\n```")})},false);expose(view);auto *code=view.findChild<CodeEditor*>();QVERIFY(code);QVERIFY(code->palette().color(QPalette::Base).lightness()>128);palette.setColor(QPalette::Window,QColor("#20232b"));palette.setColor(QPalette::Text,QColor("#eeeeee"));view.setPalette(palette);QTest::qWait(20);QVERIFY2(code->palette().color(QPalette::Base).lightness()<128,qPrintable(QString("root=%1 card=%2 code=%3 expectedDark=%4").arg(view.palette().color(QPalette::Window).name(),code->parentWidget()->palette().color(QPalette::Window).name(),code->palette().color(QPalette::Base).name()).arg(code->parentWidget()->property("expectedDark").toBool())));}
+void TranscriptTest::shortCodeBlocksFitWithoutVerticalScrolling(){
+    for(const int pixels:{14,18,24}){
+        ConversationView view;auto font=view.font();font.setPixelSize(pixels);view.setFont(font);
+        view.setConversation("chat",{message("a","assistant",{text("p","```cpp\nint answer = 42;\n```\n")})},false);expose(view,900,650);
+        auto* code=view.findChild<CodeEditor*>("codeContent");QVERIFY(code);
+        QTRY_COMPARE(code->verticalScrollBar()->maximum(),0);
+        QCOMPARE(code->sourceText(),QString("int answer = 42;\n"));
+    }
+}
+void TranscriptTest::longHistoryStreamingRetainsSelectionAndReportsCost(){
+    ConversationView view;QJsonArray rows;
+    for(int i=0;i<1000;++i)rows.append(message("m"+QString::number(i),"assistant",{text("p"+QString::number(i),"Settled message with **formatting** and a stable selection.")}));
+    view.setConversation("long-chat",rows,false);expose(view,900,650);
+    auto* first=part(view,"p0")->findChild<TranscriptText*>();QVERIFY(first);
+    const QPointer<TranscriptText> retained(first);const int updates=first->updateCount();
+    first->setTextCursor(first->document()->find("stable selection"));
+    QVector<qint64> costs;QString stream;
+    for(int i=0;i<40;++i){
+        stream+="native delta ";rows[999]=message("m999","assistant",{text("p999",stream,"streaming")});
+        QElapsedTimer timer;timer.start();view.setConversation("long-chat",rows,true);costs.append(timer.nsecsElapsed());
+        QCoreApplication::processEvents();
+    }
+    QVERIFY(retained);QCOMPARE(retained->updateCount(),updates);
+    QCOMPARE(retained->textCursor().selectedText(),QString("stable selection"));
+    QCOMPARE(view.findChildren<TranscriptText*>().size(),1000);
+    std::sort(costs.begin(),costs.end());
+    qInfo("1000-row stream setConversation cost ms: median=%.3f p95=%.3f max=%.3f; excludes deferred layout/paint",costs[20]/1e6,costs[37]/1e6,costs.last()/1e6);
+}
 void TranscriptTest::largeHistoryRetainsUnchangedDocuments(){ConversationView view;QJsonArray rows;for(int i=0;i<160;++i)rows.append(message("m"+QString::number(i),"assistant",{text("p"+QString::number(i),"A short settled message.")}));view.setConversation("chat",rows,false);expose(view);auto *original=part(view,"p0")->findChild<TranscriptText*>();const int updates=original->updateCount();for(int i=0;i<8;++i){rows[159]=message("m159","assistant",{text("p159",QString("Streaming ").repeated(i+1),"streaming")});view.setConversation("chat",rows,true);}QCOMPARE(original->updateCount(),updates);QCOMPARE(view.findChildren<TranscriptText*>().size(),160);}
 void TranscriptTest::replacementOfAdjacentFenceKinds(){ConversationView view;view.setConversation("chat",{message("a","assistant",{text("p","```js\none\n```\n```cpp\ntwo\n```")})},false);expose(view);QCOMPARE(view.findChildren<CodeEditor*>().size(),2);view.setConversation("chat",{message("a","assistant",{text("p","Replacement prose\n```cpp\ntwo\n```")})},false);QTest::qWait(20);QCOMPARE(view.findChildren<CodeEditor*>().size(),1);QCOMPARE(view.findChildren<TranscriptText*>().size(),1);QCOMPARE(view.findChild<CodeEditor*>()->sourceText(),QString("two\n"));}
 void TranscriptTest::changedPartRetainsSelectedText(){ConversationView view;view.setConversation("chat",{message("a","assistant",{text("p","Choose **selected** text.","streaming")})},true);expose(view);auto *browser=view.findChild<TranscriptText*>();auto cursor=browser->document()->find("selected");QVERIFY(!cursor.isNull());browser->setTextCursor(cursor);view.setConversation("chat",{message("a","assistant",{text("p","Choose **selected** text.\n\nAnother paragraph.","streaming")})},true);QCOMPARE(browser->textCursor().selectedText(),QString("selected"));}

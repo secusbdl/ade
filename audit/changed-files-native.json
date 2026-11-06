@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "status": "shared_component_and_host_repair_suites_pass_full_candidate_pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeBaseCommit": "8ad7d25fb8e080de436b6e2d1b45ab11480a560f",
+  "implemented": [
+    "Files / Changed files sidebar mode and persisted preference, filename/directory/status/staged badges and totals",
+    "Source-compatible merged staged+working Git summary, renamed old path and explicit untracked U status",
+    "Actual native read-only diff content tabs compare committed bytes with exact staged index or working bytes; binary/unsupported encoding errors remain explicit",
+    "One shared diff tab opener used from Source control and Changed files, keyed workspace/path/stage/oldPath",
+    "Coalesced known-write refresh, Git topology refresh, visible-only five-second fallback polling for external working edits; stale replies ignored",
+    "Current per-turn action helper performs fresh diff query, path/oldPath match, deleted no-op, ordinary-file fallback, and caller owner/row validity guard",
+    "Explicit child-chat ownership shows its distinct workspace in Changed files without rebinding the primary conversation; clears on primary switch, owner removal or workspace change. Actual host coverage passed in native_turn_files_host."
+  ],
+  "sourceContract": [
+    "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-tree-sidebar.tsx",
+    "reference/stagewise/apps/browser/src/ui/screens/main/file-tree/file-tree-diff-view.tsx",
+    "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/turn-file-edits.tsx",
+    "reference/stagewise/apps/browser/src/backend/services/git/index.ts"
+  ],
+  "reproducedFixes": [
+    {
+      "problem": "Unchanged junction alias adopted a different physical workspace during a refresh.",
+      "before": "audit/changed-files/alias-before.txt",
+      "fix": "Retain lexical request name and original resolved destination; reject changed destination. Compare canonical strings without pathKey re-resolution. Failed first guard attempt retained separately.",
+      "afterTest": "unchangedAliasCannotRetargetAuthority"
+    },
+    {
+      "problem": "Background refresh status label changed list viewport height from248 to227, causing layout churn.",
+      "before": "audit/changed-files/refresh-layout-before.txt",
+      "fix": "Keep settled same-workspace list geometry during refresh; spinner text only for initial load.",
+      "afterTest": "selectionAndScrollSurviveRefresh"
+    },
+    {
+      "problem": "Repeated unavailable workspace recursively emitted changed -> refreshWorkbench -> setWorkspace, causing a stack overflow.",
+      "before": "audit/changed-files/unavailable-workspace-before-stack.txt",
+      "fix": "Root made repeated unavailable requests idempotent while permitting recovery when the path reappears.",
+      "afterTest": "unavailableWorkspaceRefreshIsIdempotentAndCanRecover"
+    },
+    {
+      "problem": "Initial shared host test used the default 5000ms snapshot deadline; controlled Git operations completed at5200ms.",
+      "before": "audit/changed-files/host-initial-gate.txt",
+      "fix": "Fixture uses the explicit15000ms deadline already used by comparable native Git tests; source assertions retained.",
+      "classification": "fixture deadline; no runtime speed improvement claimed"
+    }
+  ],
+  "validation": {
+    "component": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 25776,
+      "report": "audit/changed-files/component-final.txt",
+      "build": "Independent static Qt6.11.2/GCC16.2 production-source component build, Windows, offscreen; no shared build access.",
+      "historical": true
+    },
+    "host": {
+      "status": "passed",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 34108,
+      "report": "audit/changed-files/host-shared-6.txt",
+      "test": "tests/test_workspace_changes_host.cpp"
+    },
+    "diffCheck": "Owned tracked source diff check passed before integration.",
+    "componentShared": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "elapsedMs": 28216,
+      "report": "audit/changed-files/component-shared-17.txt"
+    },
+    "repairGate": {
+      "passedSuites": 13,
+      "failedSuites": 0,
+      "elapsedSeconds": 97.32,
+      "report": "audit/changed-files/repaired-13-ctest.txt",
+      "scope": "Focused repair run only; initial broad gate failures remain preserved. Not a full current all-suite pass."
+    },
+    "childOwnerHost": {
+      "passed": 12,
+      "failed": 0,
+      "report": "audit/mutation-settlement/turn-files-host-shared-12.txt",
+      "case": "sideChatDifferentWorkspaceOpensItsOwnCurrentDiff",
+      "scope": "Earlier observed shared host result; not one of the13 repair suites."
+    }
+  },
+  "visuals": {
+    "status": "Private component and actual MainWindow fixture screenshots inspected. Sidebar rows and read-only diff tab render; this is fixture rendering, not a packaged EXE manual interaction.",
+    "privateDirectory": "private/changed-files-stage/captures",
+    "screenshots": [
+      {
+        "name": "changed-files-dark-narrow.png",
+        "sha256": "0e49f1597c7764c6147743dc58a6d49f4130e0b137d76d3e9fb04253b277bab9"
+      },
+      {
+        "name": "changed-files-light-narrow.png",
+        "sha256": "8dba77a9e29a411f890e9a179100296f5d15855932606a3b7e4a43d049bbd2b0"
+      }
+    ],
+    "hostScreenshots": [
+      {
+        "path": "private/changed-files-stage/host-captures-repaired/host-changed-files-sidebar.png",
+        "sha256": "c53c29cf2d370c62e6f7b860fab2ef4696475589728b49c4f148c66c84dd51ac",
+        "inspected": true
+      },
+      {
+        "path": "private/changed-files-stage/host-captures-repaired/host-changed-files-diff-tab.png",
+        "sha256": "bb47b7c8ab620b64acab522f27191062beeb5ecff486f434ea634a6075ef4d4f",
+        "inspected": true
+      }
+    ]
+  },
+  "limits": [
+    "This is not full Stagewise parity. Per-turn historical tree is a separately owned integration.",
+    "Existing Git metadata watcher does not observe every arbitrary working-file content write immediately; the visible polling fallback is explicit.",
+    "Current Git diff view is read-only; durable mutation undo/history remains separate.",
+    "Canonical destination checks reject alias retargeting, but do not claim filesystem-wide atomic snapshots or protection against arbitrary same-name replacement after every check.",
+    "Each chat has one workspace; explicit side-chat owners can select a different workspace without changing the main chat. Multi-mount UI parity remains separate.",
+    "Full candidate rebuild/all-suite run and packaged interaction for this combined checkpoint remain pending."
+  ],
+  "reports": [
+    {
+      "path": "audit/changed-files/alias-before.txt",
+      "sha256": "3ff7d71da758ac82ee200c515b6e359b03d9e62984c7a0cab40305a2b9300acf",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/alias-first-fix-failed.txt",
+      "sha256": "4fb868cef8ff98451f92b8bc0c3c02dfd6fa25697cc73efc89ca52c3ec9fef12",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/refresh-layout-before.txt",
+      "sha256": "3ce8411a59123720798990ada69ba510a99aa8f3d070340012035b26643378c5",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/first-tests.txt",
+      "sha256": "7bee8b62bf0b431cd5fb56cb787189b8ef2fdaa3d72d2daea0e3824bcb634121",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/component-final.txt",
+      "sha256": "684a41c300e5d82b92b9ab088a0fdf8cc102a703f2a0e1613f4ea7154dc4d3b5",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/component-final.xml",
+      "sha256": "4cf6c3c6b416ecb9fdb62240cca53832dee6f3761e46c338bc7813d0736b2b85",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/component-shared-17.txt",
+      "sha256": "140c1752ab06dcd347930c5bc5ae790b4729bef15b1c48e623cfda6633917a7c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/host-initial-gate.txt",
+      "sha256": "ea70f5e8428e22d9241575c6ad6b680c3f24945f673611344d6e5dcfc2eb7a18",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/host-shared-6.txt",
+      "sha256": "156d162924c24dd4a45ffc2fcd11c37ac216e8442ac5ed178d8ae2640a427d87",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/repaired-13-ctest.txt",
+      "sha256": "07327b995d85b54eece404db73c3e210b75b28f3c867b6950d5c951904350e47",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "audit/changed-files/unavailable-workspace-before-stack.txt",
+      "sha256": "f9e3d7ba7a486fc8ffc07a5cd3d81916f534f489258e2cca742ea10a1632651b",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "src/ui/WorkspaceChangesController.h",
+      "sha256": "4473c3006910a4e43f6fc19ee1e8292eaa309184eb27296a181d2bbcff0f583f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesController.cpp",
+      "sha256": "d3b7fa2593c9648a40ec1555f2d82fbcc30dc2d00b01e93be35ac98846efc4a7",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesView.h",
+      "sha256": "912900e1895fd73f3eaef55416a924f941bdc88dc5b66bc87f18a249dc8b68b6",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesView.cpp",
+      "sha256": "00c68eeac6d349f63213897c18825d0cc88b9883de6bfa61878b7e9a86bd7597",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/GitDiffTab.h",
+      "sha256": "c3fa2013369489c559605f5b1afcae45adf1cbdee365cb24586087a35276254f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/GitDiffTab.cpp",
+      "sha256": "1a67d9684a558fe6b4bfe6ca5f04a89079e923452077355b639ff24b79cc03fe",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256": "74fc4d33185f5af26f70cb0e2f5c3e6eca14b1a686a17d93cb9d9147677918c2",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/ui/MainWindowGit.cpp",
+      "sha256": "ca9236f93ce345129779d81643c8951f95173f941065167535c5aa46b792e3ef",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "sha256": "1d4a890d357b00fd95d3464147f395e0334f856b24b637f1a4571acf2e473b3c",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workspace_changes.cpp",
+      "sha256": "01d9cd2ff5ebf9765b20b58e468165f907092ec3240cc601e16ba46ea15ef835",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_workspace_changes_host.cpp",
+      "sha256": "98121c78d2b4167893771a23e98a7c0a427635ae63cd5428687ad3e6576884df",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "ownerRoute": "showWorkspaceChanges(workspace,ownerChat) and openWorkspaceChangedFile(workspace,path,stillValid,ownerChat); fixed primary-chat anchor, side-pane lifetime and physical workspace revalidation.",
+  "hashBasis": "canonical_git_text_LF"
+}

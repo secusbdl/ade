@@ -1,6 +1,8 @@
 #include "AgentEngine.h"
 #include "ProviderProtocol.h"
 #include "UtilityService.h"
+#include "harness/CodexHarnessSession.h"
+#include <QFileInfo>
 
 #include <QDateTime>
 #include <QJsonDocument>
@@ -100,12 +102,18 @@ AgentEngine::AgentEngine(QObject *parent)
     });
     connect(&m_tools, &ToolExecutor::completed, this, [this](const QString &id, const QString &output, bool error,const QJsonObject& metadata) { recordToolResult(id, output, error,metadata); });
     connect(&m_tools, &ToolExecutor::fileChanged, this, &AgentEngine::fileChanged);
+    connect(&m_tools,&ToolExecutor::mutationStarted,this,[this](const QString& invocation,const QString& request){
+        const QPointer<AgentEngine> self(this);const auto generation=m_generation;
+        if(!registerMutation(invocation,request,false)&&self&&generation==m_generation)m_tools.cancel();
+    });
+    connect(&m_tools,&ToolExecutor::mutationSettled,this,[this](const QString& invocation,const QString&,const QString& output,bool error,const QJsonObject& metadata){settleMutation(invocation,output,error,metadata);});
 }
 
 AgentEngine::~AgentEngine() {
     m_busy = false;
     ++m_generation;
     stopCompression();
+    stopHarness();
     stopNetwork();
     if (!m_externalRequestId.isEmpty()) emit externalToolCancellationRequested(m_externalRequestId);
     m_tools.disconnect(this);
@@ -114,6 +122,7 @@ AgentEngine::~AgentEngine() {
 
 void AgentEngine::setProvider(const ProviderConfig &provider) {
     if (m_busy) return;
+    if(m_provider.id!=provider.id||m_provider.kind!=provider.kind||m_provider.harnessExecutable!=provider.harnessExecutable)stopHarness();
     m_provider = provider; m_models.clear(); m_presetId.clear(); m_fallback.reset();
 }
 
@@ -121,7 +130,9 @@ void AgentEngine::setModelChain(const QList<ModelConfig> &models, const QString 
     if (m_busy) return;
     m_models = models; m_presetId = presetId;
     const int index = m_fallback.resolve(m_presetId, m_models);
-    m_provider = models.isEmpty() ? ProviderConfig{} : models[index].provider;
+    const auto selected=models.isEmpty()?ProviderConfig{}:models[index].provider;
+    if(m_provider.id!=selected.id||m_provider.kind!=selected.kind||m_provider.harnessExecutable!=selected.harnessExecutable)stopHarness();
+    m_provider = selected;
 }
 
 bool AgentEngine::applyCompression(int boundaryIndex, const QString &briefing) {
@@ -135,7 +146,7 @@ bool AgentEngine::applyCompression(int boundaryIndex, const QString &briefing) {
 }
 
 void AgentEngine::setWorkspace(const QString &path) {
-    if (!m_busy) m_tools.setWorkspace(path);
+    if (!m_busy) { if(path!=m_tools.workspace())stopHarness();m_tools.setWorkspace(path); }
 }
 
 bool AgentEngine::setAppsDirectory(const QString &path) {return (!m_busy||m_configuringTurn)&&m_tools.setAppsDirectory(path);}
@@ -148,11 +159,11 @@ void AgentEngine::setDynamicSystemContext(std::function<QString()> context) {
 }
 
 void AgentEngine::setMessages(const QJsonArray &messages) {
-    if (!m_busy) { const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;if(changed)emit displayChanged(); }
+    if (!m_busy) { if(m_messages!=messages)stopHarness(); const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;const QPointer<AgentEngine> self(this);reconcileMutationHistory();if(self&&changed)emit displayChanged(); }
 }
 QJsonArray AgentEngine::displayHistory(const QJsonArray& history){return AgentPresentation::history(history);}
 QJsonArray AgentEngine::displayMessages() const {
-    auto result=displayHistory(m_messages);
+    auto result=m_historyProjection.project(m_messages);
     if(!m_responseRetained&&!m_display.id().isEmpty()&&(m_busy||!m_display.empty()))result.append(m_display.row(m_busy));
     return result;
 }
@@ -217,12 +228,16 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
         rejectSubmission("Attachment reference metadata is invalid."); return false;
     }
     const auto base = QUrl(m_provider.baseUrl);
-    if (!base.isValid() || base.host().isEmpty() || (base.scheme() != "https" && base.scheme() != "http")
-        || !base.userInfo().isEmpty() || base.hasFragment() || base.hasQuery()) {
+    if (!m_provider.isCodexHarness() && (!base.isValid() || base.host().isEmpty() || (base.scheme() != "https" && base.scheme() != "http")
+        || !base.userInfo().isEmpty() || base.hasFragment() || base.hasQuery())) {
         rejectSubmission(QStringLiteral("Configure a valid provider API base URL.")); return false;
     }
     if (m_provider.model.trimmed().isEmpty()) { rejectSubmission(QStringLiteral("Select a model first.")); return false; }
-    if (!ProviderProtocol::supports(m_provider)) {
+    if (m_provider.isCodexHarness() && (CodexAppServer::findExecutable(m_provider.harnessExecutable).isEmpty() || m_harnessOwnerId.isEmpty()
+        || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
+        rejectSubmission("Configure the installed Codex coding agent and its chat context first."); return false;
+    }
+    if (!m_provider.isCodexHarness() && !ProviderProtocol::supports(m_provider)) {
         rejectSubmission(QStringLiteral("This provider protocol is not implemented yet.")); return false;
     }
     // Pinned base-agent.ts845-860 terminates every inherited non-terminal tool
@@ -274,6 +289,7 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
 
 void AgentEngine::requestModel() {
     if (!m_busy) return;
+    if (m_provider.isCodexHarness()) { requestHarness(); return; }
     if (maybeCompress(false)) return;
     const QPointer<AgentEngine> self(this);
     const auto generation = m_generation;
@@ -802,6 +818,7 @@ void AgentEngine::finishReply() {
 }
 
 void AgentEngine::retainPartialResponse() {
+    if(m_provider.isCodexHarness()){retainHarnessResponse();return;}
     if (m_responseRetained || (m_streamText.isEmpty() && m_streamReasoning.isEmpty() && m_streamCalls.isEmpty())) return;
     const bool uiOnly=m_streamText.isEmpty()&&m_streamCalls.isEmpty()&&!m_streamReasoning.isEmpty()&&!m_busy;
     QJsonObject message{{"role", "assistant"}, {"content", m_streamText}};
@@ -887,16 +904,22 @@ void AgentEngine::completeExternalTool(const QString &requestId, const QString &
 }
 
 void AgentEngine::completeExternalToolWithAttachments(const QString &requestId, const QString &output, bool error,
-    const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata) {
+    const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata,const QJsonArray &mutations) {
     if (!m_busy || requestId.isEmpty() || requestId != m_externalRequestId || m_toolIndex >= m_pendingTools.size()) return;
     m_externalDeadline.stop();
     m_externalRequestId.clear();
     QJsonObject metadata;
     if (!references.isEmpty()) {metadata = {{"attachments", references}, {"pathReferences", pathReferences}};if(!pathMetadata.isEmpty())metadata["pathMetadata"]=pathMetadata;}
+    if(!mutations.isEmpty())metadata["mutations"]=mutations;
     recordToolResult(m_pendingTools[m_toolIndex].id, output, error, metadata);
 }
 
 void AgentEngine::approveTool(const QString &id, bool allow) {
+    if(m_busy&&m_provider.isCodexHarness()&&m_harness&&m_harnessApprovals.contains(id)){
+        const auto token=m_harnessApprovals.take(id);
+        if(m_harness->answerApproval(token,allow)){m_display.toolState(id,allow?"input-available":"output-denied");emit displayChanged();}
+        return;
+    }
     if (!m_busy || id != m_waitingApproval || m_toolIndex >= m_pendingTools.size()) return;
     m_waitingApproval.clear();
     const auto call = m_pendingTools[m_toolIndex];
@@ -949,9 +972,10 @@ void AgentEngine::recordToolResult(const QString &id, const QString &output, boo
     const auto safeOutput = redact(output);const auto completedId=id;
     QJsonObject message{{"role", "tool"}, {"tool_call_id", completedId}, {"content", (error ? QStringLiteral("Error: ") : QString()) + safeOutput}};
     if (!metadata.isEmpty()) message["metadata"] = metadata;
-    const auto state=displayState.isEmpty()?(error?QStringLiteral("output-error"):QStringLiteral("output-available")):displayState;
+    auto state=displayState.isEmpty()?(error?QStringLiteral("output-error"):QStringLiteral("output-available")):displayState;
     message=AgentPresentation::withMetadata(message,QJsonObject{{"version",1},{"toolState",state}});
-    m_messages.append(message);
+    message=mutationToolMessage(completedId,message);state=message["metadata"].toObject()["display"].toObject()["toolState"].toString(state);
+    storeToolMessage(completedId,message);
     m_display.toolState(completedId,state);syncDisplayMetadata();
     ++m_toolIndex;
     const auto generation = m_generation;const QPointer<AgentEngine> self(this);
@@ -981,9 +1005,11 @@ void AgentEngine::settleOutstandingTools(const QString &reason) {
     m_questionToken.clear();m_questionCallId.clear();m_questionStopReason.clear();
     // Settle the whole protocol block before observers may start a new turn.
     const auto terminal=reason=="Action cancelled by the user."?QStringLiteral("canceled"):QStringLiteral("output-error");
+    QList<QJsonObject> settled;
     for(const auto& call:pending){
-        m_messages.append(AgentPresentation::withMetadata(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",hadQuestion&&call.id==questionId?questionOutput:reason}},QJsonObject{{"version",1},{"toolState",terminal}}));
-        m_display.toolState(call.id,terminal);
+        const auto message=mutationToolMessage(call.id,AgentPresentation::withMetadata(QJsonObject{{"role","tool"},{"tool_call_id",call.id},{"content",hadQuestion&&call.id==questionId?questionOutput:reason}},QJsonObject{{"version",1},{"toolState",terminal}}));
+        storeToolMessage(call.id,message);settled.append(message);
+        m_display.toolState(call.id,message["metadata"].toObject()["display"].toObject()["toolState"].toString(terminal));
     }
     syncDisplayMetadata();
     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
@@ -991,8 +1017,9 @@ void AgentEngine::settleOutstandingTools(const QString &reason) {
         emit externalToolCancellationRequested(request);
         if(!self||generation!=m_generation)return;
     }
-    for(const auto& call:pending){
-        emit toolFinished(call.id,hadQuestion&&call.id==questionId?questionOutput:reason,!(hadQuestion&&call.id==questionId));
+    for(int i=0;i<pending.size();++i){
+        const auto message=settled[i];const auto state=message["metadata"].toObject()["display"].toObject()["toolState"].toString();
+        emit toolFinished(pending[i].id,message["content"].toString(),state!="output-available");
         if(!self||generation!=m_generation)return;
     }
     if(hadQuestion)emit questionChanged();
@@ -1034,6 +1061,7 @@ void AgentEngine::fail(const QString &message) {
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);const auto safeMessage=redact(message).left(2000);
     m_busy=false;
     stopCompression();
+    stopHarness();
     stopNetwork();
     if(!self||generation!=m_generation)return;
     m_display.finish("error");m_display.error(safeMessage);syncDisplayMetadata();
@@ -1059,6 +1087,7 @@ void AgentEngine::cancel() {
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);
     m_busy=false;
     stopCompression();
+    stopHarness();
     stopNetwork();
     if(!self||generation!=m_generation)return;
     m_display.finish("canceled");syncDisplayMetadata();

@@ -16,6 +16,8 @@ public:
   QString agentId() const { return m_agentId; }
   void setConversationTitle(const QString &title);
   QStringList selectedMutations() const;
+  bool selectMutations(const QStringList& ids);
+  bool pathsForMutations(const QStringList& ids,QStringList* paths,QString* error) const;
   void setBusy(bool busy) {
     m_busy = busy;
     refreshActions();

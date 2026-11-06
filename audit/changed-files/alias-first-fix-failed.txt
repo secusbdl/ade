@@ -1,0 +1,29 @@
+********* Start testing of WorkspaceChangesTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceChangesTests::initTestCase()
+QWARN  : WorkspaceChangesTests::realMergedSummaryAndStageSnapshots() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : WorkspaceChangesTests::realMergedSummaryAndStageSnapshots()
+QWARN  : WorkspaceChangesTests::renameAndDeletedRows() This plugin does not support propagateSizeHints()
+PASS   : WorkspaceChangesTests::renameAndDeletedRows()
+PASS   : WorkspaceChangesTests::untrackedBinaryAndNonRepository()
+PASS   : WorkspaceChangesTests::refreshRetainsSnapshotOnError()
+PASS   : WorkspaceChangesTests::switchingWorkspaceRejectsOldRequests()
+FAIL!  : WorkspaceChangesTests::unchangedAliasCannotRetargetAuthority() Compared values are not the same
+   Actual   (controller.phase())                      : 2
+   Expected (WorkspaceChangesController::Phase::Error): 4
+D:/age/ADE/tests/test_workspace_changes.cpp(82) : failure location
+PASS   : WorkspaceChangesTests::visibilityStopsPolling()
+PASS   : WorkspaceChangesTests::controllerObserverCanDeleteOrReplace()
+PASS   : WorkspaceChangesTests::diffRejectsTraversalAndUnknownRoot()
+PASS   : WorkspaceChangesTests::diffReplacementAndDestruction()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+PASS   : WorkspaceChangesTests::selectionAndScrollSurviveRefresh()
+PASS   : WorkspaceChangesTests::deletionAndWorkspaceSwitchFromSelection()
+PASS   : WorkspaceChangesTests::modelReentryDoesNotOverwriteNewerRows()
+QWARN  : WorkspaceChangesTests::renderLightDarkNarrow() This plugin does not support propagateSizeHints()
+PASS   : WorkspaceChangesTests::renderLightDarkNarrow()
+PASS   : WorkspaceChangesTests::cleanupTestCase()
+Totals: 15 passed, 1 failed, 0 skipped, 0 blacklisted, 27390ms
+********* Finished testing of WorkspaceChangesTests *********

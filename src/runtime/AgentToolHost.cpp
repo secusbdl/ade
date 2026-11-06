@@ -16,9 +16,10 @@ bool prepareAppDirectory(const QString& directory){
 }
 
 AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,const QString& agentId,
-    const QString& dataDirectory,QObject* parent,QNetworkAccessManager* network):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_mutations(dataDirectory,agentId),
+    const QString& dataDirectory,QObject* parent,QNetworkAccessManager* network):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_harnessFiles(dataDirectory,agentId),m_mutations(dataDirectory,agentId),
     m_shellLogs(std::make_shared<SessionLogStore>(dataDirectory,agentId)),m_shells(agentId,m_shellLogs,this),
     m_attachmentStore(dataDirectory),m_attachmentPipeline(m_attachmentStore),m_readSnapshots(dataDirectory),m_readLease(m_readSnapshots.acquire(agentId)),m_attachmentFiles(agentId,dataDirectory,this),m_network(network,this),m_apps(agentId,dataDirectory,this) {
+    engine->setHarnessContext(agentId,m_harnessFiles.rootDirectory());
     m_attachmentPipeline.setFileReadLease(m_readLease);
     m_files.setFileMutationExecutor(m_mutations.executor());
     m_files.setShellReadSource(m_shellLogs->formattedSource());
@@ -55,7 +56,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     connect(engine,&AgentEngine::externalToolRequested,this,[this](const QString& id,const QString& name,const QJsonObject& args){
         if(ShellService::handles(name)){m_shells.execute(id,name,args);return;}
         if(name=="readContext"){QString error;const auto output=m_context.readFile(args["path"].toString(),&error);if(m_engine)m_engine->completeExternalTool(id,error.isEmpty()?output:error,!error.isEmpty());return;}
-        if(m_sandbox.handles(name)){m_toolAttachments.remove(id);m_attachmentErrors.remove(id);m_sandbox.execute(id,name,args);return;}
+        if(m_sandbox.handles(name)){m_toolAttachments.remove(id);m_attachmentErrors.remove(id);m_toolMutations.insert(id,{});m_sandbox.execute(id,name,args);return;}
         if(m_browser&&m_browser->handles(name)){m_directBrowser.insert(id);m_browser->executeForAgent(id,m_agentId,name,args);return;}
         if(m_engine)m_engine->completeExternalTool(id,"Error: External tool is unavailable.",true);
     });
@@ -104,11 +105,11 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         m_pendingWatcherMessages.insert(sessionId,message);deliverWatcherMessage(sessionId);
     });
     connect(&m_sandbox,&SandboxHost::completed,this,[this](const QString& id,const QString& output,bool error){
-        const auto references=m_toolAttachments.take(id);auto attachmentError=m_attachmentErrors.take(id);
+        const auto references=m_toolAttachments.take(id);const auto mutations=m_toolMutations.take(id);auto attachmentError=m_attachmentErrors.take(id);
         QJsonObject metadata;
         if(attachmentError.isEmpty()&&!references.isEmpty())metadata=captureAttachments(references,&attachmentError);
         const auto result=attachmentError.isEmpty()?output:output+"\nAttachment processing failed: "+attachmentError;
-        if(m_engine)m_engine->completeExternalToolWithAttachments(id,result,error||!attachmentError.isEmpty(),metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject());
+        if(m_engine)m_engine->completeExternalToolWithAttachments(id,result,error||!attachmentError.isEmpty(),metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject(),mutations);
     });
     connect(&m_sandbox,&SandboxHost::output,this,&AgentToolHost::output);
     connect(&m_sandbox,&SandboxHost::attachmentCreated,this,[this](const QString& id,const QString& path,const QString& mime){
@@ -136,10 +137,40 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         if(m_workspaceChanging){m_sandbox.completeFileRequest(id,"The workspace is changing; retry after it is connected.",true);return;}
         const auto owner=m_sandbox.requestOwnerId(id);
         const auto modelCall=m_engine?m_engine->externalToolCallId(owner):QString{};
-        m_sandboxFiles.insert(id);m_files.executeWithProvenance(id,name,arguments,modelCall.isEmpty()?"background-"+id:modelCall);
+        // A background sandbox request has an RPC owner but no model turn.
+        // Journal its writes without inventing a persistent chat invocation.
+        m_sandboxFiles.insert(id);m_sandboxFileOwners.insert(id,modelCall.isEmpty()?QString{}:owner);m_files.executeWithProvenance(id,name,arguments,modelCall.isEmpty()?"background-"+id:modelCall);
     });
-    connect(&m_files,&ToolExecutor::completed,this,[this](const QString& id,const QString& output,bool error){
-        if(m_sandboxFiles.remove(id))m_sandbox.completeFileRequest(id,output,error);
+    connect(&m_files,&ToolExecutor::completed,this,[this](const QString& id,const QString& output,bool error,const QJsonObject& metadata){
+        const auto owner=m_sandboxFileOwners.take(id);
+        if(m_sandboxFiles.remove(id)){
+            // Capture the host-created durable IDs before completing the inner
+            // RPC: completion can synchronously finish/reenter the outer call.
+            if(!owner.isEmpty()&&m_toolMutations.contains(owner))for(const auto& value:metadata["mutations"].toArray()){
+                const auto record=value.toObject();if(record["agentId"]==m_agentId&&!record["mutationId"].toString().isEmpty()&&m_toolMutations[owner].size()<513)m_toolMutations[owner].append(record);
+            }
+            m_sandbox.completeFileRequest(id,output,error);
+        }
+    });
+    connect(&m_files,&ToolExecutor::mutationStarted,this,[this](const QString& invocation,const QString& id){
+        m_pendingFileMutations.insert(id);const auto owner=m_sandboxFileOwners.value(id);if(owner.isEmpty())return;
+        const QPointer<AgentToolHost> self(this);const bool accepted=m_engine&&m_engine->registerExternalMutation(invocation,owner);if(!self)return;
+        if(!accepted){
+            // Rejection can emit queueError. Its observer may replace the outer
+            // request, so only cancel the executor while this RPC still owns it.
+            if(!m_sandboxFiles.contains(id)||m_sandboxFileOwners.value(id)!=owner)return;
+            m_files.cancel();if(!self)return;
+            if(m_sandboxFiles.remove(id))m_sandbox.completeFileRequest(id,"The mutation was not started because its original chat turn could not be saved.",true);
+        }
+    });
+    connect(&m_files,&ToolExecutor::mutationSettled,this,[this](const QString& invocation,const QString& id,const QString&,bool,const QJsonObject& metadata){
+        m_pendingFileMutations.remove(id);const auto owner=m_sandboxFileOwners.take(id);
+        // This notification precedes fileChanged and survives cancellation of
+        // the RPC. Attribution is by the registered invocation, not call text.
+        if(!owner.isEmpty()&&m_toolMutations.contains(owner))for(const auto& value:metadata["mutations"].toArray()){
+            const auto record=value.toObject();if(record["agentId"]==m_agentId&&!record["mutationId"].toString().isEmpty()&&m_toolMutations[owner].size()<513)m_toolMutations[owner].append(record);
+        }
+        if(m_engine)m_engine->settleExternalMutation(invocation,metadata);
     });
     connect(&m_files,&ToolExecutor::fileChanged,this,&AgentToolHost::fileChanged);
     connect(&m_sandbox,&SandboxHost::attachmentFileRequest,this,[this](const QString& id,const QString& agent,const QString& operation,const QJsonObject& arguments){
@@ -166,6 +197,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         resetEvents();if(!self)return;
         m_sandboxApps.clear();m_apps.reset();if(!self)return;
         m_sandboxFiles.clear();m_files.cancel();if(!self)return;
+        for(const auto& id:m_sandboxFileOwners.keys())if(!m_pendingFileMutations.contains(id))m_sandboxFileOwners.remove(id);
         m_sandboxAttachmentFiles.clear();m_attachmentFiles.cancelAll();
     });
     connect(&m_sandbox,&SandboxHost::brokerCancellationRequested,this,[this](const QString& id){
@@ -178,6 +210,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         if(!self)return;
         if(m_sandboxFiles.remove(id))m_files.cancel();
         if(!self)return;
+        if(!m_pendingFileMutations.contains(id))m_sandboxFileOwners.remove(id);
         if(m_sandboxAttachmentFiles.remove(id))m_attachmentFiles.cancel(id);
     });
     connect(&m_sandbox,&SandboxHost::appRequest,this,[this](const QString& id,const QString& agent,const QString& operation,const QJsonObject& args){
@@ -211,6 +244,10 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
             m_sandbox.deliverEvent(it.key(),data);if(!self)return;
         }
     });
+    // Last: reconciliation can emit public engine notifications. The captured
+    // journal lease has immutable owner identity and no QObject dependency.
+    const auto journal=m_mutations;
+    engine->setMutationContext(agentId,[journal](const QStringList& ids,QString* error){return journal.settledInvocations(ids,error);});
 }
 AgentToolHost::~AgentToolHost(){
     m_watcherRetryTimer.stop();m_pendingWatcherMessages.clear();
@@ -280,6 +317,9 @@ bool AgentToolHost::cloneFileContext(const QString& targetAgentId,QString* error
     if(!m_shellLogs->cloneTo(targetAgentId,error)){
         QString ignored;m_readSnapshots.removeAgent(targetAgentId,&ignored);m_attachmentStore.removeAgent(targetAgentId,&ignored);return false;
     }
+    if(!m_harnessFiles.cloneTo(targetAgentId,error)){
+        QString ignored;m_readSnapshots.removeAgent(targetAgentId,&ignored);m_attachmentStore.removeAgent(targetAgentId,&ignored);SessionLogStore::removeAgent(m_dataDirectory,targetAgentId,&ignored);return false;
+    }
     return true;
 }
 bool AgentToolHost::removeFileContext(QString* error){
@@ -289,18 +329,20 @@ bool AgentToolHost::removeFileContext(QString* error){
     const QPointer<AgentToolHost> self(this);
     if(m_engine&&m_engine->isBusy())m_engine->cancel();
     if(!self){if(error)*error="The file context owner closed during cancellation.";return false;}
+    if(m_engine)m_engine->setHarnessContext({},{});
     FileReadSnapshotStore::revoke(m_readLease);
     m_sandbox.setArtifactDirectory({});m_sandbox.resetAgent(m_agentId);
     if(!self){if(error)*error="The file context owner closed during reset.";return false;}
     m_shells.closeAll();if(!self){if(error)*error="The file context owner closed while stopping shells.";return false;}
     m_shellLogs->revoke();
-    QString readError,attachmentError,mutationError,shellError;
+    QString readError,attachmentError,mutationError,shellError,harnessError;
+    const bool removedHarness=m_harnessFiles.remove(&harnessError);
     const bool removedShells=SessionLogStore::removeAgent(m_dataDirectory,m_agentId,&shellError);
     const bool removedMutations=FileMutationJournal::removeAgent(m_dataDirectory,m_agentId,&mutationError);
     const bool removedReads=m_readSnapshots.removeAgent(m_agentId,&readError);
     const bool removedAttachments=m_attachmentStore.removeAgent(m_agentId,&attachmentError);
-    if(error)*error=!shellError.isEmpty()?shellError:(!mutationError.isEmpty()?mutationError:(readError.isEmpty()?attachmentError:readError));
-    return removedReads&&removedAttachments&&removedMutations&&removedShells;
+    if(error)*error=!harnessError.isEmpty()?harnessError:(!shellError.isEmpty()?shellError:(!mutationError.isEmpty()?mutationError:(readError.isEmpty()?attachmentError:readError)));
+    return removedReads&&removedAttachments&&removedMutations&&removedShells&&removedHarness;
 }
 void AgentToolHost::scheduleWatcherRetry(){
     if(m_pendingWatcherMessages.isEmpty()||m_fileContextRemoved||!m_engine){m_watcherRetryTimer.stop();return;}
@@ -319,6 +361,25 @@ void AgentToolHost::deliverWatcherMessage(const QString& sessionId){
     scheduleWatcherRetry();
 }
 QJsonArray AgentToolHost::mutationHistory(QString* error,int limit)const{return m_mutations.history(error,limit);}
+void AgentToolHost::requestTurnFiles(quint64 requestId,const QStringList& ids,const QString& path){
+    if(!requestId||m_turnFileRequests.contains(requestId))return;
+    if(m_fileContextRemoved||m_turnFileRequests.size()>=200){emit turnFilesReady(requestId,{},"Saved changes are temporarily unavailable; retry after the current requests finish.");return;}
+    m_turnFileRequests.insert(requestId);m_turnFileQueue.append({requestId,ids,path});startTurnFileQueries();
+}
+void AgentToolHost::startTurnFileQueries(){
+    using Reply=QPair<QJsonObject,QString>;
+    while(m_activeTurnFileQueries<2&&!m_turnFileQueue.isEmpty()){
+        const auto request=m_turnFileQueue.takeFirst();const auto journal=m_mutations;++m_activeTurnFileQueries;
+        auto* watcher=new QFutureWatcher<Reply>(this);
+        connect(watcher,&QFutureWatcher<Reply>::finished,this,[this,watcher,request]{
+            const auto result=watcher->result();watcher->deleteLater();m_turnFileRequests.remove(request.id);--m_activeTurnFileQueries;
+            const QPointer<AgentToolHost> self(this);
+            if(m_fileContextRemoved)emit turnFilesReady(request.id,{},"The chat's file context was removed.");else emit turnFilesReady(request.id,result.first,result.second);
+            if(self)startTurnFileQueries();
+        });
+        watcher->setFuture(QtConcurrent::run([journal,request]{QString error;auto summary=journal.turnFiles(request.mutations,request.path,&error);return Reply{summary,error};}));
+    }
+}
 void AgentToolHost::undoMutations(const QString& id,const QStringList& ids){
     runMutationAction(id,ids,false);
 }

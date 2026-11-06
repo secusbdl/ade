@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ProviderPickerTest" timestamp="2026&#x002D;11&#x002D;06T21:00:41" hostname="VOID" tests="6" failures="2" errors="0" skipped="0" time="38.024">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ProviderPickerTest" time="0.000"/>
+  <testcase name="customEndpointCardUsesFullSectionWidth(350&#x002D;all)" classname="ProviderPickerTest" time="0.092"/>
+  <testcase name="customEndpointCardUsesFullSectionWidth(350&#x002D;filtered)" classname="ProviderPickerTest" time="0.048"/>
+  <testcase name="customEndpointCardUsesFullSectionWidth(512&#x002D;all)" classname="ProviderPickerTest" time="18.929">
+    <failure type="fail" message="&apos;card&#x002D;&gt;width()&gt;=card&#x002D;&gt;parentWidget()&#x002D;&gt;width()&#x002D;2&apos; returned FALSE. (Custom card width 225; section width 450.)"/>
+  </testcase>
+  <testcase name="customEndpointCardUsesFullSectionWidth(512&#x002D;filtered)" classname="ProviderPickerTest" time="18.951">
+    <failure type="fail" message="&apos;card&#x002D;&gt;width()&gt;=card&#x002D;&gt;parentWidget()&#x002D;&gt;width()&#x002D;2&apos; returned FALSE. (Custom card width 230; section width 459.)"/>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="ProviderPickerTest" time="0.000"/>
+</testsuite>

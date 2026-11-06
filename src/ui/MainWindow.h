@@ -10,6 +10,7 @@
 #include <QSet>
 #include <QUuid>
 #include <memory>
+#include <functional>
 class QComboBox; class QFileSystemModel; class QLabel; class QLineEdit; class QListWidget;
 class QPlainTextEdit; class QSplitter; class QStackedWidget; class QTabWidget; class QTextBrowser;
 class QToolButton; class QTreeView;
@@ -28,6 +29,7 @@ class WorktreeCleanupController;
 class ComposerCompletionController;
 class CommandCenterController;
 class FileChangesPanel;
+class WorkspaceChangesController;class WorkspaceChangesView;class GitDiffTab;
 class QuestionPanel;class MessageQueuePanel;
 class SideChatPane;
 class BrowserSessionStore;
@@ -66,7 +68,7 @@ private:
     void retryConversationCleanup();
     void conversationError(const QString& message);
     void refreshAgents(); void refreshModels(); void restoreModelSelection(); void renderConversation(); bool saveSessions();
-    void send();void showProviders();void showSettings();void applyPreferences();void chooseWorkspace();void openFile(const QString& path);
+    void send();void showProviders(bool add=false,const QString& providerId={});void showSettings();void applyPreferences();void chooseWorkspace();void openFile(const QString& path);
     void addBrowserTab(const QUrl& url=QUrl("about:blank"),const QString& restoredId={},const QString& restoredTitle={}); void showTerminal();
     void initializeBrowserSession();void scheduleBrowserSessionSave();bool saveBrowserSession();
     std::unique_ptr<BrowserSessionStore> m_browserSessionStore;
@@ -84,6 +86,7 @@ private:
     void beginTranscriptLinkTurn(const QString& id,bool acceptedUserMessage=false);
     QJsonObject forkTranscriptLinkProvenance(const QString& sourceId,const QString& targetId,const QString& workspace);
     void updateTranscriptLinkRows(const QString& id);
+    void updateTranscriptLinkRows(const QString& id,const QJsonArray& rows);
     bool visibleTranscript(const QString& id,ConversationView* view,bool requireCurrentTab=true) const;
     void routeTranscriptLink(const QString& id,const QString& rowId,const QString& partId,const QUrl& url,ConversationView* target=nullptr);
     void provideTranscriptImage(quint64 requestId,const QString& id,const QString& rowId,const QString& partId,const QUrl& url,ConversationView* target=nullptr);
@@ -114,7 +117,16 @@ private:
     bool configureTurnContext(const QString& id,const QString& userMessage,QString* error=nullptr);
     QPointer<ComposerCompletionController> m_completionController;
     void showFileChanges();void refreshFileChanges();
+    void initializeWorkspaceChanges();void refreshWorkspaceChanges();
+    void showWorkspaceChanges(const QString& workspace,const QString& ownerChat={});
+    void openWorkspaceDiff(const QString& workspace,const QString& path,bool staged,const QString& oldPath={});
+    void openWorkspaceChangedFile(const QString& workspace,const QString& relativePath,std::function<bool()> stillValid={},const QString& ownerChat={});
+    quint64 m_changedFileOpenEpoch=0;
+    QSet<QString> m_pendingMutationHydration;
+    QPointer<WorkspaceChangesController> m_workspaceChanges;
+    QPointer<WorkspaceChangesView> m_workspaceChangesView;
     void connectMutationControls(const QString& id,AgentToolHost* host);
+    void connectTurnFileControls(ConversationView* view);
     void undoFileChanges(const QString& id,const QStringList& mutationIds);
     void recoverFileChanges(const QString& id);
     QPointer<FileChangesPanel> m_fileChanges;

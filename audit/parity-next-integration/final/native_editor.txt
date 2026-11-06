@@ -1,0 +1,36 @@
+********* Start testing of EditorTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : EditorTest::initTestCase()
+PASS   : EditorTest::encodingAndEolRoundTrip(0-0-0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(0-1-0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(0-0-0d0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(0-1-0d0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(0-0-0d)
+PASS   : EditorTest::encodingAndEolRoundTrip(0-1-0d)
+PASS   : EditorTest::encodingAndEolRoundTrip(2-1-0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(2-1-0d0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(2-1-0d)
+PASS   : EditorTest::encodingAndEolRoundTrip(3-1-0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(3-1-0d0a)
+PASS   : EditorTest::encodingAndEolRoundTrip(3-1-0d)
+PASS   : EditorTest::mixedAndUnicodeDelimitersStayLossless()
+PASS   : EditorTest::invalidInputIsRejectedWithoutReplacingOpenBuffer()
+PASS   : EditorTest::detectsContentChangeEvenWithoutMtimeChange()
+PASS   : EditorTest::cleanReloadAndDirtyConflict()
+PASS   : EditorTest::deletedFileRequiresExplicitRecreate()
+PASS   : EditorTest::closeChoicesNeverSilentlyDiscard()
+QWARN  : EditorTest::saveFailureKeepsEdits() QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_editor-vyzPGq\child"  (Access is denied.)
+PASS   : EditorTest::saveFailureKeepsEdits()
+QINFO  : EditorTest::replacementDeniedByReaderPreservesBytesAndCanRetry(normal-save) Controlled delete-sharing denial: Save failed; the previous file was preserved: Access is denied.
+PASS   : EditorTest::replacementDeniedByReaderPreservesBytesAndCanRetry(normal-save)
+QINFO  : EditorTest::replacementDeniedByReaderPreservesBytesAndCanRetry(explicit-overwrite) Controlled delete-sharing denial: Save failed; the previous file was preserved: Access is denied.
+PASS   : EditorTest::replacementDeniedByReaderPreservesBytesAndCanRetry(explicit-overwrite)
+PASS   : EditorTest::undoTracksSavedContent()
+PASS   : EditorTest::partialUndoRestoresMixedDelimiterMetadata()
+PASS   : EditorTest::findReplacePreservesLiteralsAndUndo()
+PASS   : EditorTest::gutterSyntaxAndIndentation()
+PASS   : EditorTest::explicitThemeSurvivesTransparentPalette()
+PASS   : EditorTest::watchesAtomicExternalReplacement()
+PASS   : EditorTest::cleanupTestCase()
+Totals: 29 passed, 0 failed, 0 skipped, 0 blacklisted, 1200ms
+********* Finished testing of EditorTest *********

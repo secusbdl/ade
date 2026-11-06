@@ -1,0 +1,12 @@
+********* Start testing of WorkspaceChangesTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceChangesTests::initTestCase()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+FAIL!  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() Compared values are not the same
+   Actual   (view.list()->viewport()->geometry()): QRect(1,1 224x227) (bottomright 224,227)
+   Expected (viewport)                           : QRect(1,1 224x248) (bottomright 224,248)
+D:/age/ADE/tests/test_workspace_changes.cpp(369) : failure location
+PASS   : WorkspaceChangesTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 95ms
+********* Finished testing of WorkspaceChangesTests *********

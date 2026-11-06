@@ -37,8 +37,11 @@ void MainWindow::updateTranscriptLinkRows(const QString& id) {
     const auto* engine = m_engines.value(id);
     if (!engine)
         return;
+    updateTranscriptLinkRows(id,engine->displayMessages());
+}
+void MainWindow::updateTranscriptLinkRows(const QString& id,const QJsonArray& rows) {
     auto& known = m_linkKnownRows[id];
-    for (const auto& value : engine->displayMessages()) {
+    for (const auto& value : rows) {
         const auto row = value.toObject();
         const auto rowId = row["id"].toString();
         if (rowId.isEmpty() || known.contains(rowId))

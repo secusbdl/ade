@@ -1,0 +1,31 @@
+Test project D:/age/ADE/build-next
+      Start  1: native_codex_harness
+ 1/13 Test  #1: native_codex_harness .............   Passed    5.17 sec
+      Start  2: native_codex_engine
+ 2/13 Test  #2: native_codex_engine ..............   Passed    3.22 sec
+      Start  3: native_codex_provider_ui
+ 3/13 Test  #3: native_codex_provider_ui .........   Passed    0.56 sec
+      Start  4: native_codex_host
+ 4/13 Test  #4: native_codex_host ................   Passed    3.08 sec
+      Start  5: native_provider_operations
+ 5/13 Test  #5: native_provider_operations .......   Passed    1.24 sec
+      Start  7: native_retired_wire
+ 6/13 Test  #7: native_retired_wire ..............   Passed    0.31 sec
+      Start  8: native_navigation_shortcuts
+ 7/13 Test  #8: native_navigation_shortcuts ......   Passed    2.02 sec
+      Start 36: native_mutation_runtime
+ 8/13 Test #36: native_mutation_runtime ..........   Passed    6.06 sec
+      Start 45: native_sidebar_navigation
+ 9/13 Test #45: native_sidebar_navigation ........   Passed    5.22 sec
+      Start 48: native_workspace_changes
+10/13 Test #48: native_workspace_changes .........   Passed   28.36 sec
+      Start 49: native_workspace_changes_host
+11/13 Test #49: native_workspace_changes_host ....   Passed   34.27 sec
+      Start 67: native_attachment_mount
+12/13 Test #67: native_attachment_mount ..........   Passed    0.81 sec
+      Start 72: native_runtime_apps
+13/13 Test #72: native_runtime_apps ..............   Passed    6.98 sec
+
+100% tests passed out of 13
+
+Total Test time (real) =  97.32 sec

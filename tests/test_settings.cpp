@@ -91,9 +91,10 @@ void SettingsTest::navigationAndArchiveRestoreDoNotMutateSessions() {
     SettingsPage page(directory.path());
     QSignalSpy back(&page,&SettingsPage::backRequested);
     QSignalSpy providers(&page,&SettingsPage::providersRequested);
+    QSignalSpy addProvider(&page,&SettingsPage::addProviderRequested);
     QSignalSpy restore(&page,&SettingsPage::restoreConversationRequested);
     auto *backButton=page.findChild<QPushButton *>("settingsBack");QVERIFY(backButton);backButton->click();QCOMPARE(back.count(),1);
-    auto *providerButton=page.findChild<QPushButton *>("settingsAddProvider");QVERIFY(providerButton);providerButton->click();QCOMPARE(providers.count(),1);
+    auto *providerButton=page.findChild<QPushButton *>("settingsAddProvider");QVERIFY(providerButton);providerButton->click();QCOMPARE(addProvider.count(),1);QCOMPARE(providers.count(),0);
     for(const auto &id:{"agent-general","models-providers","skills-context","worktree-setup","plugins","archived-agents","personalization","browsing","clear-data","history","account","about"}){
         page.selectSection(id);QCOMPARE(page.currentSection(),QString(id));
         QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);

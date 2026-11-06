@@ -1,0 +1,77 @@
+{
+  "recordedUtc": "2026-11-06T18:30:00.616734+00:00",
+  "packageSha256": "f8caefee745b7cd1f6af6e7f2ee191a2f10103b24343272cd80e33a34ce6c008",
+  "mode": "Actual packaged ADE --smoke with hidden native ConversationView captures; no main-window input",
+  "provider": "deepseek",
+  "requestedModel": "deepseek-flash",
+  "actualModel": "deepseek-flash",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "markerMatched": true,
+  "fencedCodePresent": true,
+  "toolNames": [
+    "read"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 2714,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 61,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "a395e2240ec5597c207435ea702aa525f0342c895a8dfdbb6346a896d7d02d29",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "961438cb6c91349f669dfdeb27a77429a7f6f4fc1d3e16c15a45fa8d8ca49dd3",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-reasoning.png",
+        "sha256": "99a1944f16076984bc25534b6d45f60b21ebb66e12028062e7feaa64c3b9fe95",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-text.png",
+        "sha256": "7e1e752e769fcc76220456d68d4956cc581aa8ac0ec8e46cb753328c92bdb0c8",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "05-completed.png",
+        "sha256": "b793f8057b8b9e80cfbfbc215293ccc046baa12ba35cf1e1e1fbd9ef792c994a",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 14.0428,
+    "meanSetConversationMs": 1.9607214285714285,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 11,
+    "renderUpdates": 14,
+    "textDeltas": 26,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "scope": "Bounded real read tool and live Markdown/code streaming into actual native transcript. Intermediate integration package; no full-window interaction or complete parity claim.",
+  "schemaVersion": 1,
+  "package": "out/parity-integration-smoke-2/ADE.exe",
+  "captureDirectory": "private/parity-live/render-4e840e1d20/captures",
+  "reviewNotes": [
+    "Completed frame visually inspected: real read tool, Markdown heading/list and C++ fenced answer present.",
+    "Intermediate reasoning capture can precede settled widget layout; phase filenames alone do not establish complete geometry for every delta.",
+    "This binary predates the later Roboto Mono inline-code and 100px bottom-indicator fixes, which have separate regression evidence.",
+    "Measured scope excludes deferred layout, image capture and compositor; these numbers do not establish frame rate or latency superiority.",
+    "Credentials were runtime-only; no key or raw private conversation is included in this audit. Screenshots stay local."
+  ]
+}

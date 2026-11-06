@@ -1,0 +1,10 @@
+********* Start testing of WorkspaceChangesTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceChangesTests::initTestCase()
+FAIL!  : WorkspaceChangesTests::unchangedAliasCannotRetargetAuthority() Compared values are not the same
+   Actual   (controller.phase())                      : 2
+   Expected (WorkspaceChangesController::Phase::Error): 4
+D:/age/ADE/tests/test_workspace_changes.cpp(82) : failure location
+PASS   : WorkspaceChangesTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 4339ms
+********* Finished testing of WorkspaceChangesTests *********

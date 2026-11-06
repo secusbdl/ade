@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="TurnSnapshotTests" timestamp="2026&#x002D;11&#x002D;06T20:05:30" hostname="redacted" tests="19" failures="0" errors="0" skipped="0" time="0.593">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="TurnSnapshotTests" time="0.000"/>
+  <testcase name="netEndpointsAreNotCumulative" classname="TurnSnapshotTests" time="0.037"/>
+  <testcase name="repeatedModelIdsDoNotMixTurns" classname="TurnSnapshotTests" time="0.030"/>
+  <testcase name="currentFilesCannotRewriteSavedDiff" classname="TurnSnapshotTests" time="0.022"/>
+  <testcase name="restoredEndpointHasNoNetChange" classname="TurnSnapshotTests" time="0.030"/>
+  <testcase name="ownerMissingDuplicateAndTraversalRejectAtomically" classname="TurnSnapshotTests" time="0.025"/>
+  <testcase name="fullSummaryExceedsPreviewEightFileLimit" classname="TurnSnapshotTests" time="0.110"/>
+  <testcase name="binaryAndLargeFilesHaveExplicitUnknownCounts" classname="TurnSnapshotTests" time="0.084"/>
+  <testcase name="movePreservesBothChangedPaths" classname="TurnSnapshotTests" time="0.025"/>
+  <testcase name="directoryOnlyChangesRemainReviewable" classname="TurnSnapshotTests" time="0.020"/>
+  <testcase name="finalNewlineIsCounted" classname="TurnSnapshotTests" time="0.023"/>
+  <testcase name="byteSignificantBomAndCrLfRemainVisibleInCounts" classname="TurnSnapshotTests" time="0.021"/>
+  <testcase name="missingOrCorruptSnapshotCannotClaimCounts" classname="TurnSnapshotTests" time="0.028"/>
+  <testcase name="noOpDirectoryDoesNotAdvertiseUnqueryableMutation" classname="TurnSnapshotTests" time="0.023"/>
+  <testcase name="durableInvocationsSurviveRestartAndRemainOwnerScoped" classname="TurnSnapshotTests" time="0.042"/>
+  <testcase name="durableInvocationCannotBeReboundToAnotherMutation" classname="TurnSnapshotTests" time="0.025"/>
+  <testcase name="legacyJournalMigratesWithoutGuessingInvocationFromModelId" classname="TurnSnapshotTests" time="0.015"/>
+  <testcase name="interruptedInvocationReconcilesOnlyAfterRollbackCompletes" classname="TurnSnapshotTests" time="0.031"/>
+  <testcase name="cleanupTestCase" classname="TurnSnapshotTests" time="0.000"/>
+</testsuite>

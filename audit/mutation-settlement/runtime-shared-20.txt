@@ -1,0 +1,24 @@
+********* Start testing of MutationRuntimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MutationRuntimeTest::initTestCase()
+PASS   : MutationRuntimeTest::actualEngineToolsPersistAndUndo(openai)
+PASS   : MutationRuntimeTest::actualEngineToolsPersistAndUndo(responses)
+PASS   : MutationRuntimeTest::actualEngineToolsPersistAndUndo(anthropic)
+PASS   : MutationRuntimeTest::actualEngineToolsPersistAndUndo(google)
+PASS   : MutationRuntimeTest::restartConflictAndForkAuthority()
+PASS   : MutationRuntimeTest::sandboxRawWritesAreExactAndAttributed()
+PASS   : MutationRuntimeTest::cancellationBeforeQueuedSandboxMutationDoesNotWrite()
+PASS   : MutationRuntimeTest::mutationActionsHaveOneHostLane()
+PASS   : MutationRuntimeTest::undoObserverMayDestroyHost()
+PASS   : MutationRuntimeTest::repeatedToolIdsRetainExactSavedTurnIdentity()
+PASS   : MutationRuntimeTest::sandboxOuterResultRetainsAllCommittedMutationIds()
+PASS   : MutationRuntimeTest::cancelFromCommittedChangeNotificationRetainsMutationIdentity()
+PASS   : MutationRuntimeTest::lateCommittedResultCannotAttachToReusedModelId()
+PASS   : MutationRuntimeTest::persistedInvocationRecoversAfterOwnerDiesBeforeDelivery()
+PASS   : MutationRuntimeTest::failedDispatchPersistencePreventsMutation()
+PASS   : MutationRuntimeTest::restartedSandboxCommitDoesNotClaimOuterCompletion()
+PASS   : MutationRuntimeTest::rejectedDispatchObserverCannotCancelReplacementMutation()
+PASS   : MutationRuntimeTest::rejectedSandboxDispatchCannotCancelReplacementRpc()
+PASS   : MutationRuntimeTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 5552ms
+********* Finished testing of MutationRuntimeTest *********

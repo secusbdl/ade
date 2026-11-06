@@ -5,6 +5,8 @@
 #include "editor/EditorWidget.h"
 #include "runtime/AgentToolHost.h"
 #include <QLabel>
+#include <QDir>
+#include <QFileInfo>
 #include <QSignalBlocker>
 #include <QTabWidget>
 #include <QTimer>
@@ -114,6 +116,7 @@ void MainWindow::connectMutationControls(const QString &id,
     }
   });
   connect(host, &AgentToolHost::fileChanged, this, [this, id] {
+    if(id==m_currentId)refreshWorkspaceChanges();
     if (m_fileChanges && m_fileChanges->agentId() == id)
       QTimer::singleShot(0, this, &MainWindow::refreshFileChanges);
   });
@@ -123,32 +126,35 @@ void MainWindow::undoFileChanges(const QString &id, const QStringList &ids) {
       !m_mutationUndoId.isEmpty())
     return;
   auto *session = find(id);
-  auto *host = m_toolHosts.value(id);
+  const QPointer<MainWindow> self(this);
+  const QPointer<FileChangesPanel> panel=m_fileChanges;
+  const QPointer<AgentToolHost> host=m_toolHosts.value(id);
   auto *engine = m_engines.value(id);
   if (!session || session->archived || !host ||
       (engine && (engine->isBusy() || !engine->queuedMessages().isEmpty())) ||
       gitPathBusy(session->workspace))
     return;
   QString error;
-  const auto history = host->mutationHistory(&error);
+  QStringList selectedPaths;
+  if(!panel->pathsForMutations(ids,&selectedPaths,&error)){
+    panel->setOperation(id,false,error);return;
+  }
   QSet<QString> paths;
-  ToolExecutor scope;
-  scope.setWorkspace(session->workspace);
-  for (const auto &value : history) {
-    const auto row = value.toObject();
-    if (!ids.contains(row["mutationId"].toString()))
-      continue;
-    for (const auto &entry : row["entries"].toArray()) {
-      QString issue;
-      const auto path =
-          scope.resolvePath(entry.toObject()["path"].toString(), &issue);
-      if (issue.isEmpty())
-        paths.insert(path.toCaseFolded());
-    }
+  const auto physicalPath=[](const QString& path){
+    const QFileInfo info(path);const auto canonical=info.canonicalFilePath();
+    if(!canonical.isEmpty())return QDir::cleanPath(canonical).toCaseFolded();
+    const auto parent=QFileInfo(info.absolutePath()).canonicalFilePath();
+    return QDir::cleanPath(parent.isEmpty()?info.absoluteFilePath():parent+'/'+info.fileName()).toCaseFolded();
+  };
+  // The panel rows originate in exact owner-scoped journal reads. Use their
+  // original roots, including old workspaces and apps, never today's ws1 alias.
+  for(const auto& path:selectedPaths){
+    if(gitPathBusy(path)){panel->setOperation(id,false,"Wait for the operation in the original workspace to finish.");return;}
+    paths.insert(physicalPath(path));
   }
   for (auto *editor : m_tabs->findChildren<EditorWidget *>())
     if (editor->isModified() &&
-        paths.contains(editor->filePath().toCaseFolded())) {
+        paths.contains(physicalPath(editor->filePath()))) {
       if (m_fileChanges)
         m_fileChanges->setOperation(id, false,
                                     "Save or close your unsaved edits to " +
@@ -157,11 +163,26 @@ void MainWindow::undoFileChanges(const QString &id, const QStringList &ids) {
       return;
     }
   m_mutationUndoAgent = id;
-  m_mutationUndoId = QUuid::createUuid().toString(QUuid::WithoutBraces);
+  const auto requestId=QUuid::createUuid().toString(QUuid::WithoutBraces);
+  m_mutationUndoId = requestId;
+  const auto abandon=[self,panel,id,requestId]{
+    if(!self||self->m_mutationUndoAgent!=id||self->m_mutationUndoId!=requestId)return;
+    self->m_mutationUndoAgent.clear();self->m_mutationUndoId.clear();
+    if(panel&&self->m_fileChanges==panel)panel->setOperation(id,false,"The conversation changed before undo could start.");
+    if(self)self->updateComposerState();
+  };
   if (m_fileChanges)
     m_fileChanges->setOperation(id, true, "Restoring selected changes…");
+  if(!self||!panel||m_fileChanges!=panel||!host||m_toolHosts.value(id)!=host){abandon();return;}
   updateComposerState();
-  host->undoMutations(m_mutationUndoId, ids);
+  if(!self||!panel||m_fileChanges!=panel||!host||m_toolHosts.value(id)!=host
+      ||panel->agentId()!=id||m_mutationUndoAgent!=id||m_mutationUndoId!=requestId){abandon();return;}
+  const auto* live=find(id);const auto* running=m_engines.value(id);
+  if(!live||live->archived||(running&&(running->isBusy()||!running->queuedMessages().isEmpty()))||gitPathBusy(live->workspace)){
+    abandon();return;
+  }
+  for(const auto& path:selectedPaths)if(gitPathBusy(path)){abandon();return;}
+  host->undoMutations(requestId, ids);
 }
 void MainWindow::recoverFileChanges(const QString &id) {
   if (!m_fileChanges || m_fileChanges->agentId() != id ||

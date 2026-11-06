@@ -1,0 +1,93 @@
+{
+  "status": "production_migrated_private_tests_pass_shared_rebuild_pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "productionModifiedByThisStage": true,
+  "fixes": [
+    {
+      "file": "src/ui/MarkdownParts.cpp",
+      "issue": "Qt Markdown stores generic monospace despite code CSS; bundled Roboto Mono was not bound to inline code fragments.",
+      "change": "Set the font family on fixed-pitch document fragments while retaining existing selection, sizing and resource-denial behavior."
+    },
+    {
+      "file": "src/ui/ConversationView.cpp",
+      "issue": "Jump indicator used a 2px threshold while native follow state and source use 100px.",
+      "change": "Show jump only more than 100px from bottom. Preserve intentional tail padding."
+    }
+  ],
+  "sourceContract": [
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/chat-history.tsx",
+      "lines": [
+        220,
+        224,
+        289,
+        1331,
+        1337
+      ],
+      "behavior": "Intentional last-assistant tail minimum height; auto-scroll and at-bottom threshold100; indicator shown only outside at-bottom state."
+    }
+  ],
+  "before": {
+    "report": "audit/transcript-polish/source-contract-before.txt",
+    "passed": 4,
+    "failed": 2,
+    "failures": [
+      "inlineCodeUsesApplicationMono",
+      "jumpUsesSourceBottomThreshold"
+    ]
+  },
+  "after": {
+    "targeted": {
+      "report": "audit/transcript-polish/final-polish.txt",
+      "passed": 6,
+      "failed": 0,
+      "milliseconds": 1904
+    },
+    "existingTranscript": {
+      "report": "audit/transcript-polish/final-transcript.txt",
+      "passed": 35,
+      "failed": 0,
+      "milliseconds": 3419
+    }
+  },
+  "visualInspection": {
+    "inspected": "after-captures/short-18.png",
+    "observation": "Roboto Mono marker, normal native code card, and no jump indicator after settled completion; intended blank tail retained."
+  },
+  "settledFollow": {
+    "normal14px": {
+      "value": 6,
+      "maximum": 6,
+      "jumpVisible": false,
+      "followsOutput": true
+    },
+    "large18px": {
+      "value": 13,
+      "maximum": 13,
+      "jumpVisible": false,
+      "followsOutput": true
+    },
+    "interpretation": "No persistent short-turn auto-follow bug reproduced in the settled fixture. Capture timing is a plausible explanation for the original image, not a proven diagnosis. The zero-range exploratory assertion was invalid because source intentionally pads the tail."
+  },
+  "exploratoryReport": "exploratory-zero-range.txt is retained as an overstrict test draft, not evidence of a padding defect.",
+  "testsScope": "Static Qt6.11.2 GCC16.2 offscreen private UI sources and actual transcript widgets; no live provider calls or real user profiles; current integrated executable not retested by this private stage.",
+  "integration": {
+    "patch": "private/transcript-polish-stage/transcript-polish.patch",
+    "testSource": "tests/test_transcript_polish.cpp",
+    "suggestedTarget": "test_transcript_polish linked ade_ui and Qt6::Test; qt_import_plugins INCLUDE Qt6::QOffscreenIntegrationPlugin; add_test native_transcript_polish; TIMEOUT60",
+    "note": "Header paths changed to ui/ after migration to use ade_ui public include directory; no production behavior change from privately tested patch. Root owns CMake and shared validation."
+  },
+  "rootRowOptimizationPreserved": true,
+  "sourceHashes": {
+    "src/ui/MarkdownParts.cpp": "4bc6adf6e7a28e98159f07e8120f0e32636926e83601690c409ebd6bcfa888db",
+    "src/ui/ConversationView.cpp": "e31021814ea69286c035bf313cdcfc6141a8f97cd783b7e315b0577979979c84",
+    "tests/test_transcript_polish.cpp": "3da2b56695eddab6cb7fd74e29562022824bde9096cea93720b473f8d58ed64c"
+  },
+  "hashBasis": "canonical_git_text_LF",
+  "reports": {
+    "audit/transcript-polish/final-polish.txt": "8de9710885802200798449b8ac09ca0c6803927c423a984a1ca1263203e1932d",
+    "audit/transcript-polish/final-polish.xml": "990d5401db1077ab31ee09bcec6f00477b0f838f7b2d339c572ea90e7063548f",
+    "audit/transcript-polish/final-transcript.txt": "f14d28c5e80cddab7f0498da7ce59817537cbb979d6022e21a824412f336b5fb",
+    "audit/transcript-polish/source-contract-before.txt": "5eccdada8428ce14d86ef8c85c07cbc49e0a21691625e8d34f00ec56e5730f70"
+  }
+}

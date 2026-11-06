@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="CodexEngineTest" timestamp="2026&#x002D;11&#x002D;06T20:02:45" hostname="VOID" tests="13" failures="0" errors="0" skipped="0" time="3.119">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="CodexEngineTest" time="0.000"/>
+  <testcase name="priorTranscriptOnlyForNewSession" classname="CodexEngineTest" time="0.893">
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_codex_engine-noBjJD" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="failedResumeRebuildsCanonicalHistoryOnce" classname="CodexEngineTest" time="0.419"/>
+  <testcase name="nonsecretProviderRoundtrip" classname="CodexEngineTest" time="0.004"/>
+  <testcase name="mixedCredentialRejectedWithoutOverwrite" classname="CodexEngineTest" time="0.003"/>
+  <testcase name="streamsPersistsAndRestarts" classname="CodexEngineTest" time="0.360"/>
+  <testcase name="forkHistoryDoesNotResumeSourceThread" classname="CodexEngineTest" time="0.343"/>
+  <testcase name="actualApprovalUsesNativeEngineControl" classname="CodexEngineTest" time="0.252"/>
+  <testcase name="actualQuestionUsesNativeForm" classname="CodexEngineTest" time="0.245"/>
+  <testcase name="queuedMessagesDrainAfterSuccessfulHarnessTurn" classname="CodexEngineTest" time="0.239"/>
+  <testcase name="cancelAtReasoningRetainsOnePartial" classname="CodexEngineTest" time="0.188"/>
+  <testcase name="deletedEngineDuringStream" classname="CodexEngineTest" time="0.170"/>
+  <testcase name="cleanupTestCase" classname="CodexEngineTest" time="0.000"/>
+</testsuite>

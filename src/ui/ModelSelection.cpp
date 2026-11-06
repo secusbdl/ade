@@ -4,6 +4,14 @@
 #include <QUrl>
 
 namespace ade {
+namespace {
+bool catalogMatches(const ProviderConfig& provider,const QJsonObject& catalog) {
+    return QUrl(catalog["baseUrl"].toString())==QUrl(provider.baseUrl)
+        && catalog["protocol"].toString()==provider.protocol
+        && catalog["kind"].toString("api")==provider.kind
+        && catalog["harnessExecutable"].toString()==provider.harnessExecutable;
+}
+}
 QJsonObject ModelSelection::toJson() const {
     return {{"providerInstanceId",providerId},{"modelId",modelId},
             {"presetId",presetId},{"label",label},{"overrides",overrides}};
@@ -37,12 +45,22 @@ QJsonObject cleanModelCatalog(const ProviderConfig &provider,const QJsonArray &m
         if(id.isEmpty() || id.size()>512 || ids.contains(id))continue;
         ids.insert(id);
         auto limit=[](const QJsonValue& value){return value.isDouble()&&value.toDouble()==value.toInt()&&value.toInt()>0&&value.toInt()<=100000000?value.toInt():0;};
-        entries.append(QJsonObject{{"id",id},{"name",m["name"].toString(id).left(512)},
+        QJsonObject entry{{"id",id},{"name",m["name"].toString(id).left(512)},
             {"inputTokenLimit",limit(m["inputTokenLimit"])},
-            {"outputTokenLimit",limit(m["outputTokenLimit"])}});
+            {"outputTokenLimit",limit(m["outputTokenLimit"])}};
+        if(provider.isCodexHarness()) {
+            QJsonArray efforts,modalities;
+            for(const auto& value:m["reasoningEfforts"].toArray())if(value.isString()&&value.toString().size()<=32&&efforts.size()<20)efforts.append(value);
+            for(const auto& value:m["inputModalities"].toArray())if(value.isString()&&value.toString().size()<=32&&modalities.size()<10)modalities.append(value);
+            entry["reasoningEfforts"]=efforts;entry["inputModalities"]=modalities;
+            entry["defaultReasoningEffort"]=m["defaultReasoningEffort"].toString().left(32);
+            entry["isDefault"]=m["isDefault"].toBool();
+        }
+        entries.append(entry);
         if(entries.size()>=10000)break;
     }
-    return {{"baseUrl",provider.baseUrl},{"protocol",provider.protocol},{"models",entries}};
+    return {{"baseUrl",provider.baseUrl},{"protocol",provider.protocol},{"kind",provider.kind},
+            {"harnessExecutable",provider.harnessExecutable},{"models",entries}};
 }
 QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &providers,
     const QJsonObject &catalogs,const QJsonArray &presets) {
@@ -61,7 +79,7 @@ QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &prov
         append({p.id,p.model,{},p.name+" / "+p.model,{}});
         const auto catalog=catalogs[p.id].toObject();
         // A catalog belongs to one endpoint/protocol. Editing a provider invalidates old discovery.
-        if(QUrl(catalog["baseUrl"].toString())!=QUrl(p.baseUrl)||catalog["protocol"].toString()!=p.protocol)continue;
+        if(!catalogMatches(p,catalog))continue;
         for(const auto &value:catalog["models"].toArray()) {
             const auto m=value.toObject();const auto id=m["id"].toString();
             append({p.id,id,{},p.name+" / "+m["name"].toString(id),{}});
@@ -74,7 +92,7 @@ QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,co
     for(const auto& value:entries){const auto item=value.toObject();auto selection=ModelSelection::fromJson(item);ProviderConfig provider;
         if(!selection.resolve(providers,&provider)||seen.contains(selection.key()))continue;
         const auto catalog=catalogs[provider.id].toObject();
-        if(provider.contextWindowTokens==0&&QUrl(catalog["baseUrl"].toString())==QUrl(provider.baseUrl)&&catalog["protocol"]==provider.protocol){
+        if(provider.contextWindowTokens==0&&catalogMatches(provider,catalog)){
             for(const auto& value:catalog["models"].toArray()){
                 const auto model=value.toObject();const auto limit=model["inputTokenLimit"];
                 if(model["id"]==provider.model&&limit.isDouble()&&limit.toDouble()==limit.toInt()&&limit.toInt()>0&&limit.toInt()<=100000000){provider.contextWindowTokens=limit.toInt();break;}

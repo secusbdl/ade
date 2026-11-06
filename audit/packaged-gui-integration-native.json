@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "status": "observed_packaged_gui_scenarios_pass_combined_final_checkpoint_pending",
+  "recordedUtc": "2026-11-06T18:51:41.494431+00:00",
+  "package": {
+    "path": "out/parity-integration-smoke-3/ADE.exe",
+    "sha256": "8646f5e3901e0d620e1ff8f5b8b245fffb399fef75dd5dbd98c33582602a8383",
+    "sha256VerifiedFromBytes": true,
+    "scope": "Third integration smoke package; later source changes are not covered by this artifact check."
+  },
+  "execution": {
+    "operator": "root agent through actual native Windows UI",
+    "review": "Independent read-only inspection of ten saved screenshots and bounded process/server records; reviewer did not launch, focus, close or stop any process.",
+    "profile": "Unique ignored scratch profile and workspace; existing user profiles untouched.",
+    "syntheticOnly": true,
+    "credentialHandling": "Only a synthetic imported key in the GUI fixture; original import file and encrypted profile contents were not read for this audit. Root reports normal DPAPI storage; masked field and import success were visually verified."
+  },
+  "observations": [
+    {
+      "id": "visible_settings",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/01-main.jpg",
+      "sha256": "d2153186430e2ecf5ee9987f853948dc2b43c52d1d722e59131b2ff534f1b0df",
+      "inspected": true,
+      "result": "Visible Settings label in the packaged native main window."
+    },
+    {
+      "id": "provider_settings",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/02-settings.jpg",
+      "sha256": "a4a40786bd5a6e19e69e1cd2ea09681ef6472d8069e9615f1234995da9f66e4e",
+      "inspected": true,
+      "result": "Models & Providers shows local fixture provider, Add Provider and direct Import API key file control."
+    },
+    {
+      "id": "synthetic_key_import",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/03-import-complete.jpg",
+      "sha256": "3c7c1650aaf6bd3b3cb21a1ca3b36402fa3576a3690595fd4a80054be9c73526",
+      "inspected": true,
+      "result": "One synthetic provider key imported through the native file-dialog flow; DeepSeek provider card appears and status reports one imported key. No real DeepSeek service request was made by this fixture."
+    },
+    {
+      "id": "context_setting",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/04-provider-context.jpg",
+      "sha256": "e5d51fae6baed80d71b4165f9863676165b46435bfb32375597961403d18004f",
+      "inspected": true,
+      "result": "Local loopback provider dialog shows model context limit32768 and a masked key field."
+    },
+    {
+      "id": "send_enabled",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/05-send-enabled.jpg",
+      "sha256": "e9ab58ddef702712cbd70ee3096a8a3bc0c89edb03bd4e982454e4dfb312df5f",
+      "inspected": true,
+      "result": "Composer contains typed synthetic request and blue enabled Send button."
+    },
+    {
+      "id": "streaming",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/06-streaming.jpg",
+      "sha256": "f2b9d26e414b7235cc07b4014b4cca0541396d5892efc8ad2721aa48c1ffdc2b",
+      "inspected": true,
+      "result": "Native transcript displays fixture reasoning while Stop is visible."
+    },
+    {
+      "id": "completed_stream_browser",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/07-browser-one.jpg",
+      "sha256": "cea21671a9504246b3cf763a1f41b1fe803bcb9642d053d1bf16bf2e1b688152",
+      "inspected": true,
+      "result": "Completed synthetic response remains visible beside native embedded loopback page ONE."
+    },
+    {
+      "id": "two_browser_tabs",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/08-two-tabs-before-close.jpg",
+      "sha256": "b53e9fd4497265ba4d5d27e29198ad82e4a67aa0265fcf618f511af66202bbb8",
+      "inspected": true,
+      "result": "Ordinary browser tabs ONE and TWO visible before idle titlebar close."
+    },
+    {
+      "id": "browser_restart",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/09-tabs-restored.jpg",
+      "sha256": "dcd7d7c56d29096dfc4bb53d72d935ff3d69f4a597d010a97732b546b6b0021e",
+      "inspected": true,
+      "result": "Relaunched packaged app restored ONE and TWO with TWO selected; server observed TWO load again."
+    },
+    {
+      "id": "busy_input_close",
+      "privateScreenshot": "private/packaged-browser-qa-run-2bd6bdc4/10-busy-browser-input.jpg",
+      "sha256": "e7ac399f8ba3649413838bca673fa6bd3575c8e10fe91231e513a2f8d579c315",
+      "inspected": true,
+      "result": "Held stream remains busy with Stop visible; browser address bar accepts unsubmitted input while stream is active. Operator then closed the native titlebar."
+    }
+  ],
+  "serverEvidence": {
+    "requests": [
+      {
+        "index": 1,
+        "held": false,
+        "syntheticPromptRecognized": true,
+        "chunksSent": 9,
+        "clientDisconnected": false,
+        "completed": true
+      },
+      {
+        "index": 2,
+        "held": true,
+        "syntheticPromptRecognized": true,
+        "chunksSent": 2,
+        "clientDisconnected": true,
+        "completed": false
+      }
+    ],
+    "pageLoads": [
+      "ONE",
+      "TWO",
+      "TWO"
+    ],
+    "scope": "Loopback HTTP fixture, not an external provider or arbitrary internet website."
+  },
+  "nativeClose": {
+    "action": "Native Windows titlebar X, operator observed; separate process-wrapper records confirm exit.",
+    "idle": {
+      "pid": 50488,
+      "exitCode": 0,
+      "processExited": true
+    },
+    "busy": {
+      "pid": 31088,
+      "exitCode": 0,
+      "processExited": true,
+      "clientDisconnected": true,
+      "streamCompleted": false,
+      "fixtureHoldSeconds": 90,
+      "requestReceivedToProcessExitSeconds": 49.1
+    },
+    "timingLimit": "Process records do not timestamp the X click; no exact click-to-exit latency is claimed. Busy request receipt to process exit was under the90-second fixture hold. Child-process census was not part of these records."
+  },
+  "separateLiveCodex": {
+    "classification": "Actual managed Codex model and native commandExecution, not synthetic GUI fixture",
+    "summaryPath": "private/parity-live/codex-integrated-a499e5b353/summary.json",
+    "summarySha256": "67e7b29edc447ce1fd651a0f6d99920ddf6235e805360758ff64396a79d97cd8",
+    "provider": "Codex installed native CLI, managed ChatGPT subscription",
+    "model": "gpt-6.1-sol",
+    "nativeSuccess": true,
+    "exactMarker": true,
+    "workspaceUnchanged": true,
+    "exitCode": 0,
+    "elapsedMs": 15068,
+    "toolNames": [
+      "commandExecution"
+    ],
+    "credentialsReadByRunnerOrADE": false,
+    "screenshotPath": "private/parity-live/codex-integrated-a499e5b353/captures/04-completed.png",
+    "screenshotSha256": "86cf2ef11ab0018d262925a454c97836c37beccc842795c6514bf30ca29e11eb",
+    "screenshotInspected": true,
+    "scope": "Actual packaged native AgentEngine+AgentToolHost, live managed Codex, one read-only turn. Hidden transcript renders; not main-window input, native mutation-journal coverage, or complete parity.",
+    "initialFailure": "Retained in local gallery and audit/codex-harness-native.json; command launcher failure resolved by filtering inherited parent desktop routing environment. No token extraction or global account changes."
+  },
+  "privateRecordHashes": {
+    "app-idle.json": "704e648f8cf78337a8dddb29cacfb7c88887e46344a7ea47ac3b53d94106ec60",
+    "app-busy.json": "015f50fa4b1bf46087e466e43439d4f55124429d77f02a28e6437e4cefd92d5e",
+    "result.json": "f469fc4d83b905e6e3d11d30152bbd4ce87352f6e08a12e4718b00d923c954ba"
+  },
+  "screenshotsPublication": "Private/local only. Public audit contains sanitized observations and hashes, no copied images, key material or chat history.",
+  "limits": [
+    "This verifies the named packaged GUI scenarios, not complete Stagewise parity.",
+    "Synthetic streaming verifies UI and request lifecycle; it does not validate a real DeepSeek response or credential.",
+    "The separate real Codex success is one read-only turn rendered in a hidden transcript; it does not establish full-window Codex login/input, all models, or mutation journal parity.",
+    "Later transcript, picker and fallback lifecycle integration requires its own final build/test gate.",
+    "No click-to-process-exit latency or owned child-process termination count can be derived from these bounded records."
+  ]
+}

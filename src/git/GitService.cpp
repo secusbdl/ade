@@ -350,7 +350,7 @@ public:
         for(const auto &name:untracked) {
             if(name.isEmpty()) continue;
             const auto path=QString::fromUtf8(name); const auto bytes=diskBytes(repo.repoRoot,path);
-            GitDiffEntry entry; entry.path=path; entry.status='A'; entry.binary=bytes.left(8000).contains('\0');
+            GitDiffEntry entry; entry.path=path; entry.status='U'; entry.binary=bytes.left(8000).contains('\0');
             if(!entry.binary && !bytes.isEmpty()) entry.added=bytes.count('\n')+(bytes.endsWith('\n')?0:1);
             if(combined.contains(path)) { auto &item=combined[path]; item.status='M'; item.added+=entry.added; item.binary|=entry.binary; }
             else combined.insert(path,entry);
