@@ -259,7 +259,7 @@ struct HarnessFileContext::State {
   HarnessWorkspace dataPin;
   QList<Handle> ancestors;
   Handle categoryPin, locksPin, ownerLock, root;
-  State(const QString &data, const QString &owner) : agent(owner) {
+  State(const QString &data, const QString &owner,bool create=true) : agent(owner) {
     try {
       const auto name = hash(owner);
       dataPin = HarnessWorkspace::resolve(data);
@@ -276,12 +276,12 @@ struct HarnessFileContext::State {
       }
       category = dataPin.path + "/harness-workspaces";
       locks = dataPin.path + "/harness-workspace-locks";
-      categoryPin = directory(category, true);
+      categoryPin = directory(category, create);
       locksPin = directory(locks, true);
       ownerLock = open(locks + '/' + name + ".lock", false,
                        GENERIC_READ | GENERIC_WRITE, OPEN_ALWAYS, 0);
       path = category + '/' + name;
-      root = directory(path, true);
+      root = directory(path, create);
       rootId = identity(root);
     } catch (const Failure &e) {
       error = e.message;
@@ -291,7 +291,10 @@ struct HarnessFileContext::State {
 };
 HarnessFileContext::HarnessFileContext(const QString &data,
                                        const QString &owner)
-    : m_state(std::make_unique<State>(data, owner)) {}
+    : HarnessFileContext(data,owner,true) {}
+HarnessFileContext::HarnessFileContext(const QString &data,
+                                       const QString &owner,bool create)
+    : m_state(std::make_unique<State>(data, owner,create)) {}
 HarnessFileContext::~HarnessFileContext() = default;
 QString HarnessFileContext::rootDirectory() const {
   return m_state->root ? m_state->path : QString{};
@@ -380,5 +383,18 @@ bool HarnessFileContext::remove(QString *error) {
       *error = e.message;
     return false;
   }
+}
+bool HarnessFileContext::removeAgent(const QString &data,const QString &owner,QString *error) {
+  if(error)error->clear();
+  try {
+    const auto name=hash(owner);
+    const auto profile=HarnessWorkspace::resolve(data);
+    if(profile.path.isEmpty())fail("Harness profile directory is unavailable.");
+    const auto path=profile.path+"/harness-workspaces/"+name;
+    if(!QFileInfo::exists(path))return true;
+    HarnessFileContext existing(profile.path,owner,false);
+    if(existing.m_state->dataPin.identity!=profile.identity)fail("Harness profile identity changed during cleanup.");
+    return existing.remove(error);
+  }catch(const Failure &failure){if(error)*error=failure.message;return false;}
 }
 } // namespace ade

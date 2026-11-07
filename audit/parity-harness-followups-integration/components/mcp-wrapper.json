@@ -1,0 +1,81 @@
+{
+  "status": "frozen_private_verified_ready_for_parent_integration",
+  "pinnedSource": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/tool-mapper.ts",
+      "lines": "61-80",
+      "contract": "Exact case-sensitive request_user_input name, stagewise_request_user_input substring in source name/title, or exact rawInput.tool. Native keeps sourceName metadata fallback."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+      "lines": "20-27",
+      "contract": "Exact preference text prepended as its own block once when native MCP callback bridge is configured."
+    }
+  ],
+  "changes": [
+    "Validated optional UI-only questionWrapper marker on ACP presentation; typed grouping and plain text omit ordinary matching wrapper parts without removing canonical raw tools/results.",
+    "Pending approvals remain visible. Once an approval is created, approvalSeen stays in display metadata through terminal updates and restart, including late wrapper recognition. No automatic permission grant or permission-routing change.",
+    "Pinned Stagewise question-tool preference added only to configured-bridge initial prompts; disabled bridge and cancellation before prompt do not advertise/send it."
+  ],
+  "before": {
+    "reports": [
+      "before.txt",
+      "before.xml"
+    ],
+    "passed": 3,
+    "failed": 2,
+    "failures": [
+      "Actual Engine plus native subprocess rendered two tool cards instead of one native question card.",
+      "Configured MCP prompt omitted the pinned preference instruction."
+    ]
+  },
+  "verification": {
+    "suiteCount": 8,
+    "passedQtRows": 161,
+    "failedQtRows": 0,
+    "newSuiteQtRows": 26,
+    "compatibility": [
+      "MCP Engine14",
+      "ACP presentation Engine8",
+      "ACP mapper27",
+      "ACP presentation UI20",
+      "Transcript35",
+      "Transcript grouping18",
+      "Codex Engine13"
+    ],
+    "results": "results.json",
+    "captures": "renders/index.json",
+    "captureCount": 8,
+    "noDesktopInput": true,
+    "noLiveProviders": true
+  },
+  "fixtureCorrections": [
+    "Intermediate expanded run20pass2fail: newly inserted native child visibility needed QTRY after Qt event delivery; source logic unchanged.",
+    "The invalid-helper test assumed bridge configuration validates helper executable existence. It does not: start configures the callback; no production defect claimed from that test. Replaced with verified cancellation-before-prompt. Helper launch validation is outside this slice."
+  ],
+  "integration": {
+    "patch": "mcp-wrapper.patch",
+    "manifest": "manifest.json",
+    "cmake": "CMAKE-HANDOFF.txt",
+    "patchCanonicalSha256": "9c64ff5eaf52e99926993d040f0550320c22f09d34c68c329501992db1eea6a5",
+    "gitApplyCheck": "passed against current root working source including ACP settlement on 2026-11-07",
+    "paths": 8,
+    "sharedBuildUsed": false,
+    "rootCmakeChanged": false,
+    "productionChangedByThisStage": false,
+    "mergeInstructions": "Apply narrow patch, never overwrite full staged source copies. AcpHarnessSession change is prompt-only; retain newly integrated settlement/continuity changes. Add test target with CMAKE-HANDOFF. Rebuild ABI-consistent root libraries and run integrated gates."
+  },
+  "remainingLimits": [
+    "No full Stagewise parity claim; this slice covers Stagewise question-wrapper rendering and source preference text.",
+    "Existing history without the validated wrapper presentation marker is unchanged. Raw wrapper names/arguments/results remain stored and can be inspected; hidden UI does not confer authority.",
+    "General isHiddenTool rules for image generation, provider hidden names and path prefixes are not added here.",
+    "Pending/previous approval visibility is an explicit native safeguard required by the parent; it takes precedence over a matching wrapper label.",
+    "Bridge configured means callback configuration was successfully produced; it is not proof that an arbitrary helper executable launched. Actual self-helper launch and form response are covered by the native subprocess fixtures.",
+    "Offscreen component renders are not actual packaged MainWindow/foreground/live OpenCode verification. No credentials or real user profiles were used.",
+    "Parent integrated full suite and packaged validation remain pending for this patch."
+  ],
+  "runningPrivateProcesses": [],
+  "sourceFreeze": true,
+  "peerReview": "Parent bounded read of wrapper predicate, approvalSeen retention and display-only grouping found no new concern. Other reviewer was occupied; no independent peer fixture run."
+}

@@ -16,5 +16,9 @@ public:
   static QString mountedPath(const QString &path,
                               const QList<AcpDisplayMount> &mounts);
   static QString sourceName(const QJsonObject &tool);
+  // Source-listed UI wrappers only. These predicates never grant permission,
+  // discard raw tool events or change execution/routing authority.
+  static bool isQuestionWrapper(const QJsonObject &tool);
+  static bool suppressQuestionWrapperPart(const QJsonObject &part);
 };
 }

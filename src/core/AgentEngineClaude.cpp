@@ -121,7 +121,7 @@ void AgentEngine::requestClaudeHarness(const QJsonArray &originalInput,
               fail("Claude could not complete the turn.");
               return;
             }
-            retainHarnessResponse();
+            retainHarnessResponse(true);
             complete();
           });
   QJsonArray input;
@@ -145,6 +145,7 @@ void AgentEngine::requestClaudeHarness(const QJsonArray &originalInput,
     input.append(part);
   }
   ClaudeHarnessOptions options;
+  options.attachments=m_harnessAttachments;
   options.executable = m_provider.harnessExecutable;
   options.providerId = m_provider.id;
   options.model = m_provider.model;

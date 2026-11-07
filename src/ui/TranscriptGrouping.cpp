@@ -1,4 +1,5 @@
 #include "TranscriptGrouping.h"
+#include "harness/AcpToolPresentation.h"
 #include <QSet>
 
 namespace ade {
@@ -19,7 +20,7 @@ QList<TranscriptGroup> groupTranscriptRows(const QJsonArray& rows) {
             groups.append({row,{},{},{}});
         auto& group=groups.last();
         group.messageIds.append(id);
-        for(const auto& value:row["parts"].toArray())group.parts.append({id,value.toObject()});
+        for(const auto& value:row["parts"].toArray()){const auto part=value.toObject();if(!AcpToolPresentation::suppressQuestionWrapperPart(part))group.parts.append({id,part});}
         // Native attachment chips are outside parts. Preserve every round's
         // existing visible refs without merging its authority/other metadata.
         for(const auto& attachment:row["attachments"].toArray())group.attachments.append(attachment);

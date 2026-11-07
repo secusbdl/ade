@@ -1,0 +1,127 @@
+{
+  "status": "frozen_private_verified_pending_root_integration",
+  "nativeBase": {
+    "nativeHead": "48318e02cc2603350405d1067973011d3795ed7d",
+    "files": {
+      "src/ui/MainWindow.cpp": "c683b084195d514d6b3dfd2274ef62d7b9fc927beaf9a7f4a6f7501d3768d729",
+      "src/ui/SettingsPage.cpp": "d3d0c0a119046ce156411c65bd060e9146936ed9948fd4c506f003dc77e2a2d2",
+      "src/core/UtilityService.cpp": "ca363cb90fe13cf81c887a484f321a02be3f13f748b8dc132b15e991a1fbb5b8",
+      "src/ui/ModelSelection.cpp": "5f61674c3676fcbec52133d8cf566bffba4631728318d0816d61b3ba4b5514b9",
+      "src/ui/ModelSelection.h": "610638770b1cd8b15450b7a9d81694515eb9c701eb48953e181e36cc9500dd80"
+    }
+  },
+  "pinnedSource": "17a0123a0e896885465df36169457199d5225eb5",
+  "scope": "Source-grounded utility eligibility and ordered task-specific fallback, plus exact-instance utility selection; custom model CRUD/options/vendor groups deferred.",
+  "implementation": [
+    "Shared pure resolver used by MainWindow configureUtilities and turnAboutToStart compression setup. Complete title/compression candidate chains preserve exact provider instance, order, explicit per-entry thinking overrides and discovered/configured context limits.",
+    "External-only presets with empty/fully-excluded overrides use configured global utilities; mixed/native presets use their eligible chat chain. Missing provider counts eligible before resolution, then skips, so an intentional missing override never silently switches to global.",
+    "Empty utility chain tries current active selection first then preset models; compression additionally has final active-model fallback; title nonempty configured chain without preset does not append current model. Legacy native top-level-only preset primary remains supported.",
+    "Codex/OpenCode/Claude removed only from new utility choices and defensively skipped by UtilityService. Main/fallback chat selection unchanged; stored external/missing/disabled rows remain visible and preserved.",
+    "Guarded QInputDialog preserves selected row identity rather than indexOf(displayText); per-item exact-instance tooltip/data added. Owner deletion/cancel and preferences CAS conflict covered."
+  ],
+  "before": {
+    "text": "host-before.txt",
+    "junit": "host-before.xml",
+    "canonicalSha256": "8d2a87e41873b00a1efde3a59f2e9bc7301efc0d91188dbf79145668bf3be3ab",
+    "passed": 2,
+    "failed": 5,
+    "failures": [
+      "Actual /compact on Codex external-only preset made zero configured HTTP requests",
+      "Same for OpenCode",
+      "Same for Claude Code",
+      "Actual fake-Codex chat title path made zero configured HTTP requests",
+      "Second identically labeled provider selection saved first instance"
+    ],
+    "fixtureNotes": "Initial seed omitted legacy preset primary fields and was corrected before the retained host-before reproduction. Later pure matrix fixture used same-object QJsonValueRef assignment; corrected to owned .value(). Neither is represented as a production defect."
+  },
+  "verification": {
+    "results": "results.json",
+    "suites": 7,
+    "qtRows": 164,
+    "failed": 0,
+    "skipped": 0,
+    "oneJobPrivateBuild": true,
+    "noSharedBuild": true,
+    "noProductionEdits": true,
+    "network": "Loopback fixtures only; fake harness subprocess only, no credentials/live services.",
+    "settingsCompatibility": "Standalone targets compiled with new helper; explicit offscreen static plugin imports were private harness setup only. Initial unlogged startup process was stopped by exact private executable identity, then both suites passed."
+  },
+  "patch": {
+    "path": "utility-models.patch",
+    "canonicalSha256": "7ef0c15eb593bbad8b5cfd5b4144c56c0d04d2e2d5f9a6c1fd9ee6e3fa0305e3",
+    "manifest": "manifest.json",
+    "cmake": "CMAKE-HANDOFF.txt",
+    "files": 8,
+    "authoritative": "Listed src/ and tests/ paths under this stage. next/ is initial draft-only and must not be copied.",
+    "seams": [
+      "MainWindow.cpp include + turnAboutToStart compression setup + configureUtilities only; constructor/send/side-chat links untouched",
+      "SettingsPage.cpp new guarded picker and utility/preset-chain sections only; unrelated settings unchanged",
+      "UtilityService.cpp candidate exclusion only; protocol/request/retry/cancellation code unchanged",
+      "Root UI_SOURCES glob adds helper; standalone Settings targets require helper explicitly. No production CMake patch included."
+    ]
+  },
+  "renders": {
+    "directory": "renders",
+    "index": "renders/index.json",
+    "inspected": [
+      "utility-content-light-350.png",
+      "utility-content-dark-350.png",
+      "utility-content-light-620.png",
+      "utility-content-dark-620.png"
+    ],
+    "conclusion": "New status text wraps and controls remain visible at requested column widths. These are actual Settings content columns; fixed-width full Settings navigation is excluded from narrow rendering, so no full-window350px or exact screenshot parity claim.",
+    "additional": [
+      "settings-full-light.png",
+      "settings-full-dark.png"
+    ]
+  },
+  "limits": [
+    "Private integration only; parent full combined gate pending.",
+    "No custom-model CRUD, generic provider options, rich vendor groups, Stagewise built-in alias fallback/default utility models, or new thinking-editor controls.",
+    "Native existing per-model typed override schema retained; source-wide model-thinking/custom option migration is deferred.",
+    "External automatic context compression remains delegated to its managed harness; this change enables configured native manual utilities and correct HTTP utility selection.",
+    "No universal bug-free/full Stagewise parity claim."
+  ],
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/agent-core-bridge/host-models.ts",
+      "lines": [
+        54,
+        70,
+        90,
+        103,
+        123
+      ],
+      "canonicalSha256": "4ceae056a173043686863cde4452cc3d312e555361ede4a7e5cb08181d8e2a80"
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/provider-instance-helpers.ts",
+      "lines": [
+        958
+      ],
+      "canonicalSha256": "341a807bed9eac0c07aa755e7cfcfee96b73b833b6d1520562d4459634332f9d"
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+      "lines": [
+        110,
+        129,
+        150,
+        162
+      ],
+      "canonicalSha256": "b66dbe64695d9106d083303d6104ba46da7921903cc3a3f8f66acbfade2af9f2"
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/shared/history-compression/index.ts",
+      "lines": [
+        213,
+        233,
+        253,
+        272,
+        303
+      ],
+      "canonicalSha256": "d3eeddb5ae777ca551b8e7cc94568873f587e8e4e56f71c02fb7fdcf8adc6b78"
+    }
+  ],
+  "nextRequestedByParent": "Private plan for hiding source-listed ACP request_user_input/stagewise_request_user_input wrapper cards while retaining pending approval authority and bridge prompt preference; not part of this patch."
+}

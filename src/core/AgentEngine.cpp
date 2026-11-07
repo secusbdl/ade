@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "HarnessHistory.h"
 #include "AgentPrompt.h"
 #include "ProviderProtocol.h"
 #include "UtilityService.h"
@@ -166,7 +167,7 @@ void AgentEngine::setDynamicSystemContext(std::function<QString()> context) {
 }
 
 void AgentEngine::setMessages(const QJsonArray &messages) {
-    if (!m_busy) { if(m_messages!=messages)stopHarness(); const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;const QPointer<AgentEngine> self(this);reconcileMutationHistory();if(self&&changed)emit displayChanged(); }
+    if (!m_busy) { if(m_messages!=messages)stopHarness(); const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=(!m_messages.isEmpty() && HarnessHistory::canonicalDigest(m_messages)!=HarnessHistory::canonicalDigest(messages))?HarnessHistory::withoutBindings(messages):messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;const QPointer<AgentEngine> self(this);reconcileMutationHistory();if(self&&changed)emit displayChanged(); }
 }
 QJsonArray AgentEngine::displayHistory(const QJsonArray& history){return AgentPresentation::history(history);}
 QJsonArray AgentEngine::displayMessages() const {

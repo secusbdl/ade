@@ -313,6 +313,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "transcript.restore_checkpoint",
           "assessment": "source_only_no_native_equivalent"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "invalidate_stale_external_continuity",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -346,6 +351,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.automatic_compression",
           "assessment": "missing"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "canonical_summary_attachment_boundary",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -384,6 +394,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "attachments.lifecycle",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "captured_original_delivery_and_lifecycle",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -416,6 +431,11 @@
         {
           "report": "audit/parity-harness-integration.json",
           "capability": "native_owner_scoped_mcp_and_claude_forms",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "source_derived_duplicate_wrapper_suppression",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -454,6 +474,11 @@
         {
           "report": "audit/parity-harness-integration.json",
           "capability": "native_external_adapters_with_transport_limits",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "owner_scoped_durable_external_attachments",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -1151,6 +1176,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "settings.providers",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "ordered_exact_provider_utility_selection",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1165,6 +1195,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "settings.providers",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "coding_agent_presets_use_http_utility_fallbacks",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1836,6 +1871,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "providers.cloud_external",
           "assessment": "missing"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "canonical_completed_session_binding",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1855,6 +1895,11 @@
           "report": "audit/parity-harness-integration.json",
           "capability": "native_claude_control_stream_and_host_forms",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "narrow_owned_missing_session_recovery",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1873,6 +1918,11 @@
         {
           "report": "audit/parity-harness-integration.json",
           "capability": "native_acp_question_mcp_and_presentation",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-harness-followups-integration.json",
+          "capability": "pending_decision_and_late_tool_settlement",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -7789,6 +7839,12 @@
       "sha256CanonicalLf": "135f690add1a79af8b90b505d52448cd77190131e8abf485001d9ded364c328c",
       "linkedFeatureRows": 8,
       "scope": "Incremental tested behaviors; historical domain reviews remain unchanged."
+    },
+    {
+      "path": "audit/parity-harness-followups-integration.json",
+      "sha256CanonicalLf": "da377cbae26ade07263eeadae27e3f6e4fd853b68d9316f314a5aafac8e9352c",
+      "linkedFeatureRows": 10,
+      "scope": "Incremental tested behaviors; no claim that whole feature rows or source functions are completed."
     }
   ]
 }

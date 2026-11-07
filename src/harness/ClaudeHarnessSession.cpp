@@ -124,6 +124,8 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
   m_busy = true;
   m_interrupted = false;
   m_promptSent = false;
+  m_resumeId.clear();
+  m_resumeRecoveryUsed = m_resumeActivity = m_recoveryQueued = false;
   m_usage = {};
   m_eventCount = 0;
   m_waitRemaining = -1;
@@ -155,6 +157,11 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
   m_sessionId = resume && !m_fork
                     ? saved.value("sessionId").toString()
                     : QUuid::createUuid().toString(QUuid::WithoutBraces);
+  m_resumeId = resume ? saved.value("sessionId").toString() : QString{};
+  return launchProcess(m_resumeId, m_fork);
+}
+bool ClaudeHarnessSession::launchProcess(const QString &resumeId, bool fork) {
+  const auto &options = m_options;
   QStringList args{"--print",
                    "--input-format",
                    "stream-json",
@@ -166,9 +173,9 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
                    "stdio",
                    "--permission-mode",
                    "default"};
-  if (resume) {
-    args << "--resume=" + saved.value("sessionId").toString();
-    if (m_fork)
+  if (!resumeId.isEmpty()) {
+    args << "--resume=" + resumeId;
+    if (fork)
       args << "--fork-session";
   } else
     args << "--session-id=" + m_sessionId;
@@ -196,14 +203,66 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
   const auto generation = m_generation;
   const QPointer<ClaudeHarnessSession> self(this);
   const bool started =
-      m_process.start(executable, args, workspace.path, environment);
+      m_process.start(options.executable, args, m_workspace.path, environment);
   if (self && generation == m_generation && !started && m_busy)
     finish("failed", "Could not start Claude.");
   return started;
 }
+bool ClaudeHarnessSession::recoverMissingSession(const QJsonObject &frame) {
+  // Only a typed, exact diagnostic for this attempted resume is replayable.
+  // Generic exits, prose substrings and account/network failures are not proof
+  // that a prompt or tool had no side effects.
+  const auto errors = frame.value("errors");
+  const auto parent = frame.value("parent_tool_use_id");
+  const auto origin = frame.value("origin");
+  const auto result = frame.value("result");
+  if (!m_busy || m_interrupted || m_resumeId.isEmpty() ||
+      m_resumeRecoveryUsed || m_resumeActivity || !m_pending.isEmpty() ||
+      !m_tasks.isEmpty() || frame.value("type") != "result" ||
+      frame.value("subtype") != "error_during_execution" ||
+      frame.value("is_error") != true || !errors.isArray() ||
+      errors.toArray().size() != 1 ||
+      errors.toArray().first() !=
+          "No conversation found with session ID: " + m_resumeId ||
+      (!parent.isUndefined() && !parent.isNull()) ||
+      (!origin.isUndefined() &&
+       (!origin.isObject() || origin.toObject().value("kind") != "human")) ||
+      (!result.isUndefined() && result != ""))
+    return false;
+  m_resumeRecoveryUsed = true;
+  m_recoveryQueued = true;
+  m_initialized = false;
+  m_promptSent = false;
+  m_initializeId.clear();
+  m_process.stop();
+  const auto generation = m_generation;
+  QTimer::singleShot(0, this, [this, generation] {
+    if (generation != m_generation || !m_busy || m_interrupted ||
+        !m_recoveryQueued)
+      return;
+    m_recoveryQueued = false;
+    const auto current = HarnessWorkspace::resolve(m_workspace.path);
+    if (current.identity.isEmpty() ||
+        current.identity != m_workspace.identity) {
+      finish("failed", "The Claude workspace changed before session recovery.");
+      return;
+    }
+    m_resumeId.clear();
+    m_created = true;
+    m_fork = false;
+    m_sessionId = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    // Keep the original turn ID and remaining deadline. sendPrompt adds the
+    // caller's canonical history exactly once for this new session.
+    launchProcess();
+  });
+  return true;
+}
 void ClaudeHarnessSession::sendPrompt() {
   if (!m_busy || m_interrupted || !m_initialized)
     return;
+  QString attachmentError;
+  const auto prepared=mapHarnessAttachments(m_input,m_options.attachments,false,true,m_created,&attachmentError);
+  if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
   QJsonArray content;
   // Per-turn context avoids relying on a stale resumed system-prompt snapshot.
   if (!m_options.instructions.isEmpty())
@@ -218,7 +277,7 @@ void ClaudeHarnessSession::sendPrompt() {
     content.append(
         QJsonObject{{"type", "text"},
                     {"text", m_options.historyContext.left(1024 * 1024)}});
-  for (const auto &part : m_input)
+  for (const auto &part : prepared)
     content.append(part);
   m_promptSent = true;
   if (!m_process.sendUser(content, m_fork ? QString{} : m_sessionId))
@@ -248,6 +307,8 @@ bool ClaudeHarnessSession::publishUpdates(const QJsonArray &updates) {
   return true;
 }
 void ClaudeHarnessSession::consume(const QJsonObject &frame) {
+  if (m_recoveryQueued)
+    return;
   const auto session = frame.value("session_id").toString();
   if (!session.isEmpty()) {
     if (m_fork && uuid(session)) {
@@ -258,6 +319,10 @@ void ClaudeHarnessSession::consume(const QJsonObject &frame) {
   }
   const auto type = frame.value("type").toString(),
              subtype = frame.value("subtype").toString();
+  if (recoverMissingSession(frame))
+    return;
+  if (m_busy && (type != "system" || subtype != "init"))
+    m_resumeActivity = true;
   if (type == "system") {
     const auto taskId = frame.value("task_id").toString();
     if (!taskId.isEmpty() && taskId.size() <= 512) {
@@ -324,7 +389,9 @@ void ClaudeHarnessSession::consume(const QJsonObject &frame) {
 }
 void ClaudeHarnessSession::request(const QString &id, const QString &subtype,
                                    const QJsonObject &request) {
-  if (!m_busy || !m_promptSent || m_interrupted) {
+  if (m_busy)
+    m_resumeActivity = true;
+  if (!m_busy || !m_promptSent || m_interrupted || m_recoveryQueued) {
     m_process.reject(id, "No active user turn owns this request.");
     return;
   }
@@ -504,10 +571,13 @@ void ClaudeHarnessSession::shutdown() {
   m_busy = false;
   m_initialized = false;
   m_promptSent = false;
+  m_recoveryQueued = false;
+  m_resumeId.clear();
   m_deadline.stop();
   m_cancelDeadline.stop();
   m_pending.clear();
   m_tasks.clear();
   m_process.stop();
+  m_options.attachments={};
 }
 } // namespace ade

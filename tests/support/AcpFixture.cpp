@@ -135,6 +135,19 @@ int main(int argc, char **argv) {
       reply(id, {{"configOptions", config}});
     } else if (method == "session/prompt") {
       promptId = id;
+      // A continuation is a new provider prompt in the SAME user turn. Do not
+      // repeat the fixture's previously denied action indefinitely.
+      if (p["prompt"].toArray().size() == 1 &&
+          p["prompt"].toArray().first().toObject()["text"].toString() ==
+              "Continue from the rejected tool call. Treat the rejection as "
+              "the user response, do not retry the rejected action unless "
+              "explicitly requested, and continue the remaining task.") {
+        update({{"sessionUpdate", "agent_message_chunk"},
+                {"content", QJsonObject{{"type", "text"},
+                                        {"text", "ACP_CONTINUED"}}}});
+        done();
+        continue;
+      }
       update({{"sessionUpdate", "agent_message_chunk"},
               {"content", QJsonObject{{"type", "text"}, {"text", "FOREIGN"}}}},
              "foreign-session");

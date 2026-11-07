@@ -1,0 +1,10 @@
+********* Start testing of AcpSettlementTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpSettlementTest::initTestCase()
+FAIL!  : AcpSettlementTest::nestedTerminalUpdateIsNotOverwrittenByStaleSweep() Compared values are not the same
+   Actual   (lastStates.value(completedByObserver)): "failed"
+   Expected (QString("completed"))                 : "completed"
+D:/age/ADE/private/acp-settlement-stage/tests/test_acp_settlement.cpp(197) : failure location
+PASS   : AcpSettlementTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 1387ms
+********* Finished testing of AcpSettlementTest *********

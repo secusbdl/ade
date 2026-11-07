@@ -1,0 +1,1937 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-07T00:16:33.240664+00:00",
+  "status": "verified_checkpoint_full_parity_not_established",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "developmentBaseCommit": "823d5472cc0f945cf8e2d63874db85ff9fa159c7",
+  "fullNativeParity": false,
+  "lineByLinePortEstablished": false,
+  "scopeLedger": "audit/parity-review-coverage.json",
+  "sourceIndex": "audit/upstream-source-index.json",
+  "testedSource": {
+    "path": "audit/parity-harness-followups-integration/tested-source-hashes.json",
+    "sha256CanonicalLf": "fbeea0aa567b94f4ab6e6d6f79dd4fcf34be294f7022f237f9e8ee695829d143",
+    "basis": "Canonical LF for text; exact binary assets. Source identity is not semantic parity."
+  },
+  "tests": {
+    "ctestSuites": 154,
+    "failedSuites": 0,
+    "nativeSuites": 152,
+    "referenceExperimentSuites": 2,
+    "passedCasesIncludingLifecycle": 2703,
+    "skippedCases": 1,
+    "skipExplanation": "Offscreen WebView case has a passing Windows native_transcript_tabs_real counterpart.",
+    "rows": [
+      {
+        "suite": "native_codex_harness",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5692,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_codex_harness.txt",
+          "sha256CanonicalLf": "e9e55694bbdb468e2d23d0491c97606515d34513cc0db67fbf955436323d9d03"
+        }
+      },
+      {
+        "suite": "native_codex_engine",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3095,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_codex_engine.txt",
+          "sha256CanonicalLf": "f80174dfaf531ee25e8e98237b9f1bda5246389d7228d9d0e3448d0d81350ed2"
+        }
+      },
+      {
+        "suite": "native_codex_provider_ui",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 410,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_codex_provider_ui.txt",
+          "sha256CanonicalLf": "0f0473e10419bc9d1833f919a4cb57b4c45f1b57173fd2010e0063ec11904c44"
+        }
+      },
+      {
+        "suite": "native_codex_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2955,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_codex_host.txt",
+          "sha256CanonicalLf": "327ca0046403b78f5a4f1284df20da14e53fcb174fe253458b13c286869df3d2"
+        }
+      },
+      {
+        "suite": "native_provider_operations",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1049,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_operations.txt",
+          "sha256CanonicalLf": "e347100940500ced6734a01e0f12e491a3fe5d0c2d75bda46aa8b40ea7d1e369"
+        }
+      },
+      {
+        "suite": "native_link_provenance_codec",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 18,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_link_provenance_codec.txt",
+          "sha256CanonicalLf": "a9ccba2138735adfb64d4e03f4347c9c03baa24fc3dcd51be2288adac79bfcd1"
+        }
+      },
+      {
+        "suite": "native_retired_wire",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 133,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_retired_wire.txt",
+          "sha256CanonicalLf": "68a48671b53d89b21b052ecfd2899c72d075ad85a669269bf7a5d80fb22ff031"
+        }
+      },
+      {
+        "suite": "native_navigation_shortcuts",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1660,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_navigation_shortcuts.txt",
+          "sha256CanonicalLf": "3e2535f871e774f1a2b8b24ff91e82d260a4155b1e2e36b09cc70bdbef428e77"
+        }
+      },
+      {
+        "suite": "native_browser_session",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 84,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_session.txt",
+          "sha256CanonicalLf": "45b3cd358bd7bc065778e47d5c907dc1ac4bcdf3e5692813ad89b1d6ed6da518"
+        }
+      },
+      {
+        "suite": "native_browser_session_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1805,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_session_host.txt",
+          "sha256CanonicalLf": "fd591c3faee84fe6cd92d540558b17bf987a830c5d4ef5c755a91e77782c32c4"
+        }
+      },
+      {
+        "suite": "native_usage_compression",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4383,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_usage_compression.txt",
+          "sha256CanonicalLf": "04da0bbb3407a1b8f64e4296ebdab95548fcf1a9ae47cedf10283d5e29e5437a"
+        }
+      },
+      {
+        "suite": "native_usage_settings",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 62,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_usage_settings.txt",
+          "sha256CanonicalLf": "faee5adfa4e6886ed9f10db62013f76e3dea30ed572d972fec4254f46ce87fe9"
+        }
+      },
+      {
+        "suite": "native_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2085,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_usage.txt",
+          "sha256CanonicalLf": "f69f7f8a6a53da1a1cd3a8b904e095256a3fc9265a0e0ef66870400be8a03068"
+        }
+      },
+      {
+        "suite": "native_git_cleanup",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 96660,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_cleanup.txt",
+          "sha256CanonicalLf": "de66b3668d5984cd81fb30bc852f5bb81a7fd5da6394010f444891cfd389f855"
+        }
+      },
+      {
+        "suite": "native_session_logs",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 360,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_session_logs.txt",
+          "sha256CanonicalLf": "b07e8c9b77b4887428c23859c441ad07bb8b51229a6716a143599c4773231210"
+        }
+      },
+      {
+        "suite": "native_shell_log_mount",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 543,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_shell_log_mount.txt",
+          "sha256CanonicalLf": "1fbcba9279b4d2a32fa7adbd39834dff34eca657c4a442df06c33a58b96a4503"
+        }
+      },
+      {
+        "suite": "native_shell_service",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 42974,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_shell_service.txt",
+          "sha256CanonicalLf": "8f55e18e7eeb5c6732e395a724911957f401172f1022466ee0898a2f61202780"
+        }
+      },
+      {
+        "suite": "native_shell_engine",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4678,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_shell_engine.txt",
+          "sha256CanonicalLf": "75e022a1877dc683558692b784db46f1a46accad10c65fefc4522d609ac7b14b"
+        }
+      },
+      {
+        "suite": "native_shell_view",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1426,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_shell_view.txt",
+          "sha256CanonicalLf": "a973f5768b5d18a0e7bbee789375a54c92193b967dc582dc230f742c0d2b5b29"
+        }
+      },
+      {
+        "suite": "native_conversation_control",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4312,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_conversation_control.txt",
+          "sha256CanonicalLf": "31a8cf780c4fb958cd76e05c543805be3ed460f34e854b3720d59ef74964c1c6"
+        }
+      },
+      {
+        "suite": "native_file_mutations",
+        "passedIncludingLifecycle": 60,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3566,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_file_mutations.txt",
+          "sha256CanonicalLf": "31312fa5efa2c740e0b879a2cf66ffd1ae3471b60417ed1379ff65500599740f"
+        }
+      },
+      {
+        "suite": "native_question_panel",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 160,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_question_panel.txt",
+          "sha256CanonicalLf": "455b59803fc3d2603086ba40a36c93dc7a27242eaa576b87c6259c238c2efd84"
+        }
+      },
+      {
+        "suite": "native_transcript_rich",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 962,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_rich.txt",
+          "sha256CanonicalLf": "5e486f1bd946bfa653c60adecf8ba002600ab1293f4b1ea57ed654fac075ca93"
+        }
+      },
+      {
+        "suite": "native_composer_completion",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2214,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_composer_completion.txt",
+          "sha256CanonicalLf": "702ab54e2b1184eab955eb64998713163752bceaacfdd8ac2de06401309461ed"
+        }
+      },
+      {
+        "suite": "native_composer_search",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 149,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_composer_search.txt",
+          "sha256CanonicalLf": "10bf93e6ddff0d35d0a17e6a6ec10e0532cb47f570987fcf1b2840e091dd810e"
+        }
+      },
+      {
+        "suite": "native_composer_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2978,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_composer_host.txt",
+          "sha256CanonicalLf": "2f3a9442cce2dacb64d674101a336d9f4da295d51824ed5df44fff438a57f0a4"
+        }
+      },
+      {
+        "suite": "native_reference_controls",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 590,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_reference_controls.txt",
+          "sha256CanonicalLf": "92d7f15813df19ee11065c467183762e922ff117bdb76f105c4eb8cbf9ea4d56"
+        }
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2470,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_agent_control_ui.txt",
+          "sha256CanonicalLf": "610fce20f20603f8bd02a58ea7e15d40b479d2a24d20346187e3c69bc7f4fd33"
+        }
+      },
+      {
+        "suite": "native_command_center",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 228,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_command_center.txt",
+          "sha256CanonicalLf": "b4be3856638b8c4e0efaa7d690042ec5cb856a97dd00bee0b043de3ede8a19c4"
+        }
+      },
+      {
+        "suite": "native_command_file_search",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 709,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_command_file_search.txt",
+          "sha256CanonicalLf": "9f045e4296d70ede9d3ee549970b954547c21caaca1c02068ab14117f2411a2b"
+        }
+      },
+      {
+        "suite": "native_command_center_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3405,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_command_center_host.txt",
+          "sha256CanonicalLf": "dd9a3beab9b9b2678abfacab9105d4c9d2e4a05554be2d3ba586f18224bee410"
+        }
+      },
+      {
+        "suite": "native_side_chat",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 256,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_side_chat.txt",
+          "sha256CanonicalLf": "48bfe7e90e68cc501d01f089e8fa2647b3fde68e7d5642d34f727b0e09b7b875"
+        }
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8357,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_side_chat_host.txt",
+          "sha256CanonicalLf": "36a2f8d3bc0e7dc1a2826f5ef0e4a0026b07e13dd3592adea71fe72361252b45"
+        }
+      },
+      {
+        "suite": "native_file_diff",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 148,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_file_diff.txt",
+          "sha256CanonicalLf": "b54a80101c26984b56500846a85b5f64334e2bf0b22847161c817e9682013602"
+        }
+      },
+      {
+        "suite": "native_image_preview",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 358,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_image_preview.txt",
+          "sha256CanonicalLf": "23c74da0e9cdce8a59b1f3b3e9d987cc5804846a3b961024ba8f8dd5a6ca5034"
+        }
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5938,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_mutation_runtime.txt",
+          "sha256CanonicalLf": "1969534d60e07b92dfd6a2e14fc9b831cea4e136e52216f6dfb69ea663da4066"
+        }
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12311,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_shell_runtime.txt",
+          "sha256CanonicalLf": "7bd7150e950ba0f9364fe650c15d1694360dbb7ff0de15e32ec9ade0d1ebb996"
+        }
+      },
+      {
+        "suite": "native_transcript_links",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 135,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_links.txt",
+          "sha256CanonicalLf": "069b2cfbff9dc8b733d8806ebe301af9bf3678bfdd4a4e2d93c8e67c37a3b70b"
+        }
+      },
+      {
+        "suite": "native_transcript_link_ui",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 4193,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_link_ui.txt",
+          "sha256CanonicalLf": "73dd0098ad92e9fcca95813f99f9238d0b219125c2dd11c93f41f08bdceda096"
+        }
+      },
+      {
+        "suite": "native_transcript_tabs_real",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1329,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_tabs_real.txt",
+          "sha256CanonicalLf": "58c593d7a75dfbebb95a40e0b1340d2936203e2858a15f3e35660dfdaacc1392"
+        }
+      },
+      {
+        "suite": "native_workbench_layout",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7752,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_workbench_layout.txt",
+          "sha256CanonicalLf": "fa87be482908a2d1d1872ccb59a1bd91e536ef12f64399496286ec72e15dd5db"
+        }
+      },
+      {
+        "suite": "native_workbench_helpers",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 22,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_workbench_helpers.txt",
+          "sha256CanonicalLf": "6fae72227a999e2abebedd443c5911e9078259a3619def9368e7b1b502279a3c"
+        }
+      },
+      {
+        "suite": "native_chevron",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 162,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_chevron.txt",
+          "sha256CanonicalLf": "36fc62d815da1ec4c9aa158db082ba00d600a9f873dadbc675b0c8f48fb6e141"
+        }
+      },
+      {
+        "suite": "native_sidebar_model",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_sidebar_model.txt",
+          "sha256CanonicalLf": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899"
+        }
+      },
+      {
+        "suite": "native_sidebar_navigation",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4365,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_sidebar_navigation.txt",
+          "sha256CanonicalLf": "7b914a1d91ad6d173a53597aa5da12f33e502f1c487d7e5293b2daa74aeb1e48"
+        }
+      },
+      {
+        "suite": "native_presentation",
+        "passedIncludingLifecycle": 89,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 17206,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_presentation.txt",
+          "sha256CanonicalLf": "73b33be23799245a4a598b444c33c4f95e9afad2efffe243c0b7b831f7c24c6d"
+        }
+      },
+      {
+        "suite": "native_history_projection",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1241,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_history_projection.txt",
+          "sha256CanonicalLf": "0ba006690d8d003390069b2f75983b7d583505d20e0ccc248618d9da63c38e07"
+        }
+      },
+      {
+        "suite": "native_workspace_changes",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 28094,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_workspace_changes.txt",
+          "sha256CanonicalLf": "fb2109b849b25e24ad58e289f4077732f8f5db596caa605b46bf3109f3206941"
+        }
+      },
+      {
+        "suite": "native_workspace_changes_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 28810,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_workspace_changes_host.txt",
+          "sha256CanonicalLf": "5139ba30fe0ed5132617422911466490525382c65d6180678379d64d86de12d7"
+        }
+      },
+      {
+        "suite": "native_smoke_capture",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 247,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_smoke_capture.txt",
+          "sha256CanonicalLf": "4c8505ed55a13bea37dc75b6829c0a7559a404d7dc062f4b7758e381481608a8"
+        }
+      },
+      {
+        "suite": "native_turn_files",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 332,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_turn_files.txt",
+          "sha256CanonicalLf": "22735c04817e1d4d80692dcc790496f62f14893a9998d53ea1fcd68ad021d2c6"
+        }
+      },
+      {
+        "suite": "native_turn_files_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16781,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_turn_files_host.txt",
+          "sha256CanonicalLf": "12dd68360bee78bd41a0dc032f1cd1377a01f2dc8cf9768e36b3e35d78a691e2"
+        }
+      },
+      {
+        "suite": "native_turn_file_snapshots",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 855,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_turn_file_snapshots.txt",
+          "sha256CanonicalLf": "e7ac0cfb1ecdfc4cb2470e5e52f58c17494fa223af678bd9db9b2cb162a539fa"
+        }
+      },
+      {
+        "suite": "native_transcript",
+        "passedIncludingLifecycle": 35,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3202,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript.txt",
+          "sha256CanonicalLf": "b1e19460496894a4fd3f256235ff05e7cdb3889cd9816c826917eafbf24f8988"
+        }
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2364,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_ui.txt",
+          "sha256CanonicalLf": "8e6bcfce88a376add86943bb4366c46c2c9b2b1271d2addebb2a213b3957fd65"
+        }
+      },
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4879,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_main_chrome.txt",
+          "sha256CanonicalLf": "57ee0f3204244ecaa2175adc3d7c53a1071ea995e7e66462133f6e26924e7f49"
+        }
+      },
+      {
+        "suite": "native_formatted_att",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3176,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_formatted_att.txt",
+          "sha256CanonicalLf": "47dc83d024f2e2e429bf1ed7ece96f09cb67fce08918caf822b8dc84a9a759f3"
+        }
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 31215,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_conversations.txt",
+          "sha256CanonicalLf": "5a4e63ada5e53206aa0610076dc64eccf922b073460afe8ce31b0964271dee07"
+        }
+      },
+      {
+        "suite": "native_history_recovery",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1323,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_history_recovery.txt",
+          "sha256CanonicalLf": "bb3d5993584cbbea21c378d78d20dafb4e6d52570d6a98f66b12c52c53e4334d"
+        }
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 493,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_session_cleanup.txt",
+          "sha256CanonicalLf": "57e6fd3966636f1b869f668ed69e330094077d5b25170405777420ca48520c08"
+        }
+      },
+      {
+        "suite": "native_raw_enumeration_races",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1560,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_raw_enumeration_races.txt",
+          "sha256CanonicalLf": "150f348c2a514dd8894ed041b031a55d0afc66d61a15532d52eb8bbd11c619a1"
+        }
+      },
+      {
+        "suite": "native_git_watcher",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 31232,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_watcher.txt",
+          "sha256CanonicalLf": "1682743093ff37ca112678f3bc5888c355ed784039bdcdaa1191635d8f701592"
+        }
+      },
+      {
+        "suite": "native_git_watcher_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 22582,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_watcher_ui.txt",
+          "sha256CanonicalLf": "d097eab69387c919b22f2b4d4cdbc40e7963ba700970386c20f6cec698a711df"
+        }
+      },
+      {
+        "suite": "native_file_tools_races",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 646,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_file_tools_races.txt",
+          "sha256CanonicalLf": "03a21aaf644f1a287c151566343781e940b377056f51df8b6fe99f57394b1f7b"
+        }
+      },
+      {
+        "suite": "native_archive_transformer",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 41,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_archive_transformer.txt",
+          "sha256CanonicalLf": "4423cd01c2a027d01de990e1746fb31901347ecb6a844a96f621e4543e90e41c"
+        }
+      },
+      {
+        "suite": "native_file_tools",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 55,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_file_tools.txt",
+          "sha256CanonicalLf": "16c7cc21d52808ede35990d6b91b20a0bd8e90b910d591a7f5ada81229f1493e"
+        }
+      },
+      {
+        "suite": "native_attachment_mount",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 959,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_attachment_mount.txt",
+          "sha256CanonicalLf": "063d604c576b4e5dd767168bfd2b9b59a61e5038cda5e5ea99a40f25dadec2a7"
+        }
+      },
+      {
+        "suite": "native_file_transformer",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_file_transformer.txt",
+          "sha256CanonicalLf": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+        }
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 47331,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_worktree_settings.txt",
+          "sha256CanonicalLf": "7d5d22c4e3f6d8ee87b1cd9f4fe696aaebff19001e4efcad86fa52f5c6d93a17"
+        }
+      },
+      {
+        "suite": "native_git_host",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 104978,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_host.txt",
+          "sha256CanonicalLf": "932387af1b4813d1af35237051ace11b7a425deeaef6228cfea0480f44620e26"
+        }
+      },
+      {
+        "suite": "native_sandbox_apps",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2055,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_sandbox_apps.txt",
+          "sha256CanonicalLf": "62c870a54b5679f708b475e6cfbaae52fea035896c29a82769a5111bde9bafd0"
+        }
+      },
+      {
+        "suite": "native_runtime_apps",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6739,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_runtime_apps.txt",
+          "sha256CanonicalLf": "ad31fe838200a50fafb975532d74cd4b50e7495d25c5ab31f2d3a643ac28bd6c"
+        }
+      },
+      {
+        "suite": "native_git",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 108369,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git.txt",
+          "sha256CanonicalLf": "587a979c4d4c6a67ac35a35d6ca19f6912277da842fe95b63de6932e9c0fa83d"
+        }
+      },
+      {
+        "suite": "native_git_ui",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 54135,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_git_ui.txt",
+          "sha256CanonicalLf": "c0fa27c5a2c32d2b62d581d9bde6a061030444de6fdd9f8e88ca2d4a3029ee28"
+        }
+      },
+      {
+        "suite": "native_app_resources",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 77,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_app_resources.txt",
+          "sha256CanonicalLf": "df32c87010d486ea77d3ce31484821e61f51f32bab5ac4049abf38afad0d2ee7"
+        }
+      },
+      {
+        "suite": "native_mini_apps",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3168,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_mini_apps.txt",
+          "sha256CanonicalLf": "df13e27c97eee2c9c062293d2c9a991e172d7a6df30fa270002d3f0b06137ea5"
+        }
+      },
+      {
+        "suite": "native_attachments",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 880,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_attachments.txt",
+          "sha256CanonicalLf": "42014430b2841eaf8f6523e82b58a97ecf5a7d2304c35473b9f8246ad35f5916"
+        }
+      },
+      {
+        "suite": "native_read_lifecycle",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 486,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_read_lifecycle.txt",
+          "sha256CanonicalLf": "e339431dfc2c686336e75bab1983b6b7be89b50314dd670dee418f03ba6cf405"
+        }
+      },
+      {
+        "suite": "native_read_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3111,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_read_runtime.txt",
+          "sha256CanonicalLf": "acd08f987682dbba19432b532a8815316e4fa5cf1cefc510b92161e2b1889f32"
+        }
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1142,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_plugins.txt",
+          "sha256CanonicalLf": "1ff7ec91b1871ff1a164aa18f48d5fbab97b8040979c61c0ce05026b0c40ecec"
+        }
+      },
+      {
+        "suite": "native_plugin_connections",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 209,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_plugin_connections.txt",
+          "sha256CanonicalLf": "03a6cc72a959b9662cbd31f23b38e901a5528fbe7fffe55f5899fa27f1c50592"
+        }
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10595,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_plugin_runtime.txt",
+          "sha256CanonicalLf": "f8797418804c27d924ea5914338bdeb2d14d224c08d372b4593a385674801464"
+        }
+      },
+      {
+        "suite": "native_plugin_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 349,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_plugin_settings.txt",
+          "sha256CanonicalLf": "36748fa7cbeca0cf040012690f80cd8a54526caa0de0429358a9a800a9372556"
+        }
+      },
+      {
+        "suite": "native_smoke_plugins",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1980,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_smoke_plugins.txt",
+          "sha256CanonicalLf": "0ed329605b4b7d0213b9bcd1d8b3b3fc861f94f235c735cd9ef5653cf89c4605"
+        }
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5231,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_sandbox_network.txt",
+          "sha256CanonicalLf": "821ac457db093a1990a30f9f113325ab6c4d37c9dc43fe43f8a1ada6947a3678"
+        }
+      },
+      {
+        "suite": "native_downloads",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8064,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_downloads.txt",
+          "sha256CanonicalLf": "c82ce1ef5ae87a3da224b30fa681660429d28899c6d6259e0074bcb9c5745f15"
+        }
+      },
+      {
+        "suite": "native_settings_audit",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 350,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_settings_audit.txt",
+          "sha256CanonicalLf": "da1df4ad4cb52ceaaee84991b36fd1bd1025281542f2dcfa94053850703abc14"
+        }
+      },
+      {
+        "suite": "native_network",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2403,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_network.txt",
+          "sha256CanonicalLf": "0fad367dc5aadd5fb4dd701f9301bcb9839612308c36cf02109bc536da04e3f8"
+        }
+      },
+      {
+        "suite": "native_terminal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3126,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_terminal.txt",
+          "sha256CanonicalLf": "85568927d52babcf69812172521d49b7273ef18086cb4e9d256bca8f03628962"
+        }
+      },
+      {
+        "suite": "native_engine_observers",
+        "passedIncludingLifecycle": 56,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8942,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_engine_observers.txt",
+          "sha256CanonicalLf": "0f1ddc7d4bcc5848f969d10b8e3c9fc2cd640e4ddaafa0b59c2b080393b6a7e6"
+        }
+      },
+      {
+        "suite": "native_core",
+        "passedIncludingLifecycle": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8468,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_core.txt",
+          "sha256CanonicalLf": "16e98c4f43d4490a203b2f5a25e5e9f905eb247713fbb97e8324f635b756841a"
+        }
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 186,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_context.txt",
+          "sha256CanonicalLf": "a7b7706e120818494666d6618756e99b0c909abb9f6ef5fcda3cca292844757c"
+        }
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1698,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_ui.txt",
+          "sha256CanonicalLf": "9f4b36dfa738c8d9fb46ec6af42412a78d632367bea0cef1ae6720d9a15bbd30"
+        }
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5341,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_ui_audit.txt",
+          "sha256CanonicalLf": "023565a87cb0a56830e9a5fd4da86eca36932ec9abffca48b6cc5c8378cb9560"
+        }
+      },
+      {
+        "suite": "native_editor",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1096,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_editor.txt",
+          "sha256CanonicalLf": "75fe7f84a639a9e21f1fde0110a5ca1ed94e3a8354305281da0a8bebb8e974ad"
+        }
+      },
+      {
+        "suite": "native_sandbox",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4535,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_sandbox.txt",
+          "sha256CanonicalLf": "57fdbe17fad81ad92701d90120b6a6e2591a6701efd576e26db5f7b1ee02e5d6"
+        }
+      },
+      {
+        "suite": "native_runtime",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5849,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_runtime.txt",
+          "sha256CanonicalLf": "06b87cabf1e91fb089c0fc3b4ca7abf4952d0be3e262b497f540f7ba5d0d4bbd"
+        }
+      },
+      {
+        "suite": "native_fonts",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 324,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_fonts.txt",
+          "sha256CanonicalLf": "c816b4096de2f8b4adf544dd8248fa3ad059466ea2215f0dd098bfb28ddcef33"
+        }
+      },
+      {
+        "suite": "native_browser",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6038,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser.txt",
+          "sha256CanonicalLf": "dc596ef75be6b101f781761296dd801dd32195a00a1fca1fab216f87c85ed2d5"
+        }
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 551,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_settings.txt",
+          "sha256CanonicalLf": "b36ed132eda390eab8413caccf0119fe725dbf407953a8e178feebcc1024a8a5"
+        }
+      },
+      {
+        "suite": "native_browser_inspector",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5996,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_inspector.txt",
+          "sha256CanonicalLf": "c21048e58b92dbce81358d42bd05ccddf72678e7163f246d8afd55098863be26"
+        }
+      },
+      {
+        "suite": "native_browser_tools",
+        "passedIncludingLifecycle": 24,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 15890,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_tools.txt",
+          "sha256CanonicalLf": "8b33f9dc0c2c1542dff8041f01492e93bd08d5b827c7908b06725e3c756aab91"
+        }
+      },
+      {
+        "suite": "native_harness_files",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 125,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_files.txt",
+          "sha256CanonicalLf": "fc236b9e85285524ecd4a917a7bed4fdcf97f5b472f76f25f5c5701507128e07"
+        }
+      },
+      {
+        "suite": "native_codex_files_runtime",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 923,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_codex_files_runtime.txt",
+          "sha256CanonicalLf": "8e96dc8933582ae442f69ac357602102266b1fd5f81e2e01c242438d3ac469a7"
+        }
+      },
+      {
+        "suite": "native_provider_picker",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 741,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_picker.txt",
+          "sha256CanonicalLf": "4766f65f5e8ea4435e58f79dad4022cb13bd0645e342b4e8b19f776be4eb946d"
+        }
+      },
+      {
+        "suite": "native_provider_picker_host",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 179,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_picker_host.txt",
+          "sha256CanonicalLf": "137a786c9d340660ad044c54edb43ce700f6f6ae3c503c30ff6e0bea6f995e6b"
+        }
+      },
+      {
+        "suite": "native_provider_picker_window",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1686,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_picker_window.txt",
+          "sha256CanonicalLf": "f88ff2d5a0719e36fc08c8be36299838f30e6c1249d9f162af19d4b2fbb87fa5"
+        }
+      },
+      {
+        "suite": "native_transcript_polish",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1856,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_polish.txt",
+          "sha256CanonicalLf": "a375e8622a88dbb74ac023c80a4736c728c71c08be1d4396a7809c1a8a174b29"
+        }
+      },
+      {
+        "suite": "native_opencode_harness",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8615,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_opencode_harness.txt",
+          "sha256CanonicalLf": "59dfde6e1f6b35fb7fa262ea2c147e8194a93e8b14a819e78442ea47407a112f"
+        }
+      },
+      {
+        "suite": "native_opencode_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3165,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_opencode_engine.txt",
+          "sha256CanonicalLf": "3180e665e572d647ea74a6d66c4b8c197a88d7f40ab550e5a1a11a82caca0682"
+        }
+      },
+      {
+        "suite": "native_provider_removal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 134,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_removal.txt",
+          "sha256CanonicalLf": "ac9c01875b2ada1a6bd6b956100d22ee961da801dac1e903c2b65f500a92e143"
+        }
+      },
+      {
+        "suite": "native_provider_removal_window",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 658,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_removal_window.txt",
+          "sha256CanonicalLf": "d889f5ab9d1906b80f361441d1d4781e53d2fb8d59f740f3d571e81309962748"
+        }
+      },
+      {
+        "suite": "native_agent_prompt",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1119,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_agent_prompt.txt",
+          "sha256CanonicalLf": "6381f7d6afec2da7774cf66a8f241f79608dfc732f83e8e92e24eb1b3e89564e"
+        }
+      },
+      {
+        "suite": "native_external_context",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 20,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_external_context.txt",
+          "sha256CanonicalLf": "8b481d1d037bab0a0b25bfa973d12df880c0b8eb3364d51962e8d4a872a8cf7c"
+        }
+      },
+      {
+        "suite": "native_agent_cycle",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 82,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_agent_cycle.txt",
+          "sha256CanonicalLf": "7f9297e11e9915724408e0616588e14328c72b22fc7e4a30e3b3e39a43d50886"
+        }
+      },
+      {
+        "suite": "native_agent_cycle_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1236,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_agent_cycle_host.txt",
+          "sha256CanonicalLf": "c8a2bcb76ad516829ab02eac9204429bd886c76cb1a2fe98340699e69ee2c87e"
+        }
+      },
+      {
+        "suite": "native_opencode_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 770,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_opencode_provider_ui.txt",
+          "sha256CanonicalLf": "8bf6960616889c460167d1f41e250027296e80bad0526a0398bbfb8c4df7c864"
+        }
+      },
+      {
+        "suite": "native_opencode_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3241,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_opencode_host.txt",
+          "sha256CanonicalLf": "5c119c36f912021509f547634b34c83919ef299b25b686774c60ba7bee5dd8d7"
+        }
+      },
+      {
+        "suite": "native_transcript_grouping",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 87,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_grouping.txt",
+          "sha256CanonicalLf": "8f9357be927078cd0f37f8ada604dbe2a0555ab059841b19fba79b8e19857445"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 391,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_model_visibility.txt",
+          "sha256CanonicalLf": "35e625307923a134b0e5dc13b7d56350ede344926a48a018557fd8cf6bc8152f"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1024,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_provider_model_visibility_host.txt",
+          "sha256CanonicalLf": "c37f97cbc385ec22aa0fed37b4b6515e7313c6b0116bcc58cc078a0f88a353d3"
+        }
+      },
+      {
+        "suite": "native_transcript_image_lifecycle",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 354,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_transcript_image_lifecycle.txt",
+          "sha256CanonicalLf": "3f1443306011b6f5c79fa86ea197bcfe3c718b4fa7506758c877d3766d906bbb"
+        }
+      },
+      {
+        "suite": "native_question_mcp",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3832,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_question_mcp.txt",
+          "sha256CanonicalLf": "b842409f02f5af8235ee4754bd390e8aeb8723edc148577c98a85fc8243a36af"
+        }
+      },
+      {
+        "suite": "native_rpc_deadline",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3818,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_rpc_deadline.txt",
+          "sha256CanonicalLf": "a65763a57295cd9ea98f0ea9bc24f449750b0d94c9144dc2075269563a6f4104"
+        }
+      },
+      {
+        "suite": "native_acp_mcp",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5437,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_acp_mcp.txt",
+          "sha256CanonicalLf": "d60ed35339d5da2a9062374ccc2322cb8917d82aef770377954a4bf281d28b05"
+        }
+      },
+      {
+        "suite": "native_mcp_engine",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4320,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_mcp_engine.txt",
+          "sha256CanonicalLf": "19eb28b5609e493d3f3f290cc32be5d7692f30bb81ace7e2f2cfe8bd5a72e5f9"
+        }
+      },
+      {
+        "suite": "native_acp_tool_presentation",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_acp_tool_presentation.txt",
+          "sha256CanonicalLf": "e0b29897f5da420c944acc7c71d795886931a98f280e615b33e65f31ece59272"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_engine",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1608,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_acp_presentation_engine.txt",
+          "sha256CanonicalLf": "e25a87fc704b60785f96f5b405157be9e26bcb3b74075f7942dd32af9ce2a416"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_ui",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 534,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_acp_presentation_ui.txt",
+          "sha256CanonicalLf": "5950d9f0ae1bd8040cc50628b8d008f330710f1070be146c96ddd9231fde9b02"
+        }
+      },
+      {
+        "suite": "native_claude_control",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2142,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_control.txt",
+          "sha256CanonicalLf": "0096e6a95ef6c8cfbe1d407c0b5e1252d9316507e96f32159c171295e1790f35"
+        }
+      },
+      {
+        "suite": "native_claude_stream",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 175,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_stream.txt",
+          "sha256CanonicalLf": "ffff2a1727b7586cc1134344b029eb693e7d6ea24592a93000692421f9acff33"
+        }
+      },
+      {
+        "suite": "native_claude_session",
+        "passedIncludingLifecycle": 22,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7756,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_session.txt",
+          "sha256CanonicalLf": "29ab64efa0197f7b3c65d8824a7fbedd4d427216fcd1136522280ba10fbf8a26"
+        }
+      },
+      {
+        "suite": "native_claude_discovery",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 618,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_discovery.txt",
+          "sha256CanonicalLf": "2027f88de86e7ab0a6eb30c6649f9b51f14e30468b31bc7b42bf073c9139e6c0"
+        }
+      },
+      {
+        "suite": "native_claude_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2388,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_engine.txt",
+          "sha256CanonicalLf": "9d7912c98cc3436edf5ce9cb2140cd606cfe725da50319b1b654e7624f9d3e97"
+        }
+      },
+      {
+        "suite": "native_claude_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 945,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_provider_ui.txt",
+          "sha256CanonicalLf": "c5c2a8ef198aa9e72f082dd28fccb1ec273084de360bcee0d2d92802fc030a89"
+        }
+      },
+      {
+        "suite": "native_claude_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3144,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_host.txt",
+          "sha256CanonicalLf": "c32f7cf432ea8ab0349214be89516a23016844bddf7a1cd48e187564be1321a7"
+        }
+      },
+      {
+        "suite": "native_harness_media",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 264,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_media.txt",
+          "sha256CanonicalLf": "422d02b7d4d8eacb634546fc450026a3c581eb218265982bc5d7bee45c773f33"
+        }
+      },
+      {
+        "suite": "native_browser_context",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 133,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_context.txt",
+          "sha256CanonicalLf": "9fcfa5f4f837c5402a6ef7efef2db5ed721d1225c4c2209f2bd08746427d8bba"
+        }
+      },
+      {
+        "suite": "native_browser_context_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2544,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_browser_context_runtime.txt",
+          "sha256CanonicalLf": "f056e1aeafc22ffd8f11e55e16f325974e2395e4c31945ca0d66d636d1649036"
+        }
+      },
+      {
+        "suite": "native_model_discovery",
+        "passedIncludingLifecycle": 36,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 552,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_model_discovery.txt",
+          "sha256CanonicalLf": "92d021b638723690c1e66bb7f3b9a8b0f6ae9f155660a02f7b0d7687a2f5c8eb"
+        }
+      },
+      {
+        "suite": "native_model_discovery_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1669,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_model_discovery_host.txt",
+          "sha256CanonicalLf": "a0ce4a84e522326b2dc8e87388e8c178791015c489f4bd3c6ec099130c227ddd"
+        }
+      },
+      {
+        "suite": "native_harness_forms_host",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2860,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_forms_host.txt",
+          "sha256CanonicalLf": "7b31aa671c7f562f57e0283a8e0da3a748d0dde2fb5ff52d3b1dcc6c648fe293"
+        }
+      },
+      {
+        "suite": "native_harness_continuity",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6602,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_continuity.txt",
+          "sha256CanonicalLf": "87e5b5856a8568af26bc33ac8c91f16e6f9ff2d85db96eaca8b325f6eda33ec9"
+        }
+      },
+      {
+        "suite": "native_acp_settlement",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12203,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_acp_settlement.txt",
+          "sha256CanonicalLf": "f5034c71f23dde51e01f5e8c949ea1ab18b031fd20268f824d267dfe993b6521"
+        }
+      },
+      {
+        "suite": "native_utility_model_selection",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 426,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_utility_model_selection.txt",
+          "sha256CanonicalLf": "c77dfa9c46938e489e092fb877a65b4bf6f3c14901b0a710d7ce215a00c4572f"
+        }
+      },
+      {
+        "suite": "native_utility_models_host",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5232,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_utility_models_host.txt",
+          "sha256CanonicalLf": "3ee290e7108f109af6cb79251a1de4b3004e63429d0850c01df8feee950e2d45"
+        }
+      },
+      {
+        "suite": "native_claude_resume",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7388,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_claude_resume.txt",
+          "sha256CanonicalLf": "a37ffaa21278683ad93997808f074dbbc2497dae5b4599a4ebca344e425aeb48"
+        }
+      },
+      {
+        "suite": "native_mcp_presentation",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3130,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_mcp_presentation.txt",
+          "sha256CanonicalLf": "77e4b3317b6d425e6f73d29ef07aad8605b23e3b14648d17ecf4f457db125c00"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_store",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 839,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_attachment_store.txt",
+          "sha256CanonicalLf": "efa5ecbe51537af052b986c5fbfc30f4f89edd2a50b58b36af7cdb8186486e6a"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_wire",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2123,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_attachment_wire.txt",
+          "sha256CanonicalLf": "501c28b8a29f4af412686b081cd019436427c0338d31d234b8f12dc26d21c909"
+        }
+      },
+      {
+        "suite": "native_harness_attachments_host",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7749,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_attachments_host.txt",
+          "sha256CanonicalLf": "a9f400b4c0884a4100852b08de9ce6dc2db830c896c12663ba1d39e8a99ceba0"
+        }
+      },
+      {
+        "suite": "native_harness_cleanup_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1006,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/native_harness_cleanup_host.txt",
+          "sha256CanonicalLf": "85ad1c385ea78ad0c4936329ca4788ca645ed4736c106331d2705b789b433bc0"
+        }
+      },
+      {
+        "suite": "reference_file_mutations",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2078,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/reference_file_mutations.txt",
+          "sha256CanonicalLf": "2782032d6a96106e6b8d05a46d6170942b4830fb9dbc117e0852bc55fe02347c"
+        }
+      },
+      {
+        "suite": "reference_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1905,
+        "report": {
+          "path": "audit/parity-harness-followups-integration/final/reference_git_usage.txt",
+          "sha256CanonicalLf": "746362f4ad23cc52d8ed8f33c668f2436bb3f408020b39b9465a015227768d62"
+        }
+      }
+    ],
+    "junit": {
+      "path": "audit/parity-harness-followups-integration/full-ctest.xml",
+      "sha256CanonicalLf": "9d2b879e9ce9e7ef71ffc665828d439ebd83fb249a4630aa589f10b85f503f97"
+    },
+    "log": {
+      "path": "audit/parity-harness-followups-integration/full-ctest.txt",
+      "sha256CanonicalLf": "2f8ab4cae86e093b542d8a73ed1388526cb17f8f63b85727e7f8060671200c4d"
+    },
+    "buildLog": {
+      "path": "audit/parity-harness-followups-integration/build.txt",
+      "sha256CanonicalLf": "fa3ee0f22a6ef34d4f9338b9daf97df43a8ecea926adac675e839dafa8e9d91e"
+    }
+  },
+  "coveredChanges": [
+    "Duplicate ACP question wrappers are hidden using the pinned source predicate while canonical tool records and explicit approval cards remain intact.",
+    "External captured attachments use durable owner-scoped byte copies, native leases and per-protocol descriptors; removed/pre-summary references stay outside canonical replay, and deleted-chat cleanup includes both attachment and fallback stores.",
+    "Canonical history continuity validates only the preceding completed owned harness binding; provider switches, destructive history changes and interrupted legacy turns create fresh sessions with bounded replay.",
+    "OpenCode keeps pending decisions and late command output after the first prompt response; denied tools continue through a bounded source-derived instruction without automatically retrying the denied operation.",
+    "Utility model resolution follows task-specific source ordering, supports HTTP utilities for coding-agent presets, and preserves exact provider instance selection for equal display labels.",
+    "Claude retries once only for an exact owned missing-session result before output/tool activity, preserving the original turn, workspace identity and active-time deadline."
+  ],
+  "componentEvidence": [
+    {
+      "path": "audit/parity-harness-followups-integration/components/continuity.json",
+      "sha256CanonicalLf": "11f8867de2425264d97918dd6de819f74825536b52963dad16ef25df9303b3b0"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/components/settlement.json",
+      "sha256CanonicalLf": "70414d0174740ffba8a9045ec825c284dc4ca7984c76ce197f3c90b8813d021e"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/components/utility-models.json",
+      "sha256CanonicalLf": "6b07fbd0f75058090214dab71d6e4acdce5e455b7ba2b2983ffdf503dbca4e95"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/components/claude-resume.json",
+      "sha256CanonicalLf": "b1f3251a409eb6296c9977f3dd2ed91a7e21acc191f7fcbf25d7fdb6352cf50e"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/components/mcp-wrapper.json",
+      "sha256CanonicalLf": "ba8a2e5a70715a20a4f39cc52ab6b4cd5bdf631cc9b4ebc5be7d9853611c3bad"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/components/attachments.json",
+      "sha256CanonicalLf": "9ed7d7190268142aea63c85bc5d0833d84a9e52cd91767d53e7cdb840b0a72e4"
+    }
+  ],
+  "reproducedBefore": [
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/cross-provider-history.txt",
+      "sha256CanonicalLf": "3d204530e63b04ed3124d1e1a5a3e7ac2a7f10fa0bcf64d08d7ea2fc969fa3ff"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/denial-and-late-tools.txt",
+      "sha256CanonicalLf": "62587f689f360ad4c01dc59813dbd93063bb38dd2455a093fdaa4a5354f97e25"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/nested-stale-settlement.txt",
+      "sha256CanonicalLf": "aa77a0c8722ddbd6dbc9b976e428246c1d5b16f4a72775b0235886fb11818e6a"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/utility-host-selection.txt",
+      "sha256CanonicalLf": "8d2a87e41873b00a1efde3a59f2e9bc7301efc0d91188dbf79145668bf3be3ab"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/claude-missing-resume.txt",
+      "sha256CanonicalLf": "af8f41aee681c4f6541a19a71645645b35afd4024059381be9f32adcf349166b"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/attachment-clone.txt",
+      "sha256CanonicalLf": "fe99608da7c8187ad52e746d2c6390f57174349b37138a3316587a98bbae9ce3"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/attachment-removed-history.txt",
+      "sha256CanonicalLf": "5bb9b907ad15f1691cb84d80deb55cc8777ad41eeb9c50503688230642e06382"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/attachment-summary-boundary.txt",
+      "sha256CanonicalLf": "a12e7f99059cf8a3a518fecad42a1b35488aec4db571a7d7706715005c995067"
+    },
+    {
+      "path": "audit/parity-harness-followups-integration/reproduced-before/failed-fork-cleanup.txt",
+      "sha256CanonicalLf": "0893bd733651fcb7dfbc2479afc09654fe455ad4bea9348e9f1bb5aab34f9945"
+    }
+  ],
+  "liveValidation": {
+    "status": "passed_for_identical_package_bytes",
+    "historicalReport": "audit/parity-harness-integration.json",
+    "scope": "Actual Windows ADE composer and file picker, real CLI tools, close/restart of the same isolated profile. No auth UI or credential extraction.",
+    "codexContinuityAndAttachment": {
+      "path": "audit/parity-harness-followups-integration/packaged-live-codex-continuity.json",
+      "sha256CanonicalLf": "5a89d98aef227fa4438a8b327c1fc30898118d5fa7cc38684a33945eea7b70ea"
+    }
+  },
+  "package": "out/parity-integration-5",
+  "binaries": [
+    {
+      "path": "ADE.exe",
+      "sha256": "dd58b6e6534b2772f2e3875b25a0759868c2f4b3cac7b8670830426949d99718",
+      "bytes": 84962937,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "path": "ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "bytes": 19775944,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "bytes": 194912,
+      "peImports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "versionSmoke": "ADE 0.1.0",
+  "packagedUiVerification": {
+    "status": "passed_for_identical_package_bytes",
+    "evidence": {
+      "path": "audit/parity-harness-followups-integration/packaged-gui.json",
+      "sha256CanonicalLf": "dbe7c07997de2ab152ccd9b5a2c556cd3b937bc232094d6bc9568efbf231000a"
+    }
+  },
+  "limits": [
+    "All701 feature rows and17331 indexed source function bodies remain preserved. Full semantic, line-by-line and identical model-reasoning parity is not established.",
+    "Direct Claude/Codex question-MCP configuration and source-specialized native question transcript rendering remain separate private work until integrated and tested.",
+    "Claude missing-session recovery is tested against documented typed envelopes and the installed diagnostic literal; the installed live missing-session envelope and paid Claude inference remain unobserved.",
+    "Continuity bindings do not prove an external CLI session was never advanced elsewhere if an older historical snapshot is restored into an entirely new Engine.",
+    "External attachment tests establish original-byte delivery and lifetime against native fixture processes; real CLI read permission may still ask or deny, and inline images retain native encoding/capability limits.",
+    "An unavailable captured file still referenced after the latest summary can block a fresh external turn; graceful historical omission remains a separate follow-up. Snapshot read failure may fall back to the original only when the captured SHA256 still matches.",
+    "Uncommitted fork rollback reports cleanup failure but does not add a new SessionStore retry transaction after a concurrent revision conflict.",
+    "Custom model CRUD/options, advanced account/usage paths, historical browser environment snapshots and other source-ledger gaps remain.",
+    "A long selected model label can scroll out its beginning while idle; a separate native selector repair is in progress."
+  ],
+  "packagedMcpVerification": {
+    "path": "audit/parity-harness-followups-integration/packaged-mcp.json",
+    "sha256CanonicalLf": "012235601d2439751b989f32dcdeb389e9b43cd847852b20237488baa1cc6752"
+  }
+}

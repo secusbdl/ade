@@ -1,0 +1,26 @@
+********* Start testing of ClaudeSessionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeSessionTest::initTestCase()
+PASS   : ClaudeSessionTest::twoTurnsAndResumeUseFreshContextWithoutRepeatedHistory()
+PASS   : ClaudeSessionTest::thinkingAndPermissionChangesRestartWithOfficialFlags()
+PASS   : ClaudeSessionTest::permissionAnswerAndDenialAreCorrelated(allow)
+PASS   : ClaudeSessionTest::permissionAnswerAndDenialAreCorrelated(deny)
+PASS   : ClaudeSessionTest::stoppingRevokesApprovalsAndNextTurnIsFresh()
+PASS   : ClaudeSessionTest::foreignWorkspaceCannotResumeAndForkGetsIndependentSession()
+PASS   : ClaudeSessionTest::resultDoesNotDisposeBackgroundOwner()
+PASS   : ClaudeSessionTest::nativeProcessProjectsPartialAndFinalTextOnlyOnce()
+PASS   : ClaudeSessionTest::backgroundResultCannotFinishAnOwnedUserTurn()
+PASS   : ClaudeSessionTest::stoppingFromTerminalPartObserverCannotReportSuccess()
+PASS   : ClaudeSessionTest::questionIsExplicitCorrelatedAndPreservesOriginalInput()
+PASS   : ClaudeSessionTest::questionsDisabledOrCanceledAreDenied(disabled)
+PASS   : ClaudeSessionTest::questionsDisabledOrCanceledAreDenied(user-canceled)
+PASS   : ClaudeSessionTest::wireCancellationAndStopRevokeQuestionTokens()
+PASS   : ClaudeSessionTest::questionObserverMayDeleteSession()
+PASS   : ClaudeSessionTest::authenticationFailureIsNotAToolPermissionRequest()
+PASS   : ClaudeSessionTest::humanQuestionWaitSuspendsOnlyOwningTurnDeadline()
+PASS   : ClaudeSessionTest::malformedQuestionAndAnswerShapesFailClosed()
+PASS   : ClaudeSessionTest::deletionFromOutputOrPermissionIsSafe(event)
+PASS   : ClaudeSessionTest::deletionFromOutputOrPermissionIsSafe(permission)
+PASS   : ClaudeSessionTest::cleanupTestCase()
+Totals: 22 passed, 0 failed, 0 skipped, 0 blacklisted, 7756ms
+********* Finished testing of ClaudeSessionTest *********

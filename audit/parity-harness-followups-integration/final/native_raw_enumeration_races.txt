@@ -1,0 +1,17 @@
+********* Start testing of RawEnumerationTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : RawEnumerationTests::initTestCase()
+PASS   : RawEnumerationTests::rawAndSearchNeverPublishOutsideNames(raw-directory)
+PASS   : RawEnumerationTests::rawAndSearchNeverPublishOutsideNames(glob)
+PASS   : RawEnumerationTests::rawAndSearchNeverPublishOutsideNames(grep)
+PASS   : RawEnumerationTests::traversalLimitsAreExplicit(raw-depth-errors)
+PASS   : RawEnumerationTests::traversalLimitsAreExplicit(glob-depth-reported)
+PASS   : RawEnumerationTests::traversalLimitsAreExplicit(grep-depth-reported)
+PASS   : RawEnumerationTests::rawEntryLimitDoesNotReturnPartialNames()
+PASS   : RawEnumerationTests::recursiveOperationsDoNotFollowChildJunctions(raw)
+PASS   : RawEnumerationTests::recursiveOperationsDoNotFollowChildJunctions(glob)
+PASS   : RawEnumerationTests::recursiveOperationsDoNotFollowChildJunctions(grep)
+PASS   : RawEnumerationTests::attachmentListingNeverPublishesOutsideNames()
+PASS   : RawEnumerationTests::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 1560ms
+********* Finished testing of RawEnumerationTests *********

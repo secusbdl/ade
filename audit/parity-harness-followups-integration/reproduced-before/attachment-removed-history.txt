@@ -1,0 +1,18 @@
+********* Start testing of HarnessAttachmentsHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentsHostTest::initTestCase()
+FAIL!  : HarnessAttachmentsHostTest::replacedHistoryDoesNotResurrectRemovedAttachments(codex) Compared values are not the same
+   Actual   (files(log).size()): 2
+   Expected (1)                : 1
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(235) : failure location
+FAIL!  : HarnessAttachmentsHostTest::replacedHistoryDoesNotResurrectRemovedAttachments(opencode) Compared values are not the same
+   Actual   (files(log).size()): 2
+   Expected (1)                : 1
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(235) : failure location
+FAIL!  : HarnessAttachmentsHostTest::replacedHistoryDoesNotResurrectRemovedAttachments(claude-code) Compared values are not the same
+   Actual   (files(log).size()): 2
+   Expected (1)                : 1
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(235) : failure location
+PASS   : HarnessAttachmentsHostTest::cleanupTestCase()
+Totals: 2 passed, 3 failed, 0 skipped, 0 blacklisted, 1496ms
+********* Finished testing of HarnessAttachmentsHostTest *********

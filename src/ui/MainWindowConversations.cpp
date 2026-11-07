@@ -9,6 +9,8 @@
 #include "core/AgentEngine.h"
 #include "core/UtilityService.h"
 #include "runtime/AgentToolHost.h"
+#include "runtime/HarnessFileContext.h"
+#include "harness/HarnessAttachmentStore.h"
 #include "mutations/FileMutationJournal.h"
 #include "shell/SessionLogStore.h"
 #include <QComboBox>
@@ -113,11 +115,13 @@ bool MainWindow::cloneConversation(const QString& id,bool sideChat) {
     if(!self)return false;
     auto next=m_sessions;next.prepend(fork);
     if(!commitConversationState(next,m_store.pendingCleanup())) {
-        QString readError,attachmentError,shellError;
+        QString readError,attachmentError,shellError,harnessError,handoffError;
         const bool readsRemoved=FileReadSnapshotStore(m_store.directory()).removeAgent(fork.id,&readError);
         const bool attachmentsRemoved=AttachmentStore(m_store.directory()).removeAgent(fork.id,&attachmentError);
         const bool shellRemoved=SessionLogStore::removeAgent(m_store.directory(),fork.id,&shellError);
-        if(!readsRemoved||!attachmentsRemoved||!shellRemoved)conversationError(m_status->text()+" Fork context cleanup failed: "+readError+attachmentError+shellError);
+        const bool harnessRemoved=HarnessFileContext::removeAgent(m_store.directory(),fork.id,&harnessError);
+        const bool handoffRemoved=HarnessAttachmentStore::removeAgent(m_store.directory(),fork.id,&handoffError);
+        if(!readsRemoved||!attachmentsRemoved||!shellRemoved||!harnessRemoved||!handoffRemoved)conversationError(m_status->text()+" Fork context cleanup failed: "+readError+attachmentError+shellError+harnessError+handoffError);
         return false;
     }
     m_agents->setProperty("showArchived",false);refreshAgents();if(sideChat)openSideChat(fork.id);else selectConversation(fork.id);return true;
@@ -197,13 +201,15 @@ void MainWindow::retryConversationCleanup() {
     if(m_store.pendingCleanup().isEmpty())return;
     QString error;
     const bool complete=m_store.processPendingCleanup(m_sessions,[](const QString& id,const QString& directory,QString* failure){
-        QString readError,attachmentError,mutationError,shellError;
+        QString readError,attachmentError,mutationError,shellError,harnessError,handoffError;
         const bool readsRemoved=FileReadSnapshotStore(directory).removeAgent(id,&readError);
         const bool attachmentsRemoved=AttachmentStore(directory).removeAgent(id,&attachmentError);
         const bool mutationsRemoved=FileMutationJournal::removeAgent(directory,id,&mutationError);
         const bool shellRemoved=SessionLogStore::removeAgent(directory,id,&shellError);
-        if(failure)*failure=QStringList{readError,attachmentError,mutationError,shellError}.join(" ").trimmed();
-        return readsRemoved&&attachmentsRemoved&&mutationsRemoved&&shellRemoved;
+        const bool harnessRemoved=HarnessFileContext::removeAgent(directory,id,&harnessError);
+        const bool handoffRemoved=HarnessAttachmentStore::removeAgent(directory,id,&handoffError);
+        if(failure)*failure=QStringList{readError,attachmentError,mutationError,shellError,harnessError,handoffError}.join(" ").trimmed();
+        return readsRemoved&&attachmentsRemoved&&mutationsRemoved&&shellRemoved&&harnessRemoved&&handoffRemoved;
     },&error);
     if(!complete)conversationError("The chat was deleted. File cleanup remains pending and will retry when the app opens: "+error);
 }

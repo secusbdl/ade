@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "HarnessHistory.h"
 #include "harness/CodexHarnessSession.h"
 #include "harness/AcpHarnessSession.h"
 #include "harness/ClaudeHarnessSession.h"
@@ -6,8 +7,49 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QUuid>
+#include <QFutureWatcher>
+#include <QtConcurrentRun>
 
 namespace ade {
+namespace {
+QStringList harnessPriorTranscript(const QJsonArray& messages){
+  QStringList transcript;
+  // Pinned runtime.ts205 forwards prior transcript only to a newly created
+  // external session; resumed/forked CLI threads already retain that history.
+  // Its prompt builder excludes tool results and starts at the latest summary.
+  int boundary = 0;
+  for (int i = messages.size() - 1; i >= 0; --i)
+    if (!messages[i]
+             .toObject()["ade_compressedHistory"]
+             .toString()
+             .isEmpty()) {
+      boundary = i;
+      break;
+    }
+  for (int i = boundary; i < messages.size() - 1; ++i) {
+    const auto row = messages[i].toObject();
+    const auto role = row["role"].toString();
+    if (i == boundary && !row["ade_compressedHistory"].toString().isEmpty())
+      transcript.append("history-summary: " +
+                        row["ade_compressedHistory"].toString());
+    if (role != "user" && role != "assistant")
+      continue;
+    const auto text = row["content"].toString();
+    if (!text.isEmpty())
+      transcript.append(role + ": " + text);
+  }
+  if (boundary == messages.size() - 1 &&
+      !messages.last()
+           .toObject()["ade_compressedHistory"]
+           .toString()
+           .isEmpty())
+    transcript.append(
+        "history-summary: " +
+        messages.last().toObject()["ade_compressedHistory"].toString());
+  return transcript;
+}
+}
+
 void AgentEngine::setHarnessContext(const QString &ownerId,
                                     const QString &fallbackWorkspace) {
   if (m_busy)
@@ -18,7 +60,12 @@ void AgentEngine::setHarnessContext(const QString &ownerId,
   m_harnessOwnerId = ownerId;
   m_harnessFallbackWorkspace = accepted;
 }
+void AgentEngine::setHarnessInputPreparer(HarnessInputPreparer preparer){
+  if(!m_busy)m_harnessInputPreparer=std::move(preparer);
+}
 void AgentEngine::stopHarness() {
+  if(m_harnessPreparing)m_harnessPreparing->store(true);
+  m_harnessPreparing.reset();
   // Preserve the user's owned partial form before stopping the external
   // process. This is display history, not an invented native model
   // tool-call/result pair.
@@ -41,12 +88,20 @@ void AgentEngine::stopHarness() {
     m_harness->shutdown();
   m_harnessApprovals.clear();
   m_harnessQuestionToken.clear();
+  m_harnessAttachments={};
 }
-void AgentEngine::retainHarnessResponse() {
+void AgentEngine::retainHarnessResponse(bool completed) {
   if (m_responseRetained || (m_display.empty() && m_streamText.isEmpty() &&
                              m_streamReasoning.isEmpty()))
     return;
   QJsonObject metadata;
+  m_harnessState.remove("continuity");
+  if (completed) {
+    auto prefix=m_messages;
+    prefix.append(QJsonObject{{"role","assistant"},{"content",m_streamText}});
+    m_harnessState=HarnessHistory::bind(m_harnessState,prefix);
+    m_messages=HarnessHistory::withoutBindings(m_messages);
+  }
   if (!m_harnessState.isEmpty())
     metadata["harness"] = m_harnessState;
   if (!m_harnessUsage.isEmpty())
@@ -83,6 +138,32 @@ void AgentEngine::requestHarness() {
   emit displayChanged();
   if (!self || generation != m_generation || !m_busy)
     return;
+  const auto transcript=harnessPriorTranscript(m_messages);
+  m_harnessAttachments={};
+  if(m_harnessInputPreparer){
+    QString error;const auto factory=m_harnessInputPreparer;
+    auto job=factory(m_messages,m_provider,&error);
+    if(!self||generation!=m_generation||!m_busy)return;
+    if(!error.isEmpty()||!job){fail(error.isEmpty()?"External attachment preparer is unavailable.":error);return;}
+    auto cancelled=std::make_shared<std::atomic_bool>(false);m_harnessPreparing=cancelled;
+    auto watcher=new QFutureWatcher<HarnessPreparedTurn>(this);
+    connect(watcher,&QFutureWatcher<HarnessPreparedTurn>::finished,this,[this,watcher,generation,cancelled,transcript]{
+      const auto result=watcher->result();watcher->deleteLater();
+      if(cancelled->load()||generation!=m_generation||!m_busy||m_harnessPreparing!=cancelled)return;
+      m_harnessPreparing.reset();
+      if(!result.error.isEmpty()){fail(result.error);return;}
+      for(const auto& lease:{result.attachments.current,result.attachments.history})
+        if(!lease.empty()&&(!lease.valid()||lease.owner()!=m_harnessOwnerId)){
+          fail("Prepared attachment context belongs to a different or closed chat.");return;
+        }
+      m_harnessAttachments=result.attachments;
+      dispatchPreparedHarness(result.input,transcript);
+    });
+    watcher->setFuture(QtConcurrent::run([job=std::move(job),cancelled]{
+      try{return job(cancelled.get());}catch(...){HarnessPreparedTurn result;result.error="External attachment preparation failed.";return result;}
+    }));
+    return;
+  }
   QJsonArray history = m_messages;
   if (m_messagePreparer) {
     QString error;
@@ -96,39 +177,6 @@ void AgentEngine::requestHarness() {
     }
   }
   QJsonArray input;
-  QStringList transcript;
-  // Pinned runtime.ts205 forwards prior transcript only to a newly created
-  // external session; resumed/forked CLI threads already retain that history.
-  // Its prompt builder excludes tool results and starts at the latest summary.
-  int boundary = 0;
-  for (int i = m_messages.size() - 1; i >= 0; --i)
-    if (!m_messages[i]
-             .toObject()["ade_compressedHistory"]
-             .toString()
-             .isEmpty()) {
-      boundary = i;
-      break;
-    }
-  for (int i = boundary; i < m_messages.size() - 1; ++i) {
-    const auto row = m_messages[i].toObject();
-    const auto role = row["role"].toString();
-    if (i == boundary && !row["ade_compressedHistory"].toString().isEmpty())
-      transcript.append("history-summary: " +
-                        row["ade_compressedHistory"].toString());
-    if (role != "user" && role != "assistant")
-      continue;
-    const auto text = row["content"].toString();
-    if (!text.isEmpty())
-      transcript.append(role + ": " + text);
-  }
-  if (boundary == m_messages.size() - 1 &&
-      !m_messages.last()
-           .toObject()["ade_compressedHistory"]
-           .toString()
-           .isEmpty())
-    transcript.append(
-        "history-summary: " +
-        m_messages.last().toObject()["ade_compressedHistory"].toString());
   for (int i = 0; i < history.size(); ++i) {
     const auto row = history[i].toObject();
     const auto role = row["role"].toString();
@@ -160,14 +208,23 @@ void AgentEngine::requestHarness() {
         input.append(image);
     }
   }
-  m_harnessState = {};
-  for (int i = m_messages.size() - 1; i >= 0; --i) {
-    const auto saved =
-        m_messages[i].toObject()["metadata"].toObject()["harness"].toObject();
-    if (saved["providerId"] == m_provider.id) {
-      m_harnessState = saved;
-      break;
-    }
+  dispatchPreparedHarness(input,transcript);
+}
+void AgentEngine::dispatchPreparedHarness(const QJsonArray& input,const QStringList& transcript){
+  if(!m_busy)return;
+  const auto generation=m_generation;
+  const QPointer<AgentEngine> self(this);
+  auto prefix=m_messages;if(!prefix.isEmpty())prefix.removeLast();
+  m_harnessState=HarnessHistory::resumable(prefix,m_provider.id,m_provider.kind);
+  // Parent CLI state can retain physical paths that belong to another owner.
+  // Reconstruct canonical attachment references in a fresh child-owned session.
+  if(!m_harnessAttachments.history.empty()&&!m_harnessState.isEmpty()&&
+     m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState={};
+  if(m_harnessState.isEmpty()){
+    const auto attachments=m_harnessAttachments;
+    stopHarness();
+    if(!self||generation!=m_generation||!m_busy)return;
+    m_harnessAttachments=attachments;
   }
   if(m_provider.isClaudeHarness()) {
     if(!m_harnessState.isEmpty() && m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState["fork"]=true;
@@ -305,10 +362,11 @@ void AgentEngine::requestHarness() {
           fail(result["error"].toString("Codex could not complete the turn."));
           return;
         }
-        retainHarnessResponse();
+        retainHarnessResponse(true);
         complete();
       });
   CodexHarnessOptions options;
+  options.attachments=m_harnessAttachments;
   options.executable = m_provider.harnessExecutable;
   options.providerId = m_provider.id;
   options.model = m_provider.model;

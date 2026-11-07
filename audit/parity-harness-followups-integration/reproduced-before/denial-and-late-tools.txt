@@ -1,0 +1,14 @@
+********* Start testing of AcpSettlementTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpSettlementTest::initTestCase()
+FAIL!  : AcpSettlementTest::denialContinuesOnlyRemainingTask() Compared values are not the same
+   Actual   (sent.size()): 1
+   Expected (2)          : 2
+D:/age/ADE/private/acp-settlement-stage/tests/test_acp_settlement.cpp(65) : failure location
+FAIL!  : AcpSettlementTest::lateCommandCompletionIsNotLost() 'QJsonDocument(result).toJson().contains("LATE_FINAL_OUTPUT")' returned FALSE. ()
+D:/age/ADE/private/acp-settlement-stage/tests/test_acp_settlement.cpp(84) : failure location
+FAIL!  : AcpSettlementTest::earlyPromptEndKeepsPendingDecision() 's.isBusy()' returned FALSE. ()
+D:/age/ADE/private/acp-settlement-stage/tests/test_acp_settlement.cpp(97) : failure location
+PASS   : AcpSettlementTest::cleanupTestCase()
+Totals: 2 passed, 3 failed, 0 skipped, 0 blacklisted, 885ms
+********* Finished testing of AcpSettlementTest *********

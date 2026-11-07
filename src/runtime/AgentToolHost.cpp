@@ -1,4 +1,5 @@
 #include "AgentToolHost.h"
+#include "HarnessInputPreparation.h"
 #include "core/AgentEngine.h"
 #include "browser/BrowserToolBridge.h"
 #include "attachments/ModelMediaCatalog.h"
@@ -16,7 +17,7 @@ bool prepareAppDirectory(const QString& directory){
 }
 
 AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,const QString& agentId,
-    const QString& dataDirectory,QObject* parent,QNetworkAccessManager* network):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_harnessFiles(dataDirectory,agentId),m_mutations(dataDirectory,agentId),
+    const QString& dataDirectory,QObject* parent,QNetworkAccessManager* network):QObject(parent),m_engine(engine),m_browser(browser),m_agentId(agentId),m_dataDirectory(dataDirectory),m_harnessFiles(dataDirectory,agentId),m_harnessAttachments(dataDirectory,agentId),m_mutations(dataDirectory,agentId),
     m_shellLogs(std::make_shared<SessionLogStore>(dataDirectory,agentId)),m_shells(agentId,m_shellLogs,this),
     m_attachmentStore(dataDirectory),m_attachmentPipeline(m_attachmentStore),m_readSnapshots(dataDirectory),m_readLease(m_readSnapshots.acquire(agentId)),m_attachmentFiles(agentId,dataDirectory,this),m_network(network,this),m_apps(agentId,dataDirectory,this) {
     engine->setHarnessContext(agentId,m_harnessFiles.rootDirectory());
@@ -38,6 +39,26 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     engine->setMessagePreparer([guard=QPointer<AgentToolHost>(this)](const QJsonArray& history,const ProviderConfig& provider,QString* error){
         if(!guard||guard->m_fileContextRemoved){if(error)*error="The file context host is unavailable or was removed.";return QJsonArray{};}
         return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),{},error);
+    });
+    engine->setHarnessInputPreparer([guard = QPointer<AgentToolHost>(this)](
+                                        const QJsonArray &history,
+                                        const ProviderConfig &provider,
+                                        QString *error) -> HarnessInputJob {
+      if (!guard || guard->m_fileContextRemoved || history.isEmpty()) {
+        if (error)
+          *error = "The attachment context host is unavailable or closed.";
+        return {};
+      }
+      const auto handoff = guard->m_harnessAttachments;
+      const auto original = guard->m_attachmentStore;
+      const auto owner = guard->m_agentId;
+      const auto mounts = guard->m_attachmentMounts;
+      const auto media = ModelMediaCatalog::resolve(provider);
+      return [handoff, original, owner, history, mounts,
+              media](const std::atomic_bool *cancelled) {
+        return prepareHarnessInput(handoff, original, owner, history, mounts,
+                                   media, cancelled);
+      };
     });
     const auto appsDirectory=m_apps.agentAppsDirectory();
     if(prepareAppDirectory(appsDirectory)&&m_files.setAppsDirectory(appsDirectory)){
@@ -257,6 +278,12 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     engine->setMutationContext(agentId,[journal](const QStringList& ids,QString* error){return journal.settledInvocations(ids,error);});
 }
 AgentToolHost::~AgentToolHost(){
+    m_harnessAttachments.revoke();
+    if(m_engine){
+        disconnect(m_engine,nullptr,this,nullptr);
+        if(m_engine->isBusy())m_engine->cancel();
+        if(m_engine)m_engine->setHarnessContext({},{});
+    }
     m_watcherRetryTimer.stop();m_pendingWatcherMessages.clear();
     disconnect(&m_shells,nullptr,this,nullptr);m_shells.closeAll();m_shellLogs->revoke();
     m_mutations.revoke();for(const auto& canceled:m_undoRequests)canceled->store(true);m_undoRequests.clear();
@@ -324,13 +351,17 @@ bool AgentToolHost::cloneFileContext(const QString& targetAgentId,QString* error
     if(!m_shellLogs->cloneTo(targetAgentId,error)){
         QString ignored;m_readSnapshots.removeAgent(targetAgentId,&ignored);m_attachmentStore.removeAgent(targetAgentId,&ignored);return false;
     }
-    if(!m_harnessFiles.cloneTo(targetAgentId,error)){
+    if(!m_harnessAttachments.cloneTo(targetAgentId,error)){
         QString ignored;m_readSnapshots.removeAgent(targetAgentId,&ignored);m_attachmentStore.removeAgent(targetAgentId,&ignored);SessionLogStore::removeAgent(m_dataDirectory,targetAgentId,&ignored);return false;
+    }
+    if(!m_harnessFiles.cloneTo(targetAgentId,error)){
+        QString ignored;HarnessAttachmentStore::removeAgent(m_dataDirectory,targetAgentId,&ignored);m_readSnapshots.removeAgent(targetAgentId,&ignored);m_attachmentStore.removeAgent(targetAgentId,&ignored);SessionLogStore::removeAgent(m_dataDirectory,targetAgentId,&ignored);return false;
     }
     return true;
 }
 bool AgentToolHost::removeFileContext(QString* error){
     if(error)error->clear();
+    m_harnessAttachments.revoke();
     m_fileContextRemoved=true;m_watcherRetryTimer.stop();m_pendingWatcherMessages.clear();
     m_mutations.revoke();for(const auto& canceled:m_undoRequests)canceled->store(true);
     const QPointer<AgentToolHost> self(this);
@@ -342,14 +373,15 @@ bool AgentToolHost::removeFileContext(QString* error){
     if(!self){if(error)*error="The file context owner closed during reset.";return false;}
     m_shells.closeAll();if(!self){if(error)*error="The file context owner closed while stopping shells.";return false;}
     m_shellLogs->revoke();
-    QString readError,attachmentError,mutationError,shellError,harnessError;
+    QString readError,attachmentError,mutationError,shellError,harnessError,handoffError;
+    const bool removedHandoff=m_harnessAttachments.remove(&handoffError);
     const bool removedHarness=m_harnessFiles.remove(&harnessError);
     const bool removedShells=SessionLogStore::removeAgent(m_dataDirectory,m_agentId,&shellError);
     const bool removedMutations=FileMutationJournal::removeAgent(m_dataDirectory,m_agentId,&mutationError);
     const bool removedReads=m_readSnapshots.removeAgent(m_agentId,&readError);
     const bool removedAttachments=m_attachmentStore.removeAgent(m_agentId,&attachmentError);
-    if(error)*error=!harnessError.isEmpty()?harnessError:(!shellError.isEmpty()?shellError:(!mutationError.isEmpty()?mutationError:(readError.isEmpty()?attachmentError:readError)));
-    return removedReads&&removedAttachments&&removedMutations&&removedShells&&removedHarness;
+    if(error)*error=!handoffError.isEmpty()?handoffError:!harnessError.isEmpty()?harnessError:(!shellError.isEmpty()?shellError:(!mutationError.isEmpty()?mutationError:(readError.isEmpty()?attachmentError:readError)));
+    return removedHandoff&&removedReads&&removedAttachments&&removedMutations&&removedShells&&removedHarness;
 }
 void AgentToolHost::scheduleWatcherRetry(){
     if(m_pendingWatcherMessages.isEmpty()||m_fileContextRemoved||!m_engine){m_watcherRetryTimer.stop();return;}

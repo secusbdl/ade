@@ -137,7 +137,7 @@ void AgentPresentation::setToolPresentation(const QString& callId,const QJsonObj
         m_parts[i]=part;return;
     }
 }
-void AgentPresentation::toolState(const QString& callId,const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){part["state"]=state;m_parts[i]=part;return;}}}
+void AgentPresentation::toolState(const QString& callId,const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){part["state"]=state;if(state=="approval-requested")part["approvalSeen"]=true;m_parts[i]=part;return;}}}
 QString AgentPresentation::toolOutput(const QString& callId)const{for(const auto& value:m_parts){const auto part=value.toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId)return part["output"].toString();}return {};}
 bool AgentPresentation::setToolOutput(const QString& callId,const QString& output){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"&&part["toolCallId"]==callId){if(part["output"]==output)return false;part["output"]=output;m_parts[i]=part;return true;}}return false;}
 void AgentPresentation::finish(const QString& state){for(int i=0;i<m_parts.size();++i){auto part=m_parts[i].toObject();if(part["type"]=="tool"){if(part["state"]=="input-streaming"){part["state"]=state=="done"?"input-available":state=="error"?"output-error":state;m_parts[i]=part;}}else closeAt(i,state);}}

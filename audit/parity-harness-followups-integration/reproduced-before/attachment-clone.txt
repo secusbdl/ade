@@ -1,0 +1,8 @@
+********* Start testing of HarnessAttachmentStoreTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentStoreTest::initTestCase()
+FAIL!  : HarnessAttachmentStoreTest::cloneMustNotAdoptConcurrentForeignTarget() '!source.cloneTo("target",&e)' returned FALSE. ()
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachment_store.cpp(43) : failure location
+PASS   : HarnessAttachmentStoreTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 43ms
+********* Finished testing of HarnessAttachmentStoreTest *********

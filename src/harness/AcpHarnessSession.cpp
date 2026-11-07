@@ -90,6 +90,14 @@ AcpHarnessSession::AcpHarnessSession(QObject *parent)
               emit stagewiseQuestionCancelled(token);
           });
   m_cancelTimer.setSingleShot(true);
+  m_settleTimer.setSingleShot(true);
+  m_turnTimer.setSingleShot(true);
+  connect(&m_settleTimer, &QTimer::timeout, this,
+          &AcpHarnessSession::settleExpired);
+  connect(&m_turnTimer, &QTimer::timeout, this, [this] {
+    if (m_busy && !m_interrupted)
+      finish("failed", "The OpenCode turn exceeded its active-time limit.");
+  });
   connect(&m_cancelTimer, &QTimer::timeout, this, [this] {
     if (m_busy)
       finish("interrupted");
@@ -199,6 +207,13 @@ bool AcpHarnessSession::startTurn(const AcpHarnessOptions &options,
   m_promptSent = false;
   m_interrupted = false;
   m_created = false;
+  m_settleTimer.stop();
+  m_turnTimer.stop();
+  m_turnRemaining = options.promptTimeoutMs;
+  m_continuations = m_staleRecoveries = 0;
+  m_promptReturned = m_permissionRejected = m_settlementQueued = false;
+  m_staleLimitReached = false;
+  m_nextPrompt.clear();
   if (saved["version"].toInt() != 1 || saved["kind"] != "opencode" ||
       saved["providerId"] != options.providerId ||
       !same(saved["executable"].toString(), exe) ||
@@ -229,8 +244,10 @@ bool AcpHarnessSession::call(const QString &method, const QJsonObject &params,
     return false;
   }
   m_calls.insert(requestId, method);
-  if (method == "session/prompt")
+  if (method == "session/prompt") {
     m_promptRequestId = requestId;
+    refreshPromptDeadline();
+  }
   return true;
 }
 void AcpHarnessSession::initialize() {
@@ -335,19 +352,25 @@ void AcpHarnessSession::configure() {
 void AcpHarnessSession::prompt() {
   if (!m_busy || m_interrupted || m_promptSent)
     return;
-  auto content = m_input;
-  for (const auto &v : content)
-    if (v.toObject()["type"] == "image" &&
-        !m_capabilities["promptCapabilities"].toObject()["image"].toBool()) {
-      finish("failed", "This ACP agent does not advertise image input.");
-      return;
-    }
+  QString attachmentError;
+  auto content=mapHarnessAttachments(m_input,m_options.attachments,true,
+      m_capabilities["promptCapabilities"].toObject()["image"].toBool(),m_created,&attachmentError);
+  if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
   if (m_created && !m_options.historyContext.isEmpty())
     content.prepend(
         QJsonObject{{"type", "text"}, {"text", m_options.historyContext}});
   if (!m_options.instructions.isEmpty())
     content.prepend(
         QJsonObject{{"type", "text"}, {"text", m_options.instructions}});
+  // beginSession must successfully configure the bridge before prompt() runs.
+  // A disabled bridge must not advertise an unavailable MCP question tool.
+  if (!m_options.questionMcpExecutable.isEmpty())
+    content.prepend(QJsonObject{{"type","text"},{"text",
+      "<stagewise-agent-instructions>\n"
+      "For structured user input, use the MCP tool `stagewise_request_user_input`. "
+      "Do not use a provider-native question tool or ask the structured question in plain text. "
+      "This tool is never used for command or tool approval: invoke the command or tool directly "
+      "and let the host show its approval UI.\n</stagewise-agent-instructions>"}});
   if (QJsonDocument(content).toJson(QJsonDocument::Compact).size() > Bound) {
     finish("failed", "ACP prompt exceeded its limit.");
     return;
@@ -425,9 +448,10 @@ void AcpHarnessSession::response(const QString &requestId,
     if (m_interrupted || reason == "cancelled")
       finish("interrupted");
     else if (reason == "end_turn" || reason == "max_tokens" ||
-             reason == "max_turn_requests" || reason == "refusal")
-      finish("completed");
-    else
+             reason == "max_turn_requests" || reason == "refusal") {
+      m_promptReturned = true;
+      scheduleSettlement();
+    } else
       finish("failed", "The ACP prompt returned an invalid stop reason.");
   }
 }
@@ -515,7 +539,8 @@ void AcpHarnessSession::notification(const QString &method,
         return;
       }
     }
-    publish({{"type", "tool"}, {"id", key}, {"update", merged}});
+    if (publish({{"type", "tool"}, {"id", key}, {"update", merged}}))
+      scheduleSettlement(true);
   } else if (kind == "plan" || kind == "plan_update" ||
              kind == "plan_removed") {
     m_currentType.clear();
@@ -605,6 +630,8 @@ bool AcpHarnessSession::answerApproval(const QString &token, bool allow) {
     return false;
   const auto pending = *found;
   m_pending.remove(token);
+  if (!allow)
+    m_permissionRejected = true;
   refreshPromptDeadline();
   return m_process.respond(
       pending.id, permission(pending.parameters["options"].toArray(), allow));
@@ -644,12 +671,133 @@ bool AcpHarnessSession::cancelQuestion(const QString &token) {
   return m_process.respond(pending.id, QJsonObject{{"action", "cancel"}});
 }
 void AcpHarnessSession::refreshPromptDeadline() {
-  if (m_promptRequestId.isEmpty())
+  const bool waiting = !m_pending.isEmpty() || !m_stagewiseQuestion.isEmpty();
+  if (!m_promptRequestId.isEmpty()) {
+    if (waiting)
+      m_process.suspendDeadline(m_promptRequestId);
+    else
+      m_process.resumeDeadline(m_promptRequestId);
+  }
+  if (waiting) {
+    if (m_turnTimer.isActive()) {
+      m_turnRemaining = qMax(0, m_turnTimer.remainingTime());
+      m_turnTimer.stop();
+    }
+    m_settleTimer.stop();
+  } else if (m_busy && !m_interrupted && m_promptSent && m_turnRemaining >= 0 &&
+             !m_turnTimer.isActive()) {
+    m_turnTimer.start(m_turnRemaining);
+  }
+  // Response writes and bridge completion may still be on their callers'
+  // stack. Settlement/public completion always runs after that stack unwinds.
+  scheduleSettlement();
+}
+QStringList AcpHarnessSession::activeCommands() const {
+  QStringList result;
+  for (auto it = m_toolStates.cbegin(); it != m_toolStates.cend(); ++it)
+    if (it.value().value("kind") == "execute" &&
+        it.value().value("status") != "completed" &&
+        it.value().value("status") != "failed")
+      result.append(it.key());
+  return result;
+}
+void AcpHarnessSession::scheduleSettlement(bool toolActivity) {
+  if (!m_busy || m_interrupted || !m_promptReturned)
     return;
-  if (!m_pending.isEmpty() || !m_stagewiseQuestion.isEmpty())
-    m_process.suspendDeadline(m_promptRequestId);
-  else
-    m_process.resumeDeadline(m_promptRequestId);
+  if (toolActivity)
+    m_settleTimer.stop();
+  if (m_settlementQueued)
+    return;
+  m_settlementQueued = true;
+  const auto generation = m_generation;
+  QTimer::singleShot(0, this, [this, generation] {
+    if (!active(generation) || m_interrupted)
+      return;
+    m_settlementQueued = false;
+    settlePrompt();
+  });
+}
+void AcpHarnessSession::settlePrompt() {
+  if (!m_busy || m_interrupted || !m_promptReturned)
+    return;
+  if (!m_pending.isEmpty() || !m_stagewiseQuestion.isEmpty()) {
+    m_settleTimer.stop();
+    return;
+  }
+  if (m_staleLimitReached) {
+    finish("completed");
+  } else if (m_permissionRejected) {
+    continuePrompt(
+        "Continue from the rejected tool call. Treat the rejection as "
+        "the user response, do not retry the rejected action unless "
+        "explicitly requested, and continue the remaining task.");
+  } else if (!m_nextPrompt.isEmpty()) {
+    const auto text = m_nextPrompt;
+    m_nextPrompt.clear();
+    continuePrompt(text);
+  } else if (activeCommands().isEmpty()) {
+    finish("completed");
+  } else if (!m_settleTimer.isActive()) {
+    m_settleTimer.start(1000);
+  }
+}
+void AcpHarnessSession::continuePrompt(const QString &text) {
+  if (++m_continuations > 8) {
+    finish("failed", "The OpenCode turn reached its continuation limit.");
+    return;
+  }
+  m_settleTimer.stop();
+  m_promptReturned = false;
+  m_permissionRejected = false;
+  m_nextPrompt.clear();
+  // Exactly the pinned continuation instruction, never original input,
+  // history, context or the denied command. This remains one owned user turn.
+  call("session/prompt",
+       {{"sessionId", m_sessionId},
+        {"prompt", QJsonArray{QJsonObject{{"type", "text"}, {"text", text}}}}},
+       m_options.promptTimeoutMs);
+}
+void AcpHarnessSession::settleExpired() {
+  if (!m_busy || m_interrupted || !m_promptReturned || !m_pending.isEmpty() ||
+      !m_stagewiseQuestion.isEmpty())
+    return;
+  const auto commands = activeCommands();
+  if (commands.isEmpty()) {
+    scheduleSettlement();
+    return;
+  }
+  int markedStale = 0;
+  for (const auto &key : commands) {
+    // A prior publication can deliver a terminal update (or a new human
+    // decision) reentrantly. The captured list is not current authority.
+    if (!m_pending.isEmpty() || !m_stagewiseQuestion.isEmpty())
+      break;
+    auto tool = m_toolStates.value(key);
+    if (tool.value("kind") != "execute" ||
+        tool.value("status") == "completed" || tool.value("status") == "failed")
+      continue;
+    tool["status"] = "failed";
+    m_toolStates[key] = tool;
+    ++markedStale;
+    if (!publish({{"type", "tool"}, {"id", key}, {"update", tool}}))
+      return;
+  }
+  if (!markedStale) {
+    scheduleSettlement();
+    return;
+  }
+  if (++m_staleRecoveries > 3) {
+    // Public tool updates above can deliver another pending decision through
+    // a reentrant observer. Recheck all decision ownership before completion.
+    m_staleLimitReached = true;
+    scheduleSettlement();
+    return;
+  }
+  m_nextPrompt =
+      "The previous command ended without a final ACP status update. "
+      "Do not retry it. Continue the remaining task using the output "
+      "already shown.";
+  scheduleSettlement();
 }
 bool AcpHarnessSession::publishStagewiseQuestion(const QString &token,
                                                  const QJsonObject &form,
@@ -700,6 +848,10 @@ void AcpHarnessSession::interrupt() {
   if (!m_busy)
     return;
   m_interrupted = true;
+  m_settleTimer.stop();
+  m_turnTimer.stop();
+  m_turnRemaining = -1;
+  m_nextPrompt.clear();
   const QPointer<AcpHarnessSession> self(this);
   const auto generation = m_generation;
   m_questionMcp.endTurn();
@@ -724,6 +876,11 @@ void AcpHarnessSession::interrupt() {
 void AcpHarnessSession::finish(const QString &status, const QString &error) {
   if (!m_busy)
     return;
+  m_settleTimer.stop();
+  m_turnTimer.stop();
+  m_turnRemaining = -1;
+  m_promptReturned = false;
+  m_nextPrompt.clear();
   const QPointer<AcpHarnessSession> bridgeGuard(this);
   const auto bridgeGeneration = m_generation;
   m_questionMcp.endTurn();
@@ -758,6 +915,11 @@ void AcpHarnessSession::finish(const QString &status, const QString &error) {
 }
 void AcpHarnessSession::shutdown() {
   ++m_generation;
+  m_settleTimer.stop();
+  m_turnTimer.stop();
+  m_turnRemaining = -1;
+  m_promptReturned = m_settlementQueued = false;
+  m_nextPrompt.clear();
   m_busy = false;
   m_initialized = false;
   m_interrupted = false;
@@ -773,6 +935,7 @@ void AcpHarnessSession::shutdown() {
   m_promptRequestId.clear();
   m_questionMcp.revoke();
   m_process.stop();
+  m_options.attachments={};
   m_workspace = {};
 }
 } // namespace ade

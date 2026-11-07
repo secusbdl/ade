@@ -1,0 +1,12 @@
+********* Start testing of AcpPresentationEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpPresentationEngineTest::initTestCase()
+PASS   : AcpPresentationEngineTest::actualProcessMapsWithoutChangingRawOwnership()
+PASS   : AcpPresentationEngineTest::restartPreservesMetadataAndReusedRawIdsStayDistinct()
+PASS   : AcpPresentationEngineTest::approvalBeforeUpdateKeepsOpaqueDecision(allow)
+PASS   : AcpPresentationEngineTest::approvalBeforeUpdateKeepsOpaqueDecision(deny)
+PASS   : AcpPresentationEngineTest::displayObserverCanCancel()
+PASS   : AcpPresentationEngineTest::displayObserverCanDestroyOwner()
+PASS   : AcpPresentationEngineTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 1608ms
+********* Finished testing of AcpPresentationEngineTest *********

@@ -1,0 +1,40 @@
+{
+  "verifiedUtc": "2026-11-07T00:16:33.238338+00:00",
+  "binarySha256": "dd58b6e6534b2772f2e3875b25a0759868c2f4b3cac7b8670830426949d99718",
+  "testedDirectory": "out/harness-followups-candidate-1",
+  "finalPackageBytesIdentical": true,
+  "identityBasis": "ADE.exe, sandbox worker and WebView2 loader hashes match final package exactly. Tests ran from the frozen candidate directory.",
+  "syntheticProtocolFixtures": true,
+  "modelNetworkRequests": 0,
+  "checks": [
+    "Settings exposes providers, model management, API-key import and utility model controls.",
+    "Typing enables Send in the actual Windows composer.",
+    "Send opens one native two-step question without an ordinary duplicate MCP wrapper.",
+    "Titlebar X closes ADE while the native question is pending."
+  ],
+  "close": {
+    "pid": 50192,
+    "exitCode": 0,
+    "ownedTestProcessesRemaining": 0
+  },
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/harness-followups-gui-1/01-main.jpg",
+      "sha256": "019b054d5b6150c33788ee82f1c16d9b0c5ca89d5af58e16d24c3467f65074a3"
+    },
+    {
+      "localPath": "private/harness-followups-gui-1/02-settings.jpg",
+      "sha256": "fefc4436a2f6252875af1d85368f282826af157b987ad9de7ae616bba93c62d8"
+    },
+    {
+      "localPath": "private/harness-followups-gui-1/03-send-enabled.jpg",
+      "sha256": "87985a0056200aa4d78ed0469beb52665da6e42a327cdcc24e8afbc071ba01b0"
+    },
+    {
+      "localPath": "private/harness-followups-gui-1/04-pending-question.jpg",
+      "sha256": "1db6ee4ff583bb22ec76d861327ff329a6bc4fee680b7a4d5ca730e89822cbc3"
+    }
+  ],
+  "limits": "The remaining generic question-card presentation is separately tracked. These interactions do not establish every control or visual parity."
+}

@@ -11,6 +11,7 @@
 #include "Icons.h"
 #include "ProviderDialog.h"
 #include "ModelSelection.h"
+#include "UtilityModelSelection.h"
 #include "ContextPreferences.h"
 #include "SettingsPage.h"
 #include "DownloadsPage.h"
@@ -353,9 +354,12 @@ AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))
     connect(engine,&AgentEngine::turnAboutToStart,this,[this,id,engine](const QJsonObject& message){
         const QPointer<MainWindow> self(this);const QPointer<AgentEngine> safe(engine);QString error;
         if(const auto* session=find(id)){
-            QJsonObject activePreset;for(const auto& value:m_settings->preference("modelPresets").toArray())if(!session->presetId.isEmpty()&&value.toObject()["id"]==session->presetId){activePreset=value.toObject();break;}
-            const auto entries=activePreset.isEmpty()?m_settings->preference("utilityModels.contextCompression").toArray():activePreset["contextCompression"].toArray();
-            engine->setCompressionModels(resolveModelEntries(m_providers,entries,m_settings->preference("modelCatalogs").toObject()));
+            const auto active=engine->provider();
+            ModelSelection selection{active.id,active.model,session->presetId,{},{}};
+            if(selection.modelId.isEmpty())selection={session->providerId,session->model,session->presetId,{},{}};
+            const auto plan=resolveUtilityModelPlan(selection,m_providers,m_settings->preference("modelPresets").toArray(),
+                m_settings->preference("utilityModels").toObject(),m_settings->preference("modelCatalogs").toObject());
+            engine->setCompressionModels(plan.compressionModels);
         }
         if(!configureTurnContext(id,message["content"].toString(),&error)){if(self)m_status->setText(error);if(safe)safe->cancel();return;}
         if(self&&safe){beginTranscriptLinkTurn(id,true);if(!saveSessions()&&safe)safe->cancel();}
@@ -472,11 +476,19 @@ void MainWindow::attachImage(const QImage& image){
 void MainWindow::submitPrompt(const QString& prompt){m_composer->setPlainText(prompt);send();}
 void MainWindow::configureUtilities(UtilityService* service,const Conversation& session){
     ModelSelection selection{session.providerId,session.model,session.presetId,{},{}};
-    const auto presets=m_settings->preference("modelPresets").toArray();const auto catalogs=m_settings->preference("modelCatalogs").toObject();service->setMainModels(selectedModelChain(selection,m_providers,presets,catalogs));
-    QJsonObject activePreset;for(const auto& value:presets)if(value.toObject()["id"].toString()==session.presetId&&!session.presetId.isEmpty()){activePreset=value.toObject();break;}
-    const auto titles=activePreset.isEmpty()?m_settings->preference("utilityModels.titleGeneration").toArray():activePreset["titleGeneration"].toArray();
-    const auto compression=activePreset.isEmpty()?m_settings->preference("utilityModels.contextCompression").toArray():activePreset["contextCompression"].toArray();
-    service->setTitleModels(resolveModelEntries(m_providers,titles,catalogs));service->setCompressionModels(resolveModelEntries(m_providers,compression,catalogs));
+    const auto presets=m_settings->preference("modelPresets").toArray();
+    const auto catalogs=m_settings->preference("modelCatalogs").toObject();
+    // Failover can leave a later preset model active. Retain it only while it
+    // still belongs to this conversation's current configured selection.
+    if(const auto* engine=m_engines.value(session.id)){
+        const auto active=engine->provider();
+        for(const auto& model:selectedModelChain(selection,m_providers,presets,catalogs))
+            if(model.provider.id==active.id&&model.provider.model==active.model){selection.providerId=active.id;selection.modelId=active.model;break;}
+    }
+    const auto plan=resolveUtilityModelPlan(selection,m_providers,presets,m_settings->preference("utilityModels").toObject(),catalogs);
+    service->setMainModels({});
+    service->setTitleModels(plan.titleModels);
+    service->setCompressionModels(plan.compressionModels);
 }
 void MainWindow::generateTitle(const QString& id){
     auto* session=find(id);if(!session||session->titleLocked||session->autoTitleAttempted||session->messages.isEmpty())return;

@@ -1,0 +1,14 @@
+********* Start testing of ClaudeResumeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeResumeTest::initTestCase()
+FAIL!  : ClaudeResumeTest::missingSessionRecoversOnce(before-initialize) Compared values are not the same
+   Actual   (done[0][0].toJsonObject().value("status").toString()): "failed"
+   Expected (QString("completed"))                                : "completed"
+D:/age/ADE/private/claude-resume-stage/tests/test_claude_resume.cpp(35) : failure location
+FAIL!  : ClaudeResumeTest::missingSessionRecoversOnce(after-prompt) Compared values are not the same
+   Actual   (done[0][0].toJsonObject().value("status").toString()): "failed"
+   Expected (QString("completed"))                                : "completed"
+D:/age/ADE/private/claude-resume-stage/tests/test_claude_resume.cpp(35) : failure location
+PASS   : ClaudeResumeTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 1724ms
+********* Finished testing of ClaudeResumeTest *********

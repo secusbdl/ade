@@ -102,6 +102,18 @@ QString AcpToolPresentation::sourceName(const QJsonObject &tool) {
   }
   return {};
 }
+bool AcpToolPresentation::isQuestionWrapper(const QJsonObject &tool) {
+  const auto name=sourceName(tool);
+  return name=="request_user_input" || name.contains("stagewise_request_user_input") ||
+      tool.value("title").toString().contains("stagewise_request_user_input") ||
+      tool.value("rawInput").toObject().value("tool")=="stagewise_request_user_input";
+}
+bool AcpToolPresentation::suppressQuestionWrapperPart(const QJsonObject &part) {
+  const auto mapped=part.value("acpPresentation").toObject();
+  if(part.value("type")!="tool" || mapped.value("questionWrapper")!=true ||
+      part.value("state")=="approval-requested" || part.value("approvalSeen")==true)return false;
+  return valid(mapped);
+}
 QString AcpToolPresentation::mountedPath(const QString &path,const QList<AcpDisplayMount> &mounts) {
   if(!absolute(path)) {
     for(const auto &mount:mounts)if(path.section('/',0,0)==mount.prefix)return path;
@@ -182,10 +194,13 @@ QJsonObject AcpToolPresentation::map(const QJsonObject &tool,const QList<AcpDisp
     }
     entries.append(entry);
   }
-  return {{"version",1},{"entries",entries},{"omitted",omitted},{"truncated",budget.truncated||omitted>0}};
+  QJsonObject result{{"version",1},{"entries",entries},{"omitted",omitted},{"truncated",budget.truncated||omitted>0}};
+  if(isQuestionWrapper(tool))result["questionWrapper"]=true;
+  return result;
 }
 bool AcpToolPresentation::valid(const QJsonObject &value) {
-  if(!onlyKeys(value,{"version","entries","omitted","truncated"})||value["version"]!=1||!value["entries"].isArray()||!value["truncated"].isBool()||!value["omitted"].isDouble())return false;
+  if(!onlyKeys(value,{"version","entries","omitted","truncated","questionWrapper"})||value["version"]!=1||!value["entries"].isArray()||!value["truncated"].isBool()||!value["omitted"].isDouble())return false;
+  if(value.contains("questionWrapper")&&!value.value("questionWrapper").isBool())return false;
   const auto entries=value["entries"].toArray();const double omitted=value["omitted"].toDouble();
   if(entries.isEmpty()||entries.size()>MaximumEntries||omitted<0||omitted>1000000||omitted!=std::floor(omitted))return false;
   int total=0;

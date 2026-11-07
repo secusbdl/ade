@@ -121,7 +121,7 @@ void UtilityService::start(bool title, const QString &prompt) {
         for (const auto &entry : models) {
             const auto &p = entry.provider;
             const auto key = QString::fromUtf8(QJsonDocument(QJsonArray{p.id, p.model}).toJson(QJsonDocument::Compact));
-            if (p.model.isEmpty() || seen.contains(key)) continue;
+            if (p.isExternalHarness() || p.model.isEmpty() || seen.contains(key)) continue;
             seen.insert(key); m_candidates.append(entry);
         }
     };

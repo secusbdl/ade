@@ -25,6 +25,8 @@ struct AttachmentLimits {
 class AttachmentPipeline {
 public:
     explicit AttachmentPipeline(AttachmentStore store);
+    static QJsonArray prepareImage(const QByteArray &bytes,const AttachmentRef &reference,
+                                  const ModelMediaCapabilities &capabilities,QString *error=nullptr);
     void setFileReadLease(FileReadSnapshotStore::Lease lease) { m_readLease=std::move(lease); }
     QJsonObject capture(const QString &agentId, const QJsonArray &references, const AttachmentMounts &mounts,
                         QString *error = nullptr);

@@ -7,6 +7,7 @@
 #include "AgentPresentation.h"
 #include "QuestionForm.h"
 #include "ProviderUsage.h"
+#include "harness/HarnessPreparedTurn.h"
 #include <QJsonArray>
 #include <QMap>
 #include <QNetworkAccessManager>
@@ -70,6 +71,10 @@ public:
     bool cancelQuestion(const QString& token,const QJsonObject& draft={});
     using MessagePreparer = std::function<QJsonArray(const QJsonArray &, const ProviderConfig &, QString *)>;
     void setMessagePreparer(MessagePreparer preparer);
+    // Factory executes on the owner thread; returned job contains only values
+    // and runs off-thread. Transient paths/leases never enter saved history.
+    using HarnessInputPreparer=std::function<HarnessInputJob(const QJsonArray&,const ProviderConfig&,QString*)>;
+    void setHarnessInputPreparer(HarnessInputPreparer preparer);
     void setFileReadCommitter(FileReadCommitter committer);
     void setFileMutationExecutor(FileMutationExecutor executor);
     using MutationRecovery=std::function<QJsonArray(const QStringList&,QString*)>;
@@ -134,10 +139,11 @@ private:
     void finishQuestion(const QString& reason);
     void requestModel();
     void requestHarness();
+    void dispatchPreparedHarness(const QJsonArray& input,const QStringList& transcript);
     void requestAcpHarness(const QJsonArray& input,const QStringList& transcript);
     void requestClaudeHarness(const QJsonArray& input,const QStringList& transcript);
     void stopHarness();
-    void retainHarnessResponse();
+    void retainHarnessResponse(bool completed = false);
     void consumeHarnessEvent(const QJsonObject& event);
     void finishHarnessQuestion(const QString& reason);
     void readReply();
@@ -187,6 +193,9 @@ private:
     QString m_externalHarnessContext;
     std::function<QString()> m_dynamicSystemContext;
     MessagePreparer m_messagePreparer;
+    HarnessInputPreparer m_harnessInputPreparer;
+    std::shared_ptr<std::atomic_bool> m_harnessPreparing;
+    HarnessAttachments m_harnessAttachments;
     ModelFallback m_fallback;
     QNetworkAccessManager m_network;
     QPointer<QNetworkReply> m_reply;

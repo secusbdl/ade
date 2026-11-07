@@ -1,0 +1,15 @@
+********* Start testing of UtilityHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UtilityHostTest::initTestCase()
+PASS   : UtilityHostTest::externalPresetCompactUsesGlobal(codex)
+PASS   : UtilityHostTest::externalPresetCompactUsesGlobal(opencode)
+PASS   : UtilityHostTest::externalPresetCompactUsesGlobal(claude-code)
+PASS   : UtilityHostTest::externalPresetTitleUsesGlobal()
+QWARN  : UtilityHostTest::globalPickerHonorsExactSecondInstance() This plugin does not support propagateSizeHints()
+QWARN  : UtilityHostTest::globalPickerHonorsExactSecondInstance() This plugin does not support propagateSizeHints()
+PASS   : UtilityHostTest::globalPickerHonorsExactSecondInstance()
+PASS   : UtilityHostTest::explicitPresetOverridesKeepOrderIdentityThinkingAndContext()
+PASS   : UtilityHostTest::hostPreservesUnavailableSavedUtilityRows()
+PASS   : UtilityHostTest::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 5232ms
+********* Finished testing of UtilityHostTest *********

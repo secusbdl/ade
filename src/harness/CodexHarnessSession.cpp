@@ -196,7 +196,9 @@ void CodexHarnessSession::beginThread() {
 void CodexHarnessSession::sendTurn() {
   if (!m_busy || m_interrupted)
     return;
-  auto input = m_input;
+  QString attachmentError;
+  auto input = mapHarnessAttachments(m_input,m_options.attachments,false,true,m_sessionCreated,&attachmentError);
+  if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
   if (m_sessionCreated && !m_options.historyContext.isEmpty())
     input.prepend(
         QJsonObject{{"type", "text"}, {"text", m_options.historyContext}});
@@ -629,6 +631,7 @@ void CodexHarnessSession::shutdown() {
   m_pending.clear();
   m_requests.clear();
   m_server.stop();
+  m_options.attachments={};
   m_workspaceBinding={};m_threadId.clear();m_turnId.clear();
 }
 void CodexHarnessSession::finish(const QString &status, const QString &error) {

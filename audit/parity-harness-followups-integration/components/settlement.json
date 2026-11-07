@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "status": "private_frozen_ready_for_root_integration_not_integrated_or_live_verified",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "observedRootHead": "48318e02cc2603350405d1067973011d3795ed7d",
+  "rootWorkingTreeScope": "Root has uncommitted parallel integration; exact baseline hashes below, not HEAD alone, identify this patch base.",
+  "patch": "private/acp-settlement-stage/settlement.patch",
+  "cmake": "private/acp-settlement-stage/CMAKE-HANDOFF.txt",
+  "files": [
+    {
+      "path": "src/harness/AcpHarnessSession.cpp",
+      "baselineCanonicalLfSha256": "e63b6b397599d58e755f39125e2e177841bad61d4394e787c37e70fcf7ac1a47",
+      "stagedCanonicalLfSha256": "925a88f76bef966861068b5af0d866ad352cfa05adc589274b48dc0f313cd13e"
+    },
+    {
+      "path": "src/harness/AcpHarnessSession.h",
+      "baselineCanonicalLfSha256": "bb8193b2c6989cf4ff7eca6cb4e1818ef7c7f6ed0f352628081bf894c66657a1",
+      "stagedCanonicalLfSha256": "eedccbe15dbff091332690d8d806efff35c9720ab5768a4b85b3eb75ba6d43a2"
+    },
+    {
+      "path": "tests/support/AcpFixture.cpp",
+      "baselineCanonicalLfSha256": "0aa488421783effd4e518b003944d34e4f7879b4982650021e96795a2f1b9af5",
+      "stagedCanonicalLfSha256": "04ec84f4e6d8cc84ed61c87401704fd57db3373e9351fefcefbb2f073059865a"
+    },
+    {
+      "path": "tests/support/AcpSettlementFixture.cpp",
+      "baselineCanonicalLfSha256": null,
+      "stagedCanonicalLfSha256": "478a13f29cc138a605950f95e955f9504a79421010835b4794e09eb4f42cfd42"
+    },
+    {
+      "path": "tests/test_acp_settlement.cpp",
+      "baselineCanonicalLfSha256": null,
+      "stagedCanonicalLfSha256": "391b41c45dd53e43d4f8c5779b7e679c696933f27343e42966ee0482c5d9a49d"
+    }
+  ],
+  "upstream": [
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "startLine": 81,
+      "endLine": 83,
+      "canonicalLfSha256": "69362f0a709eba8daaa5b3413121fffbd5572c60fd35301d7b45e2ee791c2c07"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "startLine": 754,
+      "endLine": 841,
+      "canonicalLfSha256": "69362f0a709eba8daaa5b3413121fffbd5572c60fd35301d7b45e2ee791c2c07"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/providers/opencode/acp-adapter.ts",
+      "startLine": 41,
+      "endLine": 46,
+      "canonicalLfSha256": "cf4459cc13b77b885b17042398ab45ebba85b2e8bd0b486a79d4df51891cb119"
+    }
+  ],
+  "behavior": [
+    "OpenCode rejection marks the current prompt and continues in the same owned session/turn with exactly the pinned no-retry text, after pending human decisions settle.",
+    "Continuation input is one text block only; original user input, history/context, denied command and media are never automatically resent.",
+    "After terminal prompt response, nonterminal execute tools wait for further tool updates. The one-second quiet window restarts on tool activity; completed/failed states stop waiting.",
+    "A stale command is marked failed, preserving its existing output; at most three pinned no-retry recovery prompts follow.",
+    "An early terminal prompt response does not discard outstanding approvals/questions, including existing MCP forms.",
+    "Cancellation, shutdown, replacement, output-bound failure and observer deletion prevent queued obsolete continuation/completion.",
+    "Nested terminal notification during stale sweep is respected; current per-key status and pending-decision state are rechecked before each stale transition."
+  ],
+  "intentionalNativeBounds": [
+    "At most eight total continuation prompts (including denials and stale recoveries); another attempt fails explicitly. Pinned rejection loop itself has no matching count cap.",
+    "One shared active-time budget uses existing promptTimeoutMs (100..600000 ms) for prompt/settlement/continuations. Native/MCP human waits pause this budget. The pinned runtime has no equivalent whole-turn active-time cap.",
+    "Existing 4 MiB aggregate output/20000 event and process/request limits remain unchanged."
+  ],
+  "beforeReproductions": [
+    "Original production adapter: denial stops after first prompt, late command output lost, early prompt completion discards pending approval (before:2 pass/3 fail).",
+    "First staged settlement sweep: nested completed command overwritten as failed (peer-before:2 pass/1 fail); fixed by current-state revalidation and actual-stale accounting."
+  ],
+  "testEvidence": [
+    {
+      "path": "private/acp-settlement-stage/before.txt",
+      "passed": 2,
+      "failed": 3,
+      "skipped": 0,
+      "milliseconds": 885,
+      "canonicalLfSha256": "62587f689f360ad4c01dc59813dbd93063bb38dd2455a093fdaa4a5354f97e25"
+    },
+    {
+      "path": "private/acp-settlement-stage/after.txt",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 944,
+      "canonicalLfSha256": "a1679eb040263fff51421d2161f60354d23277efb1485f23654b04b0e63faa7c"
+    },
+    {
+      "path": "private/acp-settlement-stage/expanded.txt",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 11075,
+      "canonicalLfSha256": "497723268fb890038755e49cc601527c4e4b0afa828e7672ec7e1fc456932e20"
+    },
+    {
+      "path": "private/acp-settlement-stage/final.txt",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 11111,
+      "canonicalLfSha256": "90928978af25a74ecb48f36de276dc5d086807d595430f4061042c32d8f54abd"
+    },
+    {
+      "path": "private/acp-settlement-stage/peer-before.txt",
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "milliseconds": 1387,
+      "canonicalLfSha256": "aa77a0c8722ddbd6dbc9b976e428246c1d5b16f4a72775b0235886fb11818e6a"
+    },
+    {
+      "path": "private/acp-settlement-stage/peer-after.txt",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 12222,
+      "canonicalLfSha256": "a6b9cb5fcfdee989a5c272109a9a112ef23d666c987c22344f2a74572504d2b4"
+    },
+    {
+      "path": "private/acp-settlement-stage/compat-final-acp.txt",
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 8471,
+      "canonicalLfSha256": "8777548f7bfa17fac6146b08e76b634776deb61ebc49ec936511d99d29168303"
+    },
+    {
+      "path": "private/acp-settlement-stage/compat-final-acp_engine.txt",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3222,
+      "canonicalLfSha256": "485315918d3e07cc6301d5a204fd884098dfc0943b37b4b050026e6ab60f5bba"
+    },
+    {
+      "path": "private/acp-settlement-stage/compat-final-acp_mcp.txt",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 5384,
+      "canonicalLfSha256": "8399dcaeedd42533468a9b1b5e883db8ef6c059ce139ca74a8cd3fa508eef236"
+    },
+    {
+      "path": "private/acp-settlement-stage/compat-final-mcp_engine.txt",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 4208,
+      "canonicalLfSha256": "57d4b61dcb99edd52ec03270157a4bafe176b6e1581c2bcbc14d84b09b4f3c98"
+    }
+  ],
+  "latestSuiteCounts": {
+    "newSettlement": 15,
+    "existingAcp": 32,
+    "existingEngine": 15,
+    "existingAcpMcp": 11,
+    "existingMcpEngine": 14,
+    "total": 87
+  },
+  "testMethod": "Private native Qt process fixtures, actual AgentEngine, and existing compatibility tests linked to frozen root archives plus exact privately compiled class/allocator/moc overrides. No shared build/source changes, UI, accounts, credentials, network or model calls. Root integration/full gate remains required.",
+  "compatibilityFixtureChange": "AcpFixture recognizes only the exact pinned single-text denial continuation and emits ACP_CONTINUED; its original approval scenario remains unchanged. Previously the fake process replayed its initial permission request forever for every prompt.",
+  "integrationNotes": [
+    "Patch changes only AcpHarnessSession.{h,cpp}, the existing fake ACP fixture, and adds the new fixture/test. Do not copy the private unchanged AgentEngineAcp.cpp override into production.",
+    "Recompile all allocations/consumers after class layout change. The private Engine override exists only for ABI-safe linking to frozen archives.",
+    "History-continuity patch is independent (Engine/proof), and remains separately frozen.",
+    "Attachment owner modifies ACP input/media validation/prompt; these response/settlement/lifecycle hunks should merge narrowly. Do not replace a newer full class from this private copy."
+  ],
+  "limits": [
+    "No live OpenCode validation for this change; deterministic ACP behavior establishes only covered scenarios.",
+    "The adapter does not execute or auto-approve a denied action; an external model may request a new action, which still follows ordinary explicit approval and loop bounds.",
+    "Late results arriving after the quiet-window recovery/whole-turn completion are outside retained active-turn ownership; this does not promise capture of arbitrarily delayed external output.",
+    "Native direct Claude/Codex settlement behavior is unchanged and not claimed equivalent by this slice."
+  ]
+}

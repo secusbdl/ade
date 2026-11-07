@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "status": "private_frozen_candidate_not_root_integrated_or_live_verified",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "observedRootHead": "823d5472cc0f945cf8e2d63874db85ff9fa159c7",
+  "rootScope": "Baseline is current uncommitted root integration, identified by canonical-LF hashes; no production/source/shared build writes occurred in this slice.",
+  "patch": "private/claude-resume-stage/claude-resume.patch",
+  "cmake": "private/claude-resume-stage/CMAKE-HANDOFF.txt",
+  "files": [
+    {
+      "path": "src/harness/ClaudeHarnessSession.h",
+      "baselineCanonicalLfSha256": "fd8c0e4128bdf6ce2025b2706aea4febb1b34aff906d7db5ebc3695478890497",
+      "stagedCanonicalLfSha256": "4c78dad4ef7dfd0b6893cb752b80ab86c966603c097fce42965eafa7f5bb05f4"
+    },
+    {
+      "path": "src/harness/ClaudeHarnessSession.cpp",
+      "baselineCanonicalLfSha256": "a4eb3d50bd09e4665151b3652593d95c9120aaefa03ef4b6c100b0eff98da343",
+      "stagedCanonicalLfSha256": "eeb50d26f8d58b770faf5e7b1d8d2eb74dc72e5bdf120533811b9abe87061052"
+    },
+    {
+      "path": "tests/support/ClaudeResumeFixture.cpp",
+      "baselineCanonicalLfSha256": null,
+      "stagedCanonicalLfSha256": "9f429860e924a49c11c33062ff46b04b16dcbcbf89f43686ac8402dda230faa8"
+    },
+    {
+      "path": "tests/test_claude_resume.cpp",
+      "baselineCanonicalLfSha256": null,
+      "stagedCanonicalLfSha256": "f047214ba89a5659699a195b70ee63c92df1704c7c8c5d4691470fc6efc46821"
+    }
+  ],
+  "sourceReferences": [
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "startLine": 315,
+      "endLine": 347,
+      "canonicalLfSha256": "69362f0a709eba8daaa5b3413121fffbd5572c60fd35301d7b45e2ee791c2c07"
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+      "startLine": 46,
+      "endLine": 88,
+      "canonicalLfSha256": "3718b96feac80e9e5d7da5b0c9338e9b55935b6d7373e71db3a75522f366a701"
+    },
+    {
+      "path": "private/claude-harness-plan/reference/src__claude_agent_sdk___internal__query.py",
+      "startLine": 91,
+      "endLine": 111,
+      "canonicalLfSha256": "e7d9d31d070d55e1f6d94a6b4331ef22ccd8742282e0823e1564aa1c382c8f4c"
+    },
+    {
+      "path": "private/claude-harness-plan/reference/src__claude_agent_sdk___internal__query.py",
+      "startLine": 540,
+      "endLine": 566,
+      "canonicalLfSha256": "e7d9d31d070d55e1f6d94a6b4331ef22ccd8742282e0823e1564aa1c382c8f4c"
+    }
+  ],
+  "officialSdkReference": {
+    "repository": "https://github.com/anthropics/claude-agent-sdk-python",
+    "commit": "2209f2c134fee914c0f75733b631a5fc238ca846",
+    "role": "Read-only MIT design reference; error_during_execution result carries errors[]; no SDK runtime dependency."
+  },
+  "installedCodeObservation": {
+    "versionPreviouslyObserved": "2.1.314",
+    "sha256": "66e00df32e6981f686a91f67287fcc86e6e1b80ba4973a7b7c4aa43c59986cfa",
+    "size": 301388448,
+    "diagnosticLiteral": "No conversation found with session ID: ",
+    "literalPresent": true,
+    "literalByteOffset": 126870932,
+    "scope": "Read-only executable bytes only. No CLI invocation, authentication/profile read or model/network request. Literal presence plus official SDK envelope is not an observed live missing-session response."
+  },
+  "reproducedBefore": {
+    "report": "before.txt",
+    "passed": 2,
+    "failed": 2,
+    "cases": [
+      "Exact missing-session result before initialize leaves resume failing/timing out.",
+      "Exact missing-session result after initial resume prompt fails whole user turn."
+    ]
+  },
+  "implemented": [
+    "An attempted saved resume/fork may recover once only if the exact typed root error identifies that owned session UUID and no output/tool/permission/background activity has occurred.",
+    "Required envelope: result/error_during_execution/is_error true, exactly one errors[] string equal to installed missing-session diagnostic plus requested UUID; no nested parent, malformed/non-human origin or nonempty result payload.",
+    "Old process is stopped; fresh launch is queued and bound to existing generation/owner/retained physical workspace. Root identity is revalidated before launch.",
+    "Fresh UUID is independent; same user turn ID and original remaining deadline are retained; canonical user/assistant history and current context/input are sent exactly once to the new session.",
+    "Generic transport, auth, quota, billing, network and arbitrary errors fail without replay. Partial output stays retained; any prior tool request blocks replay even if denied or auto-approved.",
+    "Cancel, shutdown, observer deletion or replacement after missing frame but before queued fresh launch suppresses obsolete retry. Fresh failure does not retry again.",
+    "Unchanged valid resume/live next turn and foreign owner/workspace policy remain unchanged."
+  ],
+  "intentionalDifferences": [
+    "Pinned generic ACP runtime catches any resume failure and creates a session before prompting. Native direct Claude has no separate resume RPC: recovery is intentionally narrower and recognizes only a verified owned missing-session diagnostic, avoiding replay on account/transport/arbitrary failures.",
+    "If installed CLI changes diagnostic wording/envelope or emits only stderr/exit failure, recovery fails closed; it does not guess from prose substrings.",
+    "Partial-activity missing errors do not auto-recover because replay could repeat externally executed work. Original partial display is preserved."
+  ],
+  "reports": [
+    {
+      "path": "private/claude-resume-stage/before.txt",
+      "passed": 2,
+      "failed": 2,
+      "skipped": 0,
+      "milliseconds": 1724,
+      "canonicalLfSha256": "af8f41aee681c4f6541a19a71645645b35afd4024059381be9f32adcf349166b"
+    },
+    {
+      "path": "private/claude-resume-stage/after.txt",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 844,
+      "canonicalLfSha256": "3b0a80564ae1752dce947001436fa1c976c086ddb1a8ee5e26a563a125979a92"
+    },
+    {
+      "path": "private/claude-resume-stage/expanded.txt",
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 7658,
+      "canonicalLfSha256": "eef7a068eec1d133ddfc34d7222823ca69cf2bb4185ed542162894b31078e5a7"
+    },
+    {
+      "path": "private/claude-resume-stage/compat-claude_session.txt",
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 7588,
+      "canonicalLfSha256": "0602a81d1ae530f66364849d0dbc7b5663f964f1ef5344853fbc2224fb7cdbc3"
+    },
+    {
+      "path": "private/claude-resume-stage/compat-claude_engine.txt",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2755,
+      "canonicalLfSha256": "98b384b3323573d5506dd24a02f4fe0031c13f847960bc2eb6be11dab74d1088"
+    },
+    {
+      "path": "private/claude-resume-stage/compat-claude_control.txt",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 2205,
+      "canonicalLfSha256": "8a3b4a01ebfcbe17e8f15b524598b8b73c95f6145c69c79e3ec605a5cb4db3e0"
+    },
+    {
+      "path": "private/claude-resume-stage/compat-claude_stream.txt",
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 201,
+      "canonicalLfSha256": "07f5b6b1784117e1a590be59bdf6bcaa692b8ca8ed0df3dc4ccd092d534e8a87"
+    }
+  ],
+  "latestCounts": {
+    "newResume": 31,
+    "existingSession": 22,
+    "existingEngine": 15,
+    "existingControl": 18,
+    "existingStream": 19,
+    "total": 105
+  },
+  "testScope": "Actual native QProcess fixtures and AgentEngine integration; root frozen archives plus privately rebuilt class/moc/allocator override. Counts include suite lifecycle rows. No full app/gate/live credential or inference verification claimed.",
+  "mergeNotes": [
+    "Only two ClaudeHarnessSession files change; two new fixture/test files. Rebuild consumers for class layout change.",
+    "Private src/core/AgentEngineClaude.cpp is unchanged ABI-only allocation support for isolated linking; do NOT copy it into production.",
+    "Attachment owner edits options attachment lease/sendPrompt mapping/shutdown lease clear. Preserve those hunks; this patch does not alter sendPrompt data mapping.",
+    "History-continuity/ACP-settlement are separate frozen patches, unchanged here. Canonical history remains caller-owned; this slice invokes existing fresh-session sendPrompt behavior."
+  ],
+  "limits": [
+    "Actual installed Claude missing-session error envelope and real subscription behavior were not exercised.",
+    "No claim of complete Claude/Stagewise parity; missing shared MCP, approval policies and unrelated harness gaps remain separately tracked."
+  ]
+}

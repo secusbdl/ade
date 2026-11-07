@@ -1,4 +1,5 @@
 #pragma once
+#include "HarnessPreparedTurn.h"
 #include "HarnessWorkspace.h"
 #include "JsonRpcProcess.h"
 #include "QuestionMcpBridge.h"
@@ -14,6 +15,7 @@ struct AcpHarnessOptions {
   int promptTimeoutMs = 600000;
   bool thinkingDisabled = false;
   bool alwaysAllow = false;
+  HarnessAttachments attachments;
 };
 // Native OpenCode ACP v1 session. The optional external CLI owns authentication
 // and tools; this class never reads its credential files or exports tokens.
@@ -28,7 +30,8 @@ public:
   void shutdown();
   bool answerApproval(const QString &token, bool allow);
   bool answerQuestion(const QString &token, const QJsonObject &answers);
-  bool validQuestionAnswer(const QString& token,const QJsonObject& answers) const;
+  bool validQuestionAnswer(const QString &token,
+                           const QJsonObject &answers) const;
   bool cancelQuestion(const QString &token);
   bool completeStagewiseQuestion(const QString &token,
                                  const QJsonObject &result,
@@ -72,6 +75,11 @@ private:
   bool publish(QJsonObject event);
   bool active(quint64 generation) const;
   void refreshPromptDeadline();
+  void scheduleSettlement(bool toolActivity = false);
+  void settlePrompt();
+  void settleExpired();
+  void continuePrompt(const QString &text);
+  QStringList activeCommands() const;
   bool publishStagewiseQuestion(const QString &token, const QJsonObject &form,
                                 const QJsonObject &result = {},
                                 const QString &error = {});
@@ -94,5 +102,10 @@ private:
   int m_partSequence = 0;
   bool m_busy = false, m_initialized = false, m_created = false;
   bool m_promptSent = false, m_interrupted = false;
+  QTimer m_settleTimer, m_turnTimer;
+  int m_turnRemaining = -1, m_continuations = 0, m_staleRecoveries = 0;
+  bool m_promptReturned = false, m_permissionRejected = false,
+       m_settlementQueued = false, m_staleLimitReached = false;
+  QString m_nextPrompt;
 };
 } // namespace ade

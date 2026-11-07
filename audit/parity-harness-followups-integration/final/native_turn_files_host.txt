@@ -1,0 +1,16 @@
+********* Start testing of TurnFilesHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TurnFilesHostTest::initTestCase()
+PASS   : TurnFilesHostTest::interruptedSavedDispatchHydratesOnOpenAndPersistsRecoveredResult(direct-unsettled)
+PASS   : TurnFilesHostTest::interruptedSavedDispatchHydratesOnOpenAndPersistsRecoveredResult(sandbox-settled-without-outer-result)
+PASS   : TurnFilesHostTest::savedHistoryLoadsTreeAndDefaultFileOpensCurrentGitDiff()
+PASS   : TurnFilesHostTest::headerOpensCurrentSidebarWithoutUndoPanel()
+PASS   : TurnFilesHostTest::explicitSavedDiffUsesOriginalBytesAfterOutsideEdit()
+PASS   : TurnFilesHostTest::staleOrForeignSignalsDoNotOpenTabs()
+PASS   : TurnFilesHostTest::olderThanTwoHundredMutationsCanReviewAndUndo()
+PASS   : TurnFilesHostTest::originalWorkspaceDirtyEditorBlocksUndoAfterReconnect()
+PASS   : TurnFilesHostTest::retainedPanelPathsFailClosedForMissingIds()
+PASS   : TurnFilesHostTest::sideChatDifferentWorkspaceOpensItsOwnCurrentDiff()
+PASS   : TurnFilesHostTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 16781ms
+********* Finished testing of TurnFilesHostTest *********

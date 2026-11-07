@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "status": "private_frozen_patch_ready_not_applied_to_production",
+  "referenceCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeHeadAtFreeze": "823d5472cc0f945cf8e2d63874db85ff9fa159c7",
+  "baseline": "Current root working-tree bytes including integrated continuity, ACP settlement and Claude resume. Only narrow attachment deltas are included; subsequent MCP wrapper edits remain untouched and all patches check clean.",
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+      "line": 90,
+      "contract": "Resolve actual mounted path. Known image plus advertised capability plus <=20 MiB => inline original bytes; otherwise file:// resource_link containing basename,size and optional image MIME. Stat/read failure => textual actual-path fallback."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.test.ts",
+      "line": 42,
+      "contract": "Binary [0,255] remains a resource_link; >20 MiB PNG is not inline."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/tool-mapper.ts",
+      "line": 130,
+      "contract": "Workspace roots exclude att/apps/plugins/etc. resolveMountedPath performs lexical containment."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "line": 318,
+      "contract": "New/resume additionalDirectories are other workspace roots, not every attachment directory."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/acp/process-client.ts",
+      "line": 115,
+      "contract": "Client advertises plan/form/config capabilities, not a host attachment filesystem callback service."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/services/attachments/service.ts",
+      "line": 18,
+      "contract": "Per-agent blobs: temp-rename write, archive preserves, hard-delete removes, fork copies."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/services/toolbox/path-resolution.ts",
+      "line": 79,
+      "contract": "Native universal-toolbox att mount is read-only. This does not establish external CLI filesystem enforcement."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/claude-code/acp-adapter.ts",
+      "line": 9,
+      "contract": "Pinned Claude uses a Node>=22 ACP wrapper around installed Claude; ADE uses direct native stream-json."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/providers/codex/acp-adapter.ts",
+      "line": 10,
+      "contract": "Pinned Codex uses bundled ACP wrapper; ADE direct app-server is a different transport."
+    }
+  ],
+  "patchOrder": [
+    {
+      "path": "components.patch",
+      "sha256": "e0e270a2fc52ebd13451619982cc67fa73b6fcde036264a36b72d77f032bdd6c",
+      "currentRootApplyCheck": "passed_without_whitespace_overrides"
+    },
+    {
+      "path": "runtime.patch",
+      "sha256": "cf68ccdb582653f038b71b11dae664fe8b8d179699ed78ae29c2c7730183ae28",
+      "currentRootApplyCheck": "passed_without_whitespace_overrides"
+    },
+    {
+      "path": "cleanup.patch",
+      "sha256": "7bd3767e703e117bb2e2e59c0ad7b21519b3753054f536ff710447ec963d618b",
+      "currentRootApplyCheck": "passed_without_whitespace_overrides"
+    },
+    {
+      "path": "tests.patch",
+      "sha256": "61cb96b6339243f2ff341593f242ff6c7cd9dc76c1080d8dcbcf246f531fba37",
+      "currentRootApplyCheck": "passed_without_whitespace_overrides"
+    }
+  ],
+  "cmake": {
+    "path": "CMAKE-ADDITIONS.cmake",
+    "sha256": "6a48adc7336f56c90e869d4e31b43036ab048227941ef8c877cbe437be3e1abe",
+    "requirements": [
+      "ade_harness adds Qt6::Sql; existing glob picks new harness sources",
+      "ade_host adds HarnessInputPreparation.cpp/.h",
+      "Store failure-hook test compiles Store/PreparedTurn/Workspace independently with its test macro; never mix class layouts",
+      "Three dedicated fixture source files preserve shared Codex/ACP/Claude fixtures unchanged",
+      "Four new test targets; existing harness_files and attachments tests are retained"
+    ]
+  },
+  "implementation": {
+    "storage": "Fixed host owner, pinned local Windows profile/ancestors, exclusive owner lock; SQLite FULL manifest plus physical file identities and captured hashes; separate harness-attachments/<sha256(owner)> path, never a selected workspace.",
+    "leases": "Only captured host-validated original bytes construct leases. Read handles deny ordinary writer/deletion opens while active; no claim of an OS security boundary against the same user.",
+    "preparation": "Copied immutable owner/mount/history inputs run on QtConcurrent, with atomic cancellation and Engine generation/current-job checks before process dispatch. HTTP preparation remains separate.",
+    "canonicalHistory": "Replay selects exact reference+hash identities only from the latest ade_compressedHistory boundary onward, current message once, previous rows chronologically. Removed/future/older summarized references do not regain authority. Different versions of one logical path remain distinct.",
+    "transport": "ACP file:// resource_link for arbitrary files and unsupported/oversized inline images. Direct Codex/Claude get bounded JSON text descriptors with actual owner-scoped paths. Existing image/text preparation is retained through a shared pure image conversion helper.",
+    "continuity": "Cross-owner CLI history with attachment paths starts a fresh session using child-owned copies; fresh-session shutdown preserves just-prepared leases only after generation/lifetime validation. No permission flags, additional directories, approval mode or workspace grants are widened.",
+    "durability": "Captured input is independent from evictable original snapshots. Fork copies original bytes into a new fixed owner; restart validates physical identity and digest. Cleanup retains a fixed-owner/profile/root identity receipt across final manifest/root deletion boundaries.",
+    "fallbackCleanupFix": "MainWindow pending cleanup and failed-fork rollback now include both owned fallback files and durable handoff storage. HarnessFileContext::removeAgent adopts only an existing pinned physical owner root; absent cleanup never creates one. Pending markers survive blocked cleanup and clear only after successful retry."
+  },
+  "bounds": {
+    "perFileBytes": 67108864,
+    "preparationUniqueBytes": 268435456,
+    "storeBytes": 536870912,
+    "storeEntries": 500,
+    "currentAttachments": 32,
+    "canonicalAttachmentReferences": 500,
+    "textDescriptorUtf8Bytes": 65536,
+    "mappedInputJsonBytes": 4194304,
+    "inlineImagePreparationJsonBytes": 3145728
+  },
+  "verification": {
+    "toolchain": "Windows 11; static Qt6.11.2; GCC16.2.0; native C++ fake child processes; no Node runtime",
+    "totalPassed": 107,
+    "failed": 0,
+    "skipped": 0,
+    "reports": {
+      "store-final": {
+        "report": "store-final.txt",
+        "sha256CanonicalLF": "cee1aac8a84adff2999772cf44456f910f5d3056677ada8ed32a553fbfec113d",
+        "observed": [
+          28,
+          0,
+          0
+        ]
+      },
+      "wire-final": {
+        "report": "wire-final.txt",
+        "sha256CanonicalLF": "105da84eb0ff687f3cb5c163a3694a6ab725d38662e1b7b2a2adb57cea6f2b9e",
+        "observed": [
+          12,
+          0,
+          0
+        ]
+      },
+      "host-final": {
+        "report": "host-final.txt",
+        "sha256CanonicalLF": "7a9a95229fcb57c012321ebce6b412030bec50930560470d3b300d15c2117963",
+        "observed": [
+          26,
+          0,
+          0
+        ]
+      },
+      "cleanup-final": {
+        "report": "cleanup-final.txt",
+        "sha256CanonicalLF": "d69d111b2d0819fb37e2e5ac7fece4401025f929983b37ca267e2b7e2069ac98",
+        "observed": [
+          5,
+          0,
+          0
+        ]
+      },
+      "files-final": {
+        "report": "files-final.txt",
+        "sha256CanonicalLF": "f87d559536605df6a58255e3cb079ab53a22554ea24ab6683c68a029b51a4c80",
+        "observed": [
+          13,
+          0,
+          0
+        ]
+      },
+      "attachments-compatibility": {
+        "report": "attachments-compatibility.txt",
+        "sha256CanonicalLF": "dc3f76ebcf12315270c644ef3a6ec0861b66add6ff1acae2b1286bb32ac363dd",
+        "observed": [
+          23,
+          0,
+          0
+        ]
+      }
+    },
+    "freshFinalBuild": "ninja no work to do before final six-suite run",
+    "scope": "Private coherent source build; actual AgentEngine/AgentToolHost and actual MainWindow cleanup paths. Integration against production macro-disabled Store and final application build remains parent-owned."
+  },
+  "beforeEvidence": [
+    {
+      "path": "clone-before.txt",
+      "result": "2 passed / 1 failed: concurrent foreign clone target adopted; fixed exclusive create preserves it."
+    },
+    {
+      "path": "history-before.txt",
+      "result": "2 passed / 3 failed: all adapters replayed a removed attachment after canonical history replacement; fixed exact canonical selection."
+    },
+    {
+      "path": "summary-before.txt",
+      "result": "2 passed / 3 failed: missing pre-summary attachment blocked valid compressed turns in all adapters; fixed same context boundary as fresh text replay."
+    },
+    {
+      "path": "cleanup-before.txt",
+      "result": "Actual pending cleanup left fallback directory and cleared blocked-cleanup marker. Its initial failed-fork row was a fixture setup error, not product evidence."
+    },
+    {
+      "path": "cleanup-fork-before.txt",
+      "result": "Corrected actual MainWindow fixture: 2 passed / 1 failed, failed CAS fork left2 fallback roots instead of1."
+    },
+    {
+      "path": "cleanup-store-before.txt",
+      "result": "READ_ATTRIBUTES-only directory blocker did not establish a sharing conflict on this Windows build; not claimed as reproduced product failure. Final regression uses GENERIC_READ, plus real process exits after manifest and root deletion."
+    }
+  ],
+  "limits": [
+    "No live model, paid API, authentication file or user workspace was used. Exact bytes reaching fake native children do not prove every real CLI will permit reading those paths; existing runtime permissions may ask or deny.",
+    "Historical file replay is an explicit native continuity enhancement. Pinned ACP replays historical text only; this implementation does not claim transport or reasoning identity with Stagewise.",
+    "Existing inline image resizing/encoding follows native model caps. Original arbitrary-file bytes remain exact; inline encoded image bytes need not equal the original file.",
+    "Actual process _Exit recovery is tested at reserved-file, deleted-file, deleted-manifest and deleted-root boundaries. This is not a universal power-loss guarantee. A crash before ownership metadata/receipt identity becomes durable can leave an unclaimed reserved object that fails closed instead of guessing deletion authority.",
+    "Unknown files, changed hashes/physical identities, unavailable captured legacy inputs and capacity limits fail explicitly. There is no automatic eviction of durable handoff originals.",
+    "The existing uncommitted-fork rollback reports a cleanup error if removal itself fails; this slice does not add a new SessionStore transaction/retry-marker protocol around a failed rollback after a concurrent revision change. Existing pendingCleanup markers are preserved and tested.",
+    "Windows local-volume implementation only. No Linux/macOS port or same-user process confinement claim."
+  ],
+  "peerReview": {
+    "native_core": "Canonical history/version issue independently found, reproduced across3 adapters, then bounded source review of corrected selection/watcher/generation/continuity found no additional concrete issue. Not a universal audit.",
+    "qt_port_review": "Bounded store read highlighted final directory cleanup retry ordering. Its proposed READ_ATTRIBUTES blocker was not effective here; stronger sharing and process-loss fixtures now pass."
+  },
+  "publicationScan": {
+    "scope": "32 intended source/test paths only; no credential/profile files read",
+    "patterns": "bounded PAT/private-key/project-key signatures",
+    "candidates": []
+  },
+  "hashBasis": "canonical LF UTF-8 source/report hashes; patch/CMake file hashes are exact bytes",
+  "sourceManifest": "source-manifest.json",
+  "testManifest": "test-manifest.json"
+}

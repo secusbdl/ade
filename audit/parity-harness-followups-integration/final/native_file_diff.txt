@@ -1,0 +1,17 @@
+********* Start testing of FileDiffTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : FileDiffTest::initTestCase()
+QWARN  : FileDiffTest::journalDiffIsDisplayOnly(openai) QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+PASS   : FileDiffTest::journalDiffIsDisplayOnly(openai)
+PASS   : FileDiffTest::journalDiffIsDisplayOnly(responses)
+PASS   : FileDiffTest::journalDiffIsDisplayOnly(anthropic)
+PASS   : FileDiffTest::journalDiffIsDisplayOnly(google)
+QWARN  : FileDiffTest::creationDeletionAndInvalidBytesAreDistinct() This plugin does not support propagateSizeHints()
+PASS   : FileDiffTest::creationDeletionAndInvalidBytesAreDistinct()
+PASS   : FileDiffTest::lineDiffIsMinimalAndBounded()
+QWARN  : FileDiffTest::malformedImportedDiffDoesNotRender() This plugin does not support propagateSizeHints()
+PASS   : FileDiffTest::malformedImportedDiffDoesNotRender()
+PASS   : FileDiffTest::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 148ms
+********* Finished testing of FileDiffTest *********

@@ -1,0 +1,231 @@
+********* Start testing of HarnessAttachmentsHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentsHostTest::initTestCase()
+FAIL!  : HarnessAttachmentsHostTest::summaryBoundaryExcludesMissingOlderAttachment(codex) 'engine.lastTurnSucceeded()' returned FALSE. ([
+    {
+        "content": "Older attached context",
+        "metadata": {
+            "attachments": [
+                {
+                    "originalFileName": "old.bin",
+                    "path": "att/old_9aa6b3bd858b406d9ce40f547e183493.bin"
+                }
+            ],
+            "pathMetadata": {
+                "att/old_9aa6b3bd858b406d9ce40f547e183493.bin": {
+                    "modified": "2026-11-06T23:44:21.604Z",
+                    "size": 3
+                }
+            },
+            "pathReferences": {
+                "att/old_9aa6b3bd858b406d9ce40f547e183493.bin": "76fe3925c7167317f2df68454339f5ec3650e4062178b4f2be219b105a507907"
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "Older reply",
+        "role": "assistant"
+    },
+    {
+        "ade_compressedHistory": "Earlier context summarized",
+        "content": "Summarized boundary",
+        "role": "user"
+    },
+    {
+        "content": "Continue from summary",
+        "role": "assistant"
+    },
+    {
+        "content": "Current request after summary",
+        "metadata": {
+            "display": {
+                "id": "0d93ac6e-a354-45b9-a87a-ea4ee23e950f",
+                "parts": [
+                    {
+                        "id": "0d93ac6e-a354-45b9-a87a-ea4ee23e950f/0",
+                        "state": "done",
+                        "text": "Current request after summary",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "",
+        "metadata": {
+            "display": {
+                "id": "7157eb12-1790-4806-8f41-f03f6930ac67",
+                "parts": [
+                    {
+                        "errorText": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "id": "7157eb12-1790-4806-8f41-f03f6930ac67/0",
+                        "state": "error",
+                        "text": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "type": "error"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "assistant"
+    }
+]
+)
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(61) : failure location
+FAIL!  : HarnessAttachmentsHostTest::summaryBoundaryExcludesMissingOlderAttachment(opencode) 'engine.lastTurnSucceeded()' returned FALSE. ([
+    {
+        "content": "Older attached context",
+        "metadata": {
+            "attachments": [
+                {
+                    "originalFileName": "old.bin",
+                    "path": "att/old_792fcd3e12ec4bae8c5a9ee3dbf02bb3.bin"
+                }
+            ],
+            "pathMetadata": {
+                "att/old_792fcd3e12ec4bae8c5a9ee3dbf02bb3.bin": {
+                    "modified": "2026-11-06T23:44:21.709Z",
+                    "size": 3
+                }
+            },
+            "pathReferences": {
+                "att/old_792fcd3e12ec4bae8c5a9ee3dbf02bb3.bin": "76fe3925c7167317f2df68454339f5ec3650e4062178b4f2be219b105a507907"
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "Older reply",
+        "role": "assistant"
+    },
+    {
+        "ade_compressedHistory": "Earlier context summarized",
+        "content": "Summarized boundary",
+        "role": "user"
+    },
+    {
+        "content": "Continue from summary",
+        "role": "assistant"
+    },
+    {
+        "content": "Current request after summary",
+        "metadata": {
+            "display": {
+                "id": "16bf27de-5747-4419-a86a-7ca2b0e0a08b",
+                "parts": [
+                    {
+                        "id": "16bf27de-5747-4419-a86a-7ca2b0e0a08b/0",
+                        "state": "done",
+                        "text": "Current request after summary",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "",
+        "metadata": {
+            "display": {
+                "id": "aaab514b-7baf-4f2a-99e9-b60658b618d0",
+                "parts": [
+                    {
+                        "errorText": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "id": "aaab514b-7baf-4f2a-99e9-b60658b618d0/0",
+                        "state": "error",
+                        "text": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "type": "error"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "assistant"
+    }
+]
+)
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(61) : failure location
+FAIL!  : HarnessAttachmentsHostTest::summaryBoundaryExcludesMissingOlderAttachment(claude-code) 'engine.lastTurnSucceeded()' returned FALSE. ([
+    {
+        "content": "Older attached context",
+        "metadata": {
+            "attachments": [
+                {
+                    "originalFileName": "old.bin",
+                    "path": "att/old_541d4c911c994e6982224459c4675794.bin"
+                }
+            ],
+            "pathMetadata": {
+                "att/old_541d4c911c994e6982224459c4675794.bin": {
+                    "modified": "2026-11-06T23:44:21.813Z",
+                    "size": 3
+                }
+            },
+            "pathReferences": {
+                "att/old_541d4c911c994e6982224459c4675794.bin": "76fe3925c7167317f2df68454339f5ec3650e4062178b4f2be219b105a507907"
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "Older reply",
+        "role": "assistant"
+    },
+    {
+        "ade_compressedHistory": "Earlier context summarized",
+        "content": "Summarized boundary",
+        "role": "user"
+    },
+    {
+        "content": "Continue from summary",
+        "role": "assistant"
+    },
+    {
+        "content": "Current request after summary",
+        "metadata": {
+            "display": {
+                "id": "239488c8-0efe-43c1-95c5-c7c1f525e872",
+                "parts": [
+                    {
+                        "id": "239488c8-0efe-43c1-95c5-c7c1f525e872/0",
+                        "state": "done",
+                        "text": "Current request after summary",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "",
+        "metadata": {
+            "display": {
+                "id": "de3b1a52-bb42-40df-bf94-341c0256742d",
+                "parts": [
+                    {
+                        "errorText": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "id": "de3b1a52-bb42-40df-bf94-341c0256742d/0",
+                        "state": "error",
+                        "text": "The captured attachment is unavailable: Attachment directory is unavailable.",
+                        "type": "error"
+                    }
+                ],
+                "version": 1
+            }
+        },
+        "role": "assistant"
+    }
+]
+)
+D:/age/ADE/private/harness-attachment-stage/tests/test_harness_attachments_host.cpp(61) : failure location
+PASS   : HarnessAttachmentsHostTest::cleanupTestCase()
+Totals: 2 passed, 3 failed, 0 skipped, 0 blacklisted, 319ms
+********* Finished testing of HarnessAttachmentsHostTest *********

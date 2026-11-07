@@ -90,6 +90,23 @@ QJsonArray AttachmentPipeline::transform(const QString &agentId, const Attachmen
     const QStringList raster{"png", "jpg", "jpeg", "gif", "webp", "bmp", "avif", "ico"};
     QBuffer input(&bytes); input.open(QIODevice::ReadOnly); QImageReader reader(&input); reader.setAutoTransform(true);
     if (raster.contains(extension) && reader.canRead()) {
+        return prepareImage(bytes,reference,capabilities,error);
+    }
+    FileReadParams params;if(explicitParams)params=*explicitParams;
+    else if (!reference.path.startsWith("att/")) params.preview = true;
+    FileTransformLimits transformLimits; transformLimits.maxFileBytes = limits.maxFileBytes;
+    transformLimits.maxReadChars = limits.maxReadChars; transformLimits.maxPreviewLines = limits.previewLines;
+    transformLimits.maxOutputChars = limits.maxTextChars;
+    const auto converted = FileTransformer::fromBytes(bytes, descriptor, params, transformLimits);
+    if (!converted.error.isEmpty()) { *error = converted.error; return {}; }
+    return FileTransformer::wrappedParts(descriptor, converted);
+}
+QJsonArray AttachmentPipeline::prepareImage(const QByteArray &capturedBytes,const AttachmentRef &reference,
+    const ModelMediaCapabilities &capabilities,QString *error) {
+    QString localError;if(!error)error=&localError;error->clear();
+    if(!validLimits(capabilities,{})||capturedBytes.size()>64*1024*1024){*error="Invalid bounded image input or capabilities.";return {};}
+    auto bytes=capturedBytes;QBuffer input(&bytes);input.open(QIODevice::ReadOnly);QImageReader reader(&input);reader.setAutoTransform(true);
+    if(!reader.canRead()){*error="The attachment image could not be decoded.";return {};}
         if (!capabilities.image) return {textPart(fileText(reference, "[Image content not available to this model]"))};
         const auto original = reader.size();
         if (!original.isValid() || qint64(original.width()) * original.height() > 64 * 1024 * 1024) { *error = "Image dimensions exceed the native decoding bound."; return {}; }
@@ -113,15 +130,6 @@ QJsonArray AttachmentPipeline::transform(const QString &agentId, const Attachmen
         if (encoded.size() > capabilities.maxImageBytes) { *error = "The image cannot fit this model's byte limit at the supported quality levels."; return {}; }
         return {textPart("<file path=\"" + reference.path.toHtmlEscaped() + "\"><metadata>" + QString::number(image.width()) + "x" + QString::number(image.height()) + " " + mime + "</metadata>"),
             QJsonObject{{"type", "image"}, {"mediaType", mime}, {"dataBase64", QString::fromLatin1(encoded.toBase64())}}, textPart("</file>")};
-    }
-    FileReadParams params;if(explicitParams)params=*explicitParams;
-    else if (!reference.path.startsWith("att/")) params.preview = true;
-    FileTransformLimits transformLimits; transformLimits.maxFileBytes = limits.maxFileBytes;
-    transformLimits.maxReadChars = limits.maxReadChars; transformLimits.maxPreviewLines = limits.previewLines;
-    transformLimits.maxOutputChars = limits.maxTextChars;
-    const auto converted = FileTransformer::fromBytes(bytes, descriptor, params, transformLimits);
-    if (!converted.error.isEmpty()) { *error = converted.error; return {}; }
-    return FileTransformer::wrappedParts(descriptor, converted);
 }
 QJsonArray AttachmentPipeline::prepare(const QJsonArray &history, const QString &agentId, const AttachmentMounts &mounts,
     const ModelMediaCapabilities &capabilities, const AttachmentLimits &limits, QString *error) {

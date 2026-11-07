@@ -2,6 +2,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QFile>
 #include <QProcess>
 #include <QTimer>
 #include <cstdio>
@@ -74,6 +75,7 @@ public:
         if (message["id"] != 2)
           continue;
         const auto result = message["result"].toObject();
+        if(scenario.startsWith("wrapper"))wrapper("completed",true);
         update(QString::fromUtf8(
             QJsonDocument(result).toJson(QJsonDocument::Compact)));
         helper.closeWriteChannel();
@@ -103,6 +105,12 @@ private:
                 QJsonObject{{"sessionUpdate", "agent_message_chunk"},
                             {"content", QJsonObject{{"type", "text"},
                                                     {"text", text}}}}}}}});
+  }
+  void wrapper(const QString& status,bool identified) {
+    QJsonObject tool{{"sessionUpdate",status=="pending"?"tool_call":"tool_call_update"},{"toolCallId","question-wrapper"},{"kind","other"},{"status",status},{"title",identified?"stagewise_request_user_input":"Ordinary MCP wrapper"}};
+    if(identified)tool["rawInput"]=QJsonObject{{"tool","stagewise_request_user_input"},{"arguments",form()}};
+    if(status=="completed")tool["content"]=QJsonArray{QJsonObject{{"type","content"},{"content",QJsonObject{{"type","text"},{"text","wrapper settled"}}}}};
+    send({{"jsonrpc","2.0"},{"method","session/update"},{"params",QJsonObject{{"sessionId","mcp-fixture-session"},{"update",tool}}}});
   }
   void done(QString reason = "end_turn") {
     if (prompt.isUndefined())
@@ -143,9 +151,23 @@ private:
     }
     if (method == "session/prompt") {
       prompt = id;
+      ++promptCount;
+      const auto log=qEnvironmentVariable("ADE_MCP_PROMPT_LOG");
+      if(!log.isEmpty()){QFile file(log);if(file.open(QIODevice::WriteOnly|QIODevice::Append))file.write(QJsonDocument(params).toJson(QJsonDocument::Compact)+'\n');}
+      if(scenario=="wrapper-approval-first" && promptCount>1){update("continued after decision");done();return;}
+      if(scenario.startsWith("wrapper") && scenario!="wrapper-approval-first"){
+        wrapper("pending",scenario!="wrapper-late");
+        if(scenario=="wrapper-late")QTimer::singleShot(50,this,[this]{wrapper("in_progress",true);});
+      }
       if (config.isEmpty()) {
         update("NO_MCP");
         done();
+        return;
+      }
+      if (scenario == "wrapper-approval-first") {
+        const QJsonObject tool{{"toolCallId","question-wrapper"},{"name","vendor-tool"},{"title","Ordinary approval"},{"kind","execute"},{"rawInput",QJsonObject{{"command","synthetic command, not executed"}}}};
+        send({{"jsonrpc","2.0"},{"id","native-approval"},{"method","session/request_permission"},{"params",QJsonObject{{"sessionId","mcp-fixture-session"},{"toolCall",tool},{"options",QJsonArray{QJsonObject{{"optionId","yes"},{"kind","allow_once"},{"name","Allow"}},QJsonObject{{"optionId","no"},{"kind","reject_once"},{"name","Deny"}}}}}}});
+        QTimer::singleShot(30,this,[this]{wrapper("in_progress",true);});
         return;
       }
       if (scenario == "approval-only") {
@@ -190,6 +212,11 @@ private:
       return;
     }
     if (id == "native-approval") {
+      if(scenario=="wrapper-approval-first"){
+        const auto selected=message["result"].toObject()["outcome"].toObject()["optionId"].toString();
+        const auto log=qEnvironmentVariable("ADE_MCP_DECISION_LOG");if(!log.isEmpty()){QFile file(log);if(file.open(QIODevice::WriteOnly|QIODevice::Append))file.write(selected.toUtf8()+'\n');}
+        wrapper(selected=="yes"?"completed":"failed",true);done();return;
+      }
       update("APPROVED");
       done();
       return;
@@ -240,6 +267,7 @@ private:
   QJsonObject config;
   QJsonValue prompt = QJsonValue::Undefined;
   QString scenario = qEnvironmentVariable("ADE_MCP_SCENARIO");
+  int promptCount=0;
   bool helperFinished = false, nativeAnswered = false;
 };
 } // namespace

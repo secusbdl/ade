@@ -1,0 +1,92 @@
+{
+  "verifiedUtc": "2026-11-07T00:16:33.239581+00:00",
+  "binarySha256": "dd58b6e6534b2772f2e3875b25a0759868c2f4b3cac7b8670830426949d99718",
+  "testedDirectory": "out/harness-followups-candidate-1",
+  "finalPackageBytesIdentical": true,
+  "runtime": "Installed managed-account Codex; gpt-6.1-sol; low reasoning effort",
+  "submittedUserTurns": 2,
+  "scope": "Actual Windows ADE composer and file picker, real CLI tools, close/restart of the same isolated profile. No auth UI or credential extraction.",
+  "firstTurn": {
+    "passed": true,
+    "capturedFileBytes": 16,
+    "capturedFileSha256": "6114a72df77b4161fca26cc86280f296f9e0d783b6837366597beb23a90d437d",
+    "actualCapturedPathToolObserved": true,
+    "exactReply": true,
+    "toolAttempts": [
+      {
+        "name": "commandExecution",
+        "state": "output-error"
+      },
+      {
+        "name": "commandExecution",
+        "state": "output-available"
+      }
+    ],
+    "toolRecovery": "First read used a .NET method denied by the existing constrained PowerShell environment. The CLI recovered with read-only Get-Content/Get-FileHash; no permission setting was changed."
+  },
+  "restartTurn": {
+    "passed": true,
+    "sameExternalSession": true,
+    "externalSessionIdSha256": "37d518bd81b8181828757c60b732efdb9d69d2af013eef3ac8f286b1b3c61825",
+    "additionalAssistantRows": 1,
+    "exactReply": true,
+    "toolCalls": 0,
+    "continuityBindings": 1
+  },
+  "workspaceUnchanged": true,
+  "originalAttachmentUnchanged": true,
+  "capturedOriginalMatches": true,
+  "exitCodes": [
+    0,
+    0
+  ],
+  "ownedTestProcessesRemaining": 0,
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/01-first-main.jpg",
+      "sha256": "80342bd26eaba3f7779e46d6da800d81e02a4044897a343addff29609f41c2f0"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/02-attachment-added.jpg",
+      "sha256": "05a7a6167bce94d282584d4eb304e992c34dbee1ebee0c01b80378627e164aac"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/03-first-send-enabled.jpg",
+      "sha256": "79f49e99bb7adfb9b036ec0a654eb6d7a57f69a014ddbda7c153149eca36fdf8"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/04-first-submitted.jpg",
+      "sha256": "d6c2dc7d7e9d5c54d01ed09d1f49e8e5a4e7857f71ebaca8f5e108d1a964cec0"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/05-first-live-result.jpg",
+      "sha256": "efeb02beab0321b97594687f5f3ed0d98c197e3deab9bbb0ec13567cb6020e83"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/06-restarted-session.jpg",
+      "sha256": "2c187a8c3a43907825121ae69e52e8c31fe869f8a72b345561592dad76d16c0d"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/07-restart-send-enabled.jpg",
+      "sha256": "41fa9a426857831b00998523aae1c282034995f2ffe45aa00685a69473a1ba80"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/08-restart-send-settled.jpg",
+      "sha256": "17306afb23b973f68cec509b3495cce2bfddaf7fd965bc95832f6034d9b85dfe"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/09-restart-submitted.jpg",
+      "sha256": "f7500b062f620c0632136d7f5faf48e437ba75b99fafb4011a8dea2161dfa30f"
+    },
+    {
+      "localPath": "private/parity-live/codex-continuity-followups-1/10-restart-completed.jpg",
+      "sha256": "3eb08f1b1dc495ca0c449251f43a667a4c51df99369ad52af9560b5a3358a846"
+    }
+  ],
+  "limits": [
+    "Two submitted user turns, not an assertion about the CLI provider billing/request count.",
+    "No end-to-end frame latency, paid Claude inference or every external file permission is established.",
+    "The label-clipping UI defect observed during this run is retained for a separate fix."
+  ]
+}

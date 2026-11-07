@@ -1,0 +1,18 @@
+********* Start testing of ComposerSearchTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ComposerSearchTest::initTestCase()
+PASS   : ComposerSearchTest::searchesAndPinsCurrentPhysicalEntry()
+PASS   : ComposerSearchTest::omitsGeneratedTreesAndIncludesHiddenFiles()
+PASS   : ComposerSearchTest::unicodeAndParenthesesAreEncoded()
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(../file)
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(C:/file)
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(/file)
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(a\file)
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(a/../file)
+PASS   : ComposerSearchTest::rejectsHostileRelativePaths(./file)
+PASS   : ComposerSearchTest::rootReplacementCannotInheritAResult()
+PASS   : ComposerSearchTest::junctionIsNotEnumeratedOrSelected()
+PASS   : ComposerSearchTest::cancellationAndResultLimit()
+PASS   : ComposerSearchTest::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 149ms
+********* Finished testing of ComposerSearchTest *********

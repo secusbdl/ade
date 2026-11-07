@@ -1,4 +1,5 @@
 #pragma once
+#include "HarnessPreparedTurn.h"
 #include "ClaudeControlProcess.h"
 #include "ClaudeStream.h"
 #include "harness/HarnessWorkspace.h"
@@ -13,6 +14,7 @@ struct ClaudeHarnessOptions {
   bool alwaysAllow = false;
   bool questionsEnabled = false;
   int turnTimeoutMs = 600000;
+  HarnessAttachments attachments;
 };
 // Private direct-CLI session foundation; unsupported control types fail
 // explicitly.
@@ -50,6 +52,8 @@ private:
     bool question = false;
   };
   void sendPrompt();
+  bool launchProcess(const QString &resumeId = {}, bool fork = false);
+  bool recoverMissingSession(const QJsonObject &frame);
   void consume(const QJsonObject &frame);
   void request(const QString &id, const QString &subtype,
                const QJsonObject &request);
@@ -73,5 +77,8 @@ private:
   quint64 m_generation = 0;
   bool m_busy = false, m_initialized = false, m_created = false,
        m_interrupted = false, m_promptSent = false, m_fork = false;
+  QString m_resumeId;
+  bool m_resumeRecoveryUsed = false, m_resumeActivity = false,
+       m_recoveryQueued = false;
 };
 } // namespace ade

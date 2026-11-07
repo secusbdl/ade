@@ -73,6 +73,12 @@ identical model reasoning or output.
   context. Earlier-candidate live OpenCode question evidence and exact final-package
   checks identify their binaries separately.
 
+- [`audit/parity-harness-followups-integration.json`](audit/parity-harness-followups-integration.json)
+  records the **154-suite checkpoint**: canonical coding-agent session continuity,
+  late ACP tool settlement, utility model fallback, narrow Claude resume recovery,
+  question-wrapper presentation and durable external file attachments. Exact
+  packaged UI and live smoke evidence are recorded with their binary identities.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
@@ -200,7 +206,21 @@ and returns completed steps, answers and cancellation status. The real
 OpenCode/DeepSeek GUI smoke is recorded in `audit/harness-candidate-gui-native.json`.
 The direct Claude question flow has separate actual-host fixture coverage.
 
-Discovered models and visibility choices now save atomically with their provider.
+External coding-agent attachments now keep owner-scoped copies of captured
++original bytes. OpenCode receives native ACP file links; direct Codex and Claude
++receive real local-path descriptors. Existing runtime permissions still apply.
++Original files can be moved or changed after capture without changing the stored
++input. Forks get independent copies, deletion includes owned cleanup, and context
++replay excludes removed or pre-summary references. Inline images retain the
++native size/encoding limits described in the checkpoint.
++
++Coding-agent resumes now require a binding to the immediately preceding completed
++canonical history. Provider switches, edits and interrupted legacy history use a
++fresh session with bounded replay. Utility tasks can use configured HTTP models
++even when the main conversation uses a coding-agent CLI; fallback order and exact
++provider identity are retained.
++
++Discovered models and visibility choices now save atomically with their provider.
 Eligible pinned provider templates apply source-derived defaults on first discovery;
 manual enable/disable choices survive refresh and restart. A complete inventory
 with no enabled models can be saved, then enabled through **Models**. Endpoint or

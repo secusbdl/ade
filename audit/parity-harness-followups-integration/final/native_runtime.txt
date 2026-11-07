@@ -1,0 +1,18 @@
+********* Start testing of RuntimeTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : RuntimeTests::initTestCase()
+PASS   : RuntimeTests::contextReadIsScopedAndReachesProvider()
+PASS   : RuntimeTests::nativeNetworkBrokerKeepsCredentialOutOfWorkerOutput()
+PASS   : RuntimeTests::cancelPendingSandboxFetchSettlesTheBroker()
+QWARN  : RuntimeTests::providerToSandboxToBrowserToFilesAndAttachment() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-JayYvS" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::providerToSandboxToBrowserToFilesAndAttachment()
+PASS   : RuntimeTests::userAttachmentIsPreparedAndPersistedAsReference()
+QWARN  : RuntimeTests::realCdpFailureReturnsToolErrorAndModelContinues() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-dOKHiy" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::realCdpFailureReturnsToolErrorAndModelContinues()
+QWARN  : RuntimeTests::twoHostsShareBrowserWithCancellationIsolation() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-mEMljM" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::twoHostsShareBrowserWithCancellationIsolation()
+QWARN  : RuntimeTests::destroyingOneHostCancelsOnlyItsBrokerRequests() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime-CaUobR" most likely due to the presence of read-only files.
+PASS   : RuntimeTests::destroyingOneHostCancelsOnlyItsBrokerRequests()
+PASS   : RuntimeTests::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 5849ms
+********* Finished testing of RuntimeTests *********

@@ -1,0 +1,28 @@
+********* Start testing of UtilityHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : UtilityHostTest::initTestCase()
+FAIL!  : UtilityHostTest::externalPresetCompactUsesGlobal(codex) Compared values are not the same
+   Actual   (server.requests.size()): 0
+   Expected (1)                     : 1
+D:/age/ADE/private/utility-model-stage/tests/test_utility_models_host.cpp(79) : failure location
+FAIL!  : UtilityHostTest::externalPresetCompactUsesGlobal(opencode) Compared values are not the same
+   Actual   (server.requests.size()): 0
+   Expected (1)                     : 1
+D:/age/ADE/private/utility-model-stage/tests/test_utility_models_host.cpp(79) : failure location
+FAIL!  : UtilityHostTest::externalPresetCompactUsesGlobal(claude-code) Compared values are not the same
+   Actual   (server.requests.size()): 0
+   Expected (1)                     : 1
+D:/age/ADE/private/utility-model-stage/tests/test_utility_models_host.cpp(79) : failure location
+FAIL!  : UtilityHostTest::externalPresetTitleUsesGlobal() Compared values are not the same
+   Actual   (server.requests.size()): 0
+   Expected (1)                     : 1
+D:/age/ADE/private/utility-model-stage/tests/test_utility_models_host.cpp(90) : failure location
+QWARN  : UtilityHostTest::globalPickerHonorsExactSecondInstance() This plugin does not support propagateSizeHints()
+QWARN  : UtilityHostTest::globalPickerHonorsExactSecondInstance() This plugin does not support propagateSizeHints()
+FAIL!  : UtilityHostTest::globalPickerHonorsExactSecondInstance() Compared values are not the same
+   Actual   (selected.first().toObject()["providerInstanceId"].toString()): "first"
+   Expected (QString("second"))                                           : "second"
+D:/age/ADE/private/utility-model-stage/tests/test_utility_models_host.cpp(98) : failure location
+PASS   : UtilityHostTest::cleanupTestCase()
+Totals: 2 passed, 5 failed, 0 skipped, 0 blacklisted, 12987ms
+********* Finished testing of UtilityHostTest *********

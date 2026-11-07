@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "status": "private_frozen_patch_ready_not_applied_to_production",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "observedNativeHead": "48318e02cc2603350405d1067973011d3795ed7d",
+  "baselineScope": "Current integrated working-tree bytes; root static archives linked read-only with private replacement translation units. No production/shared-build mutation.",
+  "reference": [
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "lines": [
+        139,
+        148,
+        178,
+        190,
+        280,
+        347
+      ]
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "lines": [
+        1096,
+        1103,
+        1190,
+        1196
+      ]
+    }
+  ],
+  "before": "Actual native Engine + three process fixtures and loopback HTTP reproduce stale external resume omitting intervening canonical HTTP user and assistant text: 3 failing cases, 2 lifecycle rows passed.",
+  "implementation": [
+    "Only immediately preceding completed assistant mapping with version1 owner/provider/kind-consistent prefix digest may resume. No backward search past intervening turns.",
+    "Digest covers canonical user/assistant content, compressed-history marker, and original logical attachments/pathReferences/pathMetadata. It excludes UI display/tool presentation, native signed blocks, tool results and transient prepared delivery data.",
+    "Completed-only binding is emitted at existing successful adapter completion. Partial, canceled, failed and legacy mappings remain unbound and create a fresh session.",
+    "Older bindings are removed at successful checkpoint; canonical replacement on an already-loaded Engine invalidates target mappings, preserving caller values. Metadata-only replacement keeps continuity.",
+    "Invalid continuity shuts down any live adapter before fresh creation; fresh transcript replay retains existing source policy: only canonical user/assistant text from the latest summary boundary, once.",
+    "Existing physical workspace/provider checks and owner-changed fork behavior remain adapter-owned. OpenCode forks still create new sessions with history; Codex/Claude native fork paths remain."
+  ],
+  "patch": {
+    "path": "private/harness-continuity-stage/continuity.patch",
+    "sha256": "263afda6590bc36a0c79223ae78ae04ffae11c044f7578cf0c15c1f13f63ad52",
+    "hashMode": "canonical-LF"
+  },
+  "cmake": {
+    "path": "private/harness-continuity-stage/CMAKE-HANDOFF.txt",
+    "sha256": "d8a0121a043f61d243107bb0ca44f5838c4dc090b3c84be2c99c6cb1c01c7981",
+    "hashMode": "canonical-LF"
+  },
+  "baseFiles": [
+    {
+      "path": "src/core/AgentEngine.h",
+      "sha256": "dde4dd86b38aa4e77cced8995a84bcca1f03310d646078f9ba71a84da096e871",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "sha256": "16f3e9eb9e4638a160895208162b3001c2e02d17b3793e75bfa9bc2a0f57603a",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngineHarness.cpp",
+      "sha256": "b90f4aff2e855f36a05f945152a1ad5c8e72604939ddbe47f67b371883120e3c",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngineAcp.cpp",
+      "sha256": "8f574b68c5035cbac869240bfc9e02544655a1c635f34fce2268b3e6af9cd4cb",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "src/core/AgentEngineClaude.cpp",
+      "sha256": "1587c62ca07459a5f893b25afe07ef5d6a56b3e3b24f3bc669a71900d04d9695",
+      "hashMode": "canonical-LF"
+    }
+  ],
+  "resultFiles": [
+    {
+      "path": "private/harness-continuity-stage/src/core/AgentEngine.h",
+      "sha256": "2755cf674ccd28b42a03d0775a9c5a0ccf9d6e860acc0ab9b56a4d805d630e76",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/AgentEngine.cpp",
+      "sha256": "8d8277a83eba284862e22b6c9a70764e526bbbd4f1a6a36091f9069f1d19a668",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/AgentEngineHarness.cpp",
+      "sha256": "bcf2175116455138f01f91511b355f906c4fb916beda19eb9ce72984a293d52d",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/AgentEngineAcp.cpp",
+      "sha256": "eb83dc448faf3c28f653092c6597a368c630682a6919aa47760a88e8f7d848e6",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/AgentEngineClaude.cpp",
+      "sha256": "188ae25037433130db3879ad0705b331b2033d743826ea799e1c218b421d9007",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/HarnessHistory.h",
+      "sha256": "f2b4aadee81e008bf37e5d8df50e533f784ba6f2e9f757fd526ba4f8ccb2ed81",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/src/core/HarnessHistory.cpp",
+      "sha256": "9bc23531ee315222cb14db50a63fe956366947cc41014fd2a5b6ad2bf393b10b",
+      "hashMode": "canonical-LF"
+    },
+    {
+      "path": "private/harness-continuity-stage/tests/test_harness_continuity.cpp",
+      "sha256": "b282b4510b7a2aa3807fbcff6b61821991321e3c01509deed49c5a3a08da4f7c",
+      "hashMode": "canonical-LF"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "private/harness-continuity-stage/before.txt",
+      "sha256": "3d204530e63b04ed3124d1e1a5a3e7ac2a7f10fa0bcf64d08d7ea2fc969fa3ff",
+      "hashMode": "canonical-LF",
+      "passed": 2,
+      "failed": 3,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 669
+    },
+    {
+      "path": "private/harness-continuity-stage/after.txt",
+      "sha256": "834a060f2981c72f1a135b67fe4d5418d8de424495f42f1858fe6270013a253a",
+      "hashMode": "canonical-LF",
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 6439
+    },
+    {
+      "path": "private/harness-continuity-stage/final.txt",
+      "sha256": "d73d0e7db5a2ce65ea88e553f766b67ec52a4283c9de68c04e83c16249f0600f",
+      "hashMode": "canonical-LF",
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 8578
+    },
+    {
+      "path": "private/harness-continuity-stage/compat-codex_engine.txt",
+      "sha256": "ab009e16d8e84b56e4f873badcf8f6f0d169d6743c66ef82607941bd73bdbf62",
+      "hashMode": "canonical-LF",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 3114
+    },
+    {
+      "path": "private/harness-continuity-stage/compat-acp_engine.txt",
+      "sha256": "95630fb4a162a031f6111000f328d77fd256b96b7404f5dd6a08398c78dd8fbd",
+      "hashMode": "canonical-LF",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 3252
+    },
+    {
+      "path": "private/harness-continuity-stage/compat-claude_engine.txt",
+      "sha256": "b52fd92e54603d62464177a47887755c6b302db90f2e9ed959a4130869a1b1a8",
+      "hashMode": "canonical-LF",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 2596
+    },
+    {
+      "path": "private/harness-continuity-stage/compat-mcp_engine.txt",
+      "sha256": "bf783072d69c98fcdaae2596a5ae50d5f2606cd0902b6927e67da8defe069ceb",
+      "hashMode": "canonical-LF",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "durationMs": 4750
+    }
+  ],
+  "finalCounts": {
+    "newSuite": 33,
+    "existingCodexEngine": 13,
+    "existingAcpEngine": 15,
+    "existingClaudeEngine": 15,
+    "existingMcpEngine": 14,
+    "total": 90,
+    "failed": 0
+  },
+  "coverage": [
+    "HTTP -> same harness",
+    "Other harness -> original harness",
+    "Unchanged live sessions/restart/fork across all3 adapters",
+    "Destructive revert and compressed boundary",
+    "UI/native presentation-only changes",
+    "Legacy mapping rebuild once",
+    "Canceled partial + new retry",
+    "Mismatched owner binding rejection",
+    "No tool-result/native-signature/UI bytes in fresh replay",
+    "Logical reference changes invalidate digest"
+  ],
+  "limits": [
+    "The marker is host consistency metadata, not authentication or a cryptographic authorization capability. Existing adapter physical workspace and session ownership checks still apply.",
+    "A deliberately restored stale historical snapshot in an entirely new Engine cannot prove the shared external CLI session was not advanced elsewhere. A durable external-session checkpoint ledger or runtime-supported revision query would be needed for that stronger guarantee.",
+    "A successful external turn with no retained assistant content remains conservatively unbound; the next turn may create a fresh session rather than assert an unobserved completion marker.",
+    "Interrupted/legacy paths may incur one fresh-session text replay; exact hidden external state cannot be reconstructed from visible ADE transcript.",
+    "Attachment transport/binary handoff, denial continuation and late tool settlement are deliberately separate slices.",
+    "No actual account, credentials, paid request, GUI, or native browser tested. Aggregate root integration remains pending."
+  ],
+  "review": "Peer attachment owner will inspect selector/metadata interaction during private rebase; no independent peer execution claimed.",
+  "privateBuildNotes": [
+    "Objects compiled at -j1; existing frozen root libraries read-only.",
+    "An initial private include path omission and shell quoting typo were corrected before production-defect reproduction; neither changed production."
+  ],
+  "executables": [
+    {
+      "path": "private/harness-continuity-stage/bin/continuity-before.exe",
+      "sha256": "72703af32e464b13d934ff2588bee56ae7b2dc978ca52e9287da679984c81fbe",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-continuity-stage/bin/continuity-final.exe",
+      "sha256": "97d471f5cb0130db6fca71d1bbfb6160225f4655c6f1afec68d3218ff18cd00a",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-continuity-stage/bin/harness_fixture.exe",
+      "sha256": "af857dd12e819e38daf5ad7386402b436265bc857d1706f4c6b53ba42bf741a8",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-continuity-stage/bin/acp_fixture.exe",
+      "sha256": "6db7271cb90e116ff82cb0e2edc74705fe3943f2f468048cea5919b3ede34bd2",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "private/harness-continuity-stage/bin/claude_fixture.exe",
+      "sha256": "75d9b86bbe96635a1bfee1283990f8d19702b2f70d17a89a10be95a577f05011",
+      "hashMode": "raw-bytes"
+    }
+  ]
+}

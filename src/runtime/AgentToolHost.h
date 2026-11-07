@@ -11,6 +11,7 @@
 #include "apps/MiniAppHost.h"
 #include "AttachmentFileBroker.h"
 #include "HarnessFileContext.h"
+#include "harness/HarnessAttachmentStore.h"
 #include "mutations/FileMutationJournal.h"
 #include "shell/ShellService.h"
 #include "shell/SessionLogStore.h"
@@ -54,6 +55,7 @@ private:
     QString m_agentId;
     QString m_dataDirectory;
     HarnessFileContext m_harnessFiles;
+    HarnessAttachmentStore m_harnessAttachments;
     FileMutationJournal m_mutations;
     QHash<QString,std::shared_ptr<std::atomic_bool>> m_undoRequests;
     std::shared_ptr<SessionLogStore> m_shellLogs;

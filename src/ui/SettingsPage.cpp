@@ -3,6 +3,8 @@
 
 #include "SessionStore.h"
 #include "ModelSelection.h"
+#include "UtilityModelSelection.h"
+#include <optional>
 #include "Icons.h"
 #include "ContextPreferences.h"
 #include "ProviderRepository.h"
@@ -59,6 +61,29 @@
 
 namespace ade {
 namespace {
+// QInputDialog's text return cannot distinguish equal display labels belonging
+// to different provider instances. Preserve the selected row's typed identity.
+std::optional<ade::ModelSelection> chooseModelEntry(QWidget* parent,
+        const QList<ade::ModelSelection>& choices,const QString& title) {
+    if(choices.isEmpty())return {};
+    QPointer<QInputDialog> dialog=new QInputDialog(parent);
+    dialog->setObjectName("utilityModelPicker");dialog->setWindowTitle(title);
+    dialog->setLabelText("Provider and model");dialog->setComboBoxEditable(false);
+    QStringList labels;for(const auto& choice:choices)labels.append(choice.label);
+    dialog->setComboBoxItems(labels);
+    if(auto* combo=dialog->findChild<QComboBox*>())for(int i=0;i<choices.size();++i){
+        combo->setItemData(i,choices[i].toJson());
+        combo->setItemData(i,choices[i].providerId+" / "+choices[i].modelId,Qt::ToolTipRole);
+    }
+    const auto accepted=dialog->exec()==QDialog::Accepted;
+    if(!dialog)return {};
+    const auto* combo=dialog->findChild<QComboBox*>();
+    const int index=accepted&&combo?combo->currentIndex():-1;
+    dialog->deleteLater();
+    if(index<0||index>=choices.size())return {};
+    return choices[index];
+}
+
 struct Section { const char *id; const char *label; const char *group; const char *glyph; };
 constexpr Section sections[] = {
     {"agent-general","General","Agent","⚙"},
@@ -635,7 +660,7 @@ void SettingsPage::buildProviders(QVBoxLayout *layout) {
         QHBoxLayout *row;
         const auto models=preset["models"].toArray();const auto primary=models.isEmpty()?preset:models.first().toObject();
         card(layout,preset["name"].toString(),primary["modelId"].toString()+(models.size()>1?QString(" · %1 fallback models").arg(models.size()-1):QString()),&row);
-        auto *edit = new QPushButton("Edit");row->addWidget(edit);
+        auto *edit = new QPushButton("Edit");edit->setObjectName("editModelPreset_"+preset["id"].toString());row->addWidget(edit);
         connect(edit,&QPushButton::clicked,this,[this,preset]{editModelPreset(preset["id"].toString());});
         auto *remove = new QPushButton("Remove");row->addWidget(remove);
         connect(remove,&QPushButton::clicked,this,[this,i]{auto records=preference("modelPresets").toArray();records.removeAt(i);if(setPreference("modelPresets",records))buildContent();});
@@ -668,22 +693,32 @@ void SettingsPage::editModelPreset(const QString &id) {
     const auto options=primary["overrides"].toObject();reasoning->setCurrentIndex(qMax(0,reasoning->findData(options["reasoningEffort"].toString())));thinking->setCurrentIndex(qMax(0,thinking->findData(options["thinkingMode"].toString())));budget->setValue(options["thinkingBudget"].toInt());limit->setValue(options["maxOutputTokens"].toInt());
     form->addRow("Name",name);form->addRow("Provider and model",model);form->addRow("Reasoning effort",reasoning);form->addRow("Thinking",thinking);form->addRow("Thinking budget",budget);form->addRow("Output token limit",limit);
     auto* chains=new QTabWidget;form->addRow(chains);
-    auto addChain=[&](const QString& title,const QJsonArray& entries,const QString& description){
+    auto addChain=[&](const QString& title,const QJsonArray& entries,const QString& description,bool utility){
+        const auto chainChoices=utility?availableUtilityModelSelections(providers,preference("modelCatalogs").toObject()):choices;
         auto* pane=new QWidget;auto* column=new QVBoxLayout(pane);auto* hint=new QLabel(description);hint->setWordWrap(true);column->addWidget(hint);
-        auto* list=new QListWidget;list->setMinimumHeight(110);column->addWidget(list);
-        auto labelFor=[choices](const QJsonObject& entry){for(const auto& candidate:choices)if(candidate.providerId==entry["providerInstanceId"].toString()&&candidate.modelId==entry["modelId"].toString())return candidate.label;return entry["providerInstanceId"].toString()+" / "+entry["modelId"].toString();};
+        auto* list=new QListWidget;list->setObjectName(title=="Title generation"?"presetTitleModels":title=="Context compression"?"presetCompressionModels":"presetFallbackModels");list->setMinimumHeight(110);column->addWidget(list);
+        auto labelFor=[choices,utility,providers,catalogs=preference("modelCatalogs").toObject()](const QJsonObject& entry){if(utility)return utilityModelEntryLabel(entry,providers,catalogs);for(const auto& candidate:choices)if(candidate.providerId==entry["providerInstanceId"].toString()&&candidate.modelId==entry["modelId"].toString())return candidate.label;return entry["providerInstanceId"].toString()+" / "+entry["modelId"].toString();};
         for(const auto& value:entries){auto* item=new QListWidgetItem(labelFor(value.toObject()),list);item->setData(Qt::UserRole,value.toObject());}
         auto* controls=new QHBoxLayout;column->addLayout(controls);auto* add=new QPushButton("Add model");auto* up=new QPushButton("Move up");auto* down=new QPushButton("Move down");auto* remove=new QPushButton("Remove");for(auto* button:{add,up,down,remove})controls->addWidget(button);
-        connect(add,&QPushButton::clicked,pane,[list,choices,labelFor,pane]{QStringList labels;for(const auto& choice:choices)labels.append(choice.label);bool ok=false;const auto chosen=QInputDialog::getItem(pane,"Add model","Provider and model",labels,0,false,&ok);if(!ok)return;const int index=labels.indexOf(chosen);if(index<0)return;const auto entry=choices[index].toJson();for(int i=0;i<list->count();++i)if(ModelSelection::fromJson(list->item(i)->data(Qt::UserRole).toJsonObject()).key()==choices[index].key())return;auto* item=new QListWidgetItem(labelFor(entry),list);item->setData(Qt::UserRole,entry);list->setCurrentItem(item);});
+        add->setEnabled(!chainChoices.isEmpty());
+        if(utility&&chainChoices.isEmpty())hint->setText(description+" No eligible API models are configured. Coding agents cannot perform utility requests.");
+        connect(add,&QPushButton::clicked,pane,[list,chainChoices,labelFor,pane]{
+            const QPointer<QWidget> owner(pane);const QPointer<QListWidget> safeList(list);
+            const auto chosen=chooseModelEntry(pane,chainChoices,"Add model");
+            if(!owner||!safeList||!chosen)return;
+            const auto entry=chosen->toJson();
+            for(int i=0;i<list->count();++i)if(ModelSelection::fromJson(list->item(i)->data(Qt::UserRole).toJsonObject()).key()==chosen->key())return;
+            auto* item=new QListWidgetItem(labelFor(entry),list);item->setData(Qt::UserRole,entry);list->setCurrentItem(item);
+        });
         connect(up,&QPushButton::clicked,pane,[list]{const int row=list->currentRow();if(row<=0)return;auto* item=list->takeItem(row);list->insertItem(row-1,item);list->setCurrentRow(row-1);});
         connect(down,&QPushButton::clicked,pane,[list]{const int row=list->currentRow();if(row<0||row>=list->count()-1)return;auto* item=list->takeItem(row);list->insertItem(row+1,item);list->setCurrentRow(row+1);});
         connect(remove,&QPushButton::clicked,pane,[list]{delete list->takeItem(list->currentRow());});
         chains->addTab(pane,title);return list;
     };
     QJsonArray fallbackEntries;for(int i=1;i<existingModels.size();++i)fallbackEntries.append(existingModels[i]);
-    auto* fallbacks=addChain("Fallback models",fallbackEntries,"Try these models in order if the main model is overloaded.");
-    auto* titleModels=addChain("Title generation",preset["titleGeneration"].toArray(),"An empty list uses this preset's main and fallback models.");
-    auto* compressionModels=addChain("Context compression",preset["contextCompression"].toArray(),"An empty list uses this preset's main and fallback models.");
+    auto* fallbacks=addChain("Fallback models",fallbackEntries,"Try these models in order if the main model is overloaded.",false);
+    auto* titleModels=addChain("Title generation",preset["titleGeneration"].toArray(),"An empty list uses this preset's eligible chat models, or global utility models for a coding-agent-only preset.",true);
+    auto* compressionModels=addChain("Context compression",preset["contextCompression"].toArray(),"An empty list uses this preset's eligible chat models, or global utility models for a coding-agent-only preset.",true);
     auto* feedback=new QLabel;feedback->setWordWrap(true);form->addRow(feedback);
     auto* buttons=new QDialogButtonBox(QDialogButtonBox::Save|QDialogButtonBox::Cancel);form->addRow(buttons);
     connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
@@ -706,13 +741,15 @@ void SettingsPage::buildUtilityModels(QVBoxLayout *layout,const QString &path,co
     layout->addSpacing(14);auto* captions=new QVBoxLayout;captions->setSpacing(2);captions->addWidget(text(title,"settingCardTitle"));
     auto* description=text(path.endsWith("titleGeneration")?"Models used to generate conversation titles.":"Models used to compress conversation history.");description->setStyleSheet("font-size:12px;");captions->addWidget(description);layout->addLayout(captions);
     const auto entries=preference(path).toArray();
+    QString providerError;const auto providers=ProviderStore::load(m_dataDir+"/providers.json",&providerError);
+    const auto catalogs=preference("modelCatalogs").toObject();
     if(entries.isEmpty()){
         auto* empty=new QFrame;empty->setObjectName("settingsEmptyState");empty->setFixedHeight(32);auto* column=new QVBoxLayout(empty);column->setContentsMargins(4,4,4,4);
-        auto* label=text("No model configured, uses main chat model.");label->setStyleSheet("font-size:12px;");label->setAlignment(Qt::AlignCenter);column->addWidget(label);layout->addWidget(empty);
+        auto* label=text("No model configured; uses an eligible chat model.");label->setStyleSheet("font-size:12px;");label->setAlignment(Qt::AlignCenter);column->addWidget(label);layout->addWidget(empty);
     }
     for(int i=0;i<entries.size();++i){
         const auto entry=entries[i].toObject();QHBoxLayout *row;
-        card(layout,entry["modelId"].toString(),entry["providerInstanceId"].toString(),&row);
+        card(layout,entry["modelId"].toString(),providerError.isEmpty()?utilityModelEntryLabel(entry,providers,catalogs):entry["providerInstanceId"].toString()+" (provider configuration unavailable)",&row);
         auto *up=new QPushButton("↑");up->setEnabled(i>0);up->setAccessibleName("Move model up");row->addWidget(up);
         auto *remove=new QPushButton("×");remove->setAccessibleName("Remove utility model");row->addWidget(remove);
         connect(up,&QPushButton::clicked,this,[this,path,i]{auto records=preference(path).toArray();const auto value=records.takeAt(i);records.insert(i-1,value);if(setPreference(path,records))buildContent();});
@@ -723,13 +760,12 @@ void SettingsPage::buildUtilityModels(QVBoxLayout *layout,const QString &path,co
         QString error;const auto providers=ProviderStore::load(m_dataDir+"/providers.json",&error);
         if(!error.isEmpty()){showStatus(error,true);return;}
         if(providers.isEmpty()){emit providersRequested();return;}
-        const auto choices=availableModelSelections(providers,preference("modelCatalogs").toObject(),{});
-        QStringList names;for(const auto &selection:choices)names.append(selection.label);
-        bool ok=false;const auto selected=QInputDialog::getItem(this,"Utility model","Provider and model",names,0,false,&ok);
-        if(!ok)return;
-        const auto index=names.indexOf(selected);
-        if(index<0)return;
-        const auto &selection=choices[index];auto records=preference(path).toArray();
+        const auto choices=availableUtilityModelSelections(providers,preference("modelCatalogs").toObject());
+        if(choices.isEmpty()){showStatus("No eligible API models are configured. Coding agents cannot perform utility requests.",true);return;}
+        const QPointer<SettingsPage> self(this);
+        const auto selected=chooseModelEntry(this,choices,"Utility model");
+        if(!self||!selected)return;
+        const auto selection=*selected;auto records=preference(path).toArray();
         records.append(QJsonObject{{"providerInstanceId",selection.providerId},{"modelId",selection.modelId}});
         if(setPreference(path,records))buildContent();
     });

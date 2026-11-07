@@ -1,4 +1,5 @@
 #pragma once
+#include "HarnessPreparedTurn.h"
 #include "CodexAppServer.h"
 #include "HarnessWorkspace.h"
 #include <QHash>
@@ -9,6 +10,7 @@ struct CodexHarnessOptions {
       instructions;
   bool alwaysAllow = false;
   QString historyContext;
+  HarnessAttachments attachments;
 };
 
 // One host-owned chat/session. Output is normalized into bounded UI events;

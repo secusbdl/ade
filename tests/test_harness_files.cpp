@@ -19,6 +19,23 @@ QByteArray read(const QString &path) {
 class HarnessFilesTest : public QObject {
   Q_OBJECT
 private slots:
+  void deferredCleanupAdoptsExistingAndNeverCreatesAbsent() {
+    QTemporaryDir dir;
+    QString error;
+    QVERIFY(HarnessFileContext::removeAgent(dir.path(), "absent", &error));
+    QVERIFY(!QFileInfo::exists(dir.filePath("harness-workspaces")));
+    QString path;
+    {
+      HarnessFileContext owned(dir.path(), "owned");
+      path = owned.rootDirectory();
+      QVERIFY(!path.isEmpty());
+      QVERIFY(write(path + "/kept.bin", "exact"));
+    }
+    QVERIFY2(HarnessFileContext::removeAgent(dir.path(), "owned", &error),
+             qPrintable(error));
+    QVERIFY(!QFileInfo::exists(path));
+    QVERIFY(HarnessFileContext::removeAgent(dir.path(), "owned", &error));
+  }
   void binaryNestedCloneAndDeleteAreIndependent() {
     QTemporaryDir dir;
     HarnessFileContext source(dir.path(), "source");

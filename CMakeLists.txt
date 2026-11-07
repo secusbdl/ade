@@ -862,3 +862,115 @@ set_tests_properties(native_harness_forms_host PROPERTIES
   ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
 # Optional capture env: ADE_HARNESS_FORM_CAPTURES=<private output directory>.
 # The test binary must retain its custom main's early --question-mcp-stdio path.
+
+# New HarnessHistory.cpp/.h are picked up by the existing ade_core CONFIGURE_DEPENDS glob.
+qt_add_executable(test_harness_continuity tests/test_harness_continuity.cpp)
+target_link_libraries(test_harness_continuity PRIVATE ade_core Qt6::Test)
+add_dependencies(test_harness_continuity harness_fixture acp_fixture claude_fixture)
+set_target_properties(test_harness_continuity PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" WIN32_EXECUTABLE FALSE)
+add_test(NAME native_harness_continuity COMMAND test_harness_continuity
+  -o "${CMAKE_BINARY_DIR}/Testing/native_harness_continuity.txt,txt")
+set_tests_properties(native_harness_continuity PROPERTIES TIMEOUT 90)
+# No real executable/account/provider request: native test fixtures and loopback HTTP only.
+
+# Apply settlement.patch first; no Engine/source overwrite is needed.
+# Existing ade_harness glob includes the modified class.
+qt_add_executable(acp_settlement_fixture tests/support/AcpSettlementFixture.cpp)
+target_link_libraries(acp_settlement_fixture PRIVATE Qt6::Core)
+set_target_properties(acp_settlement_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_acp_settlement tests/test_acp_settlement.cpp)
+target_link_libraries(test_acp_settlement PRIVATE ade_core Qt6::Test)
+add_dependencies(test_acp_settlement acp_settlement_fixture)
+set_target_properties(test_acp_settlement PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_acp_settlement COMMAND test_acp_settlement -o "${CMAKE_BINARY_DIR}/Testing/native_acp_settlement.txt,txt")
+set_tests_properties(native_acp_settlement PROPERTIES TIMEOUT 90)
+
+# New src/ui files are included by the existing UI_SOURCES glob.
+# Settings standalone targets compile SettingsPage directly.
+foreach(settings_target IN ITEMS render_settings test_settings test_settings_audit)
+  target_sources(${settings_target} PRIVATE src/ui/UtilityModelSelection.cpp)
+endforeach()
+foreach(utility_test IN ITEMS utility_model_selection utility_models_host)
+  qt_add_executable(test_${utility_test} tests/test_${utility_test}.cpp)
+  target_link_libraries(test_${utility_test} PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${utility_test} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_target_properties(test_${utility_test} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${utility_test} COMMAND test_${utility_test} -o "${CMAKE_BINARY_DIR}/Testing/native_${utility_test}.txt,txt")
+  set_tests_properties(native_${utility_test} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+add_dependencies(test_utility_models_host harness_fixture)
+# Optional offscreen visual evidence utility.
+qt_add_executable(render_utility_models tests/render_utility_models.cpp)
+target_link_libraries(render_utility_models PRIVATE ade_ui Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(render_utility_models INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(render_utility_models PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+# Apply claude-resume.patch; existing harness glob includes changed class.
+qt_add_executable(claude_resume_fixture tests/support/ClaudeResumeFixture.cpp)
+target_link_libraries(claude_resume_fixture PRIVATE Qt6::Core)
+set_target_properties(claude_resume_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_claude_resume tests/test_claude_resume.cpp)
+target_link_libraries(test_claude_resume PRIVATE ade_core Qt6::Test)
+add_dependencies(test_claude_resume claude_resume_fixture)
+set_target_properties(test_claude_resume PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_claude_resume COMMAND test_claude_resume -o "${CMAKE_BINARY_DIR}/Testing/native_claude_resume.txt,txt")
+set_tests_properties(native_claude_resume PROPERTIES TIMEOUT 90)
+
+# Root integration only; do not copy the stage CMakeLists.txt.
+qt_add_executable(test_mcp_presentation tests/test_mcp_presentation.cpp)
+target_link_libraries(test_mcp_presentation PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_mcp_presentation INCLUDE Qt6::QOffscreenIntegrationPlugin)
+add_dependencies(test_mcp_presentation acp_mcp_fixture)
+set_target_properties(test_mcp_presentation PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_mcp_presentation COMMAND test_mcp_presentation -o "${CMAKE_BINARY_DIR}/Testing/native_mcp_presentation.txt,txt")
+set_tests_properties(native_mcp_presentation PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 90)
+# Optional captures: ADE_MCP_RENDER_DIRECTORY=<ignored output dir>.
+# No additional production source target changes: all modified files already build.
+
+# Additive integration fragment; root owns the actual project CMake file.
+# The existing harness glob discovers HarnessAttachmentStore/HarnessPreparedTurn.
+target_link_libraries(ade_harness PUBLIC Qt6::Sql)
+target_sources(ade_host PRIVATE
+  src/runtime/HarnessInputPreparation.cpp src/runtime/HarnessInputPreparation.h)
+
+# Test-only failure hooks change the Store's private layout. Compile this unit
+# independently and do not mix its test header with the production Store object.
+qt_add_executable(test_harness_attachment_store
+  tests/test_harness_attachment_store.cpp
+  src/harness/HarnessAttachmentStore.cpp src/harness/HarnessAttachmentStore.h
+  src/harness/HarnessPreparedTurn.cpp src/harness/HarnessPreparedTurn.h
+  src/harness/HarnessWorkspace.cpp src/harness/HarnessWorkspace.h)
+target_include_directories(test_harness_attachment_store PRIVATE src)
+target_compile_definitions(test_harness_attachment_store PRIVATE ADE_HARNESS_ATTACHMENT_TESTING)
+target_link_libraries(test_harness_attachment_store PRIVATE Qt6::Core Qt6::Sql Qt6::Test)
+qt_import_plugins(test_harness_attachment_store INCLUDE Qt6::QSQLiteDriverPlugin)
+
+foreach(pair "codex|Codex" "acp|Acp" "claude|Claude")
+  string(REPLACE "|" ";" parts "${pair}")
+  list(GET parts 0 kind)
+  list(GET parts 1 name)
+  qt_add_executable(attachment_${kind}_fixture tests/support/HarnessAttachment${name}Fixture.cpp)
+  target_link_libraries(attachment_${kind}_fixture PRIVATE Qt6::Core)
+  set_target_properties(attachment_${kind}_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+endforeach()
+qt_add_executable(test_harness_attachment_wire tests/test_harness_attachment_wire.cpp)
+target_link_libraries(test_harness_attachment_wire PRIVATE ade_harness Qt6::Test)
+qt_add_executable(test_harness_attachments_host tests/test_harness_attachments_host.cpp)
+target_link_libraries(test_harness_attachments_host PRIVATE ade_host Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_add_executable(test_harness_cleanup_host tests/test_harness_cleanup_host.cpp)
+target_link_libraries(test_harness_cleanup_host PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+foreach(test IN ITEMS harness_attachment_wire harness_attachments_host)
+  add_dependencies(test_${test} attachment_codex_fixture attachment_acp_fixture attachment_claude_fixture)
+endforeach()
+foreach(test IN ITEMS harness_attachment_store harness_attachment_wire harness_attachments_host harness_cleanup_host)
+  set_target_properties(test_${test} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${test} COMMAND test_${test} -o "${CMAKE_BINARY_DIR}/Testing/native_${test}.txt,txt")
+  set_tests_properties(native_${test} PROPERTIES TIMEOUT 90)
+endforeach()
+foreach(test IN ITEMS harness_attachments_host harness_cleanup_host)
+  qt_import_plugins(test_${test} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_tests_properties(native_${test} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+# Existing native_harness_files includes its new deferred-cleanup case.
+# Existing native_attachments verifies unchanged HTTP image/text transformations.
