@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QUuid>
+#include <algorithm>
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -16,6 +17,7 @@
 namespace ade {
 namespace {
 constexpr qsizetype MaxFrame = 8 * 1024 * 1024;
+constexpr qint64 WriteChunk = 256 * 1024, WriteHighWater = 1024 * 1024;
 #ifdef Q_OS_WIN
 bool attachAndResume(HANDLE job, DWORD pid) {
   HANDLE process = OpenProcess(PROCESS_SET_QUOTA | PROCESS_TERMINATE |
@@ -160,6 +162,11 @@ bool JsonRpcProcess::start(const QString &executable,
         fail("The coding-agent process exited.");
       },
       Qt::QueuedConnection);
+  connect(process, &QProcess::bytesWritten, this,
+      [this, original, generation](qint64 count) {
+        if (original && m_process == original && generation == m_generation)
+          written(count);
+      }, Qt::QueuedConnection);
   m_clock.start();
   process->start();
   QTimer::singleShot(10000, this, [this, original, generation] {
@@ -172,15 +179,130 @@ bool JsonRpcProcess::start(const QString &executable,
 bool JsonRpcProcess::isRunning() const {
   return m_process && m_process->state() == QProcess::Running;
 }
+bool JsonRpcProcess::enqueue(OutboundFrame frame) {
+  if (!isRunning() || frame.size <= 0 || m_outbound.size() >= 512)
+    return false;
+  for (const auto &sent : m_sent)
+    if (sent.acp && !sent.prompt.valid()) return false;
+  if (!frame.acp && frame.size > 2 * MaxFrame - m_normalOutstanding)
+    return false;
+  if (frame.acp && (!m_acpWriteId.isEmpty() || frame.size > AcpPromptPayload::MaxFrameBytes))
+    return false;
+  frame.end = m_totalPlanned + frame.size;
+  if (frame.acp) {
+    m_acpWriteId = frame.requestId;
+    m_acpStart = m_totalPlanned;
+    m_acpEnd = frame.end;
+  } else m_normalOutstanding += frame.size;
+  m_totalPlanned = frame.end;
+  m_outbound.enqueue(std::move(frame));
+  schedulePump();
+  return true;
+}
+void JsonRpcProcess::schedulePump() {
+  if (m_pumpScheduled) return;
+  m_pumpScheduled = true;
+  const auto generation = m_generation;
+  QTimer::singleShot(0, this, [this, generation] {
+    if (generation != m_generation) return;
+    m_pumpScheduled = false;
+    pumpWrites();
+  });
+}
+void JsonRpcProcess::pumpWrites() {
+  if (!isRunning()) return;
+  while (!m_outbound.isEmpty() && m_process->bytesToWrite() < WriteHighWater) {
+    auto &frame = m_outbound.head();
+    if (frame.acp && !frame.prompt.valid()) {
+      fail("Captured ACP input was revoked before transmission completed."); return;
+    }
+    while (frame.segment < frame.segments.size() &&
+           frame.offset == frame.segments[frame.segment].size()) {
+      ++frame.segment; frame.offset = 0;
+    }
+    if (frame.segment == frame.segments.size()) {
+      m_sent.enqueue({frame.end,frame.size,frame.acp,frame.prompt});
+      m_outbound.dequeue();
+      continue;
+    }
+    const auto &segment = frame.segments[frame.segment];
+    const auto count = std::min<qint64>({WriteChunk, WriteHighWater - m_process->bytesToWrite(),
+                                   segment.size() - frame.offset});
+    const auto accepted = m_process->write(segment.constData() + frame.offset,count);
+    if (accepted <= 0) { fail("The coding-agent input pipe could not continue."); return; }
+    frame.offset += accepted;
+    m_totalQueued += accepted;
+    m_peakQueuedBytes = qMax(m_peakQueuedBytes,m_process->bytesToWrite());
+    while (frame.segment < frame.segments.size() &&
+           frame.offset == frame.segments[frame.segment].size()) {
+      ++frame.segment; frame.offset = 0;
+    }
+    if (frame.segment == frame.segments.size()) {
+      m_sent.enqueue({frame.end,frame.size,frame.acp,frame.prompt});
+      m_outbound.dequeue();
+    }
+  }
+}
+void JsonRpcProcess::written(qint64 count) {
+  Q_UNUSED(count)
+  if (!m_process) return;
+  m_totalWritten = qMax(m_totalWritten, m_totalQueued - m_process->bytesToWrite());
+  if (!m_acpWriteId.isEmpty() && m_totalWritten >= m_acpEnd)
+    m_acpWriteId.clear();
+  while (!m_sent.isEmpty() && m_totalWritten >= m_sent.head().end) {
+    // Observe revocation before retiring the final queued grant, including
+    // when Qt drained it between owner cancellation and this callback. The
+    // clock reports failure terminally; this bookkeeping emits no callbacks.
+    if (m_sent.head().acp && !m_sent.head().prompt.valid()) break;
+    const auto frame=m_sent.dequeue();
+    if (!frame.acp) m_normalOutstanding -= frame.size;
+  }
+  schedulePump();
+}
 bool JsonRpcProcess::send(const QJsonObject &object) {
-  if (!isRunning())
-    return false;
-  auto bytes = QJsonDocument(object).toJson(QJsonDocument::Compact);
-  if (bytes.size() > MaxFrame ||
-      m_process->bytesToWrite() + bytes.size() > 2 * MaxFrame)
-    return false;
+  if (!isRunning()) return false;
+  auto bytes=QJsonDocument(object).toJson(QJsonDocument::Compact);
+  if (bytes.size() > MaxFrame) return false;
   bytes += '\n';
-  return m_process->write(bytes) == bytes.size();
+  OutboundFrame frame;
+  frame.size=bytes.size();frame.segments.append(std::move(bytes));
+  return enqueue(std::move(frame));
+}
+QString JsonRpcProcess::requestAcpPrompt(const AcpPromptPayload &payload, int timeoutMs) {
+  if (!payload.valid() || m_deadlines.size() >= 256) return {};
+  written(0);
+  const auto id=QUuid::createUuid().toString(QUuid::WithoutBraces);
+  const auto prefix=QByteArray("{\"jsonrpc\":\"2.0\",\"id\":\"")+id.toLatin1()+
+      "\",\"method\":\"session/prompt\",\"params\":";
+  const QByteArray suffix("}\n");
+  OutboundFrame frame;
+  frame.acp=true;frame.requestId=id;frame.prompt=payload;
+  frame.size=prefix.size()+payload.m_parameters.size()+suffix.size();
+  frame.segments={prefix,payload.m_parameters,suffix};
+  if (!enqueue(std::move(frame))) return {};
+  m_deadlines.insert(id,QDateTime::currentMSecsSinceEpoch()+qBound(100,timeoutMs,600000));
+  return id;
+}
+JsonRpcProcess::PromptWriteCancel JsonRpcProcess::cancelAcpPromptWrite(const QString &id) {
+  written(0);
+  if (id.isEmpty() || id != m_acpWriteId) return PromptWriteCancel::NotPending;
+  if (m_totalQueued > m_acpStart) {
+    // A partially transmitted JSON frame cannot be followed by session/cancel.
+    // This transport owns the child/job, so stop only that process tree.
+    stop();
+    return PromptWriteCancel::StoppedPartial;
+  }
+  const auto size=m_acpEnd-m_acpStart;
+  bool removed=false;
+  for (auto it=m_outbound.begin();it!=m_outbound.end();) {
+    if (it->acp && it->requestId==id) { it=m_outbound.erase(it);removed=true; }
+    else { if (removed) it->end-=size; ++it; }
+  }
+  if (!removed) { stop(); return PromptWriteCancel::StoppedPartial; }
+  m_totalPlanned-=size;m_acpWriteId.clear();
+  m_deadlines.remove(id);m_pausedDeadlines.remove(id);
+  schedulePump();
+  return PromptWriteCancel::RemovedBeforeWrite;
 }
 QString JsonRpcProcess::request(const QString &method,
                                 const QJsonObject &parameters, int timeoutMs) {
@@ -276,6 +398,15 @@ void JsonRpcProcess::readOutput() {
   }
 }
 void JsonRpcProcess::checkDeadlines() {
+  written(0); // Refresh the actual QProcess queue before testing retained grants.
+  for (const auto &frame : m_sent)
+    if (frame.acp && !frame.prompt.valid()) {
+      fail("Captured ACP input was revoked before its queued bytes drained."); return;
+    }
+  for (const auto &frame : m_outbound)
+    if (frame.acp && !frame.prompt.valid()) {
+      fail("Captured ACP input was revoked before transmission completed."); return;
+    }
   const auto now = QDateTime::currentMSecsSinceEpoch();
   const auto generation = m_generation;
   QPointer<JsonRpcProcess> self(this);
@@ -284,12 +415,19 @@ void JsonRpcProcess::checkDeadlines() {
     if (!m_deadlines.contains(id) || m_pausedDeadlines.contains(id) ||
         m_deadlines.value(id) > now)
       continue;
+    const auto cancelled = cancelAcpPromptWrite(id);
+    const auto afterCancel = m_generation;
     m_deadlines.remove(id);
     emit response(
         id, {},
         {{"code", -32001}, {"message", "Coding-agent request timed out."}});
-    if (!self || generation != m_generation)
+    if (!self) return;
+    if (cancelled == PromptWriteCancel::StoppedPartial) {
+      if (afterCancel == m_generation)
+        emit failed("The coding-agent input timed out during a partial ACP frame.");
       return;
+    }
+    if (generation != m_generation) return;
   }
 }
 bool JsonRpcProcess::suspendDeadline(const QString &id) {
@@ -316,6 +454,9 @@ void JsonRpcProcess::stop() {
   m_deadlines.clear();
   m_pausedDeadlines.clear();
   m_input.clear();
+  m_outbound.clear(); m_sent.clear(); m_acpWriteId.clear();
+  m_totalPlanned = m_totalQueued = m_totalWritten = m_normalOutstanding = 0;
+  m_acpStart = m_acpEnd = 0; m_pumpScheduled = false;
   const auto process = m_process;
   m_process = nullptr;
   if (process)

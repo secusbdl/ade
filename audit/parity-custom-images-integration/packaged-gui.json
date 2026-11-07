@@ -1,0 +1,8 @@
+{
+  "status": "not_completed_for_this_binary",
+  "reason": "Physical Escape stopped Computer Use before candidate inspection. No further desktop input was made for this check.",
+  "binarySha256": "44c38e1e141d18e849f0b66c02e85cd5763c1398c0c37d097e3e5d5061c97729",
+  "scope": "Actual MainWindow custom-model regression suites and component renders passed separately; this does not substitute for direct packaged Windows interaction.",
+  "historicalControlEvidence": "audit/parity-native-questions-integration/packaged-gui.json",
+  "historicalEvidenceIsDifferentBinary": true
+}

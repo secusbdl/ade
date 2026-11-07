@@ -1,0 +1,14 @@
+********* Start testing of SmokePluginsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SmokePluginsTest::initTestCase()
+PASS   : SmokePluginsTest::actualProcessLoadsPluginContextAndCredential(default-enabled)
+PASS   : SmokePluginsTest::actualProcessLoadsPluginContextAndCredential(saved-enabled)
+PASS   : SmokePluginsTest::actualProcessLoadsPluginContextAndCredential(saved-disabled)
+PASS   : SmokePluginsTest::actualProcessLoadsPluginContextAndCredential(missing-credential)
+PASS   : SmokePluginsTest::invalidConfigurationFailsBeforeProviderRequest(malformed-encrypted-store)
+PASS   : SmokePluginsTest::invalidConfigurationFailsBeforeProviderRequest(malformed-preferences)
+PASS   : SmokePluginsTest::invalidConfigurationFailsBeforeProviderRequest(invalid-enabled-type)
+PASS   : SmokePluginsTest::invalidConfigurationFailsBeforeProviderRequest(oversized-preferences)
+PASS   : SmokePluginsTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 1869ms
+********* Finished testing of SmokePluginsTest *********

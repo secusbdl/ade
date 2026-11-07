@@ -1,0 +1,24 @@
+********* Start testing of HarnessAttachmentMimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentMimeTest::initTestCase()
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.gif)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.jpeg)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.jpg)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.webp)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(Unicode-é.PNG)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(UPPER.JPEG)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.txt)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.svg)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png.exe)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png?mimeType=image/png)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(no-extension)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(.png)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(.hidden.PNG)
+PASS   : HarnessAttachmentMimeTest::unsupportedInlineImageUsesCapturedNameNotInputMime()
+PASS   : HarnessAttachmentMimeTest::restartReconstructsHintWithoutSchemaChange()
+PASS   : HarnessAttachmentMimeTest::explicitMetadataCannotInventMime()
+PASS   : HarnessAttachmentMimeTest::transportBoundRemainsFourMiB()
+PASS   : HarnessAttachmentMimeTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 3529ms
+********* Finished testing of HarnessAttachmentMimeTest *********

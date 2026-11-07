@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-07T00:58:39.699665+00:00",
+  "createdUtc": "2026-11-07T01:53:38.885186+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "developmentCommit": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 4109,
-  "bytes": 43132265,
+  "fileCount": 4332,
+  "bytes": 44046033,
   "files": [
     {
       "path": ".gitattributes",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 84976,
-      "sha256": "538c6556a68f9917cda24f3b75caf95aa2117265152de229153acbc5749e2d35"
+      "bytes": 89694,
+      "sha256": "ed1393b1eab1ce3ad9269e06b114e9ffb345c62616ac6ba8cb9497aa04e491f8"
     },
     {
       "path": "CMakePresets.json",
@@ -94,8 +94,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 26196,
-      "sha256": "746dd4dda5cab378f03285494eeeed6e596781d97b17af41202d7f238af99fdb"
+      "bytes": 27898,
+      "sha256": "fb4048e51a69eeb9c017f89be7fbf5e8bca961c7955ed393875f1c51002b519a"
     },
     {
       "path": "assets/fonts/Geist-Italic-Variable.ttf",
@@ -2621,6 +2621,1001 @@
       "path": "audit/paired-read-context/before-restart.json",
       "bytes": 19913,
       "sha256": "fb41dd4811095d8871543c6c52e18da75c58b1a7ac0270941b92f50aa5b17457"
+    },
+    {
+      "path": "audit/parity-custom-images-integration.json",
+      "bytes": 79984,
+      "sha256": "3b24b532ebd068dd80500167178d1361c847221496bd6d54455c54a774ae0c81"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/build.txt",
+      "bytes": 58948,
+      "sha256": "f6ed53e324bce0ef7a0558cbdb11f7252daf429bcd0d0bb7173b5c3c7e3afa96"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/components/acp-original-images.json",
+      "bytes": 10775,
+      "sha256": "48e4df17e6d919126a1b441fe8b95b2ddb4bb08f0537947b4cadbc81560db5ee"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/components/custom-model-runtime.json",
+      "bytes": 12114,
+      "sha256": "914a6f51db9f63dc2ec829980332620c4c9fc08a8220e1fc08e41f9dec2f93b5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/components/custom-model-ui.json",
+      "bytes": 24425,
+      "sha256": "2e5d4a44ec3dd9b122dcdae4883dd87f7a7ec779276cd59c511a6bb5b5889ee4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_mcp.txt",
+      "bytes": 887,
+      "sha256": "4449c238032cfadae022a8eb0d046110deeec3fadc9a07f201a2f4c055af7aa6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_original_host.txt",
+      "bytes": 456,
+      "sha256": "84ba5ff46c8a18e0bfeb34747f3bd6865dc4b9c6ea51646df1576735472b1f33"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_original_images.txt",
+      "bytes": 1925,
+      "sha256": "7ed58a4b8b076b312a4818a8bd3a99e5fde998026693116274dc6f93cf5c80a7"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_original_lifecycle.txt",
+      "bytes": 988,
+      "sha256": "75d9861127cfd0cd4212cb3be764075a59ce447466d1bfc06fcb4429cc591c5b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_presentation_engine.txt",
+      "bytes": 889,
+      "sha256": "03d3f6da19c81778c17ce7d4d8c93f42e40e6f031efe8767d53d0ac53b91f9d3"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_presentation_ui.txt",
+      "bytes": 3665,
+      "sha256": "6e2af0944459058eba4aaa2da2fddd928e9f032cc9a795365bebf3256472b22b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_settlement.txt",
+      "bytes": 1272,
+      "sha256": "124ce1d71d3a4b950a32d6f5930ef078212970b2a7d0e236a64530af24ce30d9"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_acp_tool_presentation.txt",
+      "bytes": 2042,
+      "sha256": "6b0562bf63ff1678bc39bec3aed602b04cdd70f0b5c2dc7d10d11122e0d8582f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_agent_control_ui.txt",
+      "bytes": 789,
+      "sha256": "cc5a18d8185e188ac12221f3d3ff8b36b86b7bc7f0c9e061c9ab10f160eaf689"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_agent_cycle.txt",
+      "bytes": 5115,
+      "sha256": "5e773b49dcb766d1ed576bca5a103397974e22c9cba035cd8fd758d9faf26c1c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_agent_cycle_host.txt",
+      "bytes": 867,
+      "sha256": "abb8edccd1b2f8b387b46f9b371701f3db0015ef23796d18378ffbb61dcad350"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_agent_prompt.txt",
+      "bytes": 1711,
+      "sha256": "ed25c48421a1b39070410491630f3e4db319b6e7723795b76ac805737839c802"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_app_resources.txt",
+      "bytes": 626,
+      "sha256": "98bb1e4b286202e6225bf265802de33b46039ac77327bffcaf191172817e81a0"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_archive_transformer.txt",
+      "bytes": 2218,
+      "sha256": "92bbeb2f177926327c1916dac7bf6424d517522efacdbb25d62cba06df30fbcd"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_attachment_mount.txt",
+      "bytes": 1475,
+      "sha256": "c52db5d8f0328a4eadf202bfdeb4331dd5e1475dcb884e90e30633e13b69e7f5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_attachments.txt",
+      "bytes": 1701,
+      "sha256": "78f674a52b08a2484195b5b79e8b9213d7ddc6c80e52dba8acd8828d8cb37dfe"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser.txt",
+      "bytes": 977,
+      "sha256": "40e6197ac43387e9c98892f08a580dbea49f7e5e7b1177d9c96490f2a104f341"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_context.txt",
+      "bytes": 1753,
+      "sha256": "7ce5330d72594b5c9807dc2cd45a90c9e9ed651f222ef36dc3210d973e3554f0"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_context_runtime.txt",
+      "bytes": 1425,
+      "sha256": "507080ff84d74680975368a6d69ece9708b1b4aaa769dd7a20f3123ff58c8aca"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_inspector.txt",
+      "bytes": 1163,
+      "sha256": "0d9cdfe9433a6aa0e83d35198292815f53b76a2d4c305104e7282199f3a89494"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_session.txt",
+      "bytes": 1743,
+      "sha256": "349390fc6a92cc39ba59e8c1965a8fa7ac47ae2b034936c4cbe5b904fd8295b7"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_session_host.txt",
+      "bytes": 1363,
+      "sha256": "7871ee2415dd44589119a561e1e5ae7f2282e2eabe5aefacb5f90403bb7be24e"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_browser_tools.txt",
+      "bytes": 1883,
+      "sha256": "ada96a32eeb508f1367ca472d23f3cad17e6a0d2a8dd04d4d7c9b263fe2da502"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_chevron.txt",
+      "bytes": 725,
+      "sha256": "ff3298e3b9e4f3a8d57f990d04027e3b73ca9f73b6790014b80ae7af62c110ae"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_control.txt",
+      "bytes": 1523,
+      "sha256": "210142fcb5408a952bb8f29c79c0042ede3482605aa7fa5395314c3edeeb1add"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_discovery.txt",
+      "bytes": 962,
+      "sha256": "88eba727f7bcfcea729aa9e9563e2f6e1ee8c0a103aae3bd5d634f329684ae46"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_engine.txt",
+      "bytes": 1347,
+      "sha256": "3ee46419fdb1b395103294031f6c0f536b5edd78e680ce85aeafe9b09e8a81b9"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_host.txt",
+      "bytes": 645,
+      "sha256": "ef6d950e7aff594f4440780733bc66dd0e489b3c8ae803275fda416a91c39b6a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_provider_ui.txt",
+      "bytes": 2947,
+      "sha256": "7d92b3821f2b8d60640de5477f029be4cb55702f79c71e7f7c4ca01698c20bd8"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_resume.txt",
+      "bytes": 2341,
+      "sha256": "85e5bbe63d633677413393f1fc3d1e6b0898e9ad4977b8803cb095e551e6b74c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_session.txt",
+      "bytes": 1920,
+      "sha256": "16163497e347c9d5eba40b307c39e926909665f273226394efea559d81511391"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_claude_stream.txt",
+      "bytes": 1651,
+      "sha256": "b48958ba402b2923fca26080d1fb2e2a96eb33628d3d4da6db2677c24ce3712c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_codex_engine.txt",
+      "bytes": 1279,
+      "sha256": "a93563f6a66180a8a12c12b69b722e66aefe52589a20ae12b16e58c9c8ff7237"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_codex_files_runtime.txt",
+      "bytes": 628,
+      "sha256": "7d4475f13dc69d8f91b0e3d76a80ccaf558f32420fc85c85deccc27ba0e56e8b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_codex_harness.txt",
+      "bytes": 1965,
+      "sha256": "b09157833acb5af9b367179d929b35cdb01a034a80676f96a31b10a50f4bb9a7"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_codex_host.txt",
+      "bytes": 571,
+      "sha256": "dc45802a00444d5b815b7a653b470f0d526d80773ac3e3e72bc90346f12b16fa"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_codex_provider_ui.txt",
+      "bytes": 2659,
+      "sha256": "42fc69905fb0eb8bd47fcc1deaa4ad3ec57b2bba7d70546d440a32ebd49316dc"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_command_center.txt",
+      "bytes": 3334,
+      "sha256": "a0f7172c240d1abd25a83e075092293ed2ad8b60068048a05f772b9b2a4513ea"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_command_center_host.txt",
+      "bytes": 3235,
+      "sha256": "deda815bbe0204e7da3acce752d0b692e8804b44e5e94afd99365d6d6e0cc621"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_command_file_search.txt",
+      "bytes": 670,
+      "sha256": "8045e6d66d6e21d254f9f4d608a385c8e0f116b95e34bb01513bd7191b542696"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_composer_completion.txt",
+      "bytes": 13045,
+      "sha256": "90c01a4dc4d0f91899c1c8da73bc90b1e188112925a641958e8ff7856c5bc6c1"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_composer_host.txt",
+      "bytes": 2124,
+      "sha256": "14e6f4b649507136e8766fd6568d392380a7edcd85fedb2f4adf922ab07dcb27"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_composer_search.txt",
+      "bytes": 1178,
+      "sha256": "58147fc77d9e0f55272bcb67d40d2e168f73b398c044318cf1f26e0d0d3712f7"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_context.txt",
+      "bytes": 742,
+      "sha256": "78a84e8cac7aa07549f83d28ba41b747e0f7e1f4bd7410760eb68d6b717faee3"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_conversation_control.txt",
+      "bytes": 2353,
+      "sha256": "c61de69da894e72858b40c891ce40254b49b11516c114fd2262157e8861a41e4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "543712ee275f57be32b6649a651be361d727b1a4dfa44bc4bff4f195bb02cc40"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_core.txt",
+      "bytes": 2674,
+      "sha256": "a1ebd440b63ff2ac9ce95c3d347a56c3ac6a75cf6b5641101c1580ebc1c8dccc"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_config.txt",
+      "bytes": 1163,
+      "sha256": "8860c9a09d6a521b3fa7982e2d56fdb7b7775402c8624823fdd41c327ab8aedf"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_engine.txt",
+      "bytes": 1509,
+      "sha256": "e8683b4756db048c10e10c5c6bb9e0023063c5543ed117e8322bd78b5f06bbf0"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_host.txt",
+      "bytes": 891,
+      "sha256": "bda96ac6f266b3e7d8b29c7b797c9d2deb33c00b4dc338680d162fd6070d556d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_inventory.txt",
+      "bytes": 1013,
+      "sha256": "f6f60ea710abf13bbcebb8b788ed3eb42caa1ffb791e0999b14a38bcefc00460"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_media.txt",
+      "bytes": 816,
+      "sha256": "a9d9297ab7e0cb93e89b1cc7c216edfdb7b3b489ddef5261e8ba2cfda3d69519"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_options.txt",
+      "bytes": 10625,
+      "sha256": "f72d5e897157f2e9e2ebc4dbbf1184b21c1c62669842ed156d2651cfbe21cd0b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_smoke.txt",
+      "bytes": 583,
+      "sha256": "004d32b27988c02e7a702bbab440f4ab5f15517d568add9cd4c6db41c8162a21"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_storage.txt",
+      "bytes": 1739,
+      "sha256": "327a51c1ca8d752e5b3ebe110a09a175773afce1385872f91fe997cbee309eff"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_custom_model_ui.txt",
+      "bytes": 1464,
+      "sha256": "7feb72acc020465b6a3d2168aa4a70f73de79bed11deee5a72216d72461efbda"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_direct_question_mcp.txt",
+      "bytes": 3017,
+      "sha256": "882b56443f1bc0ca265a8f3231df12e90a0d33e3364486821b48f88093417f05"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_downloads.txt",
+      "bytes": 924,
+      "sha256": "36f5b32593375a16db0c948b80b81024d14dce56fccf4fd0af230e9e56d498a8"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_editor.txt",
+      "bytes": 2488,
+      "sha256": "ecf599a88344c94e20e73312d94ee113551269b0b74e2c2f71e24c9ad042c444"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_engine_observers.txt",
+      "bytes": 3940,
+      "sha256": "ed70a1f18cd3280e17839ad020b2c049f3d5c9a4c097f6dd0f0b1dd47e6841f5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_external_context.txt",
+      "bytes": 791,
+      "sha256": "8b481d1d037bab0a0b25bfa973d12df880c0b8eb3364d51962e8d4a872a8cf7c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_file_diff.txt",
+      "bytes": 1266,
+      "sha256": "03738f73b21822407182d92dd2acfd1fc87fbaf4a55c3cd4827ca346e917214f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_file_mutations.txt",
+      "bytes": 4355,
+      "sha256": "e34c75c76ebe35285baec768ec39367d2d9d03cf26ba986a86403c0ee7076cff"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_file_tools.txt",
+      "bytes": 1518,
+      "sha256": "23ad642ab4081be5fd08b0255a04e59374c1472efd9a418c540ac4d2e8bb170d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_file_tools_races.txt",
+      "bytes": 1045,
+      "sha256": "c35cac1b141906013cccb3c7df8a79ba1798e40f9836e31b278e089182c1058c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_file_transformer.txt",
+      "bytes": 2304,
+      "sha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_fonts.txt",
+      "bytes": 563,
+      "sha256": "06feef80823a7d8c5aedd020ecc1b931146543292f057a86365ca543f72ad918"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_formatted_att.txt",
+      "bytes": 2578,
+      "sha256": "755b6e03f9675be339215245f64e32555b4bb503deb365b5c1c34f98c40cb74c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git.txt",
+      "bytes": 1210,
+      "sha256": "7c7598371fea61b28239af9a9b604db59c4aa1323d9c58775f6f1e1a17da8835"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_cleanup.txt",
+      "bytes": 1738,
+      "sha256": "c73cf77140fb04669d1c5b3e882f31f755e37804729043d1cbf860a68f16fcc2"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_host.txt",
+      "bytes": 3258,
+      "sha256": "a9ddd09c84e910dddce3b9a63051027ff617fb1abb41b80b89859d8b424ed192"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_ui.txt",
+      "bytes": 1466,
+      "sha256": "25fc00c3de1a99b2ef55d453ba74e4c69f9e00d999ca744c4565980afcc73a7c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "01f922c7ed42f52dfb2ca83f1bba2e57ca703b4583eaf6c61492ce51f20cd46b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_watcher.txt",
+      "bytes": 2637,
+      "sha256": "4889e2cec9203b46241145466144ed9c9001d40fdc3386625ec8bb3fd5d7a5a6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_git_watcher_ui.txt",
+      "bytes": 541,
+      "sha256": "739d1b8f34d684f7675bbea16628bc12209768b69d573b7f25d1e10c92ee8a1f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_attachment_mime.txt",
+      "bytes": 1857,
+      "sha256": "8c820092f9270731245e94a887ac9782a6c7730f20ce9723869c38d1d9e5ad77"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_attachment_source.txt",
+      "bytes": 814,
+      "sha256": "83c563382c97aa65d3084890379a9a33c6be2944d283ba2c67ca6cd07070acf5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_attachment_store.txt",
+      "bytes": 2435,
+      "sha256": "9627c8a9051e6110aecd813993e031bf29f400198e6b1c828c9def6dac9aa885"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_attachment_wire.txt",
+      "bytes": 1288,
+      "sha256": "7c97f23df05475ca0fc5d87e4089d2bbd049ee1662d8a3b495ba4506b00e1000"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_attachments_host.txt",
+      "bytes": 2665,
+      "sha256": "1b7f27816c21aec2dd4e17049235b81430eb2ad11acb04d8320df4c4b9212a02"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_cleanup_host.txt",
+      "bytes": 866,
+      "sha256": "6ccacfc2b8fca4d67a4fe56c77949cd405d826298b7def9cceb51d73ea3abd7c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_continuity.txt",
+      "bytes": 2859,
+      "sha256": "6ee01468a9cf4bf4dd5e2dfb82978f8e90f19915a39ad6d59d01ecf7a918a9fa"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_files.txt",
+      "bytes": 1119,
+      "sha256": "b9231680e71f6d3bdb78e1c3a98869ab3e99f7d700a5f6833b81acc3dd3b8f44"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_forms_host.txt",
+      "bytes": 1005,
+      "sha256": "ccd9cc19db2ee1e4e70fb1ffa47f5fd2cec56ac8da3bc0fcc00c0e1d67e93a00"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_harness_media.txt",
+      "bytes": 752,
+      "sha256": "60697b08956ec7efb76be2c35d01a5741a7ed08c0bf10a37844ab2800bb9751b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_historical_attachments.txt",
+      "bytes": 2864,
+      "sha256": "314d0aabf4b6ff7053b2147080e8e1678ff8200d640234ef98ec5484376708bd"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_history_projection.txt",
+      "bytes": 1127,
+      "sha256": "218511e4aa820a51f0876215fd624e45d245e54717b721de68d875ef44f244b8"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_history_recovery.txt",
+      "bytes": 2542,
+      "sha256": "fee7d1233db3db4caeddb489d9dd5f8edc724667c3fe82549f0d9d1c41fb8576"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_image_preview.txt",
+      "bytes": 991,
+      "sha256": "c548d14ccb6bb73deb6616dffbb38e37a82dbbc1177b60b94a7d5b844adc328a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_link_provenance_codec.txt",
+      "bytes": 621,
+      "sha256": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_main_chrome.txt",
+      "bytes": 5050,
+      "sha256": "92e39a6f661db1872a3d7aa7eaf1b3f7b9ad7805c8884a179760a3ea274fa044"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_mcp_engine.txt",
+      "bytes": 1198,
+      "sha256": "e2728d28cdff71dd81643eed3b4f4fb479739aadb810778d06a5638091fef1b5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_mcp_presentation.txt",
+      "bytes": 4293,
+      "sha256": "7cec7e2b584ca72cad7f998235b9113941b4a31dce3861b334a8bd4aad2de42c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_mini_apps.txt",
+      "bytes": 626,
+      "sha256": "34ccf75fe503b833ff76c069eb84cdceb6680aae6a0ec001b81ce264a6df3890"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_model_discovery.txt",
+      "bytes": 2834,
+      "sha256": "8ad91cbaa8c2b1a19ce3f7623f1853c3c2e420ed3ae59cb80c1dcdf8fb08e784"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_model_discovery_host.txt",
+      "bytes": 3299,
+      "sha256": "b6521f9296fe19edd3ebad562cc4b90e7f43d0e4f91b79821a9f8401705e4e95"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_model_selector_display.txt",
+      "bytes": 1514,
+      "sha256": "8661d50931832750f9eeb9f3160a01cee7e0732420bb222130391629a4011179"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_mutation_runtime.txt",
+      "bytes": 1765,
+      "sha256": "9db3a5fc187ef8a8650b66ef36af844763814b98cc49a9297c4c69f252a7a992"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_navigation_shortcuts.txt",
+      "bytes": 2752,
+      "sha256": "12f6af896171f10cdac2b550cc65a350eb5189db908a00051e5099709397293d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_network.txt",
+      "bytes": 1383,
+      "sha256": "ef27104c60739b3678f1dee0043f2f9a535d4667ad284562014d4a741f88d2fe"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_opencode_engine.txt",
+      "bytes": 1219,
+      "sha256": "2675e2caf47a5188b249278e3f426a7bbf1bb2a5678186ed79210329fee9effd"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_opencode_harness.txt",
+      "bytes": 2127,
+      "sha256": "20aaadc8222089a0599e267ad14a96ed5eda36689977fc931fcd8420af4d771f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_opencode_host.txt",
+      "bytes": 661,
+      "sha256": "f2f2b9646bafc0364d5835bd36bb9d838365e67fad78dd0c2c0a3d1859075d98"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_opencode_provider_ui.txt",
+      "bytes": 4215,
+      "sha256": "30eb8e4405922797fbded2c5c90bfecd838a206f3bf3c1623e6131a6e2ed2425"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_plugin_connections.txt",
+      "bytes": 1655,
+      "sha256": "2dd4c42b42cdc8427d47b73b59e462ac392aff3bda5a27c8146287259bc517a0"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_plugin_runtime.txt",
+      "bytes": 1639,
+      "sha256": "b3383889f841ded971439d5ae9e8c7fadd2910a9a069564268b81e28dd573602"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_plugin_settings.txt",
+      "bytes": 1669,
+      "sha256": "dd79e3766ca7edf9b179fbaefc9a85e8da0dc4c5a8866f9b846db46c25d9d8fd"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_plugins.txt",
+      "bytes": 1717,
+      "sha256": "528a285c91ec9904642bb8287e891b1b55c9c2f7223eef358960dc667b0704f3"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_presentation.txt",
+      "bytes": 5530,
+      "sha256": "5b6cfb6f78fa620af03d4b4b69ae4f9e14da4ea22461c2827812aff845b03943"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_model_visibility.txt",
+      "bytes": 3130,
+      "sha256": "03e5a4b136a3349cedf0df2a28230d48614207d749fe10779e01bc87d914027f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_model_visibility_host.txt",
+      "bytes": 828,
+      "sha256": "e81f64d0c5be80a73822c8b549bffb09ce95e918878f0ef685d15010654dc007"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_operations.txt",
+      "bytes": 3804,
+      "sha256": "f8cef5401a1f8d8a7676bb6a6a28c1d35e7873b7fdb3c7ea668d73671069b956"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_picker.txt",
+      "bytes": 2562,
+      "sha256": "354cc274b9e9f37556ce4468ae61c79e3534d5a7b8872e505070c8ac8659577d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_picker_host.txt",
+      "bytes": 3444,
+      "sha256": "0ac1511190d34db3bf405af542bb0539b7166ca6a44baab2d604b120cd016f13"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_picker_window.txt",
+      "bytes": 3100,
+      "sha256": "049219d9d5c311a106885e391fefba12262f3c070188d53f5036883035782fb4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_removal.txt",
+      "bytes": 4800,
+      "sha256": "3fa78c9e403adc2b988ad27b8d06c4c24fc16e0b5fdb12a01e88210935e43d79"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_provider_removal_window.txt",
+      "bytes": 1555,
+      "sha256": "ca8aaae213765e6c300417ec7849deea3766b296f5dc48ab8637b14eefa89b35"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_question_mcp.txt",
+      "bytes": 2010,
+      "sha256": "734c3fadbb13a5c1282193636b0807aaf593eb96c2a149533142478bbe06503f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_question_panel.txt",
+      "bytes": 1594,
+      "sha256": "3b1c635eadc8236a532fd2728c81a51f47ff4212379b5a2ad8ea49d3048bcd12"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_question_presentation.txt",
+      "bytes": 4414,
+      "sha256": "ab420e77dd00d36a7e4589eed57cf35786f3d9e1e477a0227ad834fe26220833"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_question_presentation_host.txt",
+      "bytes": 669,
+      "sha256": "94d78663cff21a46f9336816f3d097597d2c0d2cdaf80044d1d51cfaf29e55f3"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_raw_enumeration_races.txt",
+      "bytes": 1244,
+      "sha256": "30a8334e2487c670134b812eea5e86ccccfc8d9ae6d40936515821502c84394f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_read_lifecycle.txt",
+      "bytes": 1712,
+      "sha256": "a3bee70f80f42b50d48a4b4bcf54af0f107969e4cf3a7d0b3b44a9549ca2c582"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_read_runtime.txt",
+      "bytes": 1391,
+      "sha256": "ff365e00e80499aee570116c1e57c7677b84b5d0c354c76082a041e63a1cf548"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_reference_controls.txt",
+      "bytes": 715,
+      "sha256": "dbb84336a4fb6d62f8352d3912191082138925149ff291814a0013f160824f7a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_retired_wire.txt",
+      "bytes": 413,
+      "sha256": "67cc213ea48381daf20df4282fc68ad5a8f81c835d96afccdb6b36131cef9f7b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_rpc_deadline.txt",
+      "bytes": 662,
+      "sha256": "fd55dba3a8f088a8832b65e988b0c189aced35980cd3c441c98fb0c426235387"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_runtime.txt",
+      "bytes": 1806,
+      "sha256": "e72815ee2ae8e2c1afd3273bacf15af28bad39f415a51b13c94c5d9e7d7a3044"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_runtime_apps.txt",
+      "bytes": 2284,
+      "sha256": "697b992f949710047d59d491ee356b5efe64b7987961198a8f795335831c7b0d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_sandbox.txt",
+      "bytes": 2081,
+      "sha256": "4864bc51068ae6ae779e95df8078848aecc5261cf722d4375399cd61fe8e4ba5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_sandbox_apps.txt",
+      "bytes": 536,
+      "sha256": "955ee1bf9dcb00f828312a987d2fbac24fd83803c64a81a56e14b397fc9d336d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_sandbox_network.txt",
+      "bytes": 1158,
+      "sha256": "49aa51f0e84c12fda904825b6d94c34df2474ecd01b06b3203b0bbf94dbbc4f6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_session_cleanup.txt",
+      "bytes": 2515,
+      "sha256": "fa7e46dd18e82d6e435115ad3bc0e89002a42164ab37dd0bc3651d9d255ced95"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_session_logs.txt",
+      "bytes": 1267,
+      "sha256": "e8d216d993efde53f93570618ac67128fab0da73462e3a43c09b1f98cc354fe5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_settings.txt",
+      "bytes": 4373,
+      "sha256": "0b5314fc7c00de1aa4ed2ce054b4a5f54be10669be2b482791e597164b581658"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_settings_audit.txt",
+      "bytes": 1393,
+      "sha256": "27a4405adae17b9f81d45bc0381620336dc5a262ba6e057fe88aa4b5d4027d4c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_shell_engine.txt",
+      "bytes": 1247,
+      "sha256": "df714ab83e922ed678fed4cec1fc250e3bf54954c55e8e7040ea4aca6451d190"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_shell_log_mount.txt",
+      "bytes": 671,
+      "sha256": "96db7fd1978ab67bc62467faf091069d43b9b5c740be70c902b6559f209d51cc"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_shell_runtime.txt",
+      "bytes": 1188,
+      "sha256": "cf7a29b51075d3016a3271990267a595d5277367aba248166c755ff71181a3ce"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_shell_service.txt",
+      "bytes": 1589,
+      "sha256": "d6de73aa1c3f033f53d68f006f03aa0b53db7022deece85d43a0b138a3de249e"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_shell_view.txt",
+      "bytes": 572,
+      "sha256": "304a6b84d8366d0a80a7020dfc6d3674d9bcee1e6950ab3c7c1bca18d7c2e0ea"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_side_chat.txt",
+      "bytes": 1675,
+      "sha256": "36267afe343c72b2ed9c66aa2dfb8bce497bda72484d0701f12f354146d9bbe6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_side_chat_host.txt",
+      "bytes": 3168,
+      "sha256": "dd6799835506755b7a9fab2c2409664a57d9e8fb29691a6c48dba5837f0fad1b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_sidebar_model.txt",
+      "bytes": 1354,
+      "sha256": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_sidebar_navigation.txt",
+      "bytes": 1612,
+      "sha256": "3ae1cd198be2e86ac5504edf3e70ab19a6908b8d2557d6c075df79d0b1592058"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_smoke_capture.txt",
+      "bytes": 692,
+      "sha256": "cba958d05214d97b2006d9ed63ba77cd79338c61a47c5f3c07e70cb183c13ae9"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_smoke_plugins.txt",
+      "bytes": 1131,
+      "sha256": "65dff24c8b013b94190e3adc97d9b3cc603e3f5f87557ecdc89ca0c804823d94"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_terminal.txt",
+      "bytes": 1227,
+      "sha256": "6b7333f62d3634dc6ae93b8e18e04b56c76b83c91ea0302b6b57dafa9255b224"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript.txt",
+      "bytes": 6514,
+      "sha256": "d80807e304ebf23d5798b53d8b86d177946e3cb86907efad67f5d12d769cb92d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_grouping.txt",
+      "bytes": 1368,
+      "sha256": "e72420f24e1829d69bdb5de443d0cc4146801d951cbd33fa021c0694c1c6e801"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_image_lifecycle.txt",
+      "bytes": 2187,
+      "sha256": "c49fa0d99af8dd66b1a87264e1a37cd053f8e00986b174d709fc1db1a70f3c9b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_link_ui.txt",
+      "bytes": 1876,
+      "sha256": "939e0c7efbc9191b0ac73212751f4c50bfef86dfba161d275ae83b4ba8013a2c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_links.txt",
+      "bytes": 2497,
+      "sha256": "a57278594c262d96c08b3c8365394f5957e14d4a1c3638f579bdc0fc9bdb366b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_polish.txt",
+      "bytes": 1564,
+      "sha256": "5691ead12416ddef3c50938683d725c92573468b05a2344c22e94e5db2d4480d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_rich.txt",
+      "bytes": 1494,
+      "sha256": "315c2473ae433d0013a6b6b6d601fdf58ca44aa1ba540afee85dc9a135929951"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_tabs_real.txt",
+      "bytes": 872,
+      "sha256": "989ef4fc6069034d2664bc1cdb6c5c1f6d1dcad9b321bf83f4c258ec2023991e"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_transcript_ui.txt",
+      "bytes": 565,
+      "sha256": "881ed9b0b96389cb2437ef79e777f8d0bf8e0aba5c8aa2cea8a97b23975e448c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_turn_file_snapshots.txt",
+      "bytes": 1603,
+      "sha256": "2eec315a764985fbeafc0e0ba5c572f47bccc1cc77d7bf5894bf13790a34e50b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_turn_files.txt",
+      "bytes": 2159,
+      "sha256": "e484548e83b217474f0f31e5fc05d67b93470abc805e7d7a698c898348ba706a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_turn_files_host.txt",
+      "bytes": 1243,
+      "sha256": "350a0f49cda029d3ee3bd4d82532828d26076b3200bec9993c4274132497b210"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_ui.txt",
+      "bytes": 965,
+      "sha256": "33f54cb44ccc77957a51ebe08b60a86930a8032d01295a21c4f2078ae4fbcfa6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "5e1430927fc2c5f677e8bd4c28dfbc704dee9a92e4f58a038f2213d858097f7b"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_usage_compression.txt",
+      "bytes": 2754,
+      "sha256": "04d1729bef0e143c98c4ade5067d9f2d100f5f32569476d90fbadfcb6e4daa98"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_usage_settings.txt",
+      "bytes": 549,
+      "sha256": "6c5e70396d4328f37248257b38d4f28fdaa779d256dfcb9f49e7d0634b5771d1"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_utility_model_selection.txt",
+      "bytes": 3675,
+      "sha256": "f15c3d75255f51f0ab6dc490ff1d5648c85f0025a856bf4deb984847a2f517e0"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_utility_models_host.txt",
+      "bytes": 1095,
+      "sha256": "076782eb8b4d278b2776209991398ef11fb602e0e5f602a3044a9f65d71ea809"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_workbench_helpers.txt",
+      "bytes": 773,
+      "sha256": "b235bc8c682fcbeac8b1072421a3367c772542533f9d712b2ce634a4d9ac2093"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_workbench_layout.txt",
+      "bytes": 5564,
+      "sha256": "98a0006ddef4362168826fc1461207a16b5591f3b1820e37659fac7e70d47b4f"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_workspace_changes.txt",
+      "bytes": 1758,
+      "sha256": "edb92ce1b459329c89fd52b5a67bf8ebadab171b82b3b26ba19dd9b8f6dc2a66"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_workspace_changes_host.txt",
+      "bytes": 712,
+      "sha256": "d18a6df8e6793b20de017a9733ecd721800d61a1564ee37ba5c0e9ac7ad44bc4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/native_worktree_settings.txt",
+      "bytes": 1543,
+      "sha256": "4e8c134d8e09f907aa4c275f49ae38f14c6ac29410e11258581ae0fb17312145"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/reference_file_mutations.txt",
+      "bytes": 2950,
+      "sha256": "47aa4fac4076cd083fe38baebc4439cd94284142665eda71d775a95d0f21033a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/final/reference_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "038edce7fcff37168363572ffb9c931edf83d6adda3441088dc0270f809c2f51"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/full-ctest.txt",
+      "bytes": 21697,
+      "sha256": "b99bf96499c094c7f8f6229e6848fd9d61d914607e5a0bb9d5ad2be0bd58f18d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/full-ctest.xml",
+      "bytes": 29308,
+      "sha256": "b39ba3ccd85c961032f349446e3fbdbadf2da7cd14fe57cfd61d6fe62febae24"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/live-acp-image.json",
+      "bytes": 2843,
+      "sha256": "938c090f0d91c18f06556a7eb3fd79b82ca4c4f21e8e55cba294649e1ec6d328"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/live-claude-subscription.json",
+      "bytes": 3225,
+      "sha256": "50fafde3083c8cbdc55ebe42afcbdeb739faf9ad484f0a9e91d92ae36b78e4b2"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/live-custom-model.json",
+      "bytes": 3344,
+      "sha256": "c5ff6456eabb2270dee42f187a34e948708669f467b56f265daffab6cb5dff84"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/packaged-gui.json",
+      "bytes": 576,
+      "sha256": "2482dec034b0b46b075950b8ea4113480d903a9191e11e8da7add1a50f90649a"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/packaged-mcp.json",
+      "bytes": 959,
+      "sha256": "5010b6c99c56584620691201621b1f0951888f157cf215b5756d45a3f53a2c2e"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-1.txt",
+      "bytes": 686,
+      "sha256": "1037b1acc3aa8bdff648b7c59c864dcfb08b78e3d825c4ad6eb970de5b59a395"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-2.txt",
+      "bytes": 596,
+      "sha256": "a207fd1581d4d2dc2fc67cfe271b30788e04ee513632ad9e42707366086a9916"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-3.txt",
+      "bytes": 712,
+      "sha256": "8ece3518ed9c27da9dc263abdd4efc67e8bdfe4da8cb3e0c9524ef3a104c73b6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-4.txt",
+      "bytes": 807,
+      "sha256": "eed1f956e7350fb6a607624a459f743912777d8057e75b348f1c865b374ee7c4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-1.txt",
+      "bytes": 1316,
+      "sha256": "f404730e0436539baa91d80df43f09e9e409b2c4ea01eb0fcf40755c5f52d1a8"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-2.txt",
+      "bytes": 11363,
+      "sha256": "64c7a7e9b4a0fb5ff84739b50b32a69f3511b3dbaadb9edb17854b8cb9c18426"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-3.txt",
+      "bytes": 807,
+      "sha256": "a873223ae447dd38538152db759b0fe9056389668f9acf57b8a33481683c9468"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-1.txt",
+      "bytes": 997,
+      "sha256": "e5687065f6d2f84025b972fa2de41d20af47a30bbc7c609eea0a81f90610ce2d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-2.txt",
+      "bytes": 1074,
+      "sha256": "992541ad593e8ecce72f6ca4c4b560379540ea1c74e5d173c9e74c7e0b4182e1"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-3.txt",
+      "bytes": 875,
+      "sha256": "60f0f4d2d4b16025da8d68ed23bfc4e31fe4a2640def5a7dee0d7d7aded9770c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-4.txt",
+      "bytes": 1060,
+      "sha256": "2856340eb1ef5ce52e2f1db945b34168ab0996a979532ae68cbf116a93a0e7e6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-5.txt",
+      "bytes": 619,
+      "sha256": "715993bb9976760a9eeb7ff353d362653167235908efa6bd277d329387112832"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-6.txt",
+      "bytes": 1616,
+      "sha256": "fb64d3c02a3144110ac16ee145986eac5b3aff05a036a87e2423739a099e7b66"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/tested-source-hashes.json",
+      "bytes": 65494,
+      "sha256": "4006886182c3d3a69c7d11c3512fd85e6e3dffcbd3cf55639624d270a8247d41"
     },
     {
       "path": "audit/parity-followup-configure/qt-minimum-build.txt",
@@ -7024,8 +8019,8 @@
     },
     {
       "path": "audit/parity-review-coverage.json",
-      "bytes": 268400,
-      "sha256": "6a178d0faab899d2e931829a23a789422558f523f2d9fff056b1622b6c6f9c81"
+      "bytes": 270801,
+      "sha256": "75f9a1950c2fdb53cd0eff3b0c9e19b33af779d017d511f5400f5d5baffca3b8"
     },
     {
       "path": "audit/parity-review-integrations.json",
@@ -7816,6 +8811,11 @@
       "path": "audit/publication-parity-integration-desktop.json",
       "bytes": 635,
       "sha256": "15c71eaade61d27212d431469a764502f99cf7c4bc35a61c35a6203e86cf9ade"
+    },
+    {
+      "path": "audit/publication-parity-native-questions-desktop.json",
+      "bytes": 932,
+      "sha256": "f76f6727fdf47f8b488736194650eba799a1e4055ae3627a806ad71a5170ccf9"
     },
     {
       "path": "audit/publication-parity-review-desktop.json",
@@ -16719,13 +17719,13 @@
     },
     {
       "path": "src/attachments/ModelMediaCatalog.cpp",
-      "bytes": 2189,
-      "sha256": "147e537c155da3372c8743c491b78317cc93b7652ae8befe82e9f08b7cdcae83"
+      "bytes": 2869,
+      "sha256": "050fdb7433d55af65aee5949564ebd4f181950fa0dcf5a08356a2427753c2762"
     },
     {
       "path": "src/attachments/ModelMediaCatalog.h",
-      "bytes": 479,
-      "sha256": "4d8a3c9a4cddba907d79d6d8cf6b62cda247ffb634eaf700b2681035a894042c"
+      "bytes": 546,
+      "sha256": "a53bef7d448720ebdf5a4c5c64889566d0693b6d865c7e24510200fddcc6d6e7"
     },
     {
       "path": "src/attachments/ModelMediaEntries.inc",
@@ -16799,8 +17799,8 @@
     },
     {
       "path": "src/core/AgentEngine.cpp",
-      "bytes": 64317,
-      "sha256": "8d8277a83eba284862e22b6c9a70764e526bbbd4f1a6a36091f9069f1d19a668"
+      "bytes": 64722,
+      "sha256": "92660005d531b023e264cc94f10aabe7ba160ea4910dba2e9726e250fe400b8e"
     },
     {
       "path": "src/core/AgentEngine.h",
@@ -16868,6 +17868,36 @@
       "sha256": "83363064d48f4479a5114fe670cbecb9c4e576792e7bfefc82d893cc057c31b5"
     },
     {
+      "path": "src/core/CustomModelConfig.cpp",
+      "bytes": 6775,
+      "sha256": "a3b6e1c89f996947b9478ccc3f60f7d6b58bd213c1a3d97c3748c22935051880"
+    },
+    {
+      "path": "src/core/CustomModelConfig.h",
+      "bytes": 1024,
+      "sha256": "13e44df04182c227132dd0f15384b6f68784c4b7f04d5fb06e7637c3de9ebb68"
+    },
+    {
+      "path": "src/core/CustomModelInventory.cpp",
+      "bytes": 3169,
+      "sha256": "0052219c7c41e12a831c4f4b20d6358e1bb2fa5aa364968dfafcc1b964cbbfff"
+    },
+    {
+      "path": "src/core/CustomModelInventory.h",
+      "bytes": 454,
+      "sha256": "851e74e8bb96caa98c9f5947a17562be96f7729ec54e1ca90548c325f67e3c3e"
+    },
+    {
+      "path": "src/core/CustomModelOptions.cpp",
+      "bytes": 32122,
+      "sha256": "7942d4f8ed953d798de1da39fad2384aaae15f27c0e1bb53e3da30e6588bd1f2"
+    },
+    {
+      "path": "src/core/CustomModelOptions.h",
+      "bytes": 1071,
+      "sha256": "ce241ec7deec0df85dea34c2f06d14cfa48e0fac73b131a1fba364cfba2a11f8"
+    },
+    {
       "path": "src/core/HarnessHistory.cpp",
       "bytes": 3572,
       "sha256": "9bc23531ee315222cb14db50a63fe956366947cc41014fd2a5b6ad2bf393b10b"
@@ -16899,23 +17929,23 @@
     },
     {
       "path": "src/core/ModelFallback.h",
-      "bytes": 1592,
-      "sha256": "b3403a706633f2a6663a831e081e3fddf8066cacbc544e12962c757939b3c248"
+      "bytes": 2100,
+      "sha256": "f86143d48b7b65ea83cc4c38cc8052a2eae6ddcf1ae29102c03ca587a5e6d3f7"
     },
     {
       "path": "src/core/ProviderConfig.h",
-      "bytes": 2956,
-      "sha256": "c6f3ecea99af105c208c01712e4bb9758c41547295636683536c9508f99b7a85"
+      "bytes": 4029,
+      "sha256": "ec75bdd3a38f48a2b62d91c8572506d9a0c5ebb5056eae2aa0d8c1d0d7033251"
     },
     {
       "path": "src/core/ProviderProtocol.cpp",
-      "bytes": 14825,
-      "sha256": "2e540debc323f95c0093f398efb2539874e7f0af6f643b64e16275a3399b9d6e"
+      "bytes": 15523,
+      "sha256": "2fe78ab7dc95ae635a6a4407ae6d369d95e615e0c5d198f1aff96fc8966e79d5"
     },
     {
       "path": "src/core/ProviderProtocol.h",
-      "bytes": 595,
-      "sha256": "f6f49ddfb447e026d4c2da875ba82923f4737048a3306b2d4922e12d9329a4c4"
+      "bytes": 610,
+      "sha256": "b00e0ab830dc26443b6c542cb9e153004ae7b58fecad4a2b19eadcc877508a34"
     },
     {
       "path": "src/core/ProviderService.cpp",
@@ -16929,8 +17959,8 @@
     },
     {
       "path": "src/core/ProviderStore.cpp",
-      "bytes": 15510,
-      "sha256": "8c26b39d4da60cd3c3139bb4cc0241e4a375e4656767f91d839662c7447cdee8"
+      "bytes": 20197,
+      "sha256": "5f2eee1eb89f8d921ec5c05c8861e0f01e6491dc3b69a1360ad79aa2411db7be"
     },
     {
       "path": "src/core/ProviderStore.h",
@@ -17004,8 +18034,8 @@
     },
     {
       "path": "src/core/UtilityService.cpp",
-      "bytes": 15639,
-      "sha256": "868f39fb18182098cb1583443ef541e2494872b56c45fb25220bf3d8ced51054"
+      "bytes": 16122,
+      "sha256": "bec51c06aa2976143c778504c9143defed0ffae57b559e12dd4031d2b9b5470a"
     },
     {
       "path": "src/core/UtilityService.h",
@@ -17234,13 +18264,23 @@
     },
     {
       "path": "src/harness/AcpHarnessSession.cpp",
-      "bytes": 35971,
-      "sha256": "fb7515e9e9c1b999ee3718f81a941326f75c86de34ead13ff691c5936c6f27af"
+      "bytes": 39195,
+      "sha256": "954dad8d31d43cc010fb9d51052b28ff267771f926192d13e48c8e3274a74799"
     },
     {
       "path": "src/harness/AcpHarnessSession.h",
-      "bytes": 4366,
-      "sha256": "2a9155bd26ad3d90ed01d5e9b52d52563a962434b9a5be1ca1a40a66712da223"
+      "bytes": 4680,
+      "sha256": "a91f5a6b0e1f6acf693db7539ef5720f6bd2fccedfbbe324c265fc9a002a4710"
+    },
+    {
+      "path": "src/harness/AcpPromptPayload.cpp",
+      "bytes": 5764,
+      "sha256": "14d22f4b4a229318dd60cd97da1d754388372f14037b92eec3743d33985dc3c2"
+    },
+    {
+      "path": "src/harness/AcpPromptPayload.h",
+      "bytes": 1277,
+      "sha256": "77870d690d00446460cbdc4d79c22e50afc7cc3897ea6e6bd98d640b36bf8ee0"
     },
     {
       "path": "src/harness/AcpToolPresentation.cpp",
@@ -17324,13 +18364,13 @@
     },
     {
       "path": "src/harness/HarnessAttachmentStore.cpp",
-      "bytes": 35754,
-      "sha256": "959f366c199ed64b079f782fd853c3b36bab0d6819521429cc500ff471011c6b"
+      "bytes": 36971,
+      "sha256": "04ff1d83e033bc3e2b1a084821be7493ba0604eea74803fb58072785a6839146"
     },
     {
       "path": "src/harness/HarnessAttachmentStore.h",
-      "bytes": 3108,
-      "sha256": "1c4dcb61a82dfd2920936dcd9e85f8a7869dc4f0beafbc715d1f926304d952f7"
+      "bytes": 3463,
+      "sha256": "eeea6a55db7dc990d5e20ba35440529e5aa8e0b36a67a1685a869ee9e6e0f52e"
     },
     {
       "path": "src/harness/HarnessPreparedTurn.cpp",
@@ -17339,8 +18379,8 @@
     },
     {
       "path": "src/harness/HarnessPreparedTurn.h",
-      "bytes": 977,
-      "sha256": "f69868032dee2db7dc8265dd47f6b55b8df5c1512f4783f6cefa59b460a4300b"
+      "bytes": 1064,
+      "sha256": "d89f64b39b7cd782c992294546530696755060ee6d658f9d3998b89d8f4c2661"
     },
     {
       "path": "src/harness/HarnessQuestionMcp.cpp",
@@ -17364,13 +18404,13 @@
     },
     {
       "path": "src/harness/JsonRpcProcess.cpp",
-      "bytes": 11966,
-      "sha256": "2f17d887df74c9d7d9322eef09c20b9bc42e1641c6d5050c88cd8c80578e0922"
+      "bytes": 18190,
+      "sha256": "75f86d544c8e3bf931d370430ce8c2f85b17585ebe1b8e2d598b05fc31a61827"
     },
     {
       "path": "src/harness/JsonRpcProcess.h",
-      "bytes": 1660,
-      "sha256": "782f5299f85649b645efba93ea1ba40e0a76c815bbebe1a870bad201bd666915"
+      "bytes": 2860,
+      "sha256": "c6f3491ce98c6193de851190cde7bacee1d1bf7a6d62a1f2b5a467553994a3d1"
     },
     {
       "path": "src/harness/OpenCodeModelDiscovery.cpp",
@@ -17429,8 +18469,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 12028,
-      "sha256": "58bd683c2efbb4af5ed914ebe34a42ea75dd782f26ffd5e44f1061d5f8c2764a"
+      "bytes": 12604,
+      "sha256": "402112fa654fc2e729cd52ab73b504c603593fe9e48888bcc0d162c1db7e9374"
     },
     {
       "path": "src/mutations/FileMutationDiff.h",
@@ -17504,8 +18544,8 @@
     },
     {
       "path": "src/runtime/AgentToolHost.cpp",
-      "bytes": 33494,
-      "sha256": "ca843599e44bd904184246d87afbc5497a6d9cdc715abef5fce957d27b93ad2e"
+      "bytes": 33599,
+      "sha256": "f1447b3b990535711475698affa0c323540f5c81597e1fabad317f1ac082c8fc"
     },
     {
       "path": "src/runtime/AgentToolHost.h",
@@ -17544,13 +18584,13 @@
     },
     {
       "path": "src/runtime/HarnessInputPreparation.cpp",
-      "bytes": 9827,
-      "sha256": "3f645b0992180f3f2dd09bbef62d30cdb2ed944d3276e75104323fca9f99ec68"
+      "bytes": 10443,
+      "sha256": "223955abb8e6508fd852350d4108320f35242e68a278b1833877e625d8035b8a"
     },
     {
       "path": "src/runtime/HarnessInputPreparation.h",
-      "bytes": 695,
-      "sha256": "0da7b160497f20b8b542f59afaf76e52fb1285ab4642b7df429198da4fe8ef33"
+      "bytes": 767,
+      "sha256": "2af8c077a657e3527e7e0abe1afdb21998022c36a45b59c4abbc3709d72cdffa"
     },
     {
       "path": "src/sandbox/SandboxHost.cpp",
@@ -18133,6 +19173,16 @@
       "sha256": "8a03e8b78bd0d077ed46adaee45728285415c21230874a4b7b996fd78ba14e84"
     },
     {
+      "path": "src/ui/CustomModelDialog.cpp",
+      "bytes": 12864,
+      "sha256": "6d4a0d17fbfe0df90ff681d4c5ef5581f67a681380875a654d1d44bebdf0de12"
+    },
+    {
+      "path": "src/ui/CustomModelDialog.h",
+      "bytes": 1347,
+      "sha256": "9b610563ad0dd5b5ee13ce83363f69ce02f31999595029ff4a484c37b9fcf91a"
+    },
+    {
       "path": "src/ui/DownloadsPage.cpp",
       "bytes": 20019,
       "sha256": "01a856c72eb39f0cae3490e0108f1c3667ca32456fe2131e86616837ad740f8e"
@@ -18234,8 +19284,8 @@
     },
     {
       "path": "src/ui/MainWindowControl.cpp",
-      "bytes": 10598,
-      "sha256": "41947d757c9fb7c02c045e1f2a4c620f05ff2fba7a12c02e6cdeec29bf5183f6"
+      "bytes": 12150,
+      "sha256": "32058f2dc494f1fd5043715fbbdf99dcf2fa6d567d7a4f91aa7a5f06ee278f91"
     },
     {
       "path": "src/ui/MainWindowConversations.cpp",
@@ -18309,8 +19359,8 @@
     },
     {
       "path": "src/ui/ModelSelection.cpp",
-      "bytes": 10433,
-      "sha256": "5f61674c3676fcbec52133d8cf566bffba4631728318d0816d61b3ba4b5514b9"
+      "bytes": 12295,
+      "sha256": "ace4091ba747706ab7d8a49ac409ae26f5dfd5be3dbfb658e9bb7872c527cd3a"
     },
     {
       "path": "src/ui/ModelSelection.h",
@@ -18359,13 +19409,13 @@
     },
     {
       "path": "src/ui/ProviderModelsDialog.cpp",
-      "bytes": 11743,
-      "sha256": "f1223fa63461ea38bb489019ea3d764f1f188e1d22618157aec571f718ae9d14"
+      "bytes": 16820,
+      "sha256": "e2afcdaee0020b0d7e1238b2581a1efe944e97be722ac63849a81934002cd2cf"
     },
     {
       "path": "src/ui/ProviderModelsDialog.h",
-      "bytes": 1560,
-      "sha256": "a93f79d45828ebdebfb49b289be22d40c036a718163c001c8c29dab2cb89bcd1"
+      "bytes": 1912,
+      "sha256": "1e553ee78551051ebc1739f7cd33275b24908fe00a7f777cb300bd90a1333376"
     },
     {
       "path": "src/ui/ProviderRepository.cpp",
@@ -18548,6 +19598,11 @@
       "sha256": "04ec84f4e6d8cc84ed61c87401704fd57db3373e9351fefcefbb2f073059865a"
     },
     {
+      "path": "tests/support/AcpOriginalFixture.cpp",
+      "bytes": 2371,
+      "sha256": "3f21b6d69a3d5a08e70147cc28b62966faebfe31207c31fbd82618c207ba1e3f"
+    },
+    {
       "path": "tests/support/AcpSettlementFixture.cpp",
       "bytes": 4972,
       "sha256": "478a13f29cc138a605950f95e955f9504a79421010835b4794e09eb4f42cfd42"
@@ -18626,6 +19681,21 @@
       "path": "tests/test_acp_mcp.cpp",
       "bytes": 8102,
       "sha256": "926f985bf82e2fd983be75b125d18c697acd9bce309499a76546e7a5a5db0449"
+    },
+    {
+      "path": "tests/test_acp_original_host.cpp",
+      "bytes": 2397,
+      "sha256": "e3f6dd0898b1f7a2519b36979c194cf58df02c3a4a48e37e379689ece2d66e67"
+    },
+    {
+      "path": "tests/test_acp_original_images.cpp",
+      "bytes": 13664,
+      "sha256": "55fe7cce3d1957859e8418ccf0bc0cac734b16c6d591064bbc35cf3dcc06151d"
+    },
+    {
+      "path": "tests/test_acp_original_lifecycle.cpp",
+      "bytes": 6689,
+      "sha256": "0e2cadd618dc28fbd17a5bd7df1ca1b6420222e1bae16c8ccb93d0787707447e"
     },
     {
       "path": "tests/test_acp_presentation_engine.cpp",
@@ -18841,6 +19911,51 @@
       "path": "tests/test_core.cpp",
       "bytes": 63649,
       "sha256": "45017b7558bf1ae01a9016ec431d162fea1474ee59c0e2ae7e4061a355b2c506"
+    },
+    {
+      "path": "tests/test_custom_model_config.cpp",
+      "bytes": 3377,
+      "sha256": "1a57b5994dea1352e5f5d47c0dffe86d581abe70cc3183779932a1d078547495"
+    },
+    {
+      "path": "tests/test_custom_model_engine.cpp",
+      "bytes": 15519,
+      "sha256": "671a1591f29e8a43051b806d90c30be10203085a5c2bbf0eec156438b8612705"
+    },
+    {
+      "path": "tests/test_custom_model_host.cpp",
+      "bytes": 15706,
+      "sha256": "291a0828dabd01f3cbbce29ae7006effb9f8e45c1f7ffb75c40cd8bf0d908f69"
+    },
+    {
+      "path": "tests/test_custom_model_inventory.cpp",
+      "bytes": 6506,
+      "sha256": "57e37b7e1be5e718ca93448b4542f42d357826d08ec9944bd28b22e1e3a75ef0"
+    },
+    {
+      "path": "tests/test_custom_model_media.cpp",
+      "bytes": 2286,
+      "sha256": "27152edc093f4a9d1bbd485e33b0ecc15df0741591ff46cdd087964df12373be"
+    },
+    {
+      "path": "tests/test_custom_model_options.cpp",
+      "bytes": 31454,
+      "sha256": "2901e952d55864faf9ac0109e47f7816dbd6156f2bb87e7f9857efdf98a5348c"
+    },
+    {
+      "path": "tests/test_custom_model_smoke.cpp",
+      "bytes": 4401,
+      "sha256": "88516f0797b099e23b552892b9fc88675a63f1bced9c75be52e588d7f1191506"
+    },
+    {
+      "path": "tests/test_custom_model_storage.cpp",
+      "bytes": 7607,
+      "sha256": "496eb0c7c3b9186471e00f0c3681e9f63becf1481f5f97913590cbf53a5e15d6"
+    },
+    {
+      "path": "tests/test_custom_model_ui.cpp",
+      "bytes": 13288,
+      "sha256": "c0a4c1b3d42f33c6dc4c7aa83cc7bcb1cf1e76a0f4f2fbe214b6e9079fa7f8c0"
     },
     {
       "path": "tests/test_direct_question_mcp.cpp",

@@ -1,0 +1,14 @@
+********* Start testing of CustomModelSmokeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelSmokeTest::initTestCase()
+FAIL!  : CustomModelSmokeTest::actualMainUsesSavedCustomDefinition(exact-second-instance) Compared values are not the same
+   Actual   (body.value("user"))            : QJsonValue(undefined)
+   Expected (QJsonValue("SYNTHETIC_OPTION")): QJsonValue(string, "SYNTHETIC_OPTION")
+D:/age/ADE/private/custom-model-host-stage/tests/test_custom_model_smoke.cpp(47) : failure location
+FAIL!  : CustomModelSmokeTest::actualMainUsesSavedCustomDefinition(removed-definition-refused) Compared values are not the same
+   Actual   (process.exitCode()): 0
+   Expected (2)                 : 2
+D:/age/ADE/private/custom-model-host-stage/tests/test_custom_model_smoke.cpp(45) : failure location
+PASS   : CustomModelSmokeTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 608ms
+********* Finished testing of CustomModelSmokeTest *********

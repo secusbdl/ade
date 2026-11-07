@@ -152,7 +152,8 @@ void erase(Handle &h) {
     fail("Cannot remove an owned attachment entry; cleanup can be retried.");
   h.reset();
 }
-QByteArray read(const Handle &h, qint64 limit) {
+QByteArray read(const Handle &h, qint64 limit,
+                const std::atomic_bool *cancelled = nullptr) {
   LARGE_INTEGER size{}, zero{};
   if (!GetFileSizeEx(raw(h), &size) || size.QuadPart < 0 ||
       size.QuadPart > limit ||
@@ -162,6 +163,8 @@ QByteArray read(const Handle &h, qint64 limit) {
   bytes.reserve(qsizetype(size.QuadPart));
   char chunk[65536];
   for (;;) {
+    if (cancelled && cancelled->load())
+      fail("Attachment preparation was cancelled.");
     DWORD n = 0;
     if (!ReadFile(raw(h), chunk, sizeof(chunk), &n, nullptr))
       fail("Cannot read captured attachment bytes.");
@@ -530,6 +533,30 @@ QJsonArray HarnessAttachmentLease::resourceLinks(QString *error) const {
     result.append(link);
   }
   return result;
+}
+std::optional<QByteArray> HarnessAttachmentLease::originalAcpImage(
+    qsizetype index, const std::atomic_bool *cancelled, QString *error) const {
+  if (error) error->clear();
+  if (!valid()) { setError(error, "Attachment lease is unavailable or revoked."); return {}; }
+  QMutexLocker lock(&m_data->state->mutex);
+  try {
+    m_data->state->check(cancelled);
+    if (index < 0 || index >= m_data->entries.size())
+      fail("Attachment image index is invalid.");
+    const auto links = resourceLinks(error);
+    if (error && !error->isEmpty()) return {};
+    const auto &entry = m_data->entries[index];
+    if (links[index].toObject()["mimeType"].toString().isEmpty() ||
+        entry.size > MaxAcpImageBytes) return {};
+    auto bytes = read(entry.pin, MaxAcpImageBytes, cancelled);
+    m_data->state->check(cancelled);
+    if (bytes.size() != entry.size || digest(bytes) != entry.hash)
+      fail("Captured image failed exact-byte verification.");
+    return bytes;
+  } catch (const Failure &failure) {
+    setError(error, failure.text);
+    return {};
+  }
 }
 QString HarnessAttachmentLease::textDescriptors(QString *error) const {
   if (error)

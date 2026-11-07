@@ -1,4 +1,5 @@
 #include "ProviderProtocol.h"
+#include "CustomModelOptions.h"
 #include "AgentPresentation.h"
 #include <QJsonDocument>
 #include <QMap>
@@ -71,7 +72,14 @@ void ProviderProtocol::authorize(QNetworkRequest &request, const ProviderConfig 
     else if (!provider.apiKey.isEmpty()) request.setRawHeader("Authorization", "Bearer " + provider.apiKey.toUtf8());
 }
 ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonArray &sourceHistory,
-                                           const QString &system, const QJsonArray &tools) {
+                                           const QString &system, const QJsonArray &sourceTools) {
+    const auto tools = CustomModelOptions::allowsTools(p) ? sourceTools : QJsonArray{};
+    if (!p.customRequest.isEmpty() && !p.customRequest.value("capabilities").toObject()
+            .value("inputModalities").toObject().value("image").toBool()) {
+        for (const auto& row : sourceHistory) for (const auto& part : row.toObject().value("content").toArray())
+            if (part.toObject().value("type") == "image")
+                return {{}, {}, "capabilities.inputModalities.image: this custom model does not declare image input."};
+    }
     QJsonArray history;for(const auto& value:sourceHistory)if(!AgentPresentation::isUiOnly(value.toObject()))history.append(value);
     QString base = p.baseUrl;
     while (base.endsWith('/')) base.chop(1);
@@ -228,6 +236,8 @@ ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonAr
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::SameOriginRedirectPolicy);
     request.setTransferTimeout(90000);
     authorize(request, p);
-    return {request, body};
+    QString error;
+    if (!CustomModelOptions::apply(p, &body, &request, &error)) return {{}, {}, error};
+    return {request, body, {}};
 }
 }

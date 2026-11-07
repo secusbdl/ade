@@ -1,0 +1,10 @@
+********* Start testing of VersionProbe *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : VersionProbe::initTestCase()
+FAIL!  : VersionProbe::olderWriterCannotEraseDefinitions() Compared values are not the same
+   Actual   (old.exitCode()): 0
+   Expected (20)            : 20
+D:/age/ADE/private/custom-model-ui-stage/tests/probe_custom_model_v1.cpp(10) : failure location
+PASS   : VersionProbe::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 153ms
+********* Finished testing of VersionProbe *********

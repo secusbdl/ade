@@ -1035,3 +1035,66 @@ add_test(NAME native_model_selector_display COMMAND test_model_selector_display 
 set_tests_properties(native_model_selector_display PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
 # Optional actual MainWindow crops/full images:
 # ADE_MODEL_SELECTOR_RENDER_DIRECTORY=<path> test_model_selector_display
+
+# New AcpPromptPayload.cpp/.h are included by the existing ade_harness source glob.
+# Async ACP preparation requires the same static Qt Concurrent module already used by ade_core.
+target_link_libraries(ade_harness PUBLIC Qt6::Concurrent)
+qt_add_executable(acp_original_fixture tests/support/AcpOriginalFixture.cpp)
+target_link_libraries(acp_original_fixture PRIVATE Qt6::Core)
+set_target_properties(acp_original_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+foreach(name acp_original_images acp_original_lifecycle acp_original_host)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  if(name STREQUAL "acp_original_host")
+    target_link_libraries(test_${name} PRIVATE ade_host Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+    qt_import_plugins(test_${name} INCLUDE Qt6::QSQLiteDriverPlugin Qt6::QOffscreenIntegrationPlugin Qt6::QWebpPlugin Qt6::QJpegPlugin Qt6::QGifPlugin)
+    add_dependencies(test_${name} attachment_acp_fixture)
+  else()
+    target_link_libraries(test_${name} PRIVATE ade_harness Qt6::Test)
+    qt_import_plugins(test_${name} INCLUDE Qt6::QSQLiteDriverPlugin)
+    if(name STREQUAL "acp_original_lifecycle")
+      target_link_libraries(test_${name} PRIVATE psapi)
+    endif()
+  endif()
+  add_dependencies(test_${name} acp_original_fixture)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+# Full ABI rebuild required: typed attachments, AcpHarnessSession and JsonRpcProcess changed layout.
+
+# CustomModelConfig + CustomModelOptions compile in the existing ade_core glob.
+foreach(suite custom_model_options custom_model_engine)
+  qt_add_executable(test_${suite} tests/test_${suite}.cpp)
+  target_link_libraries(test_${suite} PRIVATE ade_core Qt6::Test)
+  set_target_properties(test_${suite} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${suite} COMMAND test_${suite} -o "${CMAKE_BINARY_DIR}/Testing/native_${suite}.txt,txt")
+  set_tests_properties(native_${suite} PROPERTIES TIMEOUT 60)
+endforeach()
+
+# Production files are discovered by current core/UI/attachment CONFIGURE_DEPENDS globs.
+# Existing standalone Settings binaries compile ProviderModelsDialog outside ade_ui.
+foreach(settings_target IN ITEMS render_settings test_settings test_settings_audit)
+  target_sources(${settings_target} PRIVATE src/ui/CustomModelDialog.cpp src/ui/CustomModelDialog.h)
+endforeach()
+
+foreach(name custom_model_config custom_model_inventory custom_model_storage custom_model_media custom_model_ui custom_model_host)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  target_link_libraries(test_${name} PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${name} INCLUDE Qt6::QOffscreenIntegrationPlugin Qt6::QWebpPlugin Qt6::QJpegPlugin Qt6::QGifPlugin)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+
+# Actual src/main.cpp smoke entry point; isolated subprocess fixture, no browser/profile/keys.
+qt_add_executable(custom_model_smoke_app src/main.cpp)
+target_link_libraries(custom_model_smoke_app PRIVATE ade_ui Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(custom_model_smoke_app INCLUDE Qt6::QOffscreenIntegrationPlugin Qt6::QWebpPlugin Qt6::QJpegPlugin Qt6::QGifPlugin)
+set_target_properties(custom_model_smoke_app PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_custom_model_smoke tests/test_custom_model_smoke.cpp)
+target_link_libraries(test_custom_model_smoke PRIVATE ade_core Qt6::Test)
+add_dependencies(test_custom_model_smoke custom_model_smoke_app)
+set_target_properties(test_custom_model_smoke PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_custom_model_smoke COMMAND test_custom_model_smoke -o "${CMAKE_BINARY_DIR}/Testing/native_custom_model_smoke.txt,txt")
+set_tests_properties(native_custom_model_smoke PROPERTIES TIMEOUT 90)
+# Do not integrate v1-reader/probe: those are a frozen private old-binary proof, not production/test support.

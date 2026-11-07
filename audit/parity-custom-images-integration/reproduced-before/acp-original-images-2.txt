@@ -1,0 +1,8 @@
+********* Start testing of OriginalImageTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : OriginalImageTest::initTestCase()
+FAIL!  : OriginalImageTest::partialWriteTimeoutStopsUnsafeReuse() '!process.isRunning()' returned FALSE. ()
+D:/age/ADE/private/acp-original-image-stage/tests/test_acp_original_images.cpp(82) : failure location
+PASS   : OriginalImageTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 704ms
+********* Finished testing of OriginalImageTest *********

@@ -4,7 +4,7 @@
 #include <QNetworkRequest>
 
 namespace ade {
-struct ProviderRequest { QNetworkRequest request; QJsonObject body; };
+struct ProviderRequest { QNetworkRequest request; QJsonObject body; QString error; };
 class ProviderProtocol {
 public:
     static QString kind(const ProviderConfig &provider);

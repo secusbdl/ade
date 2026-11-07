@@ -1,0 +1,10 @@
+********* Start testing of CustomOptionsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomOptionsTest::initTestCase()
+FAIL!  : CustomOptionsTest::privateMetadataKeysAreRedacted() Compared values are not the same
+   Actual   (CustomModelOptions::redactDiagnostic(p, "Echo PRIVATE_METADATA_KEY_123")): "Echo PRIVATE_METADATA_KEY_123"
+   Expected (QString("Echo [REDACTED]"))                                              : "Echo [REDACTED]"
+D:/age/ADE/private/custom-model-core-stage/tests/test_custom_model_options.cpp(125) : failure location
+PASS   : CustomOptionsTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 5ms
+********* Finished testing of CustomOptionsTest *********

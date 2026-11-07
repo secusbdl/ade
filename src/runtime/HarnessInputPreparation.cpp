@@ -12,8 +12,10 @@ HarnessPreparedTurn prepareHarnessInput(const HarnessAttachmentStore &handoff,
                                         const HarnessAttachmentSource &source,
                                         const QJsonArray &history,
                                         const ModelMediaCapabilities &media,
-                                        const std::atomic_bool *cancelled) {
+                                        const std::atomic_bool *cancelled,
+                                        bool acpOriginalImages) {
   HarnessPreparedTurn out;
+  out.attachments.acpOriginalImages = acpOriginalImages;
   auto fail = [](const QString &error) {
     HarnessPreparedTurn result;
     result.error = error;
@@ -133,6 +135,14 @@ HarnessPreparedTurn prepareHarnessInput(const HarnessAttachmentStore &handoff,
       }
       (current ? currentKeys : historyKeys).append({reference.path, expected});
       if (!current)
+        continue;
+      // ACP maps only after the real runtime advertises image support. Keep
+      // known originals in the captured lease; never decode/re-encode here.
+      const auto baseName = QFileInfo(name).fileName();
+      const auto dot = baseName.lastIndexOf('.');
+      const auto extension = dot > 0 ? baseName.mid(dot + 1).toLower() : QString{};
+      if (acpOriginalImages &&
+          QStringList{"gif", "jpeg", "jpg", "png", "webp", "bmp", "avif", "ico"}.contains(extension))
         continue;
       QBuffer buffer(&bytes);
       buffer.open(QIODevice::ReadOnly);

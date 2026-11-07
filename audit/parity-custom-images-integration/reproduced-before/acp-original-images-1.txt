@@ -1,0 +1,10 @@
+********* Start testing of AcpOriginalHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpOriginalHostTest::initTestCase()
+FAIL!  : AcpOriginalHostTest::currentImageUsesOriginalBytes() Compared values are not the same
+   Actual   (mime)                : "image/webp"
+   Expected (QString("image/png")): "image/png"
+D:/age/ADE/private/acp-original-image-stage/tests/test_acp_original_host.cpp(36) : failure location
+PASS   : AcpOriginalHostTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 395ms
+********* Finished testing of AcpOriginalHostTest *********

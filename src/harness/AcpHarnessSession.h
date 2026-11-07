@@ -4,6 +4,7 @@
 #include "JsonRpcProcess.h"
 #include "QuestionMcpBridge.h"
 #include <QJsonArray>
+#include <QFutureWatcher>
 #include <QSet>
 #include <QTimer>
 
@@ -64,6 +65,11 @@ private:
   void beginSession();
   void configure();
   void prompt();
+  void sendPreparedPrompt(const AcpPromptPayload &payload);
+  void cancelPromptPreparation();
+  struct PromptPreparation { AcpPromptPayload payload; QString error; };
+  QPointer<QFutureWatcher<PromptPreparation>> m_promptWatcher;
+  std::shared_ptr<std::atomic_bool> m_promptCancellation;
   bool call(const QString &method, const QJsonObject &params,
             int timeout = 30000);
   void response(const QString &id, const QJsonValue &result,

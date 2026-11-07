@@ -1,0 +1,82 @@
+{
+  "startedUtc": "2026-11-07T01:29:31.961369+00:00",
+  "finishedUtc": "2026-11-07T01:29:36.383935+00:00",
+  "binarySha256": "44c38e1e141d18e849f0b66c02e85cd5763c1398c0c37d097e3e5d5061c97729",
+  "cliSha256": "2e055732c9d03d22700d9046251a8370b673607bfcc9e4d16a1b0e8fb1345cbd",
+  "cliVersion": "2.1.319",
+  "requestedModel": "managed CLI default",
+  "actualModel": "default",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "exactMarker": true,
+  "tools": [
+    "claude.Read"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 4213,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 27,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "bf52e87cdebf3281dc0bb9b068b5714bd4ccb3d6ba291d6afa53a6650117390b",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "f4cc36c592b458b4ed53f35c64d0d8e9370810554b0dd01e3ab3cbffb7ed2ed7",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-text.png",
+        "sha256": "0c36b2cce0f017807b03f16fc3bd0e507048c11b20b19fbd0333a3721f1b4f35",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-completed.png",
+        "sha256": "0c36b2cce0f017807b03f16fc3bd0e507048c11b20b19fbd0333a3721f1b4f35",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 3.0021,
+    "meanSetConversationMs": 1.65652,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 5,
+    "textDeltas": 4,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "scope": "Actual ADE Claude adapter and installed managed subscription CLI, one bounded read-only native transcript smoke. No API keys imported, no authentication UI or user conversation access. Submitted turn count is not billing-request count.",
+  "finalPackageBytesIdentical": true,
+  "testedDirectory": "out/custom-images-candidate-1",
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/parity-live/claude-custom-images-2/captures/01-submitted.png",
+      "sha256": "bf52e87cdebf3281dc0bb9b068b5714bd4ccb3d6ba291d6afa53a6650117390b"
+    },
+    {
+      "localPath": "private/parity-live/claude-custom-images-2/captures/02-tool.png",
+      "sha256": "f4cc36c592b458b4ed53f35c64d0d8e9370810554b0dd01e3ab3cbffb7ed2ed7"
+    },
+    {
+      "localPath": "private/parity-live/claude-custom-images-2/captures/03-text.png",
+      "sha256": "0c36b2cce0f017807b03f16fc3bd0e507048c11b20b19fbd0333a3721f1b4f35"
+    },
+    {
+      "localPath": "private/parity-live/claude-custom-images-2/captures/04-completed.png",
+      "sha256": "0c36b2cce0f017807b03f16fc3bd0e507048c11b20b19fbd0333a3721f1b4f35"
+    }
+  ],
+  "modelIdentityLimit": "Report returns configured alias default; concrete selected Claude model is not exposed by this adapter report. No concrete-model equivalence claim."
+}

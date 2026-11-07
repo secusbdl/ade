@@ -1,0 +1,2159 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-07T01:48:54.693185+00:00",
+  "status": "verified_test_and_live_checkpoint_packaged_ui_pending",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "developmentBaseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "fullNativeParity": false,
+  "lineByLinePortEstablished": false,
+  "scopeLedger": "audit/parity-review-coverage.json",
+  "sourceIndex": "audit/upstream-source-index.json",
+  "testedSource": {
+    "path": "audit/parity-custom-images-integration/tested-source-hashes.json",
+    "sha256CanonicalLf": "4006886182c3d3a69c7d11c3512fd85e6e3dffcbd3cf55639624d270a8247d41",
+    "basis": "Canonical LF for text; exact binary assets. Identity is not semantic parity."
+  },
+  "tests": {
+    "ctestSuites": 173,
+    "failedSuites": 0,
+    "nativeSuites": 171,
+    "referenceExperimentSuites": 2,
+    "passedCasesIncludingLifecycle": 3160,
+    "skippedCases": 1,
+    "skipExplanation": "Offscreen WebView case has a passing Windows native_transcript_tabs_real counterpart.",
+    "rows": [
+      {
+        "suite": "native_codex_harness",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4624,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_codex_harness.txt",
+          "sha256CanonicalLf": "b09157833acb5af9b367179d929b35cdb01a034a80676f96a31b10a50f4bb9a7"
+        }
+      },
+      {
+        "suite": "native_codex_engine",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2942,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_codex_engine.txt",
+          "sha256CanonicalLf": "a93563f6a66180a8a12c12b69b722e66aefe52589a20ae12b16e58c9c8ff7237"
+        }
+      },
+      {
+        "suite": "native_codex_provider_ui",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 381,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_codex_provider_ui.txt",
+          "sha256CanonicalLf": "42fc69905fb0eb8bd47fcc1deaa4ad3ec57b2bba7d70546d440a32ebd49316dc"
+        }
+      },
+      {
+        "suite": "native_codex_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2581,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_codex_host.txt",
+          "sha256CanonicalLf": "dc45802a00444d5b815b7a653b470f0d526d80773ac3e3e72bc90346f12b16fa"
+        }
+      },
+      {
+        "suite": "native_provider_operations",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1036,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_operations.txt",
+          "sha256CanonicalLf": "f8cef5401a1f8d8a7676bb6a6a28c1d35e7873b7fdb3c7ea668d73671069b956"
+        }
+      },
+      {
+        "suite": "native_link_provenance_codec",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_link_provenance_codec.txt",
+          "sha256CanonicalLf": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc"
+        }
+      },
+      {
+        "suite": "native_retired_wire",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 157,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_retired_wire.txt",
+          "sha256CanonicalLf": "67cc213ea48381daf20df4282fc68ad5a8f81c835d96afccdb6b36131cef9f7b"
+        }
+      },
+      {
+        "suite": "native_navigation_shortcuts",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1551,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_navigation_shortcuts.txt",
+          "sha256CanonicalLf": "12f6af896171f10cdac2b550cc65a350eb5189db908a00051e5099709397293d"
+        }
+      },
+      {
+        "suite": "native_browser_session",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 79,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_session.txt",
+          "sha256CanonicalLf": "349390fc6a92cc39ba59e8c1965a8fa7ac47ae2b034936c4cbe5b904fd8295b7"
+        }
+      },
+      {
+        "suite": "native_browser_session_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1724,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_session_host.txt",
+          "sha256CanonicalLf": "7871ee2415dd44589119a561e1e5ae7f2282e2eabe5aefacb5f90403bb7be24e"
+        }
+      },
+      {
+        "suite": "native_usage_compression",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4929,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_usage_compression.txt",
+          "sha256CanonicalLf": "04d1729bef0e143c98c4ade5067d9f2d100f5f32569476d90fbadfcb6e4daa98"
+        }
+      },
+      {
+        "suite": "native_usage_settings",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 57,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_usage_settings.txt",
+          "sha256CanonicalLf": "6c5e70396d4328f37248257b38d4f28fdaa779d256dfcb9f49e7d0634b5771d1"
+        }
+      },
+      {
+        "suite": "native_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1736,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_usage.txt",
+          "sha256CanonicalLf": "01f922c7ed42f52dfb2ca83f1bba2e57ca703b4583eaf6c61492ce51f20cd46b"
+        }
+      },
+      {
+        "suite": "native_git_cleanup",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 85429,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_cleanup.txt",
+          "sha256CanonicalLf": "c73cf77140fb04669d1c5b3e882f31f755e37804729043d1cbf860a68f16fcc2"
+        }
+      },
+      {
+        "suite": "native_session_logs",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 341,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_session_logs.txt",
+          "sha256CanonicalLf": "e8d216d993efde53f93570618ac67128fab0da73462e3a43c09b1f98cc354fe5"
+        }
+      },
+      {
+        "suite": "native_shell_log_mount",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 539,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_shell_log_mount.txt",
+          "sha256CanonicalLf": "96db7fd1978ab67bc62467faf091069d43b9b5c740be70c902b6559f209d51cc"
+        }
+      },
+      {
+        "suite": "native_shell_service",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 39301,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_shell_service.txt",
+          "sha256CanonicalLf": "d6de73aa1c3f033f53d68f006f03aa0b53db7022deece85d43a0b138a3de249e"
+        }
+      },
+      {
+        "suite": "native_shell_engine",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4760,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_shell_engine.txt",
+          "sha256CanonicalLf": "df714ab83e922ed678fed4cec1fc250e3bf54954c55e8e7040ea4aca6451d190"
+        }
+      },
+      {
+        "suite": "native_shell_view",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1290,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_shell_view.txt",
+          "sha256CanonicalLf": "304a6b84d8366d0a80a7020dfc6d3674d9bcee1e6950ab3c7c1bca18d7c2e0ea"
+        }
+      },
+      {
+        "suite": "native_conversation_control",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4355,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_conversation_control.txt",
+          "sha256CanonicalLf": "c61de69da894e72858b40c891ce40254b49b11516c114fd2262157e8861a41e4"
+        }
+      },
+      {
+        "suite": "native_file_mutations",
+        "passedIncludingLifecycle": 60,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3196,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_file_mutations.txt",
+          "sha256CanonicalLf": "e34c75c76ebe35285baec768ec39367d2d9d03cf26ba986a86403c0ee7076cff"
+        }
+      },
+      {
+        "suite": "native_question_panel",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 141,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_question_panel.txt",
+          "sha256CanonicalLf": "3b1c635eadc8236a532fd2728c81a51f47ff4212379b5a2ad8ea49d3048bcd12"
+        }
+      },
+      {
+        "suite": "native_transcript_rich",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 880,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_rich.txt",
+          "sha256CanonicalLf": "315c2473ae433d0013a6b6b6d601fdf58ca44aa1ba540afee85dc9a135929951"
+        }
+      },
+      {
+        "suite": "native_composer_completion",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2289,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_composer_completion.txt",
+          "sha256CanonicalLf": "90c01a4dc4d0f91899c1c8da73bc90b1e188112925a641958e8ff7856c5bc6c1"
+        }
+      },
+      {
+        "suite": "native_composer_search",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 113,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_composer_search.txt",
+          "sha256CanonicalLf": "58147fc77d9e0f55272bcb67d40d2e168f73b398c044318cf1f26e0d0d3712f7"
+        }
+      },
+      {
+        "suite": "native_composer_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2576,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_composer_host.txt",
+          "sha256CanonicalLf": "14e6f4b649507136e8766fd6568d392380a7edcd85fedb2f4adf922ab07dcb27"
+        }
+      },
+      {
+        "suite": "native_reference_controls",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 470,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_reference_controls.txt",
+          "sha256CanonicalLf": "dbb84336a4fb6d62f8352d3912191082138925149ff291814a0013f160824f7a"
+        }
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2351,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_agent_control_ui.txt",
+          "sha256CanonicalLf": "cc5a18d8185e188ac12221f3d3ff8b36b86b7bc7f0c9e061c9ab10f160eaf689"
+        }
+      },
+      {
+        "suite": "native_command_center",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 240,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_command_center.txt",
+          "sha256CanonicalLf": "a0f7172c240d1abd25a83e075092293ed2ad8b60068048a05f772b9b2a4513ea"
+        }
+      },
+      {
+        "suite": "native_command_file_search",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 604,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_command_file_search.txt",
+          "sha256CanonicalLf": "8045e6d66d6e21d254f9f4d608a385c8e0f116b95e34bb01513bd7191b542696"
+        }
+      },
+      {
+        "suite": "native_command_center_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3056,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_command_center_host.txt",
+          "sha256CanonicalLf": "deda815bbe0204e7da3acce752d0b692e8804b44e5e94afd99365d6d6e0cc621"
+        }
+      },
+      {
+        "suite": "native_side_chat",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 219,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_side_chat.txt",
+          "sha256CanonicalLf": "36267afe343c72b2ed9c66aa2dfb8bce497bda72484d0701f12f354146d9bbe6"
+        }
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7659,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_side_chat_host.txt",
+          "sha256CanonicalLf": "dd6799835506755b7a9fab2c2409664a57d9e8fb29691a6c48dba5837f0fad1b"
+        }
+      },
+      {
+        "suite": "native_file_diff",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 133,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_file_diff.txt",
+          "sha256CanonicalLf": "03738f73b21822407182d92dd2acfd1fc87fbaf4a55c3cd4827ca346e917214f"
+        }
+      },
+      {
+        "suite": "native_image_preview",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 328,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_image_preview.txt",
+          "sha256CanonicalLf": "c548d14ccb6bb73deb6616dffbb38e37a82dbbc1177b60b94a7d5b844adc328a"
+        }
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5752,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_mutation_runtime.txt",
+          "sha256CanonicalLf": "9db3a5fc187ef8a8650b66ef36af844763814b98cc49a9297c4c69f252a7a992"
+        }
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 11331,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_shell_runtime.txt",
+          "sha256CanonicalLf": "cf7a29b51075d3016a3271990267a595d5277367aba248166c755ff71181a3ce"
+        }
+      },
+      {
+        "suite": "native_transcript_links",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 102,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_links.txt",
+          "sha256CanonicalLf": "a57278594c262d96c08b3c8365394f5957e14d4a1c3638f579bdc0fc9bdb366b"
+        }
+      },
+      {
+        "suite": "native_transcript_link_ui",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 4027,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_link_ui.txt",
+          "sha256CanonicalLf": "939e0c7efbc9191b0ac73212751f4c50bfef86dfba161d275ae83b4ba8013a2c"
+        }
+      },
+      {
+        "suite": "native_transcript_tabs_real",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1465,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_tabs_real.txt",
+          "sha256CanonicalLf": "989ef4fc6069034d2664bc1cdb6c5c1f6d1dcad9b321bf83f4c258ec2023991e"
+        }
+      },
+      {
+        "suite": "native_workbench_layout",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7123,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_workbench_layout.txt",
+          "sha256CanonicalLf": "98a0006ddef4362168826fc1461207a16b5591f3b1820e37659fac7e70d47b4f"
+        }
+      },
+      {
+        "suite": "native_workbench_helpers",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 18,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_workbench_helpers.txt",
+          "sha256CanonicalLf": "b235bc8c682fcbeac8b1072421a3367c772542533f9d712b2ce634a4d9ac2093"
+        }
+      },
+      {
+        "suite": "native_chevron",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 150,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_chevron.txt",
+          "sha256CanonicalLf": "ff3298e3b9e4f3a8d57f990d04027e3b73ca9f73b6790014b80ae7af62c110ae"
+        }
+      },
+      {
+        "suite": "native_sidebar_model",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_sidebar_model.txt",
+          "sha256CanonicalLf": "890f00b25c6be405546a642cb59e1ce209d202187cc0fb60258f302bde995899"
+        }
+      },
+      {
+        "suite": "native_sidebar_navigation",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3915,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_sidebar_navigation.txt",
+          "sha256CanonicalLf": "3ae1cd198be2e86ac5504edf3e70ab19a6908b8d2557d6c075df79d0b1592058"
+        }
+      },
+      {
+        "suite": "native_presentation",
+        "passedIncludingLifecycle": 89,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16813,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_presentation.txt",
+          "sha256CanonicalLf": "5b6cfb6f78fa620af03d4b4b69ae4f9e14da4ea22461c2827812aff845b03943"
+        }
+      },
+      {
+        "suite": "native_history_projection",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1215,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_history_projection.txt",
+          "sha256CanonicalLf": "218511e4aa820a51f0876215fd624e45d245e54717b721de68d875ef44f244b8"
+        }
+      },
+      {
+        "suite": "native_workspace_changes",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 24660,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_workspace_changes.txt",
+          "sha256CanonicalLf": "edb92ce1b459329c89fd52b5a67bf8ebadab171b82b3b26ba19dd9b8f6dc2a66"
+        }
+      },
+      {
+        "suite": "native_workspace_changes_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 28663,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_workspace_changes_host.txt",
+          "sha256CanonicalLf": "d18a6df8e6793b20de017a9733ecd721800d61a1564ee37ba5c0e9ac7ad44bc4"
+        }
+      },
+      {
+        "suite": "native_smoke_capture",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 221,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_smoke_capture.txt",
+          "sha256CanonicalLf": "cba958d05214d97b2006d9ed63ba77cd79338c61a47c5f3c07e70cb183c13ae9"
+        }
+      },
+      {
+        "suite": "native_turn_files",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 293,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_turn_files.txt",
+          "sha256CanonicalLf": "e484548e83b217474f0f31e5fc05d67b93470abc805e7d7a698c898348ba706a"
+        }
+      },
+      {
+        "suite": "native_turn_files_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 14663,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_turn_files_host.txt",
+          "sha256CanonicalLf": "350a0f49cda029d3ee3bd4d82532828d26076b3200bec9993c4274132497b210"
+        }
+      },
+      {
+        "suite": "native_turn_file_snapshots",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 575,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_turn_file_snapshots.txt",
+          "sha256CanonicalLf": "2eec315a764985fbeafc0e0ba5c572f47bccc1cc77d7bf5894bf13790a34e50b"
+        }
+      },
+      {
+        "suite": "native_transcript",
+        "passedIncludingLifecycle": 35,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3108,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript.txt",
+          "sha256CanonicalLf": "d80807e304ebf23d5798b53d8b86d177946e3cb86907efad67f5d12d769cb92d"
+        }
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2251,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_ui.txt",
+          "sha256CanonicalLf": "881ed9b0b96389cb2437ef79e777f8d0bf8e0aba5c8aa2cea8a97b23975e448c"
+        }
+      },
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4343,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_main_chrome.txt",
+          "sha256CanonicalLf": "92e39a6f661db1872a3d7aa7eaf1b3f7b9ad7805c8884a179760a3ea274fa044"
+        }
+      },
+      {
+        "suite": "native_formatted_att",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3373,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_formatted_att.txt",
+          "sha256CanonicalLf": "755b6e03f9675be339215245f64e32555b4bb503deb365b5c1c34f98c40cb74c"
+        }
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 24052,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_conversations.txt",
+          "sha256CanonicalLf": "543712ee275f57be32b6649a651be361d727b1a4dfa44bc4bff4f195bb02cc40"
+        }
+      },
+      {
+        "suite": "native_history_recovery",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1566,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_history_recovery.txt",
+          "sha256CanonicalLf": "fee7d1233db3db4caeddb489d9dd5f8edc724667c3fe82549f0d9d1c41fb8576"
+        }
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 470,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_session_cleanup.txt",
+          "sha256CanonicalLf": "fa7e46dd18e82d6e435115ad3bc0e89002a42164ab37dd0bc3651d9d255ced95"
+        }
+      },
+      {
+        "suite": "native_raw_enumeration_races",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1529,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_raw_enumeration_races.txt",
+          "sha256CanonicalLf": "30a8334e2487c670134b812eea5e86ccccfc8d9ae6d40936515821502c84394f"
+        }
+      },
+      {
+        "suite": "native_git_watcher",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 28826,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_watcher.txt",
+          "sha256CanonicalLf": "4889e2cec9203b46241145466144ed9c9001d40fdc3386625ec8bb3fd5d7a5a6"
+        }
+      },
+      {
+        "suite": "native_git_watcher_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 19117,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_watcher_ui.txt",
+          "sha256CanonicalLf": "739d1b8f34d684f7675bbea16628bc12209768b69d573b7f25d1e10c92ee8a1f"
+        }
+      },
+      {
+        "suite": "native_file_tools_races",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 643,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_file_tools_races.txt",
+          "sha256CanonicalLf": "c35cac1b141906013cccb3c7df8a79ba1798e40f9836e31b278e089182c1058c"
+        }
+      },
+      {
+        "suite": "native_archive_transformer",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 39,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_archive_transformer.txt",
+          "sha256CanonicalLf": "92bbeb2f177926327c1916dac7bf6424d517522efacdbb25d62cba06df30fbcd"
+        }
+      },
+      {
+        "suite": "native_file_tools",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 38,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_file_tools.txt",
+          "sha256CanonicalLf": "23ad642ab4081be5fd08b0255a04e59374c1472efd9a418c540ac4d2e8bb170d"
+        }
+      },
+      {
+        "suite": "native_attachment_mount",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 768,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_attachment_mount.txt",
+          "sha256CanonicalLf": "c52db5d8f0328a4eadf202bfdeb4331dd5e1475dcb884e90e30633e13b69e7f5"
+        }
+      },
+      {
+        "suite": "native_file_transformer",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_file_transformer.txt",
+          "sha256CanonicalLf": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+        }
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 37104,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_worktree_settings.txt",
+          "sha256CanonicalLf": "4e8c134d8e09f907aa4c275f49ae38f14c6ac29410e11258581ae0fb17312145"
+        }
+      },
+      {
+        "suite": "native_git_host",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 75212,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_host.txt",
+          "sha256CanonicalLf": "a9ddd09c84e910dddce3b9a63051027ff617fb1abb41b80b89859d8b424ed192"
+        }
+      },
+      {
+        "suite": "native_sandbox_apps",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2029,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_sandbox_apps.txt",
+          "sha256CanonicalLf": "955ee1bf9dcb00f828312a987d2fbac24fd83803c64a81a56e14b397fc9d336d"
+        }
+      },
+      {
+        "suite": "native_runtime_apps",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6716,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_runtime_apps.txt",
+          "sha256CanonicalLf": "697b992f949710047d59d491ee356b5efe64b7987961198a8f795335831c7b0d"
+        }
+      },
+      {
+        "suite": "native_git",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 102134,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git.txt",
+          "sha256CanonicalLf": "7c7598371fea61b28239af9a9b604db59c4aa1323d9c58775f6f1e1a17da8835"
+        }
+      },
+      {
+        "suite": "native_git_ui",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 46961,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_git_ui.txt",
+          "sha256CanonicalLf": "25fc00c3de1a99b2ef55d453ba74e4c69f9e00d999ca744c4565980afcc73a7c"
+        }
+      },
+      {
+        "suite": "native_app_resources",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 59,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_app_resources.txt",
+          "sha256CanonicalLf": "98bb1e4b286202e6225bf265802de33b46039ac77327bffcaf191172817e81a0"
+        }
+      },
+      {
+        "suite": "native_mini_apps",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3239,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_mini_apps.txt",
+          "sha256CanonicalLf": "34ccf75fe503b833ff76c069eb84cdceb6680aae6a0ec001b81ce264a6df3890"
+        }
+      },
+      {
+        "suite": "native_attachments",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 994,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_attachments.txt",
+          "sha256CanonicalLf": "78f674a52b08a2484195b5b79e8b9213d7ddc6c80e52dba8acd8828d8cb37dfe"
+        }
+      },
+      {
+        "suite": "native_read_lifecycle",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 463,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_read_lifecycle.txt",
+          "sha256CanonicalLf": "a3bee70f80f42b50d48a4b4bcf54af0f107969e4cf3a7d0b3b44a9549ca2c582"
+        }
+      },
+      {
+        "suite": "native_read_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2624,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_read_runtime.txt",
+          "sha256CanonicalLf": "ff365e00e80499aee570116c1e57c7677b84b5d0c354c76082a041e63a1cf548"
+        }
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 919,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_plugins.txt",
+          "sha256CanonicalLf": "528a285c91ec9904642bb8287e891b1b55c9c2f7223eef358960dc667b0704f3"
+        }
+      },
+      {
+        "suite": "native_plugin_connections",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 188,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_plugin_connections.txt",
+          "sha256CanonicalLf": "2dd4c42b42cdc8427d47b73b59e462ac392aff3bda5a27c8146287259bc517a0"
+        }
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 11024,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_plugin_runtime.txt",
+          "sha256CanonicalLf": "b3383889f841ded971439d5ae9e8c7fadd2910a9a069564268b81e28dd573602"
+        }
+      },
+      {
+        "suite": "native_plugin_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 346,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_plugin_settings.txt",
+          "sha256CanonicalLf": "dd79e3766ca7edf9b179fbaefc9a85e8da0dc4c5a8866f9b846db46c25d9d8fd"
+        }
+      },
+      {
+        "suite": "native_smoke_plugins",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1869,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_smoke_plugins.txt",
+          "sha256CanonicalLf": "65dff24c8b013b94190e3adc97d9b3cc603e3f5f87557ecdc89ca0c804823d94"
+        }
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5254,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_sandbox_network.txt",
+          "sha256CanonicalLf": "49aa51f0e84c12fda904825b6d94c34df2474ecd01b06b3203b0bbf94dbbc4f6"
+        }
+      },
+      {
+        "suite": "native_downloads",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7722,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_downloads.txt",
+          "sha256CanonicalLf": "36f5b32593375a16db0c948b80b81024d14dce56fccf4fd0af230e9e56d498a8"
+        }
+      },
+      {
+        "suite": "native_settings_audit",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 349,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_settings_audit.txt",
+          "sha256CanonicalLf": "27a4405adae17b9f81d45bc0381620336dc5a262ba6e057fe88aa4b5d4027d4c"
+        }
+      },
+      {
+        "suite": "native_network",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2284,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_network.txt",
+          "sha256CanonicalLf": "ef27104c60739b3678f1dee0043f2f9a535d4667ad284562014d4a741f88d2fe"
+        }
+      },
+      {
+        "suite": "native_terminal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2749,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_terminal.txt",
+          "sha256CanonicalLf": "6b7333f62d3634dc6ae93b8e18e04b56c76b83c91ea0302b6b57dafa9255b224"
+        }
+      },
+      {
+        "suite": "native_engine_observers",
+        "passedIncludingLifecycle": 56,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8778,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_engine_observers.txt",
+          "sha256CanonicalLf": "ed70a1f18cd3280e17839ad020b2c049f3d5c9a4c097f6dd0f0b1dd47e6841f5"
+        }
+      },
+      {
+        "suite": "native_core",
+        "passedIncludingLifecycle": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8444,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_core.txt",
+          "sha256CanonicalLf": "a1ebd440b63ff2ac9ce95c3d347a56c3ac6a75cf6b5641101c1580ebc1c8dccc"
+        }
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 160,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_context.txt",
+          "sha256CanonicalLf": "78a84e8cac7aa07549f83d28ba41b747e0f7e1f4bd7410760eb68d6b717faee3"
+        }
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1645,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_ui.txt",
+          "sha256CanonicalLf": "33f54cb44ccc77957a51ebe08b60a86930a8032d01295a21c4f2078ae4fbcfa6"
+        }
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4916,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_ui_audit.txt",
+          "sha256CanonicalLf": "5e1430927fc2c5f677e8bd4c28dfbc704dee9a92e4f58a038f2213d858097f7b"
+        }
+      },
+      {
+        "suite": "native_editor",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1072,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_editor.txt",
+          "sha256CanonicalLf": "ecf599a88344c94e20e73312d94ee113551269b0b74e2c2f71e24c9ad042c444"
+        }
+      },
+      {
+        "suite": "native_sandbox",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4388,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_sandbox.txt",
+          "sha256CanonicalLf": "4864bc51068ae6ae779e95df8078848aecc5261cf722d4375399cd61fe8e4ba5"
+        }
+      },
+      {
+        "suite": "native_runtime",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5837,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_runtime.txt",
+          "sha256CanonicalLf": "e72815ee2ae8e2c1afd3273bacf15af28bad39f415a51b13c94c5d9e7d7a3044"
+        }
+      },
+      {
+        "suite": "native_fonts",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 261,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_fonts.txt",
+          "sha256CanonicalLf": "06feef80823a7d8c5aedd020ecc1b931146543292f057a86365ca543f72ad918"
+        }
+      },
+      {
+        "suite": "native_browser",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5409,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser.txt",
+          "sha256CanonicalLf": "40e6197ac43387e9c98892f08a580dbea49f7e5e7b1177d9c96490f2a104f341"
+        }
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 498,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_settings.txt",
+          "sha256CanonicalLf": "0b5314fc7c00de1aa4ed2ce054b4a5f54be10669be2b482791e597164b581658"
+        }
+      },
+      {
+        "suite": "native_browser_inspector",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5568,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_inspector.txt",
+          "sha256CanonicalLf": "0d9cdfe9433a6aa0e83d35198292815f53b76a2d4c305104e7282199f3a89494"
+        }
+      },
+      {
+        "suite": "native_browser_tools",
+        "passedIncludingLifecycle": 24,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 14567,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_tools.txt",
+          "sha256CanonicalLf": "ada96a32eeb508f1367ca472d23f3cad17e6a0d2a8dd04d4d7c9b263fe2da502"
+        }
+      },
+      {
+        "suite": "native_harness_files",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 111,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_files.txt",
+          "sha256CanonicalLf": "b9231680e71f6d3bdb78e1c3a98869ab3e99f7d700a5f6833b81acc3dd3b8f44"
+        }
+      },
+      {
+        "suite": "native_codex_files_runtime",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 869,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_codex_files_runtime.txt",
+          "sha256CanonicalLf": "7d4475f13dc69d8f91b0e3d76a80ccaf558f32420fc85c85deccc27ba0e56e8b"
+        }
+      },
+      {
+        "suite": "native_provider_picker",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 706,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_picker.txt",
+          "sha256CanonicalLf": "354cc274b9e9f37556ce4468ae61c79e3534d5a7b8872e505070c8ac8659577d"
+        }
+      },
+      {
+        "suite": "native_provider_picker_host",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 148,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_picker_host.txt",
+          "sha256CanonicalLf": "0ac1511190d34db3bf405af542bb0539b7166ca6a44baab2d604b120cd016f13"
+        }
+      },
+      {
+        "suite": "native_provider_picker_window",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1512,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_picker_window.txt",
+          "sha256CanonicalLf": "049219d9d5c311a106885e391fefba12262f3c070188d53f5036883035782fb4"
+        }
+      },
+      {
+        "suite": "native_transcript_polish",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1617,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_polish.txt",
+          "sha256CanonicalLf": "5691ead12416ddef3c50938683d725c92573468b05a2344c22e94e5db2d4480d"
+        }
+      },
+      {
+        "suite": "native_opencode_harness",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8441,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_opencode_harness.txt",
+          "sha256CanonicalLf": "20aaadc8222089a0599e267ad14a96ed5eda36689977fc931fcd8420af4d771f"
+        }
+      },
+      {
+        "suite": "native_opencode_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3171,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_opencode_engine.txt",
+          "sha256CanonicalLf": "2675e2caf47a5188b249278e3f426a7bbf1bb2a5678186ed79210329fee9effd"
+        }
+      },
+      {
+        "suite": "native_provider_removal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 179,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_removal.txt",
+          "sha256CanonicalLf": "3fa78c9e403adc2b988ad27b8d06c4c24fc16e0b5fdb12a01e88210935e43d79"
+        }
+      },
+      {
+        "suite": "native_provider_removal_window",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 652,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_removal_window.txt",
+          "sha256CanonicalLf": "ca8aaae213765e6c300417ec7849deea3766b296f5dc48ab8637b14eefa89b35"
+        }
+      },
+      {
+        "suite": "native_agent_prompt",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1080,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_agent_prompt.txt",
+          "sha256CanonicalLf": "ed25c48421a1b39070410491630f3e4db319b6e7723795b76ac805737839c802"
+        }
+      },
+      {
+        "suite": "native_external_context",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 20,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_external_context.txt",
+          "sha256CanonicalLf": "8b481d1d037bab0a0b25bfa973d12df880c0b8eb3364d51962e8d4a872a8cf7c"
+        }
+      },
+      {
+        "suite": "native_agent_cycle",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 78,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_agent_cycle.txt",
+          "sha256CanonicalLf": "5e773b49dcb766d1ed576bca5a103397974e22c9cba035cd8fd758d9faf26c1c"
+        }
+      },
+      {
+        "suite": "native_agent_cycle_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1163,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_agent_cycle_host.txt",
+          "sha256CanonicalLf": "abb8edccd1b2f8b387b46f9b371701f3db0015ef23796d18378ffbb61dcad350"
+        }
+      },
+      {
+        "suite": "native_opencode_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 708,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_opencode_provider_ui.txt",
+          "sha256CanonicalLf": "30eb8e4405922797fbded2c5c90bfecd838a206f3bf3c1623e6131a6e2ed2425"
+        }
+      },
+      {
+        "suite": "native_opencode_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3198,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_opencode_host.txt",
+          "sha256CanonicalLf": "f2f2b9646bafc0364d5835bd36bb9d838365e67fad78dd0c2c0a3d1859075d98"
+        }
+      },
+      {
+        "suite": "native_transcript_grouping",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 84,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_grouping.txt",
+          "sha256CanonicalLf": "e72420f24e1829d69bdb5de443d0cc4146801d951cbd33fa021c0694c1c6e801"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 383,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_model_visibility.txt",
+          "sha256CanonicalLf": "03e5a4b136a3349cedf0df2a28230d48614207d749fe10779e01bc87d914027f"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1001,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_provider_model_visibility_host.txt",
+          "sha256CanonicalLf": "e81f64d0c5be80a73822c8b549bffb09ce95e918878f0ef685d15010654dc007"
+        }
+      },
+      {
+        "suite": "native_transcript_image_lifecycle",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 359,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_transcript_image_lifecycle.txt",
+          "sha256CanonicalLf": "c49fa0d99af8dd66b1a87264e1a37cd053f8e00986b174d709fc1db1a70f3c9b"
+        }
+      },
+      {
+        "suite": "native_question_mcp",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3905,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_question_mcp.txt",
+          "sha256CanonicalLf": "734c3fadbb13a5c1282193636b0807aaf593eb96c2a149533142478bbe06503f"
+        }
+      },
+      {
+        "suite": "native_rpc_deadline",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3888,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_rpc_deadline.txt",
+          "sha256CanonicalLf": "fd55dba3a8f088a8832b65e988b0c189aced35980cd3c441c98fb0c426235387"
+        }
+      },
+      {
+        "suite": "native_acp_mcp",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5321,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_mcp.txt",
+          "sha256CanonicalLf": "4449c238032cfadae022a8eb0d046110deeec3fadc9a07f201a2f4c055af7aa6"
+        }
+      },
+      {
+        "suite": "native_mcp_engine",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4137,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_mcp_engine.txt",
+          "sha256CanonicalLf": "e2728d28cdff71dd81643eed3b4f4fb479739aadb810778d06a5638091fef1b5"
+        }
+      },
+      {
+        "suite": "native_acp_tool_presentation",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_tool_presentation.txt",
+          "sha256CanonicalLf": "6b0562bf63ff1678bc39bec3aed602b04cdd70f0b5c2dc7d10d11122e0d8582f"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_engine",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1463,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_presentation_engine.txt",
+          "sha256CanonicalLf": "03d3f6da19c81778c17ce7d4d8c93f42e40e6f031efe8767d53d0ac53b91f9d3"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_ui",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 526,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_presentation_ui.txt",
+          "sha256CanonicalLf": "6e2af0944459058eba4aaa2da2fddd928e9f032cc9a795365bebf3256472b22b"
+        }
+      },
+      {
+        "suite": "native_claude_control",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2020,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_control.txt",
+          "sha256CanonicalLf": "210142fcb5408a952bb8f29c79c0042ede3482605aa7fa5395314c3edeeb1add"
+        }
+      },
+      {
+        "suite": "native_claude_stream",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 167,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_stream.txt",
+          "sha256CanonicalLf": "b48958ba402b2923fca26080d1fb2e2a96eb33628d3d4da6db2677c24ce3712c"
+        }
+      },
+      {
+        "suite": "native_claude_session",
+        "passedIncludingLifecycle": 22,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7352,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_session.txt",
+          "sha256CanonicalLf": "16163497e347c9d5eba40b307c39e926909665f273226394efea559d81511391"
+        }
+      },
+      {
+        "suite": "native_claude_discovery",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 517,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_discovery.txt",
+          "sha256CanonicalLf": "88eba727f7bcfcea729aa9e9563e2f6e1ee8c0a103aae3bd5d634f329684ae46"
+        }
+      },
+      {
+        "suite": "native_claude_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2527,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_engine.txt",
+          "sha256CanonicalLf": "3ee46419fdb1b395103294031f6c0f536b5edd78e680ce85aeafe9b09e8a81b9"
+        }
+      },
+      {
+        "suite": "native_claude_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 928,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_provider_ui.txt",
+          "sha256CanonicalLf": "7d92b3821f2b8d60640de5477f029be4cb55702f79c71e7f7c4ca01698c20bd8"
+        }
+      },
+      {
+        "suite": "native_claude_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2740,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_host.txt",
+          "sha256CanonicalLf": "ef6d950e7aff594f4440780733bc66dd0e489b3c8ae803275fda416a91c39b6a"
+        }
+      },
+      {
+        "suite": "native_harness_media",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 233,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_media.txt",
+          "sha256CanonicalLf": "60697b08956ec7efb76be2c35d01a5741a7ed08c0bf10a37844ab2800bb9751b"
+        }
+      },
+      {
+        "suite": "native_browser_context",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 123,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_context.txt",
+          "sha256CanonicalLf": "7ce5330d72594b5c9807dc2cd45a90c9e9ed651f222ef36dc3210d973e3554f0"
+        }
+      },
+      {
+        "suite": "native_browser_context_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2513,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_browser_context_runtime.txt",
+          "sha256CanonicalLf": "507080ff84d74680975368a6d69ece9708b1b4aaa769dd7a20f3123ff58c8aca"
+        }
+      },
+      {
+        "suite": "native_model_discovery",
+        "passedIncludingLifecycle": 36,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 602,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_model_discovery.txt",
+          "sha256CanonicalLf": "8ad91cbaa8c2b1a19ce3f7623f1853c3c2e420ed3ae59cb80c1dcdf8fb08e784"
+        }
+      },
+      {
+        "suite": "native_model_discovery_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1564,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_model_discovery_host.txt",
+          "sha256CanonicalLf": "b6521f9296fe19edd3ebad562cc4b90e7f43d0e4f91b79821a9f8401705e4e95"
+        }
+      },
+      {
+        "suite": "native_harness_forms_host",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2550,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_forms_host.txt",
+          "sha256CanonicalLf": "ccd9cc19db2ee1e4e70fb1ffa47f5fd2cec56ac8da3bc0fcc00c0e1d67e93a00"
+        }
+      },
+      {
+        "suite": "native_harness_continuity",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5791,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_continuity.txt",
+          "sha256CanonicalLf": "6ee01468a9cf4bf4dd5e2dfb82978f8e90f19915a39ad6d59d01ecf7a918a9fa"
+        }
+      },
+      {
+        "suite": "native_acp_settlement",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12119,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_settlement.txt",
+          "sha256CanonicalLf": "124ce1d71d3a4b950a32d6f5930ef078212970b2a7d0e236a64530af24ce30d9"
+        }
+      },
+      {
+        "suite": "native_utility_model_selection",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 362,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_utility_model_selection.txt",
+          "sha256CanonicalLf": "f15c3d75255f51f0ab6dc490ff1d5648c85f0025a856bf4deb984847a2f517e0"
+        }
+      },
+      {
+        "suite": "native_utility_models_host",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3923,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_utility_models_host.txt",
+          "sha256CanonicalLf": "076782eb8b4d278b2776209991398ef11fb602e0e5f602a3044a9f65d71ea809"
+        }
+      },
+      {
+        "suite": "native_claude_resume",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6800,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_claude_resume.txt",
+          "sha256CanonicalLf": "85e5bbe63d633677413393f1fc3d1e6b0898e9ad4977b8803cb095e551e6b74c"
+        }
+      },
+      {
+        "suite": "native_mcp_presentation",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3108,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_mcp_presentation.txt",
+          "sha256CanonicalLf": "7cec7e2b584ca72cad7f998235b9113941b4a31dce3861b334a8bd4aad2de42c"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_store",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 806,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_attachment_store.txt",
+          "sha256CanonicalLf": "9627c8a9051e6110aecd813993e031bf29f400198e6b1c828c9def6dac9aa885"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_wire",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1990,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_attachment_wire.txt",
+          "sha256CanonicalLf": "7c97f23df05475ca0fc5d87e4089d2bbd049ee1662d8a3b495ba4506b00e1000"
+        }
+      },
+      {
+        "suite": "native_harness_attachments_host",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7649,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_attachments_host.txt",
+          "sha256CanonicalLf": "1b7f27816c21aec2dd4e17049235b81430eb2ad11acb04d8320df4c4b9212a02"
+        }
+      },
+      {
+        "suite": "native_harness_cleanup_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 837,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_cleanup_host.txt",
+          "sha256CanonicalLf": "6ccacfc2b8fca4d67a4fe56c77949cd405d826298b7def9cceb51d73ea3abd7c"
+        }
+      },
+      {
+        "suite": "native_question_presentation",
+        "passedIncludingLifecycle": 44,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 315,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_question_presentation.txt",
+          "sha256CanonicalLf": "ab420e77dd00d36a7e4589eed57cf35786f3d9e1e477a0227ad834fe26220833"
+        }
+      },
+      {
+        "suite": "native_question_presentation_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 740,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_question_presentation_host.txt",
+          "sha256CanonicalLf": "94d78663cff21a46f9336816f3d097597d2c0d2cdaf80044d1d51cfaf29e55f3"
+        }
+      },
+      {
+        "suite": "native_direct_question_mcp",
+        "passedIncludingLifecycle": 46,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 18046,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_direct_question_mcp.txt",
+          "sha256CanonicalLf": "882b56443f1bc0ca265a8f3231df12e90a0d33e3364486821b48f88093417f05"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_mime",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3529,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_attachment_mime.txt",
+          "sha256CanonicalLf": "8c820092f9270731245e94a887ac9782a6c7730f20ce9723869c38d1d9e5ad77"
+        }
+      },
+      {
+        "suite": "native_historical_attachments",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5621,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_historical_attachments.txt",
+          "sha256CanonicalLf": "314d0aabf4b6ff7053b2147080e8e1678ff8200d640234ef98ec5484376708bd"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_source",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 190,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_harness_attachment_source.txt",
+          "sha256CanonicalLf": "83c563382c97aa65d3084890379a9a33c6be2944d283ba2c67ca6cd07070acf5"
+        }
+      },
+      {
+        "suite": "native_model_selector_display",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1231,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_model_selector_display.txt",
+          "sha256CanonicalLf": "8661d50931832750f9eeb9f3160a01cee7e0732420bb222130391629a4011179"
+        }
+      },
+      {
+        "suite": "native_acp_original_images",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 11883,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_original_images.txt",
+          "sha256CanonicalLf": "7ed58a4b8b076b312a4818a8bd3a99e5fde998026693116274dc6f93cf5c80a7"
+        }
+      },
+      {
+        "suite": "native_acp_original_lifecycle",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3359,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_original_lifecycle.txt",
+          "sha256CanonicalLf": "75d9861127cfd0cd4212cb3be764075a59ce447466d1bfc06fcb4429cc591c5b"
+        }
+      },
+      {
+        "suite": "native_acp_original_host",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 285,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_acp_original_host.txt",
+          "sha256CanonicalLf": "84ba5ff46c8a18e0bfeb34747f3bd6865dc4b9c6ea51646df1576735472b1f33"
+        }
+      },
+      {
+        "suite": "native_custom_model_options",
+        "passedIncludingLifecycle": 158,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 947,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_options.txt",
+          "sha256CanonicalLf": "f72d5e897157f2e9e2ebc4dbbf1184b21c1c62669842ed156d2651cfbe21cd0b"
+        }
+      },
+      {
+        "suite": "native_custom_model_engine",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2032,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_engine.txt",
+          "sha256CanonicalLf": "e8683b4756db048c10e10c5c6bb9e0023063c5543ed117e8322bd78b5f06bbf0"
+        }
+      },
+      {
+        "suite": "native_custom_model_config",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_config.txt",
+          "sha256CanonicalLf": "8860c9a09d6a521b3fa7982e2d56fdb7b7775402c8624823fdd41c327ab8aedf"
+        }
+      },
+      {
+        "suite": "native_custom_model_inventory",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_inventory.txt",
+          "sha256CanonicalLf": "f6f60ea710abf13bbcebb8b788ed3eb42caa1ffb791e0999b14a38bcefc00460"
+        }
+      },
+      {
+        "suite": "native_custom_model_storage",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 89,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_storage.txt",
+          "sha256CanonicalLf": "327a51c1ca8d752e5b3ebe110a09a175773afce1385872f91fe997cbee309eff"
+        }
+      },
+      {
+        "suite": "native_custom_model_media",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_media.txt",
+          "sha256CanonicalLf": "a9d9297ab7e0cb93e89b1cc7c216edfdb7b3b489ddef5261e8ba2cfda3d69519"
+        }
+      },
+      {
+        "suite": "native_custom_model_ui",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 280,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_ui.txt",
+          "sha256CanonicalLf": "7feb72acc020465b6a3d2168aa4a70f73de79bed11deee5a72216d72461efbda"
+        }
+      },
+      {
+        "suite": "native_custom_model_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3897,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_host.txt",
+          "sha256CanonicalLf": "bda96ac6f266b3e7d8b29c7b797c9d2deb33c00b4dc338680d162fd6070d556d"
+        }
+      },
+      {
+        "suite": "native_custom_model_smoke",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 391,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/native_custom_model_smoke.txt",
+          "sha256CanonicalLf": "004d32b27988c02e7a702bbab440f4ab5f15517d568add9cd4c6db41c8162a21"
+        }
+      },
+      {
+        "suite": "reference_file_mutations",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1619,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/reference_file_mutations.txt",
+          "sha256CanonicalLf": "47aa4fac4076cd083fe38baebc4439cd94284142665eda71d775a95d0f21033a"
+        }
+      },
+      {
+        "suite": "reference_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1866,
+        "report": {
+          "path": "audit/parity-custom-images-integration/final/reference_git_usage.txt",
+          "sha256CanonicalLf": "038edce7fcff37168363572ffb9c931edf83d6adda3441088dc0270f809c2f51"
+        }
+      }
+    ],
+    "junit": {
+      "path": "audit/parity-custom-images-integration/full-ctest.xml",
+      "sha256CanonicalLf": "b39ba3ccd85c961032f349446e3fbdbadf2da7cd14fe57cfd61d6fe62febae24"
+    },
+    "log": {
+      "path": "audit/parity-custom-images-integration/full-ctest.txt",
+      "sha256CanonicalLf": "b99bf96499c094c7f8f6229e6848fd9d61d914607e5a0bb9d5ad2be0bd58f18d"
+    },
+    "buildLog": {
+      "path": "audit/parity-custom-images-integration/build.txt",
+      "sha256CanonicalLf": "f6ed53e324bce0ef7a0558cbdb11f7252daf429bcd0d0bb7173b5c3c7e3afa96"
+    }
+  },
+  "coveredChanges": [
+    "Custom HTTP models support exact-provider add/edit/move/rename/delete, context metadata, text/image and tool capabilities, encrypted private options/headers and version2 persistence when required.",
+    "A bounded typed translator maps supported custom options for OpenAI Chat, Responses, Anthropic and Google while protecting native history, tools, system and streaming construction.",
+    "Same-ID custom changes or deletion pause stale queued dispatch; explicit resume re-resolves settings. The actual smoke command now uses the same model-selection resolver.",
+    "ACP uses exact captured original bytes for supported images at or below20MiB when the actual agent reports image capability, with ordered captured-resource fallback under the64MiB aggregate frame budget.",
+    "ACP asynchronous preparation and chunked process writing retain captured leases until Qt drains sent frames; revocation, partial cancellation and timeout terminate the owned transport safely."
+  ],
+  "componentEvidence": [
+    {
+      "path": "audit/parity-custom-images-integration/components/custom-model-runtime.json",
+      "sha256CanonicalLf": "914a6f51db9f63dc2ec829980332620c4c9fc08a8220e1fc08e41f9dec2f93b5"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/components/custom-model-ui.json",
+      "sha256CanonicalLf": "2e5d4a44ec3dd9b122dcdae4883dd87f7a7ec779276cd59c511a6bb5b5889ee4"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/components/acp-original-images.json",
+      "sha256CanonicalLf": "48e4df17e6d919126a1b441fe8b95b2ddb4bb08f0537947b4cadbc81560db5ee"
+    }
+  ],
+  "reproducedBefore": [
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-1.txt",
+      "sha256CanonicalLf": "f404730e0436539baa91d80df43f09e9e409b2c4ea01eb0fcf40755c5f52d1a8"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-2.txt",
+      "sha256CanonicalLf": "64c7a7e9b4a0fb5ff84739b50b32a69f3511b3dbaadb9edb17854b8cb9c18426"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-runtime-3.txt",
+      "sha256CanonicalLf": "a873223ae447dd38538152db759b0fe9056389668f9acf57b8a33481683c9468"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-1.txt",
+      "sha256CanonicalLf": "e5687065f6d2f84025b972fa2de41d20af47a30bbc7c609eea0a81f90610ce2d"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-2.txt",
+      "sha256CanonicalLf": "992541ad593e8ecce72f6ca4c4b560379540ea1c74e5d173c9e74c7e0b4182e1"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-3.txt",
+      "sha256CanonicalLf": "60f0f4d2d4b16025da8d68ed23bfc4e31fe4a2640def5a7dee0d7d7aded9770c"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-4.txt",
+      "sha256CanonicalLf": "2856340eb1ef5ce52e2f1db945b34168ab0996a979532ae68cbf116a93a0e7e6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-5.txt",
+      "sha256CanonicalLf": "715993bb9976760a9eeb7ff353d362653167235908efa6bd277d329387112832"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/custom-model-ui-6.txt",
+      "sha256CanonicalLf": "fb64d3c02a3144110ac16ee145986eac5b3aff05a036a87e2423739a099e7b66"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-1.txt",
+      "sha256CanonicalLf": "1037b1acc3aa8bdff648b7c59c864dcfb08b78e3d825c4ad6eb970de5b59a395"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-2.txt",
+      "sha256CanonicalLf": "a207fd1581d4d2dc2fc67cfe271b30788e04ee513632ad9e42707366086a9916"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-3.txt",
+      "sha256CanonicalLf": "8ece3518ed9c27da9dc263abdd4efc67e8bdfe4da8cb3e0c9524ef3a104c73b6"
+    },
+    {
+      "path": "audit/parity-custom-images-integration/reproduced-before/acp-original-images-4.txt",
+      "sha256CanonicalLf": "eed1f956e7350fb6a607624a459f743912777d8057e75b348f1c865b374ee7c4"
+    }
+  ],
+  "liveValidation": {
+    "status": "three_targeted_smokes_passed_for_identical_package_bytes",
+    "historicalReport": "audit/parity-native-questions-integration.json",
+    "scope": "Actual custom DeepSeek model read/Markdown, OpenCode image recognition, and managed Claude read tool. Native transcript captures; no new full-window interaction claim.",
+    "evidence": [
+      {
+        "path": "audit/parity-custom-images-integration/live-custom-model.json",
+        "sha256CanonicalLf": "c5ff6456eabb2270dee42f187a34e948708669f467b56f265daffab6cb5dff84"
+      },
+      {
+        "path": "audit/parity-custom-images-integration/live-acp-image.json",
+        "sha256CanonicalLf": "938c090f0d91c18f06556a7eb3fd79b82ca4c4f21e8e55cba294649e1ec6d328"
+      },
+      {
+        "path": "audit/parity-custom-images-integration/live-claude-subscription.json",
+        "sha256CanonicalLf": "50fafde3083c8cbdc55ebe42afcbdeb739faf9ad484f0a9e91d92ae36b78e4b2"
+      }
+    ]
+  },
+  "package": "out/parity-integration-7",
+  "binaries": [
+    {
+      "path": "ADE.exe",
+      "sha256": "44c38e1e141d18e849f0b66c02e85cd5763c1398c0c37d097e3e5d5061c97729",
+      "bytes": 85616294,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "path": "ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "bytes": 19775944,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "bytes": 194912,
+      "peImports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "versionSmoke": "ADE 0.1.0",
+  "packagedUiVerification": {
+    "status": "not_completed_for_this_binary",
+    "evidence": {
+      "path": "audit/parity-custom-images-integration/packaged-gui.json",
+      "sha256CanonicalLf": "2482dec034b0b46b075950b8ea4113480d903a9191e11e8da7add1a50f90649a"
+    }
+  },
+  "limits": [
+    "701 scope rows and17331 indexed source function bodies are preserved; full semantic, line-by-line, pixel and identical reasoning parity remain unestablished.",
+    "Custom options implement a documented protocol subset. Unsupported fields fail explicitly rather than source SDK silent stripping; no arbitrary request-body override.",
+    "Custom context-derived attachment/read budgets remain a separate gap. Audio/video/file input and non-text output are not implemented by this slice.",
+    "Custom configuration version2 prevents known old version1 readers from silently overwriting newer definitions; ordinary configurations remain version1-compatible.",
+    "Native custom-model controls remain list-based with plain JSON advanced editors; source card-inline placement, platform scrollbar and checkbox appearance differ.",
+    "Original-image transport applies only to ACP/OpenCode. HTTP/Codex/Claude retain their documented existing policies. Unsupported or oversized images remain captured resource links.",
+    "64MiB aggregate ACP limit and bounded write queue are explicit native limits. Cancellation cannot retract bytes already delivered to the pipe or undo external effects.",
+    "Synthetic protocol and ownership checks do not prove all remote services or determinism of model behavior. Paid third-party inference requires separately reported live evidence.",
+    "Settings presentation, workspace-tree behavior, account/usage paths and other scoped source-ledger gaps remain."
+  ],
+  "packagedMcpVerification": {
+    "path": "audit/parity-custom-images-integration/packaged-mcp.json",
+    "sha256CanonicalLf": "5010b6c99c56584620691201621b1f0951888f157cf215b5756d45a3f53a2c2e"
+  }
+}

@@ -1,0 +1,14 @@
+********* Start testing of CustomModelHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelHostTest::initTestCase()
+FAIL!  : CustomModelHostTest::changedCustomDefinitionPausesAutomaticQueue(delete) Compared values are not the same
+   Actual   (server.requests.size()): 2
+   Expected (1)                     : 1
+D:/age/ADE/private/custom-model-host-stage/tests/test_custom_model_host.cpp(66) : failure location
+FAIL!  : CustomModelHostTest::changedCustomDefinitionPausesAutomaticQueue(edit-same-id-headers) Compared values are not the same
+   Actual   (server.requests.size()): 2
+   Expected (1)                     : 1
+D:/age/ADE/private/custom-model-host-stage/tests/test_custom_model_host.cpp(66) : failure location
+PASS   : CustomModelHostTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 1326ms
+********* Finished testing of CustomModelHostTest *********

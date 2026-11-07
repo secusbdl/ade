@@ -9,5 +9,6 @@ HarnessPreparedTurn prepareHarnessInput(const HarnessAttachmentStore &handoff,
                                         const HarnessAttachmentSource &source,
                                         const QJsonArray &history,
                                         const ModelMediaCapabilities &media,
-                                        const std::atomic_bool *cancelled);
+                                        const std::atomic_bool *cancelled,
+                                        bool acpOriginalImages = false);
 } // namespace ade

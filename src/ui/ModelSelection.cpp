@@ -52,9 +52,22 @@ bool ModelSelection::resolve(const QList<ProviderConfig> &providers, ProviderCon
     if (modelId.isEmpty() || !result) return false;
     for (const auto &provider : providers) {
         if (provider.id != providerId) continue;
-        *result=provider;result->model=modelId;
-        // An explicit provider limit belongs to its default model only.
-        if(modelId!=provider.model)result->contextWindowTokens=0;
+        const CustomModelConfig* custom=nullptr;
+        for(const auto& definition:provider.customModels)if(definition.modelId==modelId&&definition.providerInstanceId==providerId){custom=&definition;break;}
+        if(!custom&&provider.retiredCustomModelIds.contains(modelId)){
+            bool discovered=false;const auto catalog=effectiveModelCatalog(provider);
+            for(const auto& value:catalog.value("models").toArray())if(value.toObject().value("id").toString()==modelId){discovered=true;break;}
+            if(!discovered)return false;
+        }
+        if(custom){QString error;if(provider.kind!="api"||!custom->validate(provider.id,&error))return false;}
+        *result=provider;result->model=modelId;result->customRequest={};result->requestOverrides={};
+        // A custom definition supplies independent model settings, not the
+        // previously selected provider-default model's reasoning or limit.
+        if(custom){
+            result->contextWindowTokens=custom->contextWindowSize;result->reasoningEffort.clear();result->thinkingMode.clear();result->thinkingBudget=0;result->maxOutputTokens=0;
+            result->customRequest={{"providerInstanceId",provider.id},{"modelId",modelId},{"providerOptions",custom->providerOptions},{"headers",custom->headers},{"capabilities",custom->capabilities}};
+        }else if(modelId!=provider.model)result->contextWindowTokens=0;
+        for(const auto& key:{"reasoningEffort","thinkingMode","thinkingBudget","maxOutputTokens"})if(overrides.contains(key))result->requestOverrides[key]=overrides.value(key);
         if(overrides.contains("reasoningEffort"))result->reasoningEffort=overrides["reasoningEffort"].toString();
         if(overrides.contains("thinkingMode"))result->thinkingMode=overrides["thinkingMode"].toString();
         if(overrides.contains("thinkingBudget"))result->thinkingBudget=overrides["thinkingBudget"].toInt();
@@ -120,14 +133,16 @@ QList<ModelSelection> availableModelSelections(const QList<ProviderConfig> &prov
         QSet<QString> disabled;
         if(!includeDisabled)for(const auto& id:p.disabledModelIds)disabled.insert(normalizedModelVisibilityId(p,id));
         const auto enabled=[&](const QString& id){return !disabled.contains(normalizedModelVisibilityId(p,id));};
-        if(includeDisabled||enabled(p.model))append({p.id,p.model,{},p.name+" / "+p.model,{}});
+        QSet<QString> customIds;for(const auto& custom:p.customModels)customIds.insert(custom.modelId);
+        ModelSelection defaultSelection{p.id,p.model,{},p.name+" / "+p.model,{}};ProviderConfig resolvedDefault;
+        if(!customIds.contains(p.model)&&(includeDisabled||enabled(p.model))&&defaultSelection.resolve({p},&resolvedDefault))append(defaultSelection);
         const auto catalog=effectiveModelCatalog(p,catalogs[p.id].toObject());
         // A catalog belongs to one endpoint/protocol. Editing a provider invalidates old discovery.
-        if(!catalogMatches(p,catalog))continue;
-        for(const auto &value:catalog["models"].toArray()) {
+        if(catalogMatches(p,catalog))for(const auto &value:catalog["models"].toArray()) {
             const auto m=value.toObject();const auto id=m["id"].toString();
-            if(includeDisabled||enabled(id))append({p.id,id,{},p.name+" / "+m["name"].toString(id),{}});
+            if(!customIds.contains(id)&&(includeDisabled||enabled(id)))append({p.id,id,{},p.name+" / "+m["name"].toString(id),{}});
         }
+        for(const auto& custom:p.customModels)if(custom.providerInstanceId==p.id&&(includeDisabled||enabled(custom.modelId)))append({p.id,custom.modelId,{},p.name+" / "+custom.displayName,{}});
     }
     return result;
 }

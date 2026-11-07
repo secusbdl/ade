@@ -1,0 +1,12 @@
+********* Start testing of CustomModelUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelUiTest::initTestCase()
+FAIL!  : CustomModelUiTest::closingOwnerDuringActionDisablesMustNotOpenChild() '!opened' returned FALSE. ()
+D:/age/ADE/private/custom-model-ui-stage/tests/test_custom_model_ui.cpp(59) : failure location
+FAIL!  : CustomModelUiTest::darkEditorInteriorUsesModelSurface() Compared values are not the same
+   Actual   (image.pixelColor(5,5)): #ffefefef
+   Expected (QColor("#21242b"))    : #ff21242b
+D:/age/ADE/private/custom-model-ui-stage/tests/test_custom_model_ui.cpp(60) : failure location
+PASS   : CustomModelUiTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 95ms
+********* Finished testing of CustomModelUiTest *********

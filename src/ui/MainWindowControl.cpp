@@ -199,6 +199,29 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
     }
     auto &chat = candidate[index];
     const bool accepted = chat.messages != history;
+    // Only a newly accepted user turn may be paused here. Saving the active
+    // response, mutation recovery, or queue edits must remain possible after a
+    // custom definition changes. Explicit resume resolves the current chain.
+    const bool newUser=history.size()>chat.messages.size()&&!history.isEmpty()
+        &&history.last().toObject().value("role")=="user";
+    if(newUser){
+      const auto active=owner->provider();
+      const ModelSelection selection{chat.providerId,chat.model,chat.presetId,{},{}};
+      const auto chain=selectedModelChain(selection,self->m_providers,
+          self->m_settings->preference("modelPresets").toArray(),
+          self->m_settings->preference("modelCatalogs").toObject());
+      const ProviderConfig* latest=nullptr;
+      for(const auto& model:chain)if(model.provider.id==active.id&&model.provider.model==active.model){latest=&model.provider;break;}
+      const bool custom=!active.customRequest.isEmpty()||(latest&&!latest->customRequest.isEmpty());
+      if(custom&&(!latest||active.customRequest!=latest->customRequest
+          ||active.requestOverrides!=latest->requestOverrides
+          ||active.contextWindowTokens!=latest->contextWindowTokens
+          ||active.kind!=latest->kind||active.protocol!=latest->protocol
+          ||active.baseUrl!=latest->baseUrl||active.apiKey!=latest->apiKey)){
+        if(error)*error="The selected custom model changed or was removed. Your queued message is retained. Select the intended model, then resume the queue.";
+        return false;
+      }
+    }
     if(accepted&&self->gitPathBusy(chat.workspace)){
       if(error)*error="Wait for the workspace operation before starting this queued message.";
       return false;

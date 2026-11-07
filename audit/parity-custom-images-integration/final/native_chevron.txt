@@ -1,0 +1,13 @@
+********* Start testing of ChevronTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ChevronTest::initTestCase()
+PASS   : ChevronTest::drawsWithoutGlyph(light-70)
+PASS   : ChevronTest::drawsWithoutGlyph(light-100)
+PASS   : ChevronTest::drawsWithoutGlyph(light-130)
+PASS   : ChevronTest::drawsWithoutGlyph(dark-70)
+PASS   : ChevronTest::drawsWithoutGlyph(dark-100)
+PASS   : ChevronTest::drawsWithoutGlyph(dark-130)
+PASS   : ChevronTest::disconnectedWorkspaceKeepsPlainAction()
+PASS   : ChevronTest::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 150ms
+********* Finished testing of ChevronTest *********

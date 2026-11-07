@@ -2,6 +2,7 @@
 #include "ui/AppStyle.h"
 #include "ui/ContextPreferences.h"
 #include "ui/SettingsPage.h"
+#include "ui/ModelSelection.h"
 #include "ui/SmokeTranscriptCapture.h"
 #include "core/AgentEngine.h"
 #include "harness/QuestionMcpStdio.h"
@@ -109,11 +110,22 @@ int main(int argc,char** argv) {
         if(parser.isSet("import-keys"))providers=ProviderStore::importKeyFile(parser.value("import-keys"),&error);
         auto selected=std::find_if(providers.begin(),providers.end(),[&](const ProviderConfig& p){return parser.value("provider").isEmpty()||p.id.compare(parser.value("provider"),Qt::CaseInsensitive)==0||p.name.compare(parser.value("provider"),Qt::CaseInsensitive)==0;});
         if(selected==providers.end()){QTextStream(stderr)<<"Requested provider is not configured. "<<error<<"\n";return 2;}
-        auto provider=*selected;if(parser.isSet("model"))provider.model=parser.value("model");
-        QStringList smokeSecrets;for(const auto& configured:providers)if(!configured.apiKey.isEmpty())smokeSecrets.append(configured.apiKey);
-        if(parser.isSet("reasoning"))provider.reasoningEffort=parser.value("reasoning");
-        if(parser.isSet("thinking"))provider.thinkingMode=parser.value("thinking");
-        if(parser.isSet("max-output"))provider.maxOutputTokens=qBound(16,parser.value("max-output").toInt(),32768);
+        ModelSelection selection{selected->id,parser.isSet("model")?parser.value("model"):selected->model,{},{},{}};
+        if(parser.isSet("reasoning"))selection.overrides["reasoningEffort"]=parser.value("reasoning");
+        if(parser.isSet("thinking"))selection.overrides["thinkingMode"]=parser.value("thinking");
+        if(parser.isSet("max-output"))selection.overrides["maxOutputTokens"]=qBound(16,parser.value("max-output").toInt(),32768);
+        ProviderConfig provider;
+        if(!selection.resolve(providers,&provider)){
+            QTextStream(stderr)<<"Requested model is unavailable for this provider instance. No request was sent.\n";
+            return 2;
+        }
+        QStringList smokeSecrets;
+        for(const auto& configured:providers){
+            if(!configured.apiKey.isEmpty())smokeSecrets.append(configured.apiKey);
+            for(const auto& definition:configured.customModels)
+                for(const auto& value:definition.headers)
+                    if(!value.toString().isEmpty())smokeSecrets.append(value.toString());
+        }
         AgentEngine engine;engine.setProvider(provider);engine.setWorkspace(parser.value("workspace"));engine.setAlwaysAllow(parser.isSet("always-allow"));
         std::unique_ptr<BrowserWidget> browser;
         BrowserToolBridge browserTools;

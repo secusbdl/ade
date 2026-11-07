@@ -1,0 +1,19 @@
+********* Start testing of CustomModelConfigTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelConfigTest::initTestCase()
+PASS   : CustomModelConfigTest::defaultsAndSafeProjection()
+PASS   : CustomModelConfigTest::invalidMetadata(empty-id)
+PASS   : CustomModelConfigTest::invalidMetadata(built-in)
+PASS   : CustomModelConfigTest::invalidMetadata(alias)
+PASS   : CustomModelConfigTest::invalidMetadata(bad-context-type)
+PASS   : CustomModelConfigTest::invalidMetadata(fraction)
+PASS   : CustomModelConfigTest::invalidMetadata(zero)
+PASS   : CustomModelConfigTest::invalidMetadata(limit)
+PASS   : CustomModelConfigTest::invalidMetadata(bad-thinking)
+PASS   : CustomModelConfigTest::invalidMetadata(bad-caps)
+PASS   : CustomModelConfigTest::invalidMetadata(bad-id-control)
+PASS   : CustomModelConfigTest::ownerAndPrivateFailureAreAtomic()
+PASS   : CustomModelConfigTest::privateBounds()
+PASS   : CustomModelConfigTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of CustomModelConfigTest *********

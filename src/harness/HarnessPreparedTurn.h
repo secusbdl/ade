@@ -9,6 +9,7 @@ struct HarnessAttachments {
   HarnessAttachmentLease current;
   HarnessAttachmentLease history;
   QStringList inlineReferences;
+  bool acpOriginalImages = false; // Host-only policy; never parsed from message JSON.
 };
 struct HarnessPreparedTurn {
   QJsonArray input;

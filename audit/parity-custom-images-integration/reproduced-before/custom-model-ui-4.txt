@@ -1,0 +1,12 @@
+********* Start testing of CustomModelUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelUiTest::initTestCase()
+QWARN  : CustomModelUiTest::darkEditorInteriorUsesModelSurface() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : CustomModelUiTest::darkEditorInteriorUsesModelSurface() Compared values are not the same
+   Actual   (image.pixelColor(toggle->mapTo(&d,QPoint(toggle->width()-8,toggle->height()/2)))): #fff4f4f4
+   Expected (QColor("#2c3039"))                                                               : #ff2c3039
+D:/age/ADE/private/custom-model-ui-stage/tests/test_custom_model_ui.cpp(63) : failure location
+PASS   : CustomModelUiTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 22ms
+********* Finished testing of CustomModelUiTest *********

@@ -1,4 +1,5 @@
 #include "UtilityService.h"
+#include "CustomModelOptions.h"
 #include "ProviderProtocol.h"
 #include "UtilityPrompts.h"
 #include <QJsonDocument>
@@ -110,7 +111,7 @@ void UtilityService::cancel() {
 void UtilityService::generateTitle(const QJsonArray &messages) { start(true, titleHistory(messages)); }
 void UtilityService::compressHistory(const QJsonArray &messages, const QString &previous) { start(false, compactHistory(messages, previous)); }
 QString UtilityService::redact(QString text) const {
-    for (const auto &entry : m_candidates) if (!entry.provider.apiKey.isEmpty()) text.replace(entry.provider.apiKey, "[REDACTED]");
+    for (const auto &entry : m_candidates) text = CustomModelOptions::redactDiagnostic(entry.provider, text);
     return text.left(2000);
 }
 void UtilityService::start(bool title, const QString &prompt) {
@@ -151,15 +152,22 @@ void UtilityService::attempt() {
     }
     p.maxOutputTokens = m_title ? 100 : 20000;
     if (m_title && !entry.hasThinkingOverride && ProviderProtocol::kind(p) == "anthropic") p.thinkingMode = "disabled";
+    if (!p.customRequest.isEmpty()) {
+        p.requestOverrides["maxOutputTokens"] = p.maxOutputTokens;
+        p.requestOverrides["temperature"] = m_title ? 0.15 : 0.1;
+        if (m_title && !entry.hasThinkingOverride && ProviderProtocol::kind(p) == "anthropic")
+            p.requestOverrides["thinkingMode"] = "disabled";
+    }
     const auto prompt = QString::fromUtf8(m_title ? utilityPrompts::title : utilityPrompts::compression);
     auto prepared = ProviderProtocol::prepare(p, QJsonArray{QJsonObject{{"role", "user"}, {"content", m_prompt}}}, prompt, {});
+    if (!prepared.error.isEmpty()) { attemptFailed(prepared.error); return; }
     prepared.request.setRawHeader("Accept", "application/json");
     if (ProviderProtocol::kind(p) == "google") {
         auto url = prepared.request.url(); auto path = url.path(); path.replace(":streamGenerateContent", ":generateContent");
         url.setPath(path); url.setQuery(QString{}); prepared.request.setUrl(url);
-        auto generation = prepared.body["generationConfig"].toObject(); generation["temperature"] = m_title ? 0.15 : 0.1;
+        auto generation = prepared.body["generationConfig"].toObject(); if (p.customRequest.isEmpty()) generation["temperature"] = m_title ? 0.15 : 0.1;
         prepared.body["generationConfig"] = generation;
-    } else { prepared.body["stream"] = false; prepared.body.remove("stream_options"); prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
+    } else { prepared.body["stream"] = false; prepared.body.remove("stream_options"); if (p.customRequest.isEmpty()) prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
     prepared.request.setTransferTimeout(m_title ? 15000 : 30000);
     m_body.clear(); m_timedOut = false; m_tooLarge = false;
     m_reply = m_network.post(prepared.request, QJsonDocument(prepared.body).toJson(QJsonDocument::Compact));

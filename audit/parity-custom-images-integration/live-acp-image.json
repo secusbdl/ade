@@ -1,0 +1,70 @@
+{
+  "startedUtc": "2026-11-07T01:28:26.746035+00:00",
+  "finishedUtc": "2026-11-07T01:28:32.704992+00:00",
+  "binarySha256": "44c38e1e141d18e849f0b66c02e85cd5763c1398c0c37d097e3e5d5061c97729",
+  "cliVersion": "1.19.5",
+  "cliSha256": "6f15c8f241f3df22375f174753193a71c488f6c0a6bbbae3f9fa34d112673b7b",
+  "requestedModel": "deepseek/deepseek-flash",
+  "actualModel": "deepseek/deepseek-flash",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "visionAnswerMatched": true,
+  "tools": [],
+  "imageBytes": 347,
+  "imageSha256": "567ee0066fd553b91691d75b51ef1914478bb2235bea0921a255c2646d8f78ab",
+  "workspaceUnchanged": true,
+  "elapsedMs": 5668,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 13,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "a75e71d1116b863eebda4d8304b891f637aa9956c82e8cc924fd095c6835cd9d",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-text.png",
+        "sha256": "d7a71865c7de059a631cd6c4f7151b6f339c6518f729a0e4fa0d9d2941029ed5",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-completed.png",
+        "sha256": "57f2dc8f1e5937c3f93de0912eeebde9226917f62fad7ec58878bb4d9bb2c988",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 2.2714,
+    "meanSetConversationMs": 0.987475,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 4,
+    "textDeltas": 9,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "scope": "Actual native ACP, real isolated OpenCode and authorized DeepSeek vision inference with a tiny synthetic PNG. Exact byte transfer is proven separately by instrumented native fixtures; remote visual recognition is not a wire-byte proof. No existing CLI credentials or user chats read. One submitted turn is not a provider billing-request count.",
+  "finalPackageBytesIdentical": true,
+  "testedDirectory": "out/custom-images-candidate-1",
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/parity-live/acp-image-1/captures/01-submitted.png",
+      "sha256": "a75e71d1116b863eebda4d8304b891f637aa9956c82e8cc924fd095c6835cd9d"
+    },
+    {
+      "localPath": "private/parity-live/acp-image-1/captures/02-text.png",
+      "sha256": "d7a71865c7de059a631cd6c4f7151b6f339c6518f729a0e4fa0d9d2941029ed5"
+    },
+    {
+      "localPath": "private/parity-live/acp-image-1/captures/03-completed.png",
+      "sha256": "57f2dc8f1e5937c3f93de0912eeebde9226917f62fad7ec58878bb4d9bb2c988"
+    }
+  ]
+}

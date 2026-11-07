@@ -1,0 +1,445 @@
+{
+  "version": 1,
+  "status": "frozen_verified_private_handoff",
+  "baseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "patch": "private/custom-model-ui-stage/custom-model-ui.patch",
+  "hashEncoding": "UTF-8 canonical LF",
+  "files": [
+    {
+      "path": "src/core/CustomModelConfig.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "13e44df04182c227132dd0f15384b6f68784c4b7f04d5fb06e7637c3de9ebb68"
+    },
+    {
+      "path": "src/core/CustomModelConfig.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "a3b6e1c89f996947b9478ccc3f60f7d6b58bd213c1a3d97c3748c22935051880"
+    },
+    {
+      "path": "src/core/CustomModelInventory.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "851e74e8bb96caa98c9f5947a17562be96f7729ec54e1ca90548c325f67e3c3e"
+    },
+    {
+      "path": "src/core/CustomModelInventory.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "0052219c7c41e12a831c4f4b20d6358e1bb2fa5aa364968dfafcc1b964cbbfff"
+    },
+    {
+      "path": "src/core/ProviderConfig.h",
+      "beforeSha256Lf": "c6f3ecea99af105c208c01712e4bb9758c41547295636683536c9508f99b7a85",
+      "afterSha256Lf": "ec75bdd3a38f48a2b62d91c8572506d9a0c5ebb5056eae2aa0d8c1d0d7033251"
+    },
+    {
+      "path": "src/core/ProviderStore.cpp",
+      "beforeSha256Lf": "8c26b39d4da60cd3c3139bb4cc0241e4a375e4656767f91d839662c7447cdee8",
+      "afterSha256Lf": "5f2eee1eb89f8d921ec5c05c8861e0f01e6491dc3b69a1360ad79aa2411db7be"
+    },
+    {
+      "path": "src/ui/ModelSelection.cpp",
+      "beforeSha256Lf": "5f61674c3676fcbec52133d8cf566bffba4631728318d0816d61b3ba4b5514b9",
+      "afterSha256Lf": "ace4091ba747706ab7d8a49ac409ae26f5dfd5be3dbfb658e9bb7872c527cd3a"
+    },
+    {
+      "path": "src/ui/CustomModelDialog.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "9b610563ad0dd5b5ee13ce83363f69ce02f31999595029ff4a484c37b9fcf91a"
+    },
+    {
+      "path": "src/ui/CustomModelDialog.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "6d4a0d17fbfe0df90ff681d4c5ef5581f67a681380875a654d1d44bebdf0de12"
+    },
+    {
+      "path": "src/ui/ProviderModelsDialog.h",
+      "beforeSha256Lf": "a93f79d45828ebdebfb49b289be22d40c036a718163c001c8c29dab2cb89bcd1",
+      "afterSha256Lf": "1e553ee78551051ebc1739f7cd33275b24908fe00a7f777cb300bd90a1333376"
+    },
+    {
+      "path": "src/ui/ProviderModelsDialog.cpp",
+      "beforeSha256Lf": "f1223fa63461ea38bb489019ea3d764f1f188e1d22618157aec571f718ae9d14",
+      "afterSha256Lf": "e2afcdaee0020b0d7e1238b2581a1efe944e97be722ac63849a81934002cd2cf"
+    },
+    {
+      "path": "src/attachments/ModelMediaCatalog.h",
+      "beforeSha256Lf": "4d8a3c9a4cddba907d79d6d8cf6b62cda247ffb634eaf700b2681035a894042c",
+      "afterSha256Lf": "a53bef7d448720ebdf5a4c5c64889566d0693b6d865c7e24510200fddcc6d6e7"
+    },
+    {
+      "path": "src/attachments/ModelMediaCatalog.cpp",
+      "beforeSha256Lf": "147e537c155da3372c8743c491b78317cc93b7652ae8befe82e9f08b7cdcae83",
+      "afterSha256Lf": "050fdb7433d55af65aee5949564ebd4f181950fa0dcf5a08356a2427753c2762"
+    },
+    {
+      "path": "src/ui/MainWindowControl.cpp",
+      "beforeSha256Lf": "41947d757c9fb7c02c045e1f2a4c620f05ff2fba7a12c02e6cdeec29bf5183f6",
+      "afterSha256Lf": "32058f2dc494f1fd5043715fbbdf99dcf2fa6d567d7a4f91aa7a5f06ee278f91"
+    },
+    {
+      "path": "src/main.cpp",
+      "beforeSha256Lf": "58bd683c2efbb4af5ed914ebe34a42ea75dd782f26ffd5e44f1061d5f8c2764a",
+      "afterSha256Lf": "402112fa654fc2e729cd52ab73b504c603593fe9e48888bcc0d162c1db7e9374"
+    },
+    {
+      "path": "tests/test_custom_model_config.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "1a57b5994dea1352e5f5d47c0dffe86d581abe70cc3183779932a1d078547495"
+    },
+    {
+      "path": "tests/test_custom_model_inventory.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "57e37b7e1be5e718ca93448b4542f42d357826d08ec9944bd28b22e1e3a75ef0"
+    },
+    {
+      "path": "tests/test_custom_model_storage.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "496eb0c7c3b9186471e00f0c3681e9f63becf1481f5f97913590cbf53a5e15d6"
+    },
+    {
+      "path": "tests/test_custom_model_media.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "27152edc093f4a9d1bbd485e33b0ecc15df0741591ff46cdd087964df12373be"
+    },
+    {
+      "path": "tests/test_custom_model_ui.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "c0a4c1b3d42f33c6dc4c7aa83cc7bcb1cf1e76a0f4f2fbe214b6e9079fa7f8c0"
+    },
+    {
+      "path": "tests/test_custom_model_host.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "291a0828dabd01f3cbbce29ae7006effb9f8e45c1f7ffb75c40cd8bf0d908f69"
+    },
+    {
+      "path": "tests/test_custom_model_smoke.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "88516f0797b099e23b552892b9fc88675a63f1bced9c75be52e588d7f1191506"
+    }
+  ],
+  "coreDependency": "private/custom-model-core-stage/HANDOFF.json",
+  "coreOverlayVerified": true,
+  "noOverlapWithAcpImages": true,
+  "cmake": "private/custom-model-ui-stage/cmake-additions.txt",
+  "newQtSuites": 7,
+  "actualMainFixtureTarget": "custom_model_smoke_app (src/main.cpp, isolated offscreen subprocess)",
+  "privateRows": 151,
+  "tests": [
+    {
+      "suite": "config",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-ui-stage/config-final.txt",
+      "sha256Lf": "062c6dd4d5c87d951ba91b2660cdc6a5117c9bb9e751e06f6989163f99d2c616",
+      "xml": "private/custom-model-ui-stage/config-final.xml",
+      "xmlSha256Lf": "444b261b94ffb11fcf17007561044c93b6fe22982bac92a2fcab9ef65f79a118"
+    },
+    {
+      "suite": "inventory",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-ui-stage/inventory-final.txt",
+      "sha256Lf": "d0c3f001ee01badec7a3be5ae12b1ef435723aaf86d28bbf9b8cba6713077acb",
+      "xml": "private/custom-model-ui-stage/inventory-final.xml",
+      "xmlSha256Lf": "bc2d307c091999758bfe5fa8e23762406b291caa03bcd440f2fe6a59f3c80eb2"
+    },
+    {
+      "suite": "storage",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-ui-stage/storage-final.txt",
+      "sha256Lf": "426f8b4b9be4113e3165186a546f961be7fe755866989c1f00ffd63580783827",
+      "xml": "private/custom-model-ui-stage/storage-final.xml",
+      "xmlSha256Lf": "6fee61c51c1586ff53ab03dc8d646f034b66a7a06b549459e1635867f0fe4cd7"
+    },
+    {
+      "suite": "media",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-ui-stage/media-final.txt",
+      "sha256Lf": "a3df35fc29cf454a901482f0f04f61d7915d31727e3680a83a7344b26acb8bed",
+      "xml": "private/custom-model-ui-stage/media-final.xml",
+      "xmlSha256Lf": "65d13386cf4585e22bb2fbcc91f1c20c6ccf84839a70b632bf6e216a3f767e04"
+    },
+    {
+      "suite": "ui",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-ui-stage/ui-final.txt",
+      "sha256Lf": "ba36f5d4ccea9937f0f8dd99287853a15dc3ad99f777c03cc94412813e4169eb",
+      "xml": "private/custom-model-ui-stage/ui-final.xml",
+      "xmlSha256Lf": "8f17a63c751fe4d795045f4873b0f4b665064cf99045d31d08015b34e604ba07"
+    },
+    {
+      "suite": "custom_model_host",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/custom_model_host-final.txt",
+      "sha256Lf": "ddbedaff54afc16bf6ff07408e8ae3fb82bb2b192332cb88780348761f3ee3b9",
+      "xml": "private/custom-model-host-stage/custom_model_host-final.xml",
+      "xmlSha256Lf": "970d756a4f1e87fda806043d39d205a4f6c609341691b225b1ce50864bc3313b"
+    },
+    {
+      "suite": "custom_model_smoke",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/custom_model_smoke-final.txt",
+      "sha256Lf": "c57351057224991dc8ed2986708b1602e83e2e13f42b3396b01dd4e271cd64ce",
+      "xml": "private/custom-model-host-stage/custom_model_smoke-final.xml",
+      "xmlSha256Lf": "37a1305d4c3a1c11341982789e1bc0b39036088ff1b6756a4b07633e63cf0e2d"
+    },
+    {
+      "suite": "provider_model_visibility",
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/provider_model_visibility-final.txt",
+      "sha256Lf": "7a4d42656b8a62e4b064db7303afae3fe176871ffe7f24766017e8e264220c18",
+      "xml": "private/custom-model-host-stage/provider_model_visibility-final.xml",
+      "xmlSha256Lf": "4836136c4c22b534ad7caaa46a6981e87d103524e61237289056433fcf7c6313"
+    },
+    {
+      "suite": "provider_model_visibility_host",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/provider_model_visibility_host-final.txt",
+      "sha256Lf": "aa7087b133cab2dcf6c2d25496f28628a8641af795bcfb00d6d73c16603d17ff",
+      "xml": "private/custom-model-host-stage/provider_model_visibility_host-final.xml",
+      "xmlSha256Lf": "3c8250becf0b58d44d71198ff2fa0fc2799a377825435909047ba9f01979fe04"
+    },
+    {
+      "suite": "model_discovery_host",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/model_discovery_host-final.txt",
+      "sha256Lf": "32e2bc9fa1505c9dedfa23fa0be1cdcd1c222292d2d3335872fba35f072eba73",
+      "xml": "private/custom-model-host-stage/model_discovery_host-final.xml",
+      "xmlSha256Lf": "b0714bcf4ae9c0820747c3dd31da06d220f4e01df1adf9255cd75b7ed7553039"
+    },
+    {
+      "suite": "agent_control_ui",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/agent_control_ui-final.txt",
+      "sha256Lf": "7b7915120c75a0a36c958b3b8e614e49a86f74551a371ba73efea32107aa9fe9",
+      "xml": "private/custom-model-host-stage/agent_control_ui-final.xml",
+      "xmlSha256Lf": "67ad3848a935a3f612646973d9cf5d381dc459598e6b149b064e9c85e741df20"
+    },
+    {
+      "suite": "utility_models_host",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "report": "private/custom-model-host-stage/utility_models_host-final.txt",
+      "sha256Lf": "8bc8d8a838cb577318a36f00bf7123b05f5369e50583b1e2b31e38c31508b1ec",
+      "xml": "private/custom-model-host-stage/utility_models_host-final.xml",
+      "xmlSha256Lf": "77917224b5889313858acb30e85adf9d8bd252c147475a810f2f2cef7aa02210"
+    }
+  ],
+  "beforeEvidence": [
+    {
+      "path": "private/custom-model-host-stage/queue-before.txt",
+      "finding": "Deleted custom and same-ID edited headers both auto-dispatched stale next queued request. Before2pass2fail; final host covers active completion, durable pause and explicit fresh resume.",
+      "sha256Lf": "e5687065f6d2f84025b972fa2de41d20af47a30bbc7c609eea0a81f90610ce2d"
+    },
+    {
+      "path": "private/custom-model-host-stage/smoke-before.txt",
+      "finding": "Actual main.cpp ignored custom options and sent removed model. Before2pass2fail; final actual subprocess4pass.",
+      "sha256Lf": "992541ad593e8ecce72f6ca4c4b560379540ea1c74e5d173c9e74c7e0b4182e1"
+    },
+    {
+      "path": "private/custom-model-ui-stage/ui-peer-before.txt",
+      "finding": "Parent rejected during EnabledChange still opened child; dark editor surface wrong. Before2pass2fail.",
+      "sha256Lf": "60f0f4d2d4b16025da8d68ed23bfc4e31fe4a2640def5a7dee0d7d7aded9770c"
+    },
+    {
+      "path": "private/custom-model-ui-stage/advanced-before.txt",
+      "finding": "Final dark render exposed pale Advanced control; actual pixel #f4f4f4 vs #2c3039, before2pass1fail.",
+      "sha256Lf": "2856340eb1ef5ce52e2f1db945b34168ab0996a979532ae68cbf116a93a0e7e6"
+    },
+    {
+      "path": "private/custom-model-ui-stage/version-v1-before.txt",
+      "finding": "Old reader accepted custom v1 rather than refusing; before2pass1fail. Private old-reader proof retained separately.",
+      "sha256Lf": "715993bb9976760a9eeb7ff353d362653167235908efa6bd277d329387112832"
+    },
+    {
+      "path": "private/custom-model-ui-stage/ui-first.txt",
+      "finding": "Narrow Edit/Delete action clipping, before13pass2fail; source controls retained with concise labels.",
+      "sha256Lf": "fb64d3c02a3144110ac16ee145986eac5b3aff05a036a87e2423739a099e7b66"
+    }
+  ],
+  "verifiedSourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/karton-contracts/ui/shared-types.ts",
+      "lines": "151-197",
+      "contract": "Custom record contains modelId/displayName/description/contextWindowSize(default128000), instance or legacy endpoint, thinkingEnabled(false), text input/output+toolCalling defaults, capabilities object, providerOptions object, string-valued headers."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+      "lines": "1306-1528",
+      "contract": "Dialog seeds exact instance; model/display trimmed; global collision with built-in or other custom ID rejects; JSON parse errors retain draft; save in progress blocks dismissal; failed save keeps dialog and error."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+      "lines": "1540-1785",
+      "contract": "Main form includes model/display/description/context, instance, thinking and modality/tool capability flags; provider-options and header JSON are advanced fields."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+      "lines": "1955-2008,2052-2058,2160-2175",
+      "contract": "Custom cards are instance-grouped with display name, context and edit/delete actions; belong in the model list rather than discovery inventory."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx",
+      "lines": "2918-2957",
+      "contract": "Edit replaces exact originally edited modelId, add appends, delete removes exact modelId; no automatic rewrite of saved preset/chat references shown in these handlers."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/provider-instance-helpers.ts",
+      "lines": "698-724,769-806,921-966,970-994",
+      "contract": "Selector uses (instanceId,modelId), custom metadata/context label, disabled preference filtering, custom over discovered collision, and utility exclusion of external agents. Resolver includes disabled entries so hiding is not disabling saved execution."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/model-provider.ts",
+      "lines": "514-562,837-961",
+      "contract": "Explicit missing instance fails; matching custom wins before built-in/discovered on that exact instance. Custom route resolves API spec and wire modelId; passes custom headers, wraps flat custom providerOptions under actual API-spec provider key (OpenAI variants use openai), returns custom context and reasoning-signature identity."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/preferences.ts",
+      "lines": "2117-2175",
+      "contract": "Provider removal atomically removes related custom models and instance thinking overrides; saved references are not silently redirected by the explicit-instance resolver."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "lines": "1340-1359,1885-1893",
+      "contract": "Normal inference consumes resolved headers/options; context window affects read limits. Capability lookup is separate and keyed by modelId."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/shared/title-generation/index.ts",
+      "lines": "202-223",
+      "contract": "Title generation retains custom headers/options while applying its documented utility thinking override policy."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/shared/history-compression/index.ts",
+      "lines": "125-126",
+      "contract": "Compression forwards resolved provider options and headers."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/services/agent-core-bridge/host-models.ts",
+      "lines": "205-207",
+      "contract": "Pinned core adapter capabilities read global getModelCapabilities(modelId), not preferences customModels."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/available-models.ts",
+      "lines": "2500-2532",
+      "contract": "Unknown/custom ID capability fallback is text-only and toolCalling true. Therefore stored custom capabilities are not proven to govern core input preparation in this pinned path."
+    }
+  ],
+  "behavior": [
+    "Exact-provider add/edit/move/rename/delete with DPAPI private payload + atomic repository CAS.",
+    "Private options and headers never enter publicJson/runtime persistence; request binding validates exact provider/model before post.",
+    "Context metadata, tool and bounded image capability reach real native Engine/Host requests.",
+    "Existing hidden custom selections stay runnable; deleted IDs remain visibly unavailable unless a verified discovered replacement exists.",
+    "Queued turns pause after same-ID binding edits/deletion without interrupting active response or dropping queued history; resume re-resolves selection.",
+    "Actual main.cpp --smoke uses the canonical resolver and honors explicit CLI overrides; removed definition is refused before network.",
+    "Custom-containing envelopes use version2; existing ordinary format1 remains readable and ordinarily saved without upgrade.",
+    "Advanced JSON controls collapsed by default, with retained drafts, dynamic light/dark palette and reachable350px controls."
+  ],
+  "compatibilityDifferencesAndLimits": [
+    "Per-instance encrypted configuration under ProviderStore CAS replaces source global preference array; global custom model ID uniqueness preserved.",
+    "Unsupported native request/media variants fail explicitly; audio/video/file input and non-text output controls are disabled except clearing imported true declarations.",
+    "Image input declaration is honored with native byte/pixel bounds; pinned host capability lookup did not include custom definitions.",
+    "Runtime explicit utility/selection overrides apply after custom options; pinned custom factory omitted generic thinking override resolution.",
+    "Retired IDs prevent deleted custom definitions silently becoming legacy provider defaults; no unrelated marker eviction.",
+    "Models dialog uses a native list plus Add/Edit/Delete actions rather than source card-inline icon placement.",
+    "JSON advanced editor remains plain text, with source-like editable object configuration and validation.",
+    "Supported HTTP option subset only; unsupported/protected fields fail explicitly. No full AI SDK/options or pixel-parity claim.",
+    "Custom HTTP model definitions do not alter Codex/Claude/OpenCode managed model inventories.",
+    "Public/saved projection excludes private headers/options; diagnostic redaction is bounded and does not rewrite successful model-authored content. Smoke capture additionally redacts saved custom header values.",
+    "Provider probe remains dotenv-imported discovery validation; it has no saved custom-provider store input. Actual ADE --smoke now resolves saved definitions via the same ModelSelection resolver.",
+    "Per-instance retired-ID capacity256 returns an explicit error instead of evicting unrelated markers and reviving deleted IDs.",
+    "Source form supports more modalities; native text plus bounded image input and tools are implemented. Other media declarations explicitly fail runtime validation.",
+    "No real provider credentials, user profiles, live remote services, desktop input or production changes were used in this stage.",
+    "Full combined root gate and packaged Windows UI remain pending; private coherent host passed."
+  ],
+  "renders": [
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-dark-350-options.png",
+      "sha256": "3e5509b1c614ce42bb438dd06307d2e0748a9f6f0b2c01d7ba67a1a79f2a1b37",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-dark-350-top.png",
+      "sha256": "0fbd7c3164c71c5cac6994f08f5cd45562cd9bb8e1ebaf9eeaecec96fe16df53",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-dark-620-options.png",
+      "sha256": "a888faeb3ee135c2c9e19bb157c9ed0936506f82774d89b74f54a4c93909527a",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-dark-620-top.png",
+      "sha256": "3fbbee183a6d873a0d404cc44489689eda81bfe2a7602bb2bf0123cf19b023bf",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-light-350-options.png",
+      "sha256": "d03acf82e9e8682db024061d231d66ac72ee6adc0d62bcbbbf0ba170fbe8f091",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-light-350-top.png",
+      "sha256": "241aa23e5ec631d09aac3626414dee1b700821ed1574f3fb3c3a83c0729dbd2e",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-light-620-options.png",
+      "sha256": "d2b069ee270b4dd98c27363b1cf0a27c0feee6ee7902065348b919046053cec0",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/editor-light-620-top.png",
+      "sha256": "e55d5bb922e1a3dadabd53ee0a999048db4b8e674ea40b332564f24c77c0bed7",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/models-dark-350.png",
+      "sha256": "88b52146d6861be89045fded6c20a77a7f8b189b77d17ded908830d0cfc08e13",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/models-dark-620.png",
+      "sha256": "98dd02e9bc98cf69f0cdd68725f9babab51cf4518d11dc81f3e91535e2b3e48e",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/models-light-350.png",
+      "sha256": "cfca510f5c9c76c001212c48a60d500ca8a2f10b6722186e1fab015b60cd5962",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    },
+    {
+      "path": "private/custom-model-ui-stage/renders-final/models-light-620.png",
+      "sha256": "c6fcf694903cde46a0d3ce0e1c1d58d959173b6b49e29199cbf41905a156f25e",
+      "scope": "Offscreen native component with actual embedded fonts; synthetic fixture values; no desktop or live account."
+    }
+  ],
+  "coherentBuildManifest": "private/custom-model-host-stage/baseline-cohort.json",
+  "coherentOverlayManifest": "private/custom-model-host-stage/overlay-cohort.json",
+  "review": "license_review bounded persistence/owner/lifetime read; EnabledChange finding reproduced/fixed. Final QueueCommitter guard source-only review found no additional concrete issue: fixed owner and appended-user acceptance guard; pure exact-binding comparison precedes persistence; active response/recovery/queue-only saves remain permitted. Native_core runtime peer review recorded separately. Review is bounded, not a universal lifecycle audit.",
+  "noMigration": [
+    "private v1-reader duplicate legacy implementation/probe",
+    "private root CMake copy/build archives/profiles",
+    "private baseline/third-party copies"
+  ]
+}

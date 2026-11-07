@@ -1,5 +1,8 @@
 #include "ProviderModelsDialog.h"
 #include "ModelSelection.h"
+#include "CustomModelDialog.h"
+#include "core/CustomModelInventory.h"
+#include <QItemSelectionModel>
 #include <QComboBox>
 #include <QEvent>
 #include <QDialogButtonBox>
@@ -39,7 +42,7 @@ protected:
 private:QString m_query;bool m_enabledOnly=false;
 };
 ProviderModelsDialog::ProviderModelsDialog(QString dataDirectory,QString providerId,QJsonObject catalog,QWidget* parent)
- :QDialog(parent),m_repository(dataDirectory+"/providers.json"),m_id(std::move(providerId)){
+ :QDialog(parent),m_repository(dataDirectory+"/providers.json"),m_id(std::move(providerId)),m_catalog(std::move(catalog)){
  if(parent){setPalette(parent->palette());parent->installEventFilter(this);}
  setObjectName("providerModelsDialog");setWindowTitle("Provider models");resize(620,500);setMinimumSize(320,300);
  auto* layout=new QVBoxLayout(this);layout->setContentsMargins(20,18,20,18);layout->setSpacing(10);
@@ -50,22 +53,21 @@ ProviderModelsDialog::ProviderModelsDialog(QString dataDirectory,QString provide
  m_visibility=new VisibilityCombo;m_visibility->setObjectName("providerModelVisibility");m_visibility->addItem("All models",false);m_visibility->addItem("Enabled only",true);m_visibility->setMinimumWidth(m_visibility->fontMetrics().horizontalAdvance("Enabled only")+30);tools->addWidget(m_visibility);layout->addLayout(tools);
  m_count=new QLabel;m_count->setObjectName("providerModelCount");layout->addWidget(m_count);
  m_model=new QStandardItemModel(this);m_filter=new ProviderModelsFilter(this);m_filter->setSourceModel(m_model);m_filter->setDynamicSortFilter(true);m_filter->setFilterRole(Qt::CheckStateRole);
- m_list=new QListView;m_list->setObjectName("providerModelList");m_list->setModel(m_filter);m_list->setUniformItemSizes(true);m_list->setTextElideMode(Qt::ElideRight);m_list->setMinimumSize(0,70);layout->addWidget(m_list,1);
+ m_list=new QListView;m_list->setObjectName("providerModelList");m_list->setModel(m_filter);m_list->setUniformItemSizes(false);m_list->setTextElideMode(Qt::ElideRight);m_list->setMinimumSize(0,70);layout->addWidget(m_list,1);
  m_empty=new QLabel;m_empty->setObjectName("providerModelsEmpty");m_empty->setWordWrap(true);layout->addWidget(m_empty);
  auto* bulk=new QHBoxLayout;m_enableAll=new QPushButton("Enable all");m_enableAll->setObjectName("enableAllProviderModels");m_disableAll=new QPushButton("Disable all");m_disableAll->setObjectName("disableAllProviderModels");bulk->addWidget(m_enableAll);bulk->addWidget(m_disableAll);bulk->addStretch();layout->addLayout(bulk);
  m_status=new QLabel;m_status->setObjectName("providerModelsStatus");m_status->setTextFormat(Qt::PlainText);m_status->setWordWrap(true);layout->addWidget(m_status);
+ auto* customActions=new QVBoxLayout;m_addCustom=new QPushButton("Add custom model");m_addCustom->setObjectName("addCustomModel");m_editCustom=new QPushButton("Edit");m_editCustom->setObjectName("editCustomModel");m_deleteCustom=new QPushButton("Delete");m_deleteCustom->setObjectName("deleteCustomModel");customActions->addWidget(m_addCustom);auto* selectedActions=new QHBoxLayout;selectedActions->addWidget(m_editCustom);selectedActions->addWidget(m_deleteCustom);customActions->addLayout(selectedActions);layout->addLayout(customActions);
  auto* close=new QDialogButtonBox(QDialogButtonBox::Close);layout->addWidget(close);connect(close,&QDialogButtonBox::rejected,this,&QDialog::reject);
  for(auto* button:findChildren<QPushButton*>()){button->setMinimumHeight(32);button->setMinimumWidth(button->fontMetrics().horizontalAdvance(button->text())+30);}
- if(m_provider>=0){
-    const auto& provider=m_providers[m_provider];const auto entries=availableModelSelections({provider},{{provider.id,catalog}},{},true);
-    QSet<QString> disabled;for(const auto& id:provider.disabledModelIds)disabled.insert(normalizedModelVisibilityId(provider,id));
-    for(const auto& entry:entries){
-        const auto label=entry.label.mid(provider.name.size()+3);auto* item=new QStandardItem(label);item->setData(entry.modelId,IdRole);item->setData(entry.modelId+" "+entry.label,SearchRole);item->setToolTip(label==entry.modelId?entry.modelId:label+"\n"+entry.modelId);item->setEditable(false);item->setCheckable(true);item->setCheckState(disabled.contains(normalizedModelVisibilityId(provider,entry.modelId))?Qt::Unchecked:Qt::Checked);item->setSizeHint(QSize(0,34));m_model->appendRow(item);
-    }
- }
+ rebuildRows();
  connect(m_model,&QStandardItemModel::itemChanged,this,&ProviderModelsDialog::changed);
  connect(m_search,&QLineEdit::textChanged,m_filter,&ProviderModelsFilter::setQuery);
  connect(m_visibility,&QComboBox::currentIndexChanged,this,[this]{m_filter->setEnabledOnly(m_visibility->currentData().toBool());});
+ connect(m_addCustom,&QPushButton::clicked,this,[this]{editCustom();});
+ connect(m_editCustom,&QPushButton::clicked,this,[this]{editCustom(m_list->currentIndex().data(IdRole).toString());});
+ connect(m_deleteCustom,&QPushButton::clicked,this,&ProviderModelsDialog::deleteCustom);
+ connect(m_list->selectionModel(),&QItemSelectionModel::currentChanged,this,[this]{updateCustomActions();});
  connect(m_enableAll,&QPushButton::clicked,this,[this]{commit({});});
  connect(m_disableAll,&QPushButton::clicked,this,[this]{QStringList ids;for(int row=0;row<m_model->rowCount();++row)ids.append(m_model->item(row)->data(IdRole).toString());commit(ids);});
  connect(m_filter,&QAbstractItemModel::rowsInserted,this,[this]{m_empty->setVisible(m_filter->rowCount()==0);});
@@ -87,7 +89,7 @@ void ProviderModelsDialog::changed(QStandardItem* item){
  commit(setModelEnabled(provider,id,enabled));
 }
 void ProviderModelsDialog::commit(QStringList disabled){
- if(m_committing||m_closed||m_provider<0||disabled==m_providers[m_provider].disabledModelIds)return;
+ if(m_committing||m_editing||m_closed||m_provider<0||disabled==m_providers[m_provider].disabledModelIds)return;
  const QPointer<ProviderModelsDialog> self(this);const auto epoch=m_epoch;m_committing=true;
  auto next=m_providers;next[m_provider].disabledModelIds=std::move(disabled);QString error;
  const bool saved=m_repository.save(next,&error);
@@ -117,7 +119,58 @@ void ProviderModelsDialog::publish(){
  m_updating=false;const bool valid=m_provider>=0;
  m_count->setText(QString("%1 of %2 models enabled").arg(enabled).arg(m_model->rowCount()));
  m_enableAll->setEnabled(valid&&m_model->rowCount()>0&&enabled<m_model->rowCount());m_disableAll->setEnabled(valid&&enabled>0);m_list->setEnabled(valid);m_search->setEnabled(valid);m_visibility->setEnabled(valid);
- m_empty->setText(m_model->rowCount()?"No models match the current filter.":"Fetch models in provider settings to show available models.");m_empty->setVisible(m_filter->rowCount()==0);
+ m_empty->setText(m_model->rowCount()?"No models match the current filter.":"Fetch models in provider settings to show available models.");m_empty->setVisible(m_filter->rowCount()==0);updateCustomActions();
+}
+bool ProviderModelsDialog::rebuildRows(){
+ const QPointer<ProviderModelsDialog> self(this);const auto epoch=m_epoch;const auto current=[&]{return self&&!m_closed&&m_epoch==epoch;};
+ const auto selected=m_list->currentIndex().data(IdRole).toString();m_updating=true;m_model->clear();if(!current())return false;
+ if(m_provider>=0){
+  const auto provider=m_providers[m_provider];const auto entries=availableModelSelections({provider},{{provider.id,m_catalog}},{},true);
+  for(const auto& entry:entries){
+   const CustomModelConfig* custom=nullptr;for(const auto& model:provider.customModels)if(model.modelId==entry.modelId){custom=&model;break;}
+   const auto label=entry.label.mid(provider.name.size()+3);const auto details=custom?QString("%1 · %2k context").arg(custom->modelId).arg(qRound(custom->contextWindowSize/1000.0)):QString{};
+   auto* item=new QStandardItem(custom?label+"\n"+details:label);item->setData(entry.modelId,IdRole);item->setData(entry.modelId+" "+entry.label+(custom?" "+custom->description:QString{}),SearchRole);item->setToolTip(custom?label+"\n"+details+"\n"+custom->description:(label==entry.modelId?entry.modelId:label+"\n"+entry.modelId));item->setEditable(false);item->setCheckable(true);item->setCheckState(isModelEnabled(provider,entry.modelId)?Qt::Checked:Qt::Unchecked);item->setSizeHint(QSize(0,custom?58:34));m_model->appendRow(item);if(!current())return false;
+  }
+ }
+ m_updating=false;
+ for(int row=0;row<m_filter->rowCount();++row)if(m_filter->index(row,0).data(IdRole).toString()==selected){m_list->setCurrentIndex(m_filter->index(row,0));if(!current())return false;break;}
+ updateCustomActions();return bool(self);
+}
+void ProviderModelsDialog::updateCustomActions(){
+ if(!m_addCustom)return;
+ const bool available=m_provider>=0&&!m_closed&&!m_committing&&!m_editing&&m_providers[m_provider].kind=="api";
+ bool selectedCustom=false;const auto id=m_list->currentIndex().data(IdRole).toString();if(m_provider>=0)for(const auto& model:m_providers[m_provider].customModels)if(model.modelId==id){selectedCustom=true;break;}
+ const QPointer<ProviderModelsDialog> self(this);m_addCustom->setEnabled(available);if(!self)return;m_editCustom->setEnabled(available&&selectedCustom);if(!self)return;m_deleteCustom->setEnabled(available&&selectedCustom);
+}
+void ProviderModelsDialog::editCustom(const QString& id){
+ if(m_closed||m_committing||m_editing||m_provider<0)return;
+ std::optional<CustomModelConfig> existing;if(!id.isEmpty()){for(const auto& model:m_providers[m_provider].customModels)if(model.modelId==id){existing=model;break;}if(!existing)return;}
+ const auto originalProvider=existing?m_id:QString{};const QPointer<ProviderModelsDialog> self(this);const auto epoch=m_epoch;m_editing=true;updateCustomActions();if(!self)return;
+ if(m_closed||m_epoch!=epoch){m_editing=false;return;}
+ QPointer<CustomModelDialog> dialog=new CustomModelDialog(m_providers,existing,m_id,[self,epoch,originalProvider,id](const CustomModelConfig& model,QString* error){if(!self||self->m_closed||self->m_epoch!=epoch){if(error)*error="The model settings view has changed.";return false;}return self->commitCustom(originalProvider,id,model,error);},this);
+ dialog->exec();if(dialog)delete dialog.data();if(!self)return;m_editing=false;updateCustomActions();
+}
+bool ProviderModelsDialog::commitCustom(const QString& originalProvider,const QString& originalId,const CustomModelConfig& model,QString* error){
+ if(m_closed||m_committing){if(error)*error="The model settings view is unavailable.";return false;}
+ auto next=m_providers;if(!upsertCustomModel(next,originalProvider,originalId,model,error))return false;
+ const QPointer<ProviderModelsDialog> self(this);const auto epoch=m_epoch;m_committing=true;
+ if(!m_repository.save(next,error)){m_committing=false;return false;}
+ m_providers=std::move(next);m_status->clear();if(!self)return true;
+ emit modelsChanged(m_id);if(!self)return true;
+ if(m_closed||m_epoch!=epoch){m_committing=false;return true;}
+ if(rebuildRows()&&self)publish();
+ if(self){m_committing=false;updateCustomActions();}
+ return true;
+}
+void ProviderModelsDialog::deleteCustom(){
+ if(m_closed||m_committing||m_editing||m_provider<0)return;
+ const auto id=m_list->currentIndex().data(IdRole).toString();auto next=m_providers;QString error;if(!removeCustomModel(next,m_id,id,&error)){m_status->setText(error);return;}
+ m_committing=true;const QPointer<ProviderModelsDialog> self(this);const auto epoch=m_epoch;
+ if(!m_repository.save(next,&error)){m_committing=false;m_status->setText(error);return;}
+ m_providers=std::move(next);m_status->clear();if(!self)return;emit modelsChanged(m_id);if(!self)return;if(m_closed||m_epoch!=epoch){m_committing=false;return;}
+ if(rebuildRows()&&self)publish();
+ if(!self)return;
+ m_committing=false;updateCustomActions();
 }
 void ProviderModelsDialog::updateColors(){
  if(m_coloring)return;

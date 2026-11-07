@@ -1,0 +1,744 @@
+-- Using Qt bundled ZLIB.
+-- Using Qt bundled PCRE2.
+-- Using Qt bundled PNG.
+-- Using Qt bundled Harfbuzz.
+-- Using Qt bundled Freetype.
+-- Using Qt bundled Jpeg.
+-- Configuring done (1.4s)
+-- Generating done (5.1s)
+-- Build files have been written to: D:/age/ADE/build-next
+[0/2] Re-checking globbed directories...
+[1/822] Automatic MOC and UIC for target ade_file_transformer
+[2/820] Automatic MOC and UIC for target ade_network
+[3/818] Automatic MOC and UIC for target ADE-sandbox-worker
+[4/816] Automatic MOC and UIC for target ade_editor
+[5/814] Automatic MOC and UIC for target harness_fixture
+[6/812] Automatic MOC and UIC for target acp_fixture
+[7/810] Automatic MOC and UIC for target rpc_deadline_fixture
+[8/808] Automatic MOC and UIC for target acp_mcp_fixture
+[9/806] Automatic MOC and UIC for target claude_fixture
+[10/804] Automatic MOC and UIC for target acp_settlement_fixture
+[11/802] Automatic MOC and UIC for target ade_harness
+[12/802] Automatic MOC and UIC for target claude_resume_fixture
+[13/800] Automatic MOC and UIC for target attachment_codex_fixture
+[14/798] Building CXX object CMakeFiles/ade_harness.dir/ade_harness_autogen/mocs_compilation.cpp.obj
+[15/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/AcpForm.cpp.obj
+[16/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/AcpPromptPayload.cpp.obj
+[17/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/AcpHarnessSession.cpp.obj
+[18/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/AcpToolPresentation.cpp.obj
+[19/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/ClaudeHarnessSession.cpp.obj
+[20/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/ClaudeModelDiscovery.cpp.obj
+[21/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/ClaudeControlProcess.cpp.obj
+[22/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/ClaudeQuestion.cpp.obj
+[23/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/CodexAppServer.cpp.obj
+[24/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/ClaudeStream.cpp.obj
+[25/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/HarnessPreparedTurn.cpp.obj
+[26/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/CodexHarnessSession.cpp.obj
+[27/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/HarnessQuestionMcp.cpp.obj
+[28/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/HarnessAttachmentStore.cpp.obj
+[29/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/HarnessWorkspace.cpp.obj
+[30/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/JsonRpcProcess.cpp.obj
+[31/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/QuestionMcpBridge.cpp.obj
+[32/798] Building CXX object CMakeFiles/ade_harness.dir/src/harness/OpenCodeModelDiscovery.cpp.obj
+[33/798] Automatic MOC and UIC for target attachment_acp_fixture
+[34/796] Automatic MOC and UIC for target attachment_claude_fixture
+[35/794] Automatic MOC and UIC for target direct_mcp_fixture
+[36/792] Automatic MOC and UIC for target acp_original_fixture
+[37/792] Building CXX object CMakeFiles/acp_original_fixture.dir/acp_original_fixture_autogen/mocs_compilation.cpp.obj
+[38/792] Building CXX object CMakeFiles/ade_harness.dir/src/harness/QuestionMcpProtocol.cpp.obj
+[39/792] Automatic MOC and UIC for target test_git_ui
+[40/790] Automatic MOC and UIC for target test_fonts
+[41/788] Automatic MOC and UIC for target test_link_provenance_codec
+[42/786] Automatic MOC and UIC for target test_retired_wire
+[43/784] Automatic MOC and UIC for target test_browser_session
+[44/782] Automatic MOC and UIC for target test_git_usage
+[45/780] Automatic MOC and UIC for target test_git_cleanup
+[46/778] Automatic MOC and UIC for target test_image_preview
+[47/776] Building CXX object CMakeFiles/acp_original_fixture.dir/tests/support/AcpOriginalFixture.cpp.obj
+[48/776] Automatic MOC and UIC for target test_sidebar_model
+[49/774] Building CXX object CMakeFiles/ade_harness.dir/src/harness/QuestionMcpStdio.cpp.obj
+[50/774] Automatic MOC and UIC for target test_raw_enumeration_races
+[51/772] Linking CXX static library libade_harness.a
+[52/772] Automatic MOC and UIC for target test_git_watcher
+[53/770] Linking CXX executable bin\acp_original_fixture.exe
+[54/770] Automatic MOC and UIC for target ade_core
+[55/770] Automatic MOC and UIC for target test_transcript
+[56/770] Automatic MOC and UIC for target test_codex_harness
+[57/770] Building CXX object CMakeFiles/ade_core.dir/ade_core_autogen/mocs_compilation.cpp.obj
+[58/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineAcp.cpp.obj
+[59/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineClaude.cpp.obj
+[60/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineCompression.cpp.obj
+[61/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngine.cpp.obj
+[62/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineControl.cpp.obj
+[63/770] Building CXX object CMakeFiles/ade_core.dir/src/core/CustomModelConfig.cpp.obj
+[64/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineMutations.cpp.obj
+[65/770] Building CXX object CMakeFiles/ade_core.dir/src/core/AgentEngineHarness.cpp.obj
+[66/770] Building CXX object CMakeFiles/ade_core.dir/src/core/CustomModelInventory.cpp.obj
+[67/770] Building CXX object CMakeFiles/ade_core.dir/src/core/ModelDiscoveryPolicy.cpp.obj
+[68/770] Building CXX object CMakeFiles/ade_core.dir/src/core/CustomModelOptions.cpp.obj
+[69/770] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderProtocol.cpp.obj
+[70/770] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderService.cpp.obj
+[71/770] Automatic MOC and UIC for target test_git_watcher_ui
+[72/768] Automatic MOC and UIC for target test_file_tools_races
+[73/766] Automatic MOC and UIC for target test_archive_transformer
+[74/764] Automatic MOC and UIC for target test_file_transformer
+[75/762] Automatic MOC and UIC for target test_worktree_settings
+[76/760] Automatic MOC and UIC for target test_git
+[77/758] Automatic MOC and UIC for target test_network
+[78/756] Automatic MOC and UIC for target test_terminal
+[79/754] Automatic MOC and UIC for target test_editor
+[80/752] Automatic MOC and UIC for target test_browser
+[81/750] Automatic MOC and UIC for target test_browser_inspector
+[82/748] Automatic MOC and UIC for target test_browser_tools
+[83/746] Building CXX object CMakeFiles/ade_core.dir/src/core/ProviderStore.cpp.obj
+[84/746] Building CXX object CMakeFiles/ade_core.dir/src/core/UtilityService.cpp.obj
+[85/746] Linking CXX static library libade_core.a
+[86/746] Automatic MOC and UIC for target ade_attachments
+[87/745] Automatic MOC and UIC for target test_harness_files
+[88/745] Automatic MOC and UIC for target ade_plugins
+[89/744] Automatic MOC and UIC for target test_opencode_harness
+[90/744] Automatic MOC and UIC for target question_mcp_fixture
+[91/743] Automatic MOC and UIC for target question_mcp_gui_fixture
+[92/742] Building CXX object CMakeFiles/ade_attachments.dir/src/attachments/ModelMediaCatalog.cpp.obj
+[93/742] Linking CXX executable bin\question_mcp_fixture.exe
+[94/742] Linking CXX static library libade_attachments.a
+[95/742] Automatic MOC and UIC for target ade_shell
+[96/740] Automatic MOC and UIC for target ade_transcript_links
+[97/738] Automatic MOC and UIC for target ade_host
+[98/738] Building CXX object CMakeFiles/ade_plugins.dir/src/plugins/PluginCatalog.cpp.obj
+[99/738] Linking CXX executable bin\question_mcp_gui_fixture.exe
+[100/738] Building CXX object CMakeFiles/ade_host.dir/ade_host_autogen/mocs_compilation.cpp.obj
+[101/738] Building CXX object CMakeFiles/ade_host.dir/src/runtime/HarnessInputPreparation.cpp.obj
+[102/738] Linking CXX static library libade_plugins.a
+[103/738] Automatic MOC and UIC for target test_file_diff
+[104/737] Automatic MOC and UIC for target render_settings
+[105/737] Building CXX object CMakeFiles/ade_host.dir/src/runtime/HarnessAttachmentSource.cpp.obj
+[106/737] Automatic MOC and UIC for target test_codex_engine
+[107/736] Automatic MOC and UIC for target provider_probe
+[108/735] Automatic MOC and UIC for target test_session_logs
+[109/734] Building CXX object CMakeFiles/ade_host.dir/src/runtime/AgentToolHost.cpp.obj
+[110/734] Automatic MOC and UIC for target test_shell_log_mount
+[111/733] Linking CXX static library libade_host.a
+[112/733] Automatic MOC and UIC for target test_shell_service
+[113/732] Automatic MOC and UIC for target test_usage_compression
+[114/731] Automatic MOC and UIC for target test_shell_view
+[115/730] Automatic MOC and UIC for target ade_ui
+[116/730] Automatic MOC and UIC for target test_shell_engine
+[117/729] Automatic MOC and UIC for target test_conversation_control
+[118/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/AddProviderDialog.cpp.obj
+[119/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/CustomModelDialog.cpp.obj
+[120/728] Building CXX object CMakeFiles/ade_ui.dir/ade_ui_autogen/mocs_compilation.cpp.obj
+[121/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowApps.cpp.obj
+[122/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowBrowserSession.cpp.obj
+[123/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowBrowserTools.cpp.obj
+[124/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindow.cpp.obj
+[125/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCommandCenter.cpp.obj
+[126/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowCompletions.cpp.obj
+[127/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowControl.cpp.obj
+[128/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowConversations.cpp.obj
+[129/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowLinks.cpp.obj
+[130/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowGit.cpp.obj
+[131/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowMutations.cpp.obj
+[132/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowPlugins.cpp.obj
+[133/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShells.cpp.obj
+[134/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowShortcuts.cpp.obj
+[135/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowTurnFiles.cpp.obj
+[136/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowSideChats.cpp.obj
+[137/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/MainWindowWorkbench.cpp.obj
+[138/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderCatalog.cpp.obj
+[139/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ModelSelection.cpp.obj
+[140/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderDiscovery.cpp.obj
+[141/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderDialog.cpp.obj
+[142/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderRepository.cpp.obj
+[143/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/ProviderModelsDialog.cpp.obj
+[144/728] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SmokeTranscriptCapture.cpp.obj
+[145/728] Automatic MOC and UIC for target test_file_mutations
+[146/727] Building CXX object CMakeFiles/ade_ui.dir/src/ui/UtilityModelSelection.cpp.obj
+[147/727] Automatic MOC and UIC for target test_mutation_runtime
+[148/726] Automatic MOC and UIC for target test_shell_runtime
+[149/725] Automatic MOC and UIC for target test_transcript_links
+[150/724] Automatic MOC and UIC for target test_history_projection
+[151/723] Automatic MOC and UIC for target test_turn_file_snapshots
+[152/722] Automatic MOC and UIC for target test_presentation
+[153/721] Automatic MOC and UIC for target test_formatted_att
+[154/720] Automatic MOC and UIC for target test_session_cleanup
+[155/719] Automatic MOC and UIC for target test_file_tools
+[156/718] Automatic MOC and UIC for target test_history_recovery
+[157/717] Automatic MOC and UIC for target test_sandbox_apps
+[158/716] Automatic MOC and UIC for target test_attachment_mount
+[159/715] Automatic MOC and UIC for target test_app_resources
+[160/714] Automatic MOC and UIC for target test_mini_apps
+[161/713] Automatic MOC and UIC for target test_runtime_apps
+[162/712] Automatic MOC and UIC for target test_attachments
+[163/711] Building CXX object CMakeFiles/ade_ui.dir/src/ui/SettingsPage.cpp.obj
+[164/711] Automatic MOC and UIC for target test_read_lifecycle
+[165/710] Linking CXX static library libade_ui.a
+[166/710] Automatic MOC and UIC for target ADE
+[167/709] Automatic MOC and UIC for target custom_model_smoke_app
+[168/709] Automatic MOC and UIC for target test_read_runtime
+[169/708] Building CXX object CMakeFiles/custom_model_smoke_app.dir/custom_model_smoke_app_autogen/mocs_compilation.cpp.obj
+[170/708] Automatic MOC and UIC for target test_plugins
+[171/707] Automatic MOC and UIC for target test_codex_provider_ui
+[172/706] Automatic MOC and UIC for target test_codex_host
+[173/705] Building CXX object CMakeFiles/ADE.dir/src/main.cpp.obj
+[174/705] Building CXX object CMakeFiles/custom_model_smoke_app.dir/src/main.cpp.obj
+[175/705] Automatic MOC and UIC for target test_provider_operations
+[176/704] Automatic MOC and UIC for target test_navigation_shortcuts
+[177/703] Automatic MOC and UIC for target test_browser_session_host
+[178/702] Linking CXX executable bin\ADE.exe
+[179/702] Automatic MOC and UIC for target test_question_panel
+[180/701] Linking CXX executable bin\custom_model_smoke_app.exe
+[181/701] Automatic MOC and UIC for target test_transcript_rich
+[182/700] Automatic MOC and UIC for target test_composer_completion
+[183/699] Automatic MOC and UIC for target test_usage_settings
+[184/698] Automatic MOC and UIC for target test_composer_search
+[185/697] Automatic MOC and UIC for target test_reference_controls
+[186/696] Automatic MOC and UIC for target test_composer_host
+[187/695] Automatic MOC and UIC for target test_agent_control_ui
+[188/694] Automatic MOC and UIC for target test_command_center
+[189/693] Automatic MOC and UIC for target test_command_file_search
+[190/692] Automatic MOC and UIC for target test_side_chat
+[191/691] Automatic MOC and UIC for target test_side_chat_host
+[192/690] Automatic MOC and UIC for target test_command_center_host
+[193/689] Automatic MOC and UIC for target test_transcript_link_ui
+[194/688] Automatic MOC and UIC for target test_workbench_helpers
+[195/687] Automatic MOC and UIC for target test_chevron
+[196/686] Automatic MOC and UIC for target test_workspace_changes
+[197/685] Automatic MOC and UIC for target test_workbench_layout
+[198/684] Automatic MOC and UIC for target test_sidebar_navigation
+[199/683] Automatic MOC and UIC for target test_turn_files
+[200/682] Automatic MOC and UIC for target test_workspace_changes_host
+[201/681] Automatic MOC and UIC for target test_smoke_capture
+[202/680] Automatic MOC and UIC for target test_transcript_ui
+[203/679] Automatic MOC and UIC for target test_turn_files_host
+[204/678] Automatic MOC and UIC for target test_conversations
+[205/677] Automatic MOC and UIC for target test_git_host
+[206/676] Automatic MOC and UIC for target test_main_chrome
+[207/675] Automatic MOC and UIC for target test_plugin_connections
+[208/674] Automatic MOC and UIC for target test_plugin_runtime
+[209/673] Automatic MOC and UIC for target test_plugin_settings
+[210/672] Automatic MOC and UIC for target test_sandbox_network
+[211/671] Automatic MOC and UIC for target test_downloads
+[212/670] Automatic MOC and UIC for target test_smoke_plugins
+[213/669] Automatic MOC and UIC for target test_settings_audit
+[214/669] Automatic MOC and UIC for target test_context
+[215/668] Automatic MOC and UIC for target test_engine_observers
+[216/667] Automatic MOC and UIC for target test_core
+[217/666] Automatic MOC and UIC for target test_sandbox
+[218/665] Automatic MOC and UIC for target test_ui_audit
+[219/664] Automatic MOC and UIC for target test_ui
+[220/663] Automatic MOC and UIC for target test_runtime
+[221/662] Automatic MOC and UIC for target test_settings
+[222/662] Automatic MOC and UIC for target test_codex_files_runtime
+[223/661] Automatic MOC and UIC for target test_provider_picker
+[224/660] Automatic MOC and UIC for target test_transcript_polish
+[225/659] Automatic MOC and UIC for target test_provider_picker_host
+[226/658] Automatic MOC and UIC for target test_provider_picker_window
+[227/657] Automatic MOC and UIC for target test_opencode_engine
+[228/656] Automatic MOC and UIC for target test_provider_removal
+[229/655] Automatic MOC and UIC for target test_provider_removal_window
+[230/654] Automatic MOC and UIC for target test_external_context
+[231/653] Automatic MOC and UIC for target test_agent_cycle
+[232/652] Automatic MOC and UIC for target test_agent_prompt
+[233/651] Automatic MOC and UIC for target test_agent_cycle_host
+[234/650] Automatic MOC and UIC for target test_transcript_grouping
+[235/649] Automatic MOC and UIC for target test_opencode_provider_ui
+[236/648] Automatic MOC and UIC for target test_opencode_host
+[237/647] Automatic MOC and UIC for target test_transcript_image_lifecycle
+[238/646] Automatic MOC and UIC for target test_question_mcp
+[239/645] Automatic MOC and UIC for target test_provider_model_visibility
+[240/644] Automatic MOC and UIC for target test_provider_model_visibility_host
+[241/643] Automatic MOC and UIC for target test_rpc_deadline
+[242/642] Automatic MOC and UIC for target test_acp_tool_presentation
+[243/641] Automatic MOC and UIC for target test_acp_mcp
+[244/640] Automatic MOC and UIC for target test_mcp_engine
+[245/639] Automatic MOC and UIC for target test_acp_presentation_ui
+[246/638] Automatic MOC and UIC for target test_acp_presentation_engine
+[247/637] Automatic MOC and UIC for target test_claude_session
+[248/636] Automatic MOC and UIC for target test_claude_stream
+[249/636] Automatic MOC and UIC for target test_claude_control
+[250/636] Automatic MOC and UIC for target test_claude_discovery
+[251/636] Automatic MOC and UIC for target test_claude_engine
+[252/635] Automatic MOC and UIC for target test_claude_provider_ui
+[253/634] Automatic MOC and UIC for target test_browser_context
+[254/633] Automatic MOC and UIC for target test_claude_host
+[255/632] Automatic MOC and UIC for target test_harness_media
+[256/631] Automatic MOC and UIC for target test_browser_context_runtime
+[257/630] Automatic MOC and UIC for target test_model_discovery
+[258/629] Automatic MOC and UIC for target test_model_discovery_host
+[259/628] Automatic MOC and UIC for target test_harness_forms_host
+[260/627] Automatic MOC and UIC for target test_harness_continuity
+[261/626] Automatic MOC and UIC for target test_acp_settlement
+[262/625] Automatic MOC and UIC for target render_utility_models
+[263/624] Automatic MOC and UIC for target test_utility_model_selection
+[264/623] Automatic MOC and UIC for target test_utility_models_host
+[265/622] Automatic MOC and UIC for target test_claude_resume
+[266/621] Automatic MOC and UIC for target test_mcp_presentation
+[267/620] Automatic MOC and UIC for target test_harness_attachment_store
+[268/619] Automatic MOC and UIC for target test_harness_attachment_wire
+[269/619] Automatic MOC and UIC for target test_question_presentation
+[270/618] Automatic MOC and UIC for target test_harness_attachments_host
+[271/617] Automatic MOC and UIC for target test_harness_cleanup_host
+[272/616] Automatic MOC and UIC for target test_question_presentation_host
+[273/615] Automatic MOC and UIC for target test_direct_question_mcp
+[274/614] Automatic MOC and UIC for target test_harness_attachment_mime
+[275/613] Automatic MOC and UIC for target test_historical_attachments
+[276/612] Automatic MOC and UIC for target test_harness_attachment_source
+[277/611] Automatic MOC and UIC for target test_model_selector_display
+[278/610] Automatic MOC and UIC for target test_acp_original_images
+[279/610] Automatic MOC and UIC for target test_acp_original_lifecycle
+[280/610] Automatic MOC and UIC for target test_custom_model_options
+[281/610] Automatic MOC and UIC for target test_acp_original_host
+[282/610] Automatic MOC and UIC for target test_custom_model_engine
+[283/610] Automatic MOC and UIC for target test_custom_model_config
+[284/610] Automatic MOC and UIC for target test_custom_model_inventory
+[285/610] Automatic MOC and UIC for target test_custom_model_storage
+[286/610] Automatic MOC and UIC for target test_custom_model_media
+[287/610] Automatic MOC and UIC for target test_custom_model_ui
+[288/610] Automatic MOC and UIC for target test_custom_model_host
+[289/610] Automatic MOC and UIC for target test_custom_model_smoke
+[290/610] Building CXX object CMakeFiles/test_transcript.dir/test_transcript_autogen/mocs_compilation.cpp.obj
+[291/610] Building CXX object CMakeFiles/test_file_diff.dir/tests/test_file_diff.cpp.obj
+D:/age/ADE/tests/test_file_diff.cpp: In member function 'void FileDiffTest::journalDiffIsDisplayOnly()':
+D:/age/ADE/tests/test_file_diff.cpp:32:27: warning: missing initializer for member 'ade::FileMutationInvocation::invocationId' [-Wmissing-field-initializers]
+   32 |         journal.executor()({"call",
+      |         ~~~~~~~~~~~~~~~~~~^~~~~~~~~
+   33 |                             "write",
+      |                             ~~~~~~~~
+   34 |                             workspace.path(),
+      |                             ~~~~~~~~~~~~~~~~~
+   35 |                             {},
+      |                             ~~~
+   36 |                             {{"path", "file.txt"}, {"content", "new text\n"}}},
+      |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   37 |                            nullptr);
+      |                            ~~~~~~~~
+[292/610] Building CXX object CMakeFiles/test_transcript.dir/tests/test_transcript.cpp.obj
+[293/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/TurnFileEdits.cpp.obj
+[294/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/FileDiffView.cpp.obj
+[295/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/MarkdownParts.cpp.obj
+[296/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/ConversationView.cpp.obj
+[297/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/AppFonts.cpp.obj
+[298/610] Building CXX object CMakeFiles/test_transcript.dir/test_transcript_autogen/EWIEGA46WW/qrc_resources.cpp.obj
+[299/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/TranscriptGrouping.cpp.obj
+[300/610] Building CXX object CMakeFiles/render_settings.dir/render_settings_autogen/mocs_compilation.cpp.obj
+[301/610] Building CXX object CMakeFiles/render_settings.dir/tests/render_settings.cpp.obj
+[302/610] Building CXX object CMakeFiles/test_transcript.dir/src/ui/QuestionToolPart.cpp.obj
+[303/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/ProviderRepository.cpp.obj
+[304/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/ModelSelection.cpp.obj
+[305/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/UtilityModelSelection.cpp.obj
+[306/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/ProviderModelsDialog.cpp.obj
+[307/610] Building CXX object CMakeFiles/test_codex_harness.dir/test_codex_harness_autogen/mocs_compilation.cpp.obj
+[308/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/SettingsPage.cpp.obj
+[309/610] Building CXX object CMakeFiles/render_settings.dir/src/ui/CustomModelDialog.cpp.obj
+[310/610] Building CXX object CMakeFiles/test_codex_harness.dir/tests/test_codex_harness.cpp.obj
+D:/age/ADE/tests/test_codex_harness.cpp: In member function 'ade::CodexHarnessOptions CodexHarnessTest::options(const QString&) const':
+D:/age/ADE/tests/test_codex_harness.cpp:25:18: warning: missing initializer for member 'ade::CodexHarnessOptions::historyContext' [-Wmissing-field-initializers]
+   25 |             false};
+      |                  ^
+D:/age/ADE/tests/test_codex_harness.cpp:25:18: warning: missing initializer for member 'ade::CodexHarnessOptions::attachments' [-Wmissing-field-initializers]
+D:/age/ADE/tests/test_codex_harness.cpp:25:18: warning: missing initializer for member 'ade::CodexHarnessOptions::questionMcpExecutable' [-Wmissing-field-initializers]
+[311/610] Building CXX object CMakeFiles/test_codex_engine.dir/tests/test_codex_engine.cpp.obj
+[312/610] Building CXX object CMakeFiles/test_codex_provider_ui.dir/tests/test_codex_provider_ui.cpp.obj
+[313/610] Building CXX object CMakeFiles/provider_probe.dir/src/probe.cpp.obj
+[314/610] Building CXX object CMakeFiles/test_codex_host.dir/tests/test_codex_host.cpp.obj
+[315/610] Building CXX object CMakeFiles/test_provider_operations.dir/tests/test_provider_operations.cpp.obj
+[316/610] Building CXX object CMakeFiles/test_navigation_shortcuts.dir/tests/test_navigation_shortcuts.cpp.obj
+D:/age/ADE/tests/test_navigation_shortcuts.cpp: In function 'void {anonymous}::activate(ade::MainWindow&)':
+D:/age/ADE/tests/test_navigation_shortcuts.cpp:46:34: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   46 |     QApplication::setActiveWindow(&window);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_navigation_shortcuts.cpp:10:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[317/610] Building CXX object CMakeFiles/test_browser_session_host.dir/tests/test_browser_session_host.cpp.obj
+[318/610] Building CXX object CMakeFiles/test_usage_compression.dir/src/ui/ModelSelection.cpp.obj
+[319/610] Building CXX object CMakeFiles/test_usage_compression.dir/tests/test_usage_compression.cpp.obj
+[320/610] Building CXX object CMakeFiles/test_usage_settings.dir/tests/test_usage_settings.cpp.obj
+[321/610] Building CXX object CMakeFiles/test_shell_engine.dir/tests/test_shell_engine.cpp.obj
+[322/610] Building CXX object CMakeFiles/test_conversation_control.dir/tests/test_conversation_control.cpp.obj
+[323/610] Building CXX object CMakeFiles/test_composer_host.dir/tests/test_composer_host.cpp.obj
+[324/610] Building CXX object CMakeFiles/test_reference_controls.dir/tests/test_reference_controls.cpp.obj
+D:/age/ADE/tests/test_reference_controls.cpp: In member function 'void ReferenceControlsTest::persistedMutationCanBeReviewedAndUndoneFromWindow()':
+D:/age/ADE/tests/test_reference_controls.cpp:157:29: warning: missing initializer for member 'ade::FileMutationInvocation::invocationId' [-Wmissing-field-initializers]
+  157 |           journal.executor()({"fixture",
+      |           ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  158 |                               "write",
+      |                               ~~~~~~~~
+  159 |                               workspace.path(),
+      |                               ~~~~~~~~~~~~~~~~~
+  160 |                               {},
+      |                               ~~~
+  161 |                               {{"path", "file.txt"}, {"content", "after"}}},
+      |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  162 |                              nullptr);
+      |                              ~~~~~~~~
+[325/610] Building CXX object CMakeFiles/test_agent_control_ui.dir/tests/test_agent_control_ui.cpp.obj
+[326/610] Building CXX object CMakeFiles/test_command_center_host.dir/tests/test_command_center_host.cpp.obj
+D:/age/ADE/tests/test_command_center_host.cpp: In function 'void {anonymous}::expose(ade::MainWindow&)':
+D:/age/ADE/tests/test_command_center_host.cpp:39:169: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   39 | void expose(MainWindow& window){window.setAttribute(Qt::WA_DontShowOnScreen);window.resize(1000,700);window.show();window.activateWindow();QApplication::setActiveWindow(&window);window.findChild<Composer*>()->setFocus();QCoreApplication::processEvents();QCOMPARE(QApplication::activeWindow(),&window);QVERIFY(window.findChild<Composer*>()->hasFocus());}
+      |                                                                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_command_center_host.cpp:15:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_command_center_host.cpp: In function 'ade::CommandCenter* {anonymous}::open(ade::MainWindow&, const QString&)':
+D:/age/ADE/tests/test_command_center_host.cpp:45:58: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   45 |     window.activateWindow();QApplication::setActiveWindow(&window);target->setFocus();
+      |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[327/610] Building CXX object CMakeFiles/test_side_chat_host.dir/tests/test_side_chat_host.cpp.obj
+[328/610] Building CXX object CMakeFiles/test_shell_runtime.dir/tests/test_shell_runtime.cpp.obj
+[329/610] Building CXX object CMakeFiles/test_mutation_runtime.dir/tests/test_mutation_runtime.cpp.obj
+[330/610] Building CXX object CMakeFiles/test_workbench_layout.dir/tests/test_workbench_layout.cpp.obj
+[331/610] Building CXX object CMakeFiles/test_transcript_link_ui.dir/tests/test_transcript_link_ui.cpp.obj
+[332/610] Building CXX object CMakeFiles/test_sidebar_navigation.dir/tests/test_sidebar_navigation.cpp.obj
+[333/610] Building CXX object CMakeFiles/test_smoke_capture.dir/tests/test_smoke_capture.cpp.obj
+[334/610] Building CXX object CMakeFiles/test_workspace_changes_host.dir/tests/test_workspace_changes_host.cpp.obj
+[335/610] Building CXX object CMakeFiles/test_presentation.dir/tests/test_presentation.cpp.obj
+[336/610] Building CXX object CMakeFiles/test_turn_files_host.dir/tests/test_turn_files_host.cpp.obj
+[337/610] Building CXX object CMakeFiles/test_transcript_ui.dir/tests/test_transcript_ui.cpp.obj
+[338/610] Building CXX object CMakeFiles/test_main_chrome.dir/tests/test_main_chrome.cpp.obj
+D:/age/ADE/tests/test_main_chrome.cpp: In member function 'void MainChromeTest::keyboardOpensCommandCenterWhileSidebarCollapsed()':
+D:/age/ADE/tests/test_main_chrome.cpp:181:158: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+  181 |         QTemporaryDir data;QVERIFY(seed(data.path()));MainWindow window(data.path());showHidden(window);window.activateWindow();QApplication::setActiveWindow(&window);auto* input=window.findChild<Composer*>();input->setFocus();QCoreApplication::processEvents();
+      |                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestkeyboard.h:27,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtestevent.h:14,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_gui.h:17,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest_widgets.h:15,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtest.h:282,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/QtTest:11,
+                 from D:/age/ADE/tests/test_main_chrome.cpp:27:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+[339/610] Building CXX object CMakeFiles/test_formatted_att.dir/tests/test_formatted_att.cpp.obj
+[340/610] Building CXX object CMakeFiles/test_conversations.dir/tests/test_conversations.cpp.obj
+[341/610] Building CXX object CMakeFiles/test_history_recovery.dir/tests/test_history_recovery.cpp.obj
+[342/610] Building CXX object CMakeFiles/test_attachment_mount.dir/tests/test_attachment_mount.cpp.obj
+[343/610] Building CXX object CMakeFiles/test_runtime_apps.dir/tests/test_runtime_apps.cpp.obj
+[344/610] Building CXX object CMakeFiles/test_git_host.dir/tests/test_git_host.cpp.obj
+[345/610] Building CXX object CMakeFiles/test_attachments.dir/tests/test_attachments.cpp.obj
+[346/610] Building CXX object CMakeFiles/test_read_lifecycle.dir/tests/test_read_lifecycle.cpp.obj
+[347/610] Building CXX object CMakeFiles/test_read_runtime.dir/tests/test_read_runtime.cpp.obj
+[348/610] Building CXX object CMakeFiles/test_plugins.dir/tests/test_plugins.cpp.obj
+[349/610] Building CXX object CMakeFiles/test_plugin_connections.dir/tests/test_plugin_connections.cpp.obj
+[350/610] Building CXX object CMakeFiles/test_plugin_runtime.dir/tests/test_plugin_runtime.cpp.obj
+[351/610] Building CXX object CMakeFiles/test_plugin_settings.dir/tests/test_plugin_settings.cpp.obj
+[352/610] Building CXX object CMakeFiles/test_settings_audit.dir/test_settings_audit_autogen/mocs_compilation.cpp.obj
+[353/610] Building CXX object CMakeFiles/test_smoke_plugins.dir/tests/test_smoke_plugins.cpp.obj
+[354/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/ModelSelection.cpp.obj
+[355/610] Building CXX object CMakeFiles/test_settings_audit.dir/tests/test_settings_audit.cpp.obj
+[356/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/ProviderRepository.cpp.obj
+[357/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/ProviderModelsDialog.cpp.obj
+[358/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/UtilityModelSelection.cpp.obj
+[359/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/SettingsPage.cpp.obj
+[360/610] Building CXX object CMakeFiles/test_settings_audit.dir/src/ui/CustomModelDialog.cpp.obj
+[361/610] Building CXX object CMakeFiles/test_engine_observers.dir/tests/test_engine_observers.cpp.obj
+[362/610] Building CXX object CMakeFiles/test_ui.dir/tests/test_ui.cpp.obj
+[363/610] Building CXX object CMakeFiles/test_core.dir/tests/test_core.cpp.obj
+[364/610] Building CXX object CMakeFiles/test_ui_audit.dir/tests/test_ui_audit.cpp.obj
+[365/610] Building CXX object CMakeFiles/test_settings.dir/test_settings_autogen/mocs_compilation.cpp.obj
+[366/610] Building CXX object CMakeFiles/test_runtime.dir/tests/test_runtime.cpp.obj
+[367/610] Building CXX object CMakeFiles/test_settings.dir/tests/test_settings.cpp.obj
+[368/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/ModelSelection.cpp.obj
+[369/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/ProviderRepository.cpp.obj
+[370/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/ProviderModelsDialog.cpp.obj
+[371/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/UtilityModelSelection.cpp.obj
+[372/610] Building CXX object CMakeFiles/test_harness_files.dir/test_harness_files_autogen/mocs_compilation.cpp.obj
+[373/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/SettingsPage.cpp.obj
+[374/610] Building CXX object CMakeFiles/test_settings.dir/src/ui/CustomModelDialog.cpp.obj
+[375/610] Building CXX object CMakeFiles/test_harness_files.dir/tests/test_harness_files.cpp.obj
+[376/610] Building CXX object CMakeFiles/test_harness_files.dir/src/runtime/HarnessFileContext.cpp.obj
+[377/610] Building CXX object CMakeFiles/test_codex_files_runtime.dir/tests/test_codex_files_runtime.cpp.obj
+[378/610] Building CXX object CMakeFiles/test_provider_picker_host.dir/tests/test_provider_picker_host.cpp.obj
+[379/610] Building CXX object CMakeFiles/test_opencode_harness.dir/test_opencode_harness_autogen/mocs_compilation.cpp.obj
+[380/610] Building CXX object CMakeFiles/test_provider_picker.dir/tests/test_provider_picker.cpp.obj
+[381/610] Building CXX object CMakeFiles/test_provider_picker_window.dir/tests/test_provider_picker_window.cpp.obj
+[382/610] Building CXX object CMakeFiles/test_opencode_harness.dir/tests/test_acp.cpp.obj
+[383/610] Building CXX object CMakeFiles/test_opencode_engine.dir/tests/test_acp_engine.cpp.obj
+[384/610] Building CXX object CMakeFiles/test_opencode_engine.dir/src/ui/ModelSelection.cpp.obj
+[385/610] Building CXX object CMakeFiles/test_agent_prompt.dir/tests/test_agent_prompt.cpp.obj
+D:/age/ADE/tests/test_agent_prompt.cpp: In lambda function:
+D:/age/ADE/tests/test_agent_prompt.cpp:21:17: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   21 |                 if(bytes.size()<end+4+size)return;socket->setProperty("received",true);requests.append(QJsonDocument::fromJson(bytes.mid(end+4,size)).object());
+      |                 ^~
+D:/age/ADE/tests/test_agent_prompt.cpp:21:51: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   21 |                 if(bytes.size()<end+4+size)return;socket->setProperty("received",true);requests.append(QJsonDocument::fromJson(bytes.mid(end+4,size)).object());
+      |                                                   ^~~~~~
+[386/610] Building CXX object CMakeFiles/test_provider_removal.dir/tests/test_provider_removal.cpp.obj
+[387/610] Building CXX object CMakeFiles/test_provider_removal_window.dir/tests/test_provider_removal_window.cpp.obj
+[388/610] Building CXX object CMakeFiles/test_agent_cycle_host.dir/tests/test_agent_cycle_host.cpp.obj
+D:/age/ADE/tests/test_agent_cycle_host.cpp: In function 'void {anonymous}::activate(ade::MainWindow&)':
+D:/age/ADE/tests/test_agent_cycle_host.cpp:19:128: warning: 'static void QApplication::setActiveWindow(QWidget*)' is deprecated: Use QWidget::activateWindow() instead. [-Wdeprecated-declarations]
+   19 | void activate(MainWindow& w) {w.setAttribute(Qt::WA_DontShowOnScreen);w.resize(1200,800);w.show();QApplication::setActiveWindow(&w);QApplication::processEvents();}
+      |                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtWidgets/QApplication:1,
+                 from D:/age/ADE/tests/test_agent_cycle_host.cpp:6:
+C:/Qt/6.11.2-mingw64-static/include/QtWidgets/qapplication.h:85:17: note: declared here
+   85 |     static void setActiveWindow(QWidget* act);
+      |                 ^~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_agent_cycle_host.cpp: In member function 'void AgentCycleHostTest::previewKeepsActualDraftThenCommitPersistsAndRestartRestores()':
+D:/age/ADE/tests/test_agent_cycle_host.cpp:79:13: warning: this 'for' clause does not guard... [-Wmisleading-indentation]
+   79 |             for(const auto& row:saved)if(row.id==original){found=true;QCOMPARE(row.draft,QString("Unsent cycle draft"));}QVERIFY(found);
+      |             ^~~
+In file included from C:/Qt/6.11.2-mingw64-static/include/QtTest/qtesteventloop.h:8,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/qsignalspy.h:10,
+                 from C:/Qt/6.11.2-mingw64-static/include/QtTest/QtTest:10,
+                 from D:/age/ADE/tests/test_agent_cycle_host.cpp:11:
+D:/age/ADE/tests/test_agent_cycle_host.cpp:79:122: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'for'
+   79 |             for(const auto& row:saved)if(row.id==original){found=true;QCOMPARE(row.draft,QString("Unsent cycle draft"));}QVERIFY(found);
+      |                                                                                                                          ^~~~~~~
+[389/610] Building CXX object CMakeFiles/test_opencode_provider_ui.dir/tests/test_opencode_provider_ui.cpp.obj
+[390/610] Building CXX object CMakeFiles/test_opencode_host.dir/tests/test_opencode_host.cpp.obj
+[391/610] Building CXX object CMakeFiles/test_rpc_deadline.dir/tests/test_rpc_deadline.cpp.obj
+[392/610] Building CXX object CMakeFiles/test_provider_model_visibility_host.dir/tests/test_provider_model_visibility_host.cpp.obj
+[393/610] Building CXX object CMakeFiles/test_provider_model_visibility.dir/tests/test_provider_model_visibility.cpp.obj
+[394/610] Building CXX object CMakeFiles/test_acp_mcp.dir/tests/test_acp_mcp.cpp.obj
+[395/610] Building CXX object CMakeFiles/test_claude_control.dir/test_claude_control_autogen/mocs_compilation.cpp.obj
+[396/610] Building CXX object CMakeFiles/test_mcp_engine.dir/tests/test_mcp_engine.cpp.obj
+[397/610] Building CXX object CMakeFiles/test_claude_stream.dir/test_claude_stream_autogen/mocs_compilation.cpp.obj
+[398/610] Building CXX object CMakeFiles/test_acp_presentation_engine.dir/tests/test_acp_presentation_engine.cpp.obj
+[399/610] Building CXX object CMakeFiles/test_claude_control.dir/tests/test_claude_control.cpp.obj
+[400/610] Building CXX object CMakeFiles/test_claude_discovery.dir/test_claude_discovery_autogen/mocs_compilation.cpp.obj
+[401/610] Building CXX object CMakeFiles/test_claude_stream.dir/tests/test_claude_stream.cpp.obj
+[402/610] Building CXX object CMakeFiles/test_claude_session.dir/tests/test_claude_session.cpp.obj
+[403/610] Building CXX object CMakeFiles/test_claude_discovery.dir/tests/test_claude_discovery.cpp.obj
+[404/610] Building CXX object CMakeFiles/test_claude_engine.dir/tests/test_claude_engine.cpp.obj
+[405/610] Building CXX object CMakeFiles/test_claude_provider_ui.dir/tests/test_claude_provider_ui.cpp.obj
+[406/610] Building CXX object CMakeFiles/test_claude_host.dir/tests/test_claude_host.cpp.obj
+[407/610] Building CXX object CMakeFiles/test_harness_media.dir/tests/test_harness_media.cpp.obj
+[408/610] Building CXX object CMakeFiles/test_model_discovery.dir/src/ui/ProviderDiscovery.cpp.obj
+[409/610] Building CXX object CMakeFiles/test_browser_context_runtime.dir/tests/test_browser_context_runtime.cpp.obj
+[410/610] Building CXX object CMakeFiles/test_model_discovery.dir/tests/test_model_discovery.cpp.obj
+[411/610] Building CXX object CMakeFiles/test_model_discovery.dir/src/ui/ProviderCatalog.cpp.obj
+[412/610] Building CXX object CMakeFiles/test_model_discovery.dir/src/ui/ModelSelection.cpp.obj
+[413/610] Building CXX object CMakeFiles/test_model_discovery.dir/src/ui/ProviderRepository.cpp.obj
+[414/610] Building CXX object CMakeFiles/test_model_discovery_host.dir/tests/test_model_discovery_host.cpp.obj
+[415/610] Building CXX object CMakeFiles/test_harness_continuity.dir/tests/test_harness_continuity.cpp.obj
+[416/610] Building CXX object CMakeFiles/test_harness_forms_host.dir/tests/test_harness_forms_host.cpp.obj
+[417/610] Building CXX object CMakeFiles/test_acp_settlement.dir/tests/test_acp_settlement.cpp.obj
+[418/610] Building CXX object CMakeFiles/test_utility_model_selection.dir/tests/test_utility_model_selection.cpp.obj
+[419/610] Building CXX object CMakeFiles/test_utility_models_host.dir/tests/test_utility_models_host.cpp.obj
+[420/610] Building CXX object CMakeFiles/render_utility_models.dir/tests/render_utility_models.cpp.obj
+[421/610] Building CXX object CMakeFiles/test_claude_resume.dir/tests/test_claude_resume.cpp.obj
+[422/610] Building CXX object CMakeFiles/test_harness_attachment_store.dir/tests/test_harness_attachment_store.cpp.obj
+[423/610] Building CXX object CMakeFiles/test_mcp_presentation.dir/tests/test_mcp_presentation.cpp.obj
+[424/610] Building CXX object CMakeFiles/test_harness_attachment_wire.dir/test_harness_attachment_wire_autogen/mocs_compilation.cpp.obj
+[425/610] Building CXX object CMakeFiles/test_harness_attachment_store.dir/src/harness/HarnessPreparedTurn.cpp.obj
+[426/610] Building CXX object CMakeFiles/test_harness_attachment_store.dir/src/harness/HarnessAttachmentStore.cpp.obj
+[427/610] Building CXX object CMakeFiles/test_harness_attachment_wire.dir/tests/test_harness_attachment_wire.cpp.obj
+[428/610] Building CXX object CMakeFiles/test_harness_attachments_host.dir/tests/test_harness_attachments_host.cpp.obj
+[429/610] Building CXX object CMakeFiles/test_harness_cleanup_host.dir/tests/test_harness_cleanup_host.cpp.obj
+[430/610] Building CXX object CMakeFiles/test_question_presentation_host.dir/tests/test_question_presentation_host.cpp.obj
+[431/610] Building CXX object CMakeFiles/test_direct_question_mcp.dir/tests/test_direct_question_mcp.cpp.obj
+[432/610] Building CXX object CMakeFiles/test_harness_attachment_mime.dir/tests/test_harness_attachment_mime.cpp.obj
+D:/age/ADE/tests/test_harness_attachment_mime.cpp: In member function 'void HarnessAttachmentMimeTest::run(const QString&, const QString&, bool, bool)':
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:206:3: warning: dangling pointer to an unnamed temporary may be used [-Wdangling-pointer=]
+  206 |   }
+      |   ^
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:155:28: note: unnamed temporary defined here
+  155 |             : store.prepare({{"att/source.bin", name, digest(bytes), bytes}},
+      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  156 |                             nullptr, &error);
+      |                             ~~~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:206:3: warning: dangling pointer to an unnamed temporary may be used [-Wdangling-pointer=]
+  206 |   }
+      |   ^
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:155:28: note: unnamed temporary defined here
+  155 |             : store.prepare({{"att/source.bin", name, digest(bytes), bytes}},
+      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  156 |                             nullptr, &error);
+      |                             ~~~~~~~~~~~~~~~~
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:206:3: warning: dangling pointer to an unnamed temporary may be used [-Wdangling-pointer=]
+  206 |   }
+      |   ^
+D:/age/ADE/tests/test_harness_attachment_mime.cpp:155:28: note: unnamed temporary defined here
+  155 |             : store.prepare({{"att/source.bin", name, digest(bytes), bytes}},
+      |               ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  156 |                             nullptr, &error);
+      |                             ~~~~~~~~~~~~~~~~
+[433/610] Building CXX object CMakeFiles/test_historical_attachments.dir/tests/test_historical_attachments.cpp.obj
+[434/610] Building CXX object CMakeFiles/test_acp_original_images.dir/test_acp_original_images_autogen/mocs_compilation.cpp.obj
+[435/610] Building CXX object CMakeFiles/test_harness_attachment_source.dir/tests/test_harness_attachment_source.cpp.obj
+[436/610] Building CXX object CMakeFiles/test_acp_original_lifecycle.dir/test_acp_original_lifecycle_autogen/mocs_compilation.cpp.obj
+[437/610] Building CXX object CMakeFiles/test_model_selector_display.dir/tests/test_model_selector_display.cpp.obj
+[438/610] Building CXX object CMakeFiles/test_acp_original_host.dir/test_acp_original_host_autogen/mocs_compilation.cpp.obj
+[439/610] Building CXX object CMakeFiles/test_acp_original_images.dir/tests/test_acp_original_images.cpp.obj
+[440/610] Building CXX object CMakeFiles/test_custom_model_options.dir/test_custom_model_options_autogen/mocs_compilation.cpp.obj
+[441/610] Building CXX object CMakeFiles/test_acp_original_lifecycle.dir/tests/test_acp_original_lifecycle.cpp.obj
+[442/610] Building CXX object CMakeFiles/test_custom_model_engine.dir/test_custom_model_engine_autogen/mocs_compilation.cpp.obj
+[443/610] Building CXX object CMakeFiles/test_acp_original_host.dir/tests/test_acp_original_host.cpp.obj
+[444/610] Building CXX object CMakeFiles/test_custom_model_config.dir/test_custom_model_config_autogen/mocs_compilation.cpp.obj
+[445/610] Building CXX object CMakeFiles/test_custom_model_options.dir/tests/test_custom_model_options.cpp.obj
+[446/610] Building CXX object CMakeFiles/test_custom_model_inventory.dir/test_custom_model_inventory_autogen/mocs_compilation.cpp.obj
+[447/610] Building CXX object CMakeFiles/test_custom_model_config.dir/tests/test_custom_model_config.cpp.obj
+[448/610] Building CXX object CMakeFiles/test_custom_model_storage.dir/test_custom_model_storage_autogen/mocs_compilation.cpp.obj
+[449/610] Building CXX object CMakeFiles/test_custom_model_engine.dir/tests/test_custom_model_engine.cpp.obj
+[450/610] Building CXX object CMakeFiles/test_custom_model_media.dir/test_custom_model_media_autogen/mocs_compilation.cpp.obj
+[451/610] Building CXX object CMakeFiles/test_custom_model_inventory.dir/tests/test_custom_model_inventory.cpp.obj
+[452/610] Building CXX object CMakeFiles/test_custom_model_ui.dir/test_custom_model_ui_autogen/mocs_compilation.cpp.obj
+[453/610] Building CXX object CMakeFiles/test_custom_model_media.dir/tests/test_custom_model_media.cpp.obj
+[454/610] Building CXX object CMakeFiles/test_custom_model_host.dir/test_custom_model_host_autogen/mocs_compilation.cpp.obj
+[455/610] Building CXX object CMakeFiles/test_custom_model_storage.dir/tests/test_custom_model_storage.cpp.obj
+[456/610] Building CXX object CMakeFiles/test_custom_model_smoke.dir/test_custom_model_smoke_autogen/mocs_compilation.cpp.obj
+[457/610] Building CXX object CMakeFiles/test_custom_model_smoke.dir/tests/test_custom_model_smoke.cpp.obj
+[458/610] Building CXX object CMakeFiles/test_custom_model_ui.dir/tests/test_custom_model_ui.cpp.obj
+[459/610] Linking CXX executable bin\test_codex_harness.exe
+[460/610] Linking CXX executable bin\test_codex_engine.exe
+[461/610] Building CXX object CMakeFiles/test_custom_model_host.dir/tests/test_custom_model_host.cpp.obj
+[462/610] Linking CXX executable bin\test_codex_provider_ui.exe
+[463/610] Linking CXX executable bin\test_codex_host.exe
+[464/610] Linking CXX executable bin\test_provider_operations.exe
+[465/610] Linking CXX executable bin\provider_probe.exe
+[466/610] Linking CXX executable bin\test_usage_compression.exe
+[467/610] Linking CXX executable bin\test_navigation_shortcuts.exe
+[468/610] Linking CXX executable bin\test_browser_session_host.exe
+[469/610] Linking CXX executable bin\test_usage_settings.exe
+[470/610] Linking CXX executable bin\test_session_logs.exe
+[471/610] Linking CXX executable bin\test_shell_log_mount.exe
+[472/610] Linking CXX executable bin\test_shell_service.exe
+[473/610] Linking CXX executable bin\test_shell_engine.exe
+[474/610] Linking CXX executable bin\test_shell_view.exe
+[475/610] Linking CXX executable bin\test_conversation_control.exe
+[476/610] Linking CXX executable bin\test_file_mutations.exe
+[477/610] Linking CXX executable bin\test_question_panel.exe
+[478/610] Linking CXX executable bin\test_transcript_rich.exe
+[479/610] Linking CXX executable bin\test_composer_completion.exe
+[480/610] Linking CXX executable bin\test_composer_search.exe
+[481/610] Linking CXX executable bin\test_composer_host.exe
+[482/610] Linking CXX executable bin\test_reference_controls.exe
+[483/610] Linking CXX executable bin\test_agent_control_ui.exe
+[484/610] Linking CXX executable bin\test_command_center.exe
+[485/610] Linking CXX executable bin\test_command_file_search.exe
+[486/610] Linking CXX executable bin\test_command_center_host.exe
+[487/610] Linking CXX executable bin\test_side_chat.exe
+[488/610] Linking CXX executable bin\test_side_chat_host.exe
+[489/610] Linking CXX executable bin\test_file_diff.exe
+[490/610] Linking CXX executable bin\test_mutation_runtime.exe
+[491/610] Linking CXX executable bin\test_shell_runtime.exe
+[492/610] Linking CXX executable bin\test_transcript_links.exe
+[493/610] Linking CXX executable bin\test_transcript_link_ui.exe
+[494/610] Linking CXX executable bin\test_workbench_layout.exe
+[495/610] Linking CXX executable bin\test_workbench_helpers.exe
+[496/610] Linking CXX executable test_presentation.exe
+[497/610] Linking CXX executable bin\test_chevron.exe
+[498/610] Linking CXX executable bin\test_history_projection.exe
+[499/610] Linking CXX executable bin\test_sidebar_navigation.exe
+[500/610] Linking CXX executable bin\test_workspace_changes.exe
+[501/610] Linking CXX executable bin\test_workspace_changes_host.exe
+[502/610] Linking CXX executable bin\test_smoke_capture.exe
+[503/610] Linking CXX executable bin\test_turn_file_snapshots.exe
+[504/610] Linking CXX executable bin\test_turn_files.exe
+[505/610] Linking CXX executable bin\test_turn_files_host.exe
+[506/610] Linking CXX executable test_transcript.exe
+[507/610] Linking CXX executable bin\test_transcript_ui.exe
+[508/610] Linking CXX executable bin\test_main_chrome.exe
+[509/610] Linking CXX executable bin\test_formatted_att.exe
+[510/610] Linking CXX executable test_history_recovery.exe
+[511/610] Linking CXX executable test_session_cleanup.exe
+[512/610] Linking CXX executable bin\test_conversations.exe
+[513/610] Linking CXX executable test_file_tools.exe
+[514/610] Linking CXX executable bin\test_attachment_mount.exe
+[515/610] Linking CXX executable bin\test_git_host.exe
+[516/610] Linking CXX executable bin\test_sandbox_apps.exe
+[517/610] Linking CXX executable bin\test_runtime_apps.exe
+[518/610] Linking CXX executable bin\test_app_resources.exe
+[519/610] Linking CXX executable bin\test_mini_apps.exe
+[520/610] Linking CXX executable test_attachments.exe
+[521/610] Linking CXX executable test_read_lifecycle.exe
+[522/610] Linking CXX executable bin\test_read_runtime.exe
+[523/610] Linking CXX executable test_plugins.exe
+[524/610] Linking CXX executable render_settings.exe
+[525/610] Linking CXX executable bin\test_plugin_connections.exe
+[526/610] Linking CXX executable bin\test_plugin_runtime.exe
+[527/610] Linking CXX executable bin\test_smoke_plugins.exe
+[528/610] Linking CXX executable bin\test_plugin_settings.exe
+[529/610] Linking CXX executable bin\test_sandbox_network.exe
+[530/610] Linking CXX executable bin\test_downloads.exe
+[531/610] Linking CXX executable test_engine_observers.exe
+[532/610] Linking CXX executable test_settings_audit.exe
+[533/610] Linking CXX executable test_core.exe
+[534/610] Linking CXX executable test_context.exe
+[535/610] Linking CXX executable bin\test_ui.exe
+[536/610] Linking CXX executable bin\test_ui_audit.exe
+[537/610] Linking CXX executable bin\test_sandbox.exe
+[538/610] Linking CXX executable bin\test_harness_files.exe
+[539/610] Linking CXX executable bin\test_runtime.exe
+[540/610] Linking CXX executable test_settings.exe
+[541/610] Linking CXX executable bin\test_codex_files_runtime.exe
+[542/610] Linking CXX executable bin\test_provider_picker.exe
+[543/610] Linking CXX executable bin\test_provider_picker_host.exe
+[544/610] Linking CXX executable bin\test_provider_picker_window.exe
+[545/610] Linking CXX executable bin\test_opencode_harness.exe
+[546/610] Linking CXX executable bin\test_transcript_polish.exe
+[547/610] Linking CXX executable bin\test_opencode_engine.exe
+[548/610] Linking CXX executable bin\test_agent_prompt.exe
+[549/610] Linking CXX executable bin\test_provider_removal.exe
+[550/610] Linking CXX executable bin\test_external_context.exe
+[551/610] Linking CXX executable bin\test_provider_removal_window.exe
+[552/610] Linking CXX executable bin\test_agent_cycle.exe
+[553/610] Linking CXX executable bin\test_agent_cycle_host.exe
+[554/610] Linking CXX executable bin\test_opencode_provider_ui.exe
+[555/610] Linking CXX executable bin\test_opencode_host.exe
+[556/610] Linking CXX executable bin\test_transcript_grouping.exe
+[557/610] Linking CXX executable bin\test_provider_model_visibility.exe
+[558/610] Linking CXX executable bin\test_question_mcp.exe
+[559/610] Linking CXX executable bin\test_provider_model_visibility_host.exe
+[560/610] Linking CXX executable bin\test_rpc_deadline.exe
+[561/610] Linking CXX executable bin\test_transcript_image_lifecycle.exe
+[562/610] Linking CXX executable bin\test_acp_mcp.exe
+[563/610] Linking CXX executable bin\test_mcp_engine.exe
+[564/610] Linking CXX executable bin\test_acp_tool_presentation.exe
+[565/610] Linking CXX executable bin\test_acp_presentation_engine.exe
+[566/610] Linking CXX executable bin\test_claude_control.exe
+[567/610] Linking CXX executable bin\test_claude_stream.exe
+[568/610] Linking CXX executable bin\test_claude_session.exe
+[569/610] Linking CXX executable bin\test_claude_discovery.exe
+[570/610] Linking CXX executable bin\test_acp_presentation_ui.exe
+[571/610] Linking CXX executable bin\test_claude_engine.exe
+[572/610] Linking CXX executable bin\test_harness_media.exe
+[573/610] Linking CXX executable bin\test_claude_provider_ui.exe
+[574/610] Linking CXX executable bin\test_claude_host.exe
+[575/610] Linking CXX executable bin\test_model_discovery.exe
+[576/610] Linking CXX executable bin\test_browser_context.exe
+[577/610] Linking CXX executable bin\test_browser_context_runtime.exe
+[578/610] Linking CXX executable bin\test_harness_continuity.exe
+[579/610] Linking CXX executable bin\test_model_discovery_host.exe
+[580/610] Linking CXX executable bin\test_acp_settlement.exe
+[581/610] Linking CXX executable bin\test_harness_forms_host.exe
+[582/610] Linking CXX executable bin\test_utility_model_selection.exe
+[583/610] Linking CXX executable bin\test_utility_models_host.exe
+[584/610] Linking CXX executable bin\render_utility_models.exe
+[585/610] Linking CXX executable bin\test_claude_resume.exe
+[586/610] Linking CXX executable bin\test_harness_attachment_store.exe
+[587/610] Linking CXX executable bin\test_harness_attachment_wire.exe
+[588/610] Linking CXX executable bin\test_mcp_presentation.exe
+[589/610] Linking CXX executable bin\test_harness_attachments_host.exe
+[590/610] Linking CXX executable bin\test_harness_cleanup_host.exe
+[591/610] Linking CXX executable bin\test_direct_question_mcp.exe
+[592/610] Linking CXX executable bin\test_question_presentation.exe
+[593/610] Linking CXX executable bin\test_question_presentation_host.exe
+[594/610] Linking CXX executable bin\test_harness_attachment_mime.exe
+[595/610] Linking CXX executable bin\test_historical_attachments.exe
+[596/610] Linking CXX executable bin\test_harness_attachment_source.exe
+[597/610] Linking CXX executable bin\test_acp_original_images.exe
+[598/610] Linking CXX executable bin\test_acp_original_lifecycle.exe
+[599/610] Linking CXX executable bin\test_model_selector_display.exe
+[600/610] Linking CXX executable bin\test_custom_model_options.exe
+[601/610] Linking CXX executable bin\test_acp_original_host.exe
+[602/610] Linking CXX executable bin\test_custom_model_engine.exe
+[603/610] Linking CXX executable bin\test_custom_model_config.exe
+[604/610] Linking CXX executable bin\test_custom_model_inventory.exe
+[605/610] Linking CXX executable bin\test_custom_model_storage.exe
+[606/610] Linking CXX executable bin\test_custom_model_media.exe
+[607/610] Linking CXX executable bin\test_custom_model_smoke.exe
+[608/610] Linking CXX executable bin\test_custom_model_ui.exe
+[609/610] Linking CXX executable bin\test_custom_model_host.exe

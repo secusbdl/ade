@@ -1,0 +1,24 @@
+********* Start testing of CustomEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomEngineTest::initTestCase()
+PASS   : CustomEngineTest::actualRoundTrip(openai)
+PASS   : CustomEngineTest::actualRoundTrip(responses)
+PASS   : CustomEngineTest::actualRoundTrip(anthropic)
+PASS   : CustomEngineTest::actualRoundTrip(google)
+PASS   : CustomEngineTest::noToolsCannotDispatch(openai)
+PASS   : CustomEngineTest::noToolsCannotDispatch(responses)
+PASS   : CustomEngineTest::noToolsCannotDispatch(anthropic)
+PASS   : CustomEngineTest::noToolsCannotDispatch(google)
+PASS   : CustomEngineTest::usageOnlySseAndToolOutputSurvive()
+PASS   : CustomEngineTest::privateErrorValuesAreRedacted(openai)
+PASS   : CustomEngineTest::privateErrorValuesAreRedacted(responses)
+PASS   : CustomEngineTest::privateErrorValuesAreRedacted(anthropic)
+PASS   : CustomEngineTest::customHeadersStayOnSelectedOrigin(openai)
+PASS   : CustomEngineTest::customHeadersStayOnSelectedOrigin(responses)
+PASS   : CustomEngineTest::customHeadersStayOnSelectedOrigin(anthropic)
+PASS   : CustomEngineTest::customHeadersStayOnSelectedOrigin(google)
+PASS   : CustomEngineTest::invalidBindingNeverPostsAndObserverMayDelete()
+PASS   : CustomEngineTest::privateChangeInvalidatesFallback()
+PASS   : CustomEngineTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 2032ms
+********* Finished testing of CustomEngineTest *********

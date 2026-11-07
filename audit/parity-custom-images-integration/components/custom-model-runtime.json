@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "status": "runtime-frozen; coherent MainWindow integration gate owned by qt_port_review pending",
+  "baseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceReview": "private/custom-model-wire-review/REVIEW.json",
+  "patch": "custom-model-core.patch",
+  "hashEncoding": "UTF-8 canonical LF",
+  "files": [
+    {
+      "path": "src/core/CustomModelOptions.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "ce241ec7deec0df85dea34c2f06d14cfa48e0fac73b131a1fba364cfba2a11f8"
+    },
+    {
+      "path": "src/core/CustomModelOptions.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "7942d4f8ed953d798de1da39fad2384aaae15f27c0e1bb53e3da30e6588bd1f2"
+    },
+    {
+      "path": "src/core/ProviderProtocol.h",
+      "beforeSha256Lf": "f6f49ddfb447e026d4c2da875ba82923f4737048a3306b2d4922e12d9329a4c4",
+      "afterSha256Lf": "b00e0ab830dc26443b6c542cb9e153004ae7b58fecad4a2b19eadcc877508a34"
+    },
+    {
+      "path": "src/core/ProviderProtocol.cpp",
+      "beforeSha256Lf": "2e540debc323f95c0093f398efb2539874e7f0af6f643b64e16275a3399b9d6e",
+      "afterSha256Lf": "2fe78ab7dc95ae635a6a4407ae6d369d95e615e0c5d198f1aff96fc8966e79d5"
+    },
+    {
+      "path": "src/core/UtilityService.cpp",
+      "beforeSha256Lf": "868f39fb18182098cb1583443ef541e2494872b56c45fb25220bf3d8ced51054",
+      "afterSha256Lf": "bec51c06aa2976143c778504c9143defed0ffae57b559e12dd4031d2b9b5470a"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "beforeSha256Lf": "8d8277a83eba284862e22b6c9a70764e526bbbd4f1a6a36091f9069f1d19a668",
+      "afterSha256Lf": "92660005d531b023e264cc94f10aabe7ba160ea4910dba2e9726e250fe400b8e"
+    },
+    {
+      "path": "src/core/ModelFallback.h",
+      "beforeSha256Lf": "b3403a706633f2a6663a831e081e3fddf8066cacbc544e12962c757939b3c248",
+      "afterSha256Lf": "f86143d48b7b65ea83cc4c38cc8052a2eae6ddcf1ae29102c03ca587a5e6d3f7"
+    },
+    {
+      "path": "tests/test_custom_model_options.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "2901e952d55864faf9ac0109e47f7816dbd6156f2bb87e7f9857efdf98a5348c"
+    },
+    {
+      "path": "tests/test_custom_model_engine.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "671a1591f29e8a43051b806d90c30be10203085a5c2bbf0eec156438b8612705"
+    }
+  ],
+  "api": [
+    "CustomModelOptions::validate(protocol,options,headers,error) typed validation, no request mutation",
+    "CustomModelOptions::apply(provider,body,request,error) exact bound runtime and atomic body/header normalization",
+    "CustomModelOptions::allowsTools(provider) declared custom capability; false on invalid binding",
+    "CustomModelOptions::redactDiagnostic(provider,text) bounded exact private strings/keys only in diagnostics",
+    "ProviderRequest gains trailing QString error; Engine and UtilityService stop before network on error"
+  ],
+  "dependencies": [
+    "Requires qt_port_review authoritative CustomModelConfig.cpp/h and ProviderConfig customRequest/requestOverrides schema before compiling. Do not overwrite those headers from this private stage.",
+    "Existing ade_core glob compiles new translator. No external runtime/package dependency.",
+    "ModelFallback digest is memory-only; no private configuration or digest is exported in publicJson/history."
+  ],
+  "precedence": [
+    "Native canonical history/tools/system/stream construction is protected; no arbitrary providerOptions JSON spread.",
+    "Validated flat SDK options normalized by selected HTTP protocol; custom header overlay follows native auth, preserving selected endpoint and SameOriginRedirectPolicy.",
+    "Only explicit requestOverrides apply after custom options. Unsupported thinking-mode/budget combinations fail clearly. Legacy maxOutputTokens=0 is unset; Anthropic uses required bounded default.",
+    "Utility task limits100/20000 and temperatures0.15/0.1 are placed before normalization; source Anthropic title thinking disable only without explicit utility override.",
+    "Private headers/options do not enter publicJson, transcript metadata, canonical provider history, or ordinary diagnostics. Successful tool/file/model text is not blanket-redacted."
+  ],
+  "protocols": {
+    "openaiChat": {
+      "supported": [
+        "parallelToolCalls",
+        "user",
+        "store",
+        "metadata(string record)",
+        "reasoningEffort",
+        "serviceTier(pinned classifier)",
+        "textVerbosity -> verbosity",
+        "promptCacheKey",
+        "promptCacheOptions",
+        "promptCacheRetention",
+        "safetyIdentifier",
+        "forceReasoning",
+        "maxCompletionTokens",
+        "prediction(content string only)"
+      ],
+      "unsupported": [
+        "logitBias",
+        "logprobs",
+        "strictJsonSchema",
+        "systemMessageMode"
+      ]
+    },
+    "openaiResponses": {
+      "supported": [
+        "parallelToolCalls",
+        "user",
+        "store",
+        "metadata(bounded object)",
+        "reasoningEffort",
+        "serviceTier(pinned classifier)",
+        "textVerbosity -> text.verbosity",
+        "promptCacheKey",
+        "promptCacheOptions",
+        "promptCacheRetention",
+        "safetyIdentifier",
+        "forceReasoning",
+        "reasoningSummary",
+        "reasoningMode",
+        "reasoningContext",
+        "include(reasoning.encrypted_content only)",
+        "truncation",
+        "maxToolCalls"
+      ],
+      "unsupported": [
+        "instructions",
+        "previousResponseId",
+        "conversation",
+        "allowedTools",
+        "passThroughUnsupportedFiles",
+        "systemMessageMode",
+        "logprobs",
+        "file/web-search include variants"
+      ]
+    },
+    "anthropic": {
+      "supported": [
+        "thinking(enabled/adaptive/disabled; default budget1024)",
+        "effort",
+        "metadata.userId",
+        "cacheControl",
+        "disableParallelToolUse",
+        "anthropicBeta",
+        "speed",
+        "inferenceGeo",
+        "toolStreaming"
+      ],
+      "unsupported": [
+        "mcpServers",
+        "container",
+        "contextManagement",
+        "sendReasoning",
+        "structuredOutputMode",
+        "taskBudget"
+      ]
+    },
+    "google": {
+      "supported": [
+        "thinkingConfig",
+        "mediaResolution",
+        "safetySettings",
+        "serviceTier",
+        "responseModalities(TEXT only)"
+      ],
+      "unsupported": [
+        "cachedContent",
+        "imageConfig",
+        "audioTimestamp",
+        "retrievalConfig",
+        "labels",
+        "threshold",
+        "streamFunctionCallArguments",
+        "structuredOutputs"
+      ]
+    }
+  },
+  "explicitLimits": [
+    "This is a bounded native translator, not full AI SDK parity. Unknown fields fail rather than source Zod silent stripping. All unsupported authority/history/media fields fail before HTTP.",
+    "Header names/values are bounded; framing/proxy/routing headers, control characters, case-alias duplicates and non-JSON Content-Type reject. Source header object allows more; native restriction is explicit.",
+    "Declared text/image input + text output supported; audio/video/file input and non-text output reject. Honoring custom image/tool declarations is an intentional native correction: pinned global capabilities lookup ignores custom preferences.",
+    "Explicit custom selection thinking overrides now take effect; pinned custom creator bypasses some built-in thinking resolution. This is a documented native correction, not a claim of identical source bug behavior.",
+    "OpenAI model classifier and Anthropic output limits follow pinned SDK names; unknown reasoning Responses models need explicit forceReasoning. No context sizes or live entitlement are guessed.",
+    "Responses preserves native default store=false when custom store is absent, rather than SDK omitted default.",
+    "Native user-agent remains ADE; no AI SDK client fingerprint emulation.",
+    "Custom context limit remains host metadata for existing compression. Context-derived attachment read-budget propagation is a separate unimplemented gap.",
+    "No real credentials, service requests or model entitlement tested. The only HTTP tests use local synthetic servers.",
+    "No broad encoded-secret or universal no-leak guarantee: diagnostics redact exact private strings/keys; successful user/tool/model content is preserved."
+  ],
+  "evidence": {
+    "initialMissingMapping": {
+      "txt": "before.txt",
+      "xml": "before.xml",
+      "passed": 2,
+      "failed": 4,
+      "scope": "baseline native protocol prepare ignored runtime custom options on all4 protocols; only schema was staged for compilation",
+      "txtSha256Lf": "f404730e0436539baa91d80df43f09e9e409b2c4ea01eb0fcf40755c5f52d1a8",
+      "xmlSha256Lf": "bdb493e49a93cc84948705a290f2f862851efd6506431d8d310d016a866c41c1"
+    },
+    "reviewBefore": {
+      "txt": "review-before-corrected-fixture.txt",
+      "xml": "review-before-corrected-fixture.xml",
+      "passed": 154,
+      "failed": 3,
+      "scope": "unknown identifier-shaped private-key diagnostic leak; Google unset output left stale generation object; Anthropic option beta case differed from pinned SDK",
+      "txtSha256Lf": "64c7a7e9b4a0fb5ff84739b50b32a69f3511b3dbaadb9edb17854b8cb9c18426",
+      "xmlSha256Lf": "6c7c9cb5881dce76522c4485774b208f061d429042f11014021965e6396404eb"
+    },
+    "fixtureCorrection": {
+      "txt": "review-before.txt",
+      "scope": "Earlier compression fixture returned a title-sized response; corrected to a >=30-character briefing without changing production limits. Includes other genuine before failures.",
+      "txtSha256Lf": "799bd7f8115145148a815f744b57ff8dde5cfc0118219516fac4bc857fb05384"
+    },
+    "privateMetadataKeyBefore": {
+      "txt": "private-keys-before.txt",
+      "xml": "private-keys-before.xml",
+      "passed": 2,
+      "failed": 1,
+      "txtSha256Lf": "a873223ae447dd38538152db759b0fe9056389668f9acf57b8a33481683c9468",
+      "xmlSha256Lf": "b8aba0005a1d112bf8d3c01b275845219f79d2b631c5413345d5a43ffea85b2d"
+    },
+    "optionsFinal": {
+      "txt": "options-frozen.txt",
+      "xml": "options-frozen.xml",
+      "passed": 158,
+      "failed": 0,
+      "txtSha256Lf": "5c01596cbd8d67480e76bae26969281ee8734fee3164549a21d0c51c3d3617b1",
+      "xmlSha256Lf": "7f5aa4a16928bc2a3f8790bf5a086f86bf8f6b00020f907fbd6135cb9fcb509f"
+    },
+    "engineFinal": {
+      "txt": "engine-final-origin.txt",
+      "xml": "engine-final-origin.xml",
+      "passed": 20,
+      "failed": 0,
+      "scope": "Actual Engine loopback4protocol tool/signed roundtrips, all4 fabricated tool rejection, Chat usage-only SSE, private errors, all4 cross-origin redirect refusal, failed-observer deletion and fallback invalidation",
+      "txtSha256Lf": "c9850fca80f91b39764640dacd1c1fd0f939d5fff111abee0c48276be288eb34",
+      "xmlSha256Lf": "8feb28b9f3dd41c75d1468064b54c251f24e514e40ac3f775e503e5ebd0d76c7"
+    },
+    "coreCompatibility": {
+      "txt": "core-compat.txt",
+      "xml": "core-compat.xml",
+      "passed": 48,
+      "failed": 0,
+      "txtSha256Lf": "adf466a66cdbbf4a26b85f1ad4bcccd447736e59dfa9964833fead36a73fd3ed",
+      "xmlSha256Lf": "f8a1f20ad9a3c12744b24c2cdf08a466ec8c5c3d04eb638ceda90a01b254aab9"
+    },
+    "observerCompatibility": {
+      "txt": "engine_observers-compat.txt",
+      "xml": "engine_observers-compat.xml",
+      "passed": 56,
+      "failed": 0,
+      "txtSha256Lf": "0690dc7e90969f958d1359b0f0972cd566bb56e1fd45a6ecaff130206695036a",
+      "xmlSha256Lf": "35ab30c80093e9743a240889413dbf8781c2adaaa686050a06e12b92ba7267c9"
+    }
+  },
+  "reviews": [
+    {
+      "agent": "license_review",
+      "scope": "read-only exact binding/header endpoint authority/atomic body and request/utility override; identified unknown key diagnostic leak, no other concrete issue observed; did not run owner fixtures"
+    }
+  ],
+  "productionEdits": false,
+  "sharedBuilds": false,
+  "liveRequests": false,
+  "credentialsRead": false,
+  "patchSha256": "9e304a53afda0cbf1e18d2f6ee008dd304e68c913a32fecc353b69bb505d5ce9",
+  "patchCheck": "git apply --check against frozen root succeeded",
+  "testsTotal": 282
+}

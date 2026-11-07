@@ -1,0 +1,19 @@
+********* Start testing of AcpEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpEngineTest::initTestCase()
+PASS   : AcpEngineTest::harnessContextExcludesNativeToolClaims(opencode)
+PASS   : AcpEngineTest::harnessContextExcludesNativeToolClaims(codex)
+PASS   : AcpEngineTest::noKeyOrUrlAcceptsAndRetainsPresentation()
+PASS   : AcpEngineTest::newResumeForkAndHttpPreserveHistory()
+PASS   : AcpEngineTest::approvalDenialContinuesTurn()
+PASS   : AcpEngineTest::duplicatePendingToolIdentityKeepsFirstApprovalUsable()
+PASS   : AcpEngineTest::nativeQuestionAnswerAndCancel()
+PASS   : AcpEngineTest::integerQuestionRejectsFractionWithoutLosingForm()
+PASS   : AcpEngineTest::approvalObserverCanCancelWithoutStaleCompletion()
+PASS   : AcpEngineTest::cancelQueueResumeAndLateToken()
+PASS   : AcpEngineTest::displayObserverMayDeleteOwner()
+PASS   : AcpEngineTest::modelSelectionKeepsExternalEfforts()
+PASS   : AcpEngineTest::providerStoreRoundTripAndRouteIsolation()
+PASS   : AcpEngineTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 3171ms
+********* Finished testing of AcpEngineTest *********

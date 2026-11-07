@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "CustomModelOptions.h"
 #include "HarnessHistory.h"
 #include "AgentPrompt.h"
 #include "ProviderProtocol.h"
@@ -350,6 +351,7 @@ void AgentEngine::requestModel() {
     }
     if(m_questionToolEnabled)definitions.append(QuestionForm::toolDefinition());
     for (const auto &definition : m_externalDefinitions) if(definition.toObject()["function"].toObject()["name"]!="askUserQuestions")definitions.append(definition);
+    if (!CustomModelOptions::allowsTools(m_provider)) definitions = {};
     const AgentPromptContext promptContext{m_tools.workspace(),m_systemContext,dynamicContext,
         !m_tools.appsDirectory().isEmpty(),m_tools.hasAttachmentReadSource(),m_tools.hasShellReadSource()};
     const auto instructions=buildNativeSystemPrompt(promptContext,definitions);
@@ -377,6 +379,7 @@ void AgentEngine::requestModel() {
         if (!preparationError.isEmpty()) { fail(preparationError); return; }
     }
     const auto prepared = ProviderProtocol::prepare(m_provider, requestHistory, instructions, definitions);
+    if (!prepared.error.isEmpty()) { fail(prepared.error); return; }
     m_reply = m_network.post(prepared.request, QJsonDocument(prepared.body).toJson(QJsonDocument::Compact));
     const QPointer<QNetworkReply> reply = m_reply;
     // Observers may destroy this engine and its network manager. Run outside the
@@ -852,6 +855,9 @@ void AgentEngine::retainPartialResponse() {
 
 void AgentEngine::runNextTool() {
     if (!m_busy) return;
+    if (!CustomModelOptions::allowsTools(m_provider) && m_toolIndex < m_pendingTools.size()) {
+        fail("The selected custom model does not declare tool calling."); return;
+    }
     if (m_toolIndex >= m_pendingTools.size()) {
         m_pendingTools.clear();
         m_toolIndex = 0;
@@ -1068,7 +1074,7 @@ void AgentEngine::fail(const QString &message) {
     if (!m_busy) return;
     m_lastTurnSucceeded = false;
     m_queuePaused=true;++m_queueResumeSerial;
-    const auto generation=++m_generation;const QPointer<AgentEngine> self(this);const auto safeMessage=redact(message).left(2000);
+    const auto generation=++m_generation;const QPointer<AgentEngine> self(this);const auto safeMessage=CustomModelOptions::redactDiagnostic(m_provider,redact(message)).left(2000);
     m_busy=false;
     stopCompression();
     stopHarness();

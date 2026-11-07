@@ -28,6 +28,11 @@ public:
   HarnessAttachmentLease excluding(const HarnessAttachmentLease &other) const;
   QJsonArray resourceLinks(QString *error = nullptr) const;
   QString textDescriptors(QString *error = nullptr) const;
+  // ACP-only exact original bytes. The index addresses this immutable lease;
+  // callers cannot supply a path, MIME, owner, or a larger read allowance.
+  static constexpr qint64 MaxAcpImageBytes = 20LL * 1024 * 1024;
+  std::optional<QByteArray> originalAcpImage(qsizetype index,
+      const std::atomic_bool *cancelled, QString *error = nullptr) const;
 
 private:
   struct Data;

@@ -53,10 +53,11 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
       const HarnessAttachmentSource source(handoff.profileDirectory(), guard->m_agentId,
                                            guard->m_attachmentMounts);
       const auto media = ModelMediaCatalog::resolve(provider);
+      const bool acpOriginalImages = provider.isOpenCodeHarness();
       return [handoff, source, history,
-              media](const std::atomic_bool *cancelled) {
+              media, acpOriginalImages](const std::atomic_bool *cancelled) {
         return prepareHarnessInput(handoff, source, history,
-                                   media, cancelled);
+                                   media, cancelled, acpOriginalImages);
       };
     });
     const auto appsDirectory=m_apps.agentAppsDirectory();

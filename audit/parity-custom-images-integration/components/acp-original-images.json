@@ -1,0 +1,198 @@
+{
+  "status": "frozen private implementation; not yet integrated in production",
+  "task": "ACP exact original images and bounded outbound scheduling",
+  "base": "current assembled161 source cohort, root development HEAD727c57fd49a97aeded7baf543096c92a2587d52b plus integrated five followups; exact preimage hashes recorded",
+  "sourceContract": {
+    "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+    "anchors": [
+      "11-18: supported image extension MIME map and20MiB raw bound",
+      "90-119: actual image capability, exact original file bytes or resource_link fallback"
+    ],
+    "nativeDifference": "Explicit64MiB total outbound ACP frame budget; later images fall back in captured order. Historical captured-file replay remains a separately documented native enhancement."
+  },
+  "patch": {
+    "path": "private/acp-original-image-stage/original-images.patch",
+    "sha256": "276dcf8b2c736e4c468a6139c98dd53a70d3c2d63d45327c044497a212965876",
+    "paths": 16,
+    "currentRootApplyCheck": "passed",
+    "checkEvidence": "private/acp-original-image-stage/patch-check.txt"
+  },
+  "cmake": {
+    "path": "private/acp-original-image-stage/cmake-additions.txt",
+    "sha256": "7f44e0d3020ac7b7861f0e1c642a5e892d98e1fe6705736ccac1976301557527",
+    "requirements": [
+      "ade_harness PUBLIC Qt6::Concurrent",
+      "three additive test executables plus native process fixture",
+      "full ABI rebuild of all dependants; new typed value/session/transport layouts"
+    ]
+  },
+  "changes": [
+    "Host-only ACP original-image policy; HTTP/Codex/Claude policies unchanged",
+    "Actual ACP capability parsed before asynchronous value-only preparation",
+    "Captured known-extension originals<=20MiB are read/hash-checked from the same pinned file handle and base64 encoded without resize/re-encode",
+    "Baseline non-image content plus all fallback descriptors <=4MiB, final ACP envelope <=64MiB, per-image ordered fallback",
+    "One final serialized byte buffer, bounded block encoding,256KiB process writes and1MiB QProcess queued bytes, no NDJSON frame interleaving",
+    "Leases retained/checked during queued writing; before-write cancellation removes its frame, partial cancellation/revocation/timeout stops only its owned child/job",
+    "Existing8MiB inbound/ordinary control frames, RPC IDs, scoped human deadline pauses and permission settings unchanged"
+  ],
+  "tests": {
+    "suiteCount": 11,
+    "qtTestPassedRowsIncludingInitCleanup": 204,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "path": "private/acp-original-image-stage/final-acp_original_images.txt",
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "144eb1f39511104b5067e20e56d7dcdd6cfd4ab415a8ee6e05e82d7e93031b96",
+        "xml": "private/acp-original-image-stage/final-acp_original_images.xml",
+        "xmlSha256": "e55380c6fd15c9eb293c40f0d0108aedb42acf5d05ab7f077f63f868d3f8a670"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-acp_original_lifecycle.txt",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "03291a2f8f6ab4ff3b7b2b7e28a3763d4698169078df9f14542ba33b5889faf5",
+        "xml": "private/acp-original-image-stage/final-acp_original_lifecycle.xml",
+        "xmlSha256": "0dead4786753ce18c4a249cf7790fb4f873754064c92ab0f2c93ac0462bacf53"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-acp_original_host.txt",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "f5c0de6e077c99415af98e8c4b26eaeb5a5727a47ccab40991a9e141d5413b8f",
+        "xml": "private/acp-original-image-stage/final-acp_original_host.xml",
+        "xmlSha256": "f28c0c822b575c12669f7593197cdbdc659ac881b226ba4d8a66e42165fe8103"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-harness_attachment_wire.txt",
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "765734a47d6bff31f35912a940fab960a831f030ba60ce517b4ffea728f05000",
+        "xml": "private/acp-original-image-stage/final-harness_attachment_wire.xml",
+        "xmlSha256": "b7bd68e702751ce461d2582997a552f979929f2eb1d223e6d8a8818e5e875913"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-harness_attachments_host.txt",
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "62abcdcda69aaf35b43b0209cb07352090bdb8b02daa3b196f982cae9318e375",
+        "xml": "private/acp-original-image-stage/final-harness_attachments_host.xml",
+        "xmlSha256": "696ed0d2ae00748a88ee4971ee639f2ad9de697eacde3263e95a27fc8745b061"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-acp.txt",
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "71fd1af49f56893b04e658be92c2211178aebafee849fc574361eedef3b13c6d",
+        "xml": "private/acp-original-image-stage/final-acp.xml",
+        "xmlSha256": "917c3be8ab75392a2e2b06bd32495b93afe609710a263d23a73b577714104c96"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-codex_harness.txt",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "f8416dee457c249041d6801063e1fe29cd46e20532ae9e5262ece5f7b8f0e091",
+        "xml": "private/acp-original-image-stage/final-codex_harness.xml",
+        "xmlSha256": "21f5c1557f8ae216c2e576926f6b305021361890d7db95ffbf5ea217f647890d"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-acp_settlement.txt",
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "906fe035e13637e0c10ee3dc41ea0916d2f6eb9b08a5a5a8881f4f394893dcc7",
+        "xml": "private/acp-original-image-stage/final-acp_settlement.xml",
+        "xmlSha256": "1262bdefdfe1799a76fee5d09f31abd980f9db079c9f37813e78972818fa3a48"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-rpc_deadline.txt",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "c93af256841dfec53d398fdcac2e5a053db2a6cd75c96203065bec9d16e255f2",
+        "xml": "private/acp-original-image-stage/final-rpc_deadline.xml",
+        "xmlSha256": "89076b370c4e2bc01aaea69d1b83dd4cdad5ac0d7c2b7740b0264f21eb623a27"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-historical_attachments.txt",
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "25b15c863a1ba6d62de8c809190869e975a23cf0ccede283e96848111a12ebd3",
+        "xml": "private/acp-original-image-stage/final-historical_attachments.xml",
+        "xmlSha256": "877c3b0899a3a830e94c22fbba38e88edae7268e432e14effdd956f23b08d4ab"
+      },
+      {
+        "path": "private/acp-original-image-stage/final-harness_attachment_mime.txt",
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0,
+        "sha256": "d1e1ec0967b26abecb7a1b179fc2c842024ca4313846c455b9e55d1f9196a376",
+        "xml": "private/acp-original-image-stage/final-harness_attachment_mime.xml",
+        "xmlSha256": "aaeb97f868f9470536c389d117f4037cbd4aa6c114e9b28be5106bb3bdb3fc9c"
+      }
+    ],
+    "actualHost": "original valid PNG with text metadata arrives byte-for-byte as image/png",
+    "memoryFixture": {
+      "peakProcessWorkingSetBytes": 102830080,
+      "serializedPayloadBytes": 55924547,
+      "limitAssertionBytes": 536870912,
+      "scope": "one native fixture process; not a universal application memory ceiling"
+    }
+  },
+  "before": [
+    {
+      "path": "private/acp-original-image-stage/original-before.txt",
+      "sha256": "3d39e27c5d56ec0db8b8a18c1745dd7680538d8ee770db24343a05994afd8f16",
+      "result": "2pass1fail; old actual Host delivered PNG as image/webp"
+    },
+    {
+      "path": "private/acp-original-image-stage/timeout-before.txt",
+      "sha256": "6916f87a0c8929758d4d491a433d07af6fc15c5f27da7ad0b876cd73a3287dec",
+      "result": "2pass1fail in new private writer before timeout fix; partial frame remained running after timeout"
+    },
+    {
+      "path": "private/acp-original-image-stage/final-buffer-before.txt",
+      "sha256": "6b658c567ed4e48ef2850f48915e9c1337381e9617ec9d6cf9d2f671adb66a42",
+      "result": "2pass1fail: typed payload dropped its sole lease before the final QProcess queue drained, so owned cleanup succeeded too early."
+    },
+    {
+      "path": "private/acp-original-image-stage/small-buffer-diagnostic.txt",
+      "sha256": "07c85dfda795920e7fec27587cff5af086a63b1314a62435f6700c741b5b7ed0",
+      "result": "2pass1fail:699273 bytes remained queued at revoke, but sent-frame bookkeeping dropped the invalid grant before the periodic check."
+    }
+  ],
+  "buildCaveat": {
+    "path": "private/acp-original-image-stage/staging-build-note.json",
+    "scope": "First after Host binary had stale private objects because preserved source timestamps were older than baseline objects. That crash is excluded from implementation evidence. Full coherent rebuilt cohort and final suites pass."
+  },
+  "peerReview": {
+    "reviewer": "qt_port_review",
+    "scope": "source-only next/ typed payload, queue segment ordering, cancellation/preparation epochs; no additional concrete blocker found; root independently found the final QProcess-buffer lifetime seam, reproduced and fixed with two focused before/after cases",
+    "limits": "Not independent runtime verification or universal lifecycle certification."
+  },
+  "limits": [
+    "No live model, external API or GUI invocation; isolated native process and temporary-file fixtures only",
+    "No change to durable store schema/bytes, filesystem permissions or external CLI read-root grants",
+    "Images above20MiB, unsupported runtime image capability, unsupported extensions, or aggregate budget overflow remain captured resource links",
+    "No original-image policy expansion to HTTP, Codex or Claude; no generic larger trusted protocol channel",
+    "Private compatibility gate only; root shared integration/full gate remains required",
+    "Revocation/cancellation cannot retract bytes already submitted to the process pipe or undo external work; tests use synthetic owned child processes only."
+  ],
+  "sourceManifest": {
+    "path": "private/acp-original-image-stage/source-manifest.json",
+    "sha256": "54f08fb276ee8af1df8fe75bd12e55499721d42626677bf65cd19a9501c3282d",
+    "hashBasis": "canonical text LF"
+  },
+  "productionEdits": false,
+  "finalBufferGuarantee": "OutboundFrame and SentFrame both retain the typed payload/lease. Sent frames retire only after QProcess reports their bytes drained. Revoked sent grants remain recorded until a terminal failure and prevent new enqueue. Checks cannot retract bytes already delivered to the pipe/child. The actual host also cancels its active session on owner removal."
+}

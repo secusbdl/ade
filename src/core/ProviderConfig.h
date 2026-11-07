@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QJsonObject>
+#include "CustomModelConfig.h"
+#include <QList>
 #include <QString>
 #include <QStringList>
 #include <QJsonArray>
@@ -30,17 +32,27 @@ struct ProviderConfig {
     QStringList disabledModelIds{};
     // Versioned inventory and visibility defaults share the provider CAS revision.
     QJsonObject discoverySnapshot{};
+    QList<CustomModelConfig> customModels{};
+    // Removed definitions must not become legacy bare provider defaults.
+    QStringList retiredCustomModelIds{};
+    // Runtime-only exact custom binding. Keys: providerInstanceId,modelId,
+    // providerOptions,headers,capabilities. Never serialized by publicJson.
+    QJsonObject customRequest{};
+    // Runtime-only explicit selection/task thinking/output overrides. Applied
+    // after custom normalization; never merged into the durable definition.
+    QJsonObject requestOverrides{};
     bool isClaudeHarness() const { return kind == QStringLiteral("claude-code"); }
     bool isOpenCodeHarness() const { return kind == QStringLiteral("opencode"); }
     bool isExternalHarness() const { return isCodexHarness() || isOpenCodeHarness() || isClaudeHarness(); }
     bool isCodexHarness() const { return kind == QStringLiteral("codex"); }
 
     QJsonObject publicJson() const {
+        QJsonArray models;for(const auto& model:customModels)models.append(model.publicJson());
         return {{"id", id}, {"name", name}, {"baseUrl", baseUrl},
                 {"model", model}, {"protocol", protocol}, {"reasoningEffort", reasoningEffort},
                 {"thinkingMode", thinkingMode}, {"thinkingBudget", thinkingBudget},
                 {"maxOutputTokens", maxOutputTokens}, {"contextWindowTokens", contextWindowTokens},
-                {"kind", kind}, {"harnessExecutable", harnessExecutable}, {"templateId", templateId}, {"disabledModelIds", QJsonArray::fromStringList(disabledModelIds)}, {"discoverySnapshot", discoverySnapshot}};
+                {"kind", kind}, {"harnessExecutable", harnessExecutable}, {"templateId", templateId}, {"disabledModelIds", QJsonArray::fromStringList(disabledModelIds)}, {"discoverySnapshot", discoverySnapshot}, {"customModels", models}, {"retiredCustomModelIds", QJsonArray::fromStringList(retiredCustomModelIds)}};
     }
     static ProviderConfig fromPublicJson(const QJsonObject &object) {
         ProviderConfig provider{object["id"].toString(), object["name"].toString(),
@@ -52,6 +64,8 @@ struct ProviderConfig {
                 object["harnessExecutable"].toString(), object["templateId"].toString()};
         for(const auto& value:object.value("disabledModelIds").toArray())provider.disabledModelIds.append(value.toString());
         provider.discoverySnapshot=object.value("discoverySnapshot").toObject();
+        for(const auto& value:object.value("customModels").toArray())provider.customModels.append(CustomModelConfig::fromPublicJson(value.toObject()));
+        for(const auto& value:object.value("retiredCustomModelIds").toArray())provider.retiredCustomModelIds.append(value.toString());
         return provider;
     }
 };

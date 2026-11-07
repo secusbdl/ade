@@ -1,5 +1,6 @@
 #include "ProviderStore.h"
 #include "ModelDiscoveryPolicy.h"
+#include "CustomModelOptions.h"
 
 #include <QDir>
 #include <QFile>
@@ -25,7 +26,7 @@ QList<ProviderConfig> ProviderStore::mergeImported(const QList<ProviderConfig>& 
     for(auto provider:imported){
         auto found=std::find_if(result.begin(),result.end(),[&](const ProviderConfig& value){return value.id==provider.id;});
         if(found==result.end())result.append(std::move(provider));
-        else {provider.disabledModelIds=found->disabledModelIds;provider.discoverySnapshot=found->discoverySnapshot;
+        else {provider.disabledModelIds=found->disabledModelIds;provider.discoverySnapshot=found->discoverySnapshot;provider.customModels=found->customModels;provider.retiredCustomModelIds=found->retiredCustomModelIds;
             // Imported keys retain discovery only when they still describe that instance.
             if(provider.templateId.isEmpty()&&provider.baseUrl==found->baseUrl&&provider.protocol==found->protocol&&provider.kind==found->kind)provider.templateId=found->templateId;
             invalidateModelDiscovery(provider);*found=std::move(provider);}
@@ -88,12 +89,12 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
     QJsonParseError parse;
     const auto document = QJsonDocument::fromJson(file.readAll(), &parse);
     if (parse.error != QJsonParseError::NoError || !document.isObject()
-        || document.object()["version"].toInt() != 1
+        || (document.object().value("version").toInt() != 1 && document.object().value("version").toInt() != 2)
         || !document.object()["providers"].isArray()) {
         if (error) *error = QStringLiteral("Invalid provider configuration format.");
         return {};
     }
-    QList<ProviderConfig> result;
+    QList<ProviderConfig> result;QSet<QString> customIds;
     for (const auto value : document.object()["providers"].toArray()) {
         if (!value.isObject()) {
             if (error) *error = QStringLiteral("Invalid provider record: expected an object.");
@@ -125,7 +126,29 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
             for(const auto& value:disabled.toArray())if(!value.isString()){if(error)*error=QStringLiteral("Invalid disabled model identifier.");return {};}
         }
         if(object.contains("discoverySnapshot")&&!object.value("discoverySnapshot").isObject()){if(error)*error="Invalid provider discovery snapshot.";return {};}
+        if(object.contains("customModels")&&(!object.value("customModels").isArray()||object.value("customModels").toArray().size()>256)){if(error)*error="Invalid custom model inventory.";return {};}
+        if(object.contains("retiredCustomModelIds")){
+            const auto retired=object.value("retiredCustomModelIds");
+            if(!retired.isArray()||retired.toArray().size()>256){if(error)*error="Invalid removed custom model inventory.";return {};}
+            for(const auto& value:retired.toArray())if(!value.isString()){if(error)*error="Invalid removed custom model identity.";return {};}
+        }
         ProviderConfig provider = ProviderConfig::fromPublicJson(object);
+        if(!validDisabledModelIds(provider.retiredCustomModelIds)){if(error)*error="Invalid removed custom model inventory.";return {};}
+        provider.customModels.clear();
+        for(const auto& value:object.value("customModels").toArray()){
+            if(!value.isObject()){if(error)*error="Invalid custom model record.";return {};}
+            const auto record=value.toObject();QString failure;
+            auto model=CustomModelConfig::fromPublicJson(record,&failure);
+            if(!failure.isEmpty()||!model.validate(provider.id,&failure)){if(error)*error=failure;return {};}
+            if(customIds.contains(model.modelId)||customIds.size()>=256){if(error)*error="Custom model IDs must be globally unique within the supported inventory bound.";return {};}
+            if(record.contains("providerOptions")||record.contains("headers")||!record.value("encryptedConfiguration").isString()){if(error)*error="Custom model private configuration must be encrypted.";return {};}
+            const auto ciphertext=QByteArray::fromBase64Encoding(record.value("encryptedConfiguration").toString().toLatin1(),QByteArray::AbortOnBase64DecodingErrors);
+            if(!ciphertext){if(error)*error="Invalid custom model private configuration encoding.";return {};}
+            bool decrypted=false;const auto plaintext=protect(ciphertext.decoded,false,&decrypted);const auto privateDocument=QJsonDocument::fromJson(plaintext);
+            if(!decrypted||!privateDocument.isObject()||!model.setPrivateJson(privateDocument.object(),&failure)){if(error)*error="Cannot read custom model private configuration for this Windows user.";return {};}
+            if(provider.kind!="api"||!CustomModelOptions::validate(provider.protocol,model.providerOptions,model.headers,&failure)){if(error)*error=failure.isEmpty()?"Custom models require a supported HTTP provider.":failure;return {};}
+            customIds.insert(model.modelId);provider.customModels.append(std::move(model));
+        }
         if(!validModelDiscoverySnapshot(provider,provider.discoverySnapshot,error))return {};
         if(!validDisabledModelIds(provider.disabledModelIds)){if(error)*error=QStringLiteral("Invalid disabled model list.");return {};}
         if (!validTemplateId(provider.templateId)) {
@@ -168,9 +191,14 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
                          QString *error) {
     if (error) error->clear();
     QJsonArray array;
-    QSet<QString> ids;
+    int formatVersion=1;
+    QSet<QString> ids,customIds;
     qint64 approximateBytes = 0;
     for (const auto &provider : providers) {
+        // Older binaries must reject this file instead of silently discarding
+        // unknown encrypted definitions or removal identity during a later Save.
+        if(!provider.customModels.isEmpty()||!provider.retiredCustomModelIds.isEmpty())formatVersion=2;
+        if(provider.retiredCustomModelIds.size()>256||!validDisabledModelIds(provider.retiredCustomModelIds)){if(error)*error="Removed custom model history exceeds its supported bound or is invalid.";return false;}
         if(!validModelDiscoverySnapshot(provider,provider.discoverySnapshot,error))return false;
         if(!validDisabledModelIds(provider.disabledModelIds)){if(error)*error=QStringLiteral("Invalid disabled model list.");return false;}
         if (!validTemplateId(provider.templateId)) {
@@ -205,10 +233,24 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
             return false;
         }
         auto object = provider.publicJson();
+        QJsonArray models;
+        for(const auto& model:provider.customModels){
+            QString failure;
+            if(!model.validate(provider.id,&failure)){if(error)*error=failure;return false;}
+            if(provider.kind!="api"||!CustomModelOptions::validate(provider.protocol,model.providerOptions,model.headers,&failure)){if(error)*error=failure.isEmpty()?"Custom models require a supported HTTP provider.":failure;return false;}
+            if(customIds.contains(model.modelId)||customIds.size()>=256){if(error)*error="Custom model IDs must be globally unique within the supported inventory bound.";return false;}
+            customIds.insert(model.modelId);
+            const auto privateBytes=QJsonDocument(model.privateJson()).toJson(QJsonDocument::Compact);approximateBytes+=privateBytes.size();
+            if(approximateBytes>MaxConfigBytes){if(error)*error="Provider configuration exceeds size limit.";return false;}
+            bool protectedModel=false;const auto secret=protect(privateBytes,true,&protectedModel);
+            if(!protectedModel){if(error)*error="OS encryption is unavailable for custom model configuration.";return false;}
+            auto record=model.publicJson();record["encryptedConfiguration"]=QString::fromLatin1(secret.toBase64());models.append(record);
+        }
+        object["customModels"]=models;
         object["encryptedApiKey"] = QString::fromLatin1(encrypted.toBase64());
         array.append(object);
     }
-    const QByteArray bytes = QJsonDocument(QJsonObject{{"version", 1}, {"providers", array}})
+    const QByteArray bytes = QJsonDocument(QJsonObject{{"version", formatVersion}, {"providers", array}})
                                  .toJson(QJsonDocument::Indented);
     if (bytes.size() > MaxConfigBytes) {
         if (error) *error = QStringLiteral("Provider configuration exceeds size limit.");

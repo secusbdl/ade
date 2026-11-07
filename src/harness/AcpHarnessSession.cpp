@@ -6,6 +6,7 @@
 #include <QStandardPaths>
 #include <QUuid>
 #include <cmath>
+#include <QtConcurrentRun>
 namespace ade {
 namespace {
 constexpr qsizetype Bound = 4 * 1024 * 1024;
@@ -349,13 +350,32 @@ void AcpHarnessSession::configure() {
   }
   prompt();
 }
+void AcpHarnessSession::cancelPromptPreparation() {
+  if (m_promptCancellation) m_promptCancellation->store(true);
+  m_promptCancellation.reset();
+  if (m_promptWatcher) { m_promptWatcher->disconnect(this); m_promptWatcher->deleteLater(); }
+  m_promptWatcher = nullptr;
+}
+void AcpHarnessSession::sendPreparedPrompt(const AcpPromptPayload &payload) {
+  if (!m_busy || m_interrupted || m_promptSent) return;
+  for (const auto &lease : {m_options.attachments.current,m_options.attachments.history})
+    if (!lease.empty() && !lease.valid()) { finish("failed","Captured attachment lease was revoked."); return; }
+  m_promptSent = true;
+  const QPointer<AcpHarnessSession> self(this);
+  const auto generation = m_generation;
+  m_questionMcp.beginTurn(m_turnId);
+  if (!self || !active(generation) || m_interrupted) return;
+  for (const auto &lease : {m_options.attachments.current,m_options.attachments.history})
+    if (!lease.empty() && !lease.valid()) { finish("failed","Captured attachment lease was revoked."); return; }
+  const auto requestId = m_process.requestAcpPrompt(payload,m_options.promptTimeoutMs);
+  if (requestId.isEmpty()) { finish("failed", "Cannot send the bounded ACP prompt."); return; }
+  m_calls.insert(requestId,"session/prompt");
+  m_promptRequestId = requestId;
+  refreshPromptDeadline();
+}
 void AcpHarnessSession::prompt() {
-  if (!m_busy || m_interrupted || m_promptSent)
-    return;
-  QString attachmentError;
-  auto content=mapHarnessAttachments(m_input,m_options.attachments,true,
-      m_capabilities["promptCapabilities"].toObject()["image"].toBool(),m_created,&attachmentError);
-  if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
+  if (!m_busy || m_interrupted || m_promptSent || m_promptWatcher) return;
+  QJsonArray content;
   if (m_created && !m_options.historyContext.isEmpty())
     content.prepend(
         QJsonObject{{"type", "text"}, {"text", m_options.historyContext}});
@@ -371,18 +391,52 @@ void AcpHarnessSession::prompt() {
       "Do not use a provider-native question tool or ask the structured question in plain text. "
       "This tool is never used for command or tool approval: invoke the command or tool directly "
       "and let the host show its approval UI.\n</stagewise-agent-instructions>"}});
-  if (QJsonDocument(content).toJson(QJsonDocument::Compact).size() > Bound) {
-    finish("failed", "ACP prompt exceeded its limit.");
+  const bool images = m_capabilities["promptCapabilities"].toObject()["image"].toBool();
+  if (m_options.attachments.acpOriginalImages) {
+    auto cancelled = std::make_shared<std::atomic_bool>(false);
+    m_promptCancellation = cancelled;
+    if (!m_turnTimer.isActive() && m_turnRemaining >= 0)
+      m_turnTimer.start(m_turnRemaining);
+    auto *watcher = new QFutureWatcher<PromptPreparation>(this);
+    m_promptWatcher = watcher;
+    const auto generation = m_generation;
+    connect(watcher,&QFutureWatcher<PromptPreparation>::finished,this,
+        [this,watcher,cancelled,generation] {
+          if (m_promptWatcher != watcher) { watcher->deleteLater(); return; }
+          m_promptWatcher = nullptr; m_promptCancellation.reset();
+          const auto result = watcher->result(); watcher->deleteLater();
+          if (cancelled->load() || !active(generation) || m_interrupted) return;
+          if (!result.error.isEmpty()) { finish("failed",result.error); return; }
+          sendPreparedPrompt(result.payload);
+        });
+    const auto attachments = m_options.attachments;
+    const auto input = m_input;
+    const auto sessionId = m_sessionId;
+    const auto created = m_created;
+    watcher->setFuture(QtConcurrent::run([sessionId,content,input,attachments,images,created,cancelled] {
+      PromptPreparation result;
+      try {
+        result.payload=prepareAcpPrompt(sessionId,content,input,attachments,images,created,cancelled.get(),&result.error);
+      } catch (...) {
+        result.error="ACP original-image preparation failed.";
+      }
+      return result;
+    }));
     return;
+  }
+  QString attachmentError;
+  const auto mapped=mapHarnessAttachments(m_input,m_options.attachments,true,images,m_created,&attachmentError);
+  if (!attachmentError.isEmpty()) { finish("failed",attachmentError); return; }
+  for (const auto &part : mapped) content.append(part);
+  if (QJsonDocument(content).toJson(QJsonDocument::Compact).size() > Bound) {
+    finish("failed", "ACP prompt exceeded its limit."); return;
   }
   m_promptSent = true;
   const QPointer<AcpHarnessSession> self(this);
   const auto generation = m_generation;
   m_questionMcp.beginTurn(m_turnId);
-  if (!self || !active(generation))
-    return;
-  call("session/prompt", {{"sessionId", m_sessionId}, {"prompt", content}},
-       m_options.promptTimeoutMs);
+  if (!self || !active(generation) || m_interrupted) return;
+  call("session/prompt", {{"sessionId", m_sessionId}, {"prompt", content}}, m_options.promptTimeoutMs);
 }
 void AcpHarnessSession::response(const QString &requestId,
                                  const QJsonValue &value,
@@ -848,6 +902,7 @@ void AcpHarnessSession::interrupt() {
   if (!m_busy)
     return;
   m_interrupted = true;
+  cancelPromptPreparation();
   m_settleTimer.stop();
   m_turnTimer.stop();
   m_turnRemaining = -1;
@@ -870,12 +925,17 @@ void AcpHarnessSession::interrupt() {
     finish("interrupted");
     return;
   }
+  if (m_process.cancelAcpPromptWrite(m_promptRequestId) !=
+      JsonRpcProcess::PromptWriteCancel::NotPending) {
+    finish("interrupted"); return;
+  }
   m_process.notify("session/cancel", {{"sessionId", m_sessionId}});
   m_cancelTimer.start(2000);
 }
 void AcpHarnessSession::finish(const QString &status, const QString &error) {
   if (!m_busy)
     return;
+  cancelPromptPreparation();
   m_settleTimer.stop();
   m_turnTimer.stop();
   m_turnRemaining = -1;
@@ -915,6 +975,7 @@ void AcpHarnessSession::finish(const QString &status, const QString &error) {
 }
 void AcpHarnessSession::shutdown() {
   ++m_generation;
+  cancelPromptPreparation();
   m_settleTimer.stop();
   m_turnTimer.stop();
   m_turnRemaining = -1;

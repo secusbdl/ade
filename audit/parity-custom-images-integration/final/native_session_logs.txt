@@ -1,0 +1,20 @@
+********* Start testing of SessionLogTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SessionLogTests::initTestCase()
+PASS   : SessionLogTests::appendReadAndRestart()
+PASS   : SessionLogTests::formattedLeaseIsRevoked()
+PASS   : SessionLogTests::ownerLockAndPin()
+PASS   : SessionLogTests::invalidPaths(shells/../other)
+PASS   : SessionLogTests::invalidPaths(shells/x.shell.log)
+PASS   : SessionLogTests::invalidPaths(shells/11111111-1111-1111-1111-111111111111.shell.log:stream)
+PASS   : SessionLogTests::invalidPaths(shells\11111111-1111-1111-1111-111111111111.shell.log)
+PASS   : SessionLogTests::invalidPaths(other/11111111-1111-1111-1111-111111111111.shell.log)
+PASS   : SessionLogTests::noPartialReadAndCancellation()
+PASS   : SessionLogTests::truncationHasOneVisibleMarker()
+PASS   : SessionLogTests::invalidUtf8StopsWriter()
+PASS   : SessionLogTests::cloneAndDeleteAreOwnerScoped()
+PASS   : SessionLogTests::unexpectedEntriesAndHardlinksFailClosed()
+PASS   : SessionLogTests::aliasProfileRejected()
+PASS   : SessionLogTests::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 341ms
+********* Finished testing of SessionLogTests *********

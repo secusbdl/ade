@@ -1,0 +1,24 @@
+{
+  "verifiedUtc": "2026-11-07T01:32:09.267072+00:00",
+  "executable": "out/custom-images-candidate-1/ADE.exe",
+  "sha256": "44c38e1e141d18e849f0b66c02e85cd5763c1398c0c37d097e3e5d5061c97729",
+  "milliseconds": 235,
+  "exitCode": 0,
+  "invalidEnvironmentExitCode": 3,
+  "steps": [
+    "actual ADE early stdio initialization",
+    "exact single-tool catalog/schema",
+    "unknown tool rejected",
+    "Unicode form reaches authenticated loopback callback",
+    "structuredContent and text JSON match full callback result",
+    "invalid UTF-8 rejected; next ping succeeds",
+    "stdin EOF exits cleanly",
+    "invalid capability rejected before GUI/profile creation"
+  ],
+  "callbackRequests": 1,
+  "isolatedProfileFiles": 0,
+  "externalNetworkRequests": 0,
+  "modelCalls": 0,
+  "limits": "Actual executable stdio transport only; loopback callback is synthetic, not the full ACP question panel or a live model invocation.",
+  "finalPackageBytesIdentical": true
+}

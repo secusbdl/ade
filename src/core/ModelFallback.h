@@ -1,6 +1,7 @@
 #pragma once
 #include "ModelConfig.h"
 #include <QDateTime>
+#include <QCryptographicHash>
 #include <QJsonDocument>
 #include <QJsonArray>
 
@@ -14,6 +15,12 @@ public:
         for (const auto &entry : models) {
             auto value = entry.provider.publicJson();
             value["hasThinkingOverride"] = entry.hasThinkingOverride;
+            // Private custom values participate only through an in-memory
+            // digest. publicJson deliberately contains no headers/options.
+            value["customRuntimeDigest"] = QString::fromLatin1(QCryptographicHash::hash(
+                QJsonDocument(QJsonObject{{"request",entry.provider.customRequest},
+                    {"overrides",entry.provider.requestOverrides}}).toJson(QJsonDocument::Compact),
+                QCryptographicHash::Sha256).toHex());
             entries.append(value);
         }
         const auto signature = QJsonDocument(entries).toJson(QJsonDocument::Compact);

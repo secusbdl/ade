@@ -1,0 +1,14 @@
+********* Start testing of CustomOptionsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomOptionsTest::initTestCase()
+FAIL!  : CustomOptionsTest::appliesCustomFields(openai) 'r.body.contains(field)' returned FALSE. (openai custom option missing)
+D:/age/ADE/private/custom-model-core-stage/tests/test_custom_model_options.cpp(15) : failure location
+FAIL!  : CustomOptionsTest::appliesCustomFields(responses) 'r.body.contains(field)' returned FALSE. (responses custom option missing)
+D:/age/ADE/private/custom-model-core-stage/tests/test_custom_model_options.cpp(15) : failure location
+FAIL!  : CustomOptionsTest::appliesCustomFields(anthropic) 'r.body.contains(field)' returned FALSE. (anthropic custom option missing)
+D:/age/ADE/private/custom-model-core-stage/tests/test_custom_model_options.cpp(15) : failure location
+FAIL!  : CustomOptionsTest::appliesCustomFields(google) 'r.body.contains(field)' returned FALSE. (google custom option missing)
+D:/age/ADE/private/custom-model-core-stage/tests/test_custom_model_options.cpp(15) : failure location
+PASS   : CustomOptionsTest::cleanupTestCase()
+Totals: 2 passed, 4 failed, 0 skipped, 0 blacklisted, 3ms
+********* Finished testing of CustomOptionsTest *********

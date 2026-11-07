@@ -85,6 +85,14 @@ identical model reasoning or output.
   ACP MIME hints, selected-model label display and deferred Codex tool discovery.
   Exact candidate bytes passed native Windows shutdown and a real Codex form flow.
 
+- [`audit/parity-custom-images-integration.json`](audit/parity-custom-images-integration.json)
+  records the **173-suite checkpoint**: custom HTTP model definitions and typed
+  options, encrypted private settings, stale queued-selection recovery, and
+  original ACP images with bounded process writes. Exact candidate bytes passed
+  three real API/CLI smokes and stdio MCP. Direct Windows UI inspection remains
+  pending after the user stopped Computer Use; earlier control evidence is
+  identified as a different binary.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
@@ -237,8 +245,25 @@ provider identity are retained.
 When a retained historical attachment is provably absent from both its cache and
 original location, replay omits it with a bounded logical-label notice. Invalid
 captured bytes and missing current attachments remain errors. ACP captured-file
-links carry optional extension-derived image MIME hints; original large-image
-inline transport remains a separate gap at this checkpoint.
+links carry optional extension-derived image MIME hints. ACP now sends exact
+captured originals for supported images up to20MiB when the actual coding agent
+advertises image input. Oversized/unsupported images and images that exceed the
+64MiB aggregate frame limit remain captured resource links. Preparation is
+asynchronous; process writes retain attachment grants until Qt drains the frame.
+This policy is specific to ACP, and cannot retract bytes already sent.
+
+Custom HTTP model definitions now support exact-provider add/edit/move/rename/
+delete, context metadata, supported text/image and tool capabilities, and
+advanced JSON options/headers. Private configuration uses Windows encryption;
+custom-containing files use format2 so known old readers refuse them instead of
+silently erasing definitions. Ordinary format1 configurations remain supported.
+
+The four HTTP adapters translate a documented subset of provider options while
+protecting native history/tool/system/stream construction. Unsupported fields
+fail explicitly. Active replies keep their original configuration; stale queued
+custom selections pause until explicitly resumed with current settings. The
+smoke command uses the same selection resolver. Full SDK-option coverage and
+context-derived read budgets remain separate gaps in this checkpoint.
 
 Discovered models and visibility choices now save atomically with their provider.
 Eligible pinned provider templates apply source-derived defaults on first discovery;

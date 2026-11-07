@@ -34,6 +34,17 @@ ModelMediaCapabilities ModelMediaCatalog::resolve(const ProviderConfig& provider
     // independent of the HTTP alias table. This is transport capability, not a
     // claim about account entitlement. Existing native byte/pixel bounds apply.
     if(provider.isExternalHarness()) {ModelMediaCapabilities result;result.image=true;return result;}
+    if(!provider.customRequest.isEmpty()) {
+        ModelMediaCapabilities result;
+        const auto& request=provider.customRequest;
+        if(provider.kind!="api"||request.value("providerInstanceId").toString()!=provider.id
+           ||request.value("modelId").toString()!=provider.model||provider.id.isEmpty()||provider.model.isEmpty()
+           ||!request.value("capabilities").isObject())return result;
+        const auto capabilities=request.value("capabilities").toObject();
+        if(!validCustomModelCapabilities(capabilities))return result;
+        result.image=capabilities.value("inputModalities").toObject().value("image").toBool();
+        return result;
+    }
     return resolve(provider.model);
 }
 QStringList ModelMediaCatalog::modelIds() { QStringList ids; for (const auto &entry : Entries) ids.append(QLatin1String(entry.id)); return ids; }

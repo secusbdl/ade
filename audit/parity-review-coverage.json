@@ -216,6 +216,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.queue",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "stale_custom_binding_pause_and_explicit_resume",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -403,6 +408,11 @@
         {
           "report": "audit/parity-native-questions-integration.json",
           "capability": "typed_historical_absence_and_acp_mime_hints",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "exact_acp_original_images_and_bounded_write_lease",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -1746,6 +1756,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.protocols",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "bounded_typed_custom_anthropic_options",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1760,6 +1775,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.protocols",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "bounded_typed_custom_chat_options",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1774,6 +1794,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.protocols",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "bounded_typed_custom_responses_options",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1788,6 +1813,11 @@
           "report": "audit/parity-review-core.json",
           "capability": "engine.protocols",
           "assessment": "implemented_with_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "bounded_typed_custom_google_options",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1925,6 +1955,11 @@
           "report": "audit/parity-native-questions-integration.json",
           "capability": "direct_shared_question_mcp_owner_lifecycle",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "real_managed_claude_read_smoke",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1954,6 +1989,11 @@
           "report": "audit/parity-native-questions-integration.json",
           "capability": "typed_historical_attachment_replay",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "real_acp_small_image_vision_smoke",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1972,6 +2012,11 @@
         {
           "report": "audit/parity-native-questions-integration.json",
           "capability": "left_anchored_idle_model_label",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-custom-images-integration.json",
+          "capability": "custom_model_crud_private_storage_and_exact_selection",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -7886,6 +7931,12 @@
       "sha256CanonicalLf": "c8f658569e0007a3a09ec26017bca2ef3841dc27dfa5132f2f2c23ce2e4105ed",
       "linkedFeatureRows": 7,
       "scope": "Incremental tested behaviors; whole feature rows and indexed source functions are not declared complete."
+    },
+    {
+      "path": "audit/parity-custom-images-integration.json",
+      "sha256CanonicalLf": "3b24b532ebd068dd80500167178d1361c847221496bd6d54455c54a774ae0c81",
+      "linkedFeatureRows": 9,
+      "scope": "Incremental verified behavior, explicit option/media limits and deferred direct Windows QA; whole features and indexed functions are not declared complete."
     }
   ]
 }
