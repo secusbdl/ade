@@ -1,0 +1,14 @@
+********* Start testing of CustomModelInventoryTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelInventoryTest::initTestCase()
+PASS   : CustomModelInventoryTest::exactInstanceAndOverrides()
+PASS   : CustomModelInventoryTest::customOverridesDiscoveryAndVisibility()
+PASS   : CustomModelInventoryTest::removeAndRecreateNeverInheritDefault()
+PASS   : CustomModelInventoryTest::knownDiscoveryReplacementRequiresMatchingIdentity()
+PASS   : CustomModelInventoryTest::renameAndMoveAreAtomic()
+PASS   : CustomModelInventoryTest::retiredCapacityNeverEvictsOrRemoves()
+PASS   : CustomModelInventoryTest::editingPreservesOrderAndExplicitReplacementCanReuseCapacity()
+PASS   : CustomModelInventoryTest::utilitiesUseExactCustomDefinition()
+PASS   : CustomModelInventoryTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 3ms
+********* Finished testing of CustomModelInventoryTest *********

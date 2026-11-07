@@ -1,0 +1,23 @@
+********* Start testing of AgentPromptTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AgentPromptTest::initTestCase()
+PASS   : AgentPromptTest::unavailableToolsAreNotDescribedAsAvailable(openai)
+PASS   : AgentPromptTest::unavailableToolsAreNotDescribedAsAvailable(responses)
+PASS   : AgentPromptTest::unavailableToolsAreNotDescribedAsAvailable(anthropic)
+PASS   : AgentPromptTest::unavailableToolsAreNotDescribedAsAvailable(google)
+PASS   : AgentPromptTest::nativeFilesystemWorkflowReachesEveryProvider(openai)
+PASS   : AgentPromptTest::nativeFilesystemWorkflowReachesEveryProvider(responses)
+PASS   : AgentPromptTest::nativeFilesystemWorkflowReachesEveryProvider(anthropic)
+PASS   : AgentPromptTest::nativeFilesystemWorkflowReachesEveryProvider(google)
+PASS   : AgentPromptTest::authoringMountDoesNotInventSandboxCapability(openai)
+PASS   : AgentPromptTest::authoringMountDoesNotInventSandboxCapability(responses)
+PASS   : AgentPromptTest::authoringMountDoesNotInventSandboxCapability(anthropic)
+PASS   : AgentPromptTest::authoringMountDoesNotInventSandboxCapability(google)
+PASS   : AgentPromptTest::suppliedContextAndToolsRemainExplicit(openai)
+PASS   : AgentPromptTest::suppliedContextAndToolsRemainExplicit(responses)
+PASS   : AgentPromptTest::suppliedContextAndToolsRemainExplicit(anthropic)
+PASS   : AgentPromptTest::suppliedContextAndToolsRemainExplicit(google)
+PASS   : AgentPromptTest::dynamicContextCancellationStillPreventsWireRequest()
+PASS   : AgentPromptTest::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 1092ms
+********* Finished testing of AgentPromptTest *********

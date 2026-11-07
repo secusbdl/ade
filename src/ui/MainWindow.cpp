@@ -13,11 +13,16 @@
 #include "Icons.h"
 #include "ProviderDialog.h"
 #include "ModelSelection.h"
+#include "ModelThinking.h"
 #include "UtilityModelSelection.h"
 #include "ContextPreferences.h"
 #include "SettingsPage.h"
 #include "DownloadsPage.h"
 #include "BrowserSessionStore.h"
+#include "AgentActivityMonitor.h"
+#include "NotificationSounds.h"
+#include "PowerRequest.h"
+#include "SoundOutput.h"
 #include "browser/browserwidget.h"
 #include "browser/BrowserToolBridge.h"
 #include "core/AgentEngine.h"
@@ -83,6 +88,7 @@ MainWindow::MainWindow(QString dataDirectory,QWidget* parent):QMainWindow(parent
     setWindowTitle("ADE");setObjectName("adeMainWindow");resize(1540,940);setMinimumSize(350,250);
     setWindowIcon(icon("agent",QColor("#4169ff")));
     QString error,providerError;m_sessions=m_store.load(&error);m_providers=m_providerRepository.load(&providerError);const QString sessionError=error;if(error.isEmpty())error=providerError;
+    initializeRuntimeEffects();
     buildUi();initializeSessionRecovery();applyPreferences();refreshModels();refreshAgents();
     QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);
     const auto lastId=settings.value("lastConversationId").toString();
@@ -125,7 +131,7 @@ void MainWindow::buildUi() {
     m_sidebarReopen=button("sidebar","Show sidebar");m_sidebarReopen->setObjectName("sidebarReopenButton");m_sidebarReopen->setVisible(m_sidebarSplitter->isCollapsed());m_chat->headerLayout()->addWidget(m_sidebarReopen);m_chat->headerLayout()->addStretch();
     connect(m_sidebarReopen,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
     connect(m_sidebarSplitter,&SidebarSplitter::collapsedChanged,m_sidebarReopen,&QWidget::setVisible);
-    m_transcript=new ConversationView;m_transcript->setObjectName("conversationView");m_chat->setHistoryWidget(m_transcript);connectTurnFileControls(m_transcript);
+    m_transcript=new ConversationView;m_transcript->setObjectName("conversationView");m_chat->setHistoryWidget(m_transcript);connectTurnFileControls(m_transcript);connectHistoryControls(m_transcript);
     connect(m_transcript,&ConversationView::imageRequested,this,[this](quint64 request,const QString& id,const QString& row,const QString& part,const QUrl& url){provideTranscriptImage(request,id,row,part,url);});
     m_transcriptRefresh=new QTimer(this);m_transcriptRefresh->setSingleShot(true);m_transcriptRefresh->setInterval(16);
     connect(m_transcriptRefresh,&QTimer::timeout,this,&MainWindow::renderConversation);
@@ -181,7 +187,7 @@ void MainWindow::buildUi() {
     m_downloads=new DownloadsPage(m_store.directory(),this);m_downloads->hide();
     connect(m_downloads,&DownloadsPage::storageErrorOccurred,this,[this](const QString& error){m_status->setText(error);});
     auto* downloads=button("download","Downloads (Ctrl+J)");tc->addWidget(downloads);connect(downloads,&QToolButton::clicked,this,&MainWindow::showDownloads);
-    initializeGit();auto* git=button("branch","Source control (Ctrl+Shift+G)");git->setObjectName("sourceControlButton");tc->addWidget(git);connect(git,&QToolButton::clicked,this,&MainWindow::showGit);
+    initializeGit();auto* git=button("branch","Source control");git->setObjectName("sourceControlButton");tc->addWidget(git);connect(git,&QToolButton::clicked,this,&MainWindow::showGit);
     initializeWorkbench();
     connect(newAgent,&QPushButton::clicked,this,&MainWindow::newConversation);
     connect(collapse,&QToolButton::clicked,m_sidebarSplitter,&SidebarSplitter::toggle);
@@ -192,6 +198,8 @@ void MainWindow::buildUi() {
     connect(m_send,&QToolButton::clicked,this,&MainWindow::send);connect(m_composer,&Composer::submitted,this,&MainWindow::send);
     connect(m_stop,&QToolButton::clicked,this,[this]{if(m_engines.contains(m_currentId))m_engines[m_currentId]->cancel();});
     connect(m_composer,&Composer::stopRequested,m_stop,&QToolButton::click);
+    // Composer::stopShortcutRequested resolves the active chat surface in
+    // initializeNavigationShortcuts (MainWindowShortcuts.cpp).
     connect(m_workspace,&QToolButton::clicked,this,&MainWindow::chooseWorkspace);
     connect(m_transcript,&ConversationView::scopedLinkActivated,this,[this](const QString& id,const QString& row,const QString& part,const QUrl& url){routeTranscriptLink(id,row,part,url);});
     connect(m_transcript,&ConversationView::approvalDecided,this,[this](const QString& conversationId,const QString& rowId,const QString& partId,const QString& toolCallId,bool allowed){
@@ -204,7 +212,7 @@ void MainWindow::buildUi() {
             for(const auto& entry:row["parts"].toArray()){
                 const auto part=entry.toObject();
                 if(part["id"]==partId&&part["type"]=="tool"&&part["toolCallId"]==toolCallId&&part["state"]=="approval-requested"){
-                    engine->approveTool(toolCallId,allowed);return;
+                    const QPointer<MainWindow> self(this);engine->approveTool(toolCallId,allowed);if(self&&m_activity)m_activity->refresh(conversationId);return;
                 }
             }
         }
@@ -251,9 +259,9 @@ void MainWindow::buildUi() {
     new QShortcut(QKeySequence("Ctrl+T"),central,[this]{addBrowserTab();});
     new QShortcut(QKeySequence("Ctrl+Alt+T"),central,[this]{showTerminal();});
     new QShortcut(QKeySequence("Ctrl+J"),central,[this]{showDownloads();});
-    new QShortcut(QKeySequence("Ctrl+Shift+G"),central,[this]{showGit();});
+    // Ctrl+Shift+G is upstream toggle_file_tree_diff (MainWindowWorkbench.cpp).
     m_fullscreenExit=new QShortcut(QKeySequence(Qt::Key_Escape),this,[this]{if(m_fullscreenBrowser)setBrowserFullscreen(m_fullscreenBrowser,false);});m_fullscreenExit->setEnabled(false);
-    m_settings=new SettingsPage(m_store.directory());m_pages->addWidget(m_settings);
+    m_settings=new SettingsPage(m_store.directory());m_pages->addWidget(m_settings);connectSoundSettings();
     m_sidebarNavigation=new SidebarNavigation(m_agents,grouping,agentsLabel,m_settings,this);m_sidebarNavigation->setGitService(m_git->service());
     connect(m_sidebarNavigation,&SidebarNavigation::errorOccurred,this,&MainWindow::conversationError);
     configureWorktreeSettingsPage();
@@ -290,9 +298,14 @@ void MainWindow::refreshAgents(){
 void MainWindow::refreshModels(){
     const QSignalBlocker blocker(m_models);const auto previous=ModelSelection::fromJson(m_models->currentData().toJsonObject()).key();
     m_models->clear();
-    const auto selections=availableModelSelections(m_providers,m_settings?m_settings->preference("modelCatalogs").toObject():QJsonObject{},m_settings?m_settings->preference("modelPresets").toArray():QJsonArray{});
+    const auto catalogs=m_settings?m_settings->preference("modelCatalogs").toObject():QJsonObject{};
+    const auto selections=availableModelSelections(m_providers,catalogs,m_settings?m_settings->preference("modelPresets").toArray():QJsonArray{});
+    const auto thinking=m_settings?validThinkingOverrides(m_settings->preference("agent.modelThinkingOverrides")):QJsonObject{};
     int restore=-1;
-    for(const auto& selection:selections){m_models->addItem(selection.label,selection.toJson());m_models->setItemData(m_models->count()-1,selection.modelId,Qt::ToolTipRole);if(selection.key()==previous)restore=m_models->count()-1;}
+    for(const auto& selection:selections){
+        // A cycled reasoning effort is shown on its model; presets keep their own.
+        const auto effort=thinkingOverrideValue(selection,m_providers,catalogs,thinking);
+        m_models->addItem(effort.isEmpty()?selection.label:selection.label+" · "+effort,selection.toJson());m_models->setItemData(m_models->count()-1,selection.modelId,Qt::ToolTipRole);if(selection.key()==previous)restore=m_models->count()-1;}
     if(restore>=0)m_models->setCurrentIndex(restore);
     if(m_models->count()==0)m_models->addItem("Configure a provider…",QJsonObject{});
     restoreModelSelection();
@@ -368,6 +381,7 @@ void MainWindow::renderConversation(){
     const auto rows=engine?engine->displayMessages():AgentEngine::displayHistory(session->messages);
     if(engine)updateTranscriptLinkRows(session->id,rows);
     const QPointer<MainWindow> self(this);m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());if(!self)return;
+    pushHistoryActions(session->id,m_transcript);if(!self)return;
     m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();refreshAgentControls();
 }
 bool MainWindow::saveSessions(){
@@ -380,7 +394,7 @@ AgentEngine* MainWindow::engineFor(const QString& id){
     if(m_sessionTransition)return nullptr;
     if(m_engines.contains(id))return m_engines[id];
     if(const auto* session=find(id);session&&!session->archived)m_liveConversationOwners.insert(id);
-    auto* engine=new AgentEngine(this);engine->setQuestionToolEnabled(true);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
+    auto* engine=new AgentEngine(this);engine->setQuestionToolEnabled(true);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->restoreTurnFailure(s->turnFailure);engine->setWorkspace(s->workspace);}
     auto* host=new AgentToolHost(engine,m_browserBridge,id,m_store.directory(),engine);m_toolHosts.insert(id,host);host->setWorkspace(engine->workspace());
     connectMutationControls(id,host);
     connect(engine,&AgentEngine::turnAboutToStart,this,[this,id,engine](const QJsonObject& message){
@@ -411,8 +425,9 @@ AgentEngine* MainWindow::engineFor(const QString& id){
     connect(engine,&AgentEngine::failed,this,[this,id](const QString& error){if(id==m_currentId)m_status->setText(error);});
     connect(engine,&AgentEngine::compressionStarted,this,[this,id]{if(id==m_currentId)m_status->setText("Compressing context…");});
     connect(engine,&AgentEngine::compressionFinished,this,[this,id](bool applied,const QString& error){if(id==m_currentId)m_status->setText(applied?"Working…":"Automatic compression could not finish; full history retained. "+error);});
-    connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->updated=QDateTime::currentMSecsSinceEpoch();if(!s->messages.isEmpty())s->lastMessageAt=s->updated;}if(engine->lastTurnSucceeded())generateTitle(id);saveSessions();refreshAgents();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
+    connect(engine,&AgentEngine::finished,this,[this,id,engine]{if(auto* s=find(id)){s->messages=engine->messages();s->turnFailure=engine->turnFailure();s->updated=QDateTime::currentMSecsSinceEpoch();if(!s->messages.isEmpty())s->lastMessageAt=s->updated;}if(engine->lastTurnSucceeded())generateTitle(id);saveSessions();refreshAgents();if(id==m_currentId){if(m_status->text()=="Working…"||m_status->text()=="Working...")m_status->clear();renderConversation();}});
     connectAgentControls(id,engine);
+    if(m_activity)m_activity->watch(id,engine);
     updateGitContext();
     return engine;
 }
@@ -430,7 +445,7 @@ void MainWindow::send(){
         selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());
         if(!selection.resolve(m_providers,&provider)){showProviders();return;}
         if(m_models->currentText()!=m_models->itemText(m_models->currentIndex())){m_status->setText("Select a model from the search results before sending.");return;}
-        engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject()),selection.presetId);
+        engine->setModelChain(selectedModelChain(selection,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject(),validThinkingOverrides(m_settings->preference("agent.modelThinkingOverrides"))),selection.presetId);
         engine->setWorkspace(session->workspace);engine->setAlwaysAllow(session->alwaysAllow);
         const QPointer<AgentToolHost> host=m_toolHosts.value(id);
         if(host){
@@ -519,7 +534,7 @@ void MainWindow::configureUtilities(UtilityService* service,const Conversation& 
     // still belongs to this conversation's current configured selection.
     if(const auto* engine=m_engines.value(session.id)){
         const auto active=engine->provider();
-        for(const auto& model:selectedModelChain(selection,m_providers,presets,catalogs))
+        for(const auto& model:selectedModelChain(selection,m_providers,presets,catalogs,validThinkingOverrides(m_settings->preference("agent.modelThinkingOverrides"))))
             if(model.provider.id==active.id&&model.provider.model==active.model){selection.providerId=active.id;selection.modelId=active.model;break;}
     }
     const auto plan=resolveUtilityModelPlan(selection,m_providers,presets,m_settings->preference("utilityModels").toObject(),catalogs);
@@ -600,6 +615,8 @@ void MainWindow::showProviders(bool add,const QString& providerId){
 void MainWindow::showSettings(){m_settings->setContextWorkspace(current()?current()->workspace:QString());m_settings->reload();m_pages->setCurrentWidget(m_settings);}
 void MainWindow::applyPreferences(){
     if(!m_settings)return;
+    if(m_sounds)m_sounds->configure(m_settings->preference("agent").toObject());
+    if(m_power&&m_activity)m_power->update(m_settings->preference("agent.keepAwake").toBool(true),m_activity->activeCount());
     refreshModels();
     if(!qApp->property("adeBaseStyleSheet").isValid())qApp->setProperty("adeBaseStyleSheet",qApp->styleSheet());
     QString style=qApp->property("adeBaseStyleSheet").toString();
@@ -791,9 +808,20 @@ void MainWindow::openFile(const QString& path){
     m_tabs->setCurrentIndex(m_tabs->addTab(editor,QFileInfo(path).fileName()));revealContent();
 }
 MainWindow::~MainWindow(){
+    // No attention or keep-awake effect may outlive the window: release the
+    // power request and stop audio before members and children are destroyed.
+    if(m_activity)m_activity->disconnect();
+    m_power.reset();
+    if(m_soundOutput)m_soundOutput->stop();
+    // The sound service is a child holding a raw ISoundOutput*; m_soundOutput
+    // is destroyed with the members, before QObject deletes children.
+    delete m_sounds.data();
     // This application-wide filter invokes guards that read our page widgets.
     // Retire it while those widgets are intact, before QObject deletes children.
     auto* agentCycle = m_agentCycle;m_agentCycle = nullptr;delete agentCycle;
+    // The stop shortcut's watcher and hooks read m_tabs, m_splitter and m_stop.
+    // Retire it with them before any teardown enable or focus change.
+    delete findChild<QShortcut*>("shortcut_stop_agent");
     m_browserSessionInitialized=false;if(m_browserSessionTimer)m_browserSessionTimer->stop();
     // Child destruction occurs after derived members are destroyed. Browser
     // teardown signals must not access those members during QObject cleanup.
@@ -950,6 +978,7 @@ void MainWindow::closeEvent(QCloseEvent* event){
     }
     if(!self)return;
     m_sessionTransition=true; // Accepted close: late callbacks cannot save or start new work.
+    m_closeAccepted=true;m_pendingInstanceUrls.clear(); // Terminal, unlike the transient transitions.
     saveBrowserSession();if(!self)return;
     if(discardSetupDrafts)m_worktreeSettings->discardDrafts();
     const auto utilities=m_utilities;for(const auto& utility:utilities){if(utility)utility->cancel();if(!self)return;}

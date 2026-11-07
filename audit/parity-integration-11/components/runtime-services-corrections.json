@@ -1,0 +1,135 @@
+{
+  "verdict": "sound_with_corrections",
+  "corrections": [
+    {
+      "claim": "Error is emitted on every AgentEngine::failed; a per-agent m_failedThisTurn flag suppresses the following Done.",
+      "problem": "AgentEngine::startUserMessage (src/core/AgentEngine.cpp:221) emits failed(\"This agent is already running.\") while m_busy is still true, and does not emit finished afterwards. With the design as written, a user sending while the agent is busy plays an Error sound and leaves m_failedThisTurn set, which then suppresses the next genuine Done. The flag is also redundant: fail() (1098-1121) sets m_lastTurnSucceeded=false, so Done cannot fire on that turn anyway.",
+      "evidence": "AgentEngine.cpp:221 `if (m_busy) { emit failed(...); return false; }`. fail() sets m_busy=false at 1104 before `emit failed` at 1118.",
+      "fix": "Emit Error only when `!engine->isBusy()` at the time failed is received, because a genuine fail() has already cleared m_busy. Drop m_failedThisTurn and rely on lastTurnSucceeded(). Add a test, `rejectedSendWhileBusyIsSilent`."
+    },
+    {
+      "claim": "Done requires that the last message has role assistant.",
+      "problem": "Upstream checks whether the history contains any assistant message (`history.some(m => m.role === 'assistant')`), not whether the last message is one. Harness turns can end with a tool or other non-assistant row, so the stricter native rule would drop legitimate Done events.",
+      "evidence": "base-agent.ts:2236-2245 (hasAssistantMessage computed with .some).",
+      "fix": "Done = lastTurnSucceeded && queuedMessages().isEmpty() && !isAwaitingUser() && any message has role==\"assistant\"."
+    },
+    {
+      "claim": "debounceDoneOnly: with an injected clock, Done at t=0 plays.",
+      "problem": "m_lastPlayedAt starts at 0, so `now(0) - 0 < 10000` debounces the very first Done. Upstream avoids this only because Date.now() is an epoch value. As specified, the test and the implementation contradict each other.",
+      "evidence": "notification-sounds.ts:164 (lastSoundPlayedAt = 0) and 666-671.",
+      "fix": "Use a 'never played' sentinel (std::optional<qint64>). Focus resets it to empty. Debounce applies only when the sentinel has a value and now - value < 10000."
+    },
+    {
+      "claim": "A Probe struct plus `watchProbe(id, QObject* emitter, Probe)` lets tests drive the monitor.",
+      "problem": "The design does not say how an arbitrary QObject's signals would be connected. Pointer-to-member connect needs AgentEngine's type, and string-based SIGNAL() connects are fragile.",
+      "fix": "Use `watch(id, AgentEngine* engine, std::function<AgentSnapshot()> snapshot = {})`. A default-constructed AgentEngine is cheap (main.cpp:129 does it), and Qt 6 signals are public, so tests can `emit engine.finished()` directly and supply a snapshot lambda. Production omits the lambda, and the snapshot is then read from the engine."
+    },
+    {
+      "claim": "realEngineAwaitingApprovalIsIdle is optional because a fixture may not exist.",
+      "problem": "A fixture does exist. tests/test_core.cpp:32 defines FixtureServer, a local OpenAI-compatible server already duplicated in test_engine_observers.cpp:32, and CoreTest::approvedToolLoop (test_core.cpp:359-380) drives a real built-in approval.",
+      "fix": "Make the test mandatory. Copy the FixtureServer pattern, assert isAwaitingUser()==true and activeCount()==0 between approvalRequired and approveTool, then 1 while the tool runs."
+    },
+    {
+      "claim": "Verify that harness ask-user flows set m_questionToken.",
+      "problem": "This is already answerable. Every harness sets it: AgentEngineClaude.cpp:85/133, AgentEngineAcp.cpp:173/195, AgentEngineCursor.cpp:177, AgentEngineHarness.cpp:346/367, plus the built-in tool at AgentEngineControl.cpp:234/280/289. Multi-step questions regenerate the token on each step (280/289), so any token-identity logic would re-fire.",
+      "fix": "Keep `isAwaitingUser()` as stated. Base Question-tool detection on the empty-to-non-empty transition of pendingQuestion() (a per-agent bool), never on token changes."
+    },
+    {
+      "claim": "Active count is recomputed on busyChanged, approvalRequired, displayChanged, questionChanged and destroyed.",
+      "problem": "On the Claude, ACP and Codex approveTool paths (AgentEngine.cpp:949-962), m_harnessApprovals.take(id) runs, but displayChanged is emitted only if answerApproval succeeds. A failure leaves the monitor's count stale.",
+      "fix": "Also recompute, coalesced, on toolStarted, toolFinished and finished, and expose `refresh(agentId)` for MainWindow to call after it invokes approveTool."
+    },
+    {
+      "claim": "MainWindow constructs a WinSoundOutput and a WinPowerBackend.",
+      "problem": "Many CTest host tests construct a real MainWindow and run real turns: test_main_chrome.cpp:116-134 and the agent-cycle and side-chat hosts. Offscreen windows are never active, so every Done would play an audible winmm sound during the gate and take real power requests.",
+      "fix": "MainWindow takes its effects from a static `MainWindow::setSystemEffectsFactory()`, set before construction. The default factory returns Null implementations when QGuiApplication::platformName() is \"offscreen\" or \"minimal\", or when ADE_DISABLE_SYSTEM_EFFECTS=1, and Win implementations otherwise. Host tests install fakes through the factory."
+    },
+    {
+      "claim": "Add the new members and connect them in engineFor and applyPreferences.",
+      "problem": "The constructor calls buildUi(), initializeSessionRecovery() and applyPreferences() at MainWindow.cpp:86, and engineFor can run during startup selection. If m_sounds, m_power or m_activity are created later, the result is a null dereference.",
+      "fix": "Create the effects, m_activity, m_sounds and m_power at the very start of the constructor body, before buildUi(). Also null-guard them in applyPreferences."
+    },
+    {
+      "claim": "WinSoundOutput::playWav stores the buffer in m_buffer, then calls PlaySoundW(nullptr) to stop the previous sound, then plays.",
+      "problem": "Assigning m_buffer before stopping frees the memory that the asynchronous winmm player may still be reading, which is a use-after-free.",
+      "fix": "Order the steps as: PlaySoundW(nullptr,nullptr,0), close any MCI alias, then assign m_buffer, then PlaySoundW(..., SND_MEMORY|SND_ASYNC|SND_NODEFAULT). The destructor and stop() must stop playback before the buffer is released."
+    },
+    {
+      "claim": "WinPowerBackend falls back if PowerCreateRequest fails.",
+      "problem": "PowerCreateRequest returns INVALID_HANDLE_VALUE on failure, not nullptr. If PowerSetRequest fails, the handle leaks. REASON_CONTEXT.Reason.SimpleReasonString is a non-const LPWSTR. Separately, Chromium maps prevent-app-suspension on Windows to PowerRequestExecutionRequired, from general knowledge that could not be verified in this checkout.",
+      "evidence": "MinGW winbase.h:1297-1301 (behind _WIN32_WINNT>=0x0601; the MinGW default is 0x0601 per _mingw.h:256); winnt.h:6766-6771 includes PowerRequestExecutionRequired.",
+      "fix": "Treat both INVALID_HANDLE_VALUE and nullptr as failure. Use a static wchar_t buffer for the reason. Set PowerRequestSystemRequired, which is the user-visible intent, and also PowerRequestExecutionRequired on a best-effort basis. Clear both, then CloseHandle. If SystemRequired cannot be set, close the handle and fall back to SetThreadExecutionState(ES_CONTINUOUS|ES_SYSTEM_REQUIRED) on the GUI thread. Never use display requests. Drop CallNtPowerInformation from the tests."
+    },
+    {
+      "claim": "The InstanceCoordinator test runs the second coordinator in the same process and expects Forwarded plus an ack.",
+      "problem": "acquire() is synchronous (connectToServer, write, then waitForReadyRead for the ack). The primary's QLocalServer needs the same thread's event loop to accept and reply, so in one thread the client times out and returns Failed.",
+      "fix": "Run the secondary acquire() on a worker thread with std::thread or QtConcurrent while the main thread pumps events (QTRY on the future). Also add a real cross-process test with a tiny helper target, `instance_client_helper`, compiled from InstanceCoordinator.cpp only. QLockFile's PID-liveness semantics differ across processes."
+    },
+    {
+      "claim": "The server name is a hash of the canonical data dir plus USERDOMAIN\\USERNAME, and the client calls AllowSetForegroundWindow(ASFW_ANY).",
+      "problem": "Windows named pipes live in a machine-global namespace. A predictable name lets another local user pre-create the pipe: the primary's listen fails or races, and a client could hand URLs to a squatter. ASFW_ANY is broader than needed. The design also never says what happens when listen() fails.",
+      "fix": "The primary first takes the QLockFile inside the data dir. QLockFile with setStaleLockTime(0) already has precedent in WorktreeUsageJournal.cpp:109, and the lock file location already normalises path spellings. It then listens on a random name, `ade-<32 hex from QUuid>`, with UserAccessOption, and atomically writes `<dataDir>/ade-instance.json` {v:1, pid, server} with QSaveFile. The client reads the sidecar, calls AllowSetForegroundWindow(pid), and connects. If listen fails, the primary still runs, without IPC, and logs it. Drop the serverNameNormalisation test and replace it with sidecar tests."
+    },
+    {
+      "claim": "The primary listens, then main connects requestReceived to MainWindow::handleInstanceRequest.",
+      "problem": "A request can arrive before the window is connected, and it would be acked and lost. A primary that is closing still accepts requests and acks them for a window that is gone.",
+      "fix": "InstanceCoordinator buffers up to 8 requests until markReady() is called, which main does after window.show(). After MainWindow accepts close (QCoreApplication::aboutToQuit or the window's destroyed signal), the server replies {ok:false, reason:\"closing\"}. The client then retries tryLock and connect until its deadline, and may become Primary itself."
+    },
+    {
+      "claim": "Frames are at most 64 KiB, with up to 16 URLs of up to 8 KiB each.",
+      "problem": "16 x 8 KiB = 128 KiB, which exceeds the frame limit, so the limits contradict each other.",
+      "fix": "Keep the frame cap at 64 KiB, cap each URL at 2048 bytes and the list at 16. The client drops URLs that would overflow the frame, and the server rejects frames over the cap."
+    },
+    {
+      "claim": "The single-instance path forwards --workspace, and the primary calls connectWorkspace(path).",
+      "problem": "Upstream forwards only URLs (main.ts:1539-1552). MainWindow::connectWorkspace (MainWindow.cpp:658-) rewires the current chat's workspace and can drop draft attachments. A second launch would silently change whatever chat the user has open.",
+      "fix": "Do not forward the workspace. When the lock is held, --workspace, --prompt and --import-keys are all refused with exit code 3. Forward only http(s) URLs."
+    },
+    {
+      "claim": "Refusals and failures print to stderr and return 3 or 4.",
+      "problem": "ADE is a WIN32-subsystem executable (CMakeLists `qt_add_executable(ADE WIN32 ...)`), so launches from Explorer or a shortcut show no stderr and fail silently.",
+      "fix": "Also show QMessageBox::warning (QApplication already exists) unless platformName is offscreen. Keep the stderr text and exit codes for scripts."
+    },
+    {
+      "claim": "validPreferences does not validate agent.*.",
+      "problem": "This is partly wrong. matchingKnownTypes already enforces bool and string types against defaultPreferences (SettingsPage.cpp:306-318). Also, a load-time validation failure marks the whole preferences store invalid and blocks every save (reload, 605-610), so new value checks must accept every value ever persisted.",
+      "fix": "Add value checks: loudness must be one of off|normal|loud, which are the only values the old combo wrote (SettingsPage.cpp:734). The sound pack must be \"default\" or match `^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$`. Never emit a migration."
+    },
+    {
+      "claim": "The pack id regex `^[A-Za-z0-9._-]+$` blocks path injection.",
+      "problem": "The regex accepts \".\" and \"..\".",
+      "fix": "Disallow '.' and require a leading alphanumeric character. Resolve pack ids only through the enumerated listing, never by joining the preference string into a path."
+    },
+    {
+      "claim": "The MP3 header check accepts \"ID3\" or the frame-sync bytes 0xFF 0xE0+, and valid files are copied as <event>.mp3.",
+      "problem": "Upstream checks `(b1 & 0xE0) == 0xE0`, which is a mask, not a range. ADE's WAV extension would also be saved as .mp3, and the manifest traversal check misses symlinks and junctions inside the manifest directory and NTFS alternate data streams (\"a.wav:x.mp3\").",
+      "evidence": "notification-sounds.ts:545-549.",
+      "fix": "Use the exact mask test. Save each file as `<event>.mp3` or `<event>.wav` according to its validated type. Reject relative names containing ':', absolute or UNC names, and anything whose isSymLink, isJunction or isShortcut is true. Require canonicalFilePath to sit under the canonical manifest directory (case-insensitive). Accept only RIFF/WAVE PCM 16-bit mono or stereo WAV, with a bounded chunk walk."
+    },
+    {
+      "claim": "Import writes into QTemporaryDir siblings and then renames.",
+      "problem": "Staging directories inside imported-sound-packs would be listed as packs, and crash leftovers persist. A hard 64-pack cap with no removal UI would permanently block importing.",
+      "fix": "Stage in `imported-sound-packs/.staging-XXXXXX` and rename it to the UUID. List only directories whose names parse as UUIDs and that contain at least one event file. Remove stale `.staging-*` directories on construction. Raise the cap to 256 and include the folder path in the cap error."
+    },
+    {
+      "claim": "Settings opens QFileDialog itself and then calls hooks.importFile(path).",
+      "problem": "In test_settings a modal QFileDialog blocks the test (SettingsPage.cpp:948 shows the existing static-dialog pattern), so the planned hook tests cannot click the button.",
+      "fix": "Use `SoundHooks::chooseAndImport` (returns {cancelled,id,name,error}), implemented by MainWindow as dialog plus import, mirroring upstream's config.importSoundPack procedure. On success, show the status \"<name> is now selected for notifications.\" (upstream toast, general-settings-section.tsx:104-110)."
+    },
+    {
+      "claim": "The UI previews when loudness changes and from the Play button.",
+      "problem": "This misses an upstream behaviour: changing the pack also previews the newly selected pack (use-sound-settings.ts:110). A pack with no done sound, and events missing from imported packs, must deliver nothing and must not arm the debounce (playFromBuffer, 761-769).",
+      "fix": "Preview on pack change as well. notify() returns false, without arming the debounce, when the active pack lacks that event. Preview returns false when the pack has no done sound."
+    },
+    {
+      "claim": "Converting MP3 to WAV at import time is not possible without a decoder.",
+      "problem": "This is inaccurate. Windows Media Foundation's built-in MP3 decoder (via IMFSourceReader) could decode it, with the same N-edition caveat as MCI.",
+      "fix": "Keep MCI mpegvideo playback for this slice, and note MF decode as a possible future step. State plainly that MCI `setaudio volume` scaling is unverified against -12 dB."
+    },
+    {
+      "claim": "scalePcm16Wav clamps at \u00b132767, and this is tested at gain 0.251.",
+      "problem": "At gains of 1.0 or less, clamping is never exercised.",
+      "fix": "The helper accepts any gain from 0 to 4 and clamps to [-32768, 32767]. Test clamping with gain 1.5. Production passes only 0.251 or 1.0."
+    }
+  ]
+}

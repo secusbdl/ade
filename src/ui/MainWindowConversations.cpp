@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "AgentActivityMonitor.h"
 #include "Composer.h"
 #include "ConversationView.h"
 #include "ModelSelection.h"
@@ -105,7 +106,7 @@ bool MainWindow::cloneConversation(const QString& id,bool sideChat) {
     if(const auto* engine=m_engines.value(id))fork.messages=engine->messages();
     fork.id=QUuid::createUuid().toString(QUuid::WithoutBraces);
     fork.title=(sideChat?"Side chat: ":"Fork: ")+(source->title.isEmpty()?QString("New chat"):source->title);fork.titleLocked=!sideChat;fork.sideChatParentId=sideChat?id:QString();
-    fork.archived=false;fork.archivedAt=0;fork.draft.clear();fork.draftAttachments={};fork.queuedMessages={};fork.created=fork.updated=QDateTime::currentMSecsSinceEpoch();
+    fork.archived=false;fork.archivedAt=0;fork.draft.clear();fork.draftAttachments={};fork.queuedMessages={};fork.turnFailure={};fork.created=fork.updated=QDateTime::currentMSecsSinceEpoch();
     const QPointer<MainWindow> self(this);engineFor(id);
     const QPointer<AgentToolHost> host=m_toolHosts.value(id);QString error;
     if(!host||!host->cloneFileContext(fork.id,&error)) {
@@ -135,6 +136,7 @@ void MainWindow::disposeConversation(const QString& id) {
     m_liveConversationOwners.remove(id);
     if(auto* utility=m_utilities.take(id).data()){utility->disconnect(this);utility->deleteLater();}
     auto* engine=m_engines.take(id);m_toolHosts.remove(id);
+    if(m_activity)m_activity->unwatch(id);
     if(engine){engine->disconnect(this);delete engine;}
 }
 void MainWindow::selectAfterConversationRemoval(const QString& id) {

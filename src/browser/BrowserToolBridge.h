@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BrowserContext.h"
+#include "BrowserScreenshot.h"
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonObject>
@@ -10,6 +11,7 @@
 #include <QStringList>
 #include <QUrl>
 #include <functional>
+#include <memory>
 
 class QTimer;
 
@@ -40,6 +42,10 @@ public:
 public slots:
     void execute(const QString& id, const QString& name, const QJsonObject& arguments);
     void executeForAgent(const QString& id,const QString& agentId,const QString& name,const QJsonObject& arguments);
+    // Direct-tool Page.captureScreenshot whose result becomes an attachment: a
+    // reply above the transport falls back to browser JPEG (BrowserScreenshot.h).
+    // Raw sendCDP (sandbox API.sendCDP) never changes the requested format.
+    void executeScreenshotForAgent(const QString& id,const QString& agentId,const QJsonObject& arguments);
     void cancel(const QString& id);
     void cancelAll();
     void subscribeEvent(const QString& subscriptionId,const QString& tabId,const QString& eventName);
@@ -60,6 +66,7 @@ private:
         quint64 focusOrder = 0;
         QList<QJsonObject> logs;
         QList<QMetaObject::Connection> connections;
+        quint64 navigation = 0; // Bumped on each document load or URL change.
     };
     struct Pending {
         QString tabId;
@@ -67,6 +74,9 @@ private:
         QPointer<QTimer> timeout;
         bool waitingForStartup = false;
         std::function<void()> resume;
+        std::shared_ptr<BrowserScreenshotLadder> screenshot; // Direct fallback only.
+        quint64 navigation = 0; // Tab navigation/URL at the ladder's first dispatch.
+        QString url;
     };
     void finish(const QString& id, const QString& output, bool error);
     void finishJson(const QString& id, const QJsonObject& output, bool error = false);
@@ -77,7 +87,8 @@ private:
     void receiveConsole(const QString& tabId, const QString& event, const QString& json);
     void readConsole(const QString& id, const QString& tabId, const QJsonObject& arguments);
     QJsonObject tabsSnapshot(const QString& agentId = {}) const;
-    void executeScoped(const QString& id,const QString& agentId,const QString& name,const QJsonObject& arguments);
+    void executeScoped(const QString& id,const QString& agentId,const QString& name,const QJsonObject& arguments,bool screenshotFallback=false);
+    void continueScreenshot(const QString& id,const QString& output);
     bool stillPending(const QString& id, const QString& correlation) const;
     void receiveEvent(const QString& tabId,const QString& event,const QString& json);
 

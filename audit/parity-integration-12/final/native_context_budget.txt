@@ -1,0 +1,20 @@
+********* Start testing of ContextBudgetTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ContextBudgetTest::initTestCase()
+PASS   : ContextBudgetTest::derivedCharacters(unknown)
+PASS   : ContextBudgetTest::derivedCharacters(minimum)
+PASS   : ContextBudgetTest::derivedCharacters(ten-thousand)
+PASS   : ContextBudgetTest::derivedCharacters(fractional)
+PASS   : ContextBudgetTest::derivedCharacters(128k)
+PASS   : ContextBudgetTest::derivedCharacters(1.05m)
+PASS   : ContextBudgetTest::derivedCharacters(native-soft-ceiling)
+PASS   : ContextBudgetTest::derivedCharacters(invalid-negative)
+PASS   : ContextBudgetTest::derivedCharacters(invalid-overflow)
+PASS   : ContextBudgetTest::pinnedCatalogIsExactAndAliasesMatch()
+PASS   : ContextBudgetTest::explicitContextAndCustomBindingDoNotInheritCatalog()
+PASS   : ContextBudgetTest::completeExactDiscoveryOnly()
+PASS   : ContextBudgetTest::hugeSingleLineIsCappedWithoutFalseRangeOrBrokenUnicode()
+PASS   : ContextBudgetTest::contextLimitIsPerRequestAndPreviewRemainsSeparate()
+PASS   : ContextBudgetTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 15ms
+********* Finished testing of ContextBudgetTest *********

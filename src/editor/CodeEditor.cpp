@@ -124,7 +124,9 @@ void CodeEditor::paintLineNumbers(QPaintEvent *event){
     qreal top=blockBoundingGeometry(block).translated(contentOffset()).top();qreal bottom=top+blockBoundingRect(block).height();
     while(block.isValid()&&top<=event->rect().bottom()){
         if(block.isVisible()&&bottom>=event->rect().top()){
-            painter.setPen(number==textCursor().blockNumber()?palette().text().color():palette().placeholderText().color());
+            // Read-only views (transcript code blocks) number lines uniformly, like the
+            // upstream code-block gutter; only an editable editor emphasizes the cursor line.
+            painter.setPen(!isReadOnly()&&number==textCursor().blockNumber()?palette().text().color():palette().placeholderText().color());
             painter.drawText(0,qRound(top),m_gutter->width()-10,fontMetrics().height(),Qt::AlignRight,QString::number(number+1));
         }
         block=block.next();top=bottom;bottom=top+blockBoundingRect(block).height();++number;

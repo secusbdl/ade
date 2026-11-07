@@ -1,0 +1,19 @@
+********* Start testing of CodexEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CodexEngineTest::initTestCase()
+QWARN  : CodexEngineTest::priorTranscriptOnlyForNewSession() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_codex_engine-ogdipH" most likely due to the presence of read-only files.
+PASS   : CodexEngineTest::priorTranscriptOnlyForNewSession()
+PASS   : CodexEngineTest::failedResumeRebuildsCanonicalHistoryOnce()
+PASS   : CodexEngineTest::nonsecretProviderRoundtrip()
+PASS   : CodexEngineTest::mixedCredentialRejectedWithoutOverwrite()
+PASS   : CodexEngineTest::streamsPersistsAndRestarts()
+PASS   : CodexEngineTest::forkHistoryDoesNotResumeSourceThread()
+PASS   : CodexEngineTest::actualApprovalUsesNativeEngineControl()
+PASS   : CodexEngineTest::serverSettledApprovalDoesNotOutliveTurn()
+PASS   : CodexEngineTest::actualQuestionUsesNativeForm()
+PASS   : CodexEngineTest::queuedMessagesDrainAfterSuccessfulHarnessTurn()
+PASS   : CodexEngineTest::cancelAtReasoningRetainsOnePartial()
+PASS   : CodexEngineTest::deletedEngineDuringStream()
+PASS   : CodexEngineTest::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 3142ms
+********* Finished testing of CodexEngineTest *********

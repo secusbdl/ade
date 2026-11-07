@@ -91,7 +91,10 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         if(m_sandbox.handles(name)){m_toolAttachments.remove(id);m_attachmentErrors.remove(id);m_toolMutations.insert(id,{});m_sandbox.execute(id,name,args);return;}
         if(m_browser&&m_browser->handles(name)){
             m_directBrowser.insert(id);
-            if(name=="sendCDP"&&args.value("method")=="Page.captureScreenshot")m_directScreenshots.insert(id);
+            if(name=="sendCDP"&&args.value("method")=="Page.captureScreenshot"){
+                // Becomes an owned attachment, so an oversized capture may fall back to JPEG.
+                m_directScreenshots.insert(id);m_browser->executeScreenshotForAgent(id,m_agentId,args);return;
+            }
             m_browser->executeForAgent(id,m_agentId,name,args);return;
         }
         if(m_engine)m_engine->completeExternalTool(id,"Error: External tool is unavailable.",true);
@@ -330,7 +333,7 @@ void AgentToolHost::completeDirectBrowserResult(const QString& id,const QString&
     // or start a replacement request; recheck the original opaque token after it.
     emit attachmentCreated(id,reference.path,image.mimeType);
     if(!self||!engine||m_engine!=engine||m_fileContextRemoved||engine->externalToolCallId(id).isEmpty())return;
-    engine->completeExternalToolWithAttachments(id,"Screenshot saved to "+reference.path+". Image content is prepared for models that support images.",false,
+    engine->completeExternalToolWithAttachments(id,"Screenshot saved to "+reference.path+"."+(image.note.isEmpty()?QString():" "+image.note)+" Image content is prepared for models that support images.",false,
         metadata.value("attachments").toArray(),metadata.value("pathReferences").toObject(),metadata.value("pathMetadata").toObject());
 }
 void AgentToolHost::removeEventSubscription(const QString& id){const auto details=m_eventSubscriptions.take(id);if(details["kind"]=="cdp"&&m_browser)m_browser->unsubscribeEvent(id);}

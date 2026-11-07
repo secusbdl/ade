@@ -1,0 +1,17 @@
+********* Start testing of AgentControlUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AgentControlUiTest::initTestCase()
+PASS   : AgentControlUiTest::busySendPersistsQueueAndStopRestartRequiresResume()
+PASS   : AgentControlUiTest::nativeQuestionCanBeAnsweredAndCannotCrossChat()
+PASS   : AgentControlUiTest::writeMessageInsteadPreservesPartialAnswersAndFitsNarrowWindow()
+PASS   : AgentControlUiTest::questionInputAndSubmissionUseAvailableHeight()
+PASS   : AgentControlUiTest::saveConflictKeepsDraftAndDoesNotEnqueue()
+PASS   : AgentControlUiTest::ctrlCInComposerWithoutSelectionStopsBusyAgent()
+PASS   : AgentControlUiTest::ctrlCWithComposerSelectionCopiesAndKeepsAgentRunning()
+PASS   : AgentControlUiTest::ctrlCFromTerminalDoesNotStopAgent()
+PASS   : AgentControlUiTest::ctrlCFromAgentListStopsBusyAgent()
+PASS   : AgentControlUiTest::ctrlCWithTranscriptSelectionCopiesWhileBusy()
+PASS   : AgentControlUiTest::ctrlCWhenIdleDoesNotActivateFallback()
+PASS   : AgentControlUiTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 4087ms
+********* Finished testing of AgentControlUiTest *********

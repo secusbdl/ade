@@ -1,0 +1,136 @@
+{
+  "verifiedUtc": "2026-11-07T07:52:13.891430+00:00",
+  "binarySha256": "780a3d0940d704dba371125aae1025ba9a24c886553d9f81c353045284cf5e83",
+  "status": "bounded_direct_windows_checks_passed_live_send_blocked_by_provider_outage",
+  "method": "tools/gui-check.ps1 and tools/gui-check-extras-11.ps1 (Windows UI Automation, PrintWindow of ADE windows only).",
+  "checks": {
+    "sendDisabledWhenEmpty": true,
+    "typedDraftEnablesSend": true,
+    "composerClearedAfterSend": true,
+    "settingsOpened": true,
+    "githubTokenFieldMasked": true,
+    "backReturnsToComposer": true,
+    "workspaceUnchanged": true,
+    "providersUnchanged": true,
+    "liveTurnCompleted": false,
+    "liveTurnBlockedBy": "DeepSeek provider outage at test time",
+    "pluginCards": [
+      "Configure Figma",
+      "Configure GitHub",
+      "Configure PostHog",
+      "Configure Supabase",
+      "Configure Vercel"
+    ],
+    "idleClose": {
+      "exited": true,
+      "exitCode": 0,
+      "latencyMs": 97
+    },
+    "pendingClose": {
+      "questionVisible": true,
+      "stillOnItShown": false,
+      "exited": true,
+      "exitCode": 0,
+      "latencyMs": 162,
+      "fixtureProcessesLeft": 0,
+      "fixtureSha256": "5f8f6c9e7994cfb70484be04ee03a100f193dc9211634db6a74554df02bd0d62"
+    },
+    "retryCard": {
+      "retryCardShownAfterFailure": true,
+      "failureRecordPersisted": true,
+      "retryReplacedRatherThanDuplicatedUserRow": true,
+      "retryCardReturnedAfterSecondFailure": true,
+      "retryClose": {
+        "exited": true,
+        "exitCode": 0,
+        "latencyMs": 88
+      }
+    },
+    "singleInstance": {
+      "sameDataDirSecondLaunch": {
+        "exited": true,
+        "exitCode": 0,
+        "firstStillRunning": true
+      },
+      "otherDataDirRunsIndependently": true,
+      "instanceCloses": {
+        "firstExitCode": 0,
+        "otherExitCode": 0
+      }
+    }
+  },
+  "screenshots": [
+    {
+      "localEvidence": "private/package11-gui-1/close/evidence/01-pending-question.png",
+      "sha256": "c7526b883d57a3deb6cdff3f2b3f77739d5f2a37b1490e05f35f59799353ec6c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/00-launched.png",
+      "sha256": "85296f5004694435c91d30ca363f006051fbd09ed824548250159eb9f3d3fc22",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/01-send-enabled.png",
+      "sha256": "e68f6c4cb046608b532eeaf560edbf94a6b637777f536d205c7bec640262855f",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/02-completed.png",
+      "sha256": "21715c19a73eb850c2f3cd03084e56cfa2d235cc030a7f5ab753a103fe141d0a",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/03-settings.png",
+      "sha256": "1b1895170d67659f6c2c8cc5ce80d96ad9c97902997a391bb544005a7d2f9c3c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/04-plugins.png",
+      "sha256": "7744e54273cdf742a506d1a667f5fdde4c5766bfe87e09413babfe70048cad2c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/05-github-token.png",
+      "sha256": "132d9f6279ebbc5b2ad46ea6ddd87701458220c119e97e1e095e866e27bf5548",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-gui-1/main/evidence/06-back.png",
+      "sha256": "21715c19a73eb850c2f3cd03084e56cfa2d235cc030a7f5ab753a103fe141d0a",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-extras-1/instance/evidence/01-primary-after-handoff.png",
+      "sha256": "1d67e570cd66deae61be7012bbaa364d1d63aa2d65bd7aa21d7403e76b6226e8",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-extras-1/instance/evidence/02-independent-profile.png",
+      "sha256": "d35b274c6453813fb8894929abbc7a69ec643e667ac040b0517aa088ade1e2a8",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-extras-1/retry/evidence/01-failed-with-retry.png",
+      "sha256": "6a7324a0b8229d39533940100b11058aef0e60dc497c35093e555f6941e749b7",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package11-extras-1/retry/evidence/02-after-retry.png",
+      "sha256": "c0b26923c5254e1683c7a547f418faa7937e465e19f654216848b4e9f8ab6483",
+      "publicRasterExport": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "retry-card-empty-body",
+      "status": "fixed_after_this_binary",
+      "details": "This binary renders the failure line above an otherwise empty Retry card; the next checkpoint moves the message into the card like upstream GenericError."
+    }
+  ],
+  "limits": [
+    "Bounded checks only.",
+    "UI Automation patterns, not physical input.",
+    "Audio output was not exercised (opt-in smoke)."
+  ]
+}

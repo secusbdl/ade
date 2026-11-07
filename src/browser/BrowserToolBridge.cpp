@@ -83,7 +83,11 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
         if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->title = title; emit tabsChanged(); }
     }));
     tab.connections.append(connect(browser, &BrowserWidget::urlChanged, this, [this, id](const QUrl& url) {
-        if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->url = url.toString(QUrl::FullyEncoded); emit tabsChanged(); }
+        if (auto it = m_tabs.find(id); it != m_tabs.end()) {
+            const QString encoded = url.toString(QUrl::FullyEncoded);
+            if (it->url != encoded) ++it->navigation;
+            it->url = encoded; emit tabsChanged();
+        }
     }));
     tab.connections.append(connect(browser, &BrowserWidget::readyChanged, this, [this, id](bool ready) {
         const QPointer<BrowserToolBridge> self(this);
@@ -103,7 +107,7 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
         if(browser&&!browser->isReady()&&!browser->isInitializing())failWaitingRequests(id,"Browser initialization failed: "+error);
     }));
     tab.connections.append(connect(browser, &BrowserWidget::loadingChanged, this, [this, id](bool loading) {
-        if (loading) if (auto it = m_tabs.find(id); it != m_tabs.end()) it->logs.clear();
+        if (loading) if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->logs.clear(); ++it->navigation; }
     }));
     tab.connections.append(connect(browser, &BrowserWidget::devToolsEventReceived, this,
         [this, id](const QString& event, const QString& json) { receiveEvent(id, event, json); }));
@@ -111,6 +115,7 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
         [this, id](const QString& correlation, const QString& output, bool error) {
             const QString requestId = m_correlations.value(correlation);
             if (requestId.isEmpty() || !stillPending(requestId, correlation) || m_pending.value(requestId).tabId != id) return;
+            if (!error && m_pending.value(requestId).screenshot) { continueScreenshot(requestId, output); return; }
             if (output.size() > MaxResponseChars)
                 finishJson(requestId, {{"error", "Browser response exceeds 2 MiB; request a narrower DOM/result or a smaller screenshot."}}, true);
             else finish(requestId, output, error);
@@ -222,7 +227,7 @@ QJsonArray BrowserToolBridge::definitions() const {
     for (const auto& level : consoleLevels()) levels.append(level);
     return {
         definition("getBrowserTabs", "List ADE's registered browser tabs and active tab ID. Use these stable tab IDs for sendCDP and readConsoleLogs. This is native tab discovery.", {}, {}),
-        definition("sendCDP", "Send one Chrome DevTools Protocol command to an ADE browser tab. Native exposure of Stagewise API.sendCDP; this does not execute Node.js sandbox code. Use Runtime.evaluate for page JavaScript/DOM inspection (awaitPromise supported), Page.navigate for navigation, Page.getNavigationHistory and Page.navigateToHistoryEntry for history, and Page.captureScreenshot to save a screenshot as an owned image attachment for the next model step. Other direct results are capped at 40 KiB with an explicit truncation notice. The underlying CDP transport is limited to 2 Mi UTF-16 code units. For full raw protocol data, use executeSandboxJs with API.sendCDP; persist screenshots with API.createAttachment instead of returning base64 text. Actions run in the selected page; cancellation stops waiting but cannot undo an issued browser action.",
+        definition("sendCDP", "Send one Chrome DevTools Protocol command to an ADE browser tab. Native exposure of Stagewise API.sendCDP; this does not execute Node.js sandbox code. Use Runtime.evaluate for page JavaScript/DOM inspection (awaitPromise supported), Page.navigate for navigation, Page.getNavigationHistory and Page.navigateToHistoryEntry for history, and Page.captureScreenshot to save a screenshot as an owned image attachment for the next model step (a capture above the transport limit is retaken as JPEG at quality 85, 70, 50 or 30, then at half scale, and the result says so). Other direct results are capped at 40 KiB with an explicit truncation notice. The underlying CDP transport is limited to 2 Mi UTF-16 code units. For full raw protocol data, use executeSandboxJs with API.sendCDP; persist screenshots with API.createAttachment instead of returning base64 text. Actions run in the selected page; cancellation stops waiting but cannot undo an issued browser action.",
             {{"tabId", stringProperty("Stable tab ID from getBrowserTabs.")},
              {"method", stringProperty("CDP method, for example Runtime.evaluate or Page.navigate.")},
              {"params", QJsonObject{{"type", "object"}, {"description", "CDP method parameters; default {}."}, {"additionalProperties", true}}}}, {"tabId", "method"}),
@@ -290,7 +295,30 @@ void BrowserToolBridge::executeForAgent(const QString& id,const QString& agentId
     if(agentId.isEmpty()||agentId.size()>256){emit completed(id,compact({{"error","Invalid browser agent identity."}}),true);return;}
     executeScoped(id,agentId,name,arguments);
 }
-void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,const QString& name,const QJsonObject& arguments){
+void BrowserToolBridge::executeScreenshotForAgent(const QString& id,const QString& agentId,const QJsonObject& arguments){
+    if(agentId.isEmpty()||agentId.size()>256){emit completed(id,compact({{"error","Invalid browser agent identity."}}),true);return;}
+    executeScoped(id,agentId,QStringLiteral("sendCDP"),arguments,true);
+}
+void BrowserToolBridge::continueScreenshot(const QString& id,const QString& output){
+    const auto pending=m_pending.value(id);
+    const auto ladder=pending.screenshot;
+    const auto tab=m_tabs.constFind(pending.tabId);
+    // Each fallback step is a fresh capture: never combine documents. A reply to
+    // the first dispatch is the caller's own capture, as with raw sendCDP.
+    const bool navigated=tab!=m_tabs.cend()&&(tab->navigation!=pending.navigation||tab->url!=pending.url);
+    const QJsonObject navigatedError{{"error","The page navigated during the screenshot fallback; retry the screenshot."}};
+    if(navigated&&ladder->attempts()>0){finishJson(id,navigatedError,true);return;}
+    const auto step=ladder->accept(output);
+    if(step==BrowserScreenshotLadder::Step::Done){finish(id,ladder->output(),false);return;}
+    if(step==BrowserScreenshotLadder::Step::Failed){finishJson(id,{{"error",ladder->error()}},true);return;}
+    if(navigated){finishJson(id,navigatedError,true);return;}
+    if(tab==m_tabs.cend()||!tab->browser){finishJson(id,{{"error","Unknown or closed browser tab; call getBrowserTabs."}},true);return;}
+    // Same opaque correlation and deadline: one ladder step is in flight at a time,
+    // and cancel/timeout/tab close settle the whole ladder.
+    const auto request=ladder->request();
+    tab->browser->callDevToolsRequest(pending.correlation,request.method,compact(request.params));
+}
+void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,const QString& name,const QJsonObject& arguments,bool screenshotFallback){
     if (m_pending.contains(id)) { finishJson(id, {{"error", "Duplicate browser request ID; the original request was canceled."}}, true); return; }
     if (id.isEmpty() || id.size() > 512 || m_pending.size() >= 64) {
         emit completed(id, compact({{"error", "Invalid request ID or too many pending browser requests."}}), true);
@@ -302,12 +330,20 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
     pending.timeout->setSingleShot(true);
     const QString correlation = pending.correlation;
     connect(pending.timeout, &QTimer::timeout, this, [this, id, correlation] {
-        if (stillPending(id, correlation)) finishJson(id, {{"error", "Browser request timed out. An already issued page action may continue."}}, true);
+        if (!stillPending(id, correlation)) return;
+        const auto request = m_pending.value(id);
+        const auto browser = m_tabs.value(request.tabId).browser;
+        // WebView2 may not paint a tab that is not visible; say so instead of
+        // implying that the page itself is slow (startup waits keep the generic text).
+        // Direct ladder only: raw/sandbox sendCDP keeps the generic text.
+        if (request.screenshot && !request.waitingForStartup && browser && !browser->isVisible())
+            finishJson(id, {{"error", "Browser screenshot timed out while the tab is not visible; WebView2 may not paint hidden tabs. Show the tab in ADE and retry."}}, true);
+        else finishJson(id, {{"error", "Browser request timed out. An already issued page action may continue."}}, true);
     });
     pending.timeout->start(m_timeoutMs);
     m_pending.insert(id, pending);
     m_correlations.insert(correlation, id);
-    const auto dispatch = [this, id, agentId,name, arguments, correlation] {
+    const auto dispatch = [this, id, agentId,name, arguments, correlation, screenshotFallback] {
         if (!stillPending(id, correlation)) return;
         if (!handles(name)) { finishJson(id, {{"error", "Unknown native browser tool."}}, true); return; }
         if (name == QStringLiteral("getBrowserTabs")) { finishJson(id, tabsSnapshot(agentId)); return; }
@@ -325,7 +361,17 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
             }
             const auto json = compact(arguments.value("params").toObject());
             if (json.size() > MaxResponseChars) { finishJson(id, {{"error", "CDP parameters exceed 2 MiB."}}, true); return; }
+            if (screenshotFallback && method == QStringLiteral("Page.captureScreenshot")) {
+                auto& request = m_pending[id];
+                if (!request.screenshot)
+                    request.screenshot = std::make_shared<BrowserScreenshotLadder>(arguments.value("params").toObject(), MaxResponseChars);
+            }
             if(deferUntilReady(id,tab->browser))return;
+            if (auto request = m_pending.find(id); request != m_pending.end() && request->screenshot) {
+                // The document the first capture targets; set after any startup wait.
+                request->navigation = tab->navigation;
+                request->url = tab->url;
+            }
             tab->browser->callDevToolsRequest(correlation, method, json);
             return;
         }

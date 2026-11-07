@@ -1,9 +1,11 @@
 #include "MainWindow.h"
+#include "AgentActivityMonitor.h"
 #include "SideChatPane.h"
 #include "ui/ChatSurface.h"
 #include "ui/Composer.h"
 #include "ui/ConversationView.h"
 #include "ui/ModelSelection.h"
+#include "ui/ModelThinking.h"
 #include "ui/QuestionPanel.h"
 #include "ui/MessageQueuePanel.h"
 #include "ui/SettingsPage.h"
@@ -51,6 +53,8 @@ void MainWindow::refreshSideChat(const QString& id){
     if(engine)updateTranscriptLinkRows(id,rows);
     pane->setState(snapshot,rows,engine&&engine->isBusy(),models,engine?engine->pendingQuestion():QJsonObject(),engine?engine->queuedMessages():snapshot.queuedMessages);
     if(!self||!pane)return;
+    pushHistoryActions(id,pane->transcript());
+    if(!self||!pane)return;
     pane->setUiScale(m_settings->preference("personalization.uiZoom").toInt(100)/100.0);const int index=m_tabs->indexOf(pane);if(index>=0){m_tabs->setTabText(index,snapshot.title.left(36));m_tabs->setTabToolTip(index,snapshot.title);}
 }
 void MainWindow::openSideChat(const QString& id){
@@ -59,7 +63,7 @@ void MainWindow::openSideChat(const QString& id){
     if(const auto existing=m_sideChats.value(id)){m_tabs->setCurrentWidget(existing);revealContent();return;}
     const auto initialTitle=session->title;
     const QPointer<MainWindow> self(this);auto* rawPane=new SideChatPane(id,m_tabs);const QPointer<SideChatPane> pane(rawPane);m_sideChats.insert(id,pane);
-    connectTurnFileControls(pane->transcript());
+    connectTurnFileControls(pane->transcript());connectHistoryControls(pane->transcript());
     const QPointer<AgentEngine> engine(engineFor(id));if(!self||!pane||!engine)return;
     initializeComposerCompletions(pane->composer(),id);
     connect(pane,&QObject::destroyed,this,[this,id,pane]{if(m_sideChats.value(id)==pane)m_sideChats.remove(id);});
@@ -85,12 +89,12 @@ void MainWindow::openSideChat(const QString& id){
     connect(pane->queue(),&MessageQueuePanel::editRequested,this,[id,currentEngine](const QString& chat,const QString& queued,const QString& text){if(chat!=id)return;if(auto* active=currentEngine())active->editQueuedMessage(queued,text);});
     connect(pane->queue(),&MessageQueuePanel::removeRequested,this,[id,currentEngine](const QString& chat,const QString& queued){if(chat!=id)return;if(auto* active=currentEngine())active->removeQueuedMessage(queued);});
     connect(pane->queue(),&MessageQueuePanel::moveRequested,this,[id,currentEngine](const QString& chat,const QString& queued,int index){if(chat!=id)return;if(auto* active=currentEngine())active->moveQueuedMessage(queued,index);});
-    auto resume=[this,id,pane,currentEngine](const QString& chat,const QString& queued){if(chat!=id)return;auto* active=currentEngine();const auto* session=find(id);if(!active||!session)return;if(gitPathBusy(session->workspace)){pane->setError("Wait for the workspace operation before resuming queued messages.");return;}if(!active->isBusy()){const ModelSelection selected{session->providerId,session->model,session->presetId,{},{}};ProviderConfig provider;if(!selected.resolve(m_providers,&provider)){pane->setError("Select an available model before resuming the queue.");return;}active->setModelChain(selectedModelChain(selected,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject()),selected.presetId);active->setAlwaysAllow(session->alwaysAllow);}if(queued.isEmpty())active->resumeQueue();else active->flushQueuedMessage(queued);};
+    auto resume=[this,id,pane,currentEngine](const QString& chat,const QString& queued){if(chat!=id)return;auto* active=currentEngine();const auto* session=find(id);if(!active||!session)return;if(gitPathBusy(session->workspace)){pane->setError("Wait for the workspace operation before resuming queued messages.");return;}if(!active->isBusy()){const ModelSelection selected{session->providerId,session->model,session->presetId,{},{}};ProviderConfig provider;if(!selected.resolve(m_providers,&provider)){pane->setError("Select an available model before resuming the queue.");return;}active->setModelChain(selectedModelChain(selected,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject(),validThinkingOverrides(m_settings->preference("agent.modelThinkingOverrides"))),selected.presetId);active->setAlwaysAllow(session->alwaysAllow);}if(queued.isEmpty())active->resumeQueue();else active->flushQueuedMessage(queued);};
     connect(pane->queue(),&MessageQueuePanel::resumeRequested,this,[resume](const QString& chat){resume(chat,{});});connect(pane->queue(),&MessageQueuePanel::sendNowRequested,this,resume);
     const QPointer<ConversationView> view=pane->transcript();
     connect(view,&ConversationView::scopedLinkActivated,this,[this,view](const QString& chat,const QString& row,const QString& part,const QUrl& url){if(view)routeTranscriptLink(chat,row,part,url,view);});
     connect(view,&ConversationView::imageRequested,this,[this,view](quint64 request,const QString& chat,const QString& row,const QString& part,const QUrl& url){if(view)provideTranscriptImage(request,chat,row,part,url,view);});
-    connect(view,&ConversationView::approvalDecided,this,[this,id,view,currentEngine](const QString& chat,const QString& rowId,const QString& partId,const QString& call,bool allowed){auto* active=currentEngine();if(chat!=id||!active||!visibleTranscript(id,view))return;for(const auto& value:active->displayMessages()){const auto row=value.toObject();if(row["id"]!=rowId)continue;for(const auto& entry:row["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==partId&&part["type"]=="tool"&&part["toolCallId"]==call&&part["state"]=="approval-requested"){active->approveTool(call,allowed);return;}}}});
+    connect(view,&ConversationView::approvalDecided,this,[this,id,view,currentEngine](const QString& chat,const QString& rowId,const QString& partId,const QString& call,bool allowed){auto* active=currentEngine();if(chat!=id||!active||!visibleTranscript(id,view))return;for(const auto& value:active->displayMessages()){const auto row=value.toObject();if(row["id"]!=rowId)continue;for(const auto& entry:row["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==partId&&part["type"]=="tool"&&part["toolCallId"]==call&&part["state"]=="approval-requested"){const QPointer<MainWindow> self(this);active->approveTool(call,allowed);if(self&&m_activity)m_activity->refresh(id);return;}}}});
     const QPointer<QTabWidget> tabs=m_tabs;int index=-1;
     {
         QSignalBlocker blocker(tabs);
@@ -118,7 +122,7 @@ void MainWindow::sendSideChat(const QString& id){
     if(gitPathBusy(session->workspace)){pane->setError("Wait for the workspace operation before sending.");return;}
     const QPointer<MainWindow> self(this);const QPointer<AgentEngine> engine(engineFor(id));if(!self||!pane||!engine)return;session=find(id);if(!session)return;
     const QPointer<AgentToolHost> host=m_toolHosts.value(id);if((host&&host->mutationBusy())||(m_mutationUndoAgent==id&&!m_mutationUndoId.isEmpty())){pane->setError("Wait for file changes to finish before sending.");return;}
-    if(!engine->isBusy()){const ModelSelection selected{session->providerId,session->model,session->presetId,{},{}};ProviderConfig provider;if(!selected.resolve(m_providers,&provider)){pane->setError("Select an available model before sending.");return;}engine->setModelChain(selectedModelChain(selected,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject()),selected.presetId);engine->setAlwaysAllow(session->alwaysAllow);engine->setWorkspace(session->workspace);if(host){QString error;if(!host->setWorkspace(session->workspace,&error)){pane->setError(error);return;}}}
+    if(!engine->isBusy()){const ModelSelection selected{session->providerId,session->model,session->presetId,{},{}};ProviderConfig provider;if(!selected.resolve(m_providers,&provider)){pane->setError("Select an available model before sending.");return;}engine->setModelChain(selectedModelChain(selected,m_providers,m_settings->preference("modelPresets").toArray(),m_settings->preference("modelCatalogs").toObject(),validThinkingOverrides(m_settings->preference("agent.modelThinkingOverrides"))),selected.presetId);engine->setAlwaysAllow(session->alwaysAllow);engine->setWorkspace(session->workspace);if(host){QString error;if(!host->setWorkspace(session->workspace,&error)){pane->setError(error);return;}}}
     session=find(id);if(!session)return;QString error;const auto metadata=host?host->captureAttachments(session->draftAttachments,&error):QJsonObject();if(!error.isEmpty()){pane->setError(error);return;}
     Conversation previous=*session;previous.draft=pane->composer()->toPlainText();const auto draft=previous.draft;const auto history=engine->messages(),queue=engine->queuedMessages();session->draft.clear();session->draftAttachments={};pane->setError({});
     const bool accepted=engine->sendUserMessage(draft.trimmed(),metadata["attachments"].toArray(),metadata["pathReferences"].toObject(),metadata["pathMetadata"].toObject());if(!self||!pane||!engine)return;

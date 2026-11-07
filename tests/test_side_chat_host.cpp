@@ -8,6 +8,7 @@
 #include "ui/SessionStore.h"
 #include "ui/SettingsPage.h"
 #include "ui/AppStyle.h"
+#include "ui/WorkbenchSplitter.h"
 #include "core/AgentEngine.h"
 #include "core/ProviderStore.h"
 #include "runtime/AgentToolHost.h"
@@ -23,6 +24,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QShortcut>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTabWidget>
@@ -101,6 +103,42 @@ void promotionSaveConflictLeavesPaneAndParentIdentity(){QTemporaryDir data;Provi
 void rejectedHistoryKeepsChildDraftAndAttachment(){QTemporaryDir data,workspace;Provider provider;QVERIFY(provider.seed(data.path(),workspace.path()));SessionStore seedStore(data.path());auto chats=seedStore.load();chats[0].messages.append(QJsonObject{{"role","tool"},{"tool_call_id","orphan"},{"content","Malformed inherited result"}});QVERIFY(seedStore.save(chats));QVERIFY(put(workspace.filePath("context.txt"),"attached context"));MainWindow window(data.path());expose(window);auto* pane=create(window);QVERIFY(pane);const auto id=pane->chatId();emit pane->filesAttached(id,{workspace.filePath("context.txt")});QCOMPARE(saved(data.path(),id).draftAttachments.size(),1);const QString text="  rejected child  \n";pane->composer()->setPlainText(text);pane->findChild<QToolButton*>("sideChatSendButton")->click();QCOMPARE(provider.requests.size(),0);QCOMPARE(pane->composer()->toPlainText(),text);QCOMPARE(saved(data.path(),id).draft,text);QCOMPARE(saved(data.path(),id).draftAttachments.size(),1);}
 void inlineApprovalUsesChildRowAndChatIdentity(){QTemporaryDir data;Provider provider;QVERIFY(provider.seed(data.path()));MainWindow window(data.path());expose(window);auto* pane=create(window);QVERIFY(pane);const auto id=pane->chatId();pane->composer()->setPlainText("Request tool");pane->findChild<QToolButton*>("sideChatSendButton")->click();QTRY_COMPARE(provider.requests.size(),1);const auto args=QString::fromUtf8(QJsonDocument(QJsonObject{{"explanation","Side fixture"},{"script","return 3;"}}).toJson(QJsonDocument::Compact));provider.send(0,{{"tool_calls",QJsonArray{QJsonObject{{"index",0},{"id","side-call"},{"type","function"},{"function",QJsonObject{{"name","executeSandboxJs"},{"arguments",args}}}}}}});provider.finish(0,"tool_calls");QString rowId,partId;auto locate=[&]{for(const auto& rowValue:engine(window,id)->displayMessages()){const auto row=rowValue.toObject();for(const auto& partValue:row["parts"].toArray()){const auto part=partValue.toObject();if(part["state"]=="approval-requested"){rowId=row["id"].toString();partId=part["id"].toString();return true;}}}return false;};QTRY_VERIFY(locate());emit pane->transcript()->approvalDecided("parent",rowId,partId,"side-call",false);QCOMPARE(provider.requests.size(),1);emit pane->transcript()->approvalDecided(id,rowId,partId,"side-call",false);QTRY_COMPARE(provider.requests.size(),2);provider.finish(1);QTRY_VERIFY(!engine(window,id)->isBusy());QCOMPARE(saved(data.path(),"parent").messages.size(),2);}
 void integratedThemesQuestionQueueAndCompactGeometry(){QTemporaryDir data;Provider provider;QVERIFY(provider.seed(data.path()));MainWindow window(data.path());expose(window);auto* pane=create(window);QVERIFY(pane);const auto id=pane->chatId();pane->composer()->setPlainText("Review this implementation");pane->findChild<QToolButton*>("sideChatSendButton")->click();QTRY_COMPARE(provider.requests.size(),1);provider.send(0,{{"reasoning_content","Check the constraints before applying the change."}});provider.send(0,{{"content","The change is ready for review.\n\n```cpp\nconst int answer = 42;\n```"}});pane->composer()->setPlainText("Then check the tests");pane->findChild<QToolButton*>("sideChatSendButton")->click();QTRY_COMPARE(engine(window,id)->queuedMessages().size(),1);provider.question(0);QTRY_VERIFY(!engine(window,id)->pendingQuestion().isEmpty());QTRY_VERIFY(pane->questions()->isVisible());auto* settings=window.findChild<SettingsPage*>();for(const auto& theme:QStringList{"light","dark","light"}){QVERIFY(settings->setPreference("personalization.appearance",theme));for(const auto width:{1100,350}){window.resize(width,750);QTest::qWait(80);QVERIFY(pane->isVisible());QVERIFY(pane->questions()->isVisible());QVERIFY(pane->queue()->isVisible());QVERIFY(window.width()==width);const auto mismatch=backgroundMismatch(window,pane,QColor(theme=="dark"?"#21242b":"#fdfdfd"));QVERIFY2(mismatch.isEmpty(),qPrintable(mismatch));auto* controls=pane->findChild<QScrollArea*>("sideChatControls");QVERIFY(controls);for(const auto& name:QStringList{"answer_name","questionSubmit","questionWriteMessage"}){auto* control=pane->findChild<QWidget*>(name);QVERIFY(control);QTRY_VERIFY(controls->viewport()->rect().contains(control->mapTo(controls->viewport(),control->rect().center())));}QVERIFY(controls->viewport()->rect().contains(pane->queue()->mapTo(controls->viewport(),QPoint(8,8))));capture(window,QString("side-question-queue-%1-%2").arg(theme).arg(width));}}pane->findChild<QToolButton*>("sideChatStopButton")->click();engine(window,id)->cancel();QTRY_VERIFY(!engine(window,id)->isBusy());}
+// stop_agent (S3): with a side-chat tab active, Ctrl+C stops that side chat,
+// from its composer, through the window fallback and from the main composer
+// (upstream disables the main listener while a side chat is the active
+// surface). A busy parent must keep running. Before, none of these existed and
+// the main composer stopped the main agent regardless of the active surface.
+void ctrlCInSideChatTargetsSideChat_data(){QTest::addColumn<bool>("parentBusy");QTest::newRow("parent-idle")<<false;QTest::newRow("parent-busy")<<true;}
+void ctrlCInSideChatTargetsSideChat(){
+    QFETCH(bool,parentBusy);
+    QTemporaryDir data;Provider provider;QVERIFY(provider.seed(data.path()));MainWindow window(data.path());expose(window);
+    window.activateWindow();QApplication::setActiveWindow(&window);QCoreApplication::processEvents();
+    auto* pane=create(window);QVERIFY(pane);const auto id=pane->chatId();auto* tabs=window.findChild<QTabWidget*>("contentTabs");auto* split=window.findChild<WorkbenchSplitter*>();auto* mainComposer=window.findChild<Composer*>("composerInput");QVERIFY(tabs&&split&&mainComposer);
+    const auto parentRunning=[&]{auto* parent=engine(window,"parent");return parent&&parent->isBusy();};
+    int requests=0;
+    if(parentBusy){window.submitPrompt("Running parent");++requests;QTRY_COMPARE(provider.requests.size(),requests);QTRY_VERIFY(parentRunning());}
+    tabs->setCurrentWidget(pane);split->setContentCollapsed(false);QVERIFY(split->contentVisible());
+    const auto runChild=[&](const QString& prompt){pane->composer()->setPlainText(prompt);pane->findChild<QToolButton*>("sideChatSendButton")->click();};
+    runChild("Running child");++requests;QTRY_COMPARE(provider.requests.size(),requests);QTRY_VERIFY(engine(window,id)&&engine(window,id)->isBusy());
+    pane->composer()->setFocus();QTRY_COMPARE(QApplication::focusWidget(),static_cast<QWidget*>(pane->composer()));
+    QTest::keyClick(pane->composer(),Qt::Key_C,Qt::ControlModifier);QTRY_VERIFY(!engine(window,id)->isBusy());QCOMPARE(parentRunning(),parentBusy);
+    // Window fallback from a focusable, non-text widget of the side pane.
+    runChild("Second child");++requests;QTRY_COMPARE(provider.requests.size(),requests);QTRY_VERIFY(engine(window,id)->isBusy());
+    auto* stop=window.findChild<QShortcut*>("shortcut_stop_agent");QVERIFY(stop);QTRY_VERIFY(stop->isEnabled());QSignalSpy activated(stop,&QShortcut::activated);
+    auto* changes=pane->findChild<QToolButton*>("sideChatChangesButton");QVERIFY(changes);changes->setFocus(Qt::OtherFocusReason);QTRY_COMPARE(QApplication::focusWidget(),static_cast<QWidget*>(changes));
+    QTest::keyClick(changes,Qt::Key_C,Qt::ControlModifier);QTRY_VERIFY(!engine(window,id)->isBusy());QCOMPARE(activated.size(),1);QCOMPARE(parentRunning(),parentBusy);
+    // The main composer resolves the same active surface.
+    runChild("Third child");++requests;QTRY_COMPARE(provider.requests.size(),requests);QTRY_VERIFY(engine(window,id)->isBusy());
+    mainComposer->setFocus();QTRY_COMPARE(QApplication::focusWidget(),static_cast<QWidget*>(mainComposer));
+    QTest::keyClick(mainComposer,Qt::Key_C,Qt::ControlModifier);QTRY_VERIFY(!engine(window,id)->isBusy());QCOMPARE(parentRunning(),parentBusy);
+    if(parentBusy){
+        // Collapsing the content makes the main chat the active surface again.
+        split->setContentCollapsed(true);QVERIFY(!split->contentVisible());
+        mainComposer->setFocus();QTRY_COMPARE(QApplication::focusWidget(),static_cast<QWidget*>(mainComposer));
+        QTest::keyClick(mainComposer,Qt::Key_C,Qt::ControlModifier);QTRY_VERIFY(!parentRunning());
+    }
+    QCOMPARE(window.currentSessionId(),QString("parent"));
+}
 void hiddenChildImagesResolveOnlyOwnedBytes(){QTemporaryDir data;Provider provider;QVERIFY(provider.seed(data.path()));MainWindow window(data.path());expose(window);auto* pane=create(window);QVERIFY(pane);const auto id=pane->chatId();auto encoded=[](const QColor& color){QImage image(40,30,QImage::Format_ARGB32);image.fill(color);QByteArray bytes;QBuffer buffer(&bytes);buffer.open(QIODevice::WriteOnly);image.save(&buffer,"PNG");return bytes;};AttachmentStore store(data.path());const auto own=store.write(id,"own.png",encoded(QColor("#00b8c8")));const auto parent=store.write("parent","parent.png",encoded(QColor("#c11e3b")));const auto foreign=store.write("other","other.png",encoded(QColor("#387b22")));QVERIFY(!own.path.isEmpty()&&!parent.path.isEmpty()&&!foreign.path.isEmpty());pane->composer()->setPlainText("Render owned image while hidden");pane->findChild<QToolButton*>("sideChatSendButton")->click();QTRY_COMPARE(provider.requests.size(),1);auto* tabs=window.findChild<QTabWidget*>();auto* unrelated=new QWidget;tabs->setCurrentIndex(tabs->addTab(unrelated,"Fixture alternate tab"));QVERIFY(!pane->isVisible());provider.send(0,{{"content","![own](path:"+own.path+")\n\n![parent](path:"+parent.path+")\n\n![foreign](path:"+foreign.path+")"}});provider.finish(0);auto count=[&]{int result=0;for(auto* text:pane->transcript()->findChildren<TranscriptText*>())result+=text->document()->property("trustedImageCount").toInt();return result;};QTRY_COMPARE(count(),1);QVERIFY(!pane->isVisible());tabs->setCurrentWidget(pane);QTest::qWait(50);const auto image=pane->transcript()->grab().toImage();int ownPixels=0,foreignPixels=0;for(int y=0;y<image.height();++y)for(int x=0;x<image.width();++x){const auto color=image.pixelColor(x,y);ownPixels+=color==QColor("#00b8c8");foreignPixels+=color==QColor("#c11e3b")||color==QColor("#387b22");}QVERIFY(ownPixels>100);QCOMPARE(foreignPixels,0);for(auto* text:window.findChild<ConversationView*>("conversationView")->findChildren<TranscriptText*>())QCOMPARE(text->document()->property("trustedImageCount").toInt(),0);}
 };
 QTEST_MAIN(SideChatHostTest)

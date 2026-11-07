@@ -1,0 +1,22 @@
+********* Start testing of CustomModelUiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelUiTest::initTestCase()
+PASS   : CustomModelUiTest::sourceDefaultsTrimAndExactOwner()
+PASS   : CustomModelUiTest::malformedJsonKeepsDraft(syntax)
+PASS   : CustomModelUiTest::malformedJsonKeepsDraft(array)
+PASS   : CustomModelUiTest::malformedJsonKeepsDraft(unsupported)
+PASS   : CustomModelUiTest::malformedJsonKeepsDraft(typed_header)
+PASS   : CustomModelUiTest::unsupportedImportedCapabilityRequiresExplicitClear()
+PASS   : CustomModelUiTest::failedCommitPreservesDraftAndCloseDuringCommit()
+PASS   : CustomModelUiTest::committerCanDeleteEditor()
+PASS   : CustomModelUiTest::advancedIsCollapsedAndRetainsPrivateDraft()
+PASS   : CustomModelUiTest::addEditMoveDeleteAreDurableAndExact()
+PASS   : CustomModelUiTest::cancelledDraftAndConcurrentSavePreserveFile()
+PASS   : CustomModelUiTest::durableChangedObserverCanDeleteOwner()
+PASS   : CustomModelUiTest::closingOwnerDuringActionDisablesMustNotOpenChild()
+PASS   : CustomModelUiTest::darkEditorInteriorUsesModelSurface()
+PASS   : CustomModelUiTest::narrowControlsRemainReachable(light)
+PASS   : CustomModelUiTest::narrowControlsRemainReachable(dark)
+PASS   : CustomModelUiTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 269ms
+********* Finished testing of CustomModelUiTest *********

@@ -1,0 +1,23 @@
+********* Start testing of TurnSnapshotTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TurnSnapshotTests::initTestCase()
+PASS   : TurnSnapshotTests::netEndpointsAreNotCumulative()
+PASS   : TurnSnapshotTests::repeatedModelIdsDoNotMixTurns()
+PASS   : TurnSnapshotTests::currentFilesCannotRewriteSavedDiff()
+PASS   : TurnSnapshotTests::restoredEndpointHasNoNetChange()
+PASS   : TurnSnapshotTests::ownerMissingDuplicateAndTraversalRejectAtomically()
+PASS   : TurnSnapshotTests::fullSummaryExceedsPreviewEightFileLimit()
+PASS   : TurnSnapshotTests::binaryAndLargeFilesHaveExplicitUnknownCounts()
+PASS   : TurnSnapshotTests::movePreservesBothChangedPaths()
+PASS   : TurnSnapshotTests::directoryOnlyChangesRemainReviewable()
+PASS   : TurnSnapshotTests::finalNewlineIsCounted()
+PASS   : TurnSnapshotTests::byteSignificantBomAndCrLfRemainVisibleInCounts()
+PASS   : TurnSnapshotTests::missingOrCorruptSnapshotCannotClaimCounts()
+PASS   : TurnSnapshotTests::noOpDirectoryDoesNotAdvertiseUnqueryableMutation()
+PASS   : TurnSnapshotTests::durableInvocationsSurviveRestartAndRemainOwnerScoped()
+PASS   : TurnSnapshotTests::durableInvocationCannotBeReboundToAnotherMutation()
+PASS   : TurnSnapshotTests::legacyJournalMigratesWithoutGuessingInvocationFromModelId()
+PASS   : TurnSnapshotTests::interruptedInvocationReconcilesOnlyAfterRollbackCompletes()
+PASS   : TurnSnapshotTests::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 629ms
+********* Finished testing of TurnSnapshotTests *********

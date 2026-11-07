@@ -1,0 +1,22 @@
+********* Start testing of ModelSelectorDisplayTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ModelSelectorDisplayTest::initTestCase()
+PASS   : ModelSelectorDisplayTest::idleSelectedLabelDoesNotScrollWithCaret(light1100)
+PASS   : ModelSelectorDisplayTest::idleSelectedLabelDoesNotScrollWithCaret(dark1100)
+PASS   : ModelSelectorDisplayTest::idleSelectedLabelDoesNotScrollWithCaret(light350)
+PASS   : ModelSelectorDisplayTest::idleSelectedLabelDoesNotScrollWithCaret(dark350)
+QWARN  : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft() This plugin does not support raise()
+QWARN  : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft() This plugin does not support grabbing the keyboard
+PASS   : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft()
+QWARN  : ModelSelectorDisplayTest::substringCompletionStillSelectsTheExactInstance() This plugin does not support raise()
+QWARN  : ModelSelectorDisplayTest::substringCompletionStillSelectsTheExactInstance() This plugin does not support grabbing the keyboard
+PASS   : ModelSelectorDisplayTest::substringCompletionStillSelectsTheExactInstance()
+PASS   : ModelSelectorDisplayTest::restoredSecondInstanceKeepsFullLabelAndIdentity()
+PASS   : ModelSelectorDisplayTest::thinkingOptionsUseOnlyDiscoveredEfforts()
+PASS   : ModelSelectorDisplayTest::nextThinkingOptionWrapsAndStartsFromDefault()
+PASS   : ModelSelectorDisplayTest::presetSelectionIgnoresThinkingOverride()
+PASS   : ModelSelectorDisplayTest::selectedModelChainAppliesOverrideReasoningEffort()
+PASS   : ModelSelectorDisplayTest::malformedOverridesAreIgnored()
+PASS   : ModelSelectorDisplayTest::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 1376ms
+********* Finished testing of ModelSelectorDisplayTest *********

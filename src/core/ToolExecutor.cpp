@@ -1,7 +1,9 @@
 #include "ToolExecutor.h"
 #include "ScopedDirectory.h"
+#include "SearchRules.h"
 #include "attachments/FileTransformer.h"
 
+#include <QDeadlineTimer>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -155,6 +157,207 @@ bool walkScopedDirectory(const QString& path,const QString& root,int limit,
     }
     return true;
 }
+// Ignore files are read only inside the selected mount, never through links,
+// with their own bounds. A rejected file contributes no rules (fail-open) and
+// is disclosed, because hiding whole trees silently would be worse.
+struct IgnoreLoadState {
+    int files=0,rules=0;
+    qint64 bytes=0;
+    bool capped=false;
+    QStringList diagnostics;
+    int omittedDiagnostics=0;
+    void note(const QString& text){if(diagnostics.size()<5)diagnostics.append(text);else ++omittedDiagnostics;}
+};
+constexpr qint64 MaxIgnoreFileBytes=256*1024,MaxIgnoreTotalBytes=4*1024*1024;
+constexpr int MaxIgnoreFiles=2000,MaxIgnoreRules=100000;
+QString shownSearchPath(const QString& path){return path.size()<=160?path:QStringLiteral("...")+path.right(157);}
+bool loadIgnoreFile(const QString& directory,const QString& relativeDirectory,search::IgnoreKind kind,const QString& root,
+                    search::RuleFile* out,IgnoreLoadState* state){
+    if(state->capped)return false;
+    const auto name=search::ignoreFileName(kind);
+    const auto path=directory+'/'+name;
+    const auto shown=shownSearchPath(relativeDirectory.isEmpty()?name:relativeDirectory+'/'+name);
+    const auto reject=[&](const QString& reason){state->note(QStringLiteral("[Ignore file %1 not applied: %2.]").arg(shown,reason));return false;};
+    QByteArray bytes;
+#ifdef Q_OS_WIN
+    const auto native=QDir::toNativeSeparators(path).toStdWString();
+    HANDLE handle=CreateFileW(native.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,
+                              FILE_FLAG_OPEN_REPARSE_POINT|FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
+    if(handle==INVALID_HANDLE_VALUE){
+        const DWORD code=GetLastError();
+        if(code==ERROR_FILE_NOT_FOUND||code==ERROR_PATH_NOT_FOUND)return false;
+        const DWORD attributes=GetFileAttributesW(native.c_str());
+        if(attributes!=INVALID_FILE_ATTRIBUTES&&(attributes&FILE_ATTRIBUTE_DIRECTORY))return reject(QStringLiteral("not a regular file"));
+        return reject(QStringLiteral("unreadable, Windows error %1").arg(code));
+    }
+    const auto close=qScopeGuard([&]{CloseHandle(handle);});
+    BY_HANDLE_FILE_INFORMATION info{};LARGE_INTEGER size{};
+    if(!GetFileInformationByHandle(handle,&info)||!GetFileSizeEx(handle,&size))return reject(QStringLiteral("unreadable"));
+    if(info.dwFileAttributes&FILE_ATTRIBUTE_REPARSE_POINT)return reject(QStringLiteral("links are not followed"));
+    if(info.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)return reject(QStringLiteral("not a regular file"));
+    const auto resolved=pathFromHandle(handle);
+    if(resolved.isEmpty()||!within(root,resolved))return reject(QStringLiteral("outside the selected mount"));
+    if(size.QuadPart>MaxIgnoreFileBytes)return reject(QStringLiteral("exceeds 256 KiB"));
+    if(state->bytes+size.QuadPart>MaxIgnoreTotalBytes){
+        state->capped=true;state->note(QStringLiteral("[Further ignore files not applied: 4 MiB total ignore-file limit reached.]"));return false;
+    }
+    QByteArray chunk(65536,Qt::Uninitialized);
+    while(true){
+        DWORD count=0;
+        if(!ReadFile(handle,chunk.data(),static_cast<DWORD>(chunk.size()),&count,nullptr))return reject(QStringLiteral("unreadable"));
+        if(!count)break;
+        if(bytes.size()+count>MaxIgnoreFileBytes)return reject(QStringLiteral("grew beyond 256 KiB"));
+        bytes.append(chunk.constData(),count);
+    }
+#else
+    const QFileInfo info(path);
+    if(!info.exists()&&!info.isSymLink())return false;
+    if(info.isSymLink()||info.isJunction())return reject(QStringLiteral("links are not followed"));
+    if(!info.isFile())return reject(QStringLiteral("not a regular file"));
+    if(!within(root,info.canonicalFilePath()))return reject(QStringLiteral("outside the selected mount"));
+    if(info.size()>MaxIgnoreFileBytes)return reject(QStringLiteral("exceeds 256 KiB"));
+    if(state->bytes+info.size()>MaxIgnoreTotalBytes){
+        state->capped=true;state->note(QStringLiteral("[Further ignore files not applied: 4 MiB total ignore-file limit reached.]"));return false;
+    }
+    QFile file(path);
+    if(!file.open(QIODevice::ReadOnly))return reject(QStringLiteral("unreadable"));
+    bytes=file.read(MaxIgnoreFileBytes+1);
+    if(bytes.size()>MaxIgnoreFileBytes)return reject(QStringLiteral("grew beyond 256 KiB"));
+#endif
+    state->bytes+=bytes.size();
+    if(++state->files>MaxIgnoreFiles){
+        state->capped=true;state->note(QStringLiteral("[Further ignore files not applied: %1-file limit reached.]").arg(MaxIgnoreFiles));return false;
+    }
+    out->rules.clear();
+    // Like rg: lines end at LF (one preceding CR is dropped), a leading UTF-8
+    // BOM is ignored, a malformed glob skips only its line, and invalid UTF-8
+    // stops the file while earlier lines stay applied.
+    const auto lines=bytes.split('\n');
+    for(qsizetype i=0;i<lines.size();++i){
+        auto line=lines[i];
+        if(line.endsWith('\r'))line.chop(1);
+        QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::ConvertInitialBom|QStringConverter::Flag::Stateless);
+        QString text=decoder(line);
+        if(decoder.hasError()){
+            state->note(QStringLiteral("[Ignore file %1: line %2 is not valid UTF-8; it and later lines were not applied.]").arg(shown,QString::number(i+1)));
+            break;
+        }
+        if(i==0)while(text.startsWith(QChar(0xfeff)))text.remove(0,1);
+        search::Rule rule;QString problem;
+        if(search::compileRule(text,search::Syntax::IgnoreFile,int(i+1),&rule,&problem)){
+            if(++state->rules>MaxIgnoreRules){
+                state->capped=true;state->note(QStringLiteral("[Further ignore rules not applied: %1-rule limit reached.]").arg(MaxIgnoreRules));break;
+            }
+            out->rules.append(std::move(rule));
+        }else if(!problem.isEmpty())state->note(QStringLiteral("[Ignore file %1 line %2 skipped: %3.]").arg(shown,QString::number(i+1),problem));
+    }
+    return true;
+}
+// Any .git entry marks a repository boundary, as in rg. The entry itself is
+// inspected, never a link target, and it is never listed or entered.
+bool hasGitEntry(const QString& directory){
+#ifdef Q_OS_WIN
+    const auto native=QDir::toNativeSeparators(directory+QStringLiteral("/.git")).toStdWString();
+    return GetFileAttributesW(native.c_str())!=INVALID_FILE_ATTRIBUTES;
+#else
+    const QFileInfo info(directory+QStringLiteral("/.git"));
+    return info.exists()||info.isSymLink();
+#endif
+}
+search::IgnoreLevel loadIgnoreLevel(const QString& directory,const QString& relativeDirectory,const QString& root,IgnoreLoadState* state){
+    search::IgnoreLevel level;
+    level.gitBoundary=hasGitEntry(directory);
+    for(int kind=0;kind<search::IgnoreKindCount;++kind){
+        level.files[kind].base=relativeDirectory;
+        level.present[kind]=loadIgnoreFile(directory,relativeDirectory,search::IgnoreKind(kind),root,&level.files[kind],state);
+    }
+    return level;
+}
+struct SearchScope {
+    search::Policy policy;
+    search::OverrideSet overrides;
+};
+constexpr int SearchEntryLimit=10000,SearchDepthLimit=64;
+constexpr qint64 SearchScanLimit=200000;
+// Like walkScopedDirectory, but ignored, excluded and hidden names are dropped
+// before they consume the 10000-entry budget. Every enumerated name still
+// counts toward a 200000-name scan bound. Pruned directories are never opened,
+// so their contents and ignore files are never read. The start directory is
+// never pruned; ignore files between the mount root and it still apply.
+// Cancellation fails the walk; an expired deadline ends it early as a
+// truncated (disclosed) result.
+bool walkSearchTree(const QString& path,const QString& root,const SearchScope& scope,
+                    const std::function<DirectoryVisit(const ScopedDirectoryEntry&,const QString&)>& visit,
+                    QString* error,bool* truncated,IgnoreLoadState* ignoreState,
+                    const std::atomic_bool* cancelled,const QDeadlineTimer& deadline){
+    const bool respectIgnores=scope.policy.respectIgnores;
+    std::atomic_bool halt{false};bool expired=false;
+    const auto halted=[&]{
+        if(halt.load(std::memory_order_relaxed))return true;
+        if(cancelled&&cancelled->load(std::memory_order_relaxed)){halt.store(true,std::memory_order_relaxed);return true;}
+        if(deadline.hasExpired()){expired=true;halt.store(true,std::memory_order_relaxed);return true;}
+        return false;
+    };
+    const auto interrupted=[&]{
+        if(expired){if(error)error->clear();*truncated=true;return true;}
+        if(error)*error=QStringLiteral("Search cancelled.");
+        return false;
+    };
+    if(halted())return interrupted();
+    QString start=QDir(root).relativeFilePath(path);
+    if(start=="."||start==".."||start.startsWith("../"))start.clear();
+    search::IgnoreStack ignores;
+    if(respectIgnores&&!start.isEmpty()){
+        ignores.push(loadIgnoreLevel(root,{},root,ignoreState));
+        const auto parts=start.split('/');QString ancestor;
+        for(qsizetype i=0;i+1<parts.size();++i){
+            ancestor+=(ancestor.isEmpty()?QString():QStringLiteral("/"))+parts[i];
+            ignores.push(loadIgnoreLevel(root+'/'+ancestor,ancestor,root,ignoreState));
+        }
+    }
+    struct Frame {ScopedDirectorySnapshot snapshot;QString prefix,mountDirectory;qsizetype next=0;};
+    QList<Frame> frames;int captured=0;qint64 scanned=0;
+    const auto open=[&](const QString& directory,const QString& prefix,const QString& mountDirectory,bool rootAlias){
+        if(respectIgnores)ignores.push(loadIgnoreLevel(directory,mountDirectory,root,ignoreState));
+        Frame frame;frame.prefix=prefix;frame.mountDirectory=mountDirectory;bool partial=false;
+        ScopedDirectoryAdmission admission;admission.scanned=&scanned;admission.scanLimit=SearchScanLimit;
+        admission.admit=[&](const ScopedDirectoryEntry& entry){
+            // The halt flag is the enumeration's cancel flag, so an expired
+            // deadline also ends a long single-directory read.
+            if(halted())return false;
+            const auto mountPath=mountDirectory.isEmpty()?entry.name:mountDirectory+'/'+entry.name;
+            return search::admit(scope.policy,scope.overrides,ignores,entry.name,prefix+entry.name,mountPath,
+                                 entry.isDirectory,entry.isReparsePoint,entry.isHidden);
+        };
+        if(!readScopedDirectory(directory,root,&frame.snapshot,error,SearchEntryLimit-captured,&halt,rootAlias,&partial,&admission)){
+            if(respectIgnores)ignores.pop();
+            return false;
+        }
+        captured+=frame.snapshot.entries.size();if(partial)*truncated=true;
+        frames.append(std::move(frame));return true;
+    };
+    if(!open(path,{},start,true))return halt.load(std::memory_order_relaxed)?interrupted():false;
+    while(!frames.isEmpty()){
+        auto& frame=frames.last();
+        if(frame.next>=frame.snapshot.entries.size()){
+            frames.removeLast();
+            if(respectIgnores)ignores.pop();
+            continue;
+        }
+        if(halted())return interrupted();
+        const auto child=frame.snapshot.entries.at(frame.next++);
+        const auto relative=frame.prefix+child.name;
+        const auto action=visit(child,relative);
+        if(action==DirectoryVisit::Error)return false;
+        if(action==DirectoryVisit::Stop)return true;
+        if(action==DirectoryVisit::Continue&&child.isDirectory&&!child.isReparsePoint){
+            if(captured>=SearchEntryLimit||scanned>=SearchScanLimit||relative.count('/')>=SearchDepthLimit){*truncated=true;continue;}
+            const auto mountDirectory=frame.mountDirectory.isEmpty()?child.name:frame.mountDirectory+'/'+child.name;
+            if(!open(child.absolutePath,relative+'/',mountDirectory,false))return halt.load(std::memory_order_relaxed)?interrupted():false;
+        }
+    }
+    return true;
+}
 struct FormattedRead {QString output;bool error=false;QJsonObject metadata={};};
 FormattedRead formattedMountedRead(const FileReadSource& source,const QString& name,const QString& path,
     const FileReadParams& params,const std::atomic_bool* cancelled,const FileReadCommitter& committer,const QString& inputHash){
@@ -242,22 +445,82 @@ QJsonObject definition(const char *name, const char *description, QJsonObject pr
         {"parameters", QJsonObject{{"type", "object"}, {"properties", properties},
                                    {"required", required}, {"additionalProperties", false}}}}}};
 }
-QRegularExpression globRegex(QString glob) {
-    QString expression;
-    for (qsizetype i = 0; i < glob.size(); ++i) {
-        const auto c = glob.at(i);
-        if (c == '*') {
-            if (i + 1 < glob.size() && glob.at(i + 1) == '*') {
-                ++i;
-                if (i + 1 < glob.size() && glob.at(i + 1) == '/') {
-                    ++i;
-                    expression += QStringLiteral("(?:.*/)?");
-                } else expression += QStringLiteral(".*");
-            } else expression += QStringLiteral("[^/]*");
-        } else if (c == '?') expression += QStringLiteral("[^/]");
-        else expression += QRegularExpression::escape(c);
-    }
-    return QRegularExpression(QStringLiteral("^(?:") + expression + QStringLiteral(")$"));
+struct SearchRequest {
+    bool grep=false;
+    QString path,root;
+    SearchScope scope;
+    QRegularExpression regex;
+    int maxMatches=15,timeLimitMs=0;
+};
+// Runs off the owner thread. The wall-clock limit starts with the walk and
+// ends it with the ordinary limit note; cancellation discards the result.
+FormattedRead runSearch(const SearchRequest& request,const std::atomic_bool* cancelled){
+    const QDeadlineTimer deadline(request.timeLimitMs);
+    const auto stopped=[&]{return (cancelled&&cancelled->load(std::memory_order_relaxed))||deadline.hasExpired();};
+    constexpr int globResultLimit = 50;
+    // Reserve room for truthful completion diagnostics; capped() must not
+    // cut those off after a long path or matching line fills the payload.
+    constexpr qsizetype payloadLimit = MaxOutputChars - 2048;
+    constexpr qint64 readLimit = 8 * 1024 * 1024;
+    QString output,error;
+    int matches = 0, skippedFiles = 0, globMatches = 0;
+    IgnoreLoadState ignoreState;
+    qint64 remainingReadBytes = readLimit;
+    bool truncated = false;
+    const auto append = [&](const QString& line) {
+        if (line.size() > payloadLimit - output.size()) {
+            truncated = true;
+            return false;
+        }
+        output += line;
+        return true;
+    };
+    if(!walkSearchTree(request.path,request.root,request.scope,[&](const ScopedDirectoryEntry& child,const QString& relative){
+        if(child.isDirectory)return DirectoryVisit::Continue;
+        if(!request.grep){
+            if(globMatches>=globResultLimit){truncated=true;return DirectoryVisit::Stop;}
+            if(!append(relative+'\n'))return DirectoryVisit::Stop;
+            ++globMatches;return DirectoryVisit::SkipChildren;
+        }
+        const auto remaining = remainingReadBytes;
+        if (remaining <= 0) { truncated = true; return DirectoryVisit::Stop; }
+        QByteArray bytes;
+        QString readError;
+        const bool read = readBoundedFile(child.absolutePath, request.root, &bytes, &readError,
+                                         qMin<qint64>(512 * 1024, remaining), nullptr, cancelled, &remainingReadBytes);
+        if (!read) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
+        QString text;
+        if (bytes.startsWith("\xff\xfe") || bytes.startsWith("\xfe\xff")) {
+            if (bytes.size() % 2 != 0) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
+            QStringDecoder decoder(bytes.startsWith("\xff\xfe") ? QStringConverter::Utf16LE : QStringConverter::Utf16BE,
+                                   QStringConverter::Flag::Stateless);
+            text = decoder(bytes);
+            if (decoder.hasError() || !text.isValidUtf16()) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
+            if (text.contains(QChar(0))) return DirectoryVisit::SkipChildren;
+        } else {
+            if (bytes.contains('\0')) return DirectoryVisit::SkipChildren;
+            text = QString::fromUtf8(bytes);
+        }
+        const auto lines = QStringView(text).split('\n');
+        for(qsizetype i=0;i<lines.size();++i){
+            if(!(i&1023)&&stopped()){truncated=true;return DirectoryVisit::Stop;}
+            if(!request.regex.matchView(lines[i]).hasMatch())continue;
+            QString preview;
+            if (lines[i].size() > 500) {
+                qsizetype length = 497;
+                if (lines[i].at(length - 1).isHighSurrogate() && lines[i].at(length).isLowSurrogate()) --length;
+                preview = lines[i].left(length).toString() + "...";
+            } else preview = lines[i].toString();
+            if (!append(relative + ':' + QString::number(i + 1) + ": " + preview + '\n')) return DirectoryVisit::Stop;
+            if (++matches >= request.maxMatches) { truncated = true; return DirectoryVisit::Stop; }
+        }
+        return DirectoryVisit::SkipChildren;
+    },&error,&truncated,&ignoreState,cancelled,deadline))return {error,true};
+    if (truncated) output += "\n[Search limit reached; narrow the query.]";
+    if (skippedFiles) output += QString("\n[Search incomplete: skipped %1 file(s) that exceeded the read limit, could not be read safely, or had malformed text encoding.]").arg(skippedFiles);
+    for (const auto& note : ignoreState.diagnostics) output += '\n' + note;
+    if (ignoreState.omittedDiagnostics) output += QStringLiteral("\n[... and %1 more ignore-file diagnostics.]").arg(ignoreState.omittedDiagnostics);
+    return {output.isEmpty() ? QStringLiteral("No matches.") : output, false};
 }
 }
 
@@ -372,12 +635,17 @@ QJsonArray ToolExecutor::definitions() {
                    {{"input_path",readPath},{"output_path",path},{"move",prop("boolean","Required: true moves, false copies.")}}, {"input_path","output_path","move"}),
         definition("delete", "Delete a scoped file or directory with durable recovery and conflict-aware undo history.", {{"path",path}}, {"path"}),
         definition("mkdir", "Create a directory and missing parent directories.", {{"path", path}}, {"path"}),
-        definition("glob", "Find files by workspace-relative glob pattern, supporting *, ** and ?. Traversal is bounded to 10000 entries and depth 64; limits are reported.",
-                   {{"pattern", prop("string", "Glob pattern, e.g. **/*.cpp.")}, {"mount_prefix", prop("string", "Workspace mount; ws1.")}}, {"pattern"}),
-        definition("grepSearch", "Search text files using a regular expression. Output, byte reads and traversal are bounded; search depth is at most 64.",
-                   {{"query", prop("string", "Regular expression to search.")}, {"case_sensitive", prop("boolean", "Default false.")},
-                    {"include_file_pattern", prop("string", "Optional relative-path glob.")},
-                    {"max_matches", prop("integer", "Maximum result count, 1-50.")}, {"mount_prefix", prop("string", "Workspace mount; ws1.")}}, {"query"}),
+        definition("glob", "Find files BY THEIR PATH/NAME using glob patterns (like 'find'). Returns at most 50 paths; a truncated list is reported. Respects .gitignore, .ignore and .rgignore files inside the mount (and skips node_modules) unless include_gitignored is true; .git and links are never listed. Traversal is bounded to 10000 entries, depth 64 and 20 seconds; limits are reported.",
+                   {{"pattern", prop("string", "Glob pattern supporting standard syntax (*, **, ?, [abc], {a,b}). A pattern without '/' matches names at any depth. Examples: '**/*.test.ts' for test files, 'src/**/config.json' for configs.")},
+                    {"include_gitignored", prop("boolean", "If true, includes files from gitignored paths (e.g. node_modules, dist). Use with specific patterns to avoid noise. Defaults to false.")},
+                    {"mount_prefix", prop("string", "Workspace mount; ws1.")}}, {"pattern"}),
+        definition("grepSearch", "Regex search INSIDE file contents. Hidden files and directories are skipped unless a pattern or ignore rule names them, and ignore files are respected unless include_gitignored is true. Output, byte reads, traversal and time (20 seconds) are bounded; search depth is at most 64.",
+                   {{"query", prop("string", "Regular expression to search.")}, {"case_sensitive", prop("boolean", "Whether search is case sensitive. Defaults to false (case insensitive).")},
+                    {"include_file_pattern", prop("string", "Glob pattern for files to include. Examples: \"*.ts\", \"**/*.tsx\", \"src/**/*.js\".")},
+                    {"exclude_file_pattern", prop("string", "Glob pattern for files to exclude. Examples: \"**/test-*.js\", \"metadata/**\".")},
+                    {"max_matches", prop("integer", "Maximum matches to return. Defaults to 15, maximum allowed is 50.")},
+                    {"include_gitignored", prop("boolean", "If true, includes files from gitignored paths (e.g. node_modules, dist). Use with specific patterns to avoid noise. Defaults to false.")},
+                    {"mount_prefix", prop("string", "Workspace mount; ws1.")}}, {"query"}),
         definition("runCommand", "Execute a shell command in the workspace (PowerShell on Windows). Requires approval unless always-allow is enabled. Commands run with the user's OS permissions; they are not filesystem sandboxed.",
                    {{"command", prop("string", "Shell command to execute.")}, {"cwd", path},
                     {"timeout_seconds", prop("integer", "Timeout in seconds, 1-300; default 60.")}}, {"command"})
@@ -578,70 +846,42 @@ void ToolExecutor::executeFileTool(const QString &name, const QJsonObject &args)
     } else if (name == "glob" || name == "grepSearch") {
         if (!info.isDir()) { finish("Search path is not a directory.", true); return; }
         const bool grep = name == "grepSearch";
-        const int maxMatches = qBound(1, args["max_matches"].toInt(15), 50);
-        const auto pattern = args[grep ? "include_file_pattern" : "pattern"].toString("**/*");
-        const auto glob = globRegex(pattern);
-        const bool basenamePattern = grep && !pattern.contains('/');
-        QRegularExpression regex(args["query"].toString(), args["case_sensitive"].toBool()
+        SearchRequest request;
+        request.grep = grep;
+        request.path = path;
+        request.root = root;
+        request.maxMatches = qBound(1, args["max_matches"].toInt(15), 50);
+        request.timeLimitMs = m_searchTimeLimitMs;
+        const auto present = [&](const char* field) { return args.contains(field) && !args[field].isNull() && !args[field].isUndefined(); };
+        if (present("include_gitignored") && !args["include_gitignored"].isBool()) { finish("include_gitignored must be a boolean.", true); return; }
+        // Upstream rg order: the include glob, then "!" + the exclude glob; the
+        // last matching glob wins. Empty patterns are treated as absent.
+        auto& scope = request.scope;
+        scope.policy.respectIgnores = !args["include_gitignored"].toBool();
+        scope.policy.skipHidden = grep;
+        for (const auto* field : grep ? QList<const char*>{"include_file_pattern", "exclude_file_pattern"} : QList<const char*>{"pattern"}) {
+            if (present(field) && !args[field].isString()) { finish(QStringLiteral("%1 must be a string.").arg(QString::fromLatin1(field)), true); return; }
+            const auto value = args[field].toString();
+            if (value.isEmpty() || (!grep && value == "**")) continue;
+            QString patternError;
+            const bool exclude = QByteArray(field) == "exclude_file_pattern";
+            if (!scope.overrides.add(exclude ? '!' + value : value, &patternError)) {
+                finish(QStringLiteral("Invalid %1: %2.").arg(QString::fromLatin1(field), patternError), true); return;
+            }
+        }
+        request.regex = QRegularExpression(args["query"].toString(), args["case_sensitive"].toBool()
             ? QRegularExpression::NoPatternOption : QRegularExpression::CaseInsensitiveOption);
-        if (grep && (!regex.isValid() || args["query"].toString().isEmpty())) { finish("Invalid or empty search regular expression.", true); return; }
-        // Reserve room for truthful completion diagnostics; capped() must not
-        // cut those off after a long path or matching line fills the payload.
-        constexpr qsizetype payloadLimit = MaxOutputChars - 512;
-        constexpr qint64 readLimit = 8 * 1024 * 1024;
-        QString output;
-        int matches = 0, skippedFiles = 0;
-        qint64 remainingReadBytes = readLimit;
-        bool truncated = false;
-        const auto append = [&](const QString& line) {
-            if (line.size() > payloadLimit - output.size()) {
-                truncated = true;
-                return false;
-            }
-            output += line;
-            return true;
-        };
-        if(!walkScopedDirectory(path,root,10000,[&](const ScopedDirectoryEntry& child,const QString& relative){
-            if(child.name==".git"||child.name=="node_modules"||child.isReparsePoint)return DirectoryVisit::SkipChildren;
-            if(child.isDirectory)return DirectoryVisit::Continue;
-            if(!glob.match(basenamePattern ? child.name : relative).hasMatch())return DirectoryVisit::SkipChildren;
-            if(!grep)return append(relative+'\n') ? DirectoryVisit::SkipChildren : DirectoryVisit::Stop;
-            const auto remaining = remainingReadBytes;
-            if (remaining <= 0) { truncated = true; return DirectoryVisit::Stop; }
-            QByteArray bytes;
-            QString readError;
-            const bool read = readBoundedFile(child.absolutePath, root, &bytes, &readError,
-                                             qMin<qint64>(512 * 1024, remaining), nullptr, nullptr, &remainingReadBytes);
-            if (!read) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
-            QString text;
-            if (bytes.startsWith("\xff\xfe") || bytes.startsWith("\xfe\xff")) {
-                if (bytes.size() % 2 != 0) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
-                QStringDecoder decoder(bytes.startsWith("\xff\xfe") ? QStringConverter::Utf16LE : QStringConverter::Utf16BE,
-                                       QStringConverter::Flag::Stateless);
-                text = decoder(bytes);
-                if (decoder.hasError() || !text.isValidUtf16()) { ++skippedFiles; return DirectoryVisit::SkipChildren; }
-                if (text.contains(QChar(0))) return DirectoryVisit::SkipChildren;
-            } else {
-                if (bytes.contains('\0')) return DirectoryVisit::SkipChildren;
-                text = QString::fromUtf8(bytes);
-            }
-            const auto lines = QStringView(text).split('\n');
-            for(qsizetype i=0;i<lines.size();++i){
-                if(!regex.matchView(lines[i]).hasMatch())continue;
-                QString preview;
-                if (lines[i].size() > 500) {
-                    qsizetype length = 497;
-                    if (lines[i].at(length - 1).isHighSurrogate() && lines[i].at(length).isLowSurrogate()) --length;
-                    preview = lines[i].left(length).toString() + "...";
-                } else preview = lines[i].toString();
-                if (!append(relative + ':' + QString::number(i + 1) + ": " + preview + '\n')) return DirectoryVisit::Stop;
-                if (++matches >= maxMatches) { truncated = true; return DirectoryVisit::Stop; }
-            }
-            return DirectoryVisit::SkipChildren;
-        },&error,&truncated,64)){finish(error,true);return;}
-        if (truncated) output += "\n[Search limit reached; narrow the query.]";
-        if (skippedFiles) output += QString("\n[Search incomplete: skipped %1 file(s) that exceeded the read limit, could not be read safely, or had malformed text encoding.]").arg(skippedFiles);
-        finish(output.isEmpty() ? QStringLiteral("No matches.") : output, false, false);
+        if (grep && (!request.regex.isValid() || args["query"].toString().isEmpty())) { finish("Invalid or empty search regular expression.", true); return; }
+        // Like read and ls, the walk runs off the owner thread; cancel() stops it.
+        const auto generation=m_generation;const auto id=m_id;
+        const auto cancelled=std::make_shared<std::atomic_bool>(false);m_fileReadCancelled=cancelled;
+        auto* watcher=new QFutureWatcher<FormattedRead>(this);
+        connect(watcher,&QFutureWatcher<FormattedRead>::finished,this,[this,watcher,generation,id]{
+            const auto result=watcher->result();watcher->deleteLater();
+            if(generation!=m_generation||id!=m_id)return;
+            m_fileReadCancelled.reset();finish(result.output,result.error,result.error);
+        });
+        watcher->setFuture(QtConcurrent::run([request,cancelled]{return runSearch(request,cancelled.get());}));
     } else finish("Unsupported tool: " + name, true);
 }
 

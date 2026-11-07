@@ -1,0 +1,26 @@
+********* Start testing of StreamingFollowups *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : StreamingFollowups::initTestCase()
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(wheel) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::independentLayoutPreservesReading(wheel)
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(page-up) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::independentLayoutPreservesReading(page-up)
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(scrollbar-value) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::independentLayoutPreservesReading(scrollbar-value)
+QWARN  : StreamingFollowups::userInputBetweenLayoutAndRestore(wheel) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::userInputBetweenLayoutAndRestore(wheel)
+QWARN  : StreamingFollowups::userInputBetweenLayoutAndRestore(page-up) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::userInputBetweenLayoutAndRestore(page-up)
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(waiting-first-response) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(waiting-first-response)
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(between-tool-steps) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(between-tool-steps)
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(running-tool) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(running-tool)
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(streaming-reasoning) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(streaming-reasoning)
+QWARN  : StreamingFollowups::reasoningOnlyGroupHasThinkingLabel() This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::reasoningOnlyGroupHasThinkingLabel()
+PASS   : StreamingFollowups::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 23251ms
+********* Finished testing of StreamingFollowups *********

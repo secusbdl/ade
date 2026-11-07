@@ -1,0 +1,24 @@
+********* Start testing of InstanceCoordinatorTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : InstanceCoordinatorTest::initTestCase()
+PASS   : InstanceCoordinatorTest::firstIsPrimaryAndWritesSidecar()
+PASS   : InstanceCoordinatorTest::secondSameDirForwardsAndPrimaryReceives()
+PASS   : InstanceCoordinatorTest::crossProcessForward()
+PASS   : InstanceCoordinatorTest::differentDataDirsBothPrimary()
+PASS   : InstanceCoordinatorTest::refusesExclusiveLaunchWhileRunning()
+PASS   : InstanceCoordinatorTest::exclusiveLaunchWaitsForClosingPrimary()
+QWARN  : InstanceCoordinatorTest::lockErrorContinuesUncoordinated() ADE cannot lock the data directory C:\Users\secus\AppData\Local\Temp\test_instance_coordinator-kcnQcD; continuing without single-instance coordination.
+QWARN  : InstanceCoordinatorTest::lockErrorContinuesUncoordinated() ADE cannot lock the data directory C:\Users\secus\AppData\Local\Temp\test_instance_coordinator-kcnQcD; continuing without single-instance coordination.
+PASS   : InstanceCoordinatorTest::lockErrorContinuesUncoordinated()
+PASS   : InstanceCoordinatorTest::filtersUrls()
+PASS   : InstanceCoordinatorTest::rejectsOversizedMalformedWrongVersionFrames()
+PASS   : InstanceCoordinatorTest::slowClientTimesOut()
+PASS   : InstanceCoordinatorTest::requestsBufferedUntilReady()
+PASS   : InstanceCoordinatorTest::closingPrimaryRefusesAndLockHandsOver()
+PASS   : InstanceCoordinatorTest::lockHeldButNoServerFails()
+PASS   : InstanceCoordinatorTest::primaryReleaseAllowsNewPrimary()
+QWARN  : InstanceCoordinatorTest::listenFailureStillPrimary() ADE single-instance server is unavailable: 
+PASS   : InstanceCoordinatorTest::listenFailureStillPrimary()
+PASS   : InstanceCoordinatorTest::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 4040ms
+********* Finished testing of InstanceCoordinatorTest *********

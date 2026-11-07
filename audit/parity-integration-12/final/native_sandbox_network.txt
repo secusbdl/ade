@@ -1,0 +1,16 @@
+********* Start testing of SandboxNetworkTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SandboxNetworkTests::initTestCase()
+PASS   : SandboxNetworkTests::bufferedResponsesHeadersAndBodyConsumption()
+PASS   : SandboxNetworkTests::requestBodiesBinaryOffsetsAndResponseConstructors()
+PASS   : SandboxNetworkTests::httpErrorsRedirectsAndTransportErrors()
+PASS   : SandboxNetworkTests::abortIsPerFetchAndLeavesContextUsable()
+PASS   : SandboxNetworkTests::opaqueCredentialsAreScopedRevokedAndNeverReflected()
+PASS   : SandboxNetworkTests::credentialRedirectsAndCancellationResetHandles()
+PASS   : SandboxNetworkTests::identityCorrelationAndResetNotificationSafety()
+PASS   : SandboxNetworkTests::boundedBodiesAndTimeoutResetRevokeCredentials()
+PASS   : SandboxNetworkTests::reentrantDeletionFromContextResetIsSafe()
+PASS   : SandboxNetworkTests::toolCancellationStopsItsNetworkImmediately()
+PASS   : SandboxNetworkTests::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 5268ms
+********* Finished testing of SandboxNetworkTests *********

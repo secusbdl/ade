@@ -1,5 +1,6 @@
 #include "SessionStore.h"
 #include "core/QueuedMessages.h"
+#include "core/TurnFailure.h"
 #include "core/ScopedDirectory.h"
 #include <QDir>
 #include <QFile>
@@ -64,6 +65,10 @@ bool validDraftAttachments(const QJsonValue& value) {
     }
     return true;
 }
+bool validTurnFailure(const QJsonValue& value){
+    // The writer and loader share one predicate; the key is absent when empty.
+    return value.isUndefined()||(value.isObject()&&TurnFailure::validShape(value.toObject()));
+}
 bool validLinkProvenance(const QJsonValue& value){
     if(value.isUndefined())return true;
     if(!value.isObject())return false;
@@ -100,7 +105,7 @@ QList<Conversation> SessionStore::load(QString* error) const {
         const auto o = value.toObject();
         const auto id=o["id"].toString();
         if (!value.isObject()||!validAgentId(id)||ids.contains(id.toCaseFolded())||!o["messages"].isArray()||!o["title"].isString()||!validDraftAttachments(o["draftAttachments"])
-            ||(o.contains("queuedMessages")&&(!o["queuedMessages"].isArray()||!QueuedMessages::validate(o["queuedMessages"].toArray())))||!validLinkProvenance(o["transcriptLinkProvenance"])) {
+            ||(o.contains("queuedMessages")&&(!o["queuedMessages"].isArray()||!QueuedMessages::validate(o["queuedMessages"].toArray())))||!validLinkProvenance(o["transcriptLinkProvenance"])||!validTurnFailure(o.value("turnFailure"))) {
             if(error)*error="Conversation storage contains invalid or duplicate records. Original data was preserved.";
             return {};
         }
@@ -114,6 +119,7 @@ QList<Conversation> SessionStore::load(QString* error) const {
         s.draftAttachments=o["draftAttachments"].toArray();
         s.queuedMessages=o["queuedMessages"].toArray();
         s.transcriptLinkProvenance=o["transcriptLinkProvenance"].toObject();
+        s.turnFailure=o.value("turnFailure").toObject();
         s.created=o["created"].toInteger(); s.updated=o["updated"].toInteger();s.archivedAt=o["archivedAt"].toInteger();
         s.archived=o["archived"].toBool();s.alwaysAllow=o["alwaysAllow"].toBool(); s.messages=o["messages"].toArray();
         if(o.contains("lastMessageAt")&&(!o["lastMessageAt"].isDouble()||o["lastMessageAt"].toDouble()!=double(o["lastMessageAt"].toInteger())||o["lastMessageAt"].toInteger()<0)){
@@ -191,11 +197,13 @@ bool SessionStore::writeState(const QString& directory,const QList<Conversation>
     QJsonArray records;
     QSet<QString> ids;
     for (const auto& s : sessions) {
-        if(!validAgentId(s.id)||ids.contains(s.id.toCaseFolded())||!validDraftAttachments(s.draftAttachments)||!QueuedMessages::validate(s.queuedMessages)||!validLinkProvenance(s.transcriptLinkProvenance)||s.lastMessageAt<0){if(error)*error="Cannot save invalid or duplicate conversation records.";return false;}
+        if(!validAgentId(s.id)||ids.contains(s.id.toCaseFolded())||!validDraftAttachments(s.draftAttachments)||!QueuedMessages::validate(s.queuedMessages)||!validLinkProvenance(s.transcriptLinkProvenance)||(!s.turnFailure.isEmpty()&&!TurnFailure::validShape(s.turnFailure))||s.lastMessageAt<0){if(error)*error="Cannot save invalid or duplicate conversation records.";return false;}
         ids.insert(s.id.toCaseFolded());
-        records.append(QJsonObject{
+        QJsonObject record{
         {"id",s.id},{"sideChatParentId",s.sideChatParentId},{"title",s.title},{"workspace",s.workspace},{"providerId",s.providerId},{"queuedMessages",s.queuedMessages},{"transcriptLinkProvenance",s.transcriptLinkProvenance},
-        {"model",s.model},{"presetId",s.presetId},{"draft",s.draft},{"draftAttachments",s.draftAttachments},{"messages",s.messages},{"created",s.created},{"updated",s.updated},{"archivedAt",s.archivedAt},{"lastMessageAt",s.lastMessageAt},{"archived",s.archived},{"alwaysAllow",s.alwaysAllow},{"titleLocked",s.titleLocked},{"autoTitleAttempted",s.autoTitleAttempted}});
+        {"model",s.model},{"presetId",s.presetId},{"draft",s.draft},{"draftAttachments",s.draftAttachments},{"messages",s.messages},{"created",s.created},{"updated",s.updated},{"archivedAt",s.archivedAt},{"lastMessageAt",s.lastMessageAt},{"archived",s.archived},{"alwaysAllow",s.alwaysAllow},{"titleLocked",s.titleLocked},{"autoTitleAttempted",s.autoTitleAttempted}};
+        if(!s.turnFailure.isEmpty())record["turnFailure"]=s.turnFailure;
+        records.append(record);
     }
     if(pendingCleanup.size()>10000){if(error)*error="Too many pending conversation cleanup records.";return false;}
     QSet<QString> cleanupIds,physicalIds;

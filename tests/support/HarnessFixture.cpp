@@ -187,7 +187,7 @@ int main(int argc, char **argv) {
            true);
       if (scenario == "hold" || scenario == "child")
         continue;
-      if (scenario == "approval") {
+      if (scenario == "approval" || scenario == "approval-settled") {
         item({{"id", "command"},
               {"type", "commandExecution"},
               {"command", "echo fixture"},
@@ -200,6 +200,9 @@ int main(int argc, char **argv) {
         output({{"id", "server-approval"},
                 {"method", "item/commandExecution/requestApproval"},
                 {"params", request}});
+        // The server resolves the approval itself and completes the turn.
+        if (scenario == "approval-settled")
+          text();
       } else if (scenario == "question") {
         auto request = params();
         request["itemId"] = "question";
@@ -220,7 +223,8 @@ int main(int argc, char **argv) {
     } else if (method == "turn/interrupt") {
       result(id, QJsonObject{});
       done("interrupted");
-    } else if (method.isEmpty() && id == "server-approval") {
+    } else if (method.isEmpty() && id == "server-approval" &&
+               scenario != "approval-settled") {
       const auto decision =
           object.value("result").toObject().value("decision").toString();
       item({{"id", "command"},

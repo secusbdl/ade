@@ -3,6 +3,8 @@
 #include <QByteArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QList>
+#include <QPair>
 #include <QWidget>
 #include <QPointer>
 #include <QUrl>
@@ -19,7 +21,18 @@ namespace ade {
 class SettingsPage : public QWidget {
     Q_OBJECT
 public:
+    struct SoundImportOutcome {
+        bool cancelled = false;
+        QString id, name, error;
+    };
+    // Supplied by the host; the page never touches audio or files itself.
+    struct SoundHooks {
+        std::function<QList<QPair<QString, QString>>()> packs; // id, display name
+        std::function<bool(const QString &pack, const QString &loudness)> preview;
+        std::function<SoundImportOutcome()> chooseAndImport;
+    };
     explicit SettingsPage(QString dataDir, QWidget *parent = nullptr);
+    void setSoundHooks(SoundHooks hooks);
     QJsonValue preference(const QString &path, const QJsonValue &fallback = {}) const;
     QJsonObject preferences() const { return m_preferences; }
     QString currentSection() const { return m_section; }
@@ -101,6 +114,7 @@ private:
     QByteArray m_persistedPreferences;
     QJsonObject m_preferences;
     std::function<QWidget*(QWidget*)> m_worktreePageFactory;
+    SoundHooks m_soundHooks;
     QButtonGroup *m_navigation = nullptr;
     QScrollArea *m_scroll = nullptr;
     QLabel *m_status = nullptr;

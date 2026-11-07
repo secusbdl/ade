@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="30"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="138"
+	timestamp="2026-11-07T09:00:17"
+	>
+	<testcase name="native_navigation_shortcuts" classname="native_navigation_shortcuts" time="4.33888" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversation_control" classname="native_conversation_control" time="4.5054" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_history_retry" classname="native_history_retry" time="7.91783" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_rich" classname="native_transcript_rich" time="1.48628" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_composer_host" classname="native_composer_host" time="3.19017" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_control_ui" classname="native_agent_control_ui" time="4.75964" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_command_center_host" classname="native_command_center_host" time="2.97472" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_side_chat" classname="native_side_chat" time="0.375538" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_side_chat_host" classname="native_side_chat_host" time="43.9561" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_history_actions_host" classname="native_history_actions_host" time="4.94552" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_diff" classname="native_file_diff" time="0.195287" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_image_preview" classname="native_image_preview" time="0.389911" status="run">
+		<properties/>
+		<system-out>libpng error: Read Error
+</system-out>
+	</testcase>
+	<testcase name="native_transcript" classname="native_transcript" time="3.22933" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_main_chrome" classname="native_main_chrome" time="4.66265" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversations" classname="native_conversations" time="19.4316" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_session_cleanup" classname="native_session_cleanup" time="0.549375" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_core" classname="native_core" time="8.70195" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui" classname="native_ui" time="2.16804" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_editor" classname="native_editor" time="1.19379" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings" classname="native_settings" time="1.05656" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_picker" classname="native_provider_picker" time="0.708452" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_continuity" classname="native_harness_continuity" time="6.33739" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_priority" classname="native_question_priority" time="1.74132" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings_shortcuts" classname="native_settings_shortcuts" time="1.75853" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_activity" classname="native_agent_activity" time="0.21951" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_notification_sounds" classname="native_notification_sounds" time="0.345763" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_power_request" classname="native_power_request" time="0.0415623" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_instance_coordinator" classname="native_instance_coordinator" time="4.06477" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_instance_window_host" classname="native_instance_window_host" time="1.80929" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_history_retry_harness" classname="native_history_retry_harness" time="1.33064" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

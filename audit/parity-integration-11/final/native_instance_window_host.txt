@@ -1,0 +1,22 @@
+********* Start testing of InstanceWindowHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : InstanceWindowHostTest::initTestCase()
+PASS   : InstanceWindowHostTest::mainWindowUsesNullEffectsOffscreen()
+QWARN  : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs() This plugin does not support raise()
+QWARN  : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs() This plugin does not support setting window masks
+QWARN  : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs() This plugin does not support lower()
+QWARN  : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs() This plugin does not support raise()
+QWARN  : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs() This plugin does not support raise()
+PASS   : InstanceWindowHostTest::handleInstanceRequestRestoresAndOpensTabs()
+PASS   : InstanceWindowHostTest::handleInstanceRequestDuringTransitionOnlyActivates()
+QWARN  : InstanceWindowHostTest::startupUrlsOpenWithoutActivation() This plugin does not support setting window masks
+PASS   : InstanceWindowHostTest::startupUrlsOpenWithoutActivation()
+QWARN  : InstanceWindowHostTest::recoveryDialogIsRaised() This plugin does not support propagateSizeHints()
+QWARN  : InstanceWindowHostTest::recoveryDialogIsRaised() This plugin does not support raise()
+QWARN  : InstanceWindowHostTest::recoveryDialogIsRaised() This plugin does not support raise()
+QWARN  : InstanceWindowHostTest::recoveryDialogIsRaised() This plugin does not support setting window masks
+PASS   : InstanceWindowHostTest::recoveryDialogIsRaised()
+PASS   : InstanceWindowHostTest::hostBusyAcquiresAwaitingReleasesPrefOffReleases()
+PASS   : InstanceWindowHostTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 1753ms
+********* Finished testing of InstanceWindowHostTest *********

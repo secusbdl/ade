@@ -1,6 +1,5 @@
 #include "BrowserToolResult.h"
-#include <QBuffer>
-#include <QImageReader>
+#include "BrowserScreenshot.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -53,14 +52,12 @@ BrowserScreenshotResult decodeBrowserScreenshot(const QString &output) {
   BrowserScreenshotResult result;
   const auto fail = [&] {
     result.bytes.clear();
-    result.error = "The browser screenshot was not a valid bounded PNG, JPEG "
-                   "or WebP image. Retry with a smaller clip or use "
-                   "executeSandboxJs and API.createAttachment.";
+    result.error = QString::fromLatin1(BrowserScreenshotInvalidMessage);
     return result;
   };
   // The bridge already enforces this UTF-16 transport bound. Keep this helper
   // defensive when called independently, without allocating an unbounded copy.
-  if (output.size() > 2 * 1024 * 1024)
+  if (output.size() > BrowserScreenshotTransportChars)
     return fail();
   QJsonParseError parse;
   const auto doc = QJsonDocument::fromJson(output.toUtf8(), &parse);
@@ -68,27 +65,23 @@ BrowserScreenshotResult decodeBrowserScreenshot(const QString &output) {
       !doc.object().value("data").isString())
     return fail();
   const auto encoded = doc.object().value("data").toString();
-  if (encoded.isEmpty() || encoded.size() > 2 * 1024 * 1024)
+  if (encoded.isEmpty() || encoded.size() > BrowserScreenshotTransportChars)
     return fail();
   const auto decoded = QByteArray::fromBase64Encoding(
       encoded.toLatin1(), QByteArray::AbortOnBase64DecodingErrors);
   if (!decoded || decoded.decoded.isEmpty() ||
-      decoded.decoded.size() > 2 * 1024 * 1024)
+      decoded.decoded.size() > BrowserScreenshotTransportChars)
+    return fail();
+  QByteArray format;
+  if (!validateBrowserScreenshotImage(decoded.decoded, &format))
     return fail();
   result.bytes = decoded.decoded;
-  QBuffer buffer(&result.bytes);
-  buffer.open(QIODevice::ReadOnly);
-  QImageReader reader(&buffer);
-  const auto format = reader.format();
-  const auto size = reader.size();
-  if (!QList<QByteArray>{"png", "jpeg", "jpg", "webp"}.contains(format) ||
-      !size.isValid() ||
-      qint64(size.width()) * size.height() > 64 * 1024 * 1024 ||
-      reader.read().isNull())
-    return fail();
-  const auto extension = format == "jpg" ? QByteArray("jpeg") : format;
-  result.fileName = "browser-screenshot." + QString::fromLatin1(extension);
-  result.mimeType = "image/" + QString::fromLatin1(extension);
+  result.fileName = "browser-screenshot." + QString::fromLatin1(format);
+  result.mimeType = "image/" + QString::fromLatin1(format);
+  // Present only when the bridge fell back from an oversized capture.
+  const auto note = doc.object().value("adeScreenshotFallback");
+  if (note.isString() && note.toString().size() <= 512)
+    result.note = note.toString();
   return result;
 }
 } // namespace ade

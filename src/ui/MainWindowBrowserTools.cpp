@@ -3,6 +3,7 @@
 #include "MainWindow.h"
 #include "attachments/AttachmentStore.h"
 #include "browser/BrowserInspector.h"
+#include "browser/BrowserScreenshot.h"
 #include "browser/browserwidget.h"
 #include <QActionGroup>
 #include <QDialog>
@@ -214,8 +215,12 @@ QWidget *MainWindow::configureBrowserTools(QWidget *page,
                 QJsonDocument(element).toJson(QJsonDocument::Indented));
           });
   connect(inspector, &BrowserInspector::screenshotCaptured, page,
-          [this](const QByteArray &png, const QString &id) {
-            attachBrowserContext(id, "Page screenshot.png", png);
+          [this](const QByteArray &image, const QString &id) {
+            // PNG normally; JPEG when the PNG exceeded the screenshot transport.
+            attachBrowserContext(id,
+                                 "Page screenshot." +
+                                     browserScreenshotExtension(image),
+                                 image);
           });
   return new BrowserViewport(browser, inspector, page);
 }

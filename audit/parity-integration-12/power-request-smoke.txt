@@ -1,0 +1,12 @@
+********* Start testing of PowerRequestTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PowerRequestTest::initTestCase()
+PASS   : PowerRequestTest::acquireOnlyWhenEnabledAndActive()
+PASS   : PowerRequestTest::disablingReleasesImmediately()
+PASS   : PowerRequestTest::destructorReleases()
+PASS   : PowerRequestTest::acquireFailureIsRetriedOnNextUpdate()
+PASS   : PowerRequestTest::nullBackendNeverHolds()
+PASS   : PowerRequestTest::winBackendRoundTrip()
+PASS   : PowerRequestTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of PowerRequestTest *********

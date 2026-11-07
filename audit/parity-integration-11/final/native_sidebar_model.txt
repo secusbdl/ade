@@ -1,0 +1,23 @@
+********* Start testing of SidebarModelTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SidebarModelTest::initTestCase()
+PASS   : SidebarModelTest::localCalendarDays(-1)
+PASS   : SidebarModelTest::localCalendarDays(0)
+PASS   : SidebarModelTest::localCalendarDays(1)
+PASS   : SidebarModelTest::localCalendarDays(2)
+PASS   : SidebarModelTest::localCalendarDays(7)
+PASS   : SidebarModelTest::localCalendarDays(8)
+PASS   : SidebarModelTest::localCalendarDays(30)
+PASS   : SidebarModelTest::localCalendarDays(31)
+PASS   : SidebarModelTest::stableNewestOrderAndPinPriority()
+PASS   : SidebarModelTest::zeroActivityStillSortsByCreation()
+PASS   : SidebarModelTest::currentBeyondFirstPageRemainsVisible()
+PASS   : SidebarModelTest::newSessionChatsRaiseVisibleFloor()
+PASS   : SidebarModelTest::searchHasNoEmptyGroupsOrArchivedLeaks()
+PASS   : SidebarModelTest::workspaceKeepsPinnedDuplicatesAndDistinctBasenames()
+PASS   : SidebarModelTest::manualWorkspaceOrderAndNewGroups()
+PASS   : SidebarModelTest::collapseNeverHidesGlobalPin()
+PASS   : SidebarModelTest::gitRootThenWorktreeAgeAndEmptyWorktrees()
+PASS   : SidebarModelTest::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 10ms
+********* Finished testing of SidebarModelTest *********

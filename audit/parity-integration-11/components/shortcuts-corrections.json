@@ -1,0 +1,128 @@
+{
+  "verdict": "sound_with_corrections",
+  "corrections": [
+    {
+      "claim": "S3: the window-level Ctrl+C fallback is safe because 'text widgets accept the Copy ShortcutOverride, so they keep native copy'; read-only transcript text without a selection 'will copy nothing rather than stop'.",
+      "problem": "The analysis is backwards. QWidgetTextControl only accepts the Copy ShortcutOverride for Qt::TextEditable widgets. The transcript is read-only (TranscriptText is a QTextBrowser with setReadOnly(true), MarkdownParts.cpp:156-163; read-only CodeEditor blocks at ConversationView.cpp:180 and 237; selectable QLabels at ConversationView.cpp:423). An always-enabled WindowShortcut on m_pages->widget(0) therefore eats Ctrl+C there. With a selection, the key never reaches the widget, so nothing is copied. Because the shortcut is enabled even when the agent is idle, it also takes Ctrl+C from item views (agent list, file tree) at all times.",
+      "fix": "Split S3. S3a: Ctrl+C in the composer, main and side chat. S3b: the window fallback. In S3b, the QShortcut `shortcut_stop_agent` is enabled only while a stop target is enabled, re-evaluated from updateComposerState, m_tabs currentChanged, splitter visibilityChanged and a new SideChatPane signal. In the callback, if the focus widget has a text selection, copy it explicitly (QTextEdit/QPlainTextEdit::copy, QLineEdit::copy, or QLabel::selectedText to the clipboard) and do not stop. Add tests for copying a read-only transcript selection while busy, and for idle Ctrl+C on the agent list where the shortcut must not activate.",
+      "evidence": "src/ui/MarkdownParts.cpp:156-163, 212; src/ui/ConversationView.cpp:180, 237, 423; src/ui/MainWindow.cpp:470-472 (m_stop enabled only while busy)"
+    },
+    {
+      "claim": "S3: in Composer::keyPressEvent, `event->matches(QKeySequence::Copy) && !hasSelection` emits the stop request.",
+      "problem": "On Windows, QKeySequence::Copy also matches Ctrl+Insert. Upstream accepts only Ctrl+C with strict modifiers (matchAccelerator, hotkeys.ts:672-701; shouldPreserveNativeCopy checks the 'c' key with ctrlKey, panel-footer.tsx:798-816).",
+      "fix": "Use `event->key()==Qt::Key_C && event->modifiers()==Qt::ControlModifier && !textCursor().hasSelection()`. Do not use QKeySequence::Copy."
+    },
+    {
+      "claim": "S3: the window fallback stops through m_stop; SideChatPane only forwards the composer.",
+      "problem": "Upstream STOP_AGENT is registered per panel-footer and enabled by `isActiveChatSurface && canStopAgent` (panel-footer.tsx:404-406, 1494-1505). When a side-chat tab is the active content tab, the main surface is inactive and the side chat's Ctrl+C stops the side chat. The design always stops the main agent from non-text focus. MainWindowSideChats.cpp is also hash-pinned by the Settings cohort, so it cannot be edited for this.",
+      "fix": "Resolve the stop target as follows: if `m_splitter->contentVisible()` and `qobject_cast<SideChatPane*>(m_tabs->currentWidget())`, click that pane's `sideChatStopButton`; otherwise click m_stop. Add the signal `stopAvailabilityChanged(bool)` to SideChatPane, emitted from updateActions(). Connect it from MainWindowShortcuts.cpp on tab change with Qt::UniqueConnection, so MainWindowSideChats.cpp is not touched.",
+      "evidence": "src/ui/SideChatPane.cpp:33, 37, 52; HANDOFF.json commonHashes include MainWindowSideChats.cpp"
+    },
+    {
+      "claim": "S3 tests extend test_agent_control_ui and press Ctrl+C.",
+      "problem": "Existing tests in that file only call window.show(). QShortcut WindowShortcut and WidgetWithChildrenShortcut contexts need an active window, so fallback tests would be flaky or fail for the wrong reason.",
+      "fix": "Use the activate() pattern from test_navigation_shortcuts.cpp:41-48 (WA_DontShowOnScreen, show, activateWindow, QApplication::setActiveWindow) in every new key test. The target already runs offscreen with a 120 s timeout (CMakeLists.txt:199-205)."
+    },
+    {
+      "claim": "S2: Source control stays reachable from the workbench menu; record the rebinding in the tooltip of the Source control menu item.",
+      "problem": "The visible source-control button `sourceControlButton` at MainWindow.cpp:184 has the tooltip 'Source control (Ctrl+Shift+G)'. After S2 that tooltip advertises a key that opens the changed-files tree instead.",
+      "fix": "Change that tooltip to 'Source control'. In the S2 test, assert that sourceControlButton's toolTip does not contain Ctrl+Shift+G."
+    },
+    {
+      "claim": "S2: the Ctrl+Shift+E lambda just also clicks fileTreeFilesMode.",
+      "problem": "Ordering matters. m_files is only made visible by refreshWorkbench after files mode is selected (MainWindowWorkbench.cpp:136). Upstream TOGGLE_FILE_TREE_FILES is captureDominantly:true (hotkeys.ts:465-468), but the native Ctrl+Shift+E is not dominant, so the terminal keeps it.",
+      "fix": "In the lambda, run setFileTreeVisible(true), then click fileTreeFilesMode, then focus m_files if it is visible. Set `adeDominantNavigation=true` on the Ctrl+Shift+E QShortcut so TerminalWidget yields it. Leave Ctrl+Shift+G not dominant. Add a test: Ctrl+Shift+E from an unstarted TerminalWidget selects files mode."
+    },
+    {
+      "claim": "S1 test focusOrToggleTerminalCreatesTerminalWhenNone 'starts a real ConPTY; the window destructor stops it'.",
+      "problem": "The seeded chats have no workspace, so showTerminal starts ConPtyProcess::defaultShell() (pwsh or powershell, without -NoProfile) in QDir::homePath(). The test would run the developer's PowerShell profile in their home directory.",
+      "fix": "Seed the conversation's workspace with a QTemporaryDir. After the assertions, call terminal->stop() and QTRY_VERIFY(!terminal->isRunning()). Record in the test that this is the single live-process test. Teardown already kills only the owned process tree (test_terminal stoppingKillsOnlyOwnedProcessTree).",
+      "evidence": "src/ui/MainWindow.cpp:816-830; src/terminal/ConPtyProcess.cpp:130-153"
+    },
+    {
+      "claim": "S1 test: force select enabled, Ctrl+I gives spy 1, then collapse or foreign owner gives spy still 1.",
+      "problem": "The first click calls BrowserInspector::setSelecting(true). That sets m_busy and emits busyChanged(true), and updateEnabled then disables the select button (MainWindowBrowserTools.cpp:189-196; BrowserInspector.cpp:197-208). The later negative assertions would pass because the button is disabled, not because of the collapse or owner guards.",
+      "fix": "Run the negative cases first: collapsed, foreign owner, miniAppBrowser, archived chat, non-browser tab. Call setEnabled(true) before each one. Run the positive case last. Assert both the clicked spy and that focus moved to the composer."
+    },
+    {
+      "claim": "S5: attachFilePreview selects Markdown by the suffixes md|markdown|mdx.",
+      "problem": "Upstream isMarkdownPath accepts only md and mdx (file-preview-tab-content.tsx:263-266).",
+      "fix": "Use md and mdx only."
+    },
+    {
+      "claim": "S5: QShortcut objectName `editorPreviewToggle` and toolbar button `editorPreviewToggle`.",
+      "problem": "Both objects get the same objectName, so findChild in tests and UI audits becomes ambiguous.",
+      "fix": "Name the shortcut `editorPreviewShortcut` and the button `editorPreviewToggle`. Give the button the tooltip 'Show source (Ctrl+Shift+V)' or 'Show preview (Ctrl+Shift+V)'; upstream shows the hotkey hint at file-preview-tab-content.tsx:2331 and 2350."
+    },
+    {
+      "claim": "S5: keeping every tab an EditorWidget leaves all callers untouched.",
+      "problem": "The command-center open-at-line path (MainWindowCommandCenter.cpp:97) sets the cursor and calls `editor->editor()->setFocus()` on the CodeEditor. While the preview is visible, the CodeEditor is hidden, so the line jump is invisible and setFocus fails.",
+      "fix": "Add `EditorWidget::showSource()` (setPreviewVisible(false)). Call it before positioning in MainWindowCommandCenter.cpp:97 when line>0. Its implementation also switches the preview off whenever find is requested."
+    },
+    {
+      "claim": "S5 test previewHostTogglesWithShortcutOnlyWhenFocused goes in tests/test_editor.cpp.",
+      "problem": "test_editor links only ade_editor and Qt6::Test. It has no offscreen plugin or QT_QPA_PLATFORM environment and never shows or activates a window (CMakeLists.txt:528-532, 591-595). A widget-context QShortcut needs an active window, so the test would be flaky on a real desktop session.",
+      "fix": "Keep the non-keyboard API tests in test_editor: setPreviewVisible, undo and modified preserved, hasPreview false without a pane. Move every shortcut test to the new offscreen target test_file_previews."
+    },
+    {
+      "claim": "S5 test closingModifiedPreviewTabStillPromptsViaRequestClose asserts that requestClose(CloseChoice::Cancel) returns false.",
+      "problem": "That is true for any modified editor whether or not a preview exists, so it proves nothing about the preview host.",
+      "fix": "Open the .md file through MainWindow::openFile, edit the source, toggle to preview, then emit tabCloseRequested. QTRY-find the modal QMessageBox from requestClose(Ask), reject it, and assert the tab count is unchanged and the editor is still modified."
+    },
+    {
+      "claim": "S5: the Markdown preview re-renders on every textChanged, debounced by 150 ms.",
+      "problem": "TextFile accepts up to 20 MiB (TextFile.h:26). Rebuilding MarkdownParts (QTextBrowser plus CodeEditor blocks) while the user types in source mode wastes work, and on large files it freezes the UI.",
+      "fix": "Re-render only while the preview is visible, and once on switching to it. Above 2 MiB of text, show a 'File too large to preview' label instead of rendering."
+    },
+    {
+      "claim": "S6: the Ctrl+Alt+G and Ctrl+Alt+F shortcuts are owned by the preview pane, so they are inactive in source mode, which 'equals upstream hotkeysEnabled: mode==='preview' && focused'.",
+      "problem": "Only CENTER_IMAGE is preview-only upstream (zoomable viewport hotkeysEnabled, file-preview-tab-content.tsx:1931-1934). handleCycleBg and handleCycleFg check only focusedPanel==='tab-content' (1943-1965), so they also fire in source mode.",
+      "fix": "Keep G and F preview-scoped deliberately: on AltGr layouts, Ctrl+Alt+letter shortcuts in the source editor would swallow typed characters. Record this as an explicit deviation, not as equivalence."
+    },
+    {
+      "claim": "S6: never setting QtSvg::AssumeTrustedSource means 'no external references'.",
+      "problem": "As far as I recall the QtSvg source, its <image> handler still loads local raster files by path for untrusted documents; the untrusted mode only refuses nested SVG. The Qt 6.11.2 install has no QtSvg sources, so this cannot be confirmed here. Upstream renders the SVG through an <img> data URL, where browsers load no external resources. Animations (SMIL/CSS, supported by Qt 6.11) are also not disabled.",
+      "fix": "Before rendering, sanitize with QXmlStreamReader/Writer: drop href and xlink:href attributes whose value does not start with '#' or 'data:image/', and drop <script> and <foreignObject>. Construct the renderer with setOptions(QtSvg::DisableAnimations). The test is a pixel probe: a red PNG in a temp dir, referenced by absolute path and by file:/// URL, must not appear in the rendered QImage."
+    },
+    {
+      "claim": "S6: currentColor is applied by injecting a color attribute on the root <svg> start tag.",
+      "problem": "If the root already has a color attribute, adding a second one makes the XML invalid and the SVG fails to render. Upstream's `<style>:root{color}</style>` overrides a presentation attribute, so overriding is the intended behavior. A regex can also match `<svg` inside comments.",
+      "fix": "Use QXmlStreamReader to find the first StartElement 'svg' and its byte range, then rewrite that start tag with QXmlStreamWriter: replace or insert color=\"#rrggbb\" and leave any inline style untouched. Add a test with a pre-existing color attribute."
+    },
+    {
+      "claim": "S6: custom background from `general.svgCustomBackground`, normalized, default #ffffff; custom foreground defaults to #8b5cf6.",
+      "problem": "The design leaves out the foreground preference. Upstream stores both values without '#': svgCustomBackground defaults to 'ffffff' and svgCustomForeground to '8b5cf6' (file-preview-tab-content.tsx:1800-1809). normalizeHexColor accepts only 3 or 6 hex digits without '#' (110-120).",
+      "fix": "Read `general.svgCustomBackground` and `general.svgCustomForeground` as bare hex strings. Add both as string defaults in SettingsPage::defaultPreferences so matchingKnownTypes type-checks them. Port normalizeHexColor exactly."
+    },
+    {
+      "claim": "S7: there are 6 call sites to update: MainWindow.cpp:389, 427-432, 514-521; MainWindowControl.cpp:143-151, 209-210; MainWindowSideChats.cpp:88.",
+      "problem": "MainWindow.cpp:389 is resolveUtilityModelPlan, not selectedModelChain. The list misses MainWindowSideChats.cpp:121 (sendSideChat, which calls setModelChain). MainWindowControl.cpp:210 uses the chain only to compare provider id and model, so it is unaffected by an effort override.",
+      "fix": "Update MainWindow.cpp:432 and 521, MainWindowControl.cpp:151 (and optionally 210 for consistency), and MainWindowSideChats.cpp:88 and 121. MainWindowControl.cpp and MainWindowSideChats.cpp are cohort-pinned, so S7 still lands only after the cohort is unfrozen."
+    },
+    {
+      "claim": "S7: no-op when the session is busy (same rule as m_models->setEnabled).",
+      "problem": "Upstream registers CYCLE_MODEL_THINKING_EFFORT with no enabled gate (model-select.tsx:879-882) and only writes the preference. A running agent does not block it.",
+      "fix": "Allow cycling while busy. Write only the preference and update the combo label, without calling refreshModels() and without touching the engine. The new value takes effect at the next setModelChain. Keep the no-op for no session, an archived session, a preset or no options."
+    },
+    {
+      "claim": "S7: m_settings->setPreference(\"agent.modelThinkingOverrides\", updated) and refreshModels().",
+      "problem": "validPreferences accepts unknown keys unchecked (matchingKnownTypes only checks keys present in the defaults), so a malformed object would be persisted and read back. setPreference emits preferencesChanged, which already runs applyPreferences (MainWindow.cpp:268). It can also fail when storage is invalid or the file changed outside the page. Provider instance ids and model ids can contain dots.",
+      "fix": "Add `agent.modelThinkingOverrides: {}` to the defaults. Read it with structural validation (objects of objects, {enabled: bool, provider: string, value: string}, size-bounded). Always write the whole object; never use a dotted per-model path. On a false return, show the storage error and leave the label unchanged."
+    },
+    {
+      "claim": "Risks: WebView2 focus is 'an existing limitation and not a parity claim'.",
+      "problem": "For toggle_context_selector, the main use is pressing Ctrl+I while the web page has focus, and upstream captures dominantly even inside webcontents (use-hotkey-listener.tsx:75-80). No ICoreWebView2Controller AcceleratorKeyPressed forwarding exists natively (grep of src/browser finds none). The S1 Ctrl+I therefore works only from Qt focus (composer, tab bar, address bar).",
+      "fix": "State this explicitly in the ledger as 'implemented_with_limits: not from web content'. Add follow-up slice S10: forward dominant chords (shortcuts with adeDominantNavigation=true) from WebView2 AcceleratorKeyPressed to the Qt host. That slice needs its own design and tests."
+    },
+    {
+      "claim": "S9: upstream resolves the Ctrl+Shift+E conflict by focus; the first matching listener wins.",
+      "problem": "Upstream does not use focus. Both listeners are dominant capture listeners on window, so registration order decides. While the agent is working, or when no message qualifies, the edit-nearest callback returns undefined, which counts as handled, so it still calls preventDefault and stopImmediatePropagation (use-hotkey-listener.tsx:63-70; chat-history.tsx:895-935). If it registered first, files mode is unreachable on Windows while no edit is active. The native focus arbitration is therefore a deliberate deviation.",
+      "fix": "Keep the native arbitration and label it a deviation: from chat or composer focus with an editable message visible, edit it; otherwise switch to files mode. Do not claim it matches upstream."
+    },
+    {
+      "claim": "S4 tests press Ctrl+Alt+C on a shown ImagePreview.",
+      "problem": "The existing test only calls preview.show() (test_image_preview.cpp:58-63). A WidgetWithChildrenShortcut needs an active window.",
+      "fix": "Call QApplication::setActiveWindow(&preview) and QTest::qWaitForWindowActive before pressing keys. The negative test uses a second top-level QLineEdit that is made active."
+    }
+  ]
+}

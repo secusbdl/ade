@@ -1,0 +1,17 @@
+********* Start testing of ContextBudgetHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ContextBudgetHostTest::initTestCase()
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(small-custom)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(custom32768)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(builtin128k)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(builtin1m)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(unknown-legacy)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(responses)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(anthropic)
+PASS   : ContextBudgetHostTest::actualAttachmentUsesSelectedContext(google)
+PASS   : ContextBudgetHostTest::fallbackRepreparesForExactActiveInstance()
+PASS   : ContextBudgetHostTest::originalRangeReplaysWithNewBudgetAfterRestart()
+PASS   : ContextBudgetHostTest::previewRetainsThirtyLinePolicy()
+PASS   : ContextBudgetHostTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 2495ms
+********* Finished testing of ContextBudgetHostTest *********

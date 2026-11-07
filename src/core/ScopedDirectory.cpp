@@ -22,7 +22,8 @@ bool contained(const QString& root,const QString& path){
 }
 }
 bool readScopedDirectory(const QString& path,const QString& root,ScopedDirectorySnapshot* result,
-                         QString* error,int maxEntries,const std::atomic_bool* cancelled,bool allowRootAlias,bool* truncated){
+                         QString* error,int maxEntries,const std::atomic_bool* cancelled,bool allowRootAlias,bool* truncated,
+                         const ScopedDirectoryAdmission* admission){
     if(error)error->clear();
     if(truncated)*truncated=false;
     if(result)*result={};
@@ -31,11 +32,14 @@ bool readScopedDirectory(const QString& path,const QString& root,ScopedDirectory
     const auto stopped=[&]{return cancelled&&cancelled->load(std::memory_order_relaxed);};
     if(stopped())return fail("Directory read cancelled.");
     ScopedDirectorySnapshot snapshot;
-    const auto accept=[&](const QString& name,bool directory,bool reparse){
+    const auto accept=[&](const QString& name,bool directory,bool reparse,bool hidden){
         if(name=="."||name=="..")return 0;
         if(name.isEmpty()||name.contains(QChar::Null)||name.contains('/')||name.contains('\\'))return -1;
+        if(admission&&admission->scanned&&++*admission->scanned>admission->scanLimit){if(truncated){*truncated=true;return 2;}return -2;}
+        ScopedDirectoryEntry entry{name,snapshot.canonicalPath+'/'+name,directory,reparse,hidden};
+        if(admission&&admission->admit&&!admission->admit(entry))return 0;
         if(snapshot.entries.size()>=maxEntries){if(truncated){*truncated=true;return 2;}return -2;}
-        snapshot.entries.append({name,snapshot.canonicalPath+'/'+name,directory,reparse});return 0;
+        snapshot.entries.append(std::move(entry));return 0;
     };
 #ifdef Q_OS_WIN
     const auto native=QDir::toNativeSeparators(path).toStdWString();
@@ -74,7 +78,7 @@ bool readScopedDirectory(const QString& path,const QString& root,ScopedDirectory
             const auto* item=reinterpret_cast<const FILE_ID_BOTH_DIR_INFO*>(buffer.constData()+offset);
             if(item->FileNameLength%sizeof(wchar_t)||item->FileNameLength>buffer.size()-offset-header)return fail("Invalid native directory filename.");
             const auto name=QString::fromWCharArray(item->FileName,int(item->FileNameLength/sizeof(wchar_t)));
-            const auto accepted=accept(name,item->FileAttributes&FILE_ATTRIBUTE_DIRECTORY,item->FileAttributes&FILE_ATTRIBUTE_REPARSE_POINT);
+            const auto accepted=accept(name,item->FileAttributes&FILE_ATTRIBUTE_DIRECTORY,item->FileAttributes&FILE_ATTRIBUTE_REPARSE_POINT,item->FileAttributes&FILE_ATTRIBUTE_HIDDEN);
             if(accepted==-1)return fail("Invalid directory entry name.");
             if(accepted==-2)return fail("Directory enumeration exceeds its entry bound; no partial result was returned.");
             if(accepted==2){done=true;break;}
@@ -91,7 +95,7 @@ bool readScopedDirectory(const QString& path,const QString& root,ScopedDirectory
     QDirIterator iterator(snapshot.canonicalPath,QDir::AllEntries|QDir::Hidden|QDir::System|QDir::NoDotAndDotDot);
     while(iterator.hasNext()){
         if(stopped())return fail("Directory read cancelled.");
-        iterator.next();const auto child=iterator.fileInfo();const auto accepted=accept(child.fileName(),child.isDir(),child.isSymLink()||child.isJunction());
+        iterator.next();const auto child=iterator.fileInfo();const auto accepted=accept(child.fileName(),child.isDir(),child.isSymLink()||child.isJunction(),false);
         if(accepted==-1)return fail("Invalid directory entry name.");
         if(accepted==-2)return fail("Directory enumeration exceeds its entry bound; no partial result was returned.");
         if(accepted==2)break;

@@ -1,0 +1,13 @@
+********* Start testing of HarnessFormsHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessFormsHostTest::initTestCase()
+PASS   : HarnessFormsHostTest::mcpOwnerSwitchSubmitAndTranscriptStayCorrelated()
+PASS   : HarnessFormsHostTest::mcpPartialCancelAndStopKeepCompletedSteps(form-cancel)
+PASS   : HarnessFormsHostTest::mcpPartialCancelAndStopKeepCompletedSteps(agent-stop)
+QWARN  : HarnessFormsHostTest::claudeUsesActualHostTheme(light) This plugin does not support propagateSizeHints()
+PASS   : HarnessFormsHostTest::claudeUsesActualHostTheme(light)
+QWARN  : HarnessFormsHostTest::claudeUsesActualHostTheme(dark) This plugin does not support propagateSizeHints()
+PASS   : HarnessFormsHostTest::claudeUsesActualHostTheme(dark)
+PASS   : HarnessFormsHostTest::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 2713ms
+********* Finished testing of HarnessFormsHostTest *********

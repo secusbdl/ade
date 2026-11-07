@@ -1,0 +1,28 @@
+********* Start testing of BrowserScreenshotTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserScreenshotTest::initTestCase()
+PASS   : BrowserScreenshotTest::fittingPngIsReturnedUnchanged()
+PASS   : BrowserScreenshotTest::oversizedPngWalksUpstreamJpegQualities()
+PASS   : BrowserScreenshotTest::exhaustedQualitiesHalveTheViewportUntilTheFloor()
+PASS   : BrowserScreenshotTest::requestedClipFullPageAndJpegQualityAreKept()
+PASS   : BrowserScreenshotTest::transportAndDecodedImageBoundsHold()
+PASS   : BrowserScreenshotTest::overBoundImageHalvesInsteadOfFailing()
+QINFO  : BrowserScreenshotTest::inspectorOversizedPngAttachesJpeg() device QSize(1500, 1200) PNG reply chars 7223951
+QINFO  : BrowserScreenshotTest::inspectorOversizedPngAttachesJpeg() JPEG bytes 1286723 image QSize(1500, 1200)
+PASS   : BrowserScreenshotTest::inspectorOversizedPngAttachesJpeg()
+QINFO  : BrowserScreenshotTest::inspectorHalvesScaleUnderLoweredCutoff() halved JPEG bytes 39458 image QSize(375, 300) device QSize(1500, 1200)
+PASS   : BrowserScreenshotTest::inspectorHalvesScaleUnderLoweredCutoff()
+QINFO  : BrowserScreenshotTest::fullPageFlagWithoutClipKeepsCapturedArea() viewport QJsonObject({"clientHeight":800,"clientWidth":1000,"offsetX":0,"offsetY":0,"pageX":0,"pageY":0,"scale":1,"zoom":1}) content QJsonObject({"height":6000,"width":1000,"x":0,"y":0})
+QINFO  : BrowserScreenshotTest::fullPageFlagWithoutClipKeepsCapturedArea() full-page flag fallback QSize(375, 2250) "The PNG capture exceeded the 2 MiB browser transport, so ADE captured JPEG at quality 70 at capture scale 0.25."
+PASS   : BrowserScreenshotTest::fullPageFlagWithoutClipKeepsCapturedArea()
+PASS   : BrowserScreenshotTest::navigationRetiresAnInFlightFallbackStep()
+QINFO  : BrowserScreenshotTest::directScreenshotFallsBackRawSendCdpDoesNot() direct fallback: "The PNG capture exceeded the 2 MiB browser transport, so ADE captured JPEG at quality 85." 1286723
+PASS   : BrowserScreenshotTest::directScreenshotFallsBackRawSendCdpDoesNot()
+PASS   : BrowserScreenshotTest::canceledLadderIsScopedAndIdCanBeReused()
+PASS   : BrowserScreenshotTest::navigationBetweenBridgeStepsFailsExplicitly()
+QINFO  : BrowserScreenshotTest::neverShownHiddenTabScreenshotIsBoundedAndExplicit() hidden tab screenshot settled after 15006 ms, error true "{\"error\":\"Browser screenshot timed out while the tab is not visible; WebView2 may not paint hidden tabs. Show the tab in ADE and retry.\"}"
+QWARN  : BrowserScreenshotTest::neverShownHiddenTabScreenshotIsBoundedAndExplicit() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_screenshot-oIKRLY" most likely due to the presence of read-only files.
+PASS   : BrowserScreenshotTest::neverShownHiddenTabScreenshotIsBoundedAndExplicit()
+PASS   : BrowserScreenshotTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 24440ms
+********* Finished testing of BrowserScreenshotTest *********

@@ -1,0 +1,24 @@
+********* Start testing of CustomModelStorageTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelStorageTest::initTestCase()
+PASS   : CustomModelStorageTest::encryptedRoundTripAndPublicBoundary()
+PASS   : CustomModelStorageTest::corruptionIsPreserved(cipher)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(plaintext)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(owner)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(capabilities)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(duplicate)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(retired_type)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(retired_duplicate)
+PASS   : CustomModelStorageTest::corruptionIsPreserved(future_version)
+PASS   : CustomModelStorageTest::invalidSaveDoesNotReplaceOriginal(owner)
+PASS   : CustomModelStorageTest::invalidSaveDoesNotReplaceOriginal(duplicate)
+PASS   : CustomModelStorageTest::invalidSaveDoesNotReplaceOriginal(unsupported_option)
+PASS   : CustomModelStorageTest::invalidSaveDoesNotReplaceOriginal(control_header)
+PASS   : CustomModelStorageTest::invalidSaveDoesNotReplaceOriginal(retired_capacity)
+PASS   : CustomModelStorageTest::exactInstanceCasAndRemovalRestart()
+PASS   : CustomModelStorageTest::importPreservesPrivateDefinitionsAndRetiredIdentity()
+PASS   : CustomModelStorageTest::customDefinitionsAndRetiredIdsRequireV2()
+PASS   : CustomModelStorageTest::legacyReadDoesNotMigrateAndOrdinarySaveRemainsV1()
+PASS   : CustomModelStorageTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 92ms
+********* Finished testing of CustomModelStorageTest *********

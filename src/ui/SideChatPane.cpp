@@ -34,7 +34,7 @@ SideChatPane::SideChatPane(QString chatId,QWidget* parent):QWidget(parent),m_cha
     m_error=new QLabel;m_error->setObjectName("sideChatStatus");m_error->setTextFormat(Qt::PlainText);m_error->setWordWrap(true);m_error->hide();layout->addWidget(m_error);
     connect(m_composer,&Composer::textChanged,this,[this]{updateActions();emit draftChanged(m_chatId,m_composer->toPlainText());});
     connect(m_composer,&Composer::submitted,this,[this]{if(m_send->isEnabled())emit submitted(m_chatId);});connect(m_send,&QToolButton::clicked,this,[this]{emit submitted(m_chatId);});
-    connect(m_composer,&Composer::stopRequested,this,[this]{emit stopRequested(m_chatId);});connect(m_stop,&QToolButton::clicked,this,[this]{emit stopRequested(m_chatId);});
+    connect(m_composer,&Composer::stopRequested,this,[this]{emit stopRequested(m_chatId);});connect(m_composer,&Composer::stopShortcutRequested,m_stop,&QToolButton::click);connect(m_stop,&QToolButton::clicked,this,[this]{emit stopRequested(m_chatId);});
     connect(m_composer,&Composer::filesAttached,this,[this](const QStringList& paths){emit filesAttached(m_chatId,paths);});connect(m_composer,&Composer::imageAttached,this,[this](const QImage& image){emit imageAttached(m_chatId,image);});
     connect(attach,&QToolButton::clicked,this,[this]{const QPointer<SideChatPane> self(this);const auto paths=QFileDialog::getOpenFileNames(this,"Attach files");if(self&&!paths.isEmpty())emit filesAttached(m_chatId,paths);});
     connect(m_attachments,&AttachmentStrip::removeRequested,this,[this](int index){emit removeAttachmentRequested(m_chatId,index);});

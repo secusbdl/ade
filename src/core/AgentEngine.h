@@ -16,6 +16,7 @@
 #include <QPointer>
 #include <QTimer>
 #include <functional>
+#include <optional>
 
 namespace ade {
 class UtilityService;
@@ -50,6 +51,19 @@ public:
     // Durable UI send: accepts into the queue while working. A question is
     // interrupted by a normal send; Stop and final failures retain the queue.
     bool sendUserMessage(const QString& text,const QJsonArray& attachments={},const QJsonObject& references={},const QJsonObject& pathMetadata={},bool queueIfBlocked=false);
+    // Failed-turn Retry. The record is set only for a turn whose user row was
+    // accepted, and cleared by any later accepted, completed or cancelled turn.
+    QJsonObject turnFailure() const { return m_turnFailure; }
+    static bool validTurnFailureShape(const QJsonObject& record);
+    static bool validTurnFailure(const QJsonArray& history,const QJsonObject& record);
+    // Idle only; validated against the current history. An empty record clears.
+    bool restoreTurnFailure(const QJsonObject& record);
+    // Replaces the failed user row and its suffix by a rebuilt copy of that row
+    // and dispatches it. History and queue clearing commit atomically.
+    bool retryFailedTurn(const QString& userRowId,QString* error=nullptr);
+    enum class CommitKind { Update, AcceptUser, ReplaceAndAcceptUser, ReplaceHistory };
+    // Meaningful only inside the QueueCommitter callback.
+    CommitKind commitKind() const { return m_commitKind; }
     QJsonArray queuedMessages() const {return m_queuedMessages;}
     bool setQueuedMessages(const QJsonArray& messages,QString* error=nullptr);
     bool editQueuedMessage(const QString& id,const QString& text);
@@ -93,6 +107,10 @@ public:
     static QJsonArray displayHistory(const QJsonArray& history);
     bool isBusy() const { return m_busy; }
     bool lastTurnSucceeded() const { return m_lastTurnSucceeded; }
+    // An approval or question is waiting for the user; the agent is idle then.
+    // Harness approvals leave the map when answered, cancelled by the harness
+    // (Claude), or when the turn ends (complete/fail/cancel).
+    bool isAwaitingUser() const { return !m_waitingApproval.isEmpty() || !m_harnessApprovals.isEmpty() || !m_questionToken.isEmpty(); }
     QString workspace() const { return m_tools.workspace(); }
     ProviderConfig provider() const { return m_provider; }
     QString actualModel() const { return m_actualModel; }
@@ -133,7 +151,8 @@ signals:
 
 private:
     struct ToolCall { QString id, name, arguments; };
-    bool startUserMessage(const QString&,const QJsonArray&,const QJsonObject&,const QJsonObject&,const QString& queuedId={},const QJsonObject& immediateMessage={});
+    bool startUserMessage(const QString&,const QJsonArray&,const QJsonObject&,const QJsonObject&,const QString& queuedId={},const QJsonObject& immediateMessage={},const std::optional<QJsonArray>& replacementPrefix=std::nullopt);
+    bool unsettledMutationAfter(int index) const;
     bool commitQueue(const QJsonArray& history,const QJsonArray& queue,QString* error);
     bool replaceQueue(const QJsonArray& queue);
     void scheduleQueue();
@@ -211,6 +230,9 @@ private:
     QJsonArray m_messages;
     mutable AgentHistoryProjection m_historyProjection;
     QJsonArray m_queuedMessages;
+    QJsonObject m_turnFailure;
+    QString m_turnUserRowId;
+    CommitKind m_commitKind = CommitKind::Update;
     QueueCommitter m_queueCommitter;
     QString m_mutationAgentId;
     MutationRecovery m_mutationRecovery;

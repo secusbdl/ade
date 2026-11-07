@@ -279,6 +279,24 @@ private slots:
                  .toArray()
                  .isEmpty());
   }
+  void serverSettledApprovalDoesNotOutliveTurn() {
+    // The server completes the turn while ADE still shows its approval; the
+    // session cancels the request on finish. A stale engine entry would keep
+    // isAwaitingUser() true, suppressing the Done chime and counting a later
+    // busy turn as idle.
+    qputenv("ADE_HARNESS_FIXTURE_SCENARIO", "approval-settled");
+    QTemporaryDir dir;
+    AgentEngine engine;
+    configure(engine, dir.path());
+    QSignalSpy approvals(&engine, &AgentEngine::approvalRequired),
+        done(&engine, &AgentEngine::finished);
+    engine.submit("tool");
+    QTRY_COMPARE(done.size(), 1);
+    QCOMPARE(approvals.size(), 1);
+    QVERIFY(engine.lastTurnSucceeded());
+    QVERIFY(!engine.isBusy());
+    QVERIFY(!engine.isAwaitingUser());
+  }
   void actualQuestionUsesNativeForm() {
     qputenv("ADE_HARNESS_FIXTURE_SCENARIO", "question");
     QTemporaryDir dir;

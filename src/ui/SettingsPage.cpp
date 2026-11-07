@@ -59,6 +59,7 @@
 #include <QTabWidget>
 #include <QTextLayout>
 #include <QTimer>
+#include <QToolButton>
 #include <QUrl>
 #include <QUuid>
 #include <QVBoxLayout>
@@ -327,6 +328,11 @@ bool validPreferences(const QJsonObject &preferences) {
         return getPath(preferences, path.split('.'), getPath(defaults, path.split('.'), {}));
     };
     if(!QStringList{"age","workspace"}.contains(value("sidebar.agentListGroupingMode").toString()))return false;
+    // Only these values were ever written; pack ids cannot name a path.
+    if(!QStringList{"off","normal","loud"}.contains(value("agent.notificationLoudness").toString()))return false;
+    static const QRegularExpression soundPackId(QRegularExpression::anchoredPattern("[A-Za-z0-9][A-Za-z0-9_-]{0,63}"));
+    const auto soundPack=value("agent.notificationSound").toString();
+    if(soundPack!="default"&&!soundPackId.match(soundPack).hasMatch())return false;
     for(const auto& path:{"sidebar.pinnedAgentIds","sidebar.workspaceGroupOrder","sidebar.collapsedWorkspaceGroupKeys"}){
         const auto array=value(path).toArray();if(array.size()>10000)return false;QSet<QString> unique;
         for(const auto& entry:array){if(!entry.isString()||entry.toString().isEmpty()||entry.toString().size()>4096||unique.contains(entry.toString())||entry.toString().contains(QChar::Null))return false;unique.insert(entry.toString());}
@@ -420,7 +426,7 @@ bool validPreferences(const QJsonObject &preferences) {
 
 QJsonObject SettingsPage::defaultPreferences() {
     return {{"sidebar",QJsonObject{{"pinnedAgentIds",QJsonArray{}},{"agentListGroupingMode","age"},{"workspaceGroupOrder",QJsonArray{}},{"collapsedWorkspaceGroupKeys",QJsonArray{}}}},
-            {"agent", QJsonObject{{"keepAwake",true},{"notificationLoudness","normal"},{"notificationSound","default"}}},
+            {"agent", QJsonObject{{"keepAwake",true},{"notificationLoudness","normal"},{"notificationSound","default"},{"modelThinkingOverrides",QJsonObject{}}}},
             {"personalization", QJsonObject{{"appearance","system"},{"theme","blue"},{"uiZoom",100},{"language","en"}}},
             {"browsing", QJsonObject{{"searchEngines",defaultEngines()},{"defaultEngineId","google"},
                                     {"newTabUrl",""},{"startupUrl",""},{"permissions",QJsonObject{}},{"permissionExceptions",QJsonObject{}}}},
@@ -720,8 +726,13 @@ void SettingsPage::buildContent() {
     m_scroll->verticalScrollBar()->setValue(0);
 }
 
+void SettingsPage::setSoundHooks(SoundHooks hooks) {
+    m_soundHooks = std::move(hooks);
+    if (m_section == "agent-general") buildContent();
+}
+
 void SettingsPage::buildGeneral(QVBoxLayout *layout) {
-    heading(layout,"Keep app awake while agents work","Prevent app suspension while agents run active work. Waiting for questions or approval is idle.");
+    heading(layout,"Keep app awake while agents work","Prevent the system from sleeping while agents actively work. Waiting for a question or approval counts as idle.");
     auto *awake = new QCheckBox("Keep awake during active work");
     awake->setObjectName("agentKeepAwake");
     awake->setChecked(preference("agent.keepAwake").toBool());
@@ -729,14 +740,64 @@ void SettingsPage::buildGeneral(QVBoxLayout *layout) {
     connect(awake,&QCheckBox::toggled,this,[this](bool checked){setPreference("agent.keepAwake",checked);});
     heading(layout,"Notification sounds","Choose your notification preferences for completed work, questions and errors.");
     auto *form = new QFormLayout;
+    // Stored values predate the relabel: normal is Subtle (-12 dB), loud is full.
     auto *loudness = new QComboBox;
     loudness->setObjectName("notificationLoudness");
-    loudness->addItem("Off","off");loudness->addItem("Normal","normal");loudness->addItem("Loud","loud");
+    loudness->addItem("Off","off");loudness->addItem("Subtle","normal");loudness->addItem("Loud","loud");
     loudness->setCurrentIndex(qMax(0,loudness->findData(preference("agent.notificationLoudness").toString())));
     form->addRow("Loudness",loudness);
-    connect(loudness,&QComboBox::currentIndexChanged,this,[this,loudness]{setPreference("agent.notificationLoudness",loudness->currentData().toString());});
+    auto *pack = new QComboBox;
+    pack->setObjectName("notificationSoundPack");
+    pack->setAccessibleName("Notification sound");
+    QList<QPair<QString,QString>> packs;
+    if (m_soundHooks.packs) packs = m_soundHooks.packs();
+    if (packs.isEmpty()) packs.append({QStringLiteral("ade-chime"),QStringLiteral("ADE Chime")});
+    for (const auto &entry : packs) pack->addItem(entry.second,entry.first);
+    const auto storedPack = preference("agent.notificationSound").toString();
+    pack->setCurrentIndex(qMax(0,pack->findData(storedPack=="default"?QStringLiteral("ade-chime"):storedPack)));
+    auto *preview = new QToolButton;
+    preview->setObjectName("notificationSoundPreview");
+    preview->setText("Play");
+    preview->setToolTip("Play the completion sound");
+    preview->setAccessibleName("Play the completion sound");
+    preview->setCursor(Qt::PointingHandCursor);
+    const auto updatePreview = [this,preview,loudness]{preview->setEnabled(m_soundHooks.preview&&loudness->currentData().toString()!="off");};
+    updatePreview();
+    auto *packRow = new QHBoxLayout;
+    packRow->setContentsMargins(0,0,0,0);
+    packRow->addWidget(pack,1);
+    packRow->addWidget(preview);
+    form->addRow("Sound",packRow);
     layout->addLayout(form);
-    layout->addWidget(text("These preferences are stored locally. Sound packs and per-event playback are still being connected."));
+    auto *import = action(layout,QString::fromUtf8("Use custom sound…"),"notificationSoundImport");
+    import->setEnabled(bool(m_soundHooks.chooseAndImport));
+    import->setToolTip("Import an MP3 or 16-bit PCM WAV file, or a sound pack JSON manifest.");
+    const auto playPreview = [this,pack,loudness]{
+        const auto level = loudness->currentData().toString();
+        if (level == "off" || !m_soundHooks.preview) return false;
+        return m_soundHooks.preview(pack->currentData().toString(),level);
+    };
+    connect(loudness,&QComboBox::currentIndexChanged,this,[this,loudness,updatePreview,playPreview]{
+        if (!setPreference("agent.notificationLoudness",loudness->currentData().toString())) return;
+        updatePreview();
+        playPreview();
+    });
+    connect(pack,&QComboBox::currentIndexChanged,this,[this,pack,playPreview]{
+        if (setPreference("agent.notificationSound",pack->currentData().toString())) playPreview();
+    });
+    connect(preview,&QToolButton::clicked,this,[this,playPreview]{
+        if (!playPreview()) showStatus("This sound could not be played.",true);
+    });
+    connect(import,&QPushButton::clicked,this,[this]{
+        if (!m_soundHooks.chooseAndImport) return;
+        const QPointer<SettingsPage> alive(this);
+        const auto outcome = m_soundHooks.chooseAndImport();
+        if (!alive || outcome.cancelled) return;
+        if (!outcome.error.isEmpty()) { showStatus(outcome.error,true); return; }
+        if (!setPreference("agent.notificationSound",outcome.id)) return;
+        buildContent();
+        if (alive) showStatus(outcome.name+" is now selected for notifications.");
+    });
 }
 
 void SettingsPage::buildProviders(QVBoxLayout *layout) {

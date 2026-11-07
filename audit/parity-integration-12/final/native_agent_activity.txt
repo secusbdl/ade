@@ -1,0 +1,17 @@
+********* Start testing of AgentActivityTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AgentActivityTest::initTestCase()
+PASS   : AgentActivityTest::doneOnSuccessfulFinishWithEmptyQueue()
+PASS   : AgentActivityTest::noDoneWhenQueueNonEmpty()
+PASS   : AgentActivityTest::noDoneWithoutAnyAssistantMessage()
+PASS   : AgentActivityTest::noDoneOnCancel()
+PASS   : AgentActivityTest::errorOnRealFailOnly()
+PASS   : AgentActivityTest::rejectedSendWhileBusyIsSilent()
+PASS   : AgentActivityTest::questionOnApprovalDedupedById()
+PASS   : AgentActivityTest::questionToolTransitionEmitsOnceAcrossSteps()
+PASS   : AgentActivityTest::activeCountExcludesAwaitingUser()
+PASS   : AgentActivityTest::destroyedEngineReleasesActivity()
+PASS   : AgentActivityTest::realEngineAwaitingApprovalIsIdle()
+PASS   : AgentActivityTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 195ms
+********* Finished testing of AgentActivityTest *********

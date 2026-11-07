@@ -8,6 +8,7 @@
 #include <QDir>
 #include "ui/Composer.h"
 #include "ui/ModelSelection.h"
+#include "ui/ModelThinking.h"
 #include "core/ProviderStore.h"
 #include <QComboBox>
 #include <QLineEdit>
@@ -22,6 +23,10 @@ namespace {
 ProviderConfig provider(QString id){ProviderConfig p;p.id=id;p.name=id+" managed continuity smoke with a deliberately long instance label";p.model="gpt-6.1-sol";p.baseUrl="http://127.0.0.1:1/v1";return p;}
 bool seed(const QString& path){const auto a=provider("Codex"),b=provider("Second");if(!ProviderStore::save(path+"/providers.json",{a,b}))return false;Conversation first;first.id="first";first.title="First";first.titleLocked=true;first.providerId=a.id;first.model=a.model;Conversation second=first;second.id="second";second.title="Second";second.providerId=b.id;QSettings settings(path+"/window.ini",QSettings::IniFormat);settings.setValue("lastConversationId","first");settings.sync();return SessionStore(path).save({first,second});}
 void settle(){QCoreApplication::sendPostedEvents();QCoreApplication::processEvents();}
+// Synthetic external harness; never started by these pure-function tests.
+ProviderConfig harness(){ProviderConfig p;p.id="harness.instance";p.name="Harness";p.model="agent.model";p.kind="codex";p.protocol="codex-app-server";p.harnessExecutable="missing-fixture.exe";return p;}
+QJsonObject catalogs(const ProviderConfig& p){return {{p.id,cleanModelCatalog(p,QJsonArray{QJsonObject{{"id","agent.model"},{"reasoningEfforts",QJsonArray{"low","medium","high"}},{"defaultReasoningEffort","medium"}}})}};}
+QJsonObject override(const QString& value,bool enabled=true){return {{"harness.instance",QJsonObject{{"agent.model",QJsonObject{{"enabled",enabled},{"provider","codex"},{"value",value}}}}}};}
 }
 class ModelSelectorDisplayTest:public QObject {
  Q_OBJECT
@@ -46,6 +51,54 @@ private slots:
   QTemporaryDir data;QVERIFY(seed(data.path()));
   {MainWindow window(data.path());auto* list=window.findChild<QListWidget*>("agentList");QVERIFY(list);for(int i=0;i<list->count();++i)if(list->item(i)->data(Qt::UserRole)=="second")list->setCurrentRow(i);QCOMPARE(window.currentSessionId(),QString("second"));QVERIFY(window.close());}
   MainWindow reopened(data.path());QCOMPARE(reopened.currentSessionId(),QString("second"));auto* combo=reopened.findChild<QComboBox*>("modelSelector");const auto selection=ModelSelection::fromJson(combo->currentData().toJsonObject());QCOMPARE(selection.providerId,QString("Second"));QCOMPARE(combo->currentText(),provider("Second").name+" / gpt-6.1-sol");QCOMPARE(combo->lineEdit()->text(),combo->currentText());
+ }
+ // Thinking-effort cycling (S7). These helpers did not exist before; the
+ // chain previously ignored agent.modelThinkingOverrides entirely.
+ void thinkingOptionsUseOnlyDiscoveredEfforts(){
+  const auto p=harness();QJsonObject entry{{"reasoningEfforts",QJsonArray{"low","","low","medium",QString(33,'x'),7,"high"}}};
+  QCOMPARE(thinkingOptions(p,entry),QStringList({"low","medium","high"}));
+  auto api=p;api.kind="api";api.protocol="openai";QVERIFY(thinkingOptions(api,entry).isEmpty());
+  QCOMPARE(thinkingOptions(p,thinkingCatalogEntry(p,"agent.model",catalogs(p))),QStringList({"low","medium","high"}));
+  QVERIFY(thinkingCatalogEntry(p,"unknown",catalogs(p)).isEmpty());
+ }
+ void nextThinkingOptionWrapsAndStartsFromDefault(){
+  const QStringList options{"low","medium","high"};
+  QCOMPARE(nextThinkingOption(options,"low","medium"),QString("medium"));
+  QCOMPARE(nextThinkingOption(options,"high","medium"),QString("low"));
+  QCOMPARE(nextThinkingOption(options,"","medium"),QString("high"));
+  QCOMPARE(nextThinkingOption(options,"unknown","also-unknown"),QString("low"));
+  QCOMPARE(nextThinkingOption({},"low","low"),QString());
+ }
+ void presetSelectionIgnoresThinkingOverride(){
+  const auto p=harness();const ModelSelection preset{p.id,"agent.model","preset-1","Preset",{}};
+  QVERIFY(thinkingOverrideValue(preset,{p},catalogs(p),override("high")).isEmpty());
+  const QJsonArray presets{QJsonObject{{"id","preset-1"},{"name","Preset"},{"providerInstanceId",p.id},{"modelId","agent.model"}}};
+  const auto chain=selectedModelChain(preset,{p},presets,catalogs(p),override("high"));
+  QCOMPARE(chain.size(),1);QVERIFY(chain.first().provider.reasoningEffort.isEmpty());QVERIFY(!chain.first().hasThinkingOverride);
+ }
+ void selectedModelChainAppliesOverrideReasoningEffort(){
+  const auto p=harness();const ModelSelection direct{p.id,"agent.model",{},{},{}};
+  QVERIFY(selectedModelChain(direct,{p},{},catalogs(p)).first().provider.reasoningEffort.isEmpty());
+  const auto chain=selectedModelChain(direct,{p},{},catalogs(p),override("high"));
+  QCOMPARE(chain.size(),1);QCOMPARE(chain.first().provider.reasoningEffort,QString("high"));QVERIFY(chain.first().hasThinkingOverride);
+  // A disabled entry or an effort no longer discovered is not sent.
+  QVERIFY(selectedModelChain(direct,{p},{},catalogs(p),override("high",false)).first().provider.reasoningEffort.isEmpty());
+  QVERIFY(selectedModelChain(direct,{p},{},catalogs(p),override("xhigh")).first().provider.reasoningEffort.isEmpty());
+ }
+ void malformedOverridesAreIgnored(){
+  QVERIFY(validThinkingOverrides(QJsonValue(QString("bad"))).isEmpty());
+  QVERIFY(validThinkingOverrides(QJsonArray{}).isEmpty());
+  const QJsonObject mixed{{"a",QJsonObject{{"m",QJsonObject{{"enabled","yes"},{"provider","codex"},{"value","low"}}},
+                                          {"n",QJsonObject{{"enabled",true},{"provider","codex"},{"value",QString(33,'x')}}},
+                                          {"o",QJsonObject{{"enabled",true},{"provider","codex"},{"value","low"},{"extra",1}}}}},
+                          {"b",QString("not an object")}};
+  const auto valid=validThinkingOverrides(mixed);
+  QCOMPARE(valid.keys(),QStringList({"a"}));QCOMPARE(valid["a"].toObject().keys(),QStringList({"o"}));
+  QVERIFY(!valid["a"].toObject()["o"].toObject().contains("extra"));
+  QJsonObject many;for(int i=0;i<300;++i)many.insert(QString("instance%1").arg(i,3,10,QChar('0')),QJsonObject{{"m",QJsonObject{{"enabled",true},{"provider","codex"},{"value","low"}}}});
+  QCOMPARE(validThinkingOverrides(many).size(),256);
+  const auto p=harness();
+  QVERIFY(selectedModelChain({p.id,"agent.model",{},{},{}},{p},{},catalogs(p),validThinkingOverrides(QJsonObject{{p.id,QString("malformed")}})).first().provider.reasoningEffort.isEmpty());
  }
 };
 QTEST_MAIN(ModelSelectorDisplayTest)

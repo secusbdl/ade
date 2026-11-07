@@ -1,0 +1,27 @@
+********* Start testing of ShellFollowups *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellFollowups::initTestCase()
+PASS   : ShellFollowups::withoutReadLine(pattern)
+PASS   : ShellFollowups::withoutReadLine(idle)
+PASS   : ShellFollowups::withoutReadLine(echo-negative)
+PASS   : ShellFollowups::withoutReadLine(raw)
+PASS   : ShellFollowups::withoutReadLine(poll)
+PASS   : ShellFollowups::watcherCmdletFailure(final-write-error)
+PASS   : ShellFollowups::watcherCmdletFailure(native-success-then-write-error)
+PASS   : ShellFollowups::watcherCmdletFailure(failed-cmdlet)
+PASS   : ShellFollowups::watcherExitPolicy(native-failure)
+PASS   : ShellFollowups::watcherExitPolicy(native-failure-then-output-retains-code)
+PASS   : ShellFollowups::watcherExitPolicy(handled-nonterminal-error)
+PASS   : ShellFollowups::watcherExitPolicy(throw)
+PASS   : ShellFollowups::watcherExitPolicy(explicit-exit-wins)
+PASS   : ShellFollowups::unicodeWatcherWithinSourceBound()
+PASS   : ShellFollowups::stdinEscapeExpansion()
+PASS   : ShellFollowups::watcherRetainsExactProcessExitCode()
+PASS   : ShellFollowups::echoMustNotMatchOutputPattern()
+PASS   : ShellFollowups::silenceDoesNotStartIdleClock()
+PASS   : ShellFollowups::rawInputExpandsEnterEscape()
+PASS   : ShellFollowups::multilineWatcherWaitsForWholeScript()
+PASS   : ShellFollowups::previewContainsOnlyCurrentCommand()
+PASS   : ShellFollowups::cleanupTestCase()
+Totals: 23 passed, 0 failed, 0 skipped, 0 blacklisted, 50091ms
+********* Finished testing of ShellFollowups *********

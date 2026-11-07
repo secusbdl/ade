@@ -1,0 +1,13 @@
+********* Start testing of OriginalLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : OriginalLifecycleTest::initTestCase()
+PASS   : OriginalLifecycleTest::actualCapabilityControlsMapping(supported)
+PASS   : OriginalLifecycleTest::actualCapabilityControlsMapping(unsupported)
+PASS   : OriginalLifecycleTest::cancelWhilePreparingThenReplacement()
+PASS   : OriginalLifecycleTest::ownerDeletionDuringPreparationStopsChild()
+PASS   : OriginalLifecycleTest::preparedPayloadRevocationAndWriterDeadline()
+QINFO  : OriginalLifecycleTest::aggregateMemoryRemainsBounded() fixture process peak working set bytes 102522880 serialized payload bytes 55924547
+PASS   : OriginalLifecycleTest::aggregateMemoryRemainsBounded()
+PASS   : OriginalLifecycleTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 3037ms
+********* Finished testing of OriginalLifecycleTest *********

@@ -1,4 +1,5 @@
 #include "ui/MainWindow.h"
+#include "ui/InstanceCoordinator.h"
 #include "ui/AppStyle.h"
 #include "ui/ContextPreferences.h"
 #include "ui/SettingsPage.h"
@@ -20,6 +21,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QSaveFile>
 #include <QRegularExpression>
 #include <QSet>
@@ -102,6 +104,7 @@ int main(int argc,char** argv) {
     parser.addOption({"attach","Attach a local file to a smoke message (repeatable)","file"});
     parser.addOption({"max-output","Bound output tokens for a smoke session","tokens"});
     parser.addOption({"capture-transcript","Save bounded native transcript renders during a smoke run (new/empty directory)","directory"});
+    parser.addPositionalArgument("urls","http(s) URLs to open","[urls...]");
     parser.process(app);
     const auto directory=parser.isSet("data-dir")?QDir(parser.value("data-dir")).absolutePath():QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if(!QDir().mkpath(directory)){QTextStream(stderr)<<"Cannot create application data directory\n";return 2;}
@@ -189,7 +192,38 @@ int main(int argc,char** argv) {
         if(browser){auto started=std::make_shared<bool>(false);QObject::connect(browser.get(),&BrowserWidget::loadingChanged,&app,[&,started](bool loading){if(!loading&&!*started){*started=true;submit();}});}else QTimer::singleShot(0,&app,submit);
         return app.exec();
     }
-    MainWindow window(directory);if(parser.isSet("import-keys"))window.importKeys(parser.value("import-keys"));if(parser.isSet("workspace"))window.connectWorkspace(parser.value("workspace"));window.show();
+    // One GUI instance per data directory; isolated --data-dir profiles and
+    // --smoke runs (above) are independent. Only http(s) URLs are forwarded.
+    InstanceCoordinator coordinator(directory);
+    const InstanceRequest startup{InstanceCoordinator::filterUrls(parser.positionalArguments()),QDir::currentPath()};
+    const bool exclusive=parser.isSet("import-keys")||parser.isSet("prompt")||parser.isSet("workspace");
+    const bool quiet=QGuiApplication::platformName()=="offscreen"||QGuiApplication::platformName()=="minimal";
+    const auto report=[quiet](const QString& message){
+        QTextStream(stderr)<<message<<'\n';
+        // A WIN32 executable started from Explorer has no visible stderr.
+        if(!quiet)QMessageBox::warning(nullptr,"ADE",message);
+    };
+    QString instanceError;
+    const auto role=coordinator.acquire(startup,5000,&instanceError,exclusive);
+    if(role==InstanceCoordinator::Role::Refused){
+        report("ADE is already running for this data directory; close it before using --import-keys/--prompt/--workspace.");
+        return 3;
+    }
+    if(role==InstanceCoordinator::Role::Forwarded)return 0;
+    // Lock-file errors other than a running owner continue uncoordinated (a
+    // logged warning); Failed means an owner holds the lock but never answered.
+    if(role==InstanceCoordinator::Role::Failed){report(instanceError);return 4;}
+    MainWindow window(directory);
+    QObject::connect(&coordinator,&InstanceCoordinator::requestReceived,&window,&MainWindow::handleInstanceRequest);
+    // After the window accepts close, later launches wait for the lock instead.
+    QObject::connect(&app,&QGuiApplication::lastWindowClosed,&coordinator,&InstanceCoordinator::setClosing);
+    QObject::connect(&app,&QCoreApplication::aboutToQuit,&coordinator,&InstanceCoordinator::setClosing);
+    if(parser.isSet("import-keys"))window.importKeys(parser.value("import-keys"));
+    if(parser.isSet("workspace"))window.connectWorkspace(parser.value("workspace"));
+    window.show();
+    // This launch's own URLs: no activation request or taskbar alert.
+    if(!startup.urls.isEmpty())window.openStartupUrls(startup.urls);
+    coordinator.markReady();
     if(parser.isSet("prompt"))QTimer::singleShot(500,&window,[&]{window.submitPrompt(parser.value("prompt"));});
     return app.exec();
 }

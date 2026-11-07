@@ -1,0 +1,13 @@
+********* Start testing of PowerRequestTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PowerRequestTest::initTestCase()
+PASS   : PowerRequestTest::acquireOnlyWhenEnabledAndActive()
+PASS   : PowerRequestTest::disablingReleasesImmediately()
+PASS   : PowerRequestTest::destructorReleases()
+PASS   : PowerRequestTest::acquireFailureIsRetriedOnNextUpdate()
+PASS   : PowerRequestTest::nullBackendNeverHolds()
+SKIP   : PowerRequestTest::winBackendRoundTrip() Set ADE_POWER_SMOKE=1 to take and release a real power request.
+D:/age/ADE/tests/test_power_request.cpp(103) : failure location
+PASS   : PowerRequestTest::cleanupTestCase()
+Totals: 7 passed, 0 failed, 1 skipped, 0 blacklisted, 2ms
+********* Finished testing of PowerRequestTest *********

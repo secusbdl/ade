@@ -30,6 +30,9 @@ public:
     void setShellReadSource(FileReadSource source) { if(m_id.isEmpty())m_shellReadSource=std::move(source); }
     bool hasShellReadSource() const { return bool(m_shellReadSource); }
     bool hasAttachmentReadSource() const { return bool(m_attachmentReadSource); }
+    // Wall-clock bound for one glob/grepSearch walk; reaching it returns the
+    // results so far with the search-limit note. Values below 0 are clamped.
+    void setSearchTimeLimit(int milliseconds) { if(m_id.isEmpty())m_searchTimeLimitMs=qMax(0,milliseconds); }
     void execute(const QString &id, const QString &name, const QJsonObject &arguments){executeWithProvenance(id,name,arguments,{});}
     void executeWithProvenance(const QString &id, const QString &name, const QJsonObject &arguments,const QString& mutationProvenanceId);
     void cancel();
@@ -66,6 +69,7 @@ private:
     FileReadSource m_attachmentReadSource;
     FileReadSource m_shellReadSource;
     FileMutationExecutor m_fileMutationExecutor;
+    int m_searchTimeLimitMs = 20000;
     void *m_job = nullptr;
 };
 

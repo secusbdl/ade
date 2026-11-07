@@ -1,0 +1,31 @@
+{
+  "status": "blocked_by_provider_outage",
+  "attempts": [
+    {
+      "run": "package11-deepseek-1",
+      "binarySha256": "780a3d0940d704dba371125aae1025ba9a24c886553d9f81c353045284cf5e83",
+      "error": "Session timed out",
+      "elapsedMs": 50077,
+      "tools": [
+        "read"
+      ]
+    },
+    {
+      "run": "package11-deepseek-2",
+      "binarySha256": "780a3d0940d704dba371125aae1025ba9a24c886553d9f81c353045284cf5e83",
+      "error": "Provider request failed (HTTP 500): Internal Server Error (request_id: a1d12a37-c931-4c78-9da3-48706f3e86a3)",
+      "elapsedMs": 49456,
+      "tools": []
+    },
+    {
+      "run": "package10-deepseek-recheck-1",
+      "binarySha256": "af9a96d1e51221b2fda8875c00ee6796f57ee1a616ceeb9a7ee58e01028810bb",
+      "error": "Session timed out",
+      "elapsedMs": 50069,
+      "tools": [
+        "read"
+      ]
+    }
+  ],
+  "reasoning": "The identical bounded smoke failed on the previously verified package-10 binary at the same time, and a later attempt returned HTTP 500 from the provider, so the failures are provider-side, not a regression of this binary."
+}

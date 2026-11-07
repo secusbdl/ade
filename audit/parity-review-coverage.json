@@ -7955,6 +7955,18 @@
       "sha256CanonicalLf": "e8526abc4fd01f1299d4b758de206848bd3ff362cbf1e8449183f8f9548866d3",
       "linkedFeatureRows": 0,
       "scope": "Checkpoint 10: question priority, Settings shortcut suppression, Markdown rich links and diff clipping, corrected hidden-browser initialization; 212 suites, exact-binary live and UI Automation evidence. No whole feature row declared complete."
+    },
+    {
+      "path": "audit/parity-integration-11.json",
+      "sha256CanonicalLf": "03fc3a78f7386be0c9befa01278fc7aec030251e8ba3183f7ddef1e79d4e623c",
+      "linkedFeatureRows": 0,
+      "scope": "Local checkpoint 11 (not separately published): failed-turn Retry, notification sounds, keep-awake, single instance, shortcut slices; 220 suites, Codex live, UI Automation; DeepSeek blocked by a provider outage at test time."
+    },
+    {
+      "path": "audit/parity-integration-12.json",
+      "sha256CanonicalLf": "1708ae377233d8255979e94e357c88dd40b14cc691dd9d96b85e6a8bd07504d2",
+      "linkedFeatureRows": 0,
+      "scope": "Checkpoint 12: checkpoint 11 plus Retry card layout, rg-parity search ignore/filters and screenshot transport fallback; 223 suites, exact-binary live and UI Automation evidence. No whole feature row declared complete."
     }
   ]
 }

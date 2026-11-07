@@ -271,7 +271,9 @@ private slots:
     for (qsizetype i = 0; i < rows.size() - 1; ++i)
       QVERIFY(rows[i].endsWith(tool == "glob" ? ".txt" : ".txt:1: needle"));
   }
-  void unchangedGlobPatternAndHiddenFiles() {
+  // Upstream glob runs rg -g '*.ts': a slashless pattern matches at any
+  // depth and glob includes hidden files (rg --hidden).
+  void globPatternMatchesAnyDepthAndHiddenFiles() {
     QTemporaryDir root;
     QVERIFY(writeFile(root.filePath("src/a.ts"), "needle"));
     QVERIFY(writeFile(root.filePath(".hidden.ts"), "needle"));
@@ -279,7 +281,7 @@ private slots:
     QVERIFY(tools.setWorkspace(root.path()));
     const auto result = run(tools, "glob", {{"pattern", "*.ts"}});
     QVERIFY(complete(result));
-    QCOMPARE(output(result), QString(".hidden.ts\n"));
+    QCOMPARE(output(result), QString(".hidden.ts\nsrc/a.ts\n"));
   }
   void caseAndLineNumbersRemainStable() {
     QTemporaryDir root;

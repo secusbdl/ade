@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QSlider>
 #include <QTemporaryDir>
+#include <QToolButton>
 
 using namespace ade;
 
@@ -31,6 +32,12 @@ private slots:
     void objectSitePermissionRecords_data();
     void objectSitePermissionRecords();
     void historyOpensThroughNativeHost();
+    // Notification sound controls (runtime-services slice 3). The old page had
+    // an Off/Normal/Loud combo, a "still being connected" placeholder and no
+    // pack, preview or import controls, and accepted any loudness/pack string.
+    void generalSoundControlsWithoutHooks();
+    void generalSoundControlsWithHooks();
+    void agentPreferenceValidation();
 };
 
 void SettingsTest::persistsIndependentSectionsAndSignals() {
@@ -238,6 +245,82 @@ void SettingsTest::historyOpensThroughNativeHost(){
     SettingsPage page(directory.path());QSignalSpy opened(&page,&SettingsPage::openUrlRequested);page.selectSection("history");
     auto* list=page.findChild<QListWidget*>("browsingHistory");QVERIFY(list);QCOMPARE(list->count(),1);emit list->itemDoubleClicked(list->item(0));
     QCOMPARE(opened.size(),1);QCOMPARE(opened.first().first().toUrl(),QUrl("https://example.test/page"));
+}
+
+namespace {
+QStringList comboTexts(QComboBox* combo){QStringList texts;for(int i=0;i<combo->count();++i)texts.append(combo->itemText(i));return texts;}
+void flushDeletes(){QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);}
+}
+
+void SettingsTest::generalSoundControlsWithoutHooks(){
+    QTemporaryDir directory;SettingsPage page(directory.path());page.selectSection("agent-general");
+    auto* loudness=page.findChild<QComboBox*>("notificationLoudness");QVERIFY(loudness);
+    QCOMPARE(comboTexts(loudness),QStringList({"Off","Subtle","Loud"}));
+    QCOMPARE(loudness->currentData().toString(),QString("normal"));
+    auto* pack=page.findChild<QComboBox*>("notificationSoundPack");QVERIFY(pack);
+    QCOMPARE(comboTexts(pack),QStringList({"ADE Chime"}));QCOMPARE(pack->currentData().toString(),QString("ade-chime"));
+    auto* preview=page.findChild<QToolButton*>("notificationSoundPreview");QVERIFY(preview);QVERIFY(!preview->isEnabled());
+    auto* import=page.findChild<QPushButton*>("notificationSoundImport");QVERIFY(import);QVERIFY(!import->isEnabled());
+    for(auto* label:page.findChildren<QLabel*>())QVERIFY2(!label->text().contains("still being connected"),qPrintable(label->text()));
+}
+
+void SettingsTest::generalSoundControlsWithHooks(){
+    QTemporaryDir directory;SettingsPage page(directory.path());page.selectSection("agent-general");
+    const QString imported="00000000-0000-4000-8000-000000000001";
+    QList<QPair<QString,QString>> previews;int imports=0;SettingsPage::SoundImportOutcome next;
+    SettingsPage::SoundHooks hooks;
+    hooks.packs=[imported]{return QList<QPair<QString,QString>>{{"ade-chime","ADE Chime"},{"ade-soft","Soft Tones"},{imported,"Mine"}};};
+    hooks.preview=[&previews](const QString& pack,const QString& loudness){previews.append({pack,loudness});return true;};
+    hooks.chooseAndImport=[&]{++imports;return next;};
+    page.setSoundHooks(hooks);flushDeletes();
+    auto* pack=page.findChild<QComboBox*>("notificationSoundPack");auto* loudness=page.findChild<QComboBox*>("notificationLoudness");
+    auto* preview=page.findChild<QToolButton*>("notificationSoundPreview");auto* status=page.findChild<QLabel*>("settingsStatus");
+    QVERIFY(pack&&loudness&&preview&&status);
+    QCOMPARE(comboTexts(pack),QStringList({"ADE Chime","Soft Tones","Mine"}));QCOMPARE(pack->currentData().toString(),QString("ade-chime"));
+    QVERIFY(preview->isEnabled());QCOMPARE(previews.size(),0);
+    pack->setCurrentIndex(1);
+    QCOMPARE(page.preference("agent.notificationSound").toString(),QString("ade-soft"));
+    QCOMPARE(previews,(QList<QPair<QString,QString>>{{"ade-soft","normal"}}));
+    loudness->setCurrentIndex(loudness->findData("loud"));
+    QCOMPARE(previews.size(),2);QCOMPARE(previews.last(),(QPair<QString,QString>{"ade-soft","loud"}));
+    loudness->setCurrentIndex(loudness->findData("off"));
+    QCOMPARE(page.preference("agent.notificationLoudness").toString(),QString("off"));
+    QCOMPARE(previews.size(),2);QVERIFY(!preview->isEnabled());
+    loudness->setCurrentIndex(loudness->findData("normal"));
+    QCOMPARE(previews.size(),3);QVERIFY(preview->isEnabled());
+    preview->click();QCOMPARE(previews.size(),4);QCOMPARE(previews.last(),(QPair<QString,QString>{"ade-soft","normal"}));
+    // Successful import selects the new pack and reports it.
+    next={false,imported,"Mine",{}};
+    page.findChild<QPushButton*>("notificationSoundImport")->click();flushDeletes();
+    QCOMPARE(imports,1);QCOMPARE(page.preference("agent.notificationSound").toString(),imported);
+    QCOMPARE(status->text(),QString("Mine is now selected for notifications."));
+    pack=page.findChild<QComboBox*>("notificationSoundPack");QCOMPARE(pack->currentData().toString(),imported);
+    // Errors are reported and leave the selection unchanged.
+    next={false,{},{},"The file is not valid JSON."};
+    page.findChild<QPushButton*>("notificationSoundImport")->click();
+    QCOMPARE(imports,2);QCOMPARE(status->text(),QString("The file is not valid JSON."));
+    QCOMPARE(page.preference("agent.notificationSound").toString(),imported);
+    // Cancel shows nothing new.
+    next={true,{},{},{}};const auto before=status->text();
+    page.findChild<QPushButton*>("notificationSoundImport")->click();
+    QCOMPARE(imports,3);QCOMPARE(status->text(),before);QCOMPARE(page.preference("agent.notificationSound").toString(),imported);
+    QCOMPARE(SettingsPage(directory.path()).preference("agent.notificationSound").toString(),imported);
+}
+
+void SettingsTest::agentPreferenceValidation(){
+    QTemporaryDir directory;SettingsPage page(directory.path());
+    for(const auto& value:{"max","Normal","subtle",""})QVERIFY2(!page.setPreference("agent.notificationLoudness",QString(value)),value);
+    for(const auto& value:QStringList{"..","../x",".","-lead","a/b","a.b","x\n",QString(65,'a')})QVERIFY2(!page.setPreference("agent.notificationSound",value),qPrintable(value));
+    for(const auto& value:{"off","normal","loud"})QVERIFY(page.setPreference("agent.notificationLoudness",QString(value)));
+    for(const auto& value:QStringList{"default","ade-soft","00000000-0000-4000-8000-000000000001",QString(64,'a')})QVERIFY2(page.setPreference("agent.notificationSound",value),qPrintable(value));
+    // Files written by the previous page (default values) still load.
+    QTemporaryDir legacy;QFile file(legacy.filePath("preferences.json"));QVERIFY(file.open(QIODevice::WriteOnly));
+    file.write(R"({"schemaVersion":1,"preferences":{"agent":{"keepAwake":false,"notificationLoudness":"loud","notificationSound":"default"}}})");file.close();
+    SettingsPage reopened(legacy.path());QVERIFY(reopened.storageError().isEmpty());QCOMPARE(reopened.preference("agent.notificationLoudness").toString(),QString("loud"));
+    QTemporaryDir hostile;QFile bad(hostile.filePath("preferences.json"));QVERIFY(bad.open(QIODevice::WriteOnly));
+    // Valid JSON, but the stored pack id is a path: the store is marked invalid.
+    bad.write(R"({"schemaVersion":1,"preferences":{"agent":{"notificationSound":"../evil"}}})");bad.close();
+    QVERIFY(!SettingsPage(hostile.path()).storageError().isEmpty());
 }
 
 QTEST_MAIN(SettingsTest)

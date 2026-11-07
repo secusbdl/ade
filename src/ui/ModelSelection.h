@@ -26,5 +26,7 @@ QJsonObject effectiveModelCatalog(const ProviderConfig& provider,const QJsonObje
 void prepareModelDiscoveryForSave(ProviderConfig& provider,const QJsonObject& legacyCatalog={});
 QJsonObject cleanModelCatalog(const ProviderConfig &provider, const QJsonArray &models);
 QList<ModelConfig> resolveModelEntries(const QList<ProviderConfig>& providers,const QJsonArray& entries,const QJsonObject& catalogs={});
-QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets,const QJsonObject& catalogs={});
+// thinkingOverrides is the validated agent.modelThinkingOverrides preference.
+// It applies only to non-preset selections and discovered harness efforts.
+QList<ModelConfig> selectedModelChain(const ModelSelection& selection,const QList<ProviderConfig>& providers,const QJsonArray& presets,const QJsonObject& catalogs={},const QJsonObject& thinkingOverrides={});
 }

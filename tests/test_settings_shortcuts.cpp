@@ -156,6 +156,15 @@ private slots:
           QCOMPARE(chat.draft, draft);
         }
       QVERIFY(found);
+    } else if (sequence == "Ctrl+Shift+G") {
+      // Upstream toggle_file_tree_diff: changed-files tree, no new tab.
+      QCOMPARE(tabs->count(), count);
+      auto *changes = window.findChild<QToolButton *>("fileTreeChangesMode");
+      auto *workbench = window.findChild<WorkbenchSplitter *>();
+      QVERIFY(changes && workbench);
+      QVERIFY(changes->isChecked());
+      QVERIFY(workbench->fileTreeVisible());
+      QCOMPARE(input->toPlainText(), draft);
     } else {
       QCOMPARE(tabs->count(), count + 1);
       QVERIFY(tabs->currentWidget()->isVisible());

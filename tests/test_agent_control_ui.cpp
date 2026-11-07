@@ -6,13 +6,20 @@
 #include "ui/MessageQueuePanel.h"
 #include "ui/QuestionPanel.h"
 #include "ui/SessionStore.h"
+#include "ui/WorkbenchSplitter.h"
+#include "terminal/TerminalWidget.h"
+#include <QClipboard>
 #include <QJsonDocument>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QShortcut>
+#include <QSignalSpy>
+#include <QTabWidget>
 #include <QTcpServer>
+#include <QTextEdit>
 #include <QTcpSocket>
 #include <QTemporaryDir>
 #include <QToolButton>
@@ -134,6 +141,39 @@ Conversation saved(const QString &path, const QString &id) {
     if (chat.id == id)
       return chat;
   return {};
+}
+// Window and widget-scoped shortcuts need an active window.
+void activate(MainWindow &window) {
+  window.setAttribute(Qt::WA_DontShowOnScreen);
+  window.resize(1100, 750);
+  window.show();
+  window.activateWindow();
+  QApplication::setActiveWindow(&window);
+  QCoreApplication::processEvents();
+}
+void ctrlC(QWidget *target) {
+  target->setFocus();
+  QTest::keyClick(target, Qt::Key_C, Qt::ControlModifier);
+  QCoreApplication::processEvents();
+}
+// Starts a turn that the fixture provider holds open, so the engine is busy.
+AgentEngine *busyEngine(MainWindow &window, Provider &provider) {
+  if (!select(window, "first"))
+    return nullptr;
+  window.submitPrompt("first turn");
+  if (!QTest::qWaitFor([&] { return provider.requests.size() == 1; }, 5000))
+    return nullptr;
+  auto *engine = window.findChild<AgentEngine *>();
+  return engine && engine->isBusy() ? engine : nullptr;
+}
+QTextEdit *transcriptText(MainWindow &window, const QString &needle) {
+  auto *view = window.findChild<QWidget *>("conversationView");
+  if (!view)
+    return nullptr;
+  for (auto *text : view->findChildren<QTextEdit *>())
+    if (text->isVisible() && text->toPlainText().contains(needle))
+      return text;
+  return nullptr;
 }
 } // namespace
 class AgentControlUiTest : public QObject {
@@ -294,6 +334,127 @@ private slots:
     QVERIFY(engine->queuedMessages().isEmpty());
     QCOMPARE(provider.requests.size(), 1);
     engine->cancel();
+  }
+  // stop_agent (S3). Before, the composer treated Ctrl+C as an empty copy and
+  // no window fallback existed, so every "stops" assertion below failed.
+  void ctrlCInComposerWithoutSelectionStopsBusyAgent() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    window.submitPrompt("queued turn");
+    auto *composer = window.findChild<Composer *>("composerInput");
+    QVERIFY(composer);
+    QCOMPARE(composer->toPlainText(), QString());
+    ctrlC(composer);
+    QTRY_VERIFY(!engine->isBusy());
+    QCOMPARE(saved(directory.path(), "first").queuedMessages.size(), 1);
+  }
+  void ctrlCWithComposerSelectionCopiesAndKeepsAgentRunning() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    auto *composer = window.findChild<Composer *>("composerInput");
+    QVERIFY(composer);
+    composer->setPlainText("copy this draft");
+    composer->selectAll();
+    QGuiApplication::clipboard()->clear();
+    ctrlC(composer);
+    QCOMPARE(QGuiApplication::clipboard()->text(), QString("copy this draft"));
+    QTest::qWait(50);
+    QVERIFY(engine->isBusy());
+    engine->cancel();
+    QTRY_VERIFY(!engine->isBusy());
+  }
+  void ctrlCFromTerminalDoesNotStopAgent() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    auto *tabs = window.findChild<QTabWidget *>("contentTabs");
+    auto *split = window.findChild<WorkbenchSplitter *>();
+    QVERIFY(tabs && split);
+    auto *terminal = new TerminalWidget;
+    tabs->setCurrentIndex(tabs->addTab(terminal, "Terminal fixture"));
+    split->setContentCollapsed(false);
+    auto *stop = window.findChild<QShortcut *>("shortcut_stop_agent");
+    QVERIFY(stop && stop->isEnabled());
+    ctrlC(terminal);
+    QTest::qWait(50);
+    QVERIFY(engine->isBusy());
+    QCOMPARE(QApplication::focusWidget(), terminal);
+    engine->cancel();
+    QTRY_VERIFY(!engine->isBusy());
+  }
+  void ctrlCFromAgentListStopsBusyAgent() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    auto *agents = window.findChild<QListWidget *>("agentList");
+    QVERIFY(agents);
+    ctrlC(agents);
+    QTRY_VERIFY(!engine->isBusy());
+    QCOMPARE(window.currentSessionId(), QString("first"));
+  }
+  void ctrlCWithTranscriptSelectionCopiesWhileBusy() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    QTRY_VERIFY(transcriptText(window, "first turn"));
+    auto *text = transcriptText(window, "first turn");
+    auto cursor = text->textCursor();
+    cursor.select(QTextCursor::Document);
+    text->setTextCursor(cursor);
+    QVERIFY(text->textCursor().hasSelection());
+    QGuiApplication::clipboard()->clear();
+    ctrlC(text);
+    QVERIFY(QGuiApplication::clipboard()->text().contains("first turn"));
+    QTest::qWait(50);
+    QVERIFY(engine->isBusy());
+    engine->cancel();
+    QTRY_VERIFY(!engine->isBusy());
+  }
+  void ctrlCWhenIdleDoesNotActivateFallback() {
+    QTemporaryDir directory;
+    Provider provider;
+    QVERIFY(provider.seed(directory.path()));
+    MainWindow window(directory.path());
+    activate(window);
+    QVERIFY(select(window, "first"));
+    auto *stop = window.findChild<QShortcut *>("shortcut_stop_agent");
+    auto *agents = window.findChild<QListWidget *>("agentList");
+    QVERIFY(stop && agents);
+    QVERIFY(!stop->isEnabled());
+    QSignalSpy activated(stop, &QShortcut::activated);
+    ctrlC(agents);
+    QCOMPARE(activated.size(), 0);
+    QVERIFY(window.findChildren<AgentEngine *>().isEmpty());
+    QCOMPARE(provider.requests.size(), 0);
+    // The enabled state follows the stop button through a turn.
+    auto *engine = busyEngine(window, provider);
+    QVERIFY(engine);
+    QTRY_VERIFY(stop->isEnabled());
+    engine->cancel();
+    QTRY_VERIFY(!engine->isBusy());
+    QTRY_VERIFY(!stop->isEnabled());
   }
 };
 QTEST_MAIN(AgentControlUiTest)

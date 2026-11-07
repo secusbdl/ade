@@ -35,11 +35,26 @@ class WorkspaceChangesController;class WorkspaceChangesView;class GitDiffTab;
 class QuestionPanel;class MessageQueuePanel;
 class SideChatPane;
 class BrowserSessionStore;
+class ISoundOutput;class IPowerBackend;class PowerRequestGuard;class NotificationSoundService;class AgentActivityMonitor;
+struct InstanceRequest;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
+    // OS effects (audio, power requests). Set before constructing a window.
+    // The default uses null effects for offscreen/minimal platforms and when
+    // ADE_DISABLE_SYSTEM_EFFECTS=1, so test hosts stay silent.
+    struct SystemEffects {
+        std::function<std::unique_ptr<ISoundOutput>()> sound;
+        std::function<std::unique_ptr<IPowerBackend>()> power;
+    };
+    static void setSystemEffectsFactory(SystemEffects effects);
+    static SystemEffects defaultSystemEffects();
     explicit MainWindow(QString dataDirectory,QWidget* parent=nullptr);
     ~MainWindow() override;
+    // A second launch for this data directory: restore, focus, open its URLs.
+    void handleInstanceRequest(const InstanceRequest& request);
+    // This launch's own URLs: opened without activation or a taskbar alert.
+    void openStartupUrls(const QList<QUrl>& urls);
     void importKeys(const QString& path);
     void connectWorkspace(const QString& path);
     void submitPrompt(const QString& prompt);
@@ -130,6 +145,9 @@ private:
     QPointer<WorkspaceChangesView> m_workspaceChangesView;
     void connectMutationControls(const QString& id,AgentToolHost* host);
     void connectTurnFileControls(ConversationView* view);
+    void connectHistoryControls(ConversationView* view);
+    bool retryFailedTurn(const QString& id,const QString& userRowId,ConversationView* view);
+    void pushHistoryActions(const QString& id,ConversationView* view);
     void undoFileChanges(const QString& id,const QStringList& mutationIds);
     void recoverFileChanges(const QString& id);
     QPointer<FileChangesPanel> m_fileChanges;
@@ -199,6 +217,17 @@ private:
     QLabel* m_sessionRecoveryLabel=nullptr;
     bool m_discardSessionChangesOnClose=false,m_sessionTransition=false;
     quint64 m_sessionRecoverySerial=0;
+    void initializeRuntimeEffects();void connectSoundSettings();
+    // URLs from launches that arrived while a recovery decision or a session
+    // transition owned the window; opened once it is free again.
+    void queueInstanceUrls(const QList<QUrl>& urls);void openPendingInstanceUrls();
+    QList<QUrl> m_pendingInstanceUrls;
+    bool m_closeAccepted=false; // terminal: set when closeEvent accepts
+    std::unique_ptr<ISoundOutput> m_soundOutput;
+    // Deleted explicitly in ~MainWindow before m_soundOutput, which it uses.
+    QPointer<NotificationSoundService> m_sounds;
+    std::unique_ptr<PowerRequestGuard> m_power;
+    QPointer<AgentActivityMonitor> m_activity;
 
 };
 }

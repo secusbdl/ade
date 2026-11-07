@@ -4,8 +4,10 @@
 #include "MainWindow.h"
 #include "MessageQueuePanel.h"
 #include "ModelSelection.h"
+#include "ModelThinking.h"
 #include "QuestionPanel.h"
 #include "SettingsPage.h"
+#include "SideChatPane.h"
 #include "core/AgentEngine.h"
 #include <QDateTime>
 #include <QLabel>
@@ -150,7 +152,9 @@ void MainWindow::initializeAgentControls() {
       engine->setModelChain(
           selectedModelChain(selection, m_providers,
                              m_settings->preference("modelPresets").toArray(),
-                             m_settings->preference("modelCatalogs").toObject()),
+                             m_settings->preference("modelCatalogs").toObject(),
+                             validThinkingOverrides(m_settings->preference(
+                                 "agent.modelThinkingOverrides"))),
           selection.presetId);
       engine->setAlwaysAllow(session->alwaysAllow);
     }
@@ -202,14 +206,19 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
     // Only a newly accepted user turn may be paused here. Saving the active
     // response, mutation recovery, or queue edits must remain possible after a
     // custom definition changes. Explicit resume resolves the current chain.
-    const bool newUser=history.size()>chat.messages.size()&&!history.isEmpty()
-        &&history.last().toObject().value("role")=="user";
+    // A Retry replaces history, so the size heuristic alone would miss it.
+    const auto kind=owner->commitKind();
+    const bool newUser=(history.size()>chat.messages.size()&&!history.isEmpty()
+        &&history.last().toObject().value("role")=="user")
+        ||kind==AgentEngine::CommitKind::AcceptUser
+        ||kind==AgentEngine::CommitKind::ReplaceAndAcceptUser;
     if(newUser){
       const auto active=owner->provider();
       const ModelSelection selection{chat.providerId,chat.model,chat.presetId,{},{}};
       const auto chain=selectedModelChain(selection,self->m_providers,
           self->m_settings->preference("modelPresets").toArray(),
-          self->m_settings->preference("modelCatalogs").toObject());
+          self->m_settings->preference("modelCatalogs").toObject(),
+          validThinkingOverrides(self->m_settings->preference("agent.modelThinkingOverrides")));
       const ProviderConfig* latest=nullptr;
       for(const auto& model:chain)if(model.provider.id==active.id&&model.provider.model==active.model){latest=&model.provider;break;}
       const bool custom=!active.customRequest.isEmpty()||(latest&&!latest->customRequest.isEmpty());
@@ -218,7 +227,9 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
           ||active.contextWindowTokens!=latest->contextWindowTokens
           ||active.kind!=latest->kind||active.protocol!=latest->protocol
           ||active.baseUrl!=latest->baseUrl||active.apiKey!=latest->apiKey)){
-        if(error)*error="The selected custom model changed or was removed. Your queued message is retained. Select the intended model, then resume the queue.";
+        if(error)*error=kind==AgentEngine::CommitKind::ReplaceAndAcceptUser
+            ?QString("The selected custom model changed or was removed. Select the intended model, then retry.")
+            :QString("The selected custom model changed or was removed. Your queued message is retained. Select the intended model, then resume the queue.");
         return false;
       }
     }
@@ -228,6 +239,9 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
     }
     chat.messages = history;
     chat.queuedMessages = queue;
+    // An accepted or replacing turn supersedes the failure in the same save.
+    if (kind != AgentEngine::CommitKind::Update)
+      chat.turnFailure = {};
     chat.updated = QDateTime::currentMSecsSinceEpoch();
     if (accepted)
       chat.lastMessageAt = chat.updated;
@@ -242,6 +256,15 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
               return;
             if (id == m_currentId)
               refreshAgentControls();
+            if (!self)
+              return;
+            // The Retry card's queued-message note counts this queue.
+            if (id == m_currentId)
+              pushHistoryActions(id, m_transcript);
+            if (!self)
+              return;
+            if (const QPointer<SideChatPane> pane = m_sideChats.value(id))
+              pushHistoryActions(id, pane->transcript());
             if (!self)
               return;
             refreshAgents();

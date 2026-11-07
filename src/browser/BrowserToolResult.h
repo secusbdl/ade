@@ -9,6 +9,7 @@ QString capBrowserModelOutput(const QString &output, bool error = false,
 struct BrowserScreenshotResult {
   QByteArray bytes;
   QString fileName, mimeType, error;
+  QString note; // Transport fallback explanation for the model, if any.
 };
 BrowserScreenshotResult decodeBrowserScreenshot(const QString &output);
 } // namespace ade

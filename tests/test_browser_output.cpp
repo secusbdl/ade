@@ -319,6 +319,120 @@ private slots:
     QVERIFY(error.isEmpty());
     QCOMPARE(reopened.first().messages, engine.messages());
   }
+  // B6: a direct PNG capture above the 2 MiB transport becomes a JPEG
+  // attachment (Stagewise compresses captures to JPEG) instead of an error.
+  void oversizedDirectScreenshotBecomesJpegAttachment() {
+    QTemporaryDir data, profile;
+    PageServer page;
+    Server model;
+    BrowserToolBridge bridge;
+    BrowserWidget browser;
+    const auto tab = bridge.registerTab(&browser, "fixture-tab");
+    QVERIFY(load(browser, page, profile.path()));
+    browser.resize(1000, 800);
+    // Wait until the page itself reports the resized viewport; a noise canvas
+    // painted at the old 500 px width would not exceed the transport.
+    QSignalSpy widths(&browser, &BrowserWidget::devToolsRequestCompleted);
+    int widthPolls = 0;
+    double innerWidth = 0;
+    QElapsedTimer resized;
+    resized.start();
+    while (innerWidth < 900 && resized.elapsed() < 10000) {
+      const QString id = "fixture-width-" + QString::number(++widthPolls);
+      browser.callDevToolsRequest(
+          id, "Runtime.evaluate",
+          R"({"expression":"innerWidth","returnByValue":true})");
+      QElapsedTimer reply;
+      reply.start();
+      bool answered = false;
+      while (!answered && reply.elapsed() < 2000) {
+        QTest::qWait(10);
+        for (const auto &row : widths)
+          if (row[0].toString() == id) {
+            answered = true;
+            innerWidth = QJsonDocument::fromJson(row[1].toString().toUtf8())
+                             .object()["result"]
+                             .toObject()["value"]
+                             .toDouble();
+          }
+      }
+      if (innerWidth < 900)
+        QTest::qWait(50);
+    }
+    qInfo() << "innerWidth" << innerWidth << "after" << widthPolls << "polls";
+    QVERIFY(innerWidth >= 900);
+    // Per-device-pixel noise over the whole viewport: PNG cannot compress it.
+    const QString noise =
+        "new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))"
+        ".then(()=>{document.body.innerHTML='';const d=devicePixelRatio||1,"
+        "c=document.createElement('canvas');c.width=Math.round(innerWidth*d);"
+        "c.height=Math.round(innerHeight*d);c.style.cssText='position:fixed;"
+        "left:0;top:0;width:100vw;height:100vh';document.body.style.overflow="
+        "'hidden';document.body.appendChild(c);const x=c.getContext('2d'),"
+        "im=x.createImageData(c.width,c.height);let s=2463534242;for(let i=0;"
+        "i<im.data.length;i+=4){s^=s<<13;s^=s>>>17;s^=s<<5;im.data[i]=s&255;"
+        "im.data[i+1]=(s>>>8)&255;im.data[i+2]=(s>>>16)&255;im.data[i+3]=255}"
+        "x.putImageData(im,0,0);return new Promise(r=>requestAnimationFrame("
+        "()=>requestAnimationFrame(()=>r(c.width*c.height))))})";
+    QSignalSpy evaluated(&browser, &BrowserWidget::devToolsRequestCompleted);
+    browser.callDevToolsRequest(
+        "fixture-noise", "Runtime.evaluate",
+        QString::fromUtf8(QJsonDocument(QJsonObject{{"expression", noise},
+                                                    {"awaitPromise", true},
+                                                    {"returnByValue", true}})
+                              .toJson(QJsonDocument::Compact)));
+    QJsonObject painted;
+    QTRY_VERIFY_WITH_TIMEOUT(
+        [&] {
+          for (const auto &row : evaluated)
+            if (row[0].toString() == "fixture-noise") {
+              painted = QJsonDocument::fromJson(row[1].toString().toUtf8())
+                            .object();
+              return true;
+            }
+          return false;
+        }(),
+        10000);
+    const auto pixels =
+        painted["result"].toObject()["value"].toInteger();
+    qInfo() << "noise device pixels" << pixels;
+    // 3 bytes per noise pixel, base64 4/3: comfortably above 2 Mi characters.
+    QVERIFY(pixels >= 700000);
+    AgentEngine engine;
+    engine.setProvider(model.provider("openai"));
+    engine.setAlwaysAllow(true);
+    AgentToolHost host(&engine, &bridge, "jpeg-owner", data.path());
+    QSignalSpy failures(&engine, &AgentEngine::failed);
+    engine.submit("Capture the oversized fixture");
+    QTRY_COMPARE_WITH_TIMEOUT(model.requests.size(), 1, 5000);
+    model.respond(0, reply("openai", true, "sendCDP",
+                           {{"tabId", tab},
+                            {"method", "Page.captureScreenshot"},
+                            {"params", QJsonObject{{"format", "png"}}}}));
+    QTRY_COMPARE_WITH_TIMEOUT(model.requests.size(), 2, 20000);
+    model.respond(1, reply("openai", false));
+    QTRY_VERIFY(!engine.isBusy());
+    QVERIFY(failures.isEmpty());
+    const auto row = toolRow(engine);
+    const auto content = row.value("content").toString();
+    const auto refs =
+        row.value("metadata").toObject().value("attachments").toArray();
+    qInfo() << "fallback tool text" << content;
+    QCOMPARE(refs.size(), 1);
+    QVERIFY(content.contains("JPEG at quality"));
+    QVERIFY(content.size() < 1024);
+    QVERIFY(!content.contains("/9j/"));
+    QVERIFY(hasImage(model.requests[1]));
+    QString error;
+    const auto ref = AttachmentRef::fromJson(refs[0].toObject(), &error);
+    QVERIFY(error.isEmpty());
+    QVERIFY(ref.path.endsWith(".jpeg"));
+    const auto bytes =
+        AttachmentStore(data.path()).read("jpeg-owner", ref, {}, &error);
+    QVERIFY(error.isEmpty());
+    QVERIFY(bytes.startsWith("\xFF\xD8\xFF"));
+    QVERIFY(!QImage::fromData(bytes, "JPEG").isNull());
+  }
   void directLargeDomAndConsoleAreCapped_data() {
     QTest::addColumn<bool>("console");
     QTest::addColumn<QString>("protocol");

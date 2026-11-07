@@ -134,6 +134,20 @@ void AgentEngine::storeToolMessage(const QString& call,const QJsonObject& messag
     m_messages.append(message);
 }
 
+bool AgentEngine::unsettledMutationAfter(int from) const{
+    // Same recoverability predicate as reconcileMutationHistory. A dirty flag
+    // blocks only when the suffix holds this agent's invocations.
+    for(int i=qMax(0,from);i<m_messages.size();++i)for(const auto& item:m_messages[i].toObject()["metadata"].toObject()["mutationInvocations"].toArray()){
+        const auto entry=item.toObject();const auto id=entry["invocationId"].toString();
+        if(entry["agentId"]!=m_mutationAgentId)continue;
+        if(m_mutationHistoryDirty)return true;
+        if(QUuid(id).isNull())continue;
+        const auto binding=locate(m_messages,id,m_mutationAgentId);
+        if(binding.assistant>=0&&(!entry["settled"].toBool()||binding.result<0))return true;
+    }
+    return false;
+}
+
 void AgentEngine::reconcileMutationHistory(){
     if(m_busy||m_committingQueue||m_mutationAgentId.isEmpty()||!m_mutationRecovery)return;
     QStringList ids;

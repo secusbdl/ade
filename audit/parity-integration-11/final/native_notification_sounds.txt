@@ -1,0 +1,34 @@
+********* Start testing of NotificationSoundsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : NotificationSoundsTest::initTestCase()
+PASS   : NotificationSoundsTest::gainMapping()
+PASS   : NotificationSoundsTest::synthesizedWavIsValidAndDeterministic()
+PASS   : NotificationSoundsTest::scalePcm16Wav()
+PASS   : NotificationSoundsTest::debounceDoneOnly()
+PASS   : NotificationSoundsTest::focusResetsDebounce()
+PASS   : NotificationSoundsTest::visibleAndFocusedSuppressed()
+PASS   : NotificationSoundsTest::offPlaysNothingAndDoesNotArmDebounce()
+PASS   : NotificationSoundsTest::failedOutputDoesNotArmDebounce()
+PASS   : NotificationSoundsTest::missingEventDeliversNothing()
+PASS   : NotificationSoundsTest::packFallback()
+PASS   : NotificationSoundsTest::configureResolvesPackOnlyWhenRequestChanges()
+PASS   : NotificationSoundsTest::importSingleMp3()
+PASS   : NotificationSoundsTest::importManifest()
+PASS   : NotificationSoundsTest::importWav()
+PASS   : NotificationSoundsTest::importRejectsNonPcm16Wav()
+PASS   : NotificationSoundsTest::importRejectsTraversal()
+PASS   : NotificationSoundsTest::importRejectsAbsoluteAndAds()
+PASS   : NotificationSoundsTest::importRejectsBadHeader()
+PASS   : NotificationSoundsTest::importRejectsEmptySounds()
+PASS   : NotificationSoundsTest::importRejectsOversize()
+PASS   : NotificationSoundsTest::importRejectsSymlink()
+PASS   : NotificationSoundsTest::importRejectsInvalidJson()
+PASS   : NotificationSoundsTest::importAtomicOnFailure()
+PASS   : NotificationSoundsTest::staleStagingIgnoredAndCleaned()
+PASS   : NotificationSoundsTest::packsListingAndDisplayNames()
+PASS   : NotificationSoundsTest::previewUsesDoneSoundAndDoesNotArmDebounce()
+SKIP   : NotificationSoundsTest::winOutputSmoke() Set ADE_AUDIO_SMOKE=1 to play two short tones.
+D:/age/ADE/tests/test_notification_sounds.cpp(465) : failure location
+PASS   : NotificationSoundsTest::cleanupTestCase()
+Totals: 28 passed, 0 failed, 1 skipped, 0 blacklisted, 302ms
+********* Finished testing of NotificationSoundsTest *********

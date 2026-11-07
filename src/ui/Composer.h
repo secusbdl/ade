@@ -41,6 +41,7 @@ signals:
     void filesAttached(QStringList paths);
     void imageAttached(QImage image);
     void stopRequested();
+    void stopShortcutRequested();
     void completionRequested(QString chatId,quint64 requestId,QChar trigger,QString query);
     void completionActivated(QString chatId,quint64 requestId,QJsonObject item);
 protected:
@@ -66,6 +67,9 @@ protected:
     }
     void keyPressEvent(QKeyEvent* event) override {
         if(handleCompletionKey(event))return;
+        // Upstream stop_agent: literal Ctrl+C (not Ctrl+Insert) without a
+        // selection; a selection keeps native copy. The host gates the stop.
+        if(event->key()==Qt::Key_C&&event->modifiers()==Qt::ControlModifier&&!textCursor().hasSelection()){emit stopShortcutRequested();event->accept();return;}
         if(event->key()==Qt::Key_Escape){emit stopRequested();event->accept();return;}
         if ((event->key()==Qt::Key_Return || event->key()==Qt::Key_Enter) && !(event->modifiers() & Qt::ShiftModifier)) {
             emit submitted(); event->accept(); return;

@@ -1,0 +1,28 @@
+********* Start testing of HistoryRetryTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HistoryRetryTest::initTestCase()
+PASS   : HistoryRetryTest::retryAfterEmptyOutputFailureSendsAcceptedUserOnce(openai)
+PASS   : HistoryRetryTest::retryAfterEmptyOutputFailureSendsAcceptedUserOnce(responses)
+PASS   : HistoryRetryTest::retryAfterEmptyOutputFailureSendsAcceptedUserOnce(anthropic)
+PASS   : HistoryRetryTest::retryAfterEmptyOutputFailureSendsAcceptedUserOnce(google)
+PASS   : HistoryRetryTest::retryRemovesPartialSuffixAndPreservesSignedPrefix(openai)
+PASS   : HistoryRetryTest::retryRemovesPartialSuffixAndPreservesSignedPrefix(responses)
+PASS   : HistoryRetryTest::retryRemovesPartialSuffixAndPreservesSignedPrefix(anthropic)
+PASS   : HistoryRetryTest::retryRemovesPartialSuffixAndPreservesSignedPrefix(google)
+PASS   : HistoryRetryTest::retryClearsQueueInSameCommit()
+PASS   : HistoryRetryTest::retryUnpausesQueueForLaterMessages()
+PASS   : HistoryRetryTest::rejectedCommitLeavesEverythingUnchanged()
+PASS   : HistoryRetryTest::successfulCanceledAndPreacceptanceTurnsAreNotRetryable()
+PASS   : HistoryRetryTest::idleCancelKeepsFailure()
+PASS   : HistoryRetryTest::staleRowBusyAndPostFailureSendRejected()
+PASS   : HistoryRetryTest::unsettledSuffixMutationBlocksRetry(unsettled)
+PASS   : HistoryRetryTest::unsettledSuffixMutationBlocksRetry(settled-but-dirty)
+PASS   : HistoryRetryTest::journalSettledSuffixMutationIsReconciledBeforeRetry()
+PASS   : HistoryRetryTest::dirtyPrefixOnlyDoesNotBlock()
+PASS   : HistoryRetryTest::restoreTurnFailureValidatesShapeAndIdentity()
+PASS   : HistoryRetryTest::failureRecordFitsShapeForMultibyteError()
+PASS   : HistoryRetryTest::ownerDeletedDuringRetryPublication()
+PASS   : HistoryRetryTest::duplicateRetryIsIdempotent()
+PASS   : HistoryRetryTest::cleanupTestCase()
+Totals: 24 passed, 0 failed, 0 skipped, 0 blacklisted, 7128ms
+********* Finished testing of HistoryRetryTest *********

@@ -1,0 +1,113 @@
+{
+  "verdict": "sound_with_corrections",
+  "corrections": [
+    {
+      "claim": "Slice 1 publication: 'when a prefix is present, call stopHarness() and m_fallback.reset() before assigning m_messages' inside startUserMessage.",
+      "problem": "startUserMessage resolves m_provider from m_fallback.resolve() at its top (AgentEngine.cpp ~226-231). Resetting the fallback after that point desynchronises m_fallback.index() from the already-chosen m_provider, so finishReply's overload advance (AgentEngine.cpp ~769-777) restarts the chain from 0 mid-turn. stopHarness() can also rewrite m_messages through its question-preservation path (AgentEngineHarness.cpp:68-80) after the CAS commit and before publication.",
+      "evidence": "AgentEngine.cpp:225-231 resolves the provider first. ModelFallback.h reset() clears m_preset/m_index. stopHarness at AgentEngineHarness.cpp:68 can append a question-form row. fail() already calls stopHarness() (AgentEngine.cpp:1105).",
+      "fix": "Do both steps in AgentEngineHistory.cpp while idle, before building the candidate. Call stopHarness(), then m_fallback.reset() (the same semantics as setMessages on a history change), then re-read m_messages and refuse if it changed. Do not call either inside startUserMessage after the commit."
+    },
+    {
+      "claim": "Retry calls startUserMessage(..., rebuilt, prefix) directly; nothing else is needed for queue semantics.",
+      "problem": "fail() sets m_queuePaused=true. sendUserMessage clears it before an immediate start (AgentEngineControl.cpp ~98). resumeQueue does the same (~197). A direct startUserMessage call leaves the queue paused. As a result, messages queued during the retried turn are never auto-dispatched by scheduleQueue (AgentEngineControl.cpp:207-216) after it completes. That diverges from a normal send.",
+      "evidence": "AgentEngine.cpp:1100 sets m_queuePaused=true in fail(). scheduleQueue returns early when m_queuePaused is set.",
+      "fix": "In retryFailedTurn, replaceUserMessage and revertToUserMessage, set m_queuePaused=false before startUserMessage, and restore it to true if the call is not accepted (mirror resumeQueue:197-204). Add a test: queue a message during the retried turn, complete it, and assert the queued message auto-dispatches."
+    },
+    {
+      "claim": "cancel() clears m_turnFailure.",
+      "problem": "cancel() runs while idle too. It resets the queue pause and fallback, then returns at `if(!m_busy) return;` (AgentEngine.cpp:1127). Clearing the record unconditionally would remove Retry when some idle path calls cancel(), for example an idle Stop or a host guard.",
+      "evidence": "AgentEngine.cpp:1123-1127.",
+      "fix": "Clear m_turnFailure only in the busy branch of cancel(), after the `if(!m_busy) return;` guard. Startup acceptance already clears it for any new turn."
+    },
+    {
+      "claim": "SessionStore load: turnFailure must be an object of at most 4096 bytes compact, otherwise the strict 'Original data was preserved' error applies; error text is \u22642000 chars.",
+      "problem": "2000 QChars can serialise to well over 4096 bytes: up to 6000 bytes of UTF-8, and \\uXXXX escapes for control characters. writeState (SessionStore.cpp:189-219) does not validate the new field. ADE could therefore save a record that the next load rejects, which refuses the whole sessions.json (every chat).",
+      "evidence": "fail() bounds only `.left(2000)` (AgentEngine.cpp:1102). load() aborts the whole store on any invalid record (SessionStore.cpp:102-105).",
+      "fix": "Use one shared predicate, `validTurnFailureShape`, on both write and load. writeState refuses invalid records. AgentEngine::fail builds the record and shrinks `error` until the compact JSON is \u22644096 bytes. Write the key only when non-empty to avoid churning every chat's bytes. Apply the same writer and loader symmetry to slice 3 `historyRevert` (\u226464 KiB), and have the edit and revert path reject replacement text that would exceed it."
+    },
+    {
+      "claim": "Host retry flow: the button is disabled on click and 'the next setHistoryActions re-enables it'; on CAS failure the button is re-enabled.",
+      "problem": "A rejected retry (CAS, guard, model, mutation-settling refusal) changes no engine state. displayChanged, finished and busyChanged then never fire, so renderConversation/refreshSideChat are never triggered and the button stays disabled.",
+      "evidence": "MainWindow.cpp:390 refreshes only on displayChanged. Side panes refresh only on displayChanged, queuedMessagesChanged, questionChanged, busyChanged and finished (MainWindowSideChats.cpp:66).",
+      "fix": "MainWindow::retryFailedTurn must push actions explicitly on every refusal path: setHistoryActions(chat, historyActionsFor(chat)) on the originating view. setHistoryActions must always re-evaluate enabled state, even when the rows are unchanged."
+    },
+    {
+      "claim": "Slice 1 harness test: 'If Claude has no failure mode, add a turn-error scenario to tests/support/ClaudeFixture.cpp'. CMake copies 867-874 'including add_dependencies(... cursor_fixture)'.",
+      "problem": "ClaudeFixture already supports ADE_CLAUDE_FIXTURE=error and authentication-error (ClaudeFixture.cpp:104,141). The test_harness_continuity block at CMakeLists.txt:869 depends only on harness_fixture, acp_fixture and claude_fixture; cursor_fixture is a separate target defined at CMakeLists.txt:1205. Cursor's auth-error fires only after the engine's authentication approval (AgentEngineCursor.cpp:144-147), so a plain submit does not fail.",
+      "evidence": "ClaudeFixture.cpp:66,104; CMakeLists.txt:869,1205; tests/test_cursor_engine.cpp:144 sets ADE_CURSOR_SCENARIO.",
+      "fix": "Use ADE_CLAUDE_FIXTURE=error and do not modify the fixture. Explicitly add cursor_fixture to the new target's add_dependencies. For Cursor, either approve the authentication request in the test and then let auth-error fail, or use a scenario that fails after acceptance (for example `missing-model`), verified against CursorFixture before writing the test. Unset or override the env per turn: fail() kills the child, so the retried turn starts a new process that rereads the env."
+    },
+    {
+      "claim": "Slice 2: register QShortcut#shortcut_edit_nearest_user_message in the navigation list.",
+      "problem": "initializeNavigationShortcuts creates a new QShortcut per bind() (MainWindowShortcuts.cpp:32-45). A second Ctrl+Shift+E QShortcut beside the workbench one (MainWindowWorkbench.cpp:98) makes Qt emit activatedAmbiguously, so neither action fires. Upstream also gates the edit hotkey on no active editor (`!activeEditMessageId`, chat-history.tsx:935) and returns early while working.",
+      "evidence": "MainWindowShortcuts.cpp:33-44; MainWindowWorkbench.cpp:98; chat-history.tsx:895-936.",
+      "fix": "Keep exactly one Ctrl+Shift+E QShortcut, the F5-moved workbench one, and dispatch inside its lambda. Edit-nearest runs when the focus widget is inside m_transcript, m_composer or a visible SideChatPane, no editor is open and the chat is idle. Otherwise reveal the file tree. Put the action name only in a property or documentation; do not create a second QShortcut. Test with QSignalSpy that activatedAmbiguously is never emitted."
+    },
+    {
+      "claim": "Upstream edit: 'On failure, the bubble stays in edit mode.'",
+      "problem": "message-user.tsx calls setIsEditing(false) before awaiting replaceUserMessage. Its catch block only closes the popover (setIsConfirmOpen(false)) and emits chat-message-failed. Despite the comment, upstream code leaves edit mode on failure.",
+      "evidence": "message-user.tsx ~268 setIsEditing(false); catch ~300-306.",
+      "fix": "Keep the native behaviour (the editor stays open with setUserEditError), but record it as a native improvement, not upstream parity."
+    },
+    {
+      "claim": "Slice 3 collects undoable ids from history metadata (committed && !recoveryRequired && agentId==chat) and calls undoMany.",
+      "problem": "The journal keeps original mutations in state 'committed' after they are undone. Undo inserts a new row with undo_of (FileMutationStore.cpp:223), and undoMany selects `state='committed'` (FileMutationStore.cpp:362). If the user already undid any suffix mutation through the File changes panel, the selection re-includes it. The whole all-or-nothing undo then fails with 'Undo conflict: file changed after the selected mutations', so Revert files becomes unusable for that checkpoint.",
+      "evidence": "FileMutationStore.cpp:223,358-377; FileChangesPanel.cpp:151 also does not exclude undone rows.",
+      "fix": "Before offering Revert files, read host->mutationHistory() (FileMutationJournal::history). Exclude ids that appear in the undoOf list of any committed undo record. If all are excluded, treat the files as already reverted. Add test `previouslyUndoneMutationIsSkipped`."
+    },
+    {
+      "claim": "Slice 3: on mutationUndoCompleted(requestId), use m_mutationUndoAgent/m_mutationUndoId to finalize.",
+      "problem": "connectMutationControls already handles mutationUndoCompleted. When the request matches, it clears m_mutationUndoAgent and m_mutationUndoId and writes panel text (MainWindowMutations.cpp:93-110). Because it is connected earlier, it runs first. A second handler that keys on m_mutationUndoId will find it already cleared.",
+      "evidence": "MainWindowMutations.cpp:93-110.",
+      "fix": "Key history finalization on the persisted intent's undoRequestId, held in an in-memory map `m_historyRevertRequests[chat]` plus the durable `historyRevert`. Either extend the existing handler to call finalizeHistoryRevert(chat, request, ...) before clearing, or connect the history handler first. Do not depend on m_mutationUndoId."
+    },
+    {
+      "claim": "Slice 3: Revert files is disabled only for harness tool rows without journal records.",
+      "problem": "Native HTTP agents also have runCommand (ToolExecutor.cpp:381,397), which runs PowerShell in the workspace and can modify files without journaling. Offering 'Revert files' after such a suffix implies a complete restore that does not happen.",
+      "evidence": "ToolExecutor.cpp:381 runCommand definition.",
+      "fix": "If the suffix contains runCommand calls, harness rows (metadata.harness) or sandbox shell output, keep Revert files enabled for journaled changes only. The dialog must state that changes made by shell commands or external coding agents are not reverted and suggest Git. If there are no journaled ids, disable Revert files with that reason."
+    },
+    {
+      "claim": "Shape guard for retry: `validTurnFailure` requires the last raw user row's metadata.display.id == userRowId; the view shows Retry when failedUserRowId is in d->order.",
+      "problem": "The projection uses display.id only when displayMatches(display,message) holds and the id does not collide (AgentPresentation.cpp:195-196); otherwise it uses legacyId. A rebuilt retry user must therefore have regenerated display parts, or its projected id will differ from the record. The design only says 'fresh display id (withMetadata)'.",
+      "evidence": "AgentPresentation.cpp:34-42 (displayMatches) and 195-197. startUserMessage builds parts `[{id:displayId+'/0',type:'text',text:prompt,state:'done'}]` (AgentEngine.cpp:272-273).",
+      "fix": "The rebuilt message must use exactly the startUserMessage display envelope: version 1, a new id, and a single text part equal to content. validTurnFailure must also check that the last user row's projected id (AgentPresentation::history) equals the display id."
+    },
+    {
+      "claim": "Refuse retry when m_mutationHistoryDirty is set.",
+      "problem": "settleMutation sets dirty = !saved || !m_queueCommitter (AgentEngineMutations.cpp ~105), so without a committer it is sticky. It is cleared only by registerMutation or reconcileMutationHistory. A dirty flag caused by a prefix row would block Retry, even though the retry commit re-saves the full in-memory prefix.",
+      "evidence": "AgentEngineMutations.cpp:73,105,161-167.",
+      "fix": "Refuse only when dirty AND the suffix contains a mutationInvocations entry for m_mutationAgentId. After a successful retry, replace or revert commit with a committer, set m_mutationHistoryDirty=false, because the candidate prefix carries the in-memory settlements."
+    },
+    {
+      "claim": "MainWindow::forkConversation (MainWindowConversations.cpp:104-108) copies *source.",
+      "problem": "The copy and clearing happen in MainWindow::cloneConversation (MainWindowConversations.cpp:98-108); forkConversation delegates to it.",
+      "evidence": "MainWindowConversations.cpp:98-108.",
+      "fix": "Clear fork.turnFailure and fork.historyRevert next to `fork.queuedMessages={}` at line 108 in cloneConversation."
+    },
+    {
+      "claim": "HistoryActions has `QSet<QString> revertBlockedReason`; a new turnFailureChanged signal drives refresh.",
+      "problem": "A set cannot carry a per-row reason. The extra signal adds one more reentrancy point in fail() and startUserMessage, while existing displayChanged/finished/busyChanged already reach both refresh paths.",
+      "evidence": "MainWindow.cpp:390,413; MainWindowSideChats.cpp:66.",
+      "fix": "Use `QHash<QString,QString> revertBlockedReason` (rowId to reason) plus `bool archived`. Drop turnFailureChanged; the host reads engine->turnFailure() during its existing refreshes."
+    },
+    {
+      "claim": "Host committer error for the custom-model refusal applies unchanged to retry/edit.",
+      "problem": "The message says 'Your queued message is retained... resume the queue' (MainWindowControl.cpp:217), which is wrong for a retry or edit. The queueError handler also prefixes 'Queue: ' (MainWindowControl.cpp:175-178; MainWindowSideChats.cpp:67).",
+      "evidence": "MainWindowControl.cpp:199-219.",
+      "fix": "When commitKind != Update, use 'The selected custom model changed or was removed. Select the intended model, then retry.' The host retry handler overwrites the status after a refusal so the 'Queue:' text is not the final message."
+    },
+    {
+      "claim": "Attachment snapshot loss produces a post-acceptance failure (honest limit).",
+      "problem": "This contradicts the approved handoff's test expectation, which says a missing or corrupt current retry attachment 'refuses before dispatch'. No pre-acceptance verifier exists: AttachmentPipeline exposes only capture/prepare/transform (attachments/AttachmentPipeline.h:31-36), and the preparer runs in requestModel after acceptance (AgentEngine.cpp:376-382).",
+      "evidence": "private/agent-history-stage/HANDOFF.json recommendedTestsNotYetWritten[3]; AgentEngine.cpp:380-382.",
+      "fix": "Keep the design's semantics, but state the reconciled assertion: zero provider requests, a new failed turn with the preparer error, and Retry offered again. Record the deviation from the handoff wording in PROGRESS.json."
+    },
+    {
+      "claim": "Test 'mainRetryAppearsOnlyAfterAcceptedFailure: Before the feature (baseline), a failed send shows no transcriptRetryButton.'",
+      "problem": "A new CTest file built against the new sources cannot assert baseline behaviour.",
+      "evidence": "CMake globbing src/ui/*.cpp into ade_ui.",
+      "fix": "Run the baseline-absence reproduction as a private before/after build of the same test source against the frozen206 cohort (private/behavior-cohort-206), with the result saved as evidence. The CTest itself asserts only the post-feature behaviour."
+    }
+  ]
+}

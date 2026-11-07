@@ -1,0 +1,24 @@
+********* Start testing of WorkspaceChangesTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceChangesTests::initTestCase()
+PASS   : WorkspaceChangesTests::realMergedSummaryAndStageSnapshots()
+QWARN  : WorkspaceChangesTests::renameAndDeletedRows() This plugin does not support propagateSizeHints()
+PASS   : WorkspaceChangesTests::renameAndDeletedRows()
+PASS   : WorkspaceChangesTests::untrackedBinaryAndNonRepository()
+PASS   : WorkspaceChangesTests::refreshRetainsSnapshotOnError()
+PASS   : WorkspaceChangesTests::switchingWorkspaceRejectsOldRequests()
+PASS   : WorkspaceChangesTests::unchangedAliasCannotRetargetAuthority()
+PASS   : WorkspaceChangesTests::unavailableWorkspaceRefreshIsIdempotentAndCanRecover()
+PASS   : WorkspaceChangesTests::visibilityStopsPolling()
+PASS   : WorkspaceChangesTests::controllerObserverCanDeleteOrReplace()
+PASS   : WorkspaceChangesTests::diffRejectsTraversalAndUnknownRoot()
+PASS   : WorkspaceChangesTests::diffReplacementAndDestruction()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+QWARN  : WorkspaceChangesTests::selectionAndScrollSurviveRefresh() This plugin does not support propagateSizeHints()
+PASS   : WorkspaceChangesTests::selectionAndScrollSurviveRefresh()
+PASS   : WorkspaceChangesTests::deletionAndWorkspaceSwitchFromSelection()
+PASS   : WorkspaceChangesTests::modelReentryDoesNotOverwriteNewerRows()
+PASS   : WorkspaceChangesTests::renderLightDarkNarrow()
+PASS   : WorkspaceChangesTests::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 23042ms
+********* Finished testing of WorkspaceChangesTests *********

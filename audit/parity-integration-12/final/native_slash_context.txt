@@ -1,0 +1,16 @@
+********* Start testing of SlashContextTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SlashContextTest::initTestCase()
+PASS   : SlashContextTest::reResolvesCurrentBodiesAndPreservesCanonicalHistory()
+PASS   : SlashContextTest::deduplicatesPerMessageAndKeepsOccurrenceOrder()
+PASS   : SlashContextTest::exactPercentIdentifiersAndXmlAreData()
+PASS   : SlashContextTest::emptyMissingAndMalformedBodiesAreNotInvented()
+PASS   : SlashContextTest::aggregateBodyBoundRejectsWholeCandidate()
+PASS   : SlashContextTest::nativeBareShortcutIsPreserved()
+PASS   : SlashContextTest::protocolWireHasSkillOnlyInUserContext(openai)
+PASS   : SlashContextTest::protocolWireHasSkillOnlyInUserContext(responses)
+PASS   : SlashContextTest::protocolWireHasSkillOnlyInUserContext(anthropic)
+PASS   : SlashContextTest::protocolWireHasSkillOnlyInUserContext(google)
+PASS   : SlashContextTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 68ms
+********* Finished testing of SlashContextTest *********

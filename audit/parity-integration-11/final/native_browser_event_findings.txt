@@ -1,0 +1,22 @@
+********* Start testing of BrowserEventFindings *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserEventFindings::initTestCase()
+PASS   : BrowserEventFindings::inspectorWorksBeforeUnsubscribe()
+PASS   : BrowserEventFindings::inspectorSurvivesSandboxUnsubscribe()
+PASS   : BrowserEventFindings::inspectorSurvivesPreReadyUnsubscribe()
+PASS   : BrowserEventFindings::inspectorSurvivesBridgeDestruction()
+PASS   : BrowserEventFindings::consoleReturnsAfterDisableAndNavigation()
+PASS   : BrowserEventFindings::widgetChildOwnersCanBeDestroyed()
+PASS   : BrowserEventFindings::independentOwnersAndIdempotentReleases()
+PASS   : BrowserEventFindings::legacyAndScopedOwnersAreIndependent()
+PASS   : BrowserEventFindings::unregisterReleasesOnlyItsBridge()
+PASS   : BrowserEventFindings::repeatedOwnerAcquisitionReleasesOnce()
+PASS   : BrowserEventFindings::preReadyChildTeardown()
+PASS   : BrowserEventFindings::externalOwnersSurviveBrowserTeardown()
+PASS   : BrowserEventFindings::deletingOwnerInsideEventIsSafe()
+PASS   : BrowserEventFindings::closingRejectsReentrantSubscriptions()
+PASS   : BrowserEventFindings::inspectorConstructedDuringShutdownIsInert(pre-ready)
+PASS   : BrowserEventFindings::inspectorConstructedDuringShutdownIsInert(ready)
+PASS   : BrowserEventFindings::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 8864ms
+********* Finished testing of BrowserEventFindings *********

@@ -21,6 +21,10 @@ public:
     bool provideImage(quint64 requestId,const QImage &image,const QString &error={});
     bool provideTurnFileEdits(quint64 requestId,const QJsonObject& summary,const QString& error={});
     QStringList turnMutationIds(const QString& rowId)const;
+    // Host-owned conversation actions. Dropped on a conversation switch/clear.
+    struct HistoryActions { QString failedUserRowId, failureText; int queuedCount=0; bool busy=false, archived=false; };
+    // Always re-evaluates Retry visibility and re-enables it after a refusal.
+    void setHistoryActions(const QString& conversationId,const HistoryActions& actions);
 public slots:
     void scrollToBottom();
 signals:
@@ -33,6 +37,7 @@ signals:
     void turnFilesReviewRequested(QString conversationId,QString rowId,QStringList mutationIds);
     void savedTurnFileRequested(QString conversationId,QString rowId,QStringList mutationIds,QString path);
     void turnUndoReviewRequested(QString conversationId,QString rowId,QStringList mutationIds);
+    void failedTurnRetryRequested(QString conversationId,QString userRowId);
 protected:
     bool eventFilter(QObject *object,QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

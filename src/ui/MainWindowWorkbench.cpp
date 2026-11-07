@@ -96,11 +96,24 @@ void MainWindow::initializeWorkbench() {
     connect(m_splitter, &WorkbenchSplitter::visibilityChanged, this, &MainWindow::refreshWorkbench);
     new QShortcut(QKeySequence("Ctrl+Alt+B"), m_pages->widget(0), [this] { m_splitter->toggleContent(); });
     new QShortcut(QKeySequence("Ctrl+Shift+B"), m_pages->widget(0), [this] { m_splitter->toggleFileTree(); });
-    new QShortcut(QKeySequence("Ctrl+Shift+E"), m_pages->widget(0), [this] {
+    // Upstream toggle_file_tree_files (dominant) and toggle_file_tree_diff (not
+    // dominant). Both open the tree in a mode; neither is a toggle. Mode buttons
+    // are created by initializeWorkspaceChanges below and looked up lazily.
+    auto* filesMode = new QShortcut(QKeySequence("Ctrl+Shift+E"), m_pages->widget(0), [this] {
         m_splitter->setFileTreeVisible(true);
+        if (auto* mode = m_fileTreePanel->findChild<QToolButton*>("fileTreeFilesMode"))
+            mode->click();
         if (m_files->isVisible())
             m_files->setFocus();
     });
+    filesMode->setObjectName("shortcut_toggle_file_tree_files");
+    filesMode->setProperty("adeDominantNavigation", true);
+    auto* diffMode = new QShortcut(QKeySequence("Ctrl+Shift+G"), m_pages->widget(0), [this] {
+        m_splitter->setFileTreeVisible(true);
+        if (auto* mode = m_fileTreePanel->findChild<QToolButton*>("fileTreeChangesMode"))
+            mode->click();
+    });
+    diffMode->setObjectName("shortcut_toggle_file_tree_diff");
     new QShortcut(QKeySequence("Ctrl+W"), m_pages->widget(0), [this] {
         if (m_splitter->contentVisible() && m_tabs->currentIndex() >= 0)
             emit m_tabs->tabCloseRequested(m_tabs->currentIndex());

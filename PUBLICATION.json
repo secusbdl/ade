@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-07T06:25:28.867712+00:00",
+  "createdUtc": "2026-11-07T08:20:23.972670+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "d80243a9977709a4c50b89bfa2a3704cfc3e7748",
+  "developmentCommit": "7319bb0a04754c359e4a0af54a0c68bbb9fb0d40",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 5134,
-  "bytes": 47481612,
+  "fileCount": 5638,
+  "bytes": 49641568,
   "files": [
     {
       "path": ".gitattributes",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 115038,
-      "sha256": "39597b4300fd03008c5fc38f716ce6eb327829d6210f78edf14e070c171d121d"
+      "bytes": 122283,
+      "sha256": "3534e447bd3ebe518b0e9a6e98a873c06882c6d7fc25be6e9becdd5698215b6c"
     },
     {
       "path": "CMakePresets.json",
@@ -8233,6 +8233,2371 @@
       "sha256": "e4b4dc7869af9da774f1ec0272b6783ddcb63f4b83e4ebd3e72d6c5005d1ca7a"
     },
     {
+      "path": "audit/parity-integration-11.json",
+      "bytes": 94649,
+      "sha256": "03fc3a78f7386be0c9befa01278fc7aec030251e8ba3183f7ddef1e79d4e623c"
+    },
+    {
+      "path": "audit/parity-integration-11/build.txt",
+      "bytes": 63,
+      "sha256": "c2ed93ffd93c840755c0e91392ae593b1b52de9b7aaf6c208123feaceb1dde2e"
+    },
+    {
+      "path": "audit/parity-integration-11/components/agent-history-corrections.json",
+      "bytes": 15551,
+      "sha256": "c8a650606a9a0331a4419cf04de9efd5c964f54eab6cae778752a8d6400fc8ad"
+    },
+    {
+      "path": "audit/parity-integration-11/components/agent-history.md",
+      "bytes": 35896,
+      "sha256": "2d15e00b291f6d0b80ec13c1231e4bf27a58d58b389138438b02da8e4ea6e7cb"
+    },
+    {
+      "path": "audit/parity-integration-11/components/batch11-fix-results.json",
+      "bytes": 20941,
+      "sha256": "0f78290726e5726b033a66307dfc6f85bde0ff2223c615e8ed2d6e9d17c305b9"
+    },
+    {
+      "path": "audit/parity-integration-11/components/runtime-services-corrections.json",
+      "bytes": 15980,
+      "sha256": "add34acf01a8010d261e2b3fdd2b1326e6d7cc21fb19e499832097ff1e5361a0"
+    },
+    {
+      "path": "audit/parity-integration-11/components/runtime-services.md",
+      "bytes": 29773,
+      "sha256": "cc7bcd8d4869a3d167b51c1029b0dbc6c66d31443def7d1aec9ea93f31bb15e1"
+    },
+    {
+      "path": "audit/parity-integration-11/components/shortcuts-corrections.json",
+      "bytes": 17120,
+      "sha256": "d4e898ac968e21dc47196bf49eaf31efb9936e88b2d601ae86c78b7d52ef9018"
+    },
+    {
+      "path": "audit/parity-integration-11/components/shortcuts.md",
+      "bytes": 34505,
+      "sha256": "1087260f5f73613ebab0388ae785f4c899e30ad69942aa04f279be0847b1322f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_mcp.txt",
+      "bytes": 887,
+      "sha256": "0147f4403d10b97d396d1bb644e0cae33c693d4e04755cb81ab09d8f94ac1b07"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_original_host.txt",
+      "bytes": 456,
+      "sha256": "02cb5e0b71034146b8b87f39624f7f986f4680adcd4fb99b086d45a893531930"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_original_images.txt",
+      "bytes": 1925,
+      "sha256": "29250fcf9bcada65d0a13c7c7d2864e08e50dcfa55e4eae10179d50fc48a904c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_original_lifecycle.txt",
+      "bytes": 988,
+      "sha256": "15516de02f88f013f4d835816caec969a1c67edcab6410db3b49df0efcb355ee"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_presentation_engine.txt",
+      "bytes": 889,
+      "sha256": "a800b4e7cbcf9c56fab1ce9397e094522c7d9a662f7021e95eff0420d9c5fd66"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_presentation_ui.txt",
+      "bytes": 3665,
+      "sha256": "2a5886d3ab0cf3be4376ce05a2a6161b112ec129fc6f73b8b5d6730df19039d7"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_settlement.txt",
+      "bytes": 1272,
+      "sha256": "649b80c7815c4a1bbf96a94e32fd720aa83d3839f5e32b28cf57f8d92747e095"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_acp_tool_presentation.txt",
+      "bytes": 2042,
+      "sha256": "e0b29897f5da420c944acc7c71d795886931a98f280e615b33e65f31ece59272"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_agent_activity.txt",
+      "bytes": 1046,
+      "sha256": "69b9a18acab234dcb566be1ef92a70ff64d7dae8394449fbf57eaa03cf741e83"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_agent_control_ui.txt",
+      "bytes": 1223,
+      "sha256": "8f8d79b53c5801515d6f13ee701d4c3c62c4ca98cb3e66afdd690e6753171daf"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_agent_cycle.txt",
+      "bytes": 5115,
+      "sha256": "307d59a1daa6032032ac4711434ddfb14edb7ee5209eb90b4c979ba745286ca4"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_agent_cycle_host.txt",
+      "bytes": 867,
+      "sha256": "f19d21270fa166063b6a0a5386b6bd99cc712383d95df1f2937f74e56bd3589f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_agent_prompt.txt",
+      "bytes": 1711,
+      "sha256": "9771b6245c64125b7ee7e17e9ba2503ff4acfacdf74a5c866323980bc3a24fbe"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_app_resources.txt",
+      "bytes": 626,
+      "sha256": "9e545bbeb9868c78aec3605ee41c7c6a7d6ed94504d6bf93e75a0d9619d32edd"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_archive_transformer.txt",
+      "bytes": 2218,
+      "sha256": "aa0d32770cc083e5bcad24049d3a0901752410f7278f8a66184650d182deda34"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_attachment_mount.txt",
+      "bytes": 1475,
+      "sha256": "08f69d5125cc8d616123c7aa3f2c26c5c2e9e769fd46a57fdc7fe9079ca9e5c1"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_attachments.txt",
+      "bytes": 1702,
+      "sha256": "67a4569f7538bd33813791ea8d97e5192a2af6adab9db16ead1e9bc6d023d2a6"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser.txt",
+      "bytes": 977,
+      "sha256": "81d77bb8b5627c2cf9de46e56c301a7e6d3d3b550c22ef17f3938611111ce222"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_context.txt",
+      "bytes": 1752,
+      "sha256": "271f2e96b33ce8568ede06d5d76d00a42768938ab50284c7127681166c428924"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_context_runtime.txt",
+      "bytes": 1425,
+      "sha256": "f80006b0d929c1888e47703edd03d77b7f90faab530b5ab759eddb3009ada22f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_event_findings.txt",
+      "bytes": 1509,
+      "sha256": "a8bf88f7699a73e6e425be6db1b78d974f2caab8e6fb5b51b40e226eab055e33"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_history_followups.txt",
+      "bytes": 2730,
+      "sha256": "c932f119cfeb5eb1c880fa2c1c157d4bf31990f22c249622f666e42b3b127272"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_inspector.txt",
+      "bytes": 1163,
+      "sha256": "c63b44c6e2249b1d6dadd1fe5987245069374b8911d936727e33257bfe29221c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_navigation_followups.txt",
+      "bytes": 1302,
+      "sha256": "678a320f85722bc1ee6fb952a378189e5293e532c7ad0ab33974914b64088470"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_output.txt",
+      "bytes": 8072,
+      "sha256": "8a8ccbea8d6b0e9faac715099a0b71415d6514b8a9e195a7e189e9bee3e6e699"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_session.txt",
+      "bytes": 1744,
+      "sha256": "81c3e8a4e239c60587b926c646c69feeb11d3ba65d1eae6588e15167ce49e6ae"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_session_host.txt",
+      "bytes": 1363,
+      "sha256": "0c51eb20f08ad3bdd0f9ed529590cbe54332b79b5aa73913d691e4ca5e2fef9c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_browser_tools.txt",
+      "bytes": 1883,
+      "sha256": "dcfe84c9ee09915bf30f6e654e3c7fe9eb73330ef2e6e06e63e5d83ceb963b50"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_chevron.txt",
+      "bytes": 725,
+      "sha256": "f8e2f7a098ea78e7c00fde15d120579cfd9eca27e892e01d006019c6abb6f59c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_control.txt",
+      "bytes": 1523,
+      "sha256": "9b4b82684e4f92e820c60e6b0784868d69e09e3e8ae6ace330a5c62b9a2f4082"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_discovery.txt",
+      "bytes": 962,
+      "sha256": "4bda1718a5bc2b69ae2d88c6ebbdf124f0c2cbedfa70f075e852f9c6851ced1e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_engine.txt",
+      "bytes": 1347,
+      "sha256": "5440c1137a8a1a629b6e93287bc92b1bd3133f94fc235165d766c4e7cbd7c0c9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_followups_engine.txt",
+      "bytes": 917,
+      "sha256": "b6667788c4e066b4dc47a36d33c0403b2d71e943de2c7dcbcec86f5aa69410ed"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_followups_session.txt",
+      "bytes": 1803,
+      "sha256": "cd2d4c45ac231b8acfce288232a13f3f91d3d1666ecfde6b1c6aa6e083cbe693"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_followups_stream.txt",
+      "bytes": 1949,
+      "sha256": "97399d937fb6efc7f12516c4a03c1f6470ce12b61b29678a9c28dac349bf7047"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_host.txt",
+      "bytes": 645,
+      "sha256": "14b6c3ff01210e48884b433223c27989de89d8dbc72648a5b24182bd69d372eb"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_provider_ui.txt",
+      "bytes": 3074,
+      "sha256": "dcc39fab7834639301ca76daa25f520fe070ca19d20120b0287528104fa315e5"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_resume.txt",
+      "bytes": 2341,
+      "sha256": "73bd7667f47e7da579295532b5a5f0bcd91168b60f7326feacacf0dfe2415614"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_session.txt",
+      "bytes": 1920,
+      "sha256": "ab016a7317a02fa2e19ae8546cdb236c5af5208f138ad4a72f6eb12aec608a2c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_claude_stream.txt",
+      "bytes": 1654,
+      "sha256": "e0a469eebeb2b65932db88621c74082879ed368b9544ee1c5d38814a263a2f72"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_codex_engine.txt",
+      "bytes": 1347,
+      "sha256": "3b5aa68025d1a728a62505bac2b2988ded5d4f8f5a7da239f3e4f850f8b79f4f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_codex_files_runtime.txt",
+      "bytes": 628,
+      "sha256": "9078d992c78d2b597569ee2c319b03fa67dc38ab17f45733521abc37656dd73c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_codex_harness.txt",
+      "bytes": 1965,
+      "sha256": "61a93d8c17250780242a99f27566dc9dca5554acbcc5be46ab7b3fec678a1ca0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_codex_host.txt",
+      "bytes": 571,
+      "sha256": "2fa2948e6def3665b5584c4fd1cbd478123f3db731e7046300b271d1779350aa"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_codex_provider_ui.txt",
+      "bytes": 2659,
+      "sha256": "10106f32bc226babaee92e5f080972fa31fd93f29db3f1b2b36b2a4b6b48449c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_command_center.txt",
+      "bytes": 3334,
+      "sha256": "7a04f2d49ae8a44bc67566517dca6ed34d0e8a4ae5257e39977e79504ae9bca7"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_command_center_host.txt",
+      "bytes": 3235,
+      "sha256": "87855c517664269bff0c2076bf282a0a88dc791a0a3a3dab1bc5bfe8dc320d44"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_command_file_search.txt",
+      "bytes": 670,
+      "sha256": "5b15c894e7f9e56afeb0b8a29c87d683e937b966ffd5d16550b7ecb721800286"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_composer_completion.txt",
+      "bytes": 13045,
+      "sha256": "8361366d538b4f624cfa9aa5577e6e999a86f76a79ce8185bc09fd8134f54b6d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_composer_host.txt",
+      "bytes": 2124,
+      "sha256": "70388a139c7a9f147b52557b5c620f17d4fcefb9c66567e9883178782b3d45c1"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_composer_search.txt",
+      "bytes": 1178,
+      "sha256": "b272b01b895e5cdd52293bcc31253817130b46e53dd778c496bde881a958101b"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_context.txt",
+      "bytes": 742,
+      "sha256": "e2674933c6fbe34ebd8727d6d78ab6f1ecd65275efef72a30564d4ce5ad810ae"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_context_budget.txt",
+      "bytes": 1283,
+      "sha256": "0347b293f5c7e5ef0ae7716779cc011b6313b05a767045cbd64b43c4b46ee129"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_context_budget_host.txt",
+      "bytes": 1265,
+      "sha256": "8d47d95bd2d8d0492c4faec416fb04f90b9e6c39657389a19be9694b5f75f755"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_conversation_control.txt",
+      "bytes": 2353,
+      "sha256": "f0886b0459e190c58a9fd5da0da4fd076c21748a4d089c40d002fd00583559e9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "8fde19c968e5917674f617a4ed88b6832241385b115a935221d7b93026728409"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_core.txt",
+      "bytes": 2675,
+      "sha256": "843450c02d18f1d132a464681c1edfad7d7973e1e2d36b9598e2058ac3763606"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_cursor.txt",
+      "bytes": 1862,
+      "sha256": "794aa72b361f875db618c1430cdd8476663d98c8e2504df3800ebd0be16c0778"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_cursor_engine.txt",
+      "bytes": 1064,
+      "sha256": "28001ae5771986aae3ec48f098bb4a754a9323cf6a3753b62c9238e6a7eda0ea"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_cursor_host.txt",
+      "bytes": 1109,
+      "sha256": "131eb58b441b395218864741989516d940b437b305d6a2af0f69f94deb52b533"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_cursor_ui.txt",
+      "bytes": 3425,
+      "sha256": "d3df829fe463cf6a32792b23cde27866fc23d1c9fc9471d32de6ad4ace76977e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_config.txt",
+      "bytes": 1163,
+      "sha256": "8860c9a09d6a521b3fa7982e2d56fdb7b7775402c8624823fdd41c327ab8aedf"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_engine.txt",
+      "bytes": 1509,
+      "sha256": "25dd1cb475946884a7546a07ff8087919d4789a60efb0ecb0acb60212f323c3e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_host.txt",
+      "bytes": 891,
+      "sha256": "5f890c314fb899283925378b6f571094c9fe833c8cbbce4ca56d525d0303049f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_inventory.txt",
+      "bytes": 1013,
+      "sha256": "80f245584e4fbd0880304578408152d0cb8e57d8cbb4f78adfee54b61713dea9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_media.txt",
+      "bytes": 816,
+      "sha256": "f51127369c3fc9f1bb89fcafecf567e61871e7bb436dc00a5f0b64e40e6be406"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_options.txt",
+      "bytes": 10625,
+      "sha256": "417ebbc85560c0caf22eb9bdab930484df0bfb08d343185d788f2b7fef38da74"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_smoke.txt",
+      "bytes": 583,
+      "sha256": "6fba72c306f1a1634788eab088aed26c821d5a21db9e61615d79ff6298198895"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_storage.txt",
+      "bytes": 1739,
+      "sha256": "426f8b4b9be4113e3165186a546f961be7fe755866989c1f00ffd63580783827"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_custom_model_ui.txt",
+      "bytes": 1464,
+      "sha256": "5cc8aa63f0b11ad343fb397319f42c32f33844ca37be293b94f7993236d336e4"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_desktop_provider.txt",
+      "bytes": 1275,
+      "sha256": "ed22565b0a98c61b28ce2bc024892283e1fd47f859ae0ed99e0836457e69a772"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_diff_preview_edge.txt",
+      "bytes": 568,
+      "sha256": "c7bd31601de31eb7f72f80e209406a0cd5175d645d69f5c38b78b52b0f9b9e6a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_direct_question_mcp.txt",
+      "bytes": 3017,
+      "sha256": "fd59ee792e4e4790e014e1056b5a30e3d4908219b5f813888a4aa9ae393f3c52"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_downloads.txt",
+      "bytes": 924,
+      "sha256": "8d0861870cdb799f4d390b40ca4f2107ef381cd91435d4b8ee8cf019ccf644c8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_editor.txt",
+      "bytes": 2356,
+      "sha256": "90724a90dc614fb8aa3cfc4d835a36b48efaf25b3d52e04c40f28427ed631751"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_engine_observers.txt",
+      "bytes": 3940,
+      "sha256": "9d719d6e82c79fb3e1d6e9f0be155f7aa7c94e44aa6ae0aed853bd93b0178a3f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_external_context.txt",
+      "bytes": 791,
+      "sha256": "d66aeb16ca9b6d3dd16b7a8123b308cd3c7e04a56f129617db06f45f5fef693e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_file_diff.txt",
+      "bytes": 1266,
+      "sha256": "c15792c20660b831ad50d053a6e151355de2bfa897d325e73d190fe3895d7c32"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_file_mutations.txt",
+      "bytes": 4355,
+      "sha256": "d8131a47751459adde5ca80f6a8bde4ab651a4960ba26db287782d3e28d3b68a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_file_tools.txt",
+      "bytes": 1518,
+      "sha256": "2eef1a55150a158daa2256960f283a16e5ed58011ba4a2d8a063f068e457549d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_file_tools_races.txt",
+      "bytes": 1045,
+      "sha256": "d63558fcb08998160bad1018eaefe0c70c6654e32399531ec1bb836fc6a842da"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_file_transformer.txt",
+      "bytes": 2304,
+      "sha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_fonts.txt",
+      "bytes": 563,
+      "sha256": "bda5549b40d891dff9b0a34ee38bca8524248b6a23cf2eb271c6dd51252661c2"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_formatted_att.txt",
+      "bytes": 2578,
+      "sha256": "bdfe59346daf74f116bd5d631a1a5e74888224cb7549624e8cb6295e3235fcc9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git.txt",
+      "bytes": 1209,
+      "sha256": "537418432192f794271ef3cfc5c3e74b6f294a2eeb1fbd43e148f81d6dce30d4"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_cleanup.txt",
+      "bytes": 1738,
+      "sha256": "0f142e21093f57205707c8fa116b0243be7080603d886c7b00e645851f9b458d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_findings.txt",
+      "bytes": 1521,
+      "sha256": "ebf91b7de64eb15fc28351442ff3e01b44a29a37b7eed0251f35c5fd6945566a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_host.txt",
+      "bytes": 3286,
+      "sha256": "2084b8e9c6e0ade284c6e15085d37e3b44e54d6357e715ff079a59e0f20aeed0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_ui.txt",
+      "bytes": 1466,
+      "sha256": "89efdf0069a8e050661546125ec736a7b7a9483e7e3a8ff7ff440698e05bd076"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "2d233a4673a5bf7930a82d4e0018362b22082d456007cf31df7e7fb29460eab0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_watcher.txt",
+      "bytes": 2637,
+      "sha256": "5f5d27bfcad985072ee6b5540303f39cd7ba5260d9524294f2fc47a829d1648a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_git_watcher_ui.txt",
+      "bytes": 541,
+      "sha256": "fc60efa8de51079e486bd1584267ebfa5651663d3d8c00c673315237fa9aa2e7"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_attachment_mime.txt",
+      "bytes": 1857,
+      "sha256": "8948da599dd046afa5f0e4d586db99117ffee56f5f4ea1bf4face35be3e6d8b8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_attachment_source.txt",
+      "bytes": 814,
+      "sha256": "a710fb4bee7ee15691d51aefcdc5e47e6b427fe91eda747951602286445eceba"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_attachment_store.txt",
+      "bytes": 2435,
+      "sha256": "804ee49743b8bb324d5673747132ef9962e8fdf2c6b9e76ece861774d3fc6039"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_attachment_wire.txt",
+      "bytes": 1288,
+      "sha256": "adafd89b14961b29181dd16c2e3568320a19e7ca1ff7906c88e315c8c6404041"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_attachments_host.txt",
+      "bytes": 2665,
+      "sha256": "37e9dbed1e866264d491a1b87520ed6151d10db7d3456a0aa2915c8032d0d47f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_cleanup_host.txt",
+      "bytes": 866,
+      "sha256": "abbd8a6bd2f070cc94b093baa620874c49f4653b91fcd512e819affe0d325e50"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_continuity.txt",
+      "bytes": 2859,
+      "sha256": "dc5988248426dc52d3478632eb57eb968de75e6178bcd3891445ae4e55a61478"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_files.txt",
+      "bytes": 1119,
+      "sha256": "76d2f7a0c92677f5e13b410df9e63e1c5c1dc70068cef9764ceb521b6f271914"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_forms_host.txt",
+      "bytes": 1005,
+      "sha256": "8b6141839d7c54976c5e6fe50f8e84f95a5df81ecb56c7b38ca7047328ccf784"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_harness_media.txt",
+      "bytes": 752,
+      "sha256": "8ad39cf8b76db23a4d3948cc43b3d30c24eed171cca4ceb31f8a5f5470faa97a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_hidden_browser.txt",
+      "bytes": 5945,
+      "sha256": "9b0bf91f8474dd124eb86d76a82b133914923fafa7f56da9e1d08929a0d330d5"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_historical_attachments.txt",
+      "bytes": 2864,
+      "sha256": "26d197965dd4b48a66afb097a2521590d8a11440f55dc0d84cd031ae85d92355"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_history_actions_host.txt",
+      "bytes": 1181,
+      "sha256": "e20f1227b355e2b12c81690e8c302f1f010fff9b520015fef3980a71aae5612e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_history_projection.txt",
+      "bytes": 1127,
+      "sha256": "e8428f301e8ee09c164b896a41f2e4359204a5630c46deebea23d537631fcf21"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_history_recovery.txt",
+      "bytes": 2542,
+      "sha256": "6ef8647674a1c5ca7f8e81a04bca28b3f53c6010a2f7bb24b7431b78421cd717"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_history_retry.txt",
+      "bytes": 2025,
+      "sha256": "a7e2b244cf489a0cc64916c0689fb616a4b8b65d3e2bca05cf2f08bb0ce4332d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_history_retry_harness.txt",
+      "bytes": 773,
+      "sha256": "0ef5beb602daec58df5977ba8089bb8e5e87b1d60f5641e3bbe742c75b64dfe2"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_image_preview.txt",
+      "bytes": 1946,
+      "sha256": "01ec8d66397e3306fa9f1a416556a611dce3615afb4fd44934a2a7a315ff9ba9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_instance_coordinator.txt",
+      "bytes": 1945,
+      "sha256": "394e2c7d1788cc04c6f34e8e41a52fa10e5c97c0b59111ddb59a6b63c1d03058"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_instance_window_host.txt",
+      "bytes": 1956,
+      "sha256": "128870c91402b92e2bc5413af47dcf5b131726d02744e16e65c5261dd1ccde30"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_link_provenance_codec.txt",
+      "bytes": 621,
+      "sha256": "fff2e4077661e6d9706afa650e835d0d722fc87634dc814b426c0af3b1f4648f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_main_chrome.txt",
+      "bytes": 5050,
+      "sha256": "1a611c120138a34e42d3e6c848ebb8e1adae4e17c947823bacb3872c55a2acc5"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_markdown_findings.txt",
+      "bytes": 2926,
+      "sha256": "8562e79548aaf5791f3623594568adf6c072fb2ac50e7e8d54914b8c9bab7040"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_markdown_link_scope.txt",
+      "bytes": 692,
+      "sha256": "fd8adc99c0b91c26b59f363aaa45f1904fdd0735d8df943a5ce2347331115c4c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mcp_engine.txt",
+      "bytes": 1198,
+      "sha256": "fdbbdf6c2db89122db4d4cb77884b723a33f49800ecda60ccc7fc464d4f46b71"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mcp_presentation.txt",
+      "bytes": 4293,
+      "sha256": "0a4b71d86df803258a69b81e122752e99bfd00727ed9684a005d7bd142754c1c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mini_app_findings.txt",
+      "bytes": 1322,
+      "sha256": "576f4f277521b45ab841c942bac83eaec67775fc40176f3d01c084e3877f2c3a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mini_apps.txt",
+      "bytes": 626,
+      "sha256": "1da3f9cf931466e11efb98e89500bc9b5f96bc18d22680642e9145091e7d9955"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_model_discovery.txt",
+      "bytes": 2834,
+      "sha256": "70be497c4376b474ed747935bd7cb9ec0bdbcd12dcd2399e865ddc057b752384"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_model_discovery_host.txt",
+      "bytes": 3299,
+      "sha256": "c6156bbc32aa0af6fa012976b2d44e5da97c0bd9e210cb0cc70620df4a7e4d29"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_model_selector_display.txt",
+      "bytes": 1901,
+      "sha256": "1fedde24f9381fab858b7bba127e2c8b2c4a6f50b88f60a3dd02eeafe90ad370"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mutation_findings.txt",
+      "bytes": 3006,
+      "sha256": "fd34344f1f3151b4b99a1372cd5e73e8882b960e25e54d94ed17c861f342f6e1"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_mutation_runtime.txt",
+      "bytes": 1765,
+      "sha256": "9801734b39249f3204bc61460a7304efa2bd6fb8fba8b3461cae979c8baf689f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_navigation_shortcuts.txt",
+      "bytes": 5455,
+      "sha256": "e2fb25e7ee625ddf29bff9097a43d40059d24e9642f467fd0d8862ef283ae130"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_network.txt",
+      "bytes": 1383,
+      "sha256": "1b1c71e16d6bbe6d74cb5fc990652eb34d25e6348b00592e813d597986b86aff"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_notification_sounds.txt",
+      "bytes": 2121,
+      "sha256": "f7f92fea774ef92b8235dcc75b20973a5fca236ab70631123bad9b4d65491d2f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_opencode_engine.txt",
+      "bytes": 1219,
+      "sha256": "8fabd4c67c57ee20f133cc47b5333a02be0ac6d03f16bcd09676ed22f1b54980"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_opencode_harness.txt",
+      "bytes": 2127,
+      "sha256": "70e4899c086b35a7a8eba3daf3147eafca92a4055749d052089fc6b7515d0b18"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_opencode_host.txt",
+      "bytes": 661,
+      "sha256": "f326a99a6390a3b0bb7aad84e71faae48726df1b5d42f82017a33641137b7017"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_opencode_provider_ui.txt",
+      "bytes": 4342,
+      "sha256": "a72b738a91b01eed0d1e688213dce7980711a93be0ea3bdfca6d58850b15f490"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_plugin_connections.txt",
+      "bytes": 1655,
+      "sha256": "cbac8e78e18820e6816137f514724c8d5e3c483592d0fc157e7c780e6f3f8e7f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_plugin_findings.txt",
+      "bytes": 1791,
+      "sha256": "cbdac98696d4e63b96754254700094a8d65c23ef7a93671653ca9f8a218843b9"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_plugin_runtime.txt",
+      "bytes": 1996,
+      "sha256": "06261db00d6b715d62a48da865ad25ea9c4fe54e2d74bb393cb4c4acda103e6c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_plugin_settings.txt",
+      "bytes": 1669,
+      "sha256": "5280597b4c0635786d90bfdf49bcdeff9ba88dba1c651ba1abb69713f632f65f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_plugins.txt",
+      "bytes": 1717,
+      "sha256": "b14ca19fbd74f7f9c01d7ec6164dd19b007d40bdce021fa9efd86ee13ce14737"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_power_request.txt",
+      "bytes": 840,
+      "sha256": "090c92bb0495d5331b075f62ae4b82f00c91b9dab240ca3cb693103c2225f8d5"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_presentation.txt",
+      "bytes": 5530,
+      "sha256": "dd1e1ba097a60fc5e2ef1c62cc213609bda5b711183621558b71aa2f19448b22"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_http_engine.txt",
+      "bytes": 1030,
+      "sha256": "0285f2cd799b478df8aa72afe024f99e3cc86b0cc48ae5613094906c6010d8be"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_http_rules.txt",
+      "bytes": 3466,
+      "sha256": "fbc79e258be8bfc9001f4a17b5303d7b4bd65fcc184021a97a919b956a061a07"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_model_visibility.txt",
+      "bytes": 3130,
+      "sha256": "efd80f5262280753f98128bc0a79456c22e1cf971654042d811255d6547539c5"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_model_visibility_host.txt",
+      "bytes": 828,
+      "sha256": "225d530a857b90e5a51f2522d8e214d9c2b3a71de77c29e4dc9ea31d8a4eab3d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_operations.txt",
+      "bytes": 3804,
+      "sha256": "3bee2f913d18d7cffad033c3990a4958072bb6ed3bcf9a6844c4ab754ffed395"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_picker.txt",
+      "bytes": 2562,
+      "sha256": "8401f127095e31b5bce73315e9caf7f9b6595b8929cd783982bce4b8f2833915"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_picker_host.txt",
+      "bytes": 3444,
+      "sha256": "3772f4b350b077f542b5fff08458720817e64e3f35514a55a1154a16512347ee"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_picker_window.txt",
+      "bytes": 3100,
+      "sha256": "28e21165e038dd34fed5566ee9b0ef6d5607c5390464e9efc5d637fb9bcf9c1e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_provenance.txt",
+      "bytes": 7108,
+      "sha256": "7538d85cc7d55a26960432b3898cfce3e93eef047345e5a3ec1acfbd568a2efb"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_removal.txt",
+      "bytes": 4800,
+      "sha256": "86847463a652082fa1f205d80306561317faf91ca0a2da3661ed9783845b2949"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_provider_removal_window.txt",
+      "bytes": 1555,
+      "sha256": "6a83c2fbca2dc69fe53ff08dfafd6340c44a7607501cedb06f50ab3c1f9e54d3"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_findings.txt",
+      "bytes": 5513,
+      "sha256": "2880db62ee58ce52353b8b76b8a7adef547b0484973f019e233f02001bee45f8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_mcp.txt",
+      "bytes": 2010,
+      "sha256": "696c5276c40f1887fa9f1fb4ba79a691437f71dfd19a0de8e0ead22432774600"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_panel.txt",
+      "bytes": 1596,
+      "sha256": "fbc7bb9066eef3eb27ddf0fcaff229a0a96eb20bc910aa3f224f095e5b92b1b8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_presentation.txt",
+      "bytes": 4414,
+      "sha256": "2cdaf48258c4b81792809993f40efcb837d7bb7e014817b64c1070842069d2b7"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_presentation_host.txt",
+      "bytes": 669,
+      "sha256": "1b85bb0f100ead106734b3ca68ccdb0eb949de919b1b1c913775ea2c36555330"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_priority.txt",
+      "bytes": 972,
+      "sha256": "e3614d3edbaa954b821836d506364cbae3337d995a0d00bd8abb9cb19f4be8fa"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_question_stall.txt",
+      "bytes": 2725,
+      "sha256": "779b582c3ee8e9bda1673c4a1bd288181bcac1a8707ff4f5b55b454f3f1aab49"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_raw_enumeration_races.txt",
+      "bytes": 1244,
+      "sha256": "2c5a9e0d573b7445f2b5e03d3834487a3104ee21caa010dbf0f739ba961dd993"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_read_lifecycle.txt",
+      "bytes": 1712,
+      "sha256": "b5095c8ca5c59a796d08b143bfdf4867f8563765a2304e396e56ec121a567c42"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_read_runtime.txt",
+      "bytes": 1391,
+      "sha256": "cff1449cdf49f783808149ec700292bf2e18901eda68c21a3806605fc14b39a4"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_reference_controls.txt",
+      "bytes": 715,
+      "sha256": "c5c66c9e6f2dae996de8898892b2009aab31b955cc5e1ba606355ff294d2885e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_retired_wire.txt",
+      "bytes": 413,
+      "sha256": "17c993b519f074a948cf5fe18d39c299d269f5b739a5ad87eab3d090405275f0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_rpc_deadline.txt",
+      "bytes": 662,
+      "sha256": "4949a81cbcf1a2e34ca1ecf768743dd6551ba7bd8c33d56b1ace48721fa7704f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_runtime.txt",
+      "bytes": 1806,
+      "sha256": "6d56e8d4427573d89fd03703d3494eaebed30c932a28d33a54e500c3cbfccdc8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_runtime_apps.txt",
+      "bytes": 2298,
+      "sha256": "30e25545bce126c2b9034149f8ebcd1c80a0ef3bb91f79518e7f45c412a78722"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_sandbox.txt",
+      "bytes": 2081,
+      "sha256": "a173b52b76196da81e66a5add319344e111a5c29d11618fa8c346653ab71e081"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_sandbox_apps.txt",
+      "bytes": 536,
+      "sha256": "dd3fc189a2702ed296901ca6b0443d9361b6a91a64607b77a79ea8c3c59bf11f"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_sandbox_network.txt",
+      "bytes": 1158,
+      "sha256": "a90626e2dc5c2b6d9056b5263bef3446f412173ecb104fb44a4c1143924f71eb"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_search_findings.txt",
+      "bytes": 1806,
+      "sha256": "1a141c35a043746d3c2bd8494bc7859d36ae773f13a74ab2f9b6ab4eeb514187"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_search_read_budget.txt",
+      "bytes": 447,
+      "sha256": "870125aba585cdc1568c5f0dae843748c09ee94af067cf5dbf4e6bdcd1d6c0fa"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_session_cleanup.txt",
+      "bytes": 2515,
+      "sha256": "6c77842171d7dd346ce2b897d409013f99808a049b47b2db197bce0152f6a0c6"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_session_logs.txt",
+      "bytes": 1267,
+      "sha256": "4a1f7114f3b6c045befe0ec9657d473b0de5bce5c5e471c5633f6536f3569fc3"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_settings.txt",
+      "bytes": 2206,
+      "sha256": "726b0b1544d2efc7026721e69a6b9b395634cbed97b920f3607da7eba2cfe04c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_settings_audit.txt",
+      "bytes": 1393,
+      "sha256": "ac700e4e2db9ca7fa9f9de59adcb8b69c708437cf08bea1f002d29809aa8f9c0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_settings_presentation.txt",
+      "bytes": 6310,
+      "sha256": "07ad084c9976f36f9100bd08c44450131bfb96c122c8aaf528660e30b62112ac"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_settings_shortcuts.txt",
+      "bytes": 1784,
+      "sha256": "0eee755a4603deb54b24fe18b7e7851e915f2454ee04ec3f02c38e4070164ec8"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_engine.txt",
+      "bytes": 1247,
+      "sha256": "2e15348c7d032a6d852426734bea251b320832752c39ac9e04c1f37ebf6b729c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_followups.txt",
+      "bytes": 1614,
+      "sha256": "da234707e1cb5b7fa1a19303876488f9673825e14bf84d1e81f9a1330805f571"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_log_mount.txt",
+      "bytes": 671,
+      "sha256": "96db7fd1978ab67bc62467faf091069d43b9b5c740be70c902b6559f209d51cc"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_runtime.txt",
+      "bytes": 1188,
+      "sha256": "c7042cef933f6500e948e390b95b1e58f9f60b6ba98984f0c0825be5bb111eed"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_service.txt",
+      "bytes": 1589,
+      "sha256": "1370eb1201941974e4ea6b196e22e425accadaf61e9861e0df650e19641d8fc1"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_shell_view.txt",
+      "bytes": 572,
+      "sha256": "d3160e192a99f38b45ae24abd5fa4ef00e903cc02a9ff4acb760ee85d100d3f4"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_side_chat.txt",
+      "bytes": 1675,
+      "sha256": "76ac8fa339f7bf5d2f00bbfc5ce61fe0279182d1d07ab021d38a8b58d9a287c3"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_side_chat_host.txt",
+      "bytes": 3311,
+      "sha256": "bb3014e238346f91dc92e46b5cf63ec69aa4912cb883f99dede55b9c0c210b85"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_sidebar_model.txt",
+      "bytes": 1355,
+      "sha256": "0344252c53053e187c7fdacdaf82cc2a125b8f8d84fc554cf8784b96d331044b"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_sidebar_navigation.txt",
+      "bytes": 1612,
+      "sha256": "2d7029d957afe5790c4cdd52c128b3e4ba85bc7d46d515d8c00d6efc2f477a06"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_skills_host.txt",
+      "bytes": 4198,
+      "sha256": "0069f12c47a11a66c8bc91528b0b39db5a0f4c8e2a64b7c6412dacea78c849b0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_slash_context.txt",
+      "bytes": 1104,
+      "sha256": "b5d92a0eb3ff821352961b52db945d4cdee9c6643ee46ef8bccb1c27ae5931e1"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_smoke_capture.txt",
+      "bytes": 692,
+      "sha256": "d49ebc2b8637a9be63d4725f055528408c8c986299f5792d75e2384252ced7ea"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_smoke_plugins.txt",
+      "bytes": 1131,
+      "sha256": "97b77145e49fc47a75108909d5516ed775d8f9ff75411502457629d022c081bb"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_startup_recovery.txt",
+      "bytes": 3838,
+      "sha256": "8929809b0137a09eda9355e612c33b07a22ec5aa804c5758bb82b66e1aa59c35"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_streaming_followups.txt",
+      "bytes": 2467,
+      "sha256": "4897a78d281ece076cb8ac487c4b56d1676437b204b4aac63b737520f5f4861e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_terminal.txt",
+      "bytes": 1227,
+      "sha256": "086703b8fce9d050c47b600036a3b2fb5ac2999f25d539b072bb134c19b2626a"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript.txt",
+      "bytes": 6514,
+      "sha256": "4f53ccc86736a24d37345d4087a8945166f4bf31ede4e3c67283e77e7c92a3c0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_grouping.txt",
+      "bytes": 1368,
+      "sha256": "a5b32356beccc784490a9518f8b2e48347eafb28de606b60cb7dcaf911d74a52"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_image_lifecycle.txt",
+      "bytes": 2187,
+      "sha256": "bffe1b722497434b37be7fad03321767da67ec05a10903cdbf05af16ccf37a85"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_link_ui.txt",
+      "bytes": 1876,
+      "sha256": "be2b89672d65c877a6c66349b5ddcf74d1a14ab099f20d97d0783aac760da456"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_links.txt",
+      "bytes": 2497,
+      "sha256": "a0caed1a885d1b7b8f010ae303a5716312a28fab4be016305bbe9e1b9d15f7e2"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_polish.txt",
+      "bytes": 1564,
+      "sha256": "f7a44b30fa80a2524a889965516a451ceee24bac93c7b5419e60381eabe4ea57"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_rich.txt",
+      "bytes": 1494,
+      "sha256": "4038fbd1f0d5c159a9693b0b9c7bb9aa1ca2f4a0cb8c4066053a63d5cad1d834"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_tabs_real.txt",
+      "bytes": 872,
+      "sha256": "4bd5ad28ce285d154ceb2d91879fc04cff6553f388c8bc58c58d821593e968b0"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_transcript_ui.txt",
+      "bytes": 565,
+      "sha256": "942b0814dd6f161359dc48b77c278d020eaaf3cfd4896aeb5c6acacac3480ae3"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_turn_file_snapshots.txt",
+      "bytes": 1603,
+      "sha256": "97e1487739ad3112bd4550e360fd80ce7079457bd6bfa9d2a8a99b52dd18b772"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_turn_files.txt",
+      "bytes": 2159,
+      "sha256": "47a8990067f6f443ae7ccd2a855258b3f19e64883db859480ca7b9a388d65778"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_turn_files_host.txt",
+      "bytes": 1243,
+      "sha256": "80c4c7f89a83e18de2c32afc88b1863f4bc3fae35e3f9efd782bc2add41ca5ca"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_ui.txt",
+      "bytes": 965,
+      "sha256": "8228ba9efe7c1c1f88733019154e581ff19bbd37c8e4380ab3f678e47ce74c93"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "77bbf5d5aa797524016ad89883e292c2a40e8b80002a95afbf61047287c351fe"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_usage_compression.txt",
+      "bytes": 2754,
+      "sha256": "c9d2ca16c4cb2759894de3d82a0d2f04c649f7a70f395705b39b3e379959d00c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_usage_settings.txt",
+      "bytes": 549,
+      "sha256": "b56c40cdee9cab131f7a56eff6c50a0eaeaf4f2b2d52f31bcb9fd0a496158b36"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_utility_model_selection.txt",
+      "bytes": 3675,
+      "sha256": "7c2403d4ed613bf41aa94b148528d7b1e705e6d80030d3dbef2444694080c286"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_utility_models_host.txt",
+      "bytes": 1095,
+      "sha256": "bdb28663e1fa4dcd8a8df5d7a1f212c154ffb60524ed5124f9409055a96c13af"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workbench_helpers.txt",
+      "bytes": 773,
+      "sha256": "6fae72227a999e2abebedd443c5911e9078259a3619def9368e7b1b502279a3c"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workbench_layout.txt",
+      "bytes": 5564,
+      "sha256": "ef2abedd852519eef755ca4bd2729fe4e623631ad7e7b20f4c7430ec213c4c14"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workspace_changes.txt",
+      "bytes": 1758,
+      "sha256": "22cde7fa014773a8c5d178acb3d6cdf8b6a9cbbd0b5987ced2e8659904c25e3d"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workspace_changes_host.txt",
+      "bytes": 712,
+      "sha256": "9063c9f106d39d2ec55b76f25fc2df740fa29bcdf389a8a346ef66bc86ba922e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workspace_tree.txt",
+      "bytes": 2081,
+      "sha256": "4ce5f6a453e0d482c50cb387267f416b3fd11b3d2c408c82b4d5226a13eeca39"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_workspace_tree_host.txt",
+      "bytes": 820,
+      "sha256": "fb310dc2f4cb3fca42f52a80b37734a3e3f0d4200f562bc8f0d9c16ccf2b7c0e"
+    },
+    {
+      "path": "audit/parity-integration-11/final/native_worktree_settings.txt",
+      "bytes": 1543,
+      "sha256": "8b8226558c11d50a4a1696122007215fc51850f3babd5a8c486d632de0ea0806"
+    },
+    {
+      "path": "audit/parity-integration-11/final/reference_file_mutations.txt",
+      "bytes": 2950,
+      "sha256": "6ef4d8912909c40f645060bc71ba10fbdf1a63cd5a120f9ec527ae90addafebe"
+    },
+    {
+      "path": "audit/parity-integration-11/final/reference_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "a944f77d8a63f170ac8ad5886b52a22da9ec0359a0b9891d18eba8130393e385"
+    },
+    {
+      "path": "audit/parity-integration-11/focused-ctest.xml",
+      "bytes": 5065,
+      "sha256": "41b09ce51897e889d4b69f855df33628b5334543a86c646d9aff55181c9e3904"
+    },
+    {
+      "path": "audit/parity-integration-11/full-ctest.txt",
+      "bytes": 27621,
+      "sha256": "022a3d79db8d49bc3c6a1c85f60beebbfc79e4ccf13f888d74af002f40caf83c"
+    },
+    {
+      "path": "audit/parity-integration-11/full-ctest.xml",
+      "bytes": 37125,
+      "sha256": "a78a32d951511981416f987d9390b36ddd3c091ffa4911f2df842bd057808ae0"
+    },
+    {
+      "path": "audit/parity-integration-11/live/codex-subscription.json",
+      "bytes": 2094,
+      "sha256": "fb18d88d8f4c24fba1e3b7ca331654aaa0b59afc67a8fc8ed6b6c620f4377006"
+    },
+    {
+      "path": "audit/parity-integration-11/live/deepseek-provider-outage.json",
+      "bytes": 1109,
+      "sha256": "4e1672418e41560a0e6dd05eb477068e33579da6986c4e163b1e373e9e1d2f32"
+    },
+    {
+      "path": "audit/parity-integration-11/packaged-gui.json",
+      "bytes": 4943,
+      "sha256": "cad82155c5db3e8f7dd0b04a1fc9b77a23819cb0bd7b721b608a449c5f84c358"
+    },
+    {
+      "path": "audit/parity-integration-11/power-request-smoke.txt",
+      "bytes": 712,
+      "sha256": "aaff7eba58c2b684add753bc8a15149f70a663e47ad14626edcdd436afccabfe"
+    },
+    {
+      "path": "audit/parity-integration-11/tested-source-hashes.json",
+      "bytes": 75424,
+      "sha256": "cf1feff09a415037e726d95123a1fb7c5b3a9e19a69404080048c55139a8c0c5"
+    },
+    {
+      "path": "audit/parity-integration-12.json",
+      "bytes": 94934,
+      "sha256": "1708ae377233d8255979e94e357c88dd40b14cc691dd9d96b85e6a8bd07504d2"
+    },
+    {
+      "path": "audit/parity-integration-12/build.txt",
+      "bytes": 12968,
+      "sha256": "923260ab46833d45d1421b5177678fa66c46888ffde1c625d06204dc74b90e5d"
+    },
+    {
+      "path": "audit/parity-integration-12/components/BROWSER-TOOLS-REVIEW.md",
+      "bytes": 16008,
+      "sha256": "5cd23601907aba7b04357743c4f93d07d85e8fc6ed59e32a7962699074d35710"
+    },
+    {
+      "path": "audit/parity-integration-12/components/SEARCH-IGNORE-DESIGN.md",
+      "bytes": 42521,
+      "sha256": "ae160220a21a1823c99e45a4a78217c0db7b433bc827ba14bf5bd2113809ab8a"
+    },
+    {
+      "path": "audit/parity-integration-12/components/batch12-results.json",
+      "bytes": 36668,
+      "sha256": "9c254558195f99060433f44eb8f72c1aac471a485198891ed39552fce6d16762"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_mcp.txt",
+      "bytes": 887,
+      "sha256": "d4102606f38f4cab1f5eadcd0a04316833168c3b38faa92d6b7c46860e55c4c4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_original_host.txt",
+      "bytes": 456,
+      "sha256": "29d32cfab50b9c41eaa1721cb11d9bae817546b39b8799f30483732d96b8dcf4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_original_images.txt",
+      "bytes": 1925,
+      "sha256": "c945966c1cf9647cfe01f48ba756a20a29e17ea6973cbb4ff900b0fba3a39b15"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_original_lifecycle.txt",
+      "bytes": 988,
+      "sha256": "166c22b82381db7de99d1aee3ab29421aee959fc251cb05a111f4e63a3df8e31"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_presentation_engine.txt",
+      "bytes": 889,
+      "sha256": "a73dfceb5daea096dcd207b7c431b2bd4556c2046fbc5a04a22a42b3263c667f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_presentation_ui.txt",
+      "bytes": 3665,
+      "sha256": "af4d7381b152029f5e34e0308379ab9d9aaed028fd01d3cc8ac37f233887348f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_settlement.txt",
+      "bytes": 1272,
+      "sha256": "d05f4fd11aa546695dd3e26a7f47daaaad6144052980bd001d7389d26945084e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_acp_tool_presentation.txt",
+      "bytes": 2042,
+      "sha256": "e0b29897f5da420c944acc7c71d795886931a98f280e615b33e65f31ece59272"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_agent_activity.txt",
+      "bytes": 1046,
+      "sha256": "830cccc3b7db25bdd13f827670f728db6772a846209b208683b5b313a8ba86f8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_agent_control_ui.txt",
+      "bytes": 1223,
+      "sha256": "bb5e4fd3e73f8f40e95e18e568c98fc65a1783e2be900d9450d4ac30f1406e4d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_agent_cycle.txt",
+      "bytes": 5115,
+      "sha256": "5f492a4ea0bef2951433ac8b85f199b207ee7cb4530e455bb61c4ab6d3cf56a7"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_agent_cycle_host.txt",
+      "bytes": 867,
+      "sha256": "c8a2bcb76ad516829ab02eac9204429bd886c76cb1a2fe98340699e69ee2c87e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_agent_prompt.txt",
+      "bytes": 1711,
+      "sha256": "c9b016963a386d3517d937c8872af2efddaf588eabdb54fbefd7c894374a21bf"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_app_resources.txt",
+      "bytes": 626,
+      "sha256": "3b1b7c2c0bbb5221be77823f5a8aef566a7cc7e3e9f29e536fcf6ba87c197096"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_archive_transformer.txt",
+      "bytes": 2218,
+      "sha256": "aa0d32770cc083e5bcad24049d3a0901752410f7278f8a66184650d182deda34"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_attachment_mount.txt",
+      "bytes": 1475,
+      "sha256": "1351afbdd02f5fc16b8390595e759e2e80588671b5078862d34a61a41c403bd2"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_attachments.txt",
+      "bytes": 1701,
+      "sha256": "73aa6c416ed782bab31b07604f1197edf8c165f4634140ff640905c75b6edf4d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser.txt",
+      "bytes": 977,
+      "sha256": "068d1b5f58b34c1463f05d98ac3ca680bc31d3f8c82ba7832f3cceeb0568bd9e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_context.txt",
+      "bytes": 1752,
+      "sha256": "4735266589495d29525ec95e809e786d6352ba70d91a36f711edc248ceaf1a09"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_context_runtime.txt",
+      "bytes": 1425,
+      "sha256": "afef8e787a776b36d744d74da22b60b3c322573d04aff387f26ccf7e397bc983"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_event_findings.txt",
+      "bytes": 1509,
+      "sha256": "a8fb800adb01f5bf9535e63f0700f9ff2ff3b8010d2e38825bf4dcaa43bbfc92"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_history_followups.txt",
+      "bytes": 2730,
+      "sha256": "219ead8f8fe608d7e63e34fe0d1f4474ac0568ff824af505a7c8d33108ddd0b3"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_inspector.txt",
+      "bytes": 1163,
+      "sha256": "4c7be662e947825a2093fcad3bc0133becd27425de0e476d46be95433d8db3bc"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_navigation_followups.txt",
+      "bytes": 1302,
+      "sha256": "8ae3dea3d72d1cdc38e7864ec37178844e9de9a31de1e1b421a9b245e7d3a075"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_output.txt",
+      "bytes": 8916,
+      "sha256": "16b3a38d7a068c9c57295f67a6264398e09992c8d7d1d1a8294a86dc12080537"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_screenshot.txt",
+      "bytes": 3027,
+      "sha256": "1f1ab7fece5a200f50b4fd6b6fa3f839a81f86c86e2b08adc8bd98ce8f67e85f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_session.txt",
+      "bytes": 1743,
+      "sha256": "2a4bcb95645baf86cb85abe0a230d3c96d527cfadac74049d12d9558d08b0d91"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_session_host.txt",
+      "bytes": 1363,
+      "sha256": "6ae93a14f1ba9a4161804b495bbf216a5aef444d8681f0a6f48ec5fa3e6097b8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_browser_tools.txt",
+      "bytes": 1883,
+      "sha256": "8687726dfffd5070fab4dfd0e96b9f4329406e434a6729945189e77f1f70a3db"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_chevron.txt",
+      "bytes": 725,
+      "sha256": "04355244eda831c9f11712f547faadac41aab5ede3ec99f044082364154a7b3a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_control.txt",
+      "bytes": 1523,
+      "sha256": "210142fcb5408a952bb8f29c79c0042ede3482605aa7fa5395314c3edeeb1add"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_discovery.txt",
+      "bytes": 962,
+      "sha256": "499426bf2980d45906c152caa72be5ce9fa77d528085bd7cae23862108f41138"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_engine.txt",
+      "bytes": 1347,
+      "sha256": "d3cd3165babfff76176d6d30d27c9438ad6bce821662159f3f668ab9acbe93af"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_followups_engine.txt",
+      "bytes": 917,
+      "sha256": "43365e9b1694c58de4d504ba666b404c2a9ffd7ad292516f1ee8eafaacced63b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_followups_session.txt",
+      "bytes": 1803,
+      "sha256": "d08b59019ee78e76b50efa616c2e6add4891d2bd404cbdfaffd540843995b6b6"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_followups_stream.txt",
+      "bytes": 1949,
+      "sha256": "97399d937fb6efc7f12516c4a03c1f6470ce12b61b29678a9c28dac349bf7047"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_host.txt",
+      "bytes": 645,
+      "sha256": "483e14ceaedba72b34d31662e085650011d9c402f5e44792f2b0e3f1f680b537"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_provider_ui.txt",
+      "bytes": 3075,
+      "sha256": "ab3997db24d8504c6fa011dec3d64a6c8130be071a739b4b22ac755427057522"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_resume.txt",
+      "bytes": 2341,
+      "sha256": "765416334d886ae772412dcb0d9146db872db8ff94c0c64dccafee3ecb7a8a83"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_session.txt",
+      "bytes": 1920,
+      "sha256": "565a9f3848ae571aabf1dbe00aa7756a572835d9cc08a6c72476929fa7a291ec"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_claude_stream.txt",
+      "bytes": 1654,
+      "sha256": "4fa3f095917aad8569d883daf61c4a2191d4fa11ab674b3717e12e12078d3f68"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_codex_engine.txt",
+      "bytes": 1347,
+      "sha256": "894aa9a97cd54582d4d783049c692fde23ebc32f8243811a1ec18c0f18caef30"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_codex_files_runtime.txt",
+      "bytes": 628,
+      "sha256": "2053a094c6c53b276395a3391eca8a3894ac97564ffe4ebe5a3cbb132b5c8fb6"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_codex_harness.txt",
+      "bytes": 1965,
+      "sha256": "d80875845d444beb9e4bd8a8074a3721835be0cf3c1ff9c92f86696fe5e0e2f4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_codex_host.txt",
+      "bytes": 571,
+      "sha256": "e18aafbc30cb5cdf1efe6ef32b121dc2b9cfd5c16c9cdbc474ca5352cf9d4646"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_codex_provider_ui.txt",
+      "bytes": 2659,
+      "sha256": "3f37c49f3f84534d5f63ea31cca8da966676b1591cb1e229308eababc9b739f7"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_command_center.txt",
+      "bytes": 3334,
+      "sha256": "b4be3856638b8c4e0efaa7d690042ec5cb856a97dd00bee0b043de3ede8a19c4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_command_center_host.txt",
+      "bytes": 3235,
+      "sha256": "d200dbda8209fb542fe2bc3e08de45c9f737ef9d9e9c0920600ba6e792fd9164"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_command_file_search.txt",
+      "bytes": 670,
+      "sha256": "5e5de6dc10200516c2051bc8448c00f413f365455f10d26cc5bbac59c877807b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_composer_completion.txt",
+      "bytes": 13045,
+      "sha256": "3e82ad0bf0b5d756c11f8f75a6d39f318111d047ed93594e6bcc811a9164d606"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_composer_host.txt",
+      "bytes": 2345,
+      "sha256": "665723e1f7142570f3154011286a1ce60f385bc3a4c6c1b722a68592ea16cd4c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_composer_search.txt",
+      "bytes": 1178,
+      "sha256": "b272b01b895e5cdd52293bcc31253817130b46e53dd778c496bde881a958101b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_context.txt",
+      "bytes": 742,
+      "sha256": "a58396edf8cd63832cb52a0c024d6e9cc3ed25d7329de87c7ca96a6672ffa381"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_context_budget.txt",
+      "bytes": 1283,
+      "sha256": "2e1d6b09879d73716aff123e76cbc51deced0730bc9638985cd06f9412e00043"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_context_budget_host.txt",
+      "bytes": 1265,
+      "sha256": "578a6dbe120083da06cb7518e4bb1f44e9e7e02305c1229ec4d52604bef09426"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_conversation_control.txt",
+      "bytes": 2353,
+      "sha256": "5a6af80c5cc9d97e3e2f695971e636d054611a9a21a9362b18d6628d2dfcaf85"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "209d2ae4a355c0d53061b2c25df22bcfbc01ebfa7d8bb4d0edb0f64b0c62bf8b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_core.txt",
+      "bytes": 2674,
+      "sha256": "23d1b2426c3c079d085c2e9714292655c90d91780bf885ec6f78f03f03d4b9bd"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_cursor.txt",
+      "bytes": 1862,
+      "sha256": "e8d5dd3af58a65c7237a259b07437e49154e1b9c556d27e73ef5e349f2325b60"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_cursor_engine.txt",
+      "bytes": 1064,
+      "sha256": "90412a2a24f21ee8191b91e4ba9dd8d5766b81548d1b8b0e4007a69a1b3927fe"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_cursor_host.txt",
+      "bytes": 1109,
+      "sha256": "6deaa365e31b696f8f1876b1132da8ea7ef244a76050d926a1b72d9a18a75ad8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_cursor_ui.txt",
+      "bytes": 3425,
+      "sha256": "e9fd6735168e266b0c43b41f6c6b403b313310e7e94c1407188042eb0a7a63d8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_config.txt",
+      "bytes": 1163,
+      "sha256": "8860c9a09d6a521b3fa7982e2d56fdb7b7775402c8624823fdd41c327ab8aedf"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_engine.txt",
+      "bytes": 1509,
+      "sha256": "46d05d44a5a80bf73f6bb72b8372b3b2544fb4b3fd66aaffe1c0d91d9f0fb765"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_host.txt",
+      "bytes": 891,
+      "sha256": "232ec10e795aac472b5835a77dd6b709a9adbe3e11dbee8e74404aa76370723a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_inventory.txt",
+      "bytes": 1013,
+      "sha256": "80f245584e4fbd0880304578408152d0cb8e57d8cbb4f78adfee54b61713dea9"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_media.txt",
+      "bytes": 816,
+      "sha256": "f51127369c3fc9f1bb89fcafecf567e61871e7bb436dc00a5f0b64e40e6be406"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_options.txt",
+      "bytes": 10626,
+      "sha256": "49aec54dcb114b207b367c7d2668de315d54bdd46f9cfe643b9d5b491ca548bf"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_smoke.txt",
+      "bytes": 583,
+      "sha256": "01ccb7af08ba87668a8ef73ebe4517f304d81bf6e91d4c001b0834b83471ed77"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_storage.txt",
+      "bytes": 1739,
+      "sha256": "0d854c4546acee8e4c92d3eafa18f524a2a0517c9ff006a1c1b7b6a8158e162e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_custom_model_ui.txt",
+      "bytes": 1464,
+      "sha256": "2db9998b3b9b7ec50315fe63af669a3503fa7f5404cdde09143da142b3afe38d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_desktop_provider.txt",
+      "bytes": 1275,
+      "sha256": "f5f86c2217404320f339e48185a736c7284d15dd92a457d0ea1adb088bbda098"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_diff_preview_edge.txt",
+      "bytes": 568,
+      "sha256": "c7bd31601de31eb7f72f80e209406a0cd5175d645d69f5c38b78b52b0f9b9e6a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_direct_question_mcp.txt",
+      "bytes": 3017,
+      "sha256": "32fe1838837e2e6c56ba8093d8f0c784bea9bf35cf6e8d3611635f05667e1e61"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_downloads.txt",
+      "bytes": 924,
+      "sha256": "07d03860a7a555913b0847f8fccb40c0a2709a37837f934704519894d218a308"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_editor.txt",
+      "bytes": 2356,
+      "sha256": "40d865793e99d77ef47f8ff66c2e237792803e69aa3578e9729abcd1443c1e70"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_engine_observers.txt",
+      "bytes": 3940,
+      "sha256": "ebd4aedbf79b578b81fd1b669f92cd384274a222ee47bcaa998a3d869f11a801"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_external_context.txt",
+      "bytes": 791,
+      "sha256": "d66aeb16ca9b6d3dd16b7a8123b308cd3c7e04a56f129617db06f45f5fef693e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_file_diff.txt",
+      "bytes": 1266,
+      "sha256": "54bbee26dfada09f05a6efe34da1b54dc56934e5d0f5c566ac551f048c60562a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_file_mutations.txt",
+      "bytes": 4355,
+      "sha256": "b413ecd85251a3c905c0c55617e648ec78da56bbcb77e0d9a93cc2ce183587c8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_file_tools.txt",
+      "bytes": 1518,
+      "sha256": "88afc8ca1977adb95d506588e3fdc8f578b9b684191f9c5ae8a96a3a8eeb0bc8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_file_tools_races.txt",
+      "bytes": 1045,
+      "sha256": "1b03596ffc00774adbdd98546e1b8c2e0dc5e614b8ad8283626ecd2896609bd3"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_file_transformer.txt",
+      "bytes": 2304,
+      "sha256": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_fonts.txt",
+      "bytes": 563,
+      "sha256": "6e3ce0586394f0eaba5e3b51cf3142c26ca4aae26047aaa63b99068b8fb12cec"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_formatted_att.txt",
+      "bytes": 2578,
+      "sha256": "6e1c9b8eb2ace6f8811063263e5f3ae8048d9071a41d90057ac82fb67cb1f815"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git.txt",
+      "bytes": 1209,
+      "sha256": "a8e13bd2795cff3300de268d112702fda0599425c453ae696bc23e0d70628150"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_cleanup.txt",
+      "bytes": 1738,
+      "sha256": "b533e0cfa5dab6bdb2853d675c39639c69009c77946c7bcb9eecece9f64b89df"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_findings.txt",
+      "bytes": 1521,
+      "sha256": "e3ef866601c4a9dedb974f2feee3d20db83c552f24350b24869783b32d7b1bef"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_host.txt",
+      "bytes": 3286,
+      "sha256": "9e632e8834a261911522afe134b4fd8437fe8eea35a01df3ada84b91cf9675a6"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_ui.txt",
+      "bytes": 1466,
+      "sha256": "7071491d8785aa88e50ac044eeb43d4a3b6014ba37c7e50233b89e0565179421"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "64a50b712a95635586b418936492c6e0452492df18d83cb60a3ee0ca9c605571"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_watcher.txt",
+      "bytes": 2637,
+      "sha256": "8789dd4be10989826cd2fecd8bad659f93fa66b69e9373ce11cbf8ab25845cfa"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_git_watcher_ui.txt",
+      "bytes": 541,
+      "sha256": "e24cc2cfc3adcdecb24c11ae640a81fae14a3c1b7a1e0cc5e76900868c80d0c5"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_attachment_mime.txt",
+      "bytes": 1857,
+      "sha256": "bf3bc40a08e695608d5265f14f4ae295b5f8157a451c8be1968f8e6fb4f40335"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_attachment_source.txt",
+      "bytes": 814,
+      "sha256": "29d2204a153072864321252196d30b437c21be5f191b6f446705f628d1d97db7"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_attachment_store.txt",
+      "bytes": 2435,
+      "sha256": "9c3f7f5bc05261a51345af07341a578951e66464ea1adcdf0bc0980e4ba35a96"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_attachment_wire.txt",
+      "bytes": 1288,
+      "sha256": "639a15953f5da1d7bf2dd15b136e58e452becbce9bc846df3b6e71a1255da3ec"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_attachments_host.txt",
+      "bytes": 2665,
+      "sha256": "810ed59def66d8fdb966705b73f610c4f938ea477a70ea112ca590e74a37b282"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_cleanup_host.txt",
+      "bytes": 866,
+      "sha256": "1c55b401e13aa8527f2d5127cc69fe70cff4af72745a9db86c31e053c3264de6"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_continuity.txt",
+      "bytes": 2859,
+      "sha256": "8e69ca52ef8f5085ffb831a4557d8695a7a722dcd22190388deb44c08c00061b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_files.txt",
+      "bytes": 1119,
+      "sha256": "134054d052d593097cfa2fceb9d9bc4a068910839347000b17ef1d797a589fb2"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_forms_host.txt",
+      "bytes": 1005,
+      "sha256": "3e36779bb56897bd2c03b48d97ef194f2d6d18145cf66612827d2fd95b783bf2"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_harness_media.txt",
+      "bytes": 752,
+      "sha256": "abd0878ec6cc4db026141d5f065aa15de5fd70780b6645c71f405b54371444a2"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_hidden_browser.txt",
+      "bytes": 5945,
+      "sha256": "585383718ca96a87decbd81271c2a1907e35185fd637d282321fbe43f7ab6138"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_historical_attachments.txt",
+      "bytes": 2864,
+      "sha256": "16d492e9993b50aed6cf2c8cf72b60d0c95effac73d1339104746215a1fa087e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_history_actions_host.txt",
+      "bytes": 1181,
+      "sha256": "a0ec6cb0f8898ebdcffe9df518fe8ba3eb4c70ec13c906fb0d7a8f7589290caa"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_history_projection.txt",
+      "bytes": 1127,
+      "sha256": "45cc590ac86d23d250a4a24a866fb8c5552a6209f50b6f0d2de24a65d173bae1"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_history_recovery.txt",
+      "bytes": 2542,
+      "sha256": "9adaac1baf0240bd8dbfbe6232c212e1e2f08ac3b0b0e08fd4908dfcdf7beaac"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_history_retry.txt",
+      "bytes": 2025,
+      "sha256": "3bd49c03adf9b702205a67f1042972d81c0b07afd8338a1c24760558ae8eaf43"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_history_retry_harness.txt",
+      "bytes": 773,
+      "sha256": "54c1ae468dac015f9a3e3dbc1b5044ec2428f2937be225e59ea21624742a01ba"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_image_preview.txt",
+      "bytes": 1946,
+      "sha256": "20e0a67dd84919d2e9d40f88119de57c008dbc222d84c5ca5413e260e5f5cfd3"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_instance_coordinator.txt",
+      "bytes": 1945,
+      "sha256": "79cb73a088e888860420179ac6f15f1c546efc89ec6ecf5c55438e2f81339917"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_instance_window_host.txt",
+      "bytes": 1956,
+      "sha256": "d0663525930f97c955c31fac55080c4fee9fc8d2b417257e9d4f1ed0f57888d5"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_link_provenance_codec.txt",
+      "bytes": 621,
+      "sha256": "65a43e6d4971ef6bae62055a1630cf5f4461617d3d5d3d9ac846788b77d356bc"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_main_chrome.txt",
+      "bytes": 5050,
+      "sha256": "b9f367edd681fbfcd4fcbac4220f58e1d52fe0708f4942db103ac0318c09a7da"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_markdown_findings.txt",
+      "bytes": 2926,
+      "sha256": "3b0314c833684b18ae5e7aa324786460916813563f05e1c9276664df5d7b8b59"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_markdown_link_scope.txt",
+      "bytes": 692,
+      "sha256": "cb9f775e2e88c63305658810074733bd84514be0dbdb0865b7f7d96b475b2199"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mcp_engine.txt",
+      "bytes": 1198,
+      "sha256": "eb275fa5d0c778567c820b4360853b7a7141a18821d27d660e0d7c45cd2848b0"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mcp_presentation.txt",
+      "bytes": 4293,
+      "sha256": "c3b6a6dafecfc8e53ee38453c471ad77e2f2e0e6e29487ef42083c406142dfac"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mini_app_findings.txt",
+      "bytes": 1322,
+      "sha256": "3a307da422baad8072c2d5d951d4159862902482cf278eb0ecb8ec6af4c13e4d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mini_apps.txt",
+      "bytes": 626,
+      "sha256": "aa6649d540c2b8621c4d38dfd6269e7c2bdf3ec0b7148424e5ea748fd6ef1bff"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_model_discovery.txt",
+      "bytes": 2834,
+      "sha256": "1579ab6994e853c198eb3e01c7fc82c268f8670796ee5850077cf60dc8010249"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_model_discovery_host.txt",
+      "bytes": 3299,
+      "sha256": "40023f913ec7046742823ab3d88f800c675a33c676bbc4bc813f4274a550195c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_model_selector_display.txt",
+      "bytes": 1901,
+      "sha256": "2bb34f382d07ffe690277f184624c0431971ed1f863e9058deb3f07301a98e3e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mutation_findings.txt",
+      "bytes": 3006,
+      "sha256": "f9ceae9a398cee45d2266877ba5c58679491945f591f079d885b75705aa38674"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_mutation_runtime.txt",
+      "bytes": 1765,
+      "sha256": "34ee62050b2ca6f55279377f5e52b7b281a2eba38fedef023e37dcb3c182109a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_navigation_shortcuts.txt",
+      "bytes": 5455,
+      "sha256": "dbe26e81c506d0e2e474604f4bf415da27b8cf2517aa926855caa01bab7320ea"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_network.txt",
+      "bytes": 1383,
+      "sha256": "e827642a551ddbefe607f9c74038ebe399d4e48c627e66d0e660f228b3fb4fdc"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_notification_sounds.txt",
+      "bytes": 2121,
+      "sha256": "ef2890ac9f0ea156a455ae5554862476ee371c298b812257660628ff9a183ee7"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_opencode_engine.txt",
+      "bytes": 1219,
+      "sha256": "aec3ea8ec5e9c70e2690555d08106c8b689b2e3b010488ed7fec868df8ddeb78"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_opencode_harness.txt",
+      "bytes": 2127,
+      "sha256": "49c61a9ce94b9f1a23827ae53a6d0ee7843419ee74c950c4a3bd38a32d1b4c21"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_opencode_host.txt",
+      "bytes": 661,
+      "sha256": "731368ebefcce89c6551c6c6e954a7a436b0feb95a8610235d82e8df8c44d51f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_opencode_provider_ui.txt",
+      "bytes": 4342,
+      "sha256": "224bd65c0a2f412db16340d3c447d0e2053f65e1f1eee10cbe900d5b20e9ffd3"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_plugin_connections.txt",
+      "bytes": 1655,
+      "sha256": "cfc6d84656573162d0eb5ad87a03a5bc41af98ba61fa15b78d30817f1c17a7b0"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_plugin_findings.txt",
+      "bytes": 1791,
+      "sha256": "5e7667bc9fc031f8ed9aced60bac20f6918dfd54da2f241efb3b5a828f1de36d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_plugin_runtime.txt",
+      "bytes": 1996,
+      "sha256": "debe766826d7f3eb6fbb525d054ac3d763b90f4ab232406604cf0b8274e1e569"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_plugin_settings.txt",
+      "bytes": 1669,
+      "sha256": "5280597b4c0635786d90bfdf49bcdeff9ba88dba1c651ba1abb69713f632f65f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_plugins.txt",
+      "bytes": 1717,
+      "sha256": "07822aa976b53b0f701544d1d5c1536f219f82eab7a242ce9751ba9b9c561766"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_power_request.txt",
+      "bytes": 840,
+      "sha256": "5a44525ed7a5f0ca5db27688d254aa287482cde6badf7e088bd2863d91b251b3"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_presentation.txt",
+      "bytes": 5530,
+      "sha256": "07d3fd86cb1aa14ee9c278064426e234325aef782bf777252cfb426e7acbf288"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_http_engine.txt",
+      "bytes": 1030,
+      "sha256": "1dc3df5c3642f571a780f9e11ea091c21e9e61c807afcd7b0d972867afd6a54c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_http_rules.txt",
+      "bytes": 3466,
+      "sha256": "96e0da8ad9346da852cf553018d29dc3facee7ffe603dc9b367631d147a6a986"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_model_visibility.txt",
+      "bytes": 3130,
+      "sha256": "a1264dd1ed3f3f80140b1ff0b7462297af862980c5767a4f2dac53b1c1b68b59"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_model_visibility_host.txt",
+      "bytes": 828,
+      "sha256": "5c76365ce3b25159a921021777ba8220171cab228a9f65d88178deb3a192f748"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_operations.txt",
+      "bytes": 3804,
+      "sha256": "0a9bd78b6edb6a13b524ab6563b9a70d42bae0126535891863cc2097d130ebb7"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_picker.txt",
+      "bytes": 2562,
+      "sha256": "ff4bd4305fbdc4ed73a65cc0557e161cb7615bf752ff7b2fc5524802fcfe4010"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_picker_host.txt",
+      "bytes": 3444,
+      "sha256": "05958465908da446cfafd910e1b786cf724d0d0384e3e1687aac62ffe43b8f5c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_picker_window.txt",
+      "bytes": 3100,
+      "sha256": "00d6455219a517d7434c0e49e5554f7d6f909bc116d11bb4292f11468ae1416c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_provenance.txt",
+      "bytes": 7108,
+      "sha256": "e4a401241d88b03f07645b22c2809ab6ae6d0d6472642a175ca69497ebb4a3e0"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_removal.txt",
+      "bytes": 4800,
+      "sha256": "6bc40ed22167b7419229995811a2da50e19e9a3b874e55aeaa9aa8f2f4afc382"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_provider_removal_window.txt",
+      "bytes": 1555,
+      "sha256": "b1f499de2939c87aa4ad5e3e60bd9882d6a32ab79bcdcbd3413460c88f70453b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_findings.txt",
+      "bytes": 5513,
+      "sha256": "5c95ffab9324fa51abfe1b69189ec140a84febeef881595fd238c19531073150"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_mcp.txt",
+      "bytes": 2010,
+      "sha256": "b205ef5697662894353fb7fc50fc8b20055c51cef9c65b0f69f51fa4829ca2b1"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_panel.txt",
+      "bytes": 1596,
+      "sha256": "0099d830d35ba9cde65a2e55703d03350f372ac5eaa1fbd28346e896c849a375"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_presentation.txt",
+      "bytes": 4414,
+      "sha256": "3329f65912aa95ef59ecdec9696b36b060af10b8fcc052b504004840cb4c39ec"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_presentation_host.txt",
+      "bytes": 669,
+      "sha256": "dc3bab29659a42f9adf08dbe684d90e2e7cfc4185884d5d841c15287644fdc5e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_priority.txt",
+      "bytes": 972,
+      "sha256": "48f264cc33b1ff891f713219bc3e079e9cee2d5da9bacc00a917dcd03c270000"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_question_stall.txt",
+      "bytes": 2725,
+      "sha256": "bef03d440ff08b4f54e6b5739185f12646cfb0d24fbb06fe2f000b7914e067f5"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_raw_enumeration_races.txt",
+      "bytes": 1244,
+      "sha256": "ce110184a1f6830c6af82fbb4a57b8c13acbf93fc148dded80a5a6fb042e5799"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_read_lifecycle.txt",
+      "bytes": 1712,
+      "sha256": "b6a3b32e19152ba42d60a8f41739981561c78448564ad4473af6035a9396e827"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_read_runtime.txt",
+      "bytes": 1391,
+      "sha256": "1662cc917120193b09634488c61e2599d7fef831f3bb0d6409dbbbb806be1fa8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_reference_controls.txt",
+      "bytes": 715,
+      "sha256": "b0207e8e7c7f368ad83ea991ad95338e6a807e0f394a4bcdb65c4be8b3d01d8a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_retired_wire.txt",
+      "bytes": 413,
+      "sha256": "0e3a203dd0a983c92cd48e4919c78bb7da33fff3c97f748a22493663a9d5474f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_rpc_deadline.txt",
+      "bytes": 662,
+      "sha256": "f2a09fc596e615c56573d9fea135570f956107da04066f8785765d67e1d264db"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_runtime.txt",
+      "bytes": 1806,
+      "sha256": "24a05cda8cc7d347adc06fb66225d0fe5e097d98cd21148880e6205f0314cf2f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_runtime_apps.txt",
+      "bytes": 2298,
+      "sha256": "82f2d2c05e46ce9d7c61f152a7177e8991c8080324cd4ba9b64204a2561f2267"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_sandbox.txt",
+      "bytes": 2081,
+      "sha256": "8a77fa7ede1184a4ee7160ca0fea2d50022343475211939a7c44cc68968166c2"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_sandbox_apps.txt",
+      "bytes": 536,
+      "sha256": "953420740e40dda953c07817f3a8075052474cda9df30d446a201286934cc0fe"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_sandbox_network.txt",
+      "bytes": 1158,
+      "sha256": "e28e40a32896dff53a99506b13ba06a35086e76124476b0c537069b2cc51d15c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_search_findings.txt",
+      "bytes": 1812,
+      "sha256": "4488a524b73ea600fd0bbe8a58f21662808c429ae4a12820f1feaa76a98b919a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_search_ignore.txt",
+      "bytes": 6840,
+      "sha256": "aa873b0f514953ebae5c2624cc5047083cb7a546bc0d91246d1a915caaf84306"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_search_read_budget.txt",
+      "bytes": 506,
+      "sha256": "b8e1f3a2d9a870e99577284b6c2c14ddddf4d21c9f14f210d0301fe00357ada5"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_search_rules.txt",
+      "bytes": 9828,
+      "sha256": "8030318f59c7980cc66918af2b04cd1f3fd0c4cf2b547ec9073438b308c2b76f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_session_cleanup.txt",
+      "bytes": 2515,
+      "sha256": "90691d756cc8b190fe4b9dde38d4bdf45ce9f64c7f14d78b511696745908cc61"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_session_logs.txt",
+      "bytes": 1267,
+      "sha256": "b1271362c354f66ad55efc7d47f5e57985e40fd8be3e796676b858469a6830ee"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_settings.txt",
+      "bytes": 2206,
+      "sha256": "3e1a7c40d0684e7096d39ecb84692dbf57efae9fb970d5df0f10ed2c6d0f972e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_settings_audit.txt",
+      "bytes": 1393,
+      "sha256": "1f612f752fa79d6041e678d90e25dfe7514cf417613c49acab27bd159358d41b"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_settings_presentation.txt",
+      "bytes": 6310,
+      "sha256": "0e69fb76b90586380d9fd805af1fa5a8193521e28839c70fedf9752def89c71d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_settings_shortcuts.txt",
+      "bytes": 1784,
+      "sha256": "cfbd785e849266528761f6a5db6d04e4d6fecc748b26466b051a74c47bfaef9f"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_engine.txt",
+      "bytes": 1247,
+      "sha256": "22840dd37a29f7b0da6811c9d193a5dc75b078acd0d01ef224659ccc6baabd72"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_followups.txt",
+      "bytes": 1614,
+      "sha256": "adf637a9f4551226f001f4123d7578195c05563eee050048595aedd4cdcf89b4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_log_mount.txt",
+      "bytes": 671,
+      "sha256": "a3150b167ec6dab751ebdfc09cb40632c52a6a204e7e19a42817e3588b616047"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_runtime.txt",
+      "bytes": 1188,
+      "sha256": "76ec61f7d117f1efd86f6532a9b22a4c5cdbbff83f4655340c44da8ab99a62e4"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_service.txt",
+      "bytes": 1589,
+      "sha256": "9d0de2cf25a933099d8646bb0016ce456db33c486360e17d06863647ae1abd0e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_shell_view.txt",
+      "bytes": 572,
+      "sha256": "10c477c20be2049e75db6ddcc9c4ac4d8a4524ee05a94cd6178f905ef9448028"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_side_chat.txt",
+      "bytes": 1675,
+      "sha256": "0212051b66ed172f491b99c4ee56636d759b60ba1de3362d122a9383364737ec"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_side_chat_host.txt",
+      "bytes": 3310,
+      "sha256": "1906078e3327040ac47011233c5383603eb0e21f6a7c569a17989d94e915cb65"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_sidebar_model.txt",
+      "bytes": 1354,
+      "sha256": "00efdb75692177104600e85ba1dc5cbc5ab9494422565d62f027f4e913b55649"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_sidebar_navigation.txt",
+      "bytes": 1612,
+      "sha256": "2c0a54ffb536950611cc3dc06e9a4935c09f10ac52e00138efcdd918e3daf9bd"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_skills_host.txt",
+      "bytes": 4198,
+      "sha256": "771ec1fcccb3e06f886f84e7de23646a04ba1287055a9fb678e7a39ea24f00db"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_slash_context.txt",
+      "bytes": 1104,
+      "sha256": "1378f4ce2b011f96295c94298f66619a6c6d7a433a5950f1e6b01c3c57586eb0"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_smoke_capture.txt",
+      "bytes": 692,
+      "sha256": "cba958d05214d97b2006d9ed63ba77cd79338c61a47c5f3c07e70cb183c13ae9"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_smoke_plugins.txt",
+      "bytes": 1131,
+      "sha256": "3157fc256ef94613839836cf54faaed33550f9603b2533c65da10b8ef905b81a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_startup_recovery.txt",
+      "bytes": 3838,
+      "sha256": "2f6e0f5617d5f6f14cbf5a996dac11e4381e534cd9bee11374ee04d84fc4a080"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_streaming_followups.txt",
+      "bytes": 2467,
+      "sha256": "d9a0062072f9ab3564e303ffb870c3e2f026f2755927ba0c3af9a4c7f174980a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_terminal.txt",
+      "bytes": 1227,
+      "sha256": "035694900314693292e7c48486079bd9a1a86baf6635d92696c1da15ca533987"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript.txt",
+      "bytes": 6515,
+      "sha256": "87b1d96ffd2b5fb4827cac1ae6b733051e01a03b07cfd5ab183d5e0ce8fd60aa"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_grouping.txt",
+      "bytes": 1369,
+      "sha256": "c3697701177f2da33e5e6638327c35c6a8655d992d6ee970f2a35834798db684"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_image_lifecycle.txt",
+      "bytes": 2187,
+      "sha256": "b1df2e7418409bea1d3f52a3dbe45ea8d3b7be65762ecbeabcb2835c99adff0e"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_link_ui.txt",
+      "bytes": 1876,
+      "sha256": "e0721c5e45b26a4926bb2c1b3302cc0f5b74e0a032b756711135c2fe9dda2eb1"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_links.txt",
+      "bytes": 2497,
+      "sha256": "1cbf4861a63727e2ad8d239d4b1a198c636d3f3bccc714e6fc598da91481d39a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_polish.txt",
+      "bytes": 1564,
+      "sha256": "42ea35190af33d521a2ec586dfc8f78c12feb7607260a9cccdd9dfd96003f03d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_rich.txt",
+      "bytes": 1494,
+      "sha256": "da7d90d26db2bb59c7021b9cc5d977bbb5469e592ad6c9eb9bb9ce7c3d7e59ce"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_tabs_real.txt",
+      "bytes": 872,
+      "sha256": "e847a34938c7bbc05d7eb094bc7639dd8b71cd4b535cea619ace3423c4e4203a"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_transcript_ui.txt",
+      "bytes": 565,
+      "sha256": "a813fc69d845cc7cf6104decec2fdd33bcae0d6a3dc85816afebdc9c8cb04a34"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_turn_file_snapshots.txt",
+      "bytes": 1603,
+      "sha256": "685b955259a61c4353308befb79a70980eadb6759d038eb8119768ec1c3e67d9"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_turn_files.txt",
+      "bytes": 2159,
+      "sha256": "b4c8c54db9289f74ba406fdcd3a4b26e7f3b4e8f88366414e1ab55795a373af1"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_turn_files_host.txt",
+      "bytes": 1243,
+      "sha256": "33cd83a26914b897dd8089b9f0e027b1344c971b0be86d5f37375187c5813978"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_ui.txt",
+      "bytes": 965,
+      "sha256": "575df98972c550134c5a50653b42d5f8934c4c3e5435b9ed5df2e89d58e5e521"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "e29c5e3b50893fd88bcba69d2306a929a8316ae0d6d7dc17383e1da8f2404d47"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_usage_compression.txt",
+      "bytes": 2754,
+      "sha256": "095d9a8d0b7deec97eda3044cfb2f2ae99c687efbda2516f231b823138666ad0"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_usage_settings.txt",
+      "bytes": 549,
+      "sha256": "b56c40cdee9cab131f7a56eff6c50a0eaeaf4f2b2d52f31bcb9fd0a496158b36"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_utility_model_selection.txt",
+      "bytes": 3675,
+      "sha256": "b4c61ca283fb53a91d8414cafc554705f1d1d71e74d0aa15d8a4adcc6e1273e8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_utility_models_host.txt",
+      "bytes": 1095,
+      "sha256": "e2d3d25a4caaf41a2b70bd35c6fed647323e9c48fcec870241eb27d7a943fa03"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workbench_helpers.txt",
+      "bytes": 773,
+      "sha256": "6fae72227a999e2abebedd443c5911e9078259a3619def9368e7b1b502279a3c"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workbench_layout.txt",
+      "bytes": 5564,
+      "sha256": "dc786c63a6c9dea15266f2b992765c5165f2ffd3a5b78af69b1bb7ec528ed1d1"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workspace_changes.txt",
+      "bytes": 1758,
+      "sha256": "9a5cf6ec25e5792ea39c68f35278368a439d8f1f5fff8b6ca8b0ad767bb535c8"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workspace_changes_host.txt",
+      "bytes": 712,
+      "sha256": "dc9a1d5b0c22062a3afc5550d46a44fc2ffe43a2a28ffd8a693733f52b9dd7d9"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workspace_tree.txt",
+      "bytes": 1857,
+      "sha256": "a891f0a83a312c7183b83c4050071470ced6df1448059273507eded4c7772636"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_workspace_tree_host.txt",
+      "bytes": 820,
+      "sha256": "9087c0e763fa0537f548ba07b8f60d9f15704b3b6bbc95a0a9fdd240bb13d99d"
+    },
+    {
+      "path": "audit/parity-integration-12/final/native_worktree_settings.txt",
+      "bytes": 1543,
+      "sha256": "977d6009b28eed8bb41f9904923b560a3054c988b058b72b67dd62d192189569"
+    },
+    {
+      "path": "audit/parity-integration-12/final/reference_file_mutations.txt",
+      "bytes": 2950,
+      "sha256": "1ad6fe640eaeea304a3682903c6277d2d42a58ad80057d78700feae27a40bc30"
+    },
+    {
+      "path": "audit/parity-integration-12/final/reference_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "ef9f8fed545df9eb0c7a0de3047cdbb071c0f9d8fd7a08e134cf12a06bc49e82"
+    },
+    {
+      "path": "audit/parity-integration-12/focused-ctest.xml",
+      "bytes": 3121,
+      "sha256": "15400b36f812bbd908a9e2e211483e15b576d8a8982c1166cc327f61d85a16ad"
+    },
+    {
+      "path": "audit/parity-integration-12/full-ctest.txt",
+      "bytes": 27991,
+      "sha256": "ab7bf8691ed72f201687b170c1c2d53dd8e10018c5e8196993a236bd23559450"
+    },
+    {
+      "path": "audit/parity-integration-12/full-ctest.xml",
+      "bytes": 37610,
+      "sha256": "332b292caeb381ed0828e245571af5d4875e5b93512db0c647da82c15fd84e10"
+    },
+    {
+      "path": "audit/parity-integration-12/live/codex-subscription.json",
+      "bytes": 2093,
+      "sha256": "82b8936e71f6613a36908bcc763667d35ee213648b1e902c317d2d60f7f3bcf6"
+    },
+    {
+      "path": "audit/parity-integration-12/live/custom-deepseek.json",
+      "bytes": 2504,
+      "sha256": "3dcca89be55b48483257d01ff8dd3c0822d07dca379b4f32255fba14ae8a830d"
+    },
+    {
+      "path": "audit/parity-integration-12/packaged-gui.json",
+      "bytes": 5056,
+      "sha256": "8d71034e47d367e4ad35dbdb71b1f70c76cc409a32c6b861c174b9d651f0d58f"
+    },
+    {
+      "path": "audit/parity-integration-12/power-request-smoke.txt",
+      "bytes": 712,
+      "sha256": "aaff7eba58c2b684add753bc8a15149f70a663e47ad14626edcdd436afccabfe"
+    },
+    {
+      "path": "audit/parity-integration-12/tested-source-hashes.json",
+      "bytes": 76140,
+      "sha256": "cb694f929f30c9292334d9c27c019ba224ae6ed2b249a0cd54617441cdc1aad9"
+    },
+    {
       "path": "audit/parity-integration.json",
       "bytes": 40960,
       "sha256": "6f90b8a4559f9f6d0160bba9de7530335a80754d795af59ff2361760fd730ac1"
@@ -11699,8 +14064,8 @@
     },
     {
       "path": "audit/parity-review-coverage.json",
-      "bytes": 271996,
-      "sha256": "5d7aa2c7b5ca65da3ffc34a0586d5174fb4795d753b5d0e046aec9ae578c6b05"
+      "bytes": 272849,
+      "sha256": "d8cf79f773dc18b79697db3904291be78cf03276b30990bd08505e5e6b96bef9"
     },
     {
       "path": "audit/parity-review-integrations.json",
@@ -21464,33 +23829,43 @@
     },
     {
       "path": "src/browser/BrowserInspector.cpp",
-      "bytes": 20356,
-      "sha256": "4ce4efdbe1f1ee96847d2461b1bea7c77cee91d55339ac4e134b8e1585392871"
+      "bytes": 22151,
+      "sha256": "c7f437bc6458993550462955ff93cbeff476ead94ea109235627d0881b7f1f46"
     },
     {
       "path": "src/browser/BrowserInspector.h",
-      "bytes": 1965,
-      "sha256": "9be26825fc74c3ea0b504e2dcd32f96683c19532a69ebb931e802a0d335a24dd"
+      "bytes": 2828,
+      "sha256": "f3540f0f5371a21ad5ecb2d57e5057f8c550a95a64caff4b05c75318ff0bbe81"
+    },
+    {
+      "path": "src/browser/BrowserScreenshot.cpp",
+      "bytes": 10457,
+      "sha256": "906243d67b8bf661e18ba028c2e9ee93eaadc46c9f62620a9a18d24cccda921e"
+    },
+    {
+      "path": "src/browser/BrowserScreenshot.h",
+      "bytes": 3994,
+      "sha256": "b5da04b27a54a208189b1c40502b35a342e90634c51ee2899b69aa921559d5a1"
     },
     {
       "path": "src/browser/BrowserToolBridge.cpp",
-      "bytes": 27599,
-      "sha256": "80e16be33fe14465824ff62dcf521271279f75c049f6118ca47b840870c7d207"
+      "bytes": 31078,
+      "sha256": "565ad7ac29f3a08aeafc0cfcf12db8a5c0e01bbd8ce6d2fa44f2f0959aacdf1c"
     },
     {
       "path": "src/browser/BrowserToolBridge.h",
-      "bytes": 3913,
-      "sha256": "8ba0f4951b8602fcf12074586fada667901abaa2f4b36b4cbb31eb260d398538"
+      "bytes": 4681,
+      "sha256": "171ea9a5950cde77b7448ad4b3222b80f83688faa6f9cac1cc09efd1a0e80176"
     },
     {
       "path": "src/browser/BrowserToolResult.cpp",
-      "bytes": 3914,
-      "sha256": "bd7a8b60ff3c28a8e9d9f02734e04e2bf6ff431786d85c17073775e5c6e3fee3"
+      "bytes": 3674,
+      "sha256": "ad51b8c4d49d5996016ddec496df8aaa90cbc3b112548316454f3f12eef35976"
     },
     {
       "path": "src/browser/BrowserToolResult.h",
-      "bytes": 539,
-      "sha256": "b6fa8bd630d6b79e2e8063adfa7551d1838b67042c8bfa3ea557f00cc53be4fb"
+      "bytes": 612,
+      "sha256": "60e40de776eb08c5f3bb582c1a6938f46d6b3e48022a090f47a99990a4e5573b"
     },
     {
       "path": "src/browser/WebViewAppOptions.h",
@@ -21509,13 +23884,13 @@
     },
     {
       "path": "src/core/AgentEngine.cpp",
-      "bytes": 66352,
-      "sha256": "78feab695a9c159a50883933d61b66fce630e2940aa3465954b5f91a4bbeaaf2"
+      "bytes": 67852,
+      "sha256": "f45346af0034a63ecacf1a9b7069126a474ba5ab2467b55248e677e04665eb41"
     },
     {
       "path": "src/core/AgentEngine.h",
-      "bytes": 12609,
-      "sha256": "3bf818fd317e7afb40eefcdcadc009860e13a86f81c752ed5c948e9df80db83a"
+      "bytes": 14157,
+      "sha256": "1af25ea0f84d7251881ae6b475a997305f3ab3e33ebafdcebbb2cfa3cd9d08fc"
     },
     {
       "path": "src/core/AgentEngineAcp.cpp",
@@ -21548,9 +23923,14 @@
       "sha256": "8ee8597f9fb4b78fafaea355ff89892472abeb4bdfb240c9150384a98b7a4294"
     },
     {
+      "path": "src/core/AgentEngineHistory.cpp",
+      "bytes": 5331,
+      "sha256": "84b2ce1a79c198f490f5f504ac51608ea15da7a436600f4c0f7f9d91b174d453"
+    },
+    {
       "path": "src/core/AgentEngineMutations.cpp",
-      "bytes": 11106,
-      "sha256": "99734e7e9b00693c089c3fdf2132e86ba54cd772b109f10f14bb822b0cea84d2"
+      "bytes": 11886,
+      "sha256": "5fdea65d70e279f2d93fe4763e03b6a44a0d18be3b407b1688faa910ed9f4627"
     },
     {
       "path": "src/core/AgentPresentation.cpp",
@@ -21719,13 +24099,23 @@
     },
     {
       "path": "src/core/ScopedDirectory.cpp",
-      "bytes": 6585,
-      "sha256": "d8d5b19e52c3b2e2d053d4c0c900d4ad68a0f1da20467af3f1cbc02fab721689"
+      "bytes": 6986,
+      "sha256": "4927c5419dfe354470fb3b164e0675126d4419cf8d86b0a65602b56f0700484e"
     },
     {
       "path": "src/core/ScopedDirectory.h",
-      "bytes": 983,
-      "sha256": "df79a743b346dfacb2d585e532a98de5bd676c33c5d449a29a14b76105535548"
+      "bytes": 1527,
+      "sha256": "2b811298334725b3b9c0ebfaca62d2a6e9d04c6dd930aaf982bb67e6addec9dc"
+    },
+    {
+      "path": "src/core/SearchRules.cpp",
+      "bytes": 14137,
+      "sha256": "b79a8c86dd2fd03130968d9cf6ea25c06e8153c8c77a52afe071e0e1ba1dad13"
+    },
+    {
+      "path": "src/core/SearchRules.h",
+      "bytes": 3174,
+      "sha256": "ce37a6d73670a8c3e1d94a044fc21d99473fdd5adc52fbbe1f3e31a5963e4408"
     },
     {
       "path": "src/core/SseParser.cpp",
@@ -21739,13 +24129,18 @@
     },
     {
       "path": "src/core/ToolExecutor.cpp",
-      "bytes": 48254,
-      "sha256": "ef6b1af2aeb16057fb86765d6f5db2497fbb8c678e97aa167f3b834609d422d6"
+      "bytes": 63541,
+      "sha256": "0bbb8c75d06d22bec4b4e1600039b16924a66f794c09d75be149bcfdd5893e9f"
     },
     {
       "path": "src/core/ToolExecutor.h",
-      "bytes": 3262,
-      "sha256": "fddd6291ca8160aa658cc750da8e37be81003fe4a300267716d9efcafbf9a856"
+      "bytes": 3565,
+      "sha256": "68a54def1128a10c46d3974425e16f8af47a8185e1d7e01921a16b568a5f97b3"
+    },
+    {
+      "path": "src/core/TurnFailure.h",
+      "bytes": 2957,
+      "sha256": "ec0045577ed41edf2c4dc8822bd21b223d4f9b0f973ede5604cc2ec3dd84e616"
     },
     {
       "path": "src/core/UtilityPrompts.h",
@@ -21764,8 +24159,8 @@
     },
     {
       "path": "src/editor/CodeEditor.cpp",
-      "bytes": 13888,
-      "sha256": "ffb5fd5c6f933feca62351ff385dd10a2a9caa5df93da4fe3b895b0912226c45"
+      "bytes": 14087,
+      "sha256": "e1a618ab8e3824b5e62990316effd83211a0e534b5d91d4b83fbb5b4f9519617"
     },
     {
       "path": "src/editor/CodeEditor.h",
@@ -22219,8 +24614,8 @@
     },
     {
       "path": "src/main.cpp",
-      "bytes": 12762,
-      "sha256": "114cc5031d46382d66b307e38e2cc8b8d1cdbffeafda740f2dfa1e95272edfb8"
+      "bytes": 14880,
+      "sha256": "a28cd71c119a15e116179a7d275e3e91058581799d4edd7b66aa9e4d43d16130"
     },
     {
       "path": "src/mutations/FileMutationDiff.h",
@@ -22294,8 +24689,8 @@
     },
     {
       "path": "src/runtime/AgentToolHost.cpp",
-      "bytes": 36033,
-      "sha256": "1a4f6139973c3df37f14a3d28395ed8039965833df0a520f6a1890e992227647"
+      "bytes": 36274,
+      "sha256": "0b6bda27a3c00d77812c419fccecd57674943e89a608f90ad0bf3133aa7b6c75"
     },
     {
       "path": "src/runtime/AgentToolHost.h",
@@ -22793,6 +25188,16 @@
       "sha256": "24cd547cbc2486df7668cfbb1e4f07a9ee99df1382b7a7dd42432f2001790790"
     },
     {
+      "path": "src/ui/AgentActivityMonitor.cpp",
+      "bytes": 5515,
+      "sha256": "e56544569c7a9f5828bf0d8dac61acf68d4d5c1f8a917a536b46ad6dc2909daa"
+    },
+    {
+      "path": "src/ui/AgentActivityMonitor.h",
+      "bytes": 2372,
+      "sha256": "58b3c18051f8bbbe0172347d152fb6642e1cad561ae39c7744e2944399768466"
+    },
+    {
       "path": "src/ui/AgentCycleController.cpp",
       "bytes": 9394,
       "sha256": "ce49028a441aa6a329041665bd182bbbcbf61582cd4f0d6a701bf749d7762a6f"
@@ -22894,8 +25299,8 @@
     },
     {
       "path": "src/ui/Composer.h",
-      "bytes": 5452,
-      "sha256": "8e33ddd0d56be2e0061d8f33f797f8f6b31f8039aa2f5d1d0b71ebb0d6ba19f3"
+      "bytes": 5800,
+      "sha256": "429e1d51a5f6bb7549dbb53a27af26ceb5008c5dc7d8a65fc1e328e11b27fc61"
     },
     {
       "path": "src/ui/ComposerWorkspaceSearch.cpp",
@@ -22924,13 +25329,13 @@
     },
     {
       "path": "src/ui/ConversationView.cpp",
-      "bytes": 62473,
-      "sha256": "6e58e1fcdb714f6c2dfce977a40275c8a1e7ff9a4baca31dea5319e580f38cd6"
+      "bytes": 67485,
+      "sha256": "3fb45811181408db87fed3538fcc7b0bb372047b1e0d7b0afd5cf57ecd770333"
     },
     {
       "path": "src/ui/ConversationView.h",
-      "bytes": 2062,
-      "sha256": "8a03e8b78bd0d077ed46adaee45728285415c21230874a4b7b996fd78ba14e84"
+      "bytes": 2508,
+      "sha256": "2ff877f97536e92e5e64aac661b6c3cfa352054ed624c83fe2a216fe7b72180f"
     },
     {
       "path": "src/ui/CustomModelDialog.cpp",
@@ -22999,23 +25404,33 @@
     },
     {
       "path": "src/ui/ImagePreview.cpp",
-      "bytes": 3984,
-      "sha256": "16064c5a181f8d9d258721de5a16bc6a92ef2c313e395525de5d186e05180598"
+      "bytes": 4418,
+      "sha256": "4dfbbd62c5f7e17fe345cb9a81b05882883ae1ef626ccc950fe2eb3b3f3f0413"
     },
     {
       "path": "src/ui/ImagePreview.h",
-      "bytes": 533,
-      "sha256": "bc9d0c1264c2eb0e14c692aea5fe98dc9a9d4f5e4fe9b750ddd487b877ac4213"
+      "bytes": 623,
+      "sha256": "e0a5ee390ee96391b412893cd4036442a92957722c59fae14205f24999dfc47a"
+    },
+    {
+      "path": "src/ui/InstanceCoordinator.cpp",
+      "bytes": 13741,
+      "sha256": "1a3c70300641ed7faba2bf6e71f71042eac3836519890c76bc8c1d854c3a11b6"
+    },
+    {
+      "path": "src/ui/InstanceCoordinator.h",
+      "bytes": 3901,
+      "sha256": "b0965d0b1e14d78cb5ff0038383b0e24d4be448a93027ad97887c7d140f30f74"
     },
     {
       "path": "src/ui/MainWindow.cpp",
-      "bytes": 79855,
-      "sha256": "0c7dfa508865f94851f864d6612fa7bcbc5d8e590e2106cc36a377e70ff0cdb3"
+      "bytes": 82021,
+      "sha256": "9544bc2d6e7bb56f436aba3943cb570f5169ff936462a4480e5de5a3f38f8b78"
     },
     {
       "path": "src/ui/MainWindow.h",
-      "bytes": 11113,
-      "sha256": "50c6e154c597f7234c3772817e4b3533575a83032c556640a44b47118e3c1ea8"
+      "bytes": 12918,
+      "sha256": "4f11ae207d13e0c91106516c4bd0dca32608f94efeb5e1c178968bbbbddfb077"
     },
     {
       "path": "src/ui/MainWindowApps.cpp",
@@ -23029,8 +25444,8 @@
     },
     {
       "path": "src/ui/MainWindowBrowserTools.cpp",
-      "bytes": 9342,
-      "sha256": "63317bd9f89765b287a674bdf7dedd3906b63bc32bd745fdaa76c1149037dbfe"
+      "bytes": 9603,
+      "sha256": "84cfab93795957c48403fb48890bda7d39238b2f82f605cb1441e657c954d017"
     },
     {
       "path": "src/ui/MainWindowCommandCenter.cpp",
@@ -23044,18 +25459,23 @@
     },
     {
       "path": "src/ui/MainWindowControl.cpp",
-      "bytes": 12179,
-      "sha256": "11252df0611fe91fb396975240d5e90a5c3291e2fb08433f583cbbc4d0fb6405"
+      "bytes": 13428,
+      "sha256": "ab4c770b694a4dd4a2267479c541b1005a13b1a448864d8f3c980746a5a339af"
     },
     {
       "path": "src/ui/MainWindowConversations.cpp",
-      "bytes": 16071,
-      "sha256": "894dcc8313833145861c486d2ac4d0737bad83f003f6ec5f0b7a4bad4c176aee"
+      "bytes": 16168,
+      "sha256": "4dd8a7a9715a09bf32fdfa361d72cb79fa61431682794ab3cff25dabf64b3052"
     },
     {
       "path": "src/ui/MainWindowGit.cpp",
       "bytes": 20210,
       "sha256": "ca9236f93ce345129779d81643c8951f95173f941065167535c5aa46b792e3ef"
+    },
+    {
+      "path": "src/ui/MainWindowHistory.cpp",
+      "bytes": 6215,
+      "sha256": "0da39505972ac633df9a81ea0b998caf036e55e6a3b0191fee98bd38df296e1d"
     },
     {
       "path": "src/ui/MainWindowLinks.cpp",
@@ -23078,19 +25498,24 @@
       "sha256": "1ab23ddefe58aa0311282e5066e3a2964577057324ec37efd4923146e27d3c01"
     },
     {
+      "path": "src/ui/MainWindowRuntime.cpp",
+      "bytes": 6748,
+      "sha256": "280418936d26a072413a53a20d2ce4a3f7bf2e6a01f79ebe6f4d6e43a6e24bc8"
+    },
+    {
       "path": "src/ui/MainWindowShells.cpp",
       "bytes": 4266,
       "sha256": "8950ab2ae3e67951beb2e29e42e42c786aa757100cd23066097f19dc79ebf485"
     },
     {
       "path": "src/ui/MainWindowShortcuts.cpp",
-      "bytes": 6527,
-      "sha256": "df43db2f03235c1de42dde9dbe67b758ec5f3fd66b43e72babef18f2de83518f"
+      "bytes": 17820,
+      "sha256": "0a2de18379510a8a1f00640c513cd82badc786b1940e2a7af2fd1ca1edf28d3d"
     },
     {
       "path": "src/ui/MainWindowSideChats.cpp",
-      "bytes": 19165,
-      "sha256": "53dbf5948e6cfbb3af75bc805a1c27b8dc9e095b1ae38d8c9b3967b8d0df110a"
+      "bytes": 19587,
+      "sha256": "f61a205fc9b58329c38f1aa10f7621a89b5ba69d3d9695ffa8001c876955d6f9"
     },
     {
       "path": "src/ui/MainWindowTurnFiles.cpp",
@@ -23099,8 +25524,8 @@
     },
     {
       "path": "src/ui/MainWindowWorkbench.cpp",
-      "bytes": 12483,
-      "sha256": "6b9bc8315c5aa4f85d732ad35ed7dfc6ab664d4b57340394408c675769d3f4e5"
+      "bytes": 13308,
+      "sha256": "e7a370e6904f9c0a5859e6fd21995556aa8208aac0bf60e4cd247f32d79b87a2"
     },
     {
       "path": "src/ui/MarkdownParts.cpp",
@@ -23124,13 +25549,13 @@
     },
     {
       "path": "src/ui/ModelSelection.cpp",
-      "bytes": 12680,
-      "sha256": "de1f13a51140b3d22b72cce2eb1138dec42894c7e9e1261cecff56805d760be9"
+      "bytes": 16593,
+      "sha256": "0243721d0578dec444fe940eb498d953795a139a1ed1cd553f45d2b605fdb3f8"
     },
     {
       "path": "src/ui/ModelSelection.h",
-      "bytes": 1864,
-      "sha256": "610638770b1cd8b15450b7a9d81694515eb9c701eb48953e181e36cc9500dd80"
+      "bytes": 2059,
+      "sha256": "b790062d25ded8da464ee1621cffca4673314044017604b80bdf0d9df608f3f0"
     },
     {
       "path": "src/ui/ModelSelector.cpp",
@@ -23141,6 +25566,31 @@
       "path": "src/ui/ModelSelector.h",
       "bytes": 321,
       "sha256": "467cba97b4aac48ad85d9221916b132a1f3cfd8e4099497b911d8fd35602be5e"
+    },
+    {
+      "path": "src/ui/ModelThinking.h",
+      "bytes": 1564,
+      "sha256": "c876ce2a10d40f98cc9c4bf57666a80c91acd2e7d4edeb366dc973f3b372d2e3"
+    },
+    {
+      "path": "src/ui/NotificationSounds.cpp",
+      "bytes": 23494,
+      "sha256": "dd6a02426e83b6c923e50da873623ba636ae4cbaf96710e0440fd8b5ac451ace"
+    },
+    {
+      "path": "src/ui/NotificationSounds.h",
+      "bytes": 4234,
+      "sha256": "c30a991bb2cfc59553e86453aedf1ab0103280af69e70cba9986c81622c657a5"
+    },
+    {
+      "path": "src/ui/PowerRequest.cpp",
+      "bytes": 2231,
+      "sha256": "4e48f912d855ee1d257267ff42d1a0b19ada15924291f35fa2470749977d31e5"
+    },
+    {
+      "path": "src/ui/PowerRequest.h",
+      "bytes": 1687,
+      "sha256": "1c34764b3d82d718bf45402f7b59646066ec197b07b7b2b9fea60d0204887844"
     },
     {
       "path": "src/ui/ProviderCatalog.cpp",
@@ -23214,23 +25664,23 @@
     },
     {
       "path": "src/ui/SessionStore.cpp",
-      "bytes": 16021,
-      "sha256": "862de68e4752840da6e5e0c792b8334f7a743c3cf6d990ea40e4459d15b595b4"
+      "bytes": 16541,
+      "sha256": "82d4cea32368de8fb93a0ec536d0465d2d30e264ecbae78324b5920a248ce706"
     },
     {
       "path": "src/ui/SessionStore.h",
-      "bytes": 2000,
-      "sha256": "cf4b11d3cefe0ab9ff9ecfd7f2c3919892993f3d3f5db00d6b1583d94387009f"
+      "bytes": 2105,
+      "sha256": "805f7fc1f71dfd2e719e86c582dc5e1a1f0d5ec9aebf15e46047021d10f15745"
     },
     {
       "path": "src/ui/SettingsPage.cpp",
-      "bytes": 109171,
-      "sha256": "c0f7dc9bc3826943e6a5169faa4275b775cd0474bde052cb91242cf7f7faefd6"
+      "bytes": 112537,
+      "sha256": "1cec58ca1113beec649ebedb42756e8b45f3bd481ff252993c76f9e0acbac776"
     },
     {
       "path": "src/ui/SettingsPage.h",
-      "bytes": 4262,
-      "sha256": "c3cbc260dca946f2cc6536604ac5edb5c9fc43578620b194e8b502d34c04adc0"
+      "bytes": 4804,
+      "sha256": "4acca31c3d39e6461045eb43d70fc39d716730e0a6ea3bef75dcfdf6d9be6e84"
     },
     {
       "path": "src/ui/SettingsServiceMarks.h",
@@ -23239,8 +25689,8 @@
     },
     {
       "path": "src/ui/SideChatPane.cpp",
-      "bytes": 10320,
-      "sha256": "ae0cc6964d33a4826c821253ecacc72af0c11171720f976fed8297aa7d404777"
+      "bytes": 10400,
+      "sha256": "8ee7e825aa43d1ece56fb3e43dd961fdd93e0a8ccfee8baab6a45a2a78019d0b"
     },
     {
       "path": "src/ui/SideChatPane.h",
@@ -23281,6 +25731,16 @@
       "path": "src/ui/SmokeTranscriptCapture.h",
       "bytes": 1280,
       "sha256": "84f7bcf1de70d7aff4a3e61c11ee0c0218e07e42cca483fd6bc69d922d59256e"
+    },
+    {
+      "path": "src/ui/SoundOutput.cpp",
+      "bytes": 1884,
+      "sha256": "398bd8b97a180834a2eb56dd32fb10fcf3da65cb9185eb955c0ebdc23765f654"
+    },
+    {
+      "path": "src/ui/SoundOutput.h",
+      "bytes": 1528,
+      "sha256": "91380d7eda559db9426fc3e25b3f134958ee60d6448e50f4d960dd1a01b9d165"
     },
     {
       "path": "src/ui/TranscriptGrouping.cpp",
@@ -23449,8 +25909,13 @@
     },
     {
       "path": "tests/support/HarnessFixture.cpp",
-      "bytes": 9524,
-      "sha256": "fd9f7aa719bae332c73a765de267e26b0f5e750bcfa6ec76027785acbca39b5e"
+      "bytes": 9744,
+      "sha256": "adcb12458f558fe46afedd6a9f497088f77930068838ff2432ac082707ea7a52"
+    },
+    {
+      "path": "tests/support/InstanceClientHelper.cpp",
+      "bytes": 988,
+      "sha256": "5b98e5451f16c62956fb42195b47e66a970c5de08c9f598b755e9d0efecc29b6"
     },
     {
       "path": "tests/support/PluginTransport.h",
@@ -23533,9 +25998,14 @@
       "sha256": "7c654697f27d517cd510ab307806d173f8cca700774c8dfdc16c72639e563770"
     },
     {
+      "path": "tests/test_agent_activity.cpp",
+      "bytes": 11902,
+      "sha256": "e6a251bd4c2c1093a0d0fa7dec9f78a851d85671893c0244bfda0306ac7229d1"
+    },
+    {
       "path": "tests/test_agent_control_ui.cpp",
-      "bytes": 11508,
-      "sha256": "a82ad4997fa1c45aa41ab91bea9d6f18a5e420efe0bf1e8d096e14ac38636487"
+      "bytes": 17470,
+      "sha256": "6bac11443255ba97c5343ecf81d48192977eaf0915cfbfbcd6ba0111f4a15990"
     },
     {
       "path": "tests/test_agent_cycle.cpp",
@@ -23609,8 +26079,13 @@
     },
     {
       "path": "tests/test_browser_output.cpp",
-      "bytes": 23860,
-      "sha256": "37162684501323647ca0634fbb7c454d5fdda8943da03b419d7313e554cc8dc7"
+      "bytes": 29229,
+      "sha256": "558980ba989b1e3dcc4a508ef56eca7d9dcefe1a47b88a72dbe596235e712735"
+    },
+    {
+      "path": "tests/test_browser_screenshot.cpp",
+      "bytes": 33021,
+      "sha256": "17d96b7a2595ad7f278f40f3247973f63b25d652470aa12ecdc236a99acef05f"
     },
     {
       "path": "tests/test_browser_session.cpp",
@@ -23689,8 +26164,8 @@
     },
     {
       "path": "tests/test_codex_engine.cpp",
-      "bytes": 13138,
-      "sha256": "a4a485fadaba33be07a3db1cd718a111815e8ef039baa96dbf1716cff32bb72f"
+      "bytes": 13920,
+      "sha256": "a2154d6f1a8bb137d680569db27cbfb8f65909791ae68f0ccf53f3ace5a0be6c"
     },
     {
       "path": "tests/test_codex_files_runtime.cpp",
@@ -23859,8 +26334,8 @@
     },
     {
       "path": "tests/test_editor.cpp",
-      "bytes": 19021,
-      "sha256": "406bfd8e4682d2f4a86bf77e7662d3ade8417146a1fc7d6245e9d66ad7a47bd8"
+      "bytes": 20610,
+      "sha256": "57ab1adcf4c412879a3c52f555d1aaad41b900bfd4f8a9b5f608dd93cec7b392"
     },
     {
       "path": "tests/test_engine_observers.cpp",
@@ -24008,6 +26483,11 @@
       "sha256": "bf793490a4b180361efb1ee2d24c836afb448918b1f3b80f07f0a70f6cad9e25"
     },
     {
+      "path": "tests/test_history_actions_host.cpp",
+      "bytes": 17056,
+      "sha256": "316320618e8f0cdf1195da06d064e53a39581cbb341a2adff2bea5a749eb847c"
+    },
+    {
       "path": "tests/test_history_projection.cpp",
       "bytes": 8775,
       "sha256": "2dfe2d646f7694085ff385f26fc6c4790df5e177cda1e867e1318d2ca17d25e7"
@@ -24018,9 +26498,29 @@
       "sha256": "087be333d77fa85ad9bae00c2485f26f45c8b240b5b77b6dfeea665dec1111ed"
     },
     {
+      "path": "tests/test_history_retry.cpp",
+      "bytes": 31317,
+      "sha256": "2c0cc738055a7b61a5db4be6e283321c51841d5ce785bde8ba590ba550cd1733"
+    },
+    {
+      "path": "tests/test_history_retry_harness.cpp",
+      "bytes": 8155,
+      "sha256": "1fea3504f329ebd373f08e4fa8d754b54fc5bb6ac808bf146f1cba855bac63f7"
+    },
+    {
       "path": "tests/test_image_preview.cpp",
-      "bytes": 2953,
-      "sha256": "2f073c9b5eb7f8a66d211449b1f00ef379e84f46c4c81fbf97a7b89e4be120f8"
+      "bytes": 6036,
+      "sha256": "8970ad948165003225167f2d32c4d04540f5c882725027da234fea6d61cda161"
+    },
+    {
+      "path": "tests/test_instance_coordinator.cpp",
+      "bytes": 16532,
+      "sha256": "bccef105ed3f234bdcca7b8fc0b82519e86b34614fc4e6d1f1bbc5947fd4b7b4"
+    },
+    {
+      "path": "tests/test_instance_window_host.cpp",
+      "bytes": 12242,
+      "sha256": "a96e000c7bffdf8c57694594f0884dbca47b81071c4ecc56cd34be7114bc55ed"
     },
     {
       "path": "tests/test_link_provenance_codec.cpp",
@@ -24074,8 +26574,8 @@
     },
     {
       "path": "tests/test_model_selector_display.cpp",
-      "bytes": 6572,
-      "sha256": "39f7e971232c910a74956a06b2bcd13b117268f4abde6ec207c12f371c4d3b53"
+      "bytes": 11077,
+      "sha256": "c1daa8f299e55c370b25165958988d640ae215dd9ee03d0cf60e46f863d54e14"
     },
     {
       "path": "tests/test_mutation_findings.cpp",
@@ -24089,13 +26589,18 @@
     },
     {
       "path": "tests/test_navigation_shortcuts.cpp",
-      "bytes": 11907,
-      "sha256": "2c325cb0420b83c70f12290fcca2b9aaa59099a857380d2b4e3fa4522cca9cf9"
+      "bytes": 34590,
+      "sha256": "dd902f0ff9c2af60cfda1e2bbc43a8b7e9a75962ff9828865eddc7924a169b61"
     },
     {
       "path": "tests/test_network.cpp",
       "bytes": 22443,
       "sha256": "e65c1b375962862ecca239ea4462f0663d1f06c852ad82e9673e6c8e48d2afbb"
+    },
+    {
+      "path": "tests/test_notification_sounds.cpp",
+      "bytes": 27363,
+      "sha256": "98415bfd4720995e3fb48cb4de84ffd16d23a933cb7e06255f0c9a30e83064e1"
     },
     {
       "path": "tests/test_opencode_host.cpp",
@@ -24131,6 +26636,11 @@
       "path": "tests/test_plugins.cpp",
       "bytes": 21564,
       "sha256": "c070075587ef3b826b02fed7b321b4acb706d31b31ea0457a94d0029ab8cff09"
+    },
+    {
+      "path": "tests/test_power_request.cpp",
+      "bytes": 3822,
+      "sha256": "df9823f112e7adfa9ff647cf275b008bc087b5c44668428f5789f6412ba29fe0"
     },
     {
       "path": "tests/test_presentation.cpp",
@@ -24284,13 +26794,23 @@
     },
     {
       "path": "tests/test_search_findings.cpp",
-      "bytes": 13741,
-      "sha256": "abbb3f0a7afbf6c341a82fc8f5a58166bf2c0bd68b85f10d89403c519d1a1323"
+      "bytes": 13887,
+      "sha256": "8cb7ef4eaaece071c11684bff512d7546bdcbcb5fd078a444165d0e52e73d391"
+    },
+    {
+      "path": "tests/test_search_ignore.cpp",
+      "bytes": 28343,
+      "sha256": "a6bee956a06f3b218decbd028201897bbb015c4da741a4ea1312367c98cb1f89"
     },
     {
       "path": "tests/test_search_read_budget.cpp",
-      "bytes": 3497,
-      "sha256": "58f8ecb9922c96c74412f119aaca8aaa701fef4eb71de13681254361d8ecbff3"
+      "bytes": 6301,
+      "sha256": "e1fa0036b14318c65eb4c13190b129832709b54e00c83599f8180646e2ebfd6b"
+    },
+    {
+      "path": "tests/test_search_rules.cpp",
+      "bytes": 18223,
+      "sha256": "fb72a6c2997446dc128425af99af9ae1164afbd99da2e99503c5bb67220cf5ed"
     },
     {
       "path": "tests/test_session_cleanup.cpp",
@@ -24304,8 +26824,8 @@
     },
     {
       "path": "tests/test_settings.cpp",
-      "bytes": 15513,
-      "sha256": "66f99de0a7bb6b205c85526af4c9a2b67686a74def7cd8314329306d66c069b7"
+      "bytes": 22029,
+      "sha256": "436e51b7d842dffec12ae39be286612b0a623394f51570d93c9abd4a936faa1a"
     },
     {
       "path": "tests/test_settings_audit.cpp",
@@ -24319,8 +26839,8 @@
     },
     {
       "path": "tests/test_settings_shortcuts.cpp",
-      "bytes": 7549,
-      "sha256": "b14cc4035131724cdac9d906e3d4dfc7fd24ad96fa8043302ecdf4130e505c31"
+      "bytes": 8012,
+      "sha256": "7c2ea928948751c9b9a64e680d08eb29e792e50313efcebc000b9882e4ae20df"
     },
     {
       "path": "tests/test_shell_engine.cpp",
@@ -24359,8 +26879,8 @@
     },
     {
       "path": "tests/test_side_chat_host.cpp",
-      "bytes": 24604,
-      "sha256": "278e60f08a7c7ab6da82ee5cf54ed61ed71a6b25c56b72766dfad82afda9e9b7"
+      "bytes": 28345,
+      "sha256": "f9cc13906ef8cab03729b5ae443f30bdfd6a335158e11afee4ac65101aa7f971"
     },
     {
       "path": "tests/test_sidebar_model.cpp",

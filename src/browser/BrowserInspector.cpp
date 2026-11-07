@@ -77,6 +77,11 @@ BrowserInspector::BrowserInspector(BrowserWidget *browser, QObject *parent)
             }
             if (request.epoch != m_epoch)
               return;
+            if (request.raw) {
+              // The caller applies its own transport bound before parsing.
+              request.raw(result, error);
+              return;
+            }
             QJsonParseError parse;
             const auto doc = QJsonDocument::fromJson(result.toUtf8(), &parse);
             const auto obj = doc.object();
@@ -123,22 +128,43 @@ BrowserInspector::~BrowserInspector() {
 }
 void BrowserInspector::call(const QString &method,
                             const QJsonObject &parameters, Reply reply) {
+  Pending pending;
+  pending.reply = std::move(reply);
+  dispatch(method, parameters, std::move(pending));
+}
+void BrowserInspector::callRaw(const QString &method,
+                               const QJsonObject &parameters, RawReply reply) {
+  Pending pending;
+  pending.raw = std::move(reply);
+  dispatch(method, parameters, std::move(pending));
+}
+void BrowserInspector::dispatch(const QString &method,
+                                const QJsonObject &parameters,
+                                Pending pending) {
   if (!m_browser || !m_browser->isReady()) {
-    reply({}, "The browser is not ready.");
+    if (pending.raw)
+      pending.raw("The browser is not ready.", true);
+    else
+      pending.reply({}, "The browser is not ready.");
     return;
   }
   const QString id =
       "inspector-" + QUuid::createUuid().toString(QUuid::WithoutBraces);
   auto *timer = new QTimer(this);
   timer->setSingleShot(true);
-  m_pending.insert(id, {std::move(reply), timer, m_epoch});
+  pending.timer = timer;
+  pending.epoch = m_epoch;
+  m_pending.insert(id, std::move(pending));
   connect(timer, &QTimer::timeout, this, [this, id] {
     if (!m_pending.contains(id))
       return;
     auto request = m_pending.take(id);
     if (request.timer)
       request.timer->deleteLater();
-    request.reply({}, "Browser inspection timed out.");
+    if (request.raw)
+      request.raw("Browser inspection timed out.", true);
+    else
+      request.reply({}, "Browser inspection timed out.");
   });
   timer->start(10000);
   m_browser->callDevToolsRequest(
@@ -460,6 +486,10 @@ void BrowserInspector::setViewportSize(const QSize &size) {
   if (!m_device.isEmpty() && !m_busy)
     setDevice(m_device);
 }
+void BrowserInspector::setScreenshotTransportChars(qsizetype chars) {
+  m_screenshotTransportChars =
+      qBound<qsizetype>(16 * 1024, chars, BrowserScreenshotTransportChars);
+}
 void BrowserInspector::captureScreenshot() {
   if (m_busy)
     return;
@@ -470,26 +500,38 @@ void BrowserInspector::captureScreenshot() {
   emit busyChanged(true);
   if (!self || m_epoch != epoch || !m_busy)
     return;
-  call("Page.captureScreenshot",
-       {{"format", "png"}, {"captureBeyondViewport", false}},
-       [this, context, epoch](const QJsonObject &result, const QString &error) {
-         m_busy = false;
-         const QPointer<BrowserInspector> self(this);
-         emit busyChanged(false);
-         if (!self || m_epoch != epoch)
-           return;
-         if (!error.isEmpty()) {
-           emitFailure(error);
-           return;
-         }
-         const auto data =
-             QByteArray::fromBase64(result["data"].toString().toLatin1(),
-                                    QByteArray::AbortOnBase64DecodingErrors);
-         if (data.isEmpty() || data.size() > 8 * 1024 * 1024) {
-           emitFailure("Could not capture the browser viewport.");
-           return;
-         }
-         emit screenshotCaptured(data, context);
-       });
+  // Lossless PNG first; an oversized PNG falls back to browser-encoded JPEG
+  // (Stagewise compresses its captures to JPEG under a byte target).
+  continueScreenshot(std::make_shared<BrowserScreenshotLadder>(
+                         QJsonObject{{"format", "png"},
+                                     {"captureBeyondViewport", false}},
+                         m_screenshotTransportChars),
+                     context, epoch);
+}
+void BrowserInspector::continueScreenshot(
+    const std::shared_ptr<BrowserScreenshotLadder> &ladder,
+    const QString &context, quint64 epoch) {
+  const auto request = ladder->request();
+  callRaw(request.method, request.params,
+          [this, ladder, context, epoch](const QString &result, bool error) {
+            if (m_epoch != epoch)
+              return;
+            const auto step = error ? BrowserScreenshotLadder::Step::Failed
+                                    : ladder->accept(result);
+            if (step == BrowserScreenshotLadder::Step::Request) {
+              continueScreenshot(ladder, context, epoch);
+              return;
+            }
+            m_busy = false;
+            const QPointer<BrowserInspector> self(this);
+            emit busyChanged(false);
+            if (!self || m_epoch != epoch)
+              return;
+            if (step == BrowserScreenshotLadder::Step::Failed) {
+              emitFailure(error ? result.left(1024) : ladder->error());
+              return;
+            }
+            emit screenshotCaptured(ladder->bytes(), context);
+          });
 }
 } // namespace ade

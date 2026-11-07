@@ -9,6 +9,8 @@ class ImagePreview final : public QWidget {
 public:
   ImagePreview(const QString &name, const QImage &image,
                const QSize &originalSize = {}, QWidget *parent = nullptr);
+  // Upstream center_image: fit at min(available/size, 1) and center.
+  void fitToView();
 
 protected:
   bool eventFilter(QObject *object, QEvent *event) override;

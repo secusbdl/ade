@@ -1,0 +1,28 @@
+********* Start testing of QuestionStallTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionStallTest::initTestCase()
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(native-or-mcp-question) This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::humanDecisionIsNotStreaming(native-or-mcp-question)
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(question-input-available) This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::humanDecisionIsNotStreaming(question-input-available)
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(question-approval) This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::humanDecisionIsNotStreaming(question-approval)
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(ordinary-tool-approval) This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::humanDecisionIsNotStreaming(ordinary-tool-approval)
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect()
+QWARN  : QuestionStallTest::transitionClearsOldStallAndRestartsWorkingDelay() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::transitionClearsOldStallAndRestartsWorkingDelay()
+QWARN  : QuestionStallTest::clearingOrDestroyingPendingViewRetiresTimer() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::clearingOrDestroyingPendingViewRetiresTimer()
+QWARN  : QuestionStallTest::actualFormAndTranscriptCapture() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::actualFormAndTranscriptCapture()
+PASS   : QuestionStallTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 50925ms
+********* Finished testing of QuestionStallTest *********

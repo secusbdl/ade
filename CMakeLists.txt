@@ -123,6 +123,8 @@ set_tests_properties(native_retired_wire PROPERTIES TIMEOUT 45)
 add_library(ade_ui STATIC ${UI_SOURCES} resources.qrc)
 target_include_directories(ade_ui PUBLIC src)
 target_link_libraries(ade_ui PUBLIC ade_host ade_editor ade_terminal ade_plugins ade_git_ui ade_transcript_links Qt6::Svg)
+# Notification sounds use winmm (PlaySound/MCI); Qt Multimedia is not in the static kit.
+target_link_libraries(ade_ui PUBLIC winmm)
 qt_add_executable(ADE WIN32 src/main.cpp)
 target_include_directories(ADE PRIVATE src third_party/webview2/include)
 target_link_libraries(ADE PRIVATE ade_ui)
@@ -189,14 +191,14 @@ set_tests_properties(native_shell_service PROPERTIES TIMEOUT 120 ENVIRONMENT "QT
 target_link_libraries(test_shell_view PRIVATE Qt6::QOffscreenIntegrationPlugin)
 qt_import_plugins(test_shell_view INCLUDE Qt6::QOffscreenIntegrationPlugin)
 set_tests_properties(native_shell_view PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
-foreach(control_test IN ITEMS conversation_control file_mutations)
+foreach(control_test IN ITEMS conversation_control file_mutations history_retry)
   qt_add_executable(test_${control_test} tests/test_${control_test}.cpp src/ui/SessionStore.cpp)
   target_link_libraries(test_${control_test} PRIVATE ade_core Qt6::Test)
   set_target_properties(test_${control_test} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   add_test(NAME native_${control_test} COMMAND test_${control_test} -o "${CMAKE_BINARY_DIR}/Testing/native_${control_test}.txt,txt")
   set_tests_properties(native_${control_test} PROPERTIES TIMEOUT 120)
 endforeach()
-foreach(control_ui_test IN ITEMS question_panel transcript_rich composer_completion composer_search composer_host reference_controls agent_control_ui command_center command_file_search command_center_host side_chat side_chat_host)
+foreach(control_ui_test IN ITEMS question_panel transcript_rich composer_completion composer_search composer_host reference_controls agent_control_ui command_center command_file_search command_center_host side_chat side_chat_host history_actions_host)
   qt_add_executable(test_${control_ui_test} tests/test_${control_ui_test}.cpp)
   target_link_libraries(test_${control_ui_test} PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
   qt_import_plugins(test_${control_ui_test} INCLUDE Qt6::QOffscreenIntegrationPlugin)
@@ -331,7 +333,7 @@ target_link_libraries(test_session_cleanup PRIVATE ade_core Qt6::Test)
 set_target_properties(test_session_cleanup PROPERTIES WIN32_EXECUTABLE FALSE)
 add_test(NAME native_session_cleanup COMMAND test_session_cleanup -o "${CMAKE_BINARY_DIR}/Testing/native_session_cleanup.txt,txt")
 set_tests_properties(native_session_cleanup PROPERTIES TIMEOUT 30)
-qt_add_executable(test_raw_enumeration_races tests/test_raw_enumeration_races.cpp src/core/ToolExecutor.h src/runtime/AttachmentFileBroker.h)
+qt_add_executable(test_raw_enumeration_races tests/test_raw_enumeration_races.cpp src/core/ToolExecutor.h src/core/SearchRules.cpp src/runtime/AttachmentFileBroker.h)
 target_include_directories(test_raw_enumeration_races PRIVATE src)
 target_link_libraries(test_raw_enumeration_races PRIVATE ade_file_transformer Qt6::Core Qt6::Concurrent Qt6::Test)
 set_target_properties(test_raw_enumeration_races PROPERTIES WIN32_EXECUTABLE FALSE)
@@ -348,7 +350,7 @@ qt_import_plugins(test_git_watcher_ui INCLUDE Qt6::QOffscreenIntegrationPlugin)
 set_target_properties(test_git_watcher_ui PROPERTIES WIN32_EXECUTABLE FALSE)
 add_test(NAME native_git_watcher_ui COMMAND test_git_watcher_ui -o "${CMAKE_BINARY_DIR}/Testing/native_git_watcher_ui.txt,txt")
 set_tests_properties(native_git_watcher_ui PROPERTIES TIMEOUT 120)
-qt_add_executable(test_file_tools_races tests/test_file_tools_races.cpp src/core/ToolExecutor.h)
+qt_add_executable(test_file_tools_races tests/test_file_tools_races.cpp src/core/ToolExecutor.h src/core/SearchRules.cpp)
 target_include_directories(test_file_tools_races PRIVATE src)
 target_link_libraries(test_file_tools_races PRIVATE ade_file_transformer Qt6::Core Qt6::Concurrent Qt6::Test)
 set_target_properties(test_file_tools_races PROPERTIES WIN32_EXECUTABLE FALSE)
@@ -695,6 +697,8 @@ endforeach()
 qt_add_executable(test_transcript_grouping tests/test_transcript_grouping.cpp)
 foreach(transcript_target IN ITEMS test_file_diff test_transcript)
   target_sources(${transcript_target} PRIVATE src/ui/TranscriptGrouping.cpp src/ui/TranscriptGrouping.h)
+  # ConversationView's failed-turn Retry card uses ade::icon("reload").
+  target_sources(${transcript_target} PRIVATE src/ui/Icons.cpp src/ui/Icons.h)
 endforeach()
 target_include_directories(test_transcript_grouping PRIVATE src/ui)
 target_link_libraries(test_transcript_grouping PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
@@ -1329,12 +1333,26 @@ add_test(NAME native_search_findings COMMAND test_search_findings -o "${CMAKE_BI
 set_tests_properties(native_search_findings PROPERTIES TIMEOUT 60)
 
 # Includes the real ToolExecutor implementation under test-local Win32 wrappers.
-qt_add_executable(test_search_read_budget tests/test_search_read_budget.cpp src/core/ToolExecutor.h src/core/ScopedDirectory.cpp)
+qt_add_executable(test_search_read_budget tests/test_search_read_budget.cpp src/core/ToolExecutor.h src/core/ScopedDirectory.cpp src/core/SearchRules.cpp)
 target_include_directories(test_search_read_budget PRIVATE src)
 target_link_libraries(test_search_read_budget PRIVATE ade_file_transformer Qt6::Core Qt6::Concurrent Qt6::Test)
 set_target_properties(test_search_read_budget PROPERTIES WIN32_EXECUTABLE FALSE)
 add_test(NAME native_search_read_budget COMMAND test_search_read_budget -o "${CMAKE_BINARY_DIR}/Testing/native_search_read_budget.txt,txt")
 set_tests_properties(native_search_read_budget PROPERTIES TIMEOUT 45)
+
+# Search ignore/filter parity with ripgrep 15.0.0 (glob/grepSearch). The new
+# src/core/SearchRules.cpp is picked up by the ade_core glob; the targets above
+# that include ToolExecutor.cpp directly list it explicitly.
+qt_add_executable(test_search_rules tests/test_search_rules.cpp)
+target_link_libraries(test_search_rules PRIVATE ade_core Qt6::Test)
+set_target_properties(test_search_rules PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_search_rules COMMAND test_search_rules -o "${CMAKE_BINARY_DIR}/Testing/native_search_rules.txt,txt")
+set_tests_properties(native_search_rules PROPERTIES TIMEOUT 30 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+qt_add_executable(test_search_ignore tests/test_search_ignore.cpp)
+target_link_libraries(test_search_ignore PRIVATE ade_core Qt6::Test)
+set_target_properties(test_search_ignore PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_search_ignore COMMAND test_search_ignore -o "${CMAKE_BINARY_DIR}/Testing/native_search_ignore.txt,txt")
+set_tests_properties(native_search_ignore PROPERTIES TIMEOUT 120 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 
 # Integrated reviewed slice: browser-event-stage
 qt_add_executable(test_browser_event_findings tests/test_browser_event_findings.cpp ${BROWSER_SOURCES})
@@ -1345,6 +1363,18 @@ set_target_properties(test_browser_event_findings PROPERTIES WIN32_EXECUTABLE FA
 add_custom_command(TARGET test_browser_event_findings POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/third_party/webview2/x64/WebView2Loader.dll" "$<TARGET_FILE_DIR:test_browser_event_findings>")
 add_test(NAME native_browser_event_findings COMMAND test_browser_event_findings -o "${CMAKE_BINARY_DIR}/Testing/native_browser_event_findings.txt,txt")
 set_tests_properties(native_browser_event_findings PROPERTIES TIMEOUT 90)
+
+# B6 browser screenshot transport fallback; BrowserScreenshot.cpp/h are in BROWSER_SOURCES.
+# Real WebView2 with a local fixture and temporary profiles only.
+qt_add_executable(test_browser_screenshot tests/test_browser_screenshot.cpp ${BROWSER_SOURCES})
+target_include_directories(test_browser_screenshot PRIVATE src)
+target_include_directories(test_browser_screenshot SYSTEM PRIVATE third_party/webview2/include)
+target_link_libraries(test_browser_screenshot PRIVATE Qt6::Widgets Qt6::Network Qt6::Test ole32)
+qt_import_plugins(test_browser_screenshot INCLUDE Qt6::QWebpPlugin Qt6::QJpegPlugin Qt6::QGifPlugin)
+set_target_properties(test_browser_screenshot PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_custom_command(TARGET test_browser_screenshot POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/third_party/webview2/x64/WebView2Loader.dll" "$<TARGET_FILE_DIR:test_browser_screenshot>")
+add_test(NAME native_browser_screenshot COMMAND test_browser_screenshot -o "${CMAKE_BINARY_DIR}/Testing/native_browser_screenshot.txt,txt")
+set_tests_properties(native_browser_screenshot PROPERTIES TIMEOUT 180 ENVIRONMENT "QT_QPA_PLATFORM=windows")
 
 # Integrated reviewed slice: desktop-provider-followups-stage
 qt_add_executable(test_desktop_provider tests/test_desktop_provider.cpp)
@@ -1359,6 +1389,8 @@ set_tests_properties(native_desktop_provider PROPERTIES TIMEOUT 90 ENVIRONMENT "
 qt_add_executable(test_browser_output tests/test_browser_output.cpp)
 target_include_directories(test_browser_output PRIVATE src)
 target_link_libraries(test_browser_output PRIVATE ade_ui Qt6::Test)
+# The B6 fallback test decodes the JPEG attachment.
+qt_import_plugins(test_browser_output INCLUDE Qt6::QWebpPlugin Qt6::QJpegPlugin Qt6::QGifPlugin)
 set_target_properties(test_browser_output PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 add_dependencies(test_browser_output ADE-sandbox-worker)
 add_test(NAME native_browser_output COMMAND test_browser_output -o "${CMAKE_BINARY_DIR}/Testing/native_browser_output.txt,txt")
@@ -1404,3 +1436,54 @@ qt_add_executable(render_markdown_findings tests/render_markdown_findings.cpp)
 target_link_libraries(render_markdown_findings PRIVATE ade_ui Qt6::QOffscreenIntegrationPlugin)
 qt_import_plugins(render_markdown_findings INCLUDE Qt6::QOffscreenIntegrationPlugin)
 set_target_properties(render_markdown_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+# Runtime services: attention monitor, notification sounds, keep-awake and
+# per-data-dir single instance (runtime-services design, slices 1-6).
+foreach(attention_test IN ITEMS agent_activity notification_sounds power_request)
+  qt_add_executable(test_${attention_test} tests/test_${attention_test}.cpp)
+  target_link_libraries(test_${attention_test} PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${attention_test} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_target_properties(test_${attention_test} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${attention_test} COMMAND test_${attention_test} -o "${CMAKE_BINARY_DIR}/Testing/native_${attention_test}.txt,txt")
+  set_tests_properties(native_${attention_test} PROPERTIES TIMEOUT 120 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+qt_add_executable(instance_client_helper tests/support/InstanceClientHelper.cpp src/ui/InstanceCoordinator.cpp src/ui/InstanceCoordinator.h)
+target_include_directories(instance_client_helper PRIVATE src)
+target_link_libraries(instance_client_helper PRIVATE Qt6::Core Qt6::Network)
+set_target_properties(instance_client_helper PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_instance_coordinator tests/test_instance_coordinator.cpp src/ui/InstanceCoordinator.cpp src/ui/InstanceCoordinator.h)
+target_include_directories(test_instance_coordinator PRIVATE src)
+target_link_libraries(test_instance_coordinator PRIVATE Qt6::Core Qt6::Network Qt6::Concurrent Qt6::Test)
+target_compile_definitions(test_instance_coordinator PRIVATE ADE_INSTANCE_CLIENT_HELPER="$<TARGET_FILE:instance_client_helper>")
+add_dependencies(test_instance_coordinator instance_client_helper)
+set_target_properties(test_instance_coordinator PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_instance_coordinator COMMAND test_instance_coordinator -o "${CMAKE_BINARY_DIR}/Testing/native_instance_coordinator.txt,txt")
+set_tests_properties(native_instance_coordinator PROPERTIES TIMEOUT 120)
+qt_add_executable(test_instance_window_host tests/test_instance_window_host.cpp)
+target_link_libraries(test_instance_window_host PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_instance_window_host INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_instance_window_host PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_dependencies(test_instance_window_host ADE-sandbox-worker)
+add_test(NAME native_instance_window_host COMMAND test_instance_window_host -o "${CMAKE_BINARY_DIR}/Testing/native_instance_window_host.txt,txt")
+set_tests_properties(native_instance_window_host PROPERTIES TIMEOUT 120 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+# Failed-turn Retry (agent-history slice 1). New src/core/AgentEngineHistory.cpp,
+# src/core/TurnFailure.h and src/ui/MainWindowHistory.cpp are picked up by the
+# existing ade_core and ade_ui CONFIGURE_DEPENDS globs.
+qt_add_executable(test_history_retry_harness tests/test_history_retry_harness.cpp)
+target_link_libraries(test_history_retry_harness PRIVATE ade_core Qt6::Test)
+add_dependencies(test_history_retry_harness harness_fixture acp_fixture claude_fixture cursor_fixture)
+set_target_properties(test_history_retry_harness PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" WIN32_EXECUTABLE FALSE)
+add_test(NAME native_history_retry_harness COMMAND test_history_retry_harness
+  -o "${CMAKE_BINARY_DIR}/Testing/native_history_retry_harness.txt,txt")
+set_tests_properties(native_history_retry_harness PROPERTIES TIMEOUT 120)
+
+# No CTest host may play notification audio or take a power request. Hosts on
+# a real platform (QT_QPA_PLATFORM=windows, or an inherited platform) would
+# otherwise get the Win* effects; offscreen/minimal hosts are already silent.
+# Keep this block last so every test registered above receives it.
+get_property(ade_all_tests DIRECTORY PROPERTY TESTS)
+if(ade_all_tests)
+  set_property(TEST ${ade_all_tests} APPEND PROPERTY ENVIRONMENT "ADE_DISABLE_SYSTEM_EFFECTS=1")
+endif()

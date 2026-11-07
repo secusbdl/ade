@@ -1,0 +1,23 @@
+********* Start testing of SettingsShortcutsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SettingsShortcutsTest::initTestCase()
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+N)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+T)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+G)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+B)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Alt+B)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+B)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+E)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+W)
+PASS   : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+J)
+PASS   : SettingsShortcutsTest::allWorkbenchBindingsBelongToVisiblePage()
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+N)
+QWARN  : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T) This plugin does not support setting window masks
+QWARN  : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T) This plugin does not support setting window masks
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T)
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+Shift+G)
+PASS   : SettingsShortcutsTest::settingsShortcutRemainsGlobal()
+PASS   : SettingsShortcutsTest::compactNavigationRetainsWorkbenchBindings()
+PASS   : SettingsShortcutsTest::cleanupTestCase()
+Totals: 17 passed, 0 failed, 0 skipped, 0 blacklisted, 1746ms
+********* Finished testing of SettingsShortcutsTest *********

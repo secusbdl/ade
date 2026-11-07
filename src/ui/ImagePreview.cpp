@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QShortcut>
 #include <QTimer>
 #include <QVBoxLayout>
 namespace ade {
@@ -64,10 +65,12 @@ ImagePreview::ImagePreview(const QString &name, const QImage &image,
       this);
   info->setWordWrap(true);
   layout->addWidget(info);
-  connect(fitButton, &QPushButton::clicked, this, [this] {
-    m_fitting = true;
-    fit();
-  });
+  connect(fitButton, &QPushButton::clicked, this, &ImagePreview::fitToView);
+  // Scoped to this preview so the chord never reaches other tabs or editors.
+  auto *center = new QShortcut(QKeySequence("Ctrl+Alt+C"), this);
+  center->setContext(Qt::WidgetWithChildrenShortcut);
+  center->setObjectName("imageCenterShortcut");
+  connect(center, &QShortcut::activated, this, &ImagePreview::fitToView);
   connect(actual, &QPushButton::clicked, this, [this] {
     m_fitting = false;
     m_view->resetTransform();
@@ -76,6 +79,10 @@ ImagePreview::ImagePreview(const QString &name, const QImage &image,
   connect(minus, &QPushButton::clicked, this, [this] { zoom(1 / 1.25); });
   connect(plus, &QPushButton::clicked, this, [this] { zoom(1.25); });
   QTimer::singleShot(0, this, [this] { fit(); });
+}
+void ImagePreview::fitToView() {
+  m_fitting = true;
+  fit();
 }
 void ImagePreview::fit() {
   if (!m_fitting || m_imageSize.isEmpty())
@@ -87,6 +94,7 @@ void ImagePreview::fit() {
                      double(qMax(1, m_view->viewport()->height() - 8)) /
                          m_imageSize.height()));
   m_view->scale(factor, factor);
+  m_view->centerOn(m_view->sceneRect().center());
   m_scale->setText(QString::number(qRound(100 * factor)) + "%");
 }
 void ImagePreview::zoom(double factor) {

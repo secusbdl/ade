@@ -5,6 +5,7 @@
 #include "FileDiffView.h"
 #include "TurnFileEdits.h"
 #include "QuestionToolPart.h"
+#include "Icons.h"
 #include "editor/CodeEditor.h"
 #include <QApplication>
 #include <QClipboard>
@@ -491,6 +492,7 @@ private:
 struct ConversationView::Private {
     struct ScrollState { bool follow=true;QString anchor;int offset=0,absolute=0;QHash<QString,bool> disclosures; };
     ConversationView *q;QScrollArea *scroll;QWidget *content,*tail;QVBoxLayout *layout;QToolButton *jump;QLabel *activity;
+    QFrame *runtimeError=nullptr;QLabel *runtimeErrorTitle=nullptr,*runtimeErrorText=nullptr,*retryQueueNote=nullptr;QPushButton *retryButton=nullptr;HistoryActions historyActions;
     QHash<QString,MessageRow*> rows;QHash<QString,QString> rowGroups;QHash<QString,ScrollState> states;QHash<QString,QString> attachmentNames;QStringList order;QString id;QJsonArray messages;bool busy=false;
     bool updating=false,pending=false;quint64 epoch=0,contextEpoch=0;int previousValue=0;QTimer stallTimer,scrollEnd;QElapsedTimer lastChange;
     struct ImageRequest {quint64 epoch;QString messageId,partId;QUrl url;QPointer<TranscriptText> target;QByteArray key;};
@@ -520,6 +522,7 @@ struct ConversationView::Private {
             if(!self||generation!=self->d->epoch||owner!=self->d->id)return;
             int lastUser=-1;for(int i=0;i<order.size();++i)if(rows[order[i]]->property("role")=="user")lastUser=i;
             int occupied=0;if(lastUser>=0)for(int i=lastUser;i<order.size();++i)occupied+=rows[order[i]]->sizeHint().height()+layout->spacing();
+            if(lastUser>=0&&!runtimeError->isHidden())occupied+=runtimeError->sizeHint().height()+layout->spacing();
             tail->setFixedHeight(lastUser>=0?qMax(0,scroll->viewport()->height()-occupied-18):0);
             if(!self||generation!=self->d->epoch||owner!=self->d->id)return;
             layout->activate();
@@ -545,6 +548,35 @@ struct ConversationView::Private {
         layout->setContentsMargins(inset,qRound(16*scale),inset,qRound(8*scale));
     }
     void updateJump(){auto *bar=scroll->verticalScrollBar();jump->setVisible(bar->maximum()-bar->value()>100);}
+    // Upstream canRetry: an idle failed turn whose user row is still the last
+    // user row. The error text repeats only when no error part is rendered
+    // (after a restart, or a failure that produced no output row).
+    void updateRuntimeError(bool reenable){
+        const auto& actions=historyActions;
+        bool show=!id.isEmpty()&&!busy&&!actions.busy&&!actions.archived&&!actions.failedUserRowId.isEmpty();
+        bool errorRendered=false;
+        if(show){
+            int lastUser=-1;for(int i=messages.size()-1;i>=0;--i)if(messages[i].toObject()["role"]=="user"){lastUser=i;break;}
+            show=lastUser>=0&&messages[lastUser].toObject()["id"]==actions.failedUserRowId&&order.contains(actions.failedUserRowId);
+            if(show)for(const auto& part:messages.last().toObject()["parts"].toArray())errorRendered|=part.toObject()["type"]=="error";
+        }
+        // Upstream GenericError shows the message inside the card; the transcript's
+        // own error part for the same failed turn is hidden while the card owns it.
+        runtimeErrorText->setText(actions.failureText);
+        runtimeErrorText->setVisible(!actions.failureText.isEmpty());
+        const bool cardOwnsError=show&&errorRendered&&!actions.failureText.isEmpty();
+        const auto lastId=messages.isEmpty()?QString():messages.last().toObject()["id"].toString();
+        for(auto *part:content->findChildren<QWidget*>())
+            if(part->property("partType").toString()=="error"&&part->property("sourceMessageId").toString()==lastId)part->setVisible(!cardOwnsError);
+        retryQueueNote->setText(actions.queuedCount==1?QString("Retry clears 1 queued message."):QString("Retry clears %1 queued messages.").arg(actions.queuedCount));
+        retryQueueNote->setVisible(actions.queuedCount>0);
+        if(reenable)retryButton->setEnabled(true);
+        runtimeError->setVisible(show);
+    }
+    void styleRuntimeError(){
+        runtimeError->setStyleSheet("QFrame#transcriptRuntimeError{border:1px solid "+QString(darkFor(q)?"#3c424c":"#dfe3e8")+";border-radius:8px;}");
+        auto palette=runtimeErrorTitle->palette();palette.setColor(QPalette::WindowText,darkFor(q)?QColor("#f5a2a7"):QColor("#ad202e"));runtimeErrorTitle->setPalette(palette);
+    }
 };
 
 ConversationView::ConversationView(QWidget *parent):QWidget(parent),d(std::make_unique<Private>(this)) {
@@ -552,6 +584,21 @@ ConversationView::ConversationView(QWidget *parent):QWidget(parent),d(std::make_
     d->scroll=new QScrollArea(this);d->scroll->setObjectName("transcriptScroll");d->scroll->setWidgetResizable(true);d->scroll->setFrameShape(QFrame::NoFrame);d->scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     d->content=new QWidget;d->content->setObjectName("transcriptContent");d->layout=new QVBoxLayout(d->content);d->layout->setContentsMargins(27,16,12,8);d->layout->setSpacing(12);d->layout->setAlignment(Qt::AlignTop);
     d->activity=new QLabel(d->content);d->activity->setObjectName("transcriptActivity");d->activity->setProperty("muted",true);d->activity->hide();d->layout->addWidget(d->activity);
+    d->runtimeError=new QFrame(d->content);d->runtimeError->setObjectName("transcriptRuntimeError");
+    auto *errorLayout=new QVBoxLayout(d->runtimeError);errorLayout->setContentsMargins(10,8,10,8);errorLayout->setSpacing(6);
+    d->runtimeErrorTitle=new QLabel("Error",d->runtimeError);d->runtimeErrorTitle->setObjectName("transcriptRuntimeErrorTitle");{auto title=d->runtimeErrorTitle->font();title.setWeight(QFont::DemiBold);d->runtimeErrorTitle->setFont(title);}errorLayout->addWidget(d->runtimeErrorTitle);
+    d->runtimeErrorText=new QLabel(d->runtimeError);d->runtimeErrorText->setObjectName("transcriptRuntimeErrorText");d->runtimeErrorText->setWordWrap(true);d->runtimeErrorText->setTextFormat(Qt::PlainText);d->runtimeErrorText->setTextInteractionFlags(Qt::TextSelectableByMouse);errorLayout->addWidget(d->runtimeErrorText);
+    d->retryQueueNote=new QLabel(d->runtimeError);d->retryQueueNote->setObjectName("transcriptRetryQueueNote");d->retryQueueNote->setProperty("muted",true);d->retryQueueNote->setWordWrap(true);d->retryQueueNote->setTextFormat(Qt::PlainText);errorLayout->addWidget(d->retryQueueNote);
+    auto *errorActions=new QHBoxLayout;errorActions->setContentsMargins(0,0,0,0);errorActions->addStretch();
+    d->retryButton=new QPushButton(icon("reload"),"Retry",d->runtimeError);d->retryButton->setObjectName("transcriptRetryButton");d->retryButton->setAccessibleName("Retry failed turn");d->retryButton->setCursor(Qt::PointingHandCursor);errorActions->addWidget(d->retryButton);errorLayout->addLayout(errorActions);
+    d->styleRuntimeError();d->runtimeError->hide();d->layout->addWidget(d->runtimeError);
+    connect(d->retryButton,&QPushButton::clicked,this,[this]{
+        const auto chat=d->id,row=d->historyActions.failedUserRowId;
+        if(chat.isEmpty()||row.isEmpty()||d->runtimeError->isHidden()||!d->retryButton->isEnabled())return;
+        // The host re-pushes actions on every refusal, which re-enables Retry.
+        d->retryButton->setEnabled(false);
+        emit failedTurnRetryRequested(chat,row);
+    });
     d->tail=new QWidget(d->content);d->tail->setFixedHeight(0);d->layout->addWidget(d->tail);d->scroll->setWidget(d->content);d->content->setAutoFillBackground(false);d->scroll->viewport()->setAutoFillBackground(false);d->scroll->setAutoFillBackground(false);outer->addWidget(d->scroll);
     d->jump=new QToolButton(this);d->jump->setObjectName("jumpToBottom");d->jump->setText("↓");d->jump->setToolTip("Scroll to bottom");d->jump->setAccessibleName("Scroll to bottom");d->jump->setFixedSize(30,30);d->jump->hide();
     connect(d->jump,&QToolButton::clicked,this,&ConversationView::scrollToBottom);
@@ -570,7 +617,7 @@ ConversationView::~ConversationView(){qApp->removeEventFilter(this);d->stallTime
 void ConversationView::setConversation(const QString &id,const QJsonArray &messages,bool busy) {
     const bool switched=d->id!=id;
     if(!switched&&d->messages==messages&&d->busy==busy)return;
-    if(switched){d->remember();++d->epoch;++d->contextEpoch;d->pending=false;d->updating=true;d->scrollEnd.stop();d->clearRows();d->id=id;d->messages={};if(!d->states.contains(id))d->states.insert(id,{});}
+    if(switched){d->remember();++d->epoch;++d->contextEpoch;d->pending=false;d->updating=true;d->scrollEnd.stop();d->clearRows();d->id=id;d->messages={};d->historyActions={};if(!d->states.contains(id))d->states.insert(id,{});}
     else if(!d->pending)d->remember();
     const bool changed=d->messages!=messages||d->busy!=busy;
     d->messages=messages;d->busy=busy;
@@ -661,12 +708,17 @@ void ConversationView::setConversation(const QString &id,const QJsonArray &messa
         }
     }
     const auto keys=d->rows.keys();for(const auto &key:keys)if(!keep.contains(key))delete d->rows.take(key);
+    d->updateRuntimeError(false);
     d->scheduleScroll(switched);
     for(const auto requestId:requestIds){if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch)return;const auto request=self->d->turnRequests.value(requestId);if(request.chat==id&&self->turnMutationIds(request.row)==request.ids)emit self->turnFileEditsRequested(requestId,id,request.row,request.ids);}
 }
-void ConversationView::clear(){d->remember();++d->epoch;++d->contextEpoch;d->pending=false;d->updating=true;d->scrollEnd.stop();d->clearRows();d->messages={};d->id.clear();d->busy=false;d->activity->hide();d->stallTimer.stop();d->tail->setFixedHeight(0);d->jump->hide();d->updating=false;}
+void ConversationView::clear(){d->remember();++d->epoch;++d->contextEpoch;d->pending=false;d->updating=true;d->scrollEnd.stop();d->clearRows();d->messages={};d->id.clear();d->busy=false;d->historyActions={};d->updateRuntimeError(true);d->activity->hide();d->stallTimer.stop();d->tail->setFixedHeight(0);d->jump->hide();d->updating=false;}
 QString ConversationView::toPlainText() const {QStringList text;for(const auto &value:d->messages){const auto row=value.toObject();for(const auto &part:row["parts"].toArray())if(!AcpToolPresentation::suppressQuestionWrapperPart(part.toObject()))text.append(partPlain(part.toObject()));for(const auto &attachment:row["attachments"].toArray()){const auto ref=attachment.toObject();text.append("Attachment: "+ref["originalFileName"].toString(ref["path"].toString()));}}return text.join('\n');}
 QString ConversationView::conversationId() const{return d->id;}
+void ConversationView::setHistoryActions(const QString& conversationId,const HistoryActions& actions){
+    if(conversationId.isEmpty()||conversationId!=d->id)return;
+    d->historyActions=actions;d->updateRuntimeError(true);
+}
 QStringList ConversationView::turnMutationIds(const QString& rowId)const{
     const auto selection=TurnFileEdits::selections(d->messages).value(rowId);
     if(selection.incomplete||(d->busy&&!d->messages.isEmpty()&&d->messages.last().toObject()["id"]==rowId))return {};
@@ -725,6 +777,8 @@ void ConversationView::changeEvent(QEvent *event){
     if(!self)return;
     if(event->type()==QEvent::PaletteChange){
         d->jump->setStyleSheet("QToolButton{border:1px solid "+QString(darkFor(this)?"#505762":"#d5dae2")+";border-radius:15px;background:"+QString(darkFor(this)?"#2c313b":"#ffffff")+";}");
+        if(!self)return;
+        d->styleRuntimeError();
         if(!self)return;
         QList<QPointer<MarkdownParts>> texts;for(auto* text:findChildren<MarkdownParts*>())texts.append(text);
         for(const auto& text:texts){if(text)text->refreshAppearance();if(!self)return;}

@@ -1,0 +1,2658 @@
+{
+  "schemaVersion": 1,
+  "verifiedUtc": "2026-11-07T07:25:01.368569+00:00",
+  "status": "verified_tests_codex_live_and_bounded_gui_deepseek_blocked_by_provider_outage",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "developmentBaseCommit": "eab0eb7654b0370b29a6baace13e0d4597087e0f",
+  "fullNativeParity": false,
+  "lineByLinePortEstablished": false,
+  "scopeLedger": "audit/parity-review-coverage.json",
+  "sourceIndex": "audit/upstream-source-index.json",
+  "testedSource": {
+    "path": "audit/parity-integration-11/tested-source-hashes.json",
+    "sha256CanonicalLf": "cf1feff09a415037e726d95123a1fb7c5b3a9e19a69404080048c55139a8c0c5",
+    "basis": "Canonical LF for text; exact binary assets. Identity is not semantic parity."
+  },
+  "tests": {
+    "ctestSuites": 220,
+    "failedSuites": 0,
+    "nativeSuites": 218,
+    "referenceExperimentSuites": 2,
+    "passedCasesIncludingLifecycle": 3995,
+    "skippedCases": 4,
+    "skippedRows": [
+      {
+        "suite": "native_transcript_link_ui",
+        "skipped": 1
+      },
+      {
+        "suite": "native_workspace_tree",
+        "skipped": 1
+      },
+      {
+        "suite": "native_notification_sounds",
+        "skipped": 1
+      },
+      {
+        "suite": "native_power_request",
+        "skipped": 1
+      }
+    ],
+    "skipExplanation": "The offscreen WebView case has a passing Windows counterpart. Any workspace-tree link case listed as skipped requires Windows symbolic-link privilege; it is not counted as tested. native_notification_sounds and native_power_request each skip one opt-in real-device smoke (ADE_AUDIO_SMOKE / ADE_POWER_SMOKE); the power smoke passed separately (optInDeviceSmokes), the audio smoke was not run.",
+    "rows": [
+      {
+        "suite": "native_codex_harness",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4639,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_codex_harness.txt",
+          "sha256CanonicalLf": "61a93d8c17250780242a99f27566dc9dca5554acbcc5be46ab7b3fec678a1ca0"
+        }
+      },
+      {
+        "suite": "native_codex_engine",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3142,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_codex_engine.txt",
+          "sha256CanonicalLf": "3b5aa68025d1a728a62505bac2b2988ded5d4f8f5a7da239f3e4f850f8b79f4f"
+        }
+      },
+      {
+        "suite": "native_codex_provider_ui",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 392,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_codex_provider_ui.txt",
+          "sha256CanonicalLf": "10106f32bc226babaee92e5f080972fa31fd93f29db3f1b2b36b2a4b6b48449c"
+        }
+      },
+      {
+        "suite": "native_codex_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2648,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_codex_host.txt",
+          "sha256CanonicalLf": "2fa2948e6def3665b5584c4fd1cbd478123f3db731e7046300b271d1779350aa"
+        }
+      },
+      {
+        "suite": "native_provider_operations",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1085,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_operations.txt",
+          "sha256CanonicalLf": "3bee2f913d18d7cffad033c3990a4958072bb6ed3bcf9a6844c4ab754ffed395"
+        }
+      },
+      {
+        "suite": "native_link_provenance_codec",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 17,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_link_provenance_codec.txt",
+          "sha256CanonicalLf": "fff2e4077661e6d9706afa650e835d0d722fc87634dc814b426c0af3b1f4648f"
+        }
+      },
+      {
+        "suite": "native_retired_wire",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 132,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_retired_wire.txt",
+          "sha256CanonicalLf": "17c993b519f074a948cf5fe18d39c299d269f5b739a5ad87eab3d090405275f0"
+        }
+      },
+      {
+        "suite": "native_navigation_shortcuts",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4331,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_navigation_shortcuts.txt",
+          "sha256CanonicalLf": "e2fb25e7ee625ddf29bff9097a43d40059d24e9642f467fd0d8862ef283ae130"
+        }
+      },
+      {
+        "suite": "native_browser_session",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 105,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_session.txt",
+          "sha256CanonicalLf": "81c3e8a4e239c60587b926c646c69feeb11d3ba65d1eae6588e15167ce49e6ae"
+        }
+      },
+      {
+        "suite": "native_browser_session_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2089,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_session_host.txt",
+          "sha256CanonicalLf": "0c51eb20f08ad3bdd0f9ed529590cbe54332b79b5aa73913d691e4ca5e2fef9c"
+        }
+      },
+      {
+        "suite": "native_usage_compression",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4520,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_usage_compression.txt",
+          "sha256CanonicalLf": "c9d2ca16c4cb2759894de3d82a0d2f04c649f7a70f395705b39b3e379959d00c"
+        }
+      },
+      {
+        "suite": "native_usage_settings",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 63,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_usage_settings.txt",
+          "sha256CanonicalLf": "b56c40cdee9cab131f7a56eff6c50a0eaeaf4f2b2d52f31bcb9fd0a496158b36"
+        }
+      },
+      {
+        "suite": "native_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2119,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_usage.txt",
+          "sha256CanonicalLf": "2d233a4673a5bf7930a82d4e0018362b22082d456007cf31df7e7fb29460eab0"
+        }
+      },
+      {
+        "suite": "native_git_cleanup",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 76887,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_cleanup.txt",
+          "sha256CanonicalLf": "0f142e21093f57205707c8fa116b0243be7080603d886c7b00e645851f9b458d"
+        }
+      },
+      {
+        "suite": "native_session_logs",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 338,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_session_logs.txt",
+          "sha256CanonicalLf": "4a1f7114f3b6c045befe0ec9657d473b0de5bce5c5e471c5633f6536f3569fc3"
+        }
+      },
+      {
+        "suite": "native_shell_log_mount",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 539,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_log_mount.txt",
+          "sha256CanonicalLf": "96db7fd1978ab67bc62467faf091069d43b9b5c740be70c902b6559f209d51cc"
+        }
+      },
+      {
+        "suite": "native_shell_service",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 36071,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_service.txt",
+          "sha256CanonicalLf": "1370eb1201941974e4ea6b196e22e425accadaf61e9861e0df650e19641d8fc1"
+        }
+      },
+      {
+        "suite": "native_shell_engine",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4708,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_engine.txt",
+          "sha256CanonicalLf": "2e15348c7d032a6d852426734bea251b320832752c39ac9e04c1f37ebf6b729c"
+        }
+      },
+      {
+        "suite": "native_shell_view",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1166,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_view.txt",
+          "sha256CanonicalLf": "d3160e192a99f38b45ae24abd5fa4ef00e903cc02a9ff4acb760ee85d100d3f4"
+        }
+      },
+      {
+        "suite": "native_conversation_control",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4453,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_conversation_control.txt",
+          "sha256CanonicalLf": "f0886b0459e190c58a9fd5da0da4fd076c21748a4d089c40d002fd00583559e9"
+        }
+      },
+      {
+        "suite": "native_file_mutations",
+        "passedIncludingLifecycle": 60,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3682,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_file_mutations.txt",
+          "sha256CanonicalLf": "d8131a47751459adde5ca80f6a8bde4ab651a4960ba26db287782d3e28d3b68a"
+        }
+      },
+      {
+        "suite": "native_history_retry",
+        "passedIncludingLifecycle": 24,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7335,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_history_retry.txt",
+          "sha256CanonicalLf": "a7e2b244cf489a0cc64916c0689fb616a4b8b65d3e2bca05cf2f08bb0ce4332d"
+        }
+      },
+      {
+        "suite": "native_question_panel",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 148,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_panel.txt",
+          "sha256CanonicalLf": "fbc7bb9066eef3eb27ddf0fcaff229a0a96eb20bc910aa3f224f095e5b92b1b8"
+        }
+      },
+      {
+        "suite": "native_transcript_rich",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 874,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_rich.txt",
+          "sha256CanonicalLf": "4038fbd1f0d5c159a9693b0b9c7bb9aa1ca2f4a0cb8c4066053a63d5cad1d834"
+        }
+      },
+      {
+        "suite": "native_composer_completion",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2185,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_composer_completion.txt",
+          "sha256CanonicalLf": "8361366d538b4f624cfa9aa5577e6e999a86f76a79ce8185bc09fd8134f54b6d"
+        }
+      },
+      {
+        "suite": "native_composer_search",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 141,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_composer_search.txt",
+          "sha256CanonicalLf": "b272b01b895e5cdd52293bcc31253817130b46e53dd778c496bde881a958101b"
+        }
+      },
+      {
+        "suite": "native_composer_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2606,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_composer_host.txt",
+          "sha256CanonicalLf": "70388a139c7a9f147b52557b5c620f17d4fcefb9c66567e9883178782b3d45c1"
+        }
+      },
+      {
+        "suite": "native_reference_controls",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 454,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_reference_controls.txt",
+          "sha256CanonicalLf": "c5c66c9e6f2dae996de8898892b2009aab31b955cc5e1ba606355ff294d2885e"
+        }
+      },
+      {
+        "suite": "native_agent_control_ui",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4087,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_agent_control_ui.txt",
+          "sha256CanonicalLf": "8f8d79b53c5801515d6f13ee701d4c3c62c4ca98cb3e66afdd690e6753171daf"
+        }
+      },
+      {
+        "suite": "native_command_center",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 253,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_command_center.txt",
+          "sha256CanonicalLf": "7a04f2d49ae8a44bc67566517dca6ed34d0e8a4ae5257e39977e79504ae9bca7"
+        }
+      },
+      {
+        "suite": "native_command_file_search",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 840,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_command_file_search.txt",
+          "sha256CanonicalLf": "5b15c894e7f9e56afeb0b8a29c87d683e937b966ffd5d16550b7ecb721800286"
+        }
+      },
+      {
+        "suite": "native_command_center_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2850,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_command_center_host.txt",
+          "sha256CanonicalLf": "87855c517664269bff0c2076bf282a0a88dc791a0a3a3dab1bc5bfe8dc320d44"
+        }
+      },
+      {
+        "suite": "native_side_chat",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 237,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_side_chat.txt",
+          "sha256CanonicalLf": "76ac8fa339f7bf5d2f00bbfc5ce61fe0279182d1d07ab021d38a8b58d9a287c3"
+        }
+      },
+      {
+        "suite": "native_side_chat_host",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10237,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_side_chat_host.txt",
+          "sha256CanonicalLf": "bb3014e238346f91dc92e46b5cf63ec69aa4912cb883f99dede55b9c0c210b85"
+        }
+      },
+      {
+        "suite": "native_history_actions_host",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4953,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_history_actions_host.txt",
+          "sha256CanonicalLf": "e20f1227b355e2b12c81690e8c302f1f010fff9b520015fef3980a71aae5612e"
+        }
+      },
+      {
+        "suite": "native_file_diff",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 153,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_file_diff.txt",
+          "sha256CanonicalLf": "c15792c20660b831ad50d053a6e151355de2bfa897d325e73d190fe3895d7c32"
+        }
+      },
+      {
+        "suite": "native_image_preview",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 336,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_image_preview.txt",
+          "sha256CanonicalLf": "01ec8d66397e3306fa9f1a416556a611dce3615afb4fd44934a2a7a315ff9ba9"
+        }
+      },
+      {
+        "suite": "native_mutation_runtime",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5699,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mutation_runtime.txt",
+          "sha256CanonicalLf": "9801734b39249f3204bc61460a7304efa2bd6fb8fba8b3461cae979c8baf689f"
+        }
+      },
+      {
+        "suite": "native_shell_runtime",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10896,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_runtime.txt",
+          "sha256CanonicalLf": "c7042cef933f6500e948e390b95b1e58f9f60b6ba98984f0c0825be5bb111eed"
+        }
+      },
+      {
+        "suite": "native_transcript_links",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 118,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_links.txt",
+          "sha256CanonicalLf": "a0caed1a885d1b7b8f010ae303a5716312a28fab4be016305bbe9e1b9d15f7e2"
+        }
+      },
+      {
+        "suite": "native_transcript_link_ui",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 4163,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_link_ui.txt",
+          "sha256CanonicalLf": "be2b89672d65c877a6c66349b5ddcf74d1a14ab099f20d97d0783aac760da456"
+        }
+      },
+      {
+        "suite": "native_transcript_tabs_real",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1467,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_tabs_real.txt",
+          "sha256CanonicalLf": "4bd5ad28ce285d154ceb2d91879fc04cff6553f388c8bc58c58d821593e968b0"
+        }
+      },
+      {
+        "suite": "native_workbench_layout",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7105,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workbench_layout.txt",
+          "sha256CanonicalLf": "ef2abedd852519eef755ca4bd2729fe4e623631ad7e7b20f4c7430ec213c4c14"
+        }
+      },
+      {
+        "suite": "native_workbench_helpers",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 22,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workbench_helpers.txt",
+          "sha256CanonicalLf": "6fae72227a999e2abebedd443c5911e9078259a3619def9368e7b1b502279a3c"
+        }
+      },
+      {
+        "suite": "native_chevron",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 173,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_chevron.txt",
+          "sha256CanonicalLf": "f8e2f7a098ea78e7c00fde15d120579cfd9eca27e892e01d006019c6abb6f59c"
+        }
+      },
+      {
+        "suite": "native_sidebar_model",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_sidebar_model.txt",
+          "sha256CanonicalLf": "0344252c53053e187c7fdacdaf82cc2a125b8f8d84fc554cf8784b96d331044b"
+        }
+      },
+      {
+        "suite": "native_sidebar_navigation",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3868,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_sidebar_navigation.txt",
+          "sha256CanonicalLf": "2d7029d957afe5790c4cdd52c128b3e4ba85bc7d46d515d8c00d6efc2f477a06"
+        }
+      },
+      {
+        "suite": "native_presentation",
+        "passedIncludingLifecycle": 89,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 17122,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_presentation.txt",
+          "sha256CanonicalLf": "dd1e1ba097a60fc5e2ef1c62cc213609bda5b711183621558b71aa2f19448b22"
+        }
+      },
+      {
+        "suite": "native_history_projection",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1369,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_history_projection.txt",
+          "sha256CanonicalLf": "e8428f301e8ee09c164b896a41f2e4359204a5630c46deebea23d537631fcf21"
+        }
+      },
+      {
+        "suite": "native_workspace_changes",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 23042,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workspace_changes.txt",
+          "sha256CanonicalLf": "22cde7fa014773a8c5d178acb3d6cdf8b6a9cbbd0b5987ced2e8659904c25e3d"
+        }
+      },
+      {
+        "suite": "native_workspace_changes_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 23474,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workspace_changes_host.txt",
+          "sha256CanonicalLf": "9063c9f106d39d2ec55b76f25fc2df740fa29bcdf389a8a346ef66bc86ba922e"
+        }
+      },
+      {
+        "suite": "native_smoke_capture",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 218,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_smoke_capture.txt",
+          "sha256CanonicalLf": "d49ebc2b8637a9be63d4725f055528408c8c986299f5792d75e2384252ced7ea"
+        }
+      },
+      {
+        "suite": "native_turn_files",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 312,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_turn_files.txt",
+          "sha256CanonicalLf": "47a8990067f6f443ae7ccd2a855258b3f19e64883db859480ca7b9a388d65778"
+        }
+      },
+      {
+        "suite": "native_turn_files_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 15465,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_turn_files_host.txt",
+          "sha256CanonicalLf": "80c4c7f89a83e18de2c32afc88b1863f4bc3fae35e3f9efd782bc2add41ca5ca"
+        }
+      },
+      {
+        "suite": "native_turn_file_snapshots",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 629,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_turn_file_snapshots.txt",
+          "sha256CanonicalLf": "97e1487739ad3112bd4550e360fd80ce7079457bd6bfa9d2a8a99b52dd18b772"
+        }
+      },
+      {
+        "suite": "native_transcript",
+        "passedIncludingLifecycle": 35,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3071,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript.txt",
+          "sha256CanonicalLf": "4f53ccc86736a24d37345d4087a8945166f4bf31ede4e3c67283e77e7c92a3c0"
+        }
+      },
+      {
+        "suite": "native_transcript_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2205,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_ui.txt",
+          "sha256CanonicalLf": "942b0814dd6f161359dc48b77c278d020eaaf3cfd4896aeb5c6acacac3480ae3"
+        }
+      },
+      {
+        "suite": "native_main_chrome",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4588,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_main_chrome.txt",
+          "sha256CanonicalLf": "1a611c120138a34e42d3e6c848ebb8e1adae4e17c947823bacb3872c55a2acc5"
+        }
+      },
+      {
+        "suite": "native_formatted_att",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3493,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_formatted_att.txt",
+          "sha256CanonicalLf": "bdfe59346daf74f116bd5d631a1a5e74888224cb7549624e8cb6295e3235fcc9"
+        }
+      },
+      {
+        "suite": "native_conversations",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 19026,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_conversations.txt",
+          "sha256CanonicalLf": "8fde19c968e5917674f617a4ed88b6832241385b115a935221d7b93026728409"
+        }
+      },
+      {
+        "suite": "native_history_recovery",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1330,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_history_recovery.txt",
+          "sha256CanonicalLf": "6ef8647674a1c5ca7f8e81a04bca28b3f53c6010a2f7bb24b7431b78421cd717"
+        }
+      },
+      {
+        "suite": "native_session_cleanup",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 509,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_session_cleanup.txt",
+          "sha256CanonicalLf": "6c77842171d7dd346ce2b897d409013f99808a049b47b2db197bce0152f6a0c6"
+        }
+      },
+      {
+        "suite": "native_raw_enumeration_races",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1674,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_raw_enumeration_races.txt",
+          "sha256CanonicalLf": "2c5a9e0d573b7445f2b5e03d3834487a3104ee21caa010dbf0f739ba961dd993"
+        }
+      },
+      {
+        "suite": "native_git_watcher",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 26388,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_watcher.txt",
+          "sha256CanonicalLf": "5f5d27bfcad985072ee6b5540303f39cd7ba5260d9524294f2fc47a829d1648a"
+        }
+      },
+      {
+        "suite": "native_git_watcher_ui",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 19135,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_watcher_ui.txt",
+          "sha256CanonicalLf": "fc60efa8de51079e486bd1584267ebfa5651663d3d8c00c673315237fa9aa2e7"
+        }
+      },
+      {
+        "suite": "native_file_tools_races",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 637,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_file_tools_races.txt",
+          "sha256CanonicalLf": "d63558fcb08998160bad1018eaefe0c70c6654e32399531ec1bb836fc6a842da"
+        }
+      },
+      {
+        "suite": "native_archive_transformer",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 40,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_archive_transformer.txt",
+          "sha256CanonicalLf": "aa0d32770cc083e5bcad24049d3a0901752410f7278f8a66184650d182deda34"
+        }
+      },
+      {
+        "suite": "native_file_tools",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 49,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_file_tools.txt",
+          "sha256CanonicalLf": "2eef1a55150a158daa2256960f283a16e5ed58011ba4a2d8a063f068e457549d"
+        }
+      },
+      {
+        "suite": "native_attachment_mount",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 863,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_attachment_mount.txt",
+          "sha256CanonicalLf": "08f69d5125cc8d616123c7aa3f2c26c5c2e9e769fd46a57fdc7fe9079ca9e5c1"
+        }
+      },
+      {
+        "suite": "native_file_transformer",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_file_transformer.txt",
+          "sha256CanonicalLf": "eb1a05f0e31db9c0b4574b191897c2bd00652be6d2d815ef3ad3d666d8495c0d"
+        }
+      },
+      {
+        "suite": "native_worktree_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 31957,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_worktree_settings.txt",
+          "sha256CanonicalLf": "8b8226558c11d50a4a1696122007215fc51850f3babd5a8c486d632de0ea0806"
+        }
+      },
+      {
+        "suite": "native_git_host",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 76307,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_host.txt",
+          "sha256CanonicalLf": "2084b8e9c6e0ade284c6e15085d37e3b44e54d6357e715ff079a59e0f20aeed0"
+        }
+      },
+      {
+        "suite": "native_sandbox_apps",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2049,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_sandbox_apps.txt",
+          "sha256CanonicalLf": "dd3fc189a2702ed296901ca6b0443d9361b6a91a64607b77a79ea8c3c59bf11f"
+        }
+      },
+      {
+        "suite": "native_runtime_apps",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6873,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_runtime_apps.txt",
+          "sha256CanonicalLf": "30e25545bce126c2b9034149f8ebcd1c80a0ef3bb91f79518e7f45c412a78722"
+        }
+      },
+      {
+        "suite": "native_git",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 81655,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git.txt",
+          "sha256CanonicalLf": "537418432192f794271ef3cfc5c3e74b6f294a2eeb1fbd43e148f81d6dce30d4"
+        }
+      },
+      {
+        "suite": "native_git_ui",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 38029,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_ui.txt",
+          "sha256CanonicalLf": "89efdf0069a8e050661546125ec736a7b7a9483e7e3a8ff7ff440698e05bd076"
+        }
+      },
+      {
+        "suite": "native_app_resources",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 68,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_app_resources.txt",
+          "sha256CanonicalLf": "9e545bbeb9868c78aec3605ee41c7c6a7d6ed94504d6bf93e75a0d9619d32edd"
+        }
+      },
+      {
+        "suite": "native_mini_apps",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3119,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mini_apps.txt",
+          "sha256CanonicalLf": "1da3f9cf931466e11efb98e89500bc9b5f96bc18d22680642e9145091e7d9955"
+        }
+      },
+      {
+        "suite": "native_attachments",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1076,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_attachments.txt",
+          "sha256CanonicalLf": "67a4569f7538bd33813791ea8d97e5192a2af6adab9db16ead1e9bc6d023d2a6"
+        }
+      },
+      {
+        "suite": "native_read_lifecycle",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 556,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_read_lifecycle.txt",
+          "sha256CanonicalLf": "b5095c8ca5c59a796d08b143bfdf4867f8563765a2304e396e56ec121a567c42"
+        }
+      },
+      {
+        "suite": "native_read_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2887,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_read_runtime.txt",
+          "sha256CanonicalLf": "cff1449cdf49f783808149ec700292bf2e18901eda68c21a3806605fc14b39a4"
+        }
+      },
+      {
+        "suite": "native_plugins",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 982,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_plugins.txt",
+          "sha256CanonicalLf": "b14ca19fbd74f7f9c01d7ec6164dd19b007d40bdce021fa9efd86ee13ce14737"
+        }
+      },
+      {
+        "suite": "native_plugin_connections",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 207,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_plugin_connections.txt",
+          "sha256CanonicalLf": "cbac8e78e18820e6816137f514724c8d5e3c483592d0fc157e7c780e6f3f8e7f"
+        }
+      },
+      {
+        "suite": "native_plugin_runtime",
+        "passedIncludingLifecycle": 22,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 13799,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_plugin_runtime.txt",
+          "sha256CanonicalLf": "06261db00d6b715d62a48da865ad25ea9c4fe54e2d74bb393cb4c4acda103e6c"
+        }
+      },
+      {
+        "suite": "native_plugin_settings",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 427,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_plugin_settings.txt",
+          "sha256CanonicalLf": "5280597b4c0635786d90bfdf49bcdeff9ba88dba1c651ba1abb69713f632f65f"
+        }
+      },
+      {
+        "suite": "native_smoke_plugins",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2088,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_smoke_plugins.txt",
+          "sha256CanonicalLf": "97b77145e49fc47a75108909d5516ed775d8f9ff75411502457629d022c081bb"
+        }
+      },
+      {
+        "suite": "native_sandbox_network",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5229,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_sandbox_network.txt",
+          "sha256CanonicalLf": "a90626e2dc5c2b6d9056b5263bef3446f412173ecb104fb44a4c1143924f71eb"
+        }
+      },
+      {
+        "suite": "native_downloads",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8262,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_downloads.txt",
+          "sha256CanonicalLf": "8d0861870cdb799f4d390b40ca4f2107ef381cd91435d4b8ee8cf019ccf644c8"
+        }
+      },
+      {
+        "suite": "native_settings_audit",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 405,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_settings_audit.txt",
+          "sha256CanonicalLf": "ac700e4e2db9ca7fa9f9de59adcb8b69c708437cf08bea1f002d29809aa8f9c0"
+        }
+      },
+      {
+        "suite": "native_network",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2145,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_network.txt",
+          "sha256CanonicalLf": "1b1c71e16d6bbe6d74cb5fc990652eb34d25e6348b00592e813d597986b86aff"
+        }
+      },
+      {
+        "suite": "native_terminal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2719,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_terminal.txt",
+          "sha256CanonicalLf": "086703b8fce9d050c47b600036a3b2fb5ac2999f25d539b072bb134c19b2626a"
+        }
+      },
+      {
+        "suite": "native_engine_observers",
+        "passedIncludingLifecycle": 56,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9419,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_engine_observers.txt",
+          "sha256CanonicalLf": "9d719d6e82c79fb3e1d6e9f0be155f7aa7c94e44aa6ae0aed853bd93b0178a3f"
+        }
+      },
+      {
+        "suite": "native_core",
+        "passedIncludingLifecycle": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10338,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_core.txt",
+          "sha256CanonicalLf": "843450c02d18f1d132a464681c1edfad7d7973e1e2d36b9598e2058ac3763606"
+        }
+      },
+      {
+        "suite": "native_context",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 368,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_context.txt",
+          "sha256CanonicalLf": "e2674933c6fbe34ebd8727d6d78ab6f1ecd65275efef72a30564d4ce5ad810ae"
+        }
+      },
+      {
+        "suite": "native_ui",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2431,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_ui.txt",
+          "sha256CanonicalLf": "8228ba9efe7c1c1f88733019154e581ff19bbd37c8e4380ab3f678e47ce74c93"
+        }
+      },
+      {
+        "suite": "native_ui_audit",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6998,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_ui_audit.txt",
+          "sha256CanonicalLf": "77bbf5d5aa797524016ad89883e292c2a40e8b80002a95afbf61047287c351fe"
+        }
+      },
+      {
+        "suite": "native_editor",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1444,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_editor.txt",
+          "sha256CanonicalLf": "90724a90dc614fb8aa3cfc4d835a36b48efaf25b3d52e04c40f28427ed631751"
+        }
+      },
+      {
+        "suite": "native_sandbox",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4600,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_sandbox.txt",
+          "sha256CanonicalLf": "a173b52b76196da81e66a5add319344e111a5c29d11618fa8c346653ab71e081"
+        }
+      },
+      {
+        "suite": "native_runtime",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5681,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_runtime.txt",
+          "sha256CanonicalLf": "6d56e8d4427573d89fd03703d3494eaebed30c932a28d33a54e500c3cbfccdc8"
+        }
+      },
+      {
+        "suite": "native_fonts",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 200,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_fonts.txt",
+          "sha256CanonicalLf": "bda5549b40d891dff9b0a34ee38bca8524248b6a23cf2eb271c6dd51252661c2"
+        }
+      },
+      {
+        "suite": "native_browser",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6747,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser.txt",
+          "sha256CanonicalLf": "81d77bb8b5627c2cf9de46e56c301a7e6d3d3b550c22ef17f3938611111ce222"
+        }
+      },
+      {
+        "suite": "native_settings",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 804,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_settings.txt",
+          "sha256CanonicalLf": "726b0b1544d2efc7026721e69a6b9b395634cbed97b920f3607da7eba2cfe04c"
+        }
+      },
+      {
+        "suite": "native_browser_inspector",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6090,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_inspector.txt",
+          "sha256CanonicalLf": "c63b44c6e2249b1d6dadd1fe5987245069374b8911d936727e33257bfe29221c"
+        }
+      },
+      {
+        "suite": "native_browser_tools",
+        "passedIncludingLifecycle": 24,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 15871,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_tools.txt",
+          "sha256CanonicalLf": "dcfe84c9ee09915bf30f6e654e3c7fe9eb73330ef2e6e06e63e5d83ceb963b50"
+        }
+      },
+      {
+        "suite": "native_harness_files",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 124,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_files.txt",
+          "sha256CanonicalLf": "76d2f7a0c92677f5e13b410df9e63e1c5c1dc70068cef9764ceb521b6f271914"
+        }
+      },
+      {
+        "suite": "native_codex_files_runtime",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 843,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_codex_files_runtime.txt",
+          "sha256CanonicalLf": "9078d992c78d2b597569ee2c319b03fa67dc38ab17f45733521abc37656dd73c"
+        }
+      },
+      {
+        "suite": "native_provider_picker",
+        "passedIncludingLifecycle": 37,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 636,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_picker.txt",
+          "sha256CanonicalLf": "8401f127095e31b5bce73315e9caf7f9b6595b8929cd783982bce4b8f2833915"
+        }
+      },
+      {
+        "suite": "native_provider_picker_host",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 154,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_picker_host.txt",
+          "sha256CanonicalLf": "3772f4b350b077f542b5fff08458720817e64e3f35514a55a1154a16512347ee"
+        }
+      },
+      {
+        "suite": "native_provider_picker_window",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1626,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_picker_window.txt",
+          "sha256CanonicalLf": "28e21165e038dd34fed5566ee9b0ef6d5607c5390464e9efc5d637fb9bcf9c1e"
+        }
+      },
+      {
+        "suite": "native_transcript_polish",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1607,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_polish.txt",
+          "sha256CanonicalLf": "f7a44b30fa80a2524a889965516a451ceee24bac93c7b5419e60381eabe4ea57"
+        }
+      },
+      {
+        "suite": "native_opencode_harness",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8354,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_opencode_harness.txt",
+          "sha256CanonicalLf": "70e4899c086b35a7a8eba3daf3147eafca92a4055749d052089fc6b7515d0b18"
+        }
+      },
+      {
+        "suite": "native_opencode_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3114,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_opencode_engine.txt",
+          "sha256CanonicalLf": "8fabd4c67c57ee20f133cc47b5333a02be0ac6d03f16bcd09676ed22f1b54980"
+        }
+      },
+      {
+        "suite": "native_provider_removal",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 144,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_removal.txt",
+          "sha256CanonicalLf": "86847463a652082fa1f205d80306561317faf91ca0a2da3661ed9783845b2949"
+        }
+      },
+      {
+        "suite": "native_provider_removal_window",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 679,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_removal_window.txt",
+          "sha256CanonicalLf": "6a83c2fbca2dc69fe53ff08dfafd6340c44a7607501cedb06f50ab3c1f9e54d3"
+        }
+      },
+      {
+        "suite": "native_agent_prompt",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1092,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_agent_prompt.txt",
+          "sha256CanonicalLf": "9771b6245c64125b7ee7e17e9ba2503ff4acfacdf74a5c866323980bc3a24fbe"
+        }
+      },
+      {
+        "suite": "native_external_context",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 22,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_external_context.txt",
+          "sha256CanonicalLf": "d66aeb16ca9b6d3dd16b7a8123b308cd3c7e04a56f129617db06f45f5fef693e"
+        }
+      },
+      {
+        "suite": "native_agent_cycle",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 80,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_agent_cycle.txt",
+          "sha256CanonicalLf": "307d59a1daa6032032ac4711434ddfb14edb7ee5209eb90b4c979ba745286ca4"
+        }
+      },
+      {
+        "suite": "native_agent_cycle_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1259,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_agent_cycle_host.txt",
+          "sha256CanonicalLf": "f19d21270fa166063b6a0a5386b6bd99cc712383d95df1f2937f74e56bd3589f"
+        }
+      },
+      {
+        "suite": "native_opencode_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 642,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_opencode_provider_ui.txt",
+          "sha256CanonicalLf": "a72b738a91b01eed0d1e688213dce7980711a93be0ea3bdfca6d58850b15f490"
+        }
+      },
+      {
+        "suite": "native_opencode_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2951,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_opencode_host.txt",
+          "sha256CanonicalLf": "f326a99a6390a3b0bb7aad84e71faae48726df1b5d42f82017a33641137b7017"
+        }
+      },
+      {
+        "suite": "native_transcript_grouping",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 92,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_grouping.txt",
+          "sha256CanonicalLf": "a5b32356beccc784490a9518f8b2e48347eafb28de606b60cb7dcaf911d74a52"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility",
+        "passedIncludingLifecycle": 34,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 412,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_model_visibility.txt",
+          "sha256CanonicalLf": "efd80f5262280753f98128bc0a79456c22e1cf971654042d811255d6547539c5"
+        }
+      },
+      {
+        "suite": "native_provider_model_visibility_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1095,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_model_visibility_host.txt",
+          "sha256CanonicalLf": "225d530a857b90e5a51f2522d8e214d9c2b3a71de77c29e4dc9ea31d8a4eab3d"
+        }
+      },
+      {
+        "suite": "native_transcript_image_lifecycle",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 348,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_transcript_image_lifecycle.txt",
+          "sha256CanonicalLf": "bffe1b722497434b37be7fad03321767da67ec05a10903cdbf05af16ccf37a85"
+        }
+      },
+      {
+        "suite": "native_question_mcp",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4055,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_mcp.txt",
+          "sha256CanonicalLf": "696c5276c40f1887fa9f1fb4ba79a691437f71dfd19a0de8e0ead22432774600"
+        }
+      },
+      {
+        "suite": "native_rpc_deadline",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3765,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_rpc_deadline.txt",
+          "sha256CanonicalLf": "4949a81cbcf1a2e34ca1ecf768743dd6551ba7bd8c33d56b1ace48721fa7704f"
+        }
+      },
+      {
+        "suite": "native_acp_mcp",
+        "passedIncludingLifecycle": 11,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5581,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_mcp.txt",
+          "sha256CanonicalLf": "0147f4403d10b97d396d1bb644e0cae33c693d4e04755cb81ab09d8f94ac1b07"
+        }
+      },
+      {
+        "suite": "native_mcp_engine",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4417,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mcp_engine.txt",
+          "sha256CanonicalLf": "fdbbdf6c2db89122db4d4cb77884b723a33f49800ecda60ccc7fc464d4f46b71"
+        }
+      },
+      {
+        "suite": "native_acp_tool_presentation",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_tool_presentation.txt",
+          "sha256CanonicalLf": "e0b29897f5da420c944acc7c71d795886931a98f280e615b33e65f31ece59272"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_engine",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1424,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_presentation_engine.txt",
+          "sha256CanonicalLf": "a800b4e7cbcf9c56fab1ce9397e094522c7d9a662f7021e95eff0420d9c5fd66"
+        }
+      },
+      {
+        "suite": "native_acp_presentation_ui",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 546,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_presentation_ui.txt",
+          "sha256CanonicalLf": "2a5886d3ab0cf3be4376ce05a2a6161b112ec129fc6f73b8b5d6730df19039d7"
+        }
+      },
+      {
+        "suite": "native_claude_control",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2098,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_control.txt",
+          "sha256CanonicalLf": "9b4b82684e4f92e820c60e6b0784868d69e09e3e8ae6ace330a5c62b9a2f4082"
+        }
+      },
+      {
+        "suite": "native_claude_stream",
+        "passedIncludingLifecycle": 19,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 171,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_stream.txt",
+          "sha256CanonicalLf": "e0a469eebeb2b65932db88621c74082879ed368b9544ee1c5d38814a263a2f72"
+        }
+      },
+      {
+        "suite": "native_claude_session",
+        "passedIncludingLifecycle": 22,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7218,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_session.txt",
+          "sha256CanonicalLf": "ab016a7317a02fa2e19ae8546cdb236c5af5208f138ad4a72f6eb12aec608a2c"
+        }
+      },
+      {
+        "suite": "native_claude_discovery",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 519,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_discovery.txt",
+          "sha256CanonicalLf": "4bda1718a5bc2b69ae2d88c6ebbdf124f0c2cbedfa70f075e852f9c6851ced1e"
+        }
+      },
+      {
+        "suite": "native_claude_engine",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2547,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_engine.txt",
+          "sha256CanonicalLf": "5440c1137a8a1a629b6e93287bc92b1bd3133f94fc235165d766c4e7cbd7c0c9"
+        }
+      },
+      {
+        "suite": "native_claude_provider_ui",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 924,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_provider_ui.txt",
+          "sha256CanonicalLf": "dcc39fab7834639301ca76daa25f520fe070ca19d20120b0287528104fa315e5"
+        }
+      },
+      {
+        "suite": "native_claude_host",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2785,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_host.txt",
+          "sha256CanonicalLf": "14b6c3ff01210e48884b433223c27989de89d8dbc72648a5b24182bd69d372eb"
+        }
+      },
+      {
+        "suite": "native_harness_media",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 229,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_media.txt",
+          "sha256CanonicalLf": "8ad39cf8b76db23a4d3948cc43b3d30c24eed171cca4ceb31f8a5f5470faa97a"
+        }
+      },
+      {
+        "suite": "native_browser_context",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 99,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_context.txt",
+          "sha256CanonicalLf": "271f2e96b33ce8568ede06d5d76d00a42768938ab50284c7127681166c428924"
+        }
+      },
+      {
+        "suite": "native_browser_context_runtime",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2414,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_context_runtime.txt",
+          "sha256CanonicalLf": "f80006b0d929c1888e47703edd03d77b7f90faab530b5ab759eddb3009ada22f"
+        }
+      },
+      {
+        "suite": "native_model_discovery",
+        "passedIncludingLifecycle": 36,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 568,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_model_discovery.txt",
+          "sha256CanonicalLf": "70be497c4376b474ed747935bd7cb9ec0bdbcd12dcd2399e865ddc057b752384"
+        }
+      },
+      {
+        "suite": "native_model_discovery_host",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1723,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_model_discovery_host.txt",
+          "sha256CanonicalLf": "c6156bbc32aa0af6fa012976b2d44e5da97c0bd9e210cb0cc70620df4a7e4d29"
+        }
+      },
+      {
+        "suite": "native_harness_forms_host",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2687,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_forms_host.txt",
+          "sha256CanonicalLf": "8b6141839d7c54976c5e6fe50f8e84f95a5df81ecb56c7b38ca7047328ccf784"
+        }
+      },
+      {
+        "suite": "native_harness_continuity",
+        "passedIncludingLifecycle": 33,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 5899,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_continuity.txt",
+          "sha256CanonicalLf": "dc5988248426dc52d3478632eb57eb968de75e6178bcd3891445ae4e55a61478"
+        }
+      },
+      {
+        "suite": "native_acp_settlement",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12178,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_settlement.txt",
+          "sha256CanonicalLf": "649b80c7815c4a1bbf96a94e32fd720aa83d3839f5e32b28cf57f8d92747e095"
+        }
+      },
+      {
+        "suite": "native_utility_model_selection",
+        "passedIncludingLifecycle": 29,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 423,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_utility_model_selection.txt",
+          "sha256CanonicalLf": "7c2403d4ed613bf41aa94b148528d7b1e705e6d80030d3dbef2444694080c286"
+        }
+      },
+      {
+        "suite": "native_utility_models_host",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3667,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_utility_models_host.txt",
+          "sha256CanonicalLf": "bdb28663e1fa4dcd8a8df5d7a1f212c154ffb60524ed5124f9409055a96c13af"
+        }
+      },
+      {
+        "suite": "native_claude_resume",
+        "passedIncludingLifecycle": 31,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7944,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_resume.txt",
+          "sha256CanonicalLf": "73bd7667f47e7da579295532b5a5f0bcd91168b60f7326feacacf0dfe2415614"
+        }
+      },
+      {
+        "suite": "native_mcp_presentation",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3038,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mcp_presentation.txt",
+          "sha256CanonicalLf": "0a4b71d86df803258a69b81e122752e99bfd00727ed9684a005d7bd142754c1c"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_store",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 833,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_attachment_store.txt",
+          "sha256CanonicalLf": "804ee49743b8bb324d5673747132ef9962e8fdf2c6b9e76ece861774d3fc6039"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_wire",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2075,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_attachment_wire.txt",
+          "sha256CanonicalLf": "adafd89b14961b29181dd16c2e3568320a19e7ca1ff7906c88e315c8c6404041"
+        }
+      },
+      {
+        "suite": "native_harness_attachments_host",
+        "passedIncludingLifecycle": 26,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7964,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_attachments_host.txt",
+          "sha256CanonicalLf": "37e9dbed1e866264d491a1b87520ed6151d10db7d3456a0aa2915c8032d0d47f"
+        }
+      },
+      {
+        "suite": "native_harness_cleanup_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 789,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_cleanup_host.txt",
+          "sha256CanonicalLf": "abbd8a6bd2f070cc94b093baa620874c49f4653b91fcd512e819affe0d325e50"
+        }
+      },
+      {
+        "suite": "native_question_presentation",
+        "passedIncludingLifecycle": 44,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 336,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_presentation.txt",
+          "sha256CanonicalLf": "2cdaf48258c4b81792809993f40efcb837d7bb7e014817b64c1070842069d2b7"
+        }
+      },
+      {
+        "suite": "native_question_presentation_host",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 627,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_presentation_host.txt",
+          "sha256CanonicalLf": "1b85bb0f100ead106734b3ca68ccdb0eb949de919b1b1c913775ea2c36555330"
+        }
+      },
+      {
+        "suite": "native_direct_question_mcp",
+        "passedIncludingLifecycle": 46,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 17617,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_direct_question_mcp.txt",
+          "sha256CanonicalLf": "fd59ee792e4e4790e014e1056b5a30e3d4908219b5f813888a4aa9ae393f3c52"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_mime",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3616,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_attachment_mime.txt",
+          "sha256CanonicalLf": "8948da599dd046afa5f0e4d586db99117ffee56f5f4ea1bf4face35be3e6d8b8"
+        }
+      },
+      {
+        "suite": "native_historical_attachments",
+        "passedIncludingLifecycle": 32,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6213,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_historical_attachments.txt",
+          "sha256CanonicalLf": "26d197965dd4b48a66afb097a2521590d8a11440f55dc0d84cd031ae85d92355"
+        }
+      },
+      {
+        "suite": "native_harness_attachment_source",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 216,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_harness_attachment_source.txt",
+          "sha256CanonicalLf": "a710fb4bee7ee15691d51aefcdc5e47e6b427fe91eda747951602286445eceba"
+        }
+      },
+      {
+        "suite": "native_model_selector_display",
+        "passedIncludingLifecycle": 14,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1376,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_model_selector_display.txt",
+          "sha256CanonicalLf": "1fedde24f9381fab858b7bba127e2c8b2c4a6f50b88f60a3dd02eeafe90ad370"
+        }
+      },
+      {
+        "suite": "native_acp_original_images",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12000,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_original_images.txt",
+          "sha256CanonicalLf": "29250fcf9bcada65d0a13c7c7d2864e08e50dcfa55e4eae10179d50fc48a904c"
+        }
+      },
+      {
+        "suite": "native_acp_original_lifecycle",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3084,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_original_lifecycle.txt",
+          "sha256CanonicalLf": "15516de02f88f013f4d835816caec969a1c67edcab6410db3b49df0efcb355ee"
+        }
+      },
+      {
+        "suite": "native_acp_original_host",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 280,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_acp_original_host.txt",
+          "sha256CanonicalLf": "02cb5e0b71034146b8b87f39624f7f986f4680adcd4fb99b086d45a893531930"
+        }
+      },
+      {
+        "suite": "native_custom_model_options",
+        "passedIncludingLifecycle": 158,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 774,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_options.txt",
+          "sha256CanonicalLf": "417ebbc85560c0caf22eb9bdab930484df0bfb08d343185d788f2b7fef38da74"
+        }
+      },
+      {
+        "suite": "native_custom_model_engine",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2093,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_engine.txt",
+          "sha256CanonicalLf": "25dd1cb475946884a7546a07ff8087919d4789a60efb0ecb0acb60212f323c3e"
+        }
+      },
+      {
+        "suite": "native_custom_model_config",
+        "passedIncludingLifecycle": 15,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_config.txt",
+          "sha256CanonicalLf": "8860c9a09d6a521b3fa7982e2d56fdb7b7775402c8624823fdd41c327ab8aedf"
+        }
+      },
+      {
+        "suite": "native_custom_model_inventory",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_inventory.txt",
+          "sha256CanonicalLf": "80f245584e4fbd0880304578408152d0cb8e57d8cbb4f78adfee54b61713dea9"
+        }
+      },
+      {
+        "suite": "native_custom_model_storage",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 91,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_storage.txt",
+          "sha256CanonicalLf": "426f8b4b9be4113e3165186a546f961be7fe755866989c1f00ffd63580783827"
+        }
+      },
+      {
+        "suite": "native_custom_model_media",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_media.txt",
+          "sha256CanonicalLf": "f51127369c3fc9f1bb89fcafecf567e61871e7bb436dc00a5f0b64e40e6be406"
+        }
+      },
+      {
+        "suite": "native_custom_model_ui",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 269,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_ui.txt",
+          "sha256CanonicalLf": "5cc8aa63f0b11ad343fb397319f42c32f33844ca37be293b94f7993236d336e4"
+        }
+      },
+      {
+        "suite": "native_custom_model_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3396,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_host.txt",
+          "sha256CanonicalLf": "5f890c314fb899283925378b6f571094c9fe833c8cbbce4ca56d525d0303049f"
+        }
+      },
+      {
+        "suite": "native_custom_model_smoke",
+        "passedIncludingLifecycle": 4,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 370,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_custom_model_smoke.txt",
+          "sha256CanonicalLf": "6fba72c306f1a1634788eab088aed26c821d5a21db9e61615d79ff6298198895"
+        }
+      },
+      {
+        "suite": "native_settings_presentation",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1804,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_settings_presentation.txt",
+          "sha256CanonicalLf": "07ad084c9976f36f9100bd08c44450131bfb96c122c8aaf528660e30b62112ac"
+        }
+      },
+      {
+        "suite": "native_workspace_tree",
+        "passedIncludingLifecycle": 21,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 9572,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workspace_tree.txt",
+          "sha256CanonicalLf": "4ce5f6a453e0d482c50cb387267f416b3fd11b3d2c408c82b4d5226a13eeca39"
+        }
+      },
+      {
+        "suite": "native_workspace_tree_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2843,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_workspace_tree_host.txt",
+          "sha256CanonicalLf": "fb310dc2f4cb3fca42f52a80b37734a3e3f0d4200f562bc8f0d9c16ccf2b7c0e"
+        }
+      },
+      {
+        "suite": "native_context_budget",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_context_budget.txt",
+          "sha256CanonicalLf": "0347b293f5c7e5ef0ae7716779cc011b6313b05a767045cbd64b43c4b46ee129"
+        }
+      },
+      {
+        "suite": "native_context_budget_host",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3208,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_context_budget_host.txt",
+          "sha256CanonicalLf": "8d47d95bd2d8d0492c4faec416fb04f90b9e6c39657389a19be9694b5f75f755"
+        }
+      },
+      {
+        "suite": "native_plugin_findings",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 81,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_plugin_findings.txt",
+          "sha256CanonicalLf": "cbdac98696d4e63b96754254700094a8d65c23ef7a93671653ca9f8a218843b9"
+        }
+      },
+      {
+        "suite": "native_streaming_followups",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 23251,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_streaming_followups.txt",
+          "sha256CanonicalLf": "4897a78d281ece076cb8ac487c4b56d1676437b204b4aac63b737520f5f4861e"
+        }
+      },
+      {
+        "suite": "native_git_findings",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 15905,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_git_findings.txt",
+          "sha256CanonicalLf": "ebf91b7de64eb15fc28351442ff3e01b44a29a37b7eed0251f35c5fd6945566a"
+        }
+      },
+      {
+        "suite": "native_claude_followups_stream",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 40,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_followups_stream.txt",
+          "sha256CanonicalLf": "97399d937fb6efc7f12516c4a03c1f6470ce12b61b29678a9c28dac349bf7047"
+        }
+      },
+      {
+        "suite": "native_claude_followups_session",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3028,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_followups_session.txt",
+          "sha256CanonicalLf": "cd2d4c45ac231b8acfce288232a13f3f91d3d1666ecfde6b1c6aa6e083cbe693"
+        }
+      },
+      {
+        "suite": "native_claude_followups_engine",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1270,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_claude_followups_engine.txt",
+          "sha256CanonicalLf": "b6667788c4e066b4dc47a36d33c0403b2d71e943de2c7dcbcec86f5aa69410ed"
+        }
+      },
+      {
+        "suite": "native_browser_navigation_followups",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 921,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_navigation_followups.txt",
+          "sha256CanonicalLf": "678a320f85722bc1ee6fb952a378189e5293e532c7ad0ab33974914b64088470"
+        }
+      },
+      {
+        "suite": "native_browser_history_followups",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6708,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_history_followups.txt",
+          "sha256CanonicalLf": "c932f119cfeb5eb1c880fa2c1c157d4bf31990f22c249622f666e42b3b127272"
+        }
+      },
+      {
+        "suite": "native_cursor",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 10845,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_cursor.txt",
+          "sha256CanonicalLf": "794aa72b361f875db618c1430cdd8476663d98c8e2504df3800ebd0be16c0778"
+        }
+      },
+      {
+        "suite": "native_cursor_engine",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3441,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_cursor_engine.txt",
+          "sha256CanonicalLf": "28001ae5771986aae3ec48f098bb4a754a9323cf6a3753b62c9238e6a7eda0ea"
+        }
+      },
+      {
+        "suite": "native_cursor_ui",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 80,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_cursor_ui.txt",
+          "sha256CanonicalLf": "d3df829fe463cf6a32792b23cde27866fc23d1c9fc9471d32de6ad4ace76977e"
+        }
+      },
+      {
+        "suite": "native_cursor_host",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8136,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_cursor_host.txt",
+          "sha256CanonicalLf": "131eb58b441b395218864741989516d940b437b305d6a2af0f69f94deb52b533"
+        }
+      },
+      {
+        "suite": "native_slash_context",
+        "passedIncludingLifecycle": 12,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 65,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_slash_context.txt",
+          "sha256CanonicalLf": "b5d92a0eb3ff821352961b52db945d4cdee9c6643ee46ef8bccb1c27ae5931e1"
+        }
+      },
+      {
+        "suite": "native_skills_host",
+        "passedIncludingLifecycle": 16,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 7170,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_skills_host.txt",
+          "sha256CanonicalLf": "0069f12c47a11a66c8bc91528b0b39db5a0f4c8e2a64b7c6412dacea78c849b0"
+        }
+      },
+      {
+        "suite": "native_mutation_findings",
+        "passedIncludingLifecycle": 35,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 3726,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mutation_findings.txt",
+          "sha256CanonicalLf": "fd34344f1f3151b4b99a1372cd5e73e8882b960e25e54d94ed17c861f342f6e1"
+        }
+      },
+      {
+        "suite": "native_provider_http_rules",
+        "passedIncludingLifecycle": 44,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2809,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_http_rules.txt",
+          "sha256CanonicalLf": "fbc79e258be8bfc9001f4a17b5303d7b4bd65fcc184021a97a919b956a061a07"
+        }
+      },
+      {
+        "suite": "native_provider_http_engine",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 992,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_http_engine.txt",
+          "sha256CanonicalLf": "0285f2cd799b478df8aa72afe024f99e3cc86b0cc48ae5613094906c6010d8be"
+        }
+      },
+      {
+        "suite": "native_mini_app_findings",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9035,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_mini_app_findings.txt",
+          "sha256CanonicalLf": "576f4f277521b45ab841c942bac83eaec67775fc40176f3d01c084e3877f2c3a"
+        }
+      },
+      {
+        "suite": "native_question_findings",
+        "passedIncludingLifecycle": 43,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 6029,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_findings.txt",
+          "sha256CanonicalLf": "2880db62ee58ce52353b8b76b8a7adef547b0484973f019e233f02001bee45f8"
+        }
+      },
+      {
+        "suite": "native_shell_followups",
+        "passedIncludingLifecycle": 23,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 50442,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_shell_followups.txt",
+          "sha256CanonicalLf": "da234707e1cb5b7fa1a19303876488f9673825e14bf84d1e81f9a1330805f571"
+        }
+      },
+      {
+        "suite": "native_provider_provenance",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 493,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_provider_provenance.txt",
+          "sha256CanonicalLf": "7538d85cc7d55a26960432b3898cfce3e93eef047345e5a3ec1acfbd568a2efb"
+        }
+      },
+      {
+        "suite": "native_question_stall",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 50925,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_stall.txt",
+          "sha256CanonicalLf": "779b582c3ee8e9bda1673c4a1bd288181bcac1a8707ff4f5b55b454f3f1aab49"
+        }
+      },
+      {
+        "suite": "native_startup_recovery",
+        "passedIncludingLifecycle": 20,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4193,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_startup_recovery.txt",
+          "sha256CanonicalLf": "8929809b0137a09eda9355e612c33b07a22ec5aa804c5758bb82b66e1aa59c35"
+        }
+      },
+      {
+        "suite": "native_search_findings",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 392,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_search_findings.txt",
+          "sha256CanonicalLf": "1a141c35a043746d3c2bd8494bc7859d36ae773f13a74ab2f9b6ab4eeb514187"
+        }
+      },
+      {
+        "suite": "native_search_read_budget",
+        "passedIncludingLifecycle": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 51,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_search_read_budget.txt",
+          "sha256CanonicalLf": "870125aba585cdc1568c5f0dae843748c09ee94af067cf5dbf4e6bdcd1d6c0fa"
+        }
+      },
+      {
+        "suite": "native_browser_event_findings",
+        "passedIncludingLifecycle": 18,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 8864,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_event_findings.txt",
+          "sha256CanonicalLf": "a8bf88f7699a73e6e425be6db1b78d974f2caab8e6fb5b51b40e226eab055e33"
+        }
+      },
+      {
+        "suite": "native_desktop_provider",
+        "passedIncludingLifecycle": 10,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1851,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_desktop_provider.txt",
+          "sha256CanonicalLf": "ed22565b0a98c61b28ce2bc024892283e1fd47f859ae0ed99e0836457e69a772"
+        }
+      },
+      {
+        "suite": "native_browser_output",
+        "passedIncludingLifecycle": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 16820,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_browser_output.txt",
+          "sha256CanonicalLf": "8a8ccbea8d6b0e9faac715099a0b71415d6514b8a9e195a7e189e9bee3e6e699"
+        }
+      },
+      {
+        "suite": "native_question_priority",
+        "passedIncludingLifecycle": 9,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1721,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_question_priority.txt",
+          "sha256CanonicalLf": "e3614d3edbaa954b821836d506364cbae3337d995a0d00bd8abb9cb19f4be8fa"
+        }
+      },
+      {
+        "suite": "native_settings_shortcuts",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1746,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_settings_shortcuts.txt",
+          "sha256CanonicalLf": "0eee755a4603deb54b24fe18b7e7851e915f2454ee04ec3f02c38e4070164ec8"
+        }
+      },
+      {
+        "suite": "native_markdown_findings",
+        "passedIncludingLifecycle": 41,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 214,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_markdown_findings.txt",
+          "sha256CanonicalLf": "8562e79548aaf5791f3623594568adf6c072fb2ac50e7e8d54914b8c9bab7040"
+        }
+      },
+      {
+        "suite": "native_markdown_link_scope",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 88,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_markdown_link_scope.txt",
+          "sha256CanonicalLf": "fd8adc99c0b91c26b59f363aaa45f1904fdd0735d8df943a5ce2347331115c4c"
+        }
+      },
+      {
+        "suite": "native_diff_preview_edge",
+        "passedIncludingLifecycle": 5,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_diff_preview_edge.txt",
+          "sha256CanonicalLf": "c7bd31601de31eb7f72f80e209406a0cd5175d645d69f5c38b78b52b0f9b9e6a"
+        }
+      },
+      {
+        "suite": "native_hidden_browser",
+        "passedIncludingLifecycle": 25,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 12533,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_hidden_browser.txt",
+          "sha256CanonicalLf": "9b0bf91f8474dd124eb86d76a82b133914923fafa7f56da9e1d08929a0d330d5"
+        }
+      },
+      {
+        "suite": "native_agent_activity",
+        "passedIncludingLifecycle": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 180,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_agent_activity.txt",
+          "sha256CanonicalLf": "69b9a18acab234dcb566be1ef92a70ff64d7dae8394449fbf57eaa03cf741e83"
+        }
+      },
+      {
+        "suite": "native_notification_sounds",
+        "passedIncludingLifecycle": 28,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 302,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_notification_sounds.txt",
+          "sha256CanonicalLf": "f7f92fea774ef92b8235dcc75b20973a5fca236ab70631123bad9b4d65491d2f"
+        }
+      },
+      {
+        "suite": "native_power_request",
+        "passedIncludingLifecycle": 7,
+        "failed": 0,
+        "skipped": 1,
+        "milliseconds": 1,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_power_request.txt",
+          "sha256CanonicalLf": "090c92bb0495d5331b075f62ae4b82f00c91b9dab240ca3cb693103c2225f8d5"
+        }
+      },
+      {
+        "suite": "native_instance_coordinator",
+        "passedIncludingLifecycle": 17,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 4040,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_instance_coordinator.txt",
+          "sha256CanonicalLf": "394e2c7d1788cc04c6f34e8e41a52fa10e5c97c0b59111ddb59a6b63c1d03058"
+        }
+      },
+      {
+        "suite": "native_instance_window_host",
+        "passedIncludingLifecycle": 8,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1753,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_instance_window_host.txt",
+          "sha256CanonicalLf": "128870c91402b92e2bc5413af47dcf5b131726d02744e16e65c5261dd1ccde30"
+        }
+      },
+      {
+        "suite": "native_history_retry_harness",
+        "passedIncludingLifecycle": 6,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1298,
+        "report": {
+          "path": "audit/parity-integration-11/final/native_history_retry_harness.txt",
+          "sha256CanonicalLf": "0ef5beb602daec58df5977ba8089bb8e5e87b1d60f5641e3bbe742c75b64dfe2"
+        }
+      },
+      {
+        "suite": "reference_file_mutations",
+        "passedIncludingLifecycle": 40,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1713,
+        "report": {
+          "path": "audit/parity-integration-11/final/reference_file_mutations.txt",
+          "sha256CanonicalLf": "6ef4d8912909c40f645060bc71ba10fbdf1a63cd5a120f9ec527ae90addafebe"
+        }
+      },
+      {
+        "suite": "reference_git_usage",
+        "passedIncludingLifecycle": 30,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 2218,
+        "report": {
+          "path": "audit/parity-integration-11/final/reference_git_usage.txt",
+          "sha256CanonicalLf": "a944f77d8a63f170ac8ad5886b52a22da9ec0359a0b9891d18eba8130393e385"
+        }
+      }
+    ],
+    "junit": {
+      "path": "audit/parity-integration-11/full-ctest.xml",
+      "sha256CanonicalLf": "a78a32d951511981416f987d9390b36ddd3c091ffa4911f2df842bd057808ae0"
+    },
+    "log": {
+      "path": "audit/parity-integration-11/full-ctest.txt",
+      "sha256CanonicalLf": "022a3d79db8d49bc3c6a1c85f60beebbfc79e4ccf13f888d74af002f40caf83c"
+    },
+    "buildLog": {
+      "path": "audit/parity-integration-11/build.txt",
+      "sha256CanonicalLf": "c2ed93ffd93c840755c0e91392ae593b1b52de9b7aaf6c208123feaceb1dde2e"
+    },
+    "focusedGate": {
+      "path": "audit/parity-integration-11/focused-ctest.xml",
+      "sha256CanonicalLf": "41b09ce51897e889d4b69f855df33628b5334543a86c646d9aff55181c9e3904"
+    },
+    "optInDeviceSmokes": {
+      "power": {
+        "path": "audit/parity-integration-11/power-request-smoke.txt",
+        "sha256CanonicalLf": "aaff7eba58c2b684add753bc8a15149f70a663e47ad14626edcdd436afccabfe"
+      },
+      "audio": "not run: plays audible tones on the owner machine; synthesized PCM output path covered only by stubbed tests"
+    }
+  },
+  "coveredChanges": [
+    "Failed-turn Retry (agent-history slice 1): durable bounded failure record, Retry card per upstream canRetry, atomic history+queue replacement, harness thread reset, saved selection and draft preservation.",
+    "Runtime consumers for stored preferences: notification sounds with upstream trigger/suppression rules and synthesized ADE packs, keep-awake power request while agents work, per-data-dir single-instance coordination forwarding startup URLs.",
+    "Shortcut ledger slices S1-S4 and S7: terminal focus/toggle, context selector, file tree changes/files modes, Ctrl+C stop routed to the active chat surface, image center, thinking-effort cycling for harness-discovered efforts.",
+    "Read-only code views number lines uniformly like upstream code blocks."
+  ],
+  "componentEvidence": [
+    {
+      "path": "audit/parity-integration-11/components/agent-history.md",
+      "sha256CanonicalLf": "2d15e00b291f6d0b80ec13c1231e4bf27a58d58b389138438b02da8e4ea6e7cb"
+    },
+    {
+      "path": "audit/parity-integration-11/components/agent-history-corrections.json",
+      "sha256CanonicalLf": "c8a650606a9a0331a4419cf04de9efd5c964f54eab6cae778752a8d6400fc8ad"
+    },
+    {
+      "path": "audit/parity-integration-11/components/runtime-services.md",
+      "sha256CanonicalLf": "cc7bcd8d4869a3d167b51c1029b0dbc6c66d31443def7d1aec9ea93f31bb15e1"
+    },
+    {
+      "path": "audit/parity-integration-11/components/runtime-services-corrections.json",
+      "sha256CanonicalLf": "add34acf01a8010d261e2b3fdd2b1326e6d7cc21fb19e499832097ff1e5361a0"
+    },
+    {
+      "path": "audit/parity-integration-11/components/shortcuts.md",
+      "sha256CanonicalLf": "1087260f5f73613ebab0388ae785f4c899e30ad69942aa04f279be0847b1322f"
+    },
+    {
+      "path": "audit/parity-integration-11/components/shortcuts-corrections.json",
+      "sha256CanonicalLf": "d4e898ac968e21dc47196bf49eaf31efb9936e88b2d601ae86c78b7d52ef9018"
+    },
+    {
+      "path": "audit/parity-integration-11/components/batch11-fix-results.json",
+      "sha256CanonicalLf": "0f78290726e5726b033a66307dfc6f85bde0ff2223c615e8ed2d6e9d17c305b9"
+    }
+  ],
+  "reproducedBefore": [],
+  "liveValidation": {
+    "status": "codex_passed_deepseek_blocked_by_provider_outage",
+    "reports": [
+      {
+        "path": "audit/parity-integration-11/live/codex-subscription.json",
+        "sha256CanonicalLf": "fb18d88d8f4c24fba1e3b7ca331654aaa0b59afc67a8fc8ed6b6c620f4377006"
+      },
+      {
+        "path": "audit/parity-integration-11/live/deepseek-provider-outage.json",
+        "sha256CanonicalLf": "4e1672418e41560a0e6dd05eb477068e33579da6986c4e163b1e373e9e1d2f32"
+      }
+    ]
+  },
+  "package": "out/parity-integration-11",
+  "binaries": [
+    {
+      "path": "ADE.exe",
+      "sha256": "780a3d0940d704dba371125aae1025ba9a24c886553d9f81c353045284cf5e83",
+      "bytes": 86888478,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "bcrypt.dll",
+        "comdlg32.dll",
+        "CRYPT32.dll",
+        "d3d11.dll",
+        "d3d12.dll",
+        "d3d9.dll",
+        "DNSAPI.dll",
+        "dwmapi.dll",
+        "DWrite.dll",
+        "dxgi.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ncrypt.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ODBC32.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "api-ms-win-core-winrt-l1-1-0.dll",
+        "api-ms-win-core-winrt-string-l1-1-0.dll",
+        "Secur32.dll",
+        "SETUPAPI.dll",
+        "SHCORE.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "UxTheme.dll",
+        "VERSION.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "WTSAPI32.dll"
+      ]
+    },
+    {
+      "path": "ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "bytes": 19775944,
+      "peImports": [
+        "ADVAPI32.dll",
+        "AUTHZ.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "NETAPI32.dll",
+        "ntdll.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    {
+      "path": "WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "bytes": 194912,
+      "peImports": [
+        "KERNEL32.dll"
+      ]
+    }
+  ],
+  "versionSmoke": "ADE 0.1.0",
+  "packagedUiVerification": {
+    "status": "bounded_direct_windows_checks_passed_live_send_blocked_by_provider_outage",
+    "report": {
+      "path": "audit/parity-integration-11/packaged-gui.json",
+      "sha256CanonicalLf": "cad82155c5db3e8f7dd0b04a1fc9b77a23819cb0bd7b721b608a449c5f84c358"
+    }
+  },
+  "limits": [
+    "The701-row scope and17331-function reference index remain preserved. Full semantic, line-by-line, pixel and identical reasoning parity is not established.",
+    "All live and packaged GUI claims remain historical until this exact new binary is separately exercised.",
+    "Retry: fresh display id (upstream reuses the message id); dispatch uses the saved chat selection, not unsent composer choices; failure records bounded to 2000 chars/4096 bytes; Ctrl+Enter ERROR_RETRY priority, edit/replace and revert/restore checkpoint are not implemented.",
+    "Sounds: built-in packs are synthesized PCM, not upstream audio assets; the question chime is an ADE addition; real audio output was not exercised in gates (opt-in smoke). Keep-awake uses Win32 power requests; real request smoke passed once.",
+    "Single instance uses an ADE-specific local-socket protocol; non-ownership lock errors start uncoordinated.",
+    "Shortcuts: thinking-effort cycling only for harness-discovered efforts; shortcuts are not reachable from WebView2 page content; Markdown/SVG preview shortcuts (S5/S6), tab pin and edit-nearest-message remain missing.",
+    "Background unread/error/waiting status, native search gitignore parity and browser screenshot fallback (B6) remain outside this cohort.",
+    "Cursor actual login/inference and remote services without credentials remain unverified."
+  ],
+  "publication": "Not published separately; superseded by checkpoint 12 before publication.",
+  "finalizedUtc": "2026-11-07T07:52:13.893431+00:00"
+}

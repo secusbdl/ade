@@ -1,0 +1,17 @@
+********* Start testing of CursorHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CursorHostTest::initTestCase()
+PASS   : CursorHostTest::connectControlsRemainUsable(light-wide)
+PASS   : CursorHostTest::connectControlsRemainUsable(dark-wide)
+PASS   : CursorHostTest::connectControlsRemainUsable(light-narrow)
+PASS   : CursorHostTest::connectControlsRemainUsable(dark-narrow)
+PASS   : CursorHostTest::actualComposerConnectStreamAndRestart()
+PASS   : CursorHostTest::realInlinePermissionAndPlan(permission)
+PASS   : CursorHostTest::realInlinePermissionAndPlan(plan)
+PASS   : CursorHostTest::questionSwitchAndActualSubmitStayOwned(answer)
+PASS   : CursorHostTest::questionSwitchAndActualSubmitStayOwned(stop-partial)
+PASS   : CursorHostTest::pendingConnectStopRejectsStaleCard()
+PASS   : CursorHostTest::actualHostOriginalImageAndHistoryReference()
+PASS   : CursorHostTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 8136ms
+********* Finished testing of CursorHostTest *********

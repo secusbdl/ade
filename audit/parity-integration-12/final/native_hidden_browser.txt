@@ -1,0 +1,46 @@
+********* Start testing of HiddenBrowserTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HiddenBrowserTests::initTestCase()
+QWARN  : HiddenBrowserTests::neverShownTabInitializesForScopedRequest() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-piCASE" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::neverShownTabInitializesForScopedRequest()
+PASS   : HiddenBrowserTests::restoredMetadataIsAvailableWithoutLoading(expanded)
+PASS   : HiddenBrowserTests::restoredMetadataIsAvailableWithoutLoading(collapsed)
+QWARN  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-0) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-HsrVLh" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-0)
+QWARN  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-1) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-SkdjHB" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-1)
+QWARN  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-0) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-MANNKI" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-0)
+QWARN  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-1) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-SBcitB" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-1)
+PASS   : HiddenBrowserTests::foreignRequestCannotStartHiddenTab()
+QWARN  : HiddenBrowserTests::hiddenConsoleRequestWaitsForInitialDocument() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-VYdBYJ" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::hiddenConsoleRequestWaitsForInitialDocument()
+QWARN  : HiddenBrowserTests::readyVisibleTabDispatchesDuringFirstLoad() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-HVAoFu" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::readyVisibleTabDispatchesDuringFirstLoad()
+QWARN  : HiddenBrowserTests::aboutBlankHiddenTabAcceptsCdp() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-hrZhEI" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::aboutBlankHiddenTabAcceptsCdp()
+QWARN  : HiddenBrowserTests::resumedStartupRequestExecutesOnce() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-WvqUKl" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::resumedStartupRequestExecutesOnce()
+QWARN  : HiddenBrowserTests::hiddenTabUsesContentAreaViewport() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-kAvHHM" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::hiddenTabUsesContentAreaViewport()
+PASS   : HiddenBrowserTests::malformedRequestDoesNotInitialize()
+QWARN  : HiddenBrowserTests::cancelDuringInitialLoadNeverExecutesQueuedCdp() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-ScWvZm" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::cancelDuringInitialLoadNeverExecutesQueuedCdp()
+QWARN  : HiddenBrowserTests::deadlineDuringInitialLoadSettlesOnce() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-zesBzh" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::deadlineDuringInitialLoadSettlesOnce()
+QWARN  : HiddenBrowserTests::ownerRecheckedAfterInitialization() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-jHnIQH" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::ownerRecheckedAfterInitialization()
+QWARN  : HiddenBrowserTests::reusedRequestIdRetainsOriginalCorrelation() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-pfscps" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::reusedRequestIdRetainsOriginalCorrelation()
+QWARN  : HiddenBrowserTests::initialFailureCanRetryAfterProfileRepair() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-IoQsRe" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::initialFailureCanRetryAfterProfileRepair()
+PASS   : HiddenBrowserTests::completionMayDeleteBridgeDuringSynchronousInitFailure()
+QWARN  : HiddenBrowserTests::initialNavigationFailureSettlesBeforeDeadline() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-oxcZmz" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::initialNavigationFailureSettlesBeforeDeadline()
+PASS   : HiddenBrowserTests::initialMetadataObserverMayDeleteWindow()
+QWARN  : HiddenBrowserTests::closingInitializingTabSettlesRequest() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-rjfVsL" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::closingInitializingTabSettlesRequest()
+PASS   : HiddenBrowserTests::cleanupTestCase()
+Totals: 25 passed, 0 failed, 0 skipped, 0 blacklisted, 12232ms
+********* Finished testing of HiddenBrowserTests *********

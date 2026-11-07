@@ -53,6 +53,7 @@ private slots:
     void partialUndoRestoresMixedDelimiterMetadata();
     void findReplacePreservesLiteralsAndUndo();
     void gutterSyntaxAndIndentation();
+    void readOnlyLineNumbersAreUniform();
     void explicitThemeSurvivesTransparentPalette();
     void watchesAtomicExternalReplacement();
 };
@@ -211,6 +212,26 @@ void EditorTest::gutterSyntaxAndIndentation(){
     QCOMPARE(editor.sourceText(),QString("    value\n    "));editor.undo();
     cursor=editor.textCursor();cursor.setPosition(0);editor.setTextCursor(cursor);QTest::keyClick(&editor,Qt::Key_Return);QCOMPARE(editor.sourceText(),QString("\n    value"));
     editor.setPlainText("a\nb");editor.selectAll();QTest::keyClick(&editor,Qt::Key_Tab);QCOMPARE(editor.sourceText(),QString("    a\n    b"));editor.undo();QCOMPARE(editor.sourceText(),QString("a\nb"));
+}
+void EditorTest::readOnlyLineNumbersAreUniform(){
+    // Upstream transcript code blocks number every line uniformly. Only an editable editor
+    // emphasizes the cursor line, matching its current-line band (absent when read-only).
+    const auto darkest=[](const QImage &image,int top,int bottom){
+        int best=255;
+        for(int y=qMax(0,top);y<qMin(image.height(),bottom);++y)for(int x=0;x<image.width();++x)best=qMin(best,qGray(image.pixel(x,y)));
+        return best;
+    };
+    for(const bool readOnly:{false,true}){
+        CodeEditor editor;editor.resize(400,200);editor.setPlainText("one\ntwo\n");editor.setReadOnly(readOnly);
+        auto cursor=editor.textCursor();cursor.movePosition(QTextCursor::End);editor.setTextCursor(cursor);
+        auto *gutter=editor.findChild<QWidget *>("editorLineNumbers");QVERIFY(gutter);
+        const QImage image=gutter->grab().toImage();const qreal ratio=image.devicePixelRatio();
+        const auto band=[&](int block){const auto rect=editor.cursorRect(QTextCursor(editor.document()->findBlockByNumber(block)));return darkest(image,qRound(rect.top()*ratio),qRound((rect.bottom()+1)*ratio));};
+        const int other=band(0),current=band(2);
+        QVERIFY2(other<200&&current<200,qPrintable(QString("numbers not painted: %1 %2").arg(other).arg(current)));
+        if(readOnly)QVERIFY2(qAbs(current-other)<=12,qPrintable(QString("read-only %1 vs %2").arg(current).arg(other)));
+        else QVERIFY2(current+20<other,qPrintable(QString("editable %1 vs %2").arg(current).arg(other)));
+    }
 }
 void EditorTest::watchesAtomicExternalReplacement(){
     QTemporaryDir directory;const auto path=directory.filePath("watched.txt");QVERIFY(put(path,"before"));

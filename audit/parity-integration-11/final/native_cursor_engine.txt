@@ -1,0 +1,16 @@
+********* Start testing of CursorEngineTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CursorEngineTest::initTestCase()
+PASS   : CursorEngineTest::persistedProviderRejectsWrongProtocolAndKey()
+PASS   : CursorEngineTest::actualEngineRequiresExplicitConnectEvenAlwaysAllow()
+PASS   : CursorEngineTest::restartResumeAndEditedHistoryStartsFresh()
+PASS   : CursorEngineTest::permissionsAndPlansStayDistinct(permission)
+PASS   : CursorEngineTest::permissionsAndPlansStayDistinct(plan)
+PASS   : CursorEngineTest::nativeQuestionValidatesAndCompletes()
+PASS   : CursorEngineTest::ordinaryCursorToolCannotBecomeStagewiseWrapper()
+PASS   : CursorEngineTest::ownerDeleteAtQuestionDisplay()
+PASS   : CursorEngineTest::ownerDeleteAtConnect()
+PASS   : CursorEngineTest::cancellationRejectsStaleConnectionDecision()
+PASS   : CursorEngineTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 3441ms
+********* Finished testing of CursorEngineTest *********

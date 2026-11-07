@@ -1,0 +1,17 @@
+********* Start testing of BrowserInspectorTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserInspectorTest::initTestCase()
+PASS   : BrowserInspectorTest::cancellationInsideBusyObservers(starting)
+PASS   : BrowserInspectorTest::cancellationInsideBusyObservers(ready)
+PASS   : BrowserInspectorTest::replacementSelectionRetiresOldCompletionSignals()
+PASS   : BrowserInspectorTest::presetsMatchPinnedSource()
+PASS   : BrowserInspectorTest::capturesSelectedElementAndExcludesInputValue()
+PASS   : BrowserInspectorTest::overlaySelectionAndCancellation()
+PASS   : BrowserInspectorTest::deviceViewportAndReset()
+PASS   : BrowserInspectorTest::screenshotAndNavigationRetirement()
+PASS   : BrowserInspectorTest::captureContextIsPinnedBeforeObserversAndSelection()
+PASS   : BrowserInspectorTest::fittedViewportKeepsLogicalDeviceSize()
+PASS   : BrowserInspectorTest::observersMayDestroyInspector()
+PASS   : BrowserInspectorTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 5911ms
+********* Finished testing of BrowserInspectorTest *********

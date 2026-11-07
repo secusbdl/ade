@@ -2,6 +2,7 @@
 #include "harness/CursorHarnessSession.h"
 #include "CustomModelOptions.h"
 #include "HarnessHistory.h"
+#include "TurnFailure.h"
 #include "AgentPrompt.h"
 #include "ProviderProtocol.h"
 #include "UtilityService.h"
@@ -169,7 +170,7 @@ void AgentEngine::setDynamicSystemContext(std::function<QString()> context) {
 }
 
 void AgentEngine::setMessages(const QJsonArray &messages) {
-    if (!m_busy) { if(m_messages!=messages)stopHarness(); const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=(!m_messages.isEmpty() && HarnessHistory::canonicalDigest(m_messages)!=HarnessHistory::canonicalDigest(messages))?HarnessHistory::withoutBindings(messages):messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;const QPointer<AgentEngine> self(this);reconcileMutationHistory();if(self&&changed)emit displayChanged(); }
+    if (!m_busy) { m_turnFailure={};m_turnUserRowId.clear();if(m_messages!=messages)stopHarness(); const bool changed=m_messages!=messages||!m_display.id().isEmpty();if(m_messages!=messages)m_fallback.reset();m_messages=(!m_messages.isEmpty() && HarnessHistory::canonicalDigest(m_messages)!=HarnessHistory::canonicalDigest(messages))?HarnessHistory::withoutBindings(messages):messages;m_display={};m_displayHistoryIndex=-1;m_responseRetained=true;const QPointer<AgentEngine> self(this);reconcileMutationHistory();if(self&&changed)emit displayChanged(); }
 }
 QJsonArray AgentEngine::displayHistory(const QJsonArray& history){return AgentPresentation::history(history);}
 QJsonArray AgentEngine::displayMessages() const {
@@ -216,7 +217,7 @@ void AgentEngine::setShellReadSource(FileReadSource source) {
 bool AgentEngine::submitWithAttachments(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata) {
     return startUserMessage(prompt,references,pathReferences,pathMetadata);
 }
-bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata,const QString& queuedId,const QJsonObject& immediateMessage) {
+bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &references, const QJsonObject &pathReferences, const QJsonObject &pathMetadata,const QString& queuedId,const QJsonObject& immediateMessage,const std::optional<QJsonArray>& replacementPrefix) {
     if(m_committingQueue)return false;
     if (m_busy) { emit failed(QStringLiteral("This agent is already running.")); return false; }
     const QPointer<AgentEngine> self(this);const auto initialGeneration=m_generation;
@@ -266,24 +267,37 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
     // before adding a new user message. Build a candidate first so malformed
     // imports cannot partially rewrite the caller's history or trigger tools.
     QJsonArray recovered;QString historyError;
-    if(!recoverInterruptedHistory(m_messages,&recovered,&historyError)){rejectSubmission(historyError);return false;}
+    if(!recoverInterruptedHistory(replacementPrefix?*replacementPrefix:m_messages,&recovered,&historyError)){rejectSubmission(historyError);return false;}
     QJsonObject message{{"role", "user"}, {"content", prompt}};
     if (!references.isEmpty()) {QJsonObject metadata{{"attachments", references}, {"pathReferences", pathReferences}};if(!pathMetadata.isEmpty())metadata["pathMetadata"]=pathMetadata;message["metadata"]=metadata;}
     const auto displayId=QUuid::createUuid().toString(QUuid::WithoutBraces);
     message=AgentPresentation::withMetadata(message,QJsonObject{{"version",1},{"id",displayId},{"parts",QJsonArray{QJsonObject{{"id",displayId+"/0"},{"type","text"},{"text",prompt},{"state","done"}}}}});
-    auto remaining=m_queuedMessages;
+    const auto previousQueue=m_queuedMessages;
+    // A replaced history (Retry) clears the queue in the same commit, as the
+    // pinned state mutations do in one store update.
+    auto remaining=replacementPrefix?QJsonArray{}:m_queuedMessages;
     if(!immediateMessage.isEmpty()){message=immediateMessage;message.remove("id");}
     if(!queuedId.isEmpty()){
         if(remaining.isEmpty()||remaining.first().toObject()["id"]!=queuedId)return false;
         message=remaining.takeAt(0).toObject();message.remove("id");
     }
     recovered.append(message);
-    if(!queuedId.isEmpty()||!immediateMessage.isEmpty()){
-        QString error;const bool saved=commitQueue(recovered,remaining,&error);
+    if(!queuedId.isEmpty()||!immediateMessage.isEmpty()||replacementPrefix){
+        QString error;bool saved=false;
+        {
+            // Hosts distinguish an accepted user turn from saves of a running turn.
+            m_commitKind=replacementPrefix?CommitKind::ReplaceAndAcceptUser:CommitKind::AcceptUser;
+            const auto resetKind=qScopeGuard([self]{if(self)self->m_commitKind=CommitKind::Update;});
+            saved=commitQueue(recovered,remaining,&error);
+        }
         if(!self||initialGeneration!=m_generation||m_busy)return false;
         if(!saved){emit queueError(error);return false;}
     }
     m_messages=std::move(recovered);m_queuedMessages=remaining;
+    m_turnUserRowId=message["metadata"].toObject()["display"].toObject()["id"].toString();
+    m_turnFailure={};
+    // The committed candidate carries the in-memory settlements of the prefix.
+    if(replacementPrefix&&m_queueCommitter)m_mutationHistoryDirty=false;
     m_busy = true;
     const auto generation=++m_generation;
     m_round = 0;
@@ -300,7 +314,7 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
     if(!self)return true;
     m_configuringTurn=false;
     if(generation!=m_generation||!m_busy)return true;
-    if(!queuedId.isEmpty()){emit queuedMessagesChanged();if(!self||generation!=m_generation||!m_busy)return true;}
+    if(remaining!=previousQueue){emit queuedMessagesChanged();if(!self||generation!=m_generation||!m_busy)return true;}
     emit displayChanged();
     if(!self||generation!=m_generation||!m_busy)return true;
     emit busyChanged(true);
@@ -1083,8 +1097,12 @@ QString AgentEngine::redact(QString value) const {
 
 void AgentEngine::complete() {
     if (!m_busy) return;
+    // A harness that ends its turn has settled any approval still pending
+    // (Codex/ACP/Cursor sessions answer them on finish); none outlives it.
+    m_harnessApprovals.clear();
     m_lastTurnSucceeded = true;
     m_busy = false;
+    m_turnFailure={};
     const auto generation=m_generation;const QPointer<AgentEngine> self(this);
     m_display.finish();syncDisplayMetadata();emit displayChanged();
     if(!self||generation!=m_generation)return;
@@ -1111,6 +1129,8 @@ void AgentEngine::fail(const QString &message) {
     if(!self||generation!=m_generation)return;
     settleOutstandingTools("Action interrupted because the turn failed.");
     if(!self||generation!=m_generation)return;
+    // Only an accepted user turn is retryable. The record is bounded for storage.
+    if(!m_turnUserRowId.isEmpty())m_turnFailure=TurnFailure::make(m_turnUserRowId,safeMessage,QDateTime::currentMSecsSinceEpoch());
     emit displayChanged();
     if(!self||generation!=m_generation)return;
     emit busyChanged(false);
@@ -1125,6 +1145,8 @@ void AgentEngine::cancel() {
     m_lastTurnSucceeded = false;
     m_fallback.reset();
     if (!m_busy) return;
+    // An idle cancel (Stop, host guards) keeps an earlier failure retryable.
+    m_turnFailure={};
     const auto generation=++m_generation;const QPointer<AgentEngine> self(this);
     m_busy=false;
     stopCompression();
