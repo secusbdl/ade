@@ -17,6 +17,7 @@
 #include <QPushButton>
 #include <QShortcut>
 #include <QSettings>
+#include <QStackedWidget>
 #include <QTabWidget>
 #include <QToolButton>
 #include <QTreeView>
@@ -93,14 +94,14 @@ void MainWindow::initializeWorkbench() {
     connect(connectButton, &QPushButton::clicked, this, &MainWindow::chooseWorkspace);
     m_splitter->initialize(m_chat, m_tabs, m_fileTreePanel);
     connect(m_splitter, &WorkbenchSplitter::visibilityChanged, this, &MainWindow::refreshWorkbench);
-    new QShortcut(QKeySequence("Ctrl+Alt+B"), this, [this] { m_splitter->toggleContent(); });
-    new QShortcut(QKeySequence("Ctrl+Shift+B"), this, [this] { m_splitter->toggleFileTree(); });
-    new QShortcut(QKeySequence("Ctrl+Shift+E"), this, [this] {
+    new QShortcut(QKeySequence("Ctrl+Alt+B"), m_pages->widget(0), [this] { m_splitter->toggleContent(); });
+    new QShortcut(QKeySequence("Ctrl+Shift+B"), m_pages->widget(0), [this] { m_splitter->toggleFileTree(); });
+    new QShortcut(QKeySequence("Ctrl+Shift+E"), m_pages->widget(0), [this] {
         m_splitter->setFileTreeVisible(true);
         if (m_files->isVisible())
             m_files->setFocus();
     });
-    new QShortcut(QKeySequence("Ctrl+W"), this, [this] {
+    new QShortcut(QKeySequence("Ctrl+W"), m_pages->widget(0), [this] {
         if (m_splitter->contentVisible() && m_tabs->currentIndex() >= 0)
             emit m_tabs->tabCloseRequested(m_tabs->currentIndex());
     });

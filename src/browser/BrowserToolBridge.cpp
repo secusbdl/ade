@@ -86,8 +86,21 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
         if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->url = url.toString(QUrl::FullyEncoded); emit tabsChanged(); }
     }));
     tab.connections.append(connect(browser, &BrowserWidget::readyChanged, this, [this, id](bool ready) {
+        const QPointer<BrowserToolBridge> self(this);
         if (ready) prepareConsole(id);
+        if(!self)return;
+        if(ready)queueWaitingRequests(id);
         emit tabsChanged();
+    }));
+    tab.connections.append(connect(browser,&BrowserWidget::navigationFinished,this,[this,id](const QUrl&,bool success){
+        if(success)queueWaitingRequests(id);
+        else failWaitingRequests(id,"The page failed to load. Retry navigation or choose another tab.");
+    }));
+    tab.connections.append(connect(browser,&BrowserWidget::errorOccurred,this,[this,id](const QString& error){
+        // Only a failed controller start settles startup waiters; address/script
+        // errors raised while initialization is still in flight leave them waiting.
+        const auto browser=m_tabs.value(id).browser;
+        if(browser&&!browser->isReady()&&!browser->isInitializing())failWaitingRequests(id,"Browser initialization failed: "+error);
     }));
     tab.connections.append(connect(browser, &BrowserWidget::loadingChanged, this, [this, id](bool loading) {
         if (loading) if (auto it = m_tabs.find(id); it != m_tabs.end()) it->logs.clear();
@@ -109,6 +122,43 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
     return id;
 }
 
+bool BrowserToolBridge::setInitialTabMetadata(const QString& tabId,const QUrl& url,const QString& title){
+    auto tab=m_tabs.find(tabId);
+    if(tab==m_tabs.end()||!tab->browser||tab->browser->isReady()||!url.isValid()||url.isEmpty()||url.toString().size()>8192)return false;
+    tab->url=url.toString(QUrl::FullyEncoded);tab->title=title.left(1024);emit tabsChanged();return true;
+}
+bool BrowserToolBridge::deferUntilReady(const QString& id,BrowserWidget* browser){
+    auto pending=m_pending.find(id);
+    if(pending==m_pending.end())return true; // Already settled; never insert a timer-less entry.
+    // Upstream sendCDP never waits for navigation. A ready tab dispatches immediately,
+    // even during its first load; only a request that had to start a hidden tab waits
+    // for that tab's initial document.
+    if(browser->isReady()&&(browser->hasCompletedNavigation()||!pending->waitingForStartup)){
+        pending->waitingForStartup=false;pending->resume={};return false;
+    }
+    pending->waitingForStartup=true;
+    browser->ensureInitialized(); // May synchronously settle/delete the bridge.
+    return true;
+}
+void BrowserToolBridge::queueWaitingRequests(const QString& tabId){
+    for(const auto& id:m_pending.keys()){
+        const auto pending=m_pending.value(id);
+        if(pending.tabId!=tabId||!pending.waitingForStartup)continue;
+        QTimer::singleShot(0,this,[this,id,correlation=pending.correlation]{
+            if(!stillPending(id,correlation))return;
+            const auto resume=m_pending.value(id).resume;
+            if(resume)resume();
+        });
+    }
+}
+void BrowserToolBridge::failWaitingRequests(const QString& tabId,const QString& error){
+    const QPointer<BrowserToolBridge> self(this);
+    for(const auto& id:m_pending.keys()){
+        const auto pending=m_pending.value(id);
+        if(pending.tabId==tabId&&pending.waitingForStartup)finishJson(id,{{"error",error}},true);
+        if(!self)return;
+    }
+}
 void BrowserToolBridge::unregisterTab(const QString& tabId) {
     if (!m_tabs.contains(tabId)) return;
     const auto tab = m_tabs.take(tabId);
@@ -198,7 +248,10 @@ BrowserContextSnapshot BrowserToolBridge::snapshotForAgent(const QString& agentI
     for (const auto& id : m_order) {
         if (!canAccessTab(id, agentId)) continue;
         const auto& tab = m_tabs[id];
-        snapshot.tabs.append({id, tab.title, tab.url, tab.lastFocusedAt, tab.focusOrder});
+        const auto browser=tab.browser;
+        const auto pending=browser->requestedUrl();
+        const auto url=browser->currentUrl().isEmpty()&&!pending.isEmpty()?pending.toString(QUrl::FullyEncoded):tab.url;
+        snapshot.tabs.append({id, tab.title, url, tab.lastFocusedAt, tab.focusOrder});
     }
     // Stable ties preserve registration order, including never-focused tabs.
     std::stable_sort(snapshot.tabs.begin(), snapshot.tabs.end(), [](const auto& a, const auto& b) {
@@ -215,8 +268,12 @@ QJsonObject BrowserToolBridge::tabsSnapshot(const QString& agentId) const {
     for (const auto& id : m_order) {
         const auto tab = m_tabs.value(id);
         if (!tab.browser||(!agentId.isEmpty()&&!canAccessTab(id,agentId))) continue;
-        tabs.append(QJsonObject{{"id", id}, {"url", tab.browser->currentUrl().toString()}, {"title", tab.title},
-            {"ready", tab.browser->isReady()}, {"active", id == m_activeTabId}});
+        const auto requested=tab.browser->requestedUrl();
+        const auto url=tab.browser->currentUrl().isEmpty()&&!requested.isEmpty()?requested.toString(QUrl::FullyEncoded):tab.url;
+        tabs.append(QJsonObject{{"id",id},{"url",url},{"title",tab.title},
+            {"ready",tab.browser->isReady()&&tab.browser->hasCompletedNavigation()},
+            {"pendingUrl",tab.browser->hasCompletedNavigation()?QString{}:requested.toString(QUrl::FullyEncoded)},
+            {"active",id==m_activeTabId}});
     }
     return {{"activeTabId",agentId.isEmpty()||canAccessTab(m_activeTabId,agentId)?m_activeTabId:QString()}, {"tabs", tabs}};
 }
@@ -250,7 +307,7 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
     pending.timeout->start(m_timeoutMs);
     m_pending.insert(id, pending);
     m_correlations.insert(correlation, id);
-    QTimer::singleShot(0, this, [this, id, agentId,name, arguments, correlation] {
+    const auto dispatch = [this, id, agentId,name, arguments, correlation] {
         if (!stillPending(id, correlation)) return;
         if (!handles(name)) { finishJson(id, {{"error", "Unknown native browser tool."}}, true); return; }
         if (name == QStringLiteral("getBrowserTabs")) { finishJson(id, tabsSnapshot(agentId)); return; }
@@ -259,7 +316,6 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
         if (tab == m_tabs.end() || !tab->browser) { finishJson(id, {{"error", "Unknown or closed browser tab; call getBrowserTabs."}}, true); return; }
         if(!agentId.isEmpty()&&!canAccessTab(tabId,agentId)){finishJson(id,{{"error","Browser app tab belongs to another agent."}},true);return;}
         m_pending[id].tabId = tabId;
-        if (!tab->browser->isReady()) { finishJson(id, {{"error", "Browser tab is still starting."}}, true); return; }
         if (name == QStringLiteral("sendCDP")) {
             const QString method = arguments.value("method").toString();
             static const QRegularExpression methodPattern(QStringLiteral("^[A-Za-z][A-Za-z0-9]*\\.[A-Za-z][A-Za-z0-9]*$"));
@@ -269,6 +325,7 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
             }
             const auto json = compact(arguments.value("params").toObject());
             if (json.size() > MaxResponseChars) { finishJson(id, {{"error", "CDP parameters exceed 2 MiB."}}, true); return; }
+            if(deferUntilReady(id,tab->browser))return;
             tab->browser->callDevToolsRequest(correlation, method, json);
             return;
         }
@@ -283,10 +340,13 @@ void BrowserToolBridge::executeScoped(const QString& id,const QString& agentId,c
                 finishJson(id, {{"error", "Unknown console log level."}}, true); return;
             }
         }
+        if(deferUntilReady(id,tab->browser))return;
         QTimer::singleShot(arguments.value("delayMs").toInt(), this, [this, id, tabId, arguments, correlation] {
             if (stillPending(id, correlation)) readConsole(id, tabId, arguments);
         });
-    });
+    };
+    m_pending[id].resume=dispatch;
+    QTimer::singleShot(0,this,dispatch);
 }
 
 void BrowserToolBridge::finish(const QString& id, const QString& output, bool error) {

@@ -8,6 +8,8 @@
 #include <QPointer>
 #include <QSet>
 #include <QStringList>
+#include <QUrl>
+#include <functional>
 
 class QTimer;
 
@@ -23,6 +25,8 @@ public:
     ~BrowserToolBridge() override;
     QString registerTab(BrowserWidget* browser, const QString& requestedId = QString());
     void unregisterTab(const QString& tabId);
+    // Host-supplied saved metadata only; this never navigates or grants access.
+    bool setInitialTabMetadata(const QString& tabId,const QUrl& url,const QString& title);
     // Only the host selects focus; empty clears it. Registration does not focus.
     bool setActiveTab(const QString& tabId);
     QString activeTabId() const { return m_activeTabId; }
@@ -61,10 +65,15 @@ private:
         QString tabId;
         QString correlation;
         QPointer<QTimer> timeout;
+        bool waitingForStartup = false;
+        std::function<void()> resume;
     };
     void finish(const QString& id, const QString& output, bool error);
     void finishJson(const QString& id, const QJsonObject& output, bool error = false);
     void prepareConsole(const QString& tabId);
+    bool deferUntilReady(const QString& id,BrowserWidget* browser);
+    void queueWaitingRequests(const QString& tabId);
+    void failWaitingRequests(const QString& tabId,const QString& error);
     void receiveConsole(const QString& tabId, const QString& event, const QString& json);
     void readConsole(const QString& id, const QString& tabId, const QJsonObject& arguments);
     QJsonObject tabsSnapshot(const QString& agentId = {}) const;

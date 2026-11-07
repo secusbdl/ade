@@ -1,0 +1,86 @@
+{
+  "verifiedUtc": "2026-11-07T06:25:08.643955+00:00",
+  "binarySha256": "af9a96d1e51221b2fda8875c00ee6796f57ee1a616ceeb9a7ee58e01028810bb",
+  "status": "bounded_direct_windows_checks_passed",
+  "method": "private/claude-main-handoff/tools/gui-check.ps1: Windows UI Automation patterns on the real packaged app in isolated profiles; PrintWindow captures of ADE windows only.",
+  "checks": {
+    "sendDisabledWhenEmpty": true,
+    "typedDraftEnablesSend": true,
+    "liveTurnCompleted": true,
+    "composerClearedAfterSend": true,
+    "settingsOpened": true,
+    "githubTokenFieldMasked": true,
+    "backReturnsToComposer": true,
+    "workspaceUnchanged": true,
+    "providersUnchanged": true,
+    "pluginCards": [
+      "Configure Figma",
+      "Configure GitHub",
+      "Configure PostHog",
+      "Configure Supabase",
+      "Configure Vercel"
+    ],
+    "liveTurnSeconds": 6.1,
+    "idleClose": {
+      "exited": true,
+      "exitCode": 0,
+      "latencyMs": 84
+    },
+    "pendingClose": {
+      "questionVisible": true,
+      "stillOnItShown": false,
+      "exited": true,
+      "exitCode": 0,
+      "latencyMs": 148,
+      "fixtureProcessesLeft": 0,
+      "fixtureSha256": "5f8f6c9e7994cfb70484be04ee03a100f193dc9211634db6a74554df02bd0d62"
+    }
+  },
+  "screenshots": [
+    {
+      "localEvidence": "private/package10-gui-1/close/evidence/01-pending-question.png",
+      "sha256": "c7526b883d57a3deb6cdff3f2b3f77739d5f2a37b1490e05f35f59799353ec6c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/00-launched.png",
+      "sha256": "1229b1590137cf36be4f8ca6eae37fef3c7f734e0042cb11053ff53337f12d27",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/01-send-enabled.png",
+      "sha256": "e68f6c4cb046608b532eeaf560edbf94a6b637777f536d205c7bec640262855f",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/02-completed.png",
+      "sha256": "751c48651a8ea4d26774a1a9c812df39a0d50ea960d1dd26b734dfd52679caff",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/03-settings.png",
+      "sha256": "1b1895170d67659f6c2c8cc5ce80d96ad9c97902997a391bb544005a7d2f9c3c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/04-plugins.png",
+      "sha256": "7744e54273cdf742a506d1a667f5fdde4c5766bfe87e09413babfe70048cad2c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/05-github-token.png",
+      "sha256": "132d9f6279ebbc5b2ad46ea6ddd87701458220c119e97e1e095e866e27bf5548",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package10-gui-1/main/evidence/06-back.png",
+      "sha256": "751c48651a8ea4d26774a1a9c812df39a0d50ea960d1dd26b734dfd52679caff",
+      "publicRasterExport": false
+    }
+  ],
+  "limits": [
+    "Bounded checks only; not every control, pixel or semantic parity.",
+    "UI Automation patterns, not physical input.",
+    "No credential entered or imported."
+  ]
+}

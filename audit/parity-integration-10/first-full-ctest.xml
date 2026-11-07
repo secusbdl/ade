@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="212"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="1182"
+	timestamp="2026-11-07T07:42:59"
+	>
+	<testcase name="native_codex_harness" classname="native_codex_harness" time="4.4913" status="run">
+		<properties/>
+		<system-out>Junction created for C:\Users\secus\AppData\Local\Temp\test_codex_harness-BPcLsz\alias &lt;&lt;===&gt;&gt; C:\Users\secus\AppData\Local\Temp\test_codex_harness-BPcLsz\a
+Junction created for C:\Users\secus\AppData\Local\Temp\test_codex_harness-BPcLsz\alias &lt;&lt;===&gt;&gt; C:\Users\secus\AppData\Local\Temp\test_codex_harness-BPcLsz\b
+</system-out>
+	</testcase>
+	<testcase name="native_codex_engine" classname="native_codex_engine" time="3.12708" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_codex_provider_ui" classname="native_codex_provider_ui" time="0.424558" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_codex_host" classname="native_codex_host" time="2.8108" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_operations" classname="native_provider_operations" time="1.09146" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_link_provenance_codec" classname="native_link_provenance_codec" time="0.0411136" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_retired_wire" classname="native_retired_wire" time="0.15576" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_navigation_shortcuts" classname="native_navigation_shortcuts" time="1.76063" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_session" classname="native_browser_session" time="0.130631" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_session_host" classname="native_browser_session_host" time="1.84985" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_usage_compression" classname="native_usage_compression" time="4.33004" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_usage_settings" classname="native_usage_settings" time="0.108282" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_usage" classname="native_git_usage" time="2.28323" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_cleanup" classname="native_git_cleanup" time="79.3919" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_session_logs" classname="native_session_logs" time="0.384947" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_log_mount" classname="native_shell_log_mount" time="0.569956" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_service" classname="native_shell_service" time="37.0094" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_engine" classname="native_shell_engine" time="4.75167" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_view" classname="native_shell_view" time="1.19519" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversation_control" classname="native_conversation_control" time="4.28148" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_mutations" classname="native_file_mutations" time="3.80797" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_panel" classname="native_question_panel" time="0.223908" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_rich" classname="native_transcript_rich" time="0.958778" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_composer_completion" classname="native_composer_completion" time="2.23161" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_composer_search" classname="native_composer_search" time="0.180903" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_composer_host" classname="native_composer_host" time="2.74926" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_reference_controls" classname="native_reference_controls" time="0.50838" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_control_ui" classname="native_agent_control_ui" time="2.38416" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_command_center" classname="native_command_center" time="0.278695" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_command_file_search" classname="native_command_file_search" time="0.789698" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_command_center_host" classname="native_command_center_host" time="2.8734" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_side_chat" classname="native_side_chat" time="0.269169" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_side_chat_host" classname="native_side_chat_host" time="8.21952" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_diff" classname="native_file_diff" time="0.193371" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_image_preview" classname="native_image_preview" time="0.371121" status="run">
+		<properties/>
+		<system-out>libpng error: Read Error
+</system-out>
+	</testcase>
+	<testcase name="native_mutation_runtime" classname="native_mutation_runtime" time="6.02651" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_runtime" classname="native_shell_runtime" time="11.2479" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_links" classname="native_transcript_links" time="0.153354" status="run">
+		<properties/>
+		<system-out>Junction created for C:\Users\secus\AppData\Local\Temp\test_transcript_links-gTvPdO\alias &lt;&lt;===&gt;&gt; C:\Users\secus\AppData\Local\Temp\test_transcript_links-zezTjv
+</system-out>
+	</testcase>
+	<testcase name="native_transcript_link_ui" classname="native_transcript_link_ui" time="4.35977" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_tabs_real" classname="native_transcript_tabs_real" time="1.41325" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workbench_layout" classname="native_workbench_layout" time="7.09107" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workbench_helpers" classname="native_workbench_helpers" time="0.06596" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_chevron" classname="native_chevron" time="0.240456" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sidebar_model" classname="native_sidebar_model" time="0.037387" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sidebar_navigation" classname="native_sidebar_navigation" time="4.05877" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_presentation" classname="native_presentation" time="16.8892" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_history_projection" classname="native_history_projection" time="1.30756" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workspace_changes" classname="native_workspace_changes" time="23.8376" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workspace_changes_host" classname="native_workspace_changes_host" time="25.7034" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_smoke_capture" classname="native_smoke_capture" time="0.267423" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_turn_files" classname="native_turn_files" time="0.381292" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_turn_files_host" classname="native_turn_files_host" time="15.1556" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_turn_file_snapshots" classname="native_turn_file_snapshots" time="0.644457" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript" classname="native_transcript" time="3.22996" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_ui" classname="native_transcript_ui" time="2.3029" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_main_chrome" classname="native_main_chrome" time="4.56358" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_formatted_att" classname="native_formatted_att" time="3.53127" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversations" classname="native_conversations" time="20.453" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_history_recovery" classname="native_history_recovery" time="1.43027" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_session_cleanup" classname="native_session_cleanup" time="0.634694" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_raw_enumeration_races" classname="native_raw_enumeration_races" time="1.61311" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_watcher" classname="native_git_watcher" time="26.8729" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_watcher_ui" classname="native_git_watcher_ui" time="15.6015" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_tools_races" classname="native_file_tools_races" time="0.750743" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_archive_transformer" classname="native_archive_transformer" time="0.0668858" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_tools" classname="native_file_tools" time="0.0947528" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_attachment_mount" classname="native_attachment_mount" time="1.03103" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_transformer" classname="native_file_transformer" time="0.0315432" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_worktree_settings" classname="native_worktree_settings" time="33.233" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_host" classname="native_git_host" time="67.8051" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sandbox_apps" classname="native_sandbox_apps" time="2.24054" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_runtime_apps" classname="native_runtime_apps" time="7.16181" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git" classname="native_git" time="85.1882" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_ui" classname="native_git_ui" time="40.3477" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_app_resources" classname="native_app_resources" time="0.103998" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_mini_apps" classname="native_mini_apps" time="3.32699" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_attachments" classname="native_attachments" time="1.05203" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_read_lifecycle" classname="native_read_lifecycle" time="0.552681" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_read_runtime" classname="native_read_runtime" time="3.28731" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_plugins" classname="native_plugins" time="1.04879" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_plugin_connections" classname="native_plugin_connections" time="0.249219" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_plugin_runtime" classname="native_plugin_runtime" time="14.663" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_plugin_settings" classname="native_plugin_settings" time="0.507353" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_smoke_plugins" classname="native_smoke_plugins" time="2.29756" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sandbox_network" classname="native_sandbox_network" time="5.37732" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_downloads" classname="native_downloads" time="8.17575" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings_audit" classname="native_settings_audit" time="0.478214" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_network" classname="native_network" time="2.52441" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_terminal" classname="native_terminal" time="2.71599" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_engine_observers" classname="native_engine_observers" time="9.00048" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_core" classname="native_core" time="9.19619" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_context" classname="native_context" time="0.214821" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui" classname="native_ui" time="1.79338" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui_audit" classname="native_ui_audit" time="5.38265" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_editor" classname="native_editor" time="1.33567" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_sandbox" classname="native_sandbox" time="4.66436" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_runtime" classname="native_runtime" time="5.7416" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_fonts" classname="native_fonts" time="0.370949" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser" classname="native_browser" time="6.7373" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings" classname="native_settings" time="0.773509" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_inspector" classname="native_browser_inspector" time="7.20117" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_tools" classname="native_browser_tools" time="17.4233" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_files" classname="native_harness_files" time="0.917299" status="run">
+		<properties/>
+		<system-out>Junction created for C:\Users\secus\AppData\Local\Temp\test_harness_files-iJSpib\harness-workspaces\4c1029697ee358715d3a14a2add817c4b01651440de808371f78165ac90dc581\alias &lt;&lt;===&gt;&gt; C:\Users\secus\AppData\Local\Temp\test_harness_files-iJSpib\outside
+</system-out>
+	</testcase>
+	<testcase name="native_codex_files_runtime" classname="native_codex_files_runtime" time="0.887485" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_picker" classname="native_provider_picker" time="0.763162" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_picker_host" classname="native_provider_picker_host" time="0.203227" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_picker_window" classname="native_provider_picker_window" time="1.69256" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_polish" classname="native_transcript_polish" time="1.91853" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_harness" classname="native_opencode_harness" time="8.37581" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_engine" classname="native_opencode_engine" time="3.24841" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_removal" classname="native_provider_removal" time="0.247576" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_removal_window" classname="native_provider_removal_window" time="0.721172" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_prompt" classname="native_agent_prompt" time="1.10479" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_external_context" classname="native_external_context" time="0.0518268" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_cycle" classname="native_agent_cycle" time="0.128349" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_agent_cycle_host" classname="native_agent_cycle_host" time="1.30329" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_provider_ui" classname="native_opencode_provider_ui" time="0.736862" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_opencode_host" classname="native_opencode_host" time="3.11498" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_grouping" classname="native_transcript_grouping" time="0.140244" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_model_visibility" classname="native_provider_model_visibility" time="0.472212" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_model_visibility_host" classname="native_provider_model_visibility_host" time="1.14287" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_image_lifecycle" classname="native_transcript_image_lifecycle" time="0.405851" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_mcp" classname="native_question_mcp" time="4.15609" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_rpc_deadline" classname="native_rpc_deadline" time="3.84917" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_mcp" classname="native_acp_mcp" time="5.72858" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_mcp_engine" classname="native_mcp_engine" time="4.26021" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_tool_presentation" classname="native_acp_tool_presentation" time="0.0461561" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_presentation_engine" classname="native_acp_presentation_engine" time="1.42727" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_presentation_ui" classname="native_acp_presentation_ui" time="0.601242" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_control" classname="native_claude_control" time="2.20215" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_stream" classname="native_claude_stream" time="0.200774" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_session" classname="native_claude_session" time="7.32999" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_discovery" classname="native_claude_discovery" time="0.556084" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_engine" classname="native_claude_engine" time="2.56354" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_provider_ui" classname="native_claude_provider_ui" time="0.997494" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_host" classname="native_claude_host" time="2.85659" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_media" classname="native_harness_media" time="0.28549" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_context" classname="native_browser_context" time="0.136501" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_context_runtime" classname="native_browser_context_runtime" time="2.51895" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_model_discovery" classname="native_model_discovery" time="0.593039" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_model_discovery_host" classname="native_model_discovery_host" time="1.75315" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_forms_host" classname="native_harness_forms_host" time="2.6594" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_continuity" classname="native_harness_continuity" time="6.03743" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_settlement" classname="native_acp_settlement" time="12.0486" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_utility_model_selection" classname="native_utility_model_selection" time="0.465342" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_utility_models_host" classname="native_utility_models_host" time="3.9775" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_resume" classname="native_claude_resume" time="7.71156" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_mcp_presentation" classname="native_mcp_presentation" time="3.20785" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_attachment_store" classname="native_harness_attachment_store" time="1.03172" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_attachment_wire" classname="native_harness_attachment_wire" time="2.05787" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_attachments_host" classname="native_harness_attachments_host" time="8.68138" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_cleanup_host" classname="native_harness_cleanup_host" time="1.27113" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_presentation" classname="native_question_presentation" time="0.378397" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_presentation_host" classname="native_question_presentation_host" time="0.768086" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_direct_question_mcp" classname="native_direct_question_mcp" time="18.9766" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_attachment_mime" classname="native_harness_attachment_mime" time="3.67629" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_historical_attachments" classname="native_historical_attachments" time="6.06293" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_harness_attachment_source" classname="native_harness_attachment_source" time="0.255767" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_model_selector_display" classname="native_model_selector_display" time="1.41869" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_original_images" classname="native_acp_original_images" time="11.9912" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_original_lifecycle" classname="native_acp_original_lifecycle" time="3.14735" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_acp_original_host" classname="native_acp_original_host" time="0.297522" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_options" classname="native_custom_model_options" time="0.970645" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_engine" classname="native_custom_model_engine" time="1.87575" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_config" classname="native_custom_model_config" time="0.0412648" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_inventory" classname="native_custom_model_inventory" time="0.0402033" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_storage" classname="native_custom_model_storage" time="0.12924" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_media" classname="native_custom_model_media" time="0.0456089" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_ui" classname="native_custom_model_ui" time="0.322682" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_host" classname="native_custom_model_host" time="3.99044" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_custom_model_smoke" classname="native_custom_model_smoke" time="0.432931" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings_presentation" classname="native_settings_presentation" time="1.84387" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workspace_tree" classname="native_workspace_tree" time="10.8984" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_workspace_tree_host" classname="native_workspace_tree_host" time="2.62917" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_context_budget" classname="native_context_budget" time="0.0579421" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_context_budget_host" classname="native_context_budget_host" time="3.19428" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_plugin_findings" classname="native_plugin_findings" time="0.119278" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_streaming_followups" classname="native_streaming_followups" time="23.3602" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_git_findings" classname="native_git_findings" time="17.2084" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_followups_stream" classname="native_claude_followups_stream" time="0.0781296" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_followups_session" classname="native_claude_followups_session" time="3.30093" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_claude_followups_engine" classname="native_claude_followups_engine" time="1.20601" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_navigation_followups" classname="native_browser_navigation_followups" time="0.960962" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_history_followups" classname="native_browser_history_followups" time="6.83254" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_cursor" classname="native_cursor" time="11.1454" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_cursor_engine" classname="native_cursor_engine" time="3.55756" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_cursor_ui" classname="native_cursor_ui" time="0.142151" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_cursor_host" classname="native_cursor_host" time="8.5134" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_slash_context" classname="native_slash_context" time="0.111975" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_skills_host" classname="native_skills_host" time="7.62355" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_mutation_findings" classname="native_mutation_findings" time="2.98439" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_http_rules" classname="native_provider_http_rules" time="2.58734" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_http_engine" classname="native_provider_http_engine" time="1.07688" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_mini_app_findings" classname="native_mini_app_findings" time="8.7702" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_findings" classname="native_question_findings" time="6.35088" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_shell_followups" classname="native_shell_followups" time="49.5895" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_provider_provenance" classname="native_provider_provenance" time="0.572523" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_stall" classname="native_question_stall" time="50.8836" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_startup_recovery" classname="native_startup_recovery" time="4.26782" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_search_findings" classname="native_search_findings" time="0.414352" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_search_read_budget" classname="native_search_read_budget" time="0.0729333" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_event_findings" classname="native_browser_event_findings" time="9.31641" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_desktop_provider" classname="native_desktop_provider" time="1.69293" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_output" classname="native_browser_output" time="16.3382" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_priority" classname="native_question_priority" time="1.84846" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings_shortcuts" classname="native_settings_shortcuts" time="1.80848" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_markdown_findings" classname="native_markdown_findings" time="0.28322" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_markdown_link_scope" classname="native_markdown_link_scope" time="0.161141" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_diff_preview_edge" classname="native_diff_preview_edge" time="0.0543491" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_hidden_browser" classname="native_hidden_browser" time="12.6112" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="reference_file_mutations" classname="reference_file_mutations" time="1.86836" status="run">
+		<properties>
+			<property name="cmake_labels" value="experimental;reference"/>
+		</properties>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="reference_git_usage" classname="reference_git_usage" time="2.52624" status="run">
+		<properties>
+			<property name="cmake_labels" value="experimental;reference"/>
+		</properties>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

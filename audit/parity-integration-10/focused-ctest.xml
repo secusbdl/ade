@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="23"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="97"
+	timestamp="2026-11-07T07:35:43"
+	>
+	<testcase name="native_navigation_shortcuts" classname="native_navigation_shortcuts" time="1.61778" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_session_host" classname="native_browser_session_host" time="1.81374" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_conversation_control" classname="native_conversation_control" time="4.22779" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_panel" classname="native_question_panel" time="0.207067" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_rich" classname="native_transcript_rich" time="0.920623" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_side_chat_host" classname="native_side_chat_host" time="8.18707" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_file_diff" classname="native_file_diff" time="0.190256" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_transcript_links" classname="native_transcript_links" time="0.160102" status="run">
+		<properties/>
+		<system-out>Junction created for C:\Users\secus\AppData\Local\Temp\test_transcript_links-PFbCMO\alias &lt;&lt;===&gt;&gt; C:\Users\secus\AppData\Local\Temp\test_transcript_links-yCaFOK
+</system-out>
+	</testcase>
+	<testcase name="native_transcript" classname="native_transcript" time="3.10365" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_main_chrome" classname="native_main_chrome" time="4.51265" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_ui" classname="native_ui" time="1.81491" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings" classname="native_settings" time="0.743644" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_inspector" classname="native_browser_inspector" time="6.73237" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_tools" classname="native_browser_tools" time="16.4789" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_findings" classname="native_question_findings" time="5.90661" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_event_findings" classname="native_browser_event_findings" time="8.59655" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_browser_output" classname="native_browser_output" time="15.3595" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_question_priority" classname="native_question_priority" time="1.7495" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_settings_shortcuts" classname="native_settings_shortcuts" time="1.81151" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_markdown_findings" classname="native_markdown_findings" time="0.343263" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_markdown_link_scope" classname="native_markdown_link_scope" time="0.230371" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_diff_preview_edge" classname="native_diff_preview_edge" time="0.130123" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="native_hidden_browser" classname="native_hidden_browser" time="12.2245" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

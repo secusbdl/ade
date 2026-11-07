@@ -1,0 +1,25 @@
+********* Start testing of HiddenBrowserTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HiddenBrowserTests::initTestCase()
+FAIL!  : HiddenBrowserTests::neverShownTabInitializesForScopedRequest() '!reply[2].toBool()' returned FALSE. ({"error":"Browser tab is still starting."})
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(47) : failure location
+FAIL!  : HiddenBrowserTests::restoredMetadataIsAvailableWithoutLoading(expanded) Compared values are not the same
+   Actual   (tabs[0].toObject().value("url").toString()): ""
+   Expected (page.url().toString())                     : "http://127.0.0.1:55210/first"
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(53) : failure location
+FAIL!  : HiddenBrowserTests::restoredMetadataIsAvailableWithoutLoading(collapsed) Compared values are not the same
+   Actual   (tabs[0].toObject().value("url").toString()): ""
+   Expected (page.url().toString())                     : "http://127.0.0.1:55211/first"
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(53) : failure location
+FAIL!  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-0) '!reply[2].toBool()' returned FALSE. ({"error":"Browser tab is still starting."})
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(59) : failure location
+FAIL!  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(expanded-1) '!reply[2].toBool()' returned FALSE. ({"error":"Browser tab is still starting."})
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(59) : failure location
+FAIL!  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-0) '!reply[2].toBool()' returned FALSE. ({"error":"Browser tab is still starting."})
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(59) : failure location
+FAIL!  : HiddenBrowserTests::restoredBackgroundAndCollapsedTabsAreUsable(collapsed-1) '!reply[2].toBool()' returned FALSE. ({"error":"Browser tab is still starting."})
+D:/age/ADE/private/hidden-browser-stage/tests/test_hidden_browser.cpp(59) : failure location
+PASS   : HiddenBrowserTests::foreignRequestCannotStartHiddenTab()
+PASS   : HiddenBrowserTests::cleanupTestCase()
+Totals: 3 passed, 7 failed, 0 skipped, 0 blacklisted, 1009ms
+********* Finished testing of HiddenBrowserTests *********

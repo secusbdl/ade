@@ -1,0 +1,50 @@
+********* Start testing of SettingsShortcutsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SettingsShortcutsTest::initTestCase()
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+N) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+T) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+G) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+B) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Alt+B) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+B) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+E) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+W) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::settingsDoesNotMutateHiddenWorkbench(Ctrl+J) Compared values are not the same
+   Actual   (activated.size()): 1
+   Expected (0)               : 0
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(88) : failure location
+FAIL!  : SettingsShortcutsTest::allWorkbenchBindingsBelongToVisiblePage() 'owner && !owner->isVisible()' returned FALSE. (Ctrl+N)
+D:/age/ADE/private/settings-shortcuts-stage/tests/test_settings_shortcuts.cpp(110) : failure location
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+N)
+QWARN  : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T) This plugin does not support setting window masks
+QWARN  : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T) This plugin does not support setting window masks
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+T)
+PASS   : SettingsShortcutsTest::returnRestoresActualShortcut(Ctrl+Shift+G)
+PASS   : SettingsShortcutsTest::settingsShortcutRemainsGlobal()
+PASS   : SettingsShortcutsTest::cleanupTestCase()
+Totals: 6 passed, 10 failed, 0 skipped, 0 blacklisted, 2013ms
+********* Finished testing of SettingsShortcutsTest *********

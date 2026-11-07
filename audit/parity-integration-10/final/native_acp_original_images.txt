@@ -1,0 +1,27 @@
+********* Start testing of OriginalImageTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : OriginalImageTest::initTestCase()
+PASS   : OriginalImageTest::exactAndFallback(small-original)
+PASS   : OriginalImageTest::exactAndFallback(twenty-MiB)
+PASS   : OriginalImageTest::exactAndFallback(above-twenty)
+PASS   : OriginalImageTest::exactAndFallback(actual-no-images)
+PASS   : OriginalImageTest::exactAndFallback(unknown-extension)
+PASS   : OriginalImageTest::exactAndFallback(leading-only-dot)
+PASS   : OriginalImageTest::aggregatePreservesOrderedFileFallback()
+PASS   : OriginalImageTest::strictEnvelopeAndAuthority()
+PASS   : OriginalImageTest::historyNeverInlined()
+PASS   : OriginalImageTest::cancellationBeforeWriteLeavesOwnedProcessReusable()
+PASS   : OriginalImageTest::partialWriteCancellationStopsOnlyOwnedProcess()
+PASS   : OriginalImageTest::controlAndInboundLimitsStaySmall()
+PASS   : OriginalImageTest::finalQueuedBytesRetainCapturedLease()
+QINFO  : OriginalImageTest::revokedPartialWriteStopsOnlyItsProcess(multi-frame-buffer) pending before revoke 1048576 original bytes 20971520
+PASS   : OriginalImageTest::revokedPartialWriteStopsOnlyItsProcess(multi-frame-buffer)
+QINFO  : OriginalImageTest::revokedPartialWriteStopsOnlyItsProcess(final-buffer-only) pending before revoke 699273 original bytes 524288
+PASS   : OriginalImageTest::revokedPartialWriteStopsOnlyItsProcess(final-buffer-only)
+PASS   : OriginalImageTest::partialWriteTimeoutStopsUnsafeReuse()
+PASS   : OriginalImageTest::timeoutObserverCanDeleteOrReplace(delete)
+PASS   : OriginalImageTest::timeoutObserverCanDeleteOrReplace(replace)
+PASS   : OriginalImageTest::cancelledPreparation()
+PASS   : OriginalImageTest::cleanupTestCase()
+Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 11977ms
+********* Finished testing of OriginalImageTest *********

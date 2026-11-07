@@ -1,0 +1,72 @@
+{
+  "state": "frozen_private",
+  "updatedUtc": "2026-11-07T03:51:52.792724+00:00",
+  "scope": "Lifecycle F1: explicit message interrupting a pending question takes queue priority without reordering older messages.",
+  "patch": {
+    "path": "question-priority.patch",
+    "sha256": "fd20f2fc09942038987580d8c30aa6464e4a29af6060b55cede5abf8f38478f1"
+  },
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "sourceHashesCanonicalLf": {
+    "src/core/AgentEngineControl.cpp": "2b35e07e361574ea20a73432f618d455b45f63350a2035e96c362756c0a187a5",
+    "tests/test_question_priority.cpp": "d28e670515248c021e8dbeae279301e7dabdd6354924535bf7ded10c3eed2ec0",
+    "tests/QuestionFixture.h": "02fbb386526e39456c5fb04701cb20695709049461086e6c3da930d7ebf9d741"
+  },
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstreamContracts": [
+    {
+      "path": "reference/stagewise/packages/agent-core/src/services/agent-manager/agent-manager.ts",
+      "lines": "564-583",
+      "contract": "interruptQuestionWithMessage queues with flushQueueOnNextStep and cancels the question with submitted partial state."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "lines": "818-825",
+      "contract": "The explicit interrupt message is enqueued at the front."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/base-agent-send-user-message.test.ts",
+      "lines": "136 onward",
+      "contract": "Pinned regression covers priority insertion."
+    }
+  ],
+  "tests": [
+    {
+      "name": "before",
+      "cases": 9,
+      "failed": 4,
+      "files": {
+        "before.txt": "b17b5a249b0decebfb036e284cbf18d7faac3024d22af366c3cbf37e8220818d",
+        "before.xml": "948a09ee44a9479b84d112ff5a2138096b55366ec29a41d9cb6936b6a595b9e5"
+      }
+    },
+    {
+      "name": "after",
+      "cases": 9,
+      "failed": 0,
+      "files": {
+        "after.txt": "8a7c41d711bcf5771450e563abc6b7d0fc83be9618ae9ca3982a0b0223e62cfc",
+        "after.xml": "a565d2df6252d9652c4f48fa2af805fdde704df9caaab75e66b67e2428cc0ad3"
+      }
+    },
+    {
+      "name": "compatibility",
+      "cases": 26,
+      "failed": 0,
+      "files": {
+        "compatibility.txt": "91191fbcf0561c23f93a0e6eecfc8a845a476f790609c63013c5a401a32e5cb2",
+        "compatibility.xml": "03f70ac0d239a40166ee535333bf668c16e5626b9c3fdbbe93e5e346f46d4ca6"
+      }
+    }
+  ],
+  "passedFinal": 35,
+  "failedFinal": 0,
+  "peerReview": "license_review reviewed the narrow delta and fixture source; no additional concrete defect found. Peer did not rerun tests.",
+  "change": "Prepend only when a question is pending and queueIfBlocked is false. Existing transactional queue save, cancellation, generation and QPointer checks are preserved.",
+  "limits": [
+    "Private immutable186 overlay; not integrated into frozen206 cohort.",
+    "Four loopback HTTP wire protocols; no live model request or GUI test.",
+    "Other lifecycle gaps such as rewind/edit/retry, background unread state and harness failure queue policy remain separate."
+  ],
+  "fixtureProvenance": "QuestionFixture.h is the existing anonymous helper namespace from test_conversation_control.cpp at development commit91ed23d. Unchanged original26-row suite rerun separately."
+}

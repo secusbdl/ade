@@ -25,7 +25,7 @@ class TranscriptText final : public QTextBrowser {
     Q_OBJECT
 public:
     explicit TranscriptText(QWidget *parent=nullptr);
-    void setSource(const QString &source, bool markdown=true);
+    void setSource(const QString &source, bool markdown=true, bool allowIncompleteLinks=true);
     QString source() const { return m_source; }
     int updateCount() const { return m_updates; }
     void refreshColors();
@@ -43,6 +43,7 @@ private:
     QString m_source;
     bool m_initialized=false;
     bool m_markdown=true;
+    bool m_allowIncompleteLinks=true;
     bool m_measurePending=false;
     int m_updates=0;
     TranscriptImagePlaceholder *m_imageHandler=nullptr;

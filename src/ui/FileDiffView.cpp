@@ -69,9 +69,12 @@ QString FileDiffView::unifiedPreview(const QString &before,
                                      const QString &after) {
   const auto a = lines(before), b = lines(after);
   QStringList output;
+  bool truncated = false;
   auto append = [&](QChar type, const QString &text) {
     if (output.size() < 1200)
       output.append(type + text);
+    else
+      truncated = true;
   };
   int prefix = 0;
   while (prefix < a.size() && prefix < b.size() && a[prefix] == b[prefix])
@@ -114,7 +117,7 @@ QString FileDiffView::unifiedPreview(const QString &before,
   }
   for (int i = 0; i < qMin(3, suffix); ++i)
     append(' ', a[a.size() - suffix + i]);
-  if (output.size() >= 1200)
+  if (truncated)
     output.append("@@ Preview truncated after 1,200 lines @@");
   if (before.endsWith('\n') != after.endsWith('\n'))
     output.append(after.endsWith('\n') ? "+ Final newline added"

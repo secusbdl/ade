@@ -1,0 +1,28 @@
+********* Start testing of WorkspaceTreeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : WorkspaceTreeTest::initTestCase()
+PASS   : WorkspaceTreeTest::outsideLinkIsLeafAndCannotOpen()
+PASS   : WorkspaceTreeTest::gitHiddenNaturalDirectoriesFirst()
+PASS   : WorkspaceTreeTest::ordinaryOpenUsesOwnedPhysicalIdentity()
+SKIP   : WorkspaceTreeTest::safeFileLinkOpensInsideAndForeignFileLinkRejects() File symlink creation unavailable on this Windows account.
+D:/age/ADE/tests/test_workspace_tree.cpp(129) : failure location
+PASS   : WorkspaceTreeTest::switchRootDropsInflightAndStaleIndex()
+PASS   : WorkspaceTreeTest::observedCreateRenameDeletePreservesStableIndex()
+QWARN  : WorkspaceTreeTest::junctionReplacementBeforeOpenIsRejected() QFileSystemWatcher: FindNextChangeNotification failed for "C:\Users\secus\AppData\Local\Temp\test_workspace_tree-EYEdVZ\root\nested"  (Access is denied.)
+PASS   : WorkspaceTreeTest::junctionReplacementBeforeOpenIsRejected()
+PASS   : WorkspaceTreeTest::rootReplacementWithSameNamesDoesNotAdopt()
+PASS   : WorkspaceTreeTest::observerMayCloseAndPendingWorkerMayOutlive()
+PASS   : WorkspaceTreeTest::boundedFanoutPages()
+PASS   : WorkspaceTreeTest::rootResetObserverMayClose()
+PASS   : WorkspaceTreeTest::rootSwitchDuringRowsPublicationIsDeferred()
+PASS   : WorkspaceTreeTest::explicitNavigationRevealsPagedRows()
+PASS   : WorkspaceTreeTest::entryLimitIsDisclosed()
+PASS   : WorkspaceTreeTest::collapsedDetachedTreeReleasesOldWorkspace()
+PASS   : WorkspaceTreeTest::boundedWatchCoverageIsDisclosedAndReset()
+PASS   : WorkspaceTreeTest::openLoanPreventsReplacementOnlyUntilEditorLoad()
+PASS   : WorkspaceTreeTest::explicitReconnectCapturesNewRootAndRetiresOldRows()
+PASS   : WorkspaceTreeTest::deferredSameRootRefreshCannotAdoptReplacement()
+PASS   : WorkspaceTreeTest::componentRenders()
+PASS   : WorkspaceTreeTest::cleanupTestCase()
+Totals: 21 passed, 0 failed, 1 skipped, 0 blacklisted, 8949ms
+********* Finished testing of WorkspaceTreeTest *********

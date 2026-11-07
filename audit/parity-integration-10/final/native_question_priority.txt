@@ -1,0 +1,13 @@
+********* Start testing of QuestionPriorityTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionPriorityTest::initTestCase()
+PASS   : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(openai)
+PASS   : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(responses)
+PASS   : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(anthropic)
+PASS   : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(google)
+PASS   : QuestionPriorityTest::explicitlyQueuedMessageDoesNotInterrupt()
+PASS   : QuestionPriorityTest::rejectedPrioritySavePreservesQuestionAndQueue()
+PASS   : QuestionPriorityTest::ownerMayBeDeletedWhenPriorityQueueChanges()
+PASS   : QuestionPriorityTest::cleanupTestCase()
+Totals: 9 passed, 0 failed, 0 skipped, 0 blacklisted, 1669ms
+********* Finished testing of QuestionPriorityTest *********

@@ -1,0 +1,16 @@
+********* Start testing of HarnessAttachmentWireTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentWireTest::initTestCase()
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(codex-binary)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(codex-empty)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(codex-bom)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(acp-binary)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(acp-empty)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(acp-bom)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(claude-binary)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(claude-empty)
+PASS   : HarnessAttachmentWireTest::exactByteFilesReachActualNativeProcess(claude-bom)
+PASS   : HarnessAttachmentWireTest::acpUnadvertisedImageFallsBackToOriginalFile()
+PASS   : HarnessAttachmentWireTest::cleanupTestCase()
+Totals: 12 passed, 0 failed, 0 skipped, 0 blacklisted, 2066ms
+********* Finished testing of HarnessAttachmentWireTest *********

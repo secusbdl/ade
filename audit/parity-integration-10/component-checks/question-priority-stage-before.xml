@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="QuestionPriorityTest" timestamp="2026&#x002D;11&#x002D;07T05:43:10" hostname="VOID" tests="9" failures="4" errors="0" skipped="0" time="1.341">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="QuestionPriorityTest" time="0.000"/>
+  <testcase name="messageInterruptingQuestionPrecedesOlderQueue(openai)" classname="QuestionPriorityTest" time="0.178">
+    <failure type="fail" message="&apos;request.contains(&quot;INTERRUPT_B&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="messageInterruptingQuestionPrecedesOlderQueue(responses)" classname="QuestionPriorityTest" time="0.183">
+    <failure type="fail" message="&apos;request.contains(&quot;INTERRUPT_B&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="messageInterruptingQuestionPrecedesOlderQueue(anthropic)" classname="QuestionPriorityTest" time="0.178">
+    <failure type="fail" message="&apos;request.contains(&quot;INTERRUPT_B&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="messageInterruptingQuestionPrecedesOlderQueue(google)" classname="QuestionPriorityTest" time="0.182">
+    <failure type="fail" message="&apos;request.contains(&quot;INTERRUPT_B&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="explicitlyQueuedMessageDoesNotInterrupt" classname="QuestionPriorityTest" time="0.254"/>
+  <testcase name="rejectedPrioritySavePreservesQuestionAndQueue" classname="QuestionPriorityTest" time="0.184"/>
+  <testcase name="ownerMayBeDeletedWhenPriorityQueueChanges" classname="QuestionPriorityTest" time="0.177"/>
+  <testcase name="cleanupTestCase" classname="QuestionPriorityTest" time="0.000"/>
+</testsuite>

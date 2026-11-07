@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="HiddenBrowserTests" timestamp="2026&#x002D;11&#x002D;07T05:43:52" hostname="VOID" tests="10" failures="7" errors="0" skipped="0" time="1.009">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="HiddenBrowserTests" time="0.014"/>
+  <testcase name="neverShownTabInitializesForScopedRequest" classname="HiddenBrowserTests" time="0.016">
+    <failure type="fail" message="&apos;!reply[2].toBool()&apos; returned FALSE. ({&quot;error&quot;:&quot;Browser tab is still starting.&quot;})"/>
+  </testcase>
+  <testcase name="restoredMetadataIsAvailableWithoutLoading(expanded)" classname="HiddenBrowserTests" time="0.186">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (tabs[0].toObject().value("url").toString()): ""
+   Expected (page.url().toString())                     : "http://127.0.0.1:55210/first"]]>
+    </failure>
+  </testcase>
+  <testcase name="restoredMetadataIsAvailableWithoutLoading(collapsed)" classname="HiddenBrowserTests" time="0.143">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (tabs[0].toObject().value("url").toString()): ""
+   Expected (page.url().toString())                     : "http://127.0.0.1:55211/first"]]>
+    </failure>
+  </testcase>
+  <testcase name="restoredBackgroundAndCollapsedTabsAreUsable(expanded&#x002D;0)" classname="HiddenBrowserTests" time="0.154">
+    <failure type="fail" message="&apos;!reply[2].toBool()&apos; returned FALSE. ({&quot;error&quot;:&quot;Browser tab is still starting.&quot;})"/>
+  </testcase>
+  <testcase name="restoredBackgroundAndCollapsedTabsAreUsable(expanded&#x002D;1)" classname="HiddenBrowserTests" time="0.145">
+    <failure type="fail" message="&apos;!reply[2].toBool()&apos; returned FALSE. ({&quot;error&quot;:&quot;Browser tab is still starting.&quot;})"/>
+  </testcase>
+  <testcase name="restoredBackgroundAndCollapsedTabsAreUsable(collapsed&#x002D;0)" classname="HiddenBrowserTests" time="0.155">
+    <failure type="fail" message="&apos;!reply[2].toBool()&apos; returned FALSE. ({&quot;error&quot;:&quot;Browser tab is still starting.&quot;})"/>
+  </testcase>
+  <testcase name="restoredBackgroundAndCollapsedTabsAreUsable(collapsed&#x002D;1)" classname="HiddenBrowserTests" time="0.177">
+    <failure type="fail" message="&apos;!reply[2].toBool()&apos; returned FALSE. ({&quot;error&quot;:&quot;Browser tab is still starting.&quot;})"/>
+  </testcase>
+  <testcase name="foreignRequestCannotStartHiddenTab" classname="HiddenBrowserTests" time="0.015"/>
+  <testcase name="cleanupTestCase" classname="HiddenBrowserTests" time="0.000"/>
+</testsuite>

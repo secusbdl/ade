@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SettingsShortcutsTest" timestamp="2026&#x002D;11&#x002D;07T05:44:36" hostname="VOID" tests="16" failures="10" errors="0" skipped="0" time="2.013">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SettingsShortcutsTest" time="0.001"/>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+N)" classname="SettingsShortcutsTest" time="0.203">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+T)" classname="SettingsShortcutsTest" time="0.121">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+G)" classname="SettingsShortcutsTest" time="0.122">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+B)" classname="SettingsShortcutsTest" time="0.135">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+Alt+B)" classname="SettingsShortcutsTest" time="0.133">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+B)" classname="SettingsShortcutsTest" time="0.155">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+Shift+E)" classname="SettingsShortcutsTest" time="0.128">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+W)" classname="SettingsShortcutsTest" time="0.129">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="settingsDoesNotMutateHiddenWorkbench(Ctrl+J)" classname="SettingsShortcutsTest" time="0.125">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (activated.size()): 1
+   Expected (0)               : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="allWorkbenchBindingsBelongToVisiblePage" classname="SettingsShortcutsTest" time="0.116">
+    <failure type="fail" message="&apos;owner &amp;&amp; !owner&#x002D;&gt;isVisible()&apos; returned FALSE. (Ctrl+N)"/>
+  </testcase>
+  <testcase name="returnRestoresActualShortcut(Ctrl+N)" classname="SettingsShortcutsTest" time="0.130"/>
+  <testcase name="returnRestoresActualShortcut(Ctrl+T)" classname="SettingsShortcutsTest" time="0.132">
+    <system-err>
+      <![CDATA[This plugin does not support setting window masks]]>
+      <![CDATA[This plugin does not support setting window masks]]>
+    </system-err>
+  </testcase>
+  <testcase name="returnRestoresActualShortcut(Ctrl+Shift+G)" classname="SettingsShortcutsTest" time="0.131"/>
+  <testcase name="settingsShortcutRemainsGlobal" classname="SettingsShortcutsTest" time="0.146"/>
+  <testcase name="cleanupTestCase" classname="SettingsShortcutsTest" time="0.000"/>
+</testsuite>

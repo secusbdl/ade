@@ -1,0 +1,16 @@
+********* Start testing of DesktopProviderTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : DesktopProviderTest::initTestCase()
+PASS   : DesktopProviderTest::providerErrorDoesNotSkipOwnedCleanup(valid-provider-control)
+PASS   : DesktopProviderTest::providerErrorDoesNotSkipOwnedCleanup(invalid-provider)
+PASS   : DesktopProviderTest::failedCleanupRemainsPendingAndRetriesWithProviderError()
+PASS   : DesktopProviderTest::invalidSessionEnvelopeNeverAuthorizesCleanup()
+PASS   : DesktopProviderTest::importRefreshesOpenSideChatAndPreservesDraftSelection()
+QWARN  : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(save) This plugin does not support propagateSizeHints()
+PASS   : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(save)
+QWARN  : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(cancel) This plugin does not support propagateSizeHints()
+PASS   : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(cancel)
+PASS   : DesktopProviderTest::failedImportDoesNotPublishUncommittedChoices()
+PASS   : DesktopProviderTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 1601ms
+********* Finished testing of DesktopProviderTest *********

@@ -1,0 +1,17 @@
+********* Start testing of QuestionPriorityTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionPriorityTest::initTestCase()
+FAIL!  : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(openai) 'request.contains("INTERRUPT_B")' returned FALSE. ()
+D:/age/ADE/private/question-priority-stage/tests/test_question_priority.cpp(8) : failure location
+FAIL!  : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(responses) 'request.contains("INTERRUPT_B")' returned FALSE. ()
+D:/age/ADE/private/question-priority-stage/tests/test_question_priority.cpp(8) : failure location
+FAIL!  : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(anthropic) 'request.contains("INTERRUPT_B")' returned FALSE. ()
+D:/age/ADE/private/question-priority-stage/tests/test_question_priority.cpp(8) : failure location
+FAIL!  : QuestionPriorityTest::messageInterruptingQuestionPrecedesOlderQueue(google) 'request.contains("INTERRUPT_B")' returned FALSE. ()
+D:/age/ADE/private/question-priority-stage/tests/test_question_priority.cpp(8) : failure location
+PASS   : QuestionPriorityTest::explicitlyQueuedMessageDoesNotInterrupt()
+PASS   : QuestionPriorityTest::rejectedPrioritySavePreservesQuestionAndQueue()
+PASS   : QuestionPriorityTest::ownerMayBeDeletedWhenPriorityQueueChanges()
+PASS   : QuestionPriorityTest::cleanupTestCase()
+Totals: 5 passed, 4 failed, 0 skipped, 0 blacklisted, 1341ms
+********* Finished testing of QuestionPriorityTest *********

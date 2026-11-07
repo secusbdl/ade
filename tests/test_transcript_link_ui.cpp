@@ -522,7 +522,11 @@ void renderedTabAnchorActivatesOnlyCurrentOwnedTab() {
             anchor = true;
     }
   QVERIFY(target && anchor);
-  QVERIFY(target->toPlainText().contains("Visible browser"));
+  // Upstream AttachmentLinkRouter renders tab: links as a TabMentionBadge whose
+  // label is the tab title or, without one, the tab id; the link text is ignored.
+  QVERIFY2(target->toPlainText().contains("owned-link"),
+           qPrintable(target->toPlainText()));
+  QVERIFY(!target->toPlainText().contains("Visible browser"));
   emit target->anchorClicked(QUrl("tab:owned-link"));
   QCOMPARE(tabs->currentWidget(), owned);
   tabs->setCurrentWidget(neutral);

@@ -208,6 +208,8 @@ public:
     QString profileDirectory;
     bool initializing = false;
     bool ready = false;
+    bool completedNavigation = false;
+    bool everShown = false;
     quint64 navigationId = 0;
     quint64 navigationRevision = 0;
     QSet<QString> eventNames;
@@ -323,6 +325,13 @@ BrowserWidget::~BrowserWidget() {
 }
 
 bool BrowserWidget::isReady() const { return d->ready; }
+bool BrowserWidget::hasCompletedNavigation() const { return d->completedNavigation; }
+QUrl BrowserWidget::requestedUrl() const { return d->pendingUrl; }
+bool BrowserWidget::isInitializing() const { return d->initializing; }
+void BrowserWidget::ensureInitialized() {
+    if (!d->lifetime) return; // Never start COM initialization during teardown.
+    initialize();
+}
 bool BrowserWidget::isClosing() const { return !d->lifetime; }
 QUrl BrowserWidget::currentUrl() const { return d->currentUrl; }
 bool BrowserWidget::setProfileDirectory(const QString& directory) {
@@ -730,6 +739,7 @@ void BrowserWidget::initialize() {
                 args->get_IsSuccess(&succeeded);
                 const auto finishedUrl=self->d->currentUrl;
                 const auto revision=self->d->navigationRevision;
+                self->d->completedNavigation = true;
                 emit self->loadingChanged(false);
                 if(lifetime.expired()||!self||revision!=self->d->navigationRevision||navigationId!=self->d->navigationId)return S_OK;
                 emit self->navigationFinished(finishedUrl,succeeded);
@@ -1103,7 +1113,15 @@ void BrowserWidget::updateBounds() {
         // resizeEvent can precede the native HWND's size update. Derive physical
         // pixels from Qt's new logical size instead of reading stale HWND bounds.
         const qreal scale = devicePixelRatioF();
-        RECT bounds{0, 0, qRound(width() * scale), qRound(height() * scale)};
+        QSize area = size();
+        // A tab initialized while never shown keeps Qt's default child geometry. Give
+        // the hidden controller the nearest visible ancestor's size (the tab content
+        // area) so agent requests see a realistic viewport; shown tabs use their own size.
+        if (!isVisible() && !d->everShown) {
+            for (auto* ancestor = parentWidget(); ancestor; ancestor = ancestor->parentWidget())
+                if (ancestor->isVisible()) { area = ancestor->size(); break; }
+        }
+        RECT bounds{0, 0, qRound(area.width() * scale), qRound(area.height() * scale)};
         d->controller->put_Bounds(bounds);
         d->controller->NotifyParentWindowPositionChanged();
     }
@@ -1111,6 +1129,7 @@ void BrowserWidget::updateBounds() {
 }
 void BrowserWidget::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
+    d->everShown = true;
     const std::weak_ptr<int> lifetime(d->lifetime);
     initialize();
     // An initialization error signal may synchronously close/delete its host.

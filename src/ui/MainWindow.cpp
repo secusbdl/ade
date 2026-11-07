@@ -243,14 +243,15 @@ void MainWindow::buildUi() {
         if (!m_browserBridge->setActiveTab(id)) m_browserBridge->setActiveTab({});
     });
     connect(attach,&QToolButton::clicked,this,[this]{attachFiles(QFileDialog::getOpenFileNames(this,"Attach files",current()?current()->workspace:QString()));});
-    new QShortcut(QKeySequence("Ctrl+N"),this,[this]{newConversation();});
-    new QShortcut(QKeySequence("Ctrl+B"),this,[this]{m_sidebarSplitter->toggle();if(m_sidebarSplitter->isCollapsed())m_sidebarReopen->setFocus();else m_search->setFocus();});
+    // Workbench actions follow the visible page; Settings retains its own keys.
+    new QShortcut(QKeySequence("Ctrl+N"),central,[this]{newConversation();});
+    new QShortcut(QKeySequence("Ctrl+B"),central,[this]{m_sidebarSplitter->toggle();if(m_sidebarSplitter->isCollapsed())m_sidebarReopen->setFocus();else m_search->setFocus();});
     new QShortcut(QKeySequence("Ctrl+,"),this,[this]{showSettings();});
-    new QShortcut(QKeySequence("Ctrl+Shift+O"),this,[this]{chooseWorkspace();});
-    new QShortcut(QKeySequence("Ctrl+T"),this,[this]{addBrowserTab();});
-    new QShortcut(QKeySequence("Ctrl+Alt+T"),this,[this]{showTerminal();});
-    new QShortcut(QKeySequence("Ctrl+J"),this,[this]{showDownloads();});
-    new QShortcut(QKeySequence("Ctrl+Shift+G"),this,[this]{showGit();});
+    new QShortcut(QKeySequence("Ctrl+Shift+O"),central,[this]{chooseWorkspace();});
+    new QShortcut(QKeySequence("Ctrl+T"),central,[this]{addBrowserTab();});
+    new QShortcut(QKeySequence("Ctrl+Alt+T"),central,[this]{showTerminal();});
+    new QShortcut(QKeySequence("Ctrl+J"),central,[this]{showDownloads();});
+    new QShortcut(QKeySequence("Ctrl+Shift+G"),central,[this]{showGit();});
     m_fullscreenExit=new QShortcut(QKeySequence(Qt::Key_Escape),this,[this]{if(m_fullscreenBrowser)setBrowserFullscreen(m_fullscreenBrowser,false);});m_fullscreenExit->setEnabled(false);
     m_settings=new SettingsPage(m_store.directory());m_pages->addWidget(m_settings);
     m_sidebarNavigation=new SidebarNavigation(m_agents,grouping,agentsLabel,m_settings,this);m_sidebarNavigation->setGitService(m_git->service());
@@ -706,6 +707,7 @@ void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const Q
     browser->setProfileDirectory(m_store.directory()+"/browser");const auto tabId=bridge->registerTab(browser);
     if(!owned()){if(preview)preview->deleteLater();return;}
     page->setProperty("browserTabId",tabId);if(!owned())return;
+    bridge->setInitialTabMetadata(tabId,target,restoredTitle);if(!owned()){if(preview)preview->deleteLater();return;}
     auto* viewport=configureBrowserTools(page,browser,nav);if(!owned())return;
     layout->addWidget(viewport,1);if(!owned())return;
     int index=-1;

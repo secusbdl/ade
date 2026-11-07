@@ -103,11 +103,14 @@ bool AgentEngine::sendUserMessage(const QString &text,
     return startUserMessage(text, attachments, references, pathMetadata, {},
                             message);
   }
+  const bool question = !m_questionToken.isEmpty();
   auto queue = m_queuedMessages;
-  queue.append(message);
+  // The explicit message that interrupts a question is its immediate next
+  // step. Older queued messages retain their relative order behind it.
+  if (question && !queueIfBlocked) queue.prepend(message);
+  else queue.append(message);
   const QPointer<AgentEngine> self(this);
   const auto generation = m_generation;
-  const bool question = !m_questionToken.isEmpty();
   if (!replaceQueue(queue))
     return false;
   if (!self || m_generation != generation)

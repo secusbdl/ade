@@ -1,0 +1,26 @@
+********* Start testing of TranscriptImageLifecycleTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TranscriptImageLifecycleTest::initTestCase()
+PASS   : TranscriptImageLifecycleTest::retainedImageRequestsAgainAfterItsGroupAnchorDisappears()
+PASS   : TranscriptImageLifecycleTest::stalePendingReplyCannotPopulateTheReplacementDocument()
+PASS   : TranscriptImageLifecycleTest::unchangedDocumentDoesNotRequestAgain()
+PASS   : TranscriptImageLifecycleTest::rebuiltFenceSegmentInSamePartRevalidatesImage()
+PASS   : TranscriptImageLifecycleTest::sameImageInTwoDocumentsResolvesEachDocumentOnce()
+PASS   : TranscriptImageLifecycleTest::regroupingReleasesLiveBindingAndByteBudgets()
+PASS   : TranscriptImageLifecycleTest::regroupingReleasesAll32BindingSlots()
+PASS   : TranscriptImageLifecycleTest::staleChatReplyNeverCrossesOwners()
+PASS   : TranscriptImageLifecycleTest::imageRequestCanDeleteOwner()
+PASS   : TranscriptImageLifecycleTest::imageRequestCanReplaceChatBeforeItsReply()
+PASS   : TranscriptImageLifecycleTest::imagePublicationMayDeleteOwner()
+PASS   : TranscriptImageLifecycleTest::imagePublicationMayReplaceChat()
+QWARN  : TranscriptImageLifecycleTest::repairedImageRenders(light-wide) This plugin does not support propagateSizeHints()
+PASS   : TranscriptImageLifecycleTest::repairedImageRenders(light-wide)
+QWARN  : TranscriptImageLifecycleTest::repairedImageRenders(dark-wide) This plugin does not support propagateSizeHints()
+PASS   : TranscriptImageLifecycleTest::repairedImageRenders(dark-wide)
+QWARN  : TranscriptImageLifecycleTest::repairedImageRenders(light-narrow) This plugin does not support propagateSizeHints()
+PASS   : TranscriptImageLifecycleTest::repairedImageRenders(light-narrow)
+QWARN  : TranscriptImageLifecycleTest::repairedImageRenders(dark-narrow) This plugin does not support propagateSizeHints()
+PASS   : TranscriptImageLifecycleTest::repairedImageRenders(dark-narrow)
+PASS   : TranscriptImageLifecycleTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 370ms
+********* Finished testing of TranscriptImageLifecycleTest *********

@@ -1,0 +1,139 @@
+{
+  "status": "FROZEN INCOMPLETE HANDOFF AT USER REQUEST; not approved for production migration",
+  "reason": "User requested transfer to Claude Desktop to conserve Codex quota; no new work/tests after instruction.",
+  "recordedAt": "2026-11-07T03:54:55.490691+00:00",
+  "root": "D:/age/ADE",
+  "stage": "private/claude-markdown-findings-stage",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "cohort": "private/behavior-cohort-186",
+  "sharedState": "Parent shared206 source frozen/rebuilding; this stage never modified production or shared build.",
+  "processes": {
+    "runningOwnedProcesses": [],
+    "lastPrivateBuildSession": 71990,
+    "lastPrivateBuildExitCode": 0,
+    "lastBuildScope": "Expanded tests and compatibility/render binaries compiled; no newly built tests/renders executed after user stop."
+  },
+  "patches": [
+    {
+      "path": "markdown-rich-links.patch",
+      "sha256": "b2f177f9d267d20667dc016d23d7e27379e43b67d0ade786f0d156182dd41463"
+    },
+    {
+      "path": "diff-clipping.patch",
+      "sha256": "80ff697019ded876ee04656a41bd69d0aa43b8fe37a9887a77099a1368580838"
+    }
+  ],
+  "tested": [
+    {
+      "report": "before-markdown.txt",
+      "pass": 6,
+      "fail": 17,
+      "scope": "Baseline186 concrete Markdown failures"
+    },
+    {
+      "report": "before-diff.txt",
+      "pass": 4,
+      "fail": 1,
+      "scope": "Baseline exact1200 false clipping"
+    },
+    {
+      "report": "current-markdown_findings.txt",
+      "pass": 32,
+      "fail": 0,
+      "scope": "Earlier MarkdownParts-only candidate, before centralization/title repair"
+    },
+    {
+      "report": "scope-after.txt",
+      "pass": 6,
+      "fail": 0,
+      "scope": "Earlier candidate actual TranscriptLinkResolver owner/mount/alias fixtures"
+    },
+    {
+      "report": "current-diff_preview_edge.txt",
+      "pass": 5,
+      "fail": 0,
+      "scope": "Current independent tiny diff correction"
+    },
+    {
+      "report": "current-file_diff.txt",
+      "pass": 9,
+      "fail": 0,
+      "scope": "Existing diff compatibility on unchanged final diff candidate"
+    },
+    {
+      "report": "current-transcript.txt",
+      "pass": 35,
+      "fail": 0,
+      "scope": "Earlier candidate, before shared TranscriptText centralization"
+    },
+    {
+      "report": "current-transcript_rich.txt",
+      "pass": 13,
+      "fail": 0,
+      "scope": "Earlier candidate, before shared TranscriptText centralization"
+    },
+    {
+      "report": "current-transcript_links.txt",
+      "pass": 40,
+      "fail": 0,
+      "scope": "Existing resolver fixtures; resolver source unchanged"
+    },
+    {
+      "report": "peer-adjacent-before.txt",
+      "pass": 2,
+      "fail": 5,
+      "scope": "Four title forms plus actual QuestionPanel empty-label before failures"
+    },
+    {
+      "report": "peer-adjacent-after.txt",
+      "pass": 37,
+      "fail": 0,
+      "scope": "Current production candidate: shared TranscriptText normalization, title repair, actual pending/completed question UI, original32 widget cases"
+    }
+  ],
+  "compiledButNotRun": [
+    "test_markdown_findings final41 expected rows: added angle-without-title and3 cases for literal/raw source, incomplete-before-fence, grouped raw row/chat identity",
+    "Rebuilt test_markdown_link_scope, test_transcript, test_transcript_rich, test_file_diff, test_diff_preview_edge",
+    "Rebuilt render_markdown_findings"
+  ],
+  "renders": {
+    "paths": [
+      "renders-before/light-350.png",
+      "renders-before/dark-350.png",
+      "renders-before/light-768.png",
+      "renders-before/dark-768.png",
+      "renders-after/light-350.png",
+      "renders-after/dark-350.png",
+      "renders-after/light-768.png",
+      "renders-after/dark-768.png"
+    ],
+    "scope": "Component QWidget, not actual MainWindow. Captured before TranscriptText centralization/title repair; no new question render. Light350/dark350 inspected. Final768 files need final inspection."
+  },
+  "remaining": [
+    "Run newly built41-row Markdown suite and scope/compatibility suites after centralization; record exact failures rather than assuming pass.",
+    "Inspect API integration: TranscriptText::setSource now accepts third allowIncompleteLinks flag and new private bool. Recompile coherent UI consumers, not old object ABI.",
+    "Do not rebuild render_markdown_before against new header blindly: its immutable old cpp uses old two-argument setSource. Retained baseline PNGs already exist; if rebuilding baseline, use entirely old header/source/moc cohort.",
+    "Refresh and inspect final light/dark768/350 renders, including actual question labels; no desktop required.",
+    "Format only added helper/test scope if desired; candidate helper is not final style-cleaned.",
+    "Review/merge separate Markdown and tiny diff patches against current root; parent changed other files since186. No shared apply-check or full integration gate claimed.",
+    "Read SEARCH-IGNORE-DESIGN.md only as next separate task; currently unread and unimplemented."
+  ],
+  "limits": [
+    "Native visible text labels replace attachment links; not full upstream badge icons/live tab titles/preview parity.",
+    "Only inline special-link syntax normalized; empty-label special reference-style links not added/tested.",
+    "Reference definition propagation bounded256 definitions/64KiB, each <=8 lines/8192 units; not a new full CommonMark parser.",
+    "Qt Markdown remains responsible for ordinary links, HTML disabled; no Mermaid/math/container parser expansion.",
+    "QuestionPanel link visibility now shared, but no new click handler or question execution authority was added.",
+    "All native link resolver/owner/mount/provenance permissions unchanged. Existing aliases are forwarded, no new filesystem/network reads.",
+    "One encoded-color correction intentionally preserves already encoded colors instead of double encoding.",
+    "Passing current rows establish only stated scope; no full UI/SDK or universal bug-free claim."
+  ],
+  "sourceReferences": [
+    "reference/stagewise/apps/browser/src/ui/components/streamdown/index.tsx:201-248 balanced color preprocessing;262-289 incomplete path/color/tab;350 Copy only when not streaming;497,519-520 attachment router discards link children",
+    "reference/stagewise/apps/browser/src/ui/components/streamdown/attachment-links.tsx:185-215 recognized canonical/legacy schemes;582 router",
+    "https://spec.commonmark.org/0.31.2/#fenced-code-blocks",
+    "https://spec.commonmark.org/0.31.2/#link-reference-definitions"
+  ],
+  "peerReview": "license_review confirmed source semantics and found optional-title destination bug (reproduced and fixed). No final peer read of centralization/title repair. native_core B3 review not completed; notified honestly.",
+  "noSensitiveData": "Only synthetic paths/URLs and temp fixture files; no credentials, user profile, network/model calls or foreground interactions."
+}

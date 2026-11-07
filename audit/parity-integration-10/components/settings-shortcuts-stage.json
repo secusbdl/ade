@@ -1,0 +1,193 @@
+{
+  "state": "frozen_private",
+  "scope": "Desktop review F5 workbench shortcut visibility while Settings is shown. Three paths, no headers/API additions.",
+  "patch": {
+    "path": "settings-shortcuts.patch",
+    "sha256": "6769276b9639a7e9a23afb59af1a0491ec8091d93860aedcbae2eb79bd07d79f"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "48904b60ad5f4d1c59acf4e8160ec45cd9fcdc92356b38eaaaed5c0e1ab11de0",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes"
+  },
+  "cohort": {
+    "base": "private/behavior-cohort-186/manifest.json",
+    "overlays": "Frozen startup-recovery plus F4/F6 provider startup/side refresh. Only narrow new shortcut hunks are included in this patch.",
+    "commonHashes": [
+      {
+        "path": "MainWindow.h",
+        "sha256": "50c6e154c597f7234c3772817e4b3533575a83032c556640a44b47118e3c1ea8"
+      },
+      {
+        "path": "MainWindowControl.cpp",
+        "sha256": "11252df0611fe91fb396975240d5e90a5c3291e2fb08433f583cbbc4d0fb6405"
+      },
+      {
+        "path": "MainWindowConversations.cpp",
+        "sha256": "894dcc8313833145861c486d2ac4d0737bad83f003f6ec5f0b7a4bad4c176aee"
+      },
+      {
+        "path": "MainWindowRecovery.cpp",
+        "sha256": "1ab23ddefe58aa0311282e5066e3a2964577057324ec37efd4923146e27d3c01"
+      },
+      {
+        "path": "MainWindowSideChats.cpp",
+        "sha256": "53dbf5948e6cfbb3af75bc805a1c27b8dc9e095b1ae38d8c9b3967b8d0df110a"
+      },
+      {
+        "path": "SessionStore.cpp",
+        "sha256": "862de68e4752840da6e5e0c792b8334f7a743c3cf6d990ea40e4459d15b595b4"
+      },
+      {
+        "path": "SessionStore.h",
+        "sha256": "cf4b11d3cefe0ab9ff9ecfd7f2c3919892993f3d3f5db00d6b1583d94387009f"
+      }
+    ]
+  },
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "upstreamContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/index.tsx",
+      "lines": "283-285,310-345",
+      "contract": "AgentHotkeyBindings is mounted only outside Settings. Settings replaces Sidebar and workbench content."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/sidebar/agents-list/index.tsx",
+      "lines": "1082-1084",
+      "contract": "NEW_CHAT is registered by the sidebar agent list, which is not mounted in Settings."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/_components/global-hotkey-bindings.tsx",
+      "lines": "41-45,220-260",
+      "contract": "Main hotkeys are disabled in Settings, while the Settings entry itself remains globally available."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/ui/screens/main/_components/agent-hotkey-bindings.tsx",
+      "lines": "60-81,293-317",
+      "contract": "New browser/terminal and file-tree controls belong to workbench-scoped bindings."
+    }
+  ],
+  "change": "Parent eleven existing workbench QShortcuts to the visible appSurface page instead of the whole MainWindow. Default WindowShortcut scope and all action handlers remain unchanged. Settings is a separate stacked page, so hidden workbench actions do not dispatch. Global Settings shortcut stays global. Workbench action shortcuts reactivate after Back and remain active while compact navigation temporarily hides its content splitter.",
+  "nativeAliases": "Ctrl+Shift+O, Ctrl+Alt+T, Ctrl+J and the separate Source control panel are existing native affordances. Their visibility scope follows workbench actions; exact upstream action/UI equivalence is not asserted.",
+  "tests": {
+    "passed": 55,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "name": "initial-probe",
+        "tests": 5,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "initial-probe.txt",
+            "sha256": "ec3ea797ba187a1b416b67c1785d5eada4098df9b19342892b10affadf9f009f"
+          },
+          {
+            "path": "initial-probe.xml",
+            "sha256": "016a67324469b6910b936f152b160f2be1833402cc835295be9c101bcb401f81"
+          }
+        ]
+      },
+      {
+        "name": "before-final",
+        "tests": 17,
+        "failures": 10,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before-final.txt",
+            "sha256": "2302a21a29a96aa0e014eb5a169af247e36806fbbb87c83fc4914b0d9dd43b49"
+          },
+          {
+            "path": "before-final.xml",
+            "sha256": "98748e09d399aae8db29a0fda69c8c2ecc9412fef01b9089f898ceade3113a0e"
+          }
+        ]
+      },
+      {
+        "name": "compact-parent-before",
+        "tests": 3,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "compact-parent-before.txt",
+            "sha256": "beb29b2b7d065660b819ee92d81487079b220884c031d0ba19d66abcee1eedb5"
+          },
+          {
+            "path": "compact-parent-before.xml",
+            "sha256": "2e1dfa4a69dd89c7baf6272829eddaa26303b67318004ba7c4cce38861627056"
+          }
+        ]
+      },
+      {
+        "name": "after",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after.txt",
+            "sha256": "f7f14e3fed1ef110ffd7a17157a8368a9ef7b8b48222134eee40e6f4a0f08519"
+          },
+          {
+            "path": "after.xml",
+            "sha256": "f695b892c804db9eac4b50ba1b6b6a363bda5a113a8e2ee47deb82c81e3eec73"
+          }
+        ]
+      },
+      {
+        "name": "navigation",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "navigation.txt",
+            "sha256": "267fa305d4b9bee0e5bd4c65066e188024c93788c2913ba4cedf03c9f8b64c58"
+          },
+          {
+            "path": "navigation.xml",
+            "sha256": "08e587bb5a1df316e6e53c3b3bf5ec6ac1c81b72a454b52e9c002cdb1e107e53"
+          }
+        ]
+      },
+      {
+        "name": "main-chrome",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "main-chrome.txt",
+            "sha256": "2faaaee9de1e7bd17fe199dc7390b5b61ceaaeb05333e01012f9348bb6225da9"
+          },
+          {
+            "path": "main-chrome.xml",
+            "sha256": "c3aaf7150bab92af687c3468ffa6d93b943f851f9d3eabde06e661404970dc24"
+          }
+        ]
+      }
+    ]
+  },
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "harnessNotes": [
+    "The initial three-failure probe only established hidden mutations. After pinned-source review the final expectation is suppression, not implicit navigation away from Settings.",
+    "An intermediate private parent choice used m_splitter. A compact navigation fixture reproduced a 2-pass/1-fail regression because that child is hidden on narrow windows. Final parent is the full workbench page; regression now passes.",
+    "No shared source/build, desktop input, real credentials, external service or model request was used. Runtime used static Qt6.11.2/GCC16.2.0 and offscreen platform with Windows Fonts."
+  ],
+  "limits": [
+    "No live desktop focus or WebView2 dominant-input claim.",
+    "No keyboard-map redesign, new shortcut or Settings Escape implementation.",
+    "Root controls final integrated build; this private stage uses immutable186 plus frozen startup-recovery/F4/F6 overlays."
+  ]
+}

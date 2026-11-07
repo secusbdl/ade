@@ -1,0 +1,22 @@
+********* Start testing of BrowserHistoryLive *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserHistoryLive::initTestCase()
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-dAtNYN" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::completionAfterTitleRetainsFullTitle()
+QWARN  : BrowserHistoryLive::explicitLocalFileNavigates() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-Uctqza" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::explicitLocalFileNavigates()
+QWARN  : BrowserHistoryLive::laterDocumentVisitIsRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-lPRzTQ" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::laterDocumentVisitIsRecorded()
+QWARN  : BrowserHistoryLive::sameDocumentRouteIsRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-PTNxHB" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::sameDocumentRouteIsRecorded()
+QWARN  : BrowserHistoryLive::failedVisitIsNotRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-aXfZqM" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::failedVisitIsNotRecorded()
+QWARN  : BrowserHistoryLive::replacementAtCompletionSuppressesStaleVisit() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-FkCTVN" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::replacementAtCompletionSuppressesStaleVisit()
+QWARN  : BrowserHistoryLive::replacementFromSourceSuppressesStaleRoute() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-qRnYVF" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::replacementFromSourceSuppressesStaleRoute()
+QWARN  : BrowserHistoryLive::stopCancelsRealPendingNavigation() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_history_followups-YDjosg" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::stopCancelsRealPendingNavigation()
+PASS   : BrowserHistoryLive::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 6145ms
+********* Finished testing of BrowserHistoryLive *********

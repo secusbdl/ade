@@ -25,6 +25,12 @@ public:
     ~BrowserWidget() override;
 
     bool isReady() const;
+    bool hasCompletedNavigation() const;
+    // True only while controller creation is in flight (cleared by success or failure).
+    bool isInitializing() const;
+    QUrl requestedUrl() const;
+    // Start the native controller without showing/focusing/selecting this widget.
+    void ensureInitialized();
     bool isClosing() const;
     QUrl currentUrl() const;
     bool setProfileDirectory(const QString& directory);

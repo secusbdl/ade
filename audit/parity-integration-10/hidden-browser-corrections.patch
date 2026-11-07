@@ -1,0 +1,255 @@
+diff --git a/src/browser/BrowserToolBridge.cpp b/src/browser/BrowserToolBridge.cpp
+index 6e604a7..8d42e7c 100644
+--- a/src/browser/BrowserToolBridge.cpp
++++ b/src/browser/BrowserToolBridge.cpp
+@@ -94,11 +94,13 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
+     }));
+     tab.connections.append(connect(browser,&BrowserWidget::navigationFinished,this,[this,id](const QUrl&,bool success){
+         if(success)queueWaitingRequests(id);
+-        else failWaitingRequests(id,"The restored page failed to load. Retry navigation or choose another tab.");
++        else failWaitingRequests(id,"The page failed to load. Retry navigation or choose another tab.");
+     }));
+     tab.connections.append(connect(browser,&BrowserWidget::errorOccurred,this,[this,id](const QString& error){
++        // Only a failed controller start settles startup waiters; address/script
++        // errors raised while initialization is still in flight leave them waiting.
+         const auto browser=m_tabs.value(id).browser;
+-        if(browser&&!browser->isReady())failWaitingRequests(id,"Browser initialization failed: "+error);
++        if(browser&&!browser->isReady()&&!browser->isInitializing())failWaitingRequests(id,"Browser initialization failed: "+error);
+     }));
+     tab.connections.append(connect(browser, &BrowserWidget::loadingChanged, this, [this, id](bool loading) {
+         if (loading) if (auto it = m_tabs.find(id); it != m_tabs.end()) it->logs.clear();
+@@ -126,10 +128,15 @@ bool BrowserToolBridge::setInitialTabMetadata(const QString& tabId,const QUrl& u
+     tab->url=url.toString(QUrl::FullyEncoded);tab->title=title.left(1024);emit tabsChanged();return true;
+ }
+ bool BrowserToolBridge::deferUntilReady(const QString& id,BrowserWidget* browser){
+-    if(browser->isReady()&&browser->hasCompletedNavigation()){
+-        m_pending[id].waitingForStartup=false;m_pending[id].resume={};return false;
++    auto pending=m_pending.find(id);
++    if(pending==m_pending.end())return true; // Already settled; never insert a timer-less entry.
++    // Upstream sendCDP never waits for navigation. A ready tab dispatches immediately,
++    // even during its first load; only a request that had to start a hidden tab waits
++    // for that tab's initial document.
++    if(browser->isReady()&&(browser->hasCompletedNavigation()||!pending->waitingForStartup)){
++        pending->waitingForStartup=false;pending->resume={};return false;
+     }
+-    m_pending[id].waitingForStartup=true;
++    pending->waitingForStartup=true;
+     browser->ensureInitialized(); // May synchronously settle/delete the bridge.
+     return true;
+ }
+diff --git a/src/browser/browserwidget.cpp b/src/browser/browserwidget.cpp
+index 3608587..61c3659 100644
+--- a/src/browser/browserwidget.cpp
++++ b/src/browser/browserwidget.cpp
+@@ -209,6 +209,7 @@ public:
+     bool initializing = false;
+     bool ready = false;
+     bool completedNavigation = false;
++    bool everShown = false;
+     quint64 navigationId = 0;
+     quint64 navigationRevision = 0;
+     QSet<QString> eventNames;
+@@ -326,7 +327,11 @@ BrowserWidget::~BrowserWidget() {
+ bool BrowserWidget::isReady() const { return d->ready; }
+ bool BrowserWidget::hasCompletedNavigation() const { return d->completedNavigation; }
+ QUrl BrowserWidget::requestedUrl() const { return d->pendingUrl; }
+-void BrowserWidget::ensureInitialized() { initialize(); }
++bool BrowserWidget::isInitializing() const { return d->initializing; }
++void BrowserWidget::ensureInitialized() {
++    if (!d->lifetime) return; // Never start COM initialization during teardown.
++    initialize();
++}
+ bool BrowserWidget::isClosing() const { return !d->lifetime; }
+ QUrl BrowserWidget::currentUrl() const { return d->currentUrl; }
+ bool BrowserWidget::setProfileDirectory(const QString& directory) {
+@@ -1108,7 +1113,15 @@ void BrowserWidget::updateBounds() {
+         // resizeEvent can precede the native HWND's size update. Derive physical
+         // pixels from Qt's new logical size instead of reading stale HWND bounds.
+         const qreal scale = devicePixelRatioF();
+-        RECT bounds{0, 0, qRound(width() * scale), qRound(height() * scale)};
++        QSize area = size();
++        // A tab initialized while never shown keeps Qt's default child geometry. Give
++        // the hidden controller the nearest visible ancestor's size (the tab content
++        // area) so agent requests see a realistic viewport; shown tabs use their own size.
++        if (!isVisible() && !d->everShown) {
++            for (auto* ancestor = parentWidget(); ancestor; ancestor = ancestor->parentWidget())
++                if (ancestor->isVisible()) { area = ancestor->size(); break; }
++        }
++        RECT bounds{0, 0, qRound(area.width() * scale), qRound(area.height() * scale)};
+         d->controller->put_Bounds(bounds);
+         d->controller->NotifyParentWindowPositionChanged();
+     }
+@@ -1116,6 +1129,7 @@ void BrowserWidget::updateBounds() {
+ }
+ void BrowserWidget::showEvent(QShowEvent* event) {
+     QWidget::showEvent(event);
++    d->everShown = true;
+     const std::weak_ptr<int> lifetime(d->lifetime);
+     initialize();
+     // An initialization error signal may synchronously close/delete its host.
+diff --git a/src/browser/browserwidget.h b/src/browser/browserwidget.h
+index 4ed4717..964c11c 100644
+--- a/src/browser/browserwidget.h
++++ b/src/browser/browserwidget.h
+@@ -26,6 +26,8 @@ public:
+ 
+     bool isReady() const;
+     bool hasCompletedNavigation() const;
++    // True only while controller creation is in flight (cleared by success or failure).
++    bool isInitializing() const;
+     QUrl requestedUrl() const;
+     // Start the native controller without showing/focusing/selecting this widget.
+     void ensureInitialized();
+diff --git a/src/ui/MainWindow.cpp b/src/ui/MainWindow.cpp
+index 1656878..dbc51e1 100644
+--- a/src/ui/MainWindow.cpp
++++ b/src/ui/MainWindow.cpp
+@@ -707,7 +707,7 @@ void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const Q
+     browser->setProfileDirectory(m_store.directory()+"/browser");const auto tabId=bridge->registerTab(browser);
+     if(!owned()){if(preview)preview->deleteLater();return;}
+     page->setProperty("browserTabId",tabId);if(!owned())return;
+-    bridge->setInitialTabMetadata(tabId,target,restoredTitle);if(!owned())return;
++    bridge->setInitialTabMetadata(tabId,target,restoredTitle);if(!owned()){if(preview)preview->deleteLater();return;}
+     auto* viewport=configureBrowserTools(page,browser,nav);if(!owned())return;
+     layout->addWidget(viewport,1);if(!owned())return;
+     int index=-1;
+diff --git a/tests/test_hidden_browser.cpp b/tests/test_hidden_browser.cpp
+index 65031e8..8ac55d8 100644
+--- a/tests/test_hidden_browser.cpp
++++ b/tests/test_hidden_browser.cpp
+@@ -8,6 +8,7 @@
+ #include <QElapsedTimer>
+ #include <QFile>
+ #include <QJsonDocument>
++#include <QRegularExpression>
+ #include <QSettings>
+ #include <QTabWidget>
+ #include <QTcpServer>
+@@ -82,6 +83,16 @@ QList<QVariant> result(QSignalSpy &spy, const QString &id) {
+       return row;
+   return {};
+ }
++QJsonObject evaluate(const QString &tab, const QString &expression) {
++  return {{"tabId", tab},
++          {"method", "Runtime.evaluate"},
++          {"params", QJsonObject{{"expression", expression}, {"returnByValue", true}}}};
++}
++int numericValue(const QString &reply) {
++  static const QRegularExpression value(R"("value"\s*:\s*(\d+))");
++  const auto match = value.match(reply);
++  return match.hasMatch() ? match.captured(1).toInt() : -1;
++}
+ bool readyResult(QSignalSpy &spy, const QString &id, int ms = 15000) {
+   QElapsedTimer timer;
+   timer.start();
+@@ -231,6 +242,110 @@ private slots:
+     QVERIFY(reply[1].toString().contains("HIDDEN_LOG_READY"));
+     QVERIFY(!browser.isVisible());
+   }
++  void readyVisibleTabDispatchesDuringFirstLoad() {
++    // Upstream sendCDP never waits for navigation: a visible, ready tab whose
++    // first page is still loading answers at once, not at the request deadline.
++    QTemporaryDir profile;
++    PageServer page;
++    BrowserWidget browser;
++    browser.resize(600, 400);
++    QVERIFY(browser.setProfileDirectory(profile.path()));
++    browser.navigate(page.url("hold-visible"));
++    browser.show();
++    QTRY_VERIFY_WITH_TIMEOUT(browser.isReady(), 15000);
++    QTRY_VERIFY_WITH_TIMEOUT(!page.held.isEmpty(), 15000);
++    QVERIFY(!browser.hasCompletedNavigation());
++    BrowserToolBridge bridge;
++    bridge.registerTab(&browser, "visible");
++    QSignalSpy completed(&bridge, &BrowserToolBridge::completed);
++    QElapsedTimer timer;
++    timer.start();
++    bridge.executeForAgent("visible-eval", "fixture", "sendCDP",
++                           evaluate("visible", "40+2"));
++    QVERIFY(readyResult(completed, "visible-eval", 8000));
++    const auto reply = result(completed, "visible-eval");
++    QVERIFY2(!reply[2].toBool(), qPrintable(reply[1].toString()));
++    QCOMPARE(numericValue(reply[1].toString()), 42);
++    QVERIFY(timer.elapsed() < 8000);
++    QVERIFY(!page.held.isEmpty()); // Answered while the first page was still held.
++    page.release();
++  }
++  void aboutBlankHiddenTabAcceptsCdp() {
++    QTemporaryDir profile;
++    BrowserWidget browser;
++    browser.resize(600, 400);
++    QVERIFY(browser.setProfileDirectory(profile.path()));
++    BrowserToolBridge bridge;
++    bridge.registerTab(&browser, "blank");
++    QSignalSpy completed(&bridge, &BrowserToolBridge::completed);
++    bridge.executeForAgent("blank-eval", "fixture", "sendCDP",
++                           evaluate("blank", "location.href"));
++    QVERIFY(readyResult(completed, "blank-eval"));
++    const auto reply = result(completed, "blank-eval");
++    QVERIFY2(!reply[2].toBool(), qPrintable(reply[1].toString()));
++    QVERIFY2(reply[1].toString().contains("about:blank"), qPrintable(reply[1].toString()));
++    QVERIFY(!browser.isVisible());
++  }
++  void resumedStartupRequestExecutesOnce() {
++    QTemporaryDir profile;
++    PageServer page;
++    BrowserWidget browser;
++    browser.resize(600, 400);
++    QVERIFY(browser.setProfileDirectory(profile.path()));
++    browser.navigate(page.url("hold-once"));
++    BrowserToolBridge bridge;
++    bridge.registerTab(&browser, "once");
++    QSignalSpy completed(&bridge, &BrowserToolBridge::completed);
++    bridge.executeForAgent("count", "fixture", "sendCDP",
++                           evaluate("once", "window.__adeCount=(window.__adeCount||0)+1"));
++    QTRY_VERIFY_WITH_TIMEOUT(browser.isReady(), 15000);
++    QTRY_VERIFY_WITH_TIMEOUT(!page.held.isEmpty(), 15000);
++    QTest::qWait(300);
++    QVERIFY(result(completed, "count").isEmpty()); // Waits for the initial document.
++    page.release();
++    QVERIFY(readyResult(completed, "count"));
++    QVERIFY2(!result(completed, "count")[2].toBool(),
++             qPrintable(result(completed, "count")[1].toString()));
++    QTest::qWait(300);
++    bridge.executeForAgent("read", "fixture", "sendCDP",
++                           evaluate("once", "window.__adeCount"));
++    QVERIFY(readyResult(completed, "read"));
++    const auto reply = result(completed, "read");
++    QVERIFY2(!reply[2].toBool(), qPrintable(reply[1].toString()));
++    QCOMPARE(numericValue(reply[1].toString()), 1);
++  }
++  void hiddenTabUsesContentAreaViewport() {
++    QTemporaryDir data;
++    PageServer page;
++    seed(data.path(), page, false);
++    MainWindow window(data.path());
++    window.resize(1200, 800);
++    window.show();
++    QVERIFY(QTest::qWaitForWindowExposed(&window));
++    auto *tabs = window.findChild<QTabWidget *>("contentTabs");
++    auto *bridge = window.findChild<BrowserToolBridge *>();
++    QVERIFY(tabs && bridge);
++    QCOMPARE(tabs->count(), 2);
++    const int shown = tabs->currentIndex();
++    const int hidden = shown == 0 ? 1 : 0;
++    const auto shownId = tabs->widget(shown)->property("browserTabId").toString();
++    const auto hiddenId = tabs->widget(hidden)->property("browserTabId").toString();
++    QSignalSpy completed(bridge, &BrowserToolBridge::completed);
++    bridge->executeForAgent("shown-width", "fixture", "sendCDP",
++                            evaluate(shownId, "window.innerWidth"));
++    QVERIFY(readyResult(completed, "shown-width"));
++    bridge->executeForAgent("hidden-width", "fixture", "sendCDP",
++                            evaluate(hiddenId, "window.innerWidth"));
++    QVERIFY(readyResult(completed, "hidden-width"));
++    const int shownWidth = numericValue(result(completed, "shown-width")[1].toString());
++    const int hiddenWidth = numericValue(result(completed, "hidden-width")[1].toString());
++    QVERIFY2(shownWidth > 300, qPrintable(QString::number(shownWidth)));
++    QVERIFY2(hiddenWidth >= shownWidth * 8 / 10,
++             qPrintable(QString("hidden %1 shown %2").arg(hiddenWidth).arg(shownWidth)));
++    QCOMPARE(tabs->currentIndex(), shown);
++    QVERIFY(!tabs->widget(hidden)->isVisible());
++    QVERIFY(window.close());
++  }
+   void malformedRequestDoesNotInitialize() {
+     QTemporaryDir profile;
+     PageServer page;

@@ -1,0 +1,12 @@
+********* Start testing of HiddenBrowserTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HiddenBrowserTests::initTestCase()
+FAIL!  : HiddenBrowserTests::readyVisibleTabDispatchesDuringFirstLoad() 'readyResult(completed, "visible-eval", 8000)' returned FALSE. ()
+D:/age/ADE/tests/test_hidden_browser.cpp(265) : failure location
+QWARN  : HiddenBrowserTests::readyVisibleTabDispatchesDuringFirstLoad() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-mCNzbg" most likely due to the presence of read-only files.
+FAIL!  : HiddenBrowserTests::hiddenTabUsesContentAreaViewport() 'hiddenWidth >= shownWidth * 8 / 10' returned FALSE. (hidden 100 shown 686)
+D:/age/ADE/tests/test_hidden_browser.cpp(343) : failure location
+QWARN  : HiddenBrowserTests::hiddenTabUsesContentAreaViewport() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_hidden_browser-BNHgNx" most likely due to the presence of read-only files.
+PASS   : HiddenBrowserTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 9443ms
+********* Finished testing of HiddenBrowserTests *********

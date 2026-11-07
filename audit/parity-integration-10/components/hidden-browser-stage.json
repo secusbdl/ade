@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen_private_handoff_user_transfers_implementation",
+  "date": "2026-11-07",
+  "task": "Desktop browser B3: never-shown restored background/collapsed tabs",
+  "sharedProductionEdited": false,
+  "sharedBuildUsed": false,
+  "base": {
+    "path": "private/behavior-cohort-186",
+    "scope": "coherent copied src and19 static libraries; no partly rebuilt root libraries"
+  },
+  "files": [
+    {
+      "path": "src/browser/browserwidget.h",
+      "baseSha256LF": "b7dfbec1dab5864925cac960ba8409bf56519057e4041d65557f8dc85c9c9660",
+      "resultSha256LF": "836b9128070c6d72e552220f76312fe97fd034fcea201f51f4708a0cc6de9095",
+      "new": false
+    },
+    {
+      "path": "src/browser/browserwidget.cpp",
+      "baseSha256LF": "291a0a549a10581c07d36fb11f9a28730abc6a404cf8a252b0622acbabce62f4",
+      "resultSha256LF": "b41d6772bcef0678733cff1dcead1fe36d0504a39c76527959e2aa7cb8f78d5e",
+      "new": false
+    },
+    {
+      "path": "src/browser/BrowserToolBridge.h",
+      "baseSha256LF": "e10601b3326ed7aaebd84a57b323f02a7edfb40eaf3b3d8ce75a2520329fb6e9",
+      "resultSha256LF": "8ba0f4951b8602fcf12074586fada667901abaa2f4b36b4cbb31eb260d398538",
+      "new": false
+    },
+    {
+      "path": "src/browser/BrowserToolBridge.cpp",
+      "baseSha256LF": "73724bcc7b3d4346fe9befcad3e0b7459d4bdcaf664d7007e5c57b23dcb0adb8",
+      "resultSha256LF": "2b66c5f1925471ef9286180a389f7b4a35591f4b37a8f296076be10132974cca",
+      "new": false
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "baseSha256LF": "a605a04e606121c363a7c822834bb7d7f74b52c7a5964e3f74a5157bc60563f7",
+      "resultSha256LF": "58a9811c752ddba5978aafd3b607adaf26b8ff953a9b3a6b354c6ad17d5467ab",
+      "new": false
+    },
+    {
+      "path": "tests/test_hidden_browser.cpp",
+      "baseSha256LF": null,
+      "resultSha256LF": "262fb858d86cfc73a05dc60b20dd944d580fb68dcac99cd856730119d9843d5d",
+      "new": true
+    }
+  ],
+  "patch": "hidden-browser.patch",
+  "currentRootApplyCheck": {
+    "exitCode": 1,
+    "report": "apply-check-current.txt",
+    "meaning": "read-only patch application check only; not integrated or built against206"
+  },
+  "sourceContract": {
+    "pin": "17a0123a0e896885465df36169457199d5225eb5",
+    "references": [
+      {
+        "path": "upstream/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+        "lines": [
+          2449,
+          2520
+        ],
+        "behavior": "Deferred other-agent tabs are instantiated when that agent opens."
+      },
+      {
+        "path": "upstream/stagewise/apps/browser/src/backend/services/window-layout/index.ts",
+        "lines": [
+          3116,
+          3244
+        ],
+        "behavior": "Global and last-open-agent restored tabs are created eagerly."
+      },
+      {
+        "path": "upstream/stagewise/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts",
+        "lines": [
+          2334,
+          2345
+        ],
+        "behavior": "CDP forwarding is independent of tab visibility."
+      }
+    ],
+    "nativeDifference": "Native keeps resource-saving lazy WebView creation, but a valid scoped CDP/console request initializes the hidden controller and waits for its first navigation completion. This is functional access, not identical eager restoration scheduling."
+  },
+  "implementation": [
+    "BrowserWidget requestedUrl retains requested metadata separately from committed currentUrl; ensureInitialized creates an invisible native controller without selecting/showing tab.",
+    "BrowserToolBridge host-only initial metadata setter preserves restored URL/title before WebView load. getBrowserTabs exposes ready=false and pendingUrl while uninitialized; no DOM-read claim.",
+    "Deferred request keeps original opaque correlation/deadline; revalidates tab and owner after initialization. Invalid/foreign requests do not initialize.",
+    "Initial load/initialization errors settle waiters; failed initialization can retry after profile repair.",
+    "Cancellation, duplicate/reused IDs, tab close, bridge/host deletion cannot dispatch stale deferred CDP.",
+    "One narrow MainWindow addBrowserTab setter call and post-emission ownership guard; no tab-strip ownership redesign."
+  ],
+  "evidence": [
+    {
+      "name": "before",
+      "passed": 3,
+      "failed": 7,
+      "skipped": 0,
+      "text": "before.txt",
+      "xml": "before.xml",
+      "textSha256LF": "2f853bfbae4a992c0aba907ff963500f618878dc96312d0e2189be284586ddf1",
+      "xmlSha256LF": "544ec5d8bf9d0e83075023c669d3631aaacd941e8be1050e11d87da7e8aa7f88"
+    },
+    {
+      "name": "first-after",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "text": "first-after.txt",
+      "xml": "first-after.xml",
+      "textSha256LF": "7c7c8b3b0bcefd4f80f0152a9b6df8753402ee7dc0d1222848d98e3def2f86bf",
+      "xmlSha256LF": "387eac2a711abd15db0bb421ac1cc412daba3ddcda2f31533987be8a741a23a2"
+    },
+    {
+      "name": "expanded",
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "text": "expanded.txt",
+      "xml": "expanded.xml",
+      "textSha256LF": "ac2c459c07488cad58904ce34ebffab61a449bb90de294e243802d0f55f6e11d",
+      "xmlSha256LF": "80ceb0c59ad1e46753746d3e92f8d5933f5714b7167827b38d654319699e0a30"
+    },
+    {
+      "name": "final",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "text": "final.txt",
+      "xml": "final.xml",
+      "textSha256LF": "fc978e41f98c326b81aad2e79fd6cb1167f3e51e3fc8122d9be7b461f8c0c31c",
+      "xmlSha256LF": "b9a3198a4ecad74ba681a10d8793253609bc494b2b2df5cecaef57a654f38aa4"
+    }
+  ],
+  "final": {
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 10492,
+    "runtime": "real installed Windows WebView2 with local HTTP fixture and temporary profiles",
+    "scope": [
+      "never-shown hidden scoped DOM request",
+      "actual MainWindow restored active/background tabs with expanded/collapsed content",
+      "saved metadata without network load",
+      "hidden console startup",
+      "malformed and foreign requests remain unloaded",
+      "cancel/timeout while local page held and no later CDP side effect",
+      "owner change during initialization",
+      "request ID reuse across old/new hidden tabs",
+      "init failure and repair retry",
+      "completion deletes bridge synchronously",
+      "failed initial navigation",
+      "initial metadata observer deletes MainWindow",
+      "tab deletion while initialization pending"
+    ]
+  },
+  "adjacentCompatibility": {
+    "compiled": [
+      "test_browser_tools",
+      "test_browser_session_host"
+    ],
+    "executed": false,
+    "reason": "User stopped new work and transferred implementation; do not imply adjacent or integrated gate passed."
+  },
+  "limits": [
+    "Not yet integrated into root206; root all-target/shared gate remains separate.",
+    "Read-only apply-check does not replace ABI-consistent full rebuild/test after merge. Preserve current root B1 direct-output and B4 early-shutdown/event-owner fixes; use narrow patch only.",
+    "Model/sandbox tab ownership semantics unchanged; B2 per-agent tab-strip redesign excluded.",
+    "An already started page initialization/navigation can continue after cancellation; deferred CDP itself is suppressed.",
+    "Startup wait uses the existing bounded browser-request timeout. Slow first page may time out explicitly.",
+    "Only Windows WebView2 runtime tested; no unsupported backend capability claim.",
+    "Temporary WebView profiles emitted cleanup warnings while runtime file handles lingered; no user profile used or deleted.",
+    "No full restore scheduling parity claim, no real external website/model/API access, no GUI focus/CUA interaction."
+  ],
+  "nextTask": {
+    "id": "B6",
+    "status": "not_started",
+    "reference": "private/claude-desktop-review/source/BROWSER-TOOLS-REVIEW.md",
+    "scope": "Source-derived screenshot size fallback above existing cutoff, bounded decoded-image/transport limits and real attachment path; reproduce actual WebView and retain scoped cancellation/format tests. Root authorizes only future continuation, user handoff stopped work."
+  },
+  "resume": [
+    "Read AGENTS.md and this manifest. Reconfirm parent/shared ownership before writes/builds.",
+    "Use integration-current.patch after a fresh git apply --check; it preserves the two root isClosing lines that conflict with original186 hidden-browser.patch. Recheck manifests and preserve B1/B4/recovery/F4/F6. No whole-file stale copy.",
+    "Root adds native_hidden_browser target/report convention using cmake-additions.txt proposal.",
+    "Run coherent affected browser suites and all-target gate before claiming integration. Private adjacent binaries are compiled against186 only.",
+    "B6 must be a separate future slice; immutable206 cohort exists if owner authorizes continuation."
+  ],
+  "commands": {
+    "configure": "PATH=C:/mingw64/bin;C:/Qt/6.11.2-mingw64-static/bin;... cmake -S private/hidden-browser-stage -B private/hidden-browser-stage/build -G Ninja -DCMAKE_PREFIX_PATH=C:/Qt/6.11.2-mingw64-static -DOPENSSL_ROOT_DIR=C:/Qt/openssl-3.5.8-mingw64-static",
+    "build": "cmake --build private/hidden-browser-stage/build -j1",
+    "final": "QT_QPA_PLATFORM=windows private/hidden-browser-stage/build/test_hidden_browser.exe -o private/hidden-browser-stage/final.txt,txt -o private/hidden-browser-stage/final.xml,junitxml"
+  },
+  "processes": {
+    "buildSession40248": "completed exit0",
+    "testSession87346": "completed exit0",
+    "knownRunningPrivateBuildsOrTests": [],
+    "lastExecutablePathScan": "No process ExecutablePath under private/hidden-browser-stage at checkpoint."
+  },
+  "peerReview": {
+    "status": "not independently reviewed",
+    "reviewer": "qt_port_review",
+    "reason": "Only Pending declaration/call-site inventory inspected before user handoff; no meaningful callback review completed."
+  },
+  "integrationPatch": {
+    "path": "integration-current.patch",
+    "applyCheckExitCode": 0,
+    "report": "apply-check-integration.txt",
+    "status": "checkpoint artifact only; not applied/built/tested",
+    "conflictResolution": "Original186 patch conflicts only beside root BrowserWidget::isClosing declaration/definition. Added those unchanged lines as patch context. Preserve root early shutdown, event-owner API, B1 definitions and all other changes. Test evidence is immutable186 overlay;206 integration needs coherent verification."
+  }
+}

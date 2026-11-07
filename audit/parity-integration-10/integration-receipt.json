@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "startedUtc": "2026-11-07T05:26:01.779171+00:00",
+  "finishedUtc": "2026-11-07T05:26:02.210689+00:00",
+  "baseline": "Frozen206 tree captured as checkpoint 9 (behavior-next-full-1).",
+  "steps": [
+    {
+      "name": "question-priority",
+      "patch": "private/question-priority-stage/question-priority.patch",
+      "sha256": "fd20f2fc09942038987580d8c30aa6464e4a29af6060b55cede5abf8f38478f1",
+      "files": [
+        "src/core/AgentEngineControl.cpp",
+        "tests/test_question_priority.cpp",
+        "tests/QuestionFixture.h"
+      ],
+      "before": {
+        "src/core/AgentEngineControl.cpp": "d1613ccd038a5c8dd292505f73d6f951e48242293db7a9a3681f1eb17f9acb48",
+        "tests/test_question_priority.cpp": null,
+        "tests/QuestionFixture.h": null
+      },
+      "after": {
+        "src/core/AgentEngineControl.cpp": "903f14fcc7f63dd66efdfd11748e884ee84998e3fd10b4eb335c48edeeef7b0d",
+        "tests/test_question_priority.cpp": "d28e670515248c021e8dbeae279301e7dabdd6354924535bf7ded10c3eed2ec0",
+        "tests/QuestionFixture.h": "02fbb386526e39456c5fb04701cb20695709049461086e6c3da930d7ebf9d741"
+      }
+    },
+    {
+      "name": "settings-shortcuts",
+      "patch": "private/settings-shortcuts-stage/settings-shortcuts.patch",
+      "sha256": "6769276b9639a7e9a23afb59af1a0491ec8091d93860aedcbae2eb79bd07d79f",
+      "files": [
+        "src/ui/MainWindow.cpp",
+        "src/ui/MainWindowWorkbench.cpp",
+        "tests/test_settings_shortcuts.cpp"
+      ],
+      "before": {
+        "src/ui/MainWindow.cpp": "a8ea36ef69a05df2ebf9db396eec7f75b335b94c0096d3dc97807f1f83eca411",
+        "src/ui/MainWindowWorkbench.cpp": "8629f86c3c90027554450d4db6c51bf3ea358de424c1929dd4d07acd625fd03c",
+        "tests/test_settings_shortcuts.cpp": null
+      },
+      "after": {
+        "src/ui/MainWindow.cpp": "f3671c4d25e82d4c2dc6b78182ee6497e8dd42189206e69a20f5e4f98472a3b9",
+        "src/ui/MainWindowWorkbench.cpp": "6b9bc8315c5aa4f85d732ad35ed7dfc6ab664d4b57340394408c675769d3f4e5",
+        "tests/test_settings_shortcuts.cpp": "b14cc4035131724cdac9d906e3d4dfc7fd24ad96fa8043302ecdf4130e505c31"
+      }
+    },
+    {
+      "name": "diff-clipping",
+      "patch": "private/claude-markdown-findings-stage/diff-clipping.patch",
+      "sha256": "80ff697019ded876ee04656a41bd69d0aa43b8fe37a9887a77099a1368580838",
+      "files": [
+        "src/ui/FileDiffView.cpp",
+        "tests/test_diff_preview_edge.cpp"
+      ],
+      "before": {
+        "src/ui/FileDiffView.cpp": "c859f3d70787e2eb780fd44fd4e003a11d4382c3d9a59dce3502b4646daccd9e",
+        "tests/test_diff_preview_edge.cpp": null
+      },
+      "after": {
+        "src/ui/FileDiffView.cpp": "2c772b2dd83a7697721a6de67df1cbd0503feacee22d381f1950719f7fe0bd49",
+        "tests/test_diff_preview_edge.cpp": "6569b959e1100b575aa63c0c98ca81c6e012e6cc6f7c78370c5519a450616ee9"
+      }
+    },
+    {
+      "name": "markdown-rich-links",
+      "patch": "private/claude-markdown-findings-stage/markdown-rich-links.patch",
+      "sha256": "b2f177f9d267d20667dc016d23d7e27379e43b67d0ade786f0d156182dd41463",
+      "files": [
+        "src/ui/MarkdownParts.cpp",
+        "src/ui/MarkdownParts.h",
+        "tests/test_markdown_findings.cpp",
+        "tests/test_markdown_link_scope.cpp",
+        "tests/render_markdown_findings.cpp"
+      ],
+      "before": {
+        "src/ui/MarkdownParts.cpp": "55df449542693816b4275a8340be57fc130a86a7ffa9c2026733ac7d45fb230c",
+        "src/ui/MarkdownParts.h": "e1999bedbba1974be07eca843a9fd6a05dd344aea11597e89b345b4486aac53c",
+        "tests/test_markdown_findings.cpp": null,
+        "tests/test_markdown_link_scope.cpp": null,
+        "tests/render_markdown_findings.cpp": null
+      },
+      "after": {
+        "src/ui/MarkdownParts.cpp": "517d22f5e6174b6f8463f04b257404305c8910107013f1ca97a98132826f5a61",
+        "src/ui/MarkdownParts.h": "22ba9d5d3b6d1a7d9e5f7cbba9d10511843cf2c9c75019b16d7df3bea0063ad1",
+        "tests/test_markdown_findings.cpp": "afe20a14af33ade9c6d122efbbb7ba92321493b19119d5415856965305b2b77f",
+        "tests/test_markdown_link_scope.cpp": "1d796f017d44625f0a5b23812e04183825bff918d7a5352df2530ccf6732a266",
+        "tests/render_markdown_findings.cpp": "cce4ba074a0301baa90f5784f018310126840766eef8b04bd83644f3a9c9e873"
+      }
+    },
+    {
+      "name": "hidden-browser",
+      "patch": "private/hidden-browser-stage/integration-current.patch",
+      "sha256": "3a13de04840f5d9ad0ebd86f37769ad7d8a91fbecc10cd8a344186ce6a0d082e",
+      "files": [
+        "src/browser/browserwidget.h",
+        "src/browser/browserwidget.cpp",
+        "src/browser/BrowserToolBridge.h",
+        "src/browser/BrowserToolBridge.cpp",
+        "src/ui/MainWindow.cpp",
+        "tests/test_hidden_browser.cpp"
+      ],
+      "before": {
+        "src/browser/browserwidget.h": "ab239478d8aebc05595f732e32c7124d0a2211c81c006527ef7951b799c989d8",
+        "src/browser/browserwidget.cpp": "1e212f03ef0ab0a65c172dcd760a8051b558bbbab730898da293a96c8d15bf12",
+        "src/browser/BrowserToolBridge.h": "e10601b3326ed7aaebd84a57b323f02a7edfb40eaf3b3d8ce75a2520329fb6e9",
+        "src/browser/BrowserToolBridge.cpp": "717158c18e0e0ee8e92599575ab3bd0700e6ad98ee30443b3b2c12e50251e4a8",
+        "src/ui/MainWindow.cpp": "f3671c4d25e82d4c2dc6b78182ee6497e8dd42189206e69a20f5e4f98472a3b9",
+        "tests/test_hidden_browser.cpp": null
+      },
+      "after": {
+        "src/browser/browserwidget.h": "66b3237e58581904bf871fd53734a4fb04c598f4f6726ab3f9ec6a29c05cddd3",
+        "src/browser/browserwidget.cpp": "2b42f5929860db68212c705529df3278b61bd87cb71d878b59b0b5b4f3b5657a",
+        "src/browser/BrowserToolBridge.h": "8ba0f4951b8602fcf12074586fada667901abaa2f4b36b4cbb31eb260d398538",
+        "src/browser/BrowserToolBridge.cpp": "f1745c6e04c8ebdd64d0a6d2e27917f56f57dfe4c76637bbe25caf6b9407c80e",
+        "src/ui/MainWindow.cpp": "5c02a5e4ff979f75e64f12a489ae825ff608dcc872becd89893e68e054451151",
+        "tests/test_hidden_browser.cpp": "262fb858d86cfc73a05dc60b20dd944d580fb68dcac99cd856730119d9843d5d"
+      }
+    }
+  ],
+  "cmake": {
+    "before": "80824f1dc5c7512a5b60ef7fda79823e0789479aa5a0f26283fceb5c710e9e38",
+    "after": "47bd0e51ad48d0228c908f0be51373af78c3d618a960793307559957412b3c5b",
+    "block": "private/claude-integration-10/cmake-block.txt",
+    "blockSha256": "4f47cfb422f7b505b44fe2790d2de417f6b8d7114c8a2759512305236abaab15",
+    "addedSuites": [
+      "native_question_priority",
+      "native_settings_shortcuts",
+      "native_markdown_findings",
+      "native_markdown_link_scope",
+      "native_diff_preview_edge",
+      "native_hidden_browser"
+    ]
+  },
+  "expectedRegisteredSuites": 212,
+  "postGateFixes": [
+    {
+      "gate": "claude-int10-full-1",
+      "result": "211/212",
+      "suite": "native_transcript_link_ui",
+      "kind": "stale_test",
+      "finding": "Integrated rich-link normalization renders tab: links with a tab-id label; test expected the model link text.",
+      "upstream": "apps/browser/src/ui/components/streamdown/attachment-links.tsx AttachmentLinkRouter case tab -> TabMentionBadge (tab-mention-badge.tsx displayLabel = title (24 chars) or tabId); link children ignored.",
+      "fix": "Assert tab-id label and absence of link text; 17 pass + 1 qualified skip isolated."
+    }
+  ]
+}

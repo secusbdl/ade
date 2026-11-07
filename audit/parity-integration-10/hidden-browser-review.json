@@ -1,0 +1,79 @@
+{
+  "blocking": true,
+  "summary": "I reviewed the callbacks and object lifetimes in the patch read-only. I found no crash, use-after-free or double-complete. Every new callback is either bound to the bridge object or stored in it, so they all die with the bridge. Each new connection in registerTab uses the bridge as its context and is disconnected by unregisterTab and the destructor. queueWaitingRequests uses QTimer::singleShot(0,this,...) and re-checks stillPending(id, correlation). The stored `resume` std::function lives inside m_pending, and the live call always runs on a copy. The ready path in deferUntilReady clears `resume`, so when readyChanged and navigationFinished both queue a resume, only one CDP call is sent. failWaitingRequests and the readyChanged lambda guard against the bridge being deleted mid-call. The new completedNavigation write sits inside the existing COM callback after its lifetime check. Cancel, timeout, duplicate or reused IDs, tab close and bridge deletion all remove the Pending entry before any deferred CDP call can run. The B1/B4 lines are only patch context and are preserved (isClosing, the aboutToBeDestroyed connection, releaseDevToolsEvents, the destructor order). Ran `git apply --check` against the current tree: it passes alone, and also after settings-shortcuts.patch. One finding blocks integration as written. The new 'wait for first navigation' gate also applies to tabs that are already ready and visible, which is a real regression: a request on a visible tab whose first page load is slow, or never finishes, now stalls until the 20 s timeout and then fails. Before the patch it ran immediately. The fix is a few lines. Several non-blocking issues remain: hidden tabs start with a tiny default viewport, error-signal handling is too broad, test coverage has gaps, and the CMake target still has to be registered.",
+  "findings": [
+    {
+      "severity": "blocker",
+      "file": "src/browser/BrowserToolBridge.cpp",
+      "line": "patch hunk @@ -106 (BrowserToolBridge::deferUntilReady) + hunks @@ -265/@@ -279 call sites in executeScoped dispatch",
+      "issue": "deferUntilReady holds back every sendCDP/readConsoleLogs until browser->isReady() && browser->hasCompletedNavigation(). The check applies to every tab, not only to tabs this request had to start. BrowserWidget::Impl::completedNavigation becomes true only in the NavigationCompleted callback (browserwidget.cpp CompletedCallback, after the navigationId match at current line 728). So a tab that is already ready and visible is now held back while its first navigation is still running. Before the patch, current BrowserToolBridge.cpp:262 only rejected tabs that were not ready, and ready tabs ran immediately. Upstream sendCDP (upstream/stagewise/apps/browser/src/backend/services/window-layout/browsing-tab-controller.ts:2334-2345) also never waits for navigation.",
+      "scenario": "An agent opens http://localhost:3000 in a visible tab while a dev server is still doing its first compile, or the page never fires load. Every sendCDP, including Page.stop and Page.navigate used to recover, and every readConsoleLogs now sits queued until the 20 s m_timeoutMs and then fails with 'Browser request timed out'. The same stall would hit a default about:blank new tab if WebView2 never sends a matching NavigationStarting/NavigationCompleted pair for about:blank. No test sends CDP to an about:blank tab under the new gate, so that case is unverified. A navigation cancelled at NavigationStarting by allowTopNavigation (mini-app browsers) never updates d->navigationId, so it can never set the flag either.",
+      "suggestedFix": "Only wait for the first navigation when this request actually had to wait for startup. Example: in deferUntilReady, `auto& p=m_pending[id]; if(browser->isReady() && (browser->hasCompletedNavigation() || !p.waitingForStartup)){p.waitingForStartup=false;p.resume={};return false;}`. The first dispatch on a ready tab then runs immediately, as before, while requests that started hidden initialization still wait for the initial document. Add a test with a visible, ready tab on a /hold page: Runtime.evaluate must return before the page is released. Add a test that sends CDP to an about:blank tab."
+    },
+    {
+      "severity": "major",
+      "file": "src/browser/browserwidget.cpp",
+      "line": "BrowserWidget::ensureInitialized (patch) -> initialize() -> controller callback updateBounds() (current ~866) / updateBounds() current 1100-1110",
+      "issue": "A tab that has never been shown is initialized at whatever size the widget has. MainWindow::addBrowserTab (MainWindow.cpp:704) creates the widget with `new BrowserWidget(page)`, which has Qt's default child geometry. The page layout is never activated while hidden, and QStackedLayout only sets geometry on the current page. updateBounds() therefore gives the WebView2 controller roughly 100x30 device pixels for restored background tabs and for collapsed content. The standalone test calls browser.resize(600,400) to avoid this; the MainWindow tests only read textContent.",
+      "scenario": "An agent asks about layout on a restored background tab (getBoundingClientRect, window.innerWidth, media queries, Input.dispatchMouseEvent coordinates, Page.captureScreenshot). It gets results for a viewport about 100 px wide, which may be a mobile layout, instead of the content area. The data is wrong but the request still completes. Also unverified: Page.captureScreenshot with put_IsVisible(FALSE) may stall until timeout, because Chromium does not render hidden views.",
+      "suggestedFix": "Before ensureInitialized on a hidden tab, give the page the content-area geometry: in MainWindow, set it from m_tabs' stacked-area rect and activate the page layout, or add a bridge/host hook for this. Alternatively, let BrowserWidget fall back to the parent stacked widget's size in updateBounds() while hidden. Add a test in restoredBackgroundAndCollapsedTabsAreUsable that compares window.innerWidth with the visible tab, and mark screenshots of hidden tabs as unsupported until B6 handles them."
+    },
+    {
+      "severity": "minor",
+      "file": "src/browser/BrowserToolBridge.cpp",
+      "line": "patch registerTab errorOccurred lambda / navigationFinished lambda",
+      "issue": "Any errorOccurred while the browser is not ready fails all waiting requests with the message 'Browser initialization failed: \u2026'. BrowserWidget also emits errorOccurred for non-initialization reasons: navigate() with an invalid or unsupported URL (browserwidget.cpp:896/901), and executeScript/requestScreenshot 'The browser is not ready'. Separately, a waiting request is failed by navigationFinished(false) for any non-replaced failure, including a user Stop (OPERATION_CANCELED), and the message 'The restored page failed to load' also appears for tabs that were never restored.",
+      "scenario": "A UI action calls navigate() with an unsupported scheme on a tab that is still initializing. The agent's pending hidden-tab request is failed with a misleading initialization error, even though initialization is still running and would have succeeded.",
+      "suggestedFix": "Fail waiters only on errors that come from reportError() during initialization. One option is a dedicated initializationFailed signal, or checking that `initializing` changed from true to false. Use a neutral message such as 'The page failed to load' for navigation failures."
+    },
+    {
+      "severity": "minor",
+      "file": "src/browser/browserwidget.cpp",
+      "line": "patch: void BrowserWidget::ensureInitialized() { initialize(); }",
+      "issue": "The new public entry point has no `if(!d->lifetime) return;` guard. The B1/B4 changes added that guard to callDevToolsRequest and subscribeDevToolsEvent. The bridge cannot reach it today on a closing widget, because aboutToBeDestroyed calls unregisterTab first. But a public method that starts COM initialization during teardown runs CoInitializeEx/createEnvironment, whose callbacks then do nothing because the lifetime pointer has expired.",
+      "scenario": "A future caller, or an aboutToBeDestroyed observer, calls ensureInitialized while the widget is being destroyed. That starts pointless COM/environment work after shutdown has begun.",
+      "suggestedFix": "`void BrowserWidget::ensureInitialized(){ if(!d->lifetime) return; initialize(); }`"
+    },
+    {
+      "severity": "minor",
+      "file": "src/browser/BrowserToolBridge.cpp",
+      "line": "patch hunk @@ -211 (tabsSnapshot)",
+      "issue": "For initialized tabs, getBrowserTabs now returns `tab.url` (FullyEncoded, from urlChanged) instead of `tab.browser->currentUrl().toString()` (PrettyDecoded). The 'ready' field now also means 'ready and first navigation completed'. Both are visible changes to the tool's output that are not covered by tests. The new 'pendingUrl' field is never asserted by any test.",
+      "scenario": "Tab URLs with non-ASCII or percent-escaped characters change form in getBrowserTabs output between releases. A visible tab that is still loading reports ready:false.",
+      "suggestedFix": "Either keep the previous encoding for initialized tabs or document the change. Add assertions for pendingUrl and ready in restoredMetadataIsAvailableWithoutLoading."
+    },
+    {
+      "severity": "minor",
+      "file": "src/browser/BrowserToolBridge.cpp",
+      "line": "executeScoped m_pending.size() >= 64 (current 238)",
+      "issue": "Deferred requests now hold one of the 64 shared pending slots for up to the full timeout (20 s), across all agents. Before the patch they failed immediately. A sandbox script sending many API.sendCDP calls to a hidden tab can fill the bridge.",
+      "scenario": "While a hidden tab loads, another agent's unrelated browser calls get 'too many pending browser requests'.",
+      "suggestedFix": "Consider a per-tab cap on startup waiters, or document the limit."
+    },
+    {
+      "severity": "note",
+      "file": "src/ui/MainWindow.cpp",
+      "line": "patch hunk @@ -683 (current addBrowserTab line 708-709)",
+      "issue": "`bridge->setInitialTabMetadata(...);if(!owned())return;` emits tabsChanged from inside addBrowserTab. If an observer deletes only the bridge, the provisional page stays as an orphaned, hidden child of m_tabs with a live BrowserWidget. The existing line 708 has the same shape; only line 707 cleans up with `preview->deleteLater()`. Setting metadata also triggers MainWindow's navigationFinished -> recordBrowserHistory when an agent later initializes a hidden tab, so background loads started by an agent are written to browsing history.",
+      "scenario": "An observer deletes the bridge during tabsChanged. The page widget leaks until the window closes.",
+      "suggestedFix": "Mirror line 707: `if(!owned()){if(preview)preview->deleteLater();return;}`. Decide whether loads triggered by an agent should be recorded in history."
+    },
+    {
+      "severity": "note",
+      "file": "tests/test_hidden_browser.cpp",
+      "line": "whole file",
+      "issue": "Test coverage gaps. (1) Exactly-once CDP sending when readyChanged and navigationFinished both queue a resume is not observable: a second CDP reply would be dropped silently, so a side-effect counter such as `window.__n=(window.__n||0)+1` is needed. (2) No test with a visible, ready tab during its first load, and none for about:blank (see the blocker). (3) The window is never shown, so 'without focus/select' is checked only through currentWidget. Nothing checks QApplication::focusWidget or bounds and visibility when the tab is later selected. (4) No test with several waiters on one tab, and none deleting the bridge (outside a completed handler) while waiting and then releasing the page. (5) pendingUrl is never asserted. (6) cancelDuringInitialLoadNeverExecutesQueuedCdp cannot catch CDP sent before the commit, because the initial document is replaced; it only catches resume after cancel. The patch does not register the test in the root CMakeLists.txt. The cmake-additions.txt proposal leaves out WIN32_EXECUTABLE FALSE and the `-o Testing/native_*.txt,txt` report convention that root targets use (CMakeLists.txt:147-151), so as written the test would not run in the gate.",
+      "scenario": "A regression in resume de-duplication or focus handling would pass the suite.",
+      "suggestedFix": "Add the tests listed above. Register native_hidden_browser in the root CMakeLists.txt using the test_browser_session_host pattern, with QT_QPA_PLATFORM=windows and the WebView2Loader.dll copy step."
+    },
+    {
+      "severity": "note",
+      "file": "src/browser/BrowserToolBridge.cpp",
+      "line": "patch deferUntilReady",
+      "issue": "deferUntilReady writes through `m_pending[id]` (operator[]). If the invariant that `id` is still pending ever breaks, this silently inserts a default Pending with no timer or correlation, which would then never complete or time out. Today the invariant holds, because stillPending is checked earlier in dispatch and nothing in between can emit.",
+      "scenario": "A future edit adds a call between the stillPending check and deferUntilReady that can emit signals. A request without a timeout leaks.",
+      "suggestedFix": "Use `auto it=m_pending.find(id); if(it==m_pending.end()) return true;`."
+    }
+  ],
+  "mainWindowInteraction": "The two patches do not conflict. settings-shortcuts.patch changes src/ui/MainWindow.cpp only in hunk @@ -243,14 +243,15 @@: QShortcut parents in the constructor, including Ctrl+T calling addBrowserTab(). integration-current.patch changes only addBrowserTab: one line added after `page->setProperty(\"browserTabId\",tabId)`, which is at current line 708 (patch header @@ -683, applied with offset +23). The context lines do not overlap. A read-only `git apply --check -v private/settings-shortcuts-stage/settings-shortcuts.patch private/hidden-browser-stage/integration-current.patch` on the current tree passed (exit 0), with every hunk applying in that order. The standalone check of integration-current.patch also passes, matching apply-check-integration.txt exitCode=0. There is no semantic overlap either: the Ctrl+T shortcut parent becomes `central`, and addBrowserTab's signature and behavior are unchanged apart from the extra tabsChanged emission from setInitialTabMetadata."
+}

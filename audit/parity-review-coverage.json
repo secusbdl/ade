@@ -7949,6 +7949,12 @@
       "sha256CanonicalLf": "e8174b4e9eb135933e88fc190a39fe8d4d451f2a228cf40b2009da4e542c4dae",
       "linkedFeatureRows": 0,
       "scope": "Checkpoint 9: frozen206 cohort plus regression fixes; full suite, exact-binary live and bounded UI Automation evidence. No whole feature row or source function is declared completed."
+    },
+    {
+      "path": "audit/parity-integration-10.json",
+      "sha256CanonicalLf": "e8526abc4fd01f1299d4b758de206848bd3ff362cbf1e8449183f8f9548866d3",
+      "linkedFeatureRows": 0,
+      "scope": "Checkpoint 10: question priority, Settings shortcut suppression, Markdown rich links and diff clipping, corrected hidden-browser initialization; 212 suites, exact-binary live and UI Automation evidence. No whole feature row declared complete."
     }
   ]
 }

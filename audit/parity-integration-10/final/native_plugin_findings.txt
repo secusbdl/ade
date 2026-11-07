@@ -1,0 +1,22 @@
+********* Start testing of PluginFindingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PluginFindingsTest::initTestCase()
+PASS   : PluginFindingsTest::disablingAllTypesReleasesResolvedAgentCapacity()
+PASS   : PluginFindingsTest::nestedCatalogRefreshKeepsNewestStoreRevision()
+PASS   : PluginFindingsTest::synchronizedDefinitionRestoresAuthorityAndRejectsInvalidDataAtomically()
+PASS   : PluginFindingsTest::synchronizationAndAllowlistCallbacksMayReplaceOrDeleteOwner(synchronize-delete)
+PASS   : PluginFindingsTest::synchronizationAndAllowlistCallbacksMayReplaceOrDeleteOwner(synchronize-replace)
+PASS   : PluginFindingsTest::synchronizationAndAllowlistCallbacksMayReplaceOrDeleteOwner(allowlist-delete)
+PASS   : PluginFindingsTest::synchronizationAndAllowlistCallbacksMayReplaceOrDeleteOwner(allowlist-reenable)
+PASS   : PluginFindingsTest::unrelatedTokenUpdatePreservesHandlesAndPendingRequests(rotate-vercel)
+PASS   : PluginFindingsTest::unrelatedTokenUpdatePreservesHandlesAndPendingRequests(remove-vercel)
+PASS   : PluginFindingsTest::identicalCredentialResavePreservesHandle()
+PASS   : PluginFindingsTest::allowlistOnlyRevokesRemovedTypesForExactAgent()
+PASS   : PluginFindingsTest::allowlistAddAndReorderPreserveRequests()
+PASS   : PluginFindingsTest::callerUserAgentReplacesDefault(object-upper)
+PASS   : PluginFindingsTest::callerUserAgentReplacesDefault(object-lower)
+PASS   : PluginFindingsTest::callerUserAgentReplacesDefault(pair-duplicates)
+PASS   : PluginFindingsTest::callerUserAgentReplacesDefault(absent)
+PASS   : PluginFindingsTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 64ms
+********* Finished testing of PluginFindingsTest *********

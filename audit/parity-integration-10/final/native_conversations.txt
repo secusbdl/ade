@@ -1,0 +1,78 @@
+********* Start testing of ConversationsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ConversationsTest::initTestCase()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support raise()
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently() This plugin does not support propagateSizeHints()
+PASS   : ConversationsTest::forkClonesHistoryAndBothSnapshotStoresIndependently()
+QWARN  : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost() This plugin does not support raise()
+QWARN  : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::archiveCancelsBusyAgentRetainsFilesAndUnloadsHost()
+PASS   : ConversationsTest::restoreDoesNotActivateUntilSelected()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support raise()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support raise()
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles() This plugin does not support propagateSizeHints()
+PASS   : ConversationsTest::deleteCancelPreservesAndConfirmationRemovesOwnedFiles()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support raise()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support raise()
+QWARN  : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::busyDeleteIsDisabledAndLateConfirmationIsRefused()
+PASS   : ConversationsTest::archivedSearchPaginationAndSelection()
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(new)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(rename) This plugin does not support propagateSizeHints()
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(rename)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(fork) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(fork) This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(fork)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(archive) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(archive) This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(archive)
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support raise()
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::failedPersistencePreservesConversationState(delete) This plugin does not support propagateSizeHints()
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(delete)
+PASS   : ConversationsTest::failedPersistencePreservesConversationState(restore)
+PASS   : ConversationsTest::failedSelectionSaveKeepsDraftVisible()
+QWARN  : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory() This plugin does not support raise()
+QWARN  : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::liveOwnersSeparateFromArchivedAndUnselectedHistory()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support raise()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support grabbing the keyboard
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support raise()
+QWARN  : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::backgroundForkDoesNotLeaveAnUntrackedSourceHost()
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-whitespace)
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(text-and-attachment)
+QINFO  : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace) Rejected-history preservation: visibleDraft= true  diskDraft= true  reopenedDraft= true  draftAttachments= true  reopenedAttachments= true
+PASS   : ConversationsTest::rejectedInheritedHistoryPreservesDraftAndAttachments(attachment-only-whitespace)
+QWARN  : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate() This plugin does not support propagateSizeHints()
+QWARN  : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate() This plugin does not support propagateSizeHints()
+PASS   : ConversationsTest::archiveRowsTargetTheirOwnChatAndSortByArchiveDate()
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() This plugin does not support raise()
+QWARN  : ConversationsTest::lastSelectedActiveChatSurvivesRestart() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::lastSelectedActiveChatSurvivesRestart()
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() This plugin does not support raise()
+QWARN  : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart() This plugin does not support grabbing the keyboard
+PASS   : ConversationsTest::approvalPolicyFollowsSourceForkNewChatAndRestart()
+PASS   : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(ask-to-allow)
+PASS   : ConversationsTest::failedApprovalSaveRestoresSelectorAndStoredPolicy(allow-to-ask)
+PASS   : ConversationsTest::legacyApprovalPolicyDefaultsToAsk()
+PASS   : ConversationsTest::cleanupTestCase()
+Totals: 26 passed, 0 failed, 0 skipped, 0 blacklisted, 20462ms
+********* Finished testing of ConversationsTest *********
