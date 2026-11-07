@@ -33,6 +33,9 @@ public:
     NetworkBroker(QNetworkAccessManager *manager, QObject *parent);
     ~NetworkBroker() override;
     bool registerCredentialType(const CredentialType &definition, QString *error = nullptr);
+    // Host-owned store reconciliation. Empty fields remove this type's saved
+    // credential; identical definition/data leave existing requests and handles intact.
+    bool synchronizeCredential(const CredentialType &definition, const QJsonObject &fields, QString *error = nullptr);
     bool setCredential(const QString &typeId, const QJsonObject &fields, QString *error = nullptr);
     void removeCredential(const QString &typeId);
     void setAllowedCredentialTypes(const QString &agentId, const QStringList &typeIds);

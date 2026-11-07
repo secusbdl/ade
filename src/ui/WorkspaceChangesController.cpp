@@ -156,7 +156,7 @@ void WorkspaceChangesController::finish(quint64 id, const GitResult &result) {
   } else {
     m_summary = result.diff;
     m_hasSnapshot = true;
-    m_error.clear();
+    m_error = result.warnings.join('\n');
     m_phase = Phase::Ready;
   }
   if (m_dirty && m_active)

@@ -1,0 +1,19 @@
+********* Start testing of BrowserContextRuntimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserContextRuntimeTest::initTestCase()
+PASS   : BrowserContextRuntimeTest::snapshotReachesActualHostWire(openai)
+PASS   : BrowserContextRuntimeTest::snapshotReachesActualHostWire(responses)
+PASS   : BrowserContextRuntimeTest::snapshotReachesActualHostWire(anthropic)
+PASS   : BrowserContextRuntimeTest::snapshotReachesActualHostWire(google)
+PASS   : BrowserContextRuntimeTest::nextModelStepSeesFreshState(openai)
+PASS   : BrowserContextRuntimeTest::nextModelStepSeesFreshState(responses)
+PASS   : BrowserContextRuntimeTest::nextModelStepSeesFreshState(anthropic)
+PASS   : BrowserContextRuntimeTest::nextModelStepSeesFreshState(google)
+PASS   : BrowserContextRuntimeTest::sharedBridgeDoesNotCrossAgentPayloads()
+PASS   : BrowserContextRuntimeTest::deadBridgePreservesShellAndDeadHostIsInert()
+PASS   : BrowserContextRuntimeTest::invalidHostIdentityDoesNotListGlobalTabs()
+PASS   : BrowserContextRuntimeTest::harnessDoesNotReceiveNativeBrowserContext(codex)
+PASS   : BrowserContextRuntimeTest::harnessDoesNotReceiveNativeBrowserContext(opencode)
+PASS   : BrowserContextRuntimeTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2569ms
+********* Finished testing of BrowserContextRuntimeTest *********

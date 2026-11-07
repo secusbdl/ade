@@ -9,7 +9,7 @@
 #include "git/GitService.h"
 #include <QButtonGroup>
 #include <QFileInfo>
-#include <QFileSystemModel>
+#include "WorkspaceFileTreeModel.h"
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -148,8 +148,9 @@ void MainWindow::refreshWorkbench() {
             m_workspaceChangesView->setSnapshot(controller->workspace(),controller->phase(),controller->summary(),controller->hasSnapshot(),controller->error(),controller->busy());if(!self||!valid())return;
         }
     }
-    if(connected&&m_fileModel->rootPath()!=workspace){
-        const QPointer<MainWindow> self(this);m_files->setModel(m_fileModel);const auto index=m_fileModel->setRootPath(workspace);if(!self||!valid())return;m_files->setRootIndex(index);
+    if(m_fileModel->rootPath()!=workspace){
+        const QPointer<MainWindow> self(this);m_files->setModel(connected?m_fileModel:nullptr);if(!self||!valid())return;
+        const auto index=m_fileModel->setRootPath(workspace);if(!self||!valid())return;if(connected)m_files->setRootIndex(index);
     }
     m_fileTreePanel->findChild<QWidget*>("fileTreeEmpty")->setVisible(!connected);
     auto* title = m_fileTreePanel->findChild<QLabel*>("fileTreeTitle");

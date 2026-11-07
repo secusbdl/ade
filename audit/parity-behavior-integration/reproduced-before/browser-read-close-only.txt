@@ -1,0 +1,24 @@
+********* Start testing of BrowserHistoryLive *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserHistoryLive::initTestCase()
+QINFO  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() tab= "A complete browser history t" history= "A complete browser history t"
+FAIL!  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() Compared values are not the same
+   Actual   (entries(dir.path()).first().toObject()["title"].toString()): "A complete browser history t"
+   Expected (title())                                                   : "A complete browser history title longer than twenty-eight characters"
+D:/age/ADE/private/claude-browser-findings-stage/test_browser_history_live.cpp(30) : failure location
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-TxxSYO" most likely due to the presence of read-only files.
+QWARN  : BrowserHistoryLive::laterDocumentVisitIsRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-tKfzdF" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::laterDocumentVisitIsRecorded()
+FAIL!  : BrowserHistoryLive::sameDocumentRouteIsRecorded() Compared values are not the same
+   Actual   (entries(dir.path()).first().toObject()["url"].toString()): "http://127.0.0.1:64702/"
+   Expected (url("/client-route").toString())                         : "http://127.0.0.1:64702/client-route"
+D:/age/ADE/private/claude-browser-findings-stage/test_browser_history_live.cpp(32) : failure location
+QWARN  : BrowserHistoryLive::sameDocumentRouteIsRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-ADJhfn" most likely due to the presence of read-only files.
+FAIL!  : BrowserHistoryLive::failedVisitIsNotRecorded() 'e.toObject()["url"].toString()!=bad.toString()' returned FALSE. ()
+D:/age/ADE/private/claude-browser-findings-stage/test_browser_history_live.cpp(33) : failure location
+QWARN  : BrowserHistoryLive::failedVisitIsNotRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-sXlzCm" most likely due to the presence of read-only files.
+QWARN  : BrowserHistoryLive::stopCancelsRealPendingNavigation() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-xEWxsF" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::stopCancelsRealPendingNavigation()
+PASS   : BrowserHistoryLive::cleanupTestCase()
+Totals: 4 passed, 3 failed, 0 skipped, 0 blacklisted, 4483ms
+********* Finished testing of BrowserHistoryLive *********

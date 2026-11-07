@@ -1,0 +1,175 @@
+{
+  "status": "frozen private handoff; no production/shared build changes",
+  "baseCommit": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
+  "baselineVerification": "baseline-verification.json",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "patch": "claude-followups.patch",
+  "patchSha256": "856c21aa1b1cb720574e5ba2e37b4c4be47bc2402a9c35843a613efea344c2ac",
+  "patchHashBasis": "exact LF artifact bytes",
+  "sourceManifest": "SOURCE-MANIFEST.json",
+  "manifestSha256": "d329d57745a0bf7006760ea1def4d8f455b854bc5c37a7499b73a7a9ed7fcdec",
+  "sourceHashBasis": "canonical_git_text_LF",
+  "paths": 13,
+  "applyCheck": "git apply --check passed from D:/age/ADE against the current root working tree; no application performed",
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "cmakeSha256": "817b1ebb3abc633b690b7bfd32be0cb8aefdab96fcde2ff5bf5e98bc4a165020",
+  "newSuites": 3,
+  "features": [
+    "Message/lane-scoped split-final association; exact tool identity; bounded UUID replay dedup; ambiguous candidates reject without using UUID as index authority",
+    "Tool image arrays keep useful text plus bounded omission notice; no image bytes/URLs in display",
+    "Separate requested/observed root-session model telemetry; persisted assistant metadata and smoke report label legacy actualModel alias"
+  ],
+  "telemetry": {
+    "fields": [
+      "providerId",
+      "requestedModel",
+      "observedModel",
+      "observedModelSource",
+      "observedModelConflict"
+    ],
+    "sourcePriority": "Explicit owning root assistant/message overrides provisional own system/init; equal-authority conflict clears observedModel and is sticky within turn. Reset each accepted turn; absent/malformed/foreign/child observations stay unknown.",
+    "legacy": "actualModel and provider/model selection unchanged. This reports CLI assertions, not independently verified backend execution/billing."
+  },
+  "validation": {
+    "privateSuites": 8,
+    "cases": 166,
+    "failures": 0,
+    "skips": 0,
+    "reports": [
+      {
+        "suite": "claude_followups_stream",
+        "cases": 20,
+        "seconds": 0.047,
+        "xml": "claude_followups_stream-final.xml",
+        "xmlSha256": "46acaa944670acce385647533bb1b00f6378b924c0b705413279988a7a88d925",
+        "text": "claude_followups_stream-final.txt",
+        "textSha256": "5d4fdb538ce60990799ea804e3183586c2080ba661166c15b677295a5ac68e24",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_stream",
+        "cases": 19,
+        "seconds": 0.184,
+        "xml": "claude_stream-final.xml",
+        "xmlSha256": "84f1f6b86bcd6da43f2878a75cc69facd568875f9184f3b471067650628380e6",
+        "text": "claude_stream-final.txt",
+        "textSha256": "97c50cb937a2b3626685e25fd0625cedbe3d1cbc2ae1ce5bd75f9c9d2c6aa069",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_followups_session_after",
+        "cases": 18,
+        "seconds": 3.247,
+        "xml": "claude_followups_session_after-final.xml",
+        "xmlSha256": "3f6a106a2a47bf8287b448fdad5a0e52121527ae1ea85dc3418f31e76719b56f",
+        "text": "claude_followups_session_after-final.txt",
+        "textSha256": "090ebb922bc173d665364916e23b1649a15b7b1b5050859f10d90dd6bef14d46",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_followups_engine",
+        "cases": 8,
+        "seconds": 1.238,
+        "xml": "claude_followups_engine-final.xml",
+        "xmlSha256": "2dd874bb7a1d734a4e0665a7259ccd7a995c1920304912e4f0f8813702810d89",
+        "text": "claude_followups_engine-final.txt",
+        "textSha256": "f9a1fb393a2d8e108c0e52b2b590770abce9256227063306e816319bca4115ef",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_engine",
+        "cases": 15,
+        "seconds": 2.616,
+        "xml": "claude_engine-final.xml",
+        "xmlSha256": "c50cf73612cd4b6c90afec23b2649bf75a235801315385f45cb8706ecd0adbe3",
+        "text": "claude_engine-final.txt",
+        "textSha256": "bf253bc5ec32b912ff159687a3e996d1f1efd504d8f8d5edcd189b89c1a6c60c",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_session",
+        "cases": 22,
+        "seconds": 7.026,
+        "xml": "claude_session-final.xml",
+        "xmlSha256": "a773bb4e2886d06b13218735a14882a5727576e905a00bd334b29bb0ef5f6a50",
+        "text": "claude_session-final.txt",
+        "textSha256": "9706de9f42aeaae34494fb750bccf5c6b2c3e6524cdbd1aa2fe6eaf88ed4ab4e",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "claude_control",
+        "cases": 18,
+        "seconds": 2.332,
+        "xml": "claude_control-final.xml",
+        "xmlSha256": "3dd3f123f40e4283b07b022c073acb9efeca20510eb7781818188ace11e5a78b",
+        "text": "claude_control-final.txt",
+        "textSha256": "ac6db401678378e01bc9abd7d72e6a2601615524adc9de26e975edba7e83bec3",
+        "hashBasis": "exact retained report bytes"
+      },
+      {
+        "suite": "direct_question_mcp",
+        "cases": 46,
+        "seconds": 18.682,
+        "xml": "direct_question_mcp-final.xml",
+        "xmlSha256": "6ff501814633d5c9fa08471853d767930a3816721f445df003af9f29235dd597",
+        "text": "direct_question_mcp-final.txt",
+        "textSha256": "ebeac1633bd2d01b2de7846f24c88e5a2ae19971b7e58738683146d331e0f664",
+        "hashBasis": "exact retained report bytes"
+      }
+    ],
+    "mainCpp": "Changed main.cpp compiled successfully as an OBJECT target against coherent copied headers; full ADE relink/runtime smoke is parent integration work.",
+    "toolchain": "Windows11; Qt6.11.2 static; MinGW GCC16.2.0; C++20; private one-job source builds",
+    "coherence": "Full copied harness/core sources rebuilt after ClaudeStream/Session class-layout changes; file-transformer frozen archive; no mutable shared archive links."
+  },
+  "beforeEvidence": [
+    {
+      "path": "stream-before.txt",
+      "result": "3pass5fail; recorded split blocks/repeated type/parent lanes/image tool result",
+      "sha256": "7e67abafc1368ed77ea2a00daa9dbed9e8c583f2aa42ba3bb5fa995f3b0f8fe3",
+      "hashBasis": "exact retained report bytes"
+    },
+    {
+      "path": "session-before.txt",
+      "result": "2pass11fail; actual baseline subprocess split/image and missing telemetry fields",
+      "sha256": "27704257e8a57dce13eee09645e761ab8387685c79bf77d8b3d12b73ac50f57b",
+      "hashBasis": "exact retained report bytes"
+    },
+    {
+      "path": "association-peer-before.txt",
+      "result": "2pass2fail; a new final UUID does not disambiguate multiple pending same-type blocks",
+      "sha256": "b89888aa5d943dcfa8de8dabf3377031e0e41e5f61bd63edab46ac27db382a95",
+      "hashBasis": "exact retained report bytes"
+    },
+    {
+      "path": "replay-peer-before.txt",
+      "result": "2pass1fail; replayed finalized text with new UUID cannot overwrite an unrelated pending block",
+      "sha256": "528dc7160d8ed4e5c3283bf93047153e7666b0a36cded811101568e31ccb7f1f",
+      "hashBasis": "exact retained report bytes"
+    }
+  ],
+  "fixtureCorrection": {
+    "path": "engine-fixture-snapshot-only.txt",
+    "result": "6pass2fail initial new Engine fixture; final text was supplied through nonempty block_start snapshot, so a textDelta assertion was invalid. Fixture now sends real content_block_delta before final; no production delta-loss bug claimed."
+  },
+  "classification": "REVIEW-VALIDATION.json",
+  "recordedEvidence": "recorded-event-shapes.json; structural types/indices/hashed message IDs/public model names only, no thinking, text, signature, tool arguments/results, or raw session IDs emitted",
+  "limits": [
+    "F2 existing native Always Ask approvals unchanged; differs from pinned auto-allow hidden tools/workspace edits. No generalized permission weakening.",
+    "F4 native ten-minute active budget remains; pauses human decisions, ongoing output does not reset it. Synthetic short-budget case confirms divergence.",
+    "F5 inherited token/API credential stripping remains deliberate managed-subscription isolation; no new auth channel.",
+    "Tool-result image rendering remains unavailable; ordinary unknown non-image media and existing frame/part/text limits unchanged.",
+    "Unindexable ambiguous or contradictory final frames reject explicitly; no global type-only merging.",
+    "Private synthetic process/Engine scope only. No live model/auth calls, actual package/UI verification, or universal parity guarantee."
+  ],
+  "boundedScan": {
+    "scope": "13 changed/new source/test files only; no credential/profile files read",
+    "highConfidenceCandidates": 0,
+    "syntheticMarkers": "Explicit SYNTHETIC_* values used only in fixtures; no real secrets"
+  },
+  "integration": [
+    "Apply from repository root; root owns CMake.",
+    "Reconfigure and rebuild all harness/Engine consumers for changed class layout; avoid mixed old headers/static archives.",
+    "Run the 3 new suites plus existing Claude/direct question and broader affected Engine suites before claiming shared readiness.",
+    "No overlap with frozen Settings/plugin; no mutation module changes."
+  ]
+}

@@ -9,7 +9,7 @@
 #include "ui/SessionStore.h"
 #include "ui/SettingsPage.h"
 #include <QComboBox>
-#include <QFileSystemModel>
+#include "ui/WorkspaceFileTreeModel.h"
 #include <QJsonObject>
 #include <QLineEdit>
 #include <QListWidget>
@@ -266,7 +266,7 @@ class WorkbenchLayoutTest final : public QObject {
         expose(window);
         action(window, "toggleFileTreeButton")->click();
         auto* tree = window.findChild<QTreeView*>("workspaceFiles");
-        auto* model = qobject_cast<QFileSystemModel*>(tree->model());
+        auto* model = qobject_cast<WorkspaceFileTreeModel*>(tree->model());
         QVERIFY(model);
         const auto index = model->index(file.fileName());
         QVERIFY(index.isValid());

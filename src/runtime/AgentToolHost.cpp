@@ -3,6 +3,7 @@
 #include "core/AgentEngine.h"
 #include "browser/BrowserToolBridge.h"
 #include "attachments/ModelMediaCatalog.h"
+#include "attachments/ContextContentLimits.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>
@@ -38,7 +39,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     engine->setFileReadCommitter([lease=m_readLease](const FileReadCapture& capture,const std::atomic_bool* canceled,QString* error){return FileReadSnapshotStore::commit(lease,capture,canceled,error);});
     engine->setMessagePreparer([guard=QPointer<AgentToolHost>(this)](const QJsonArray& history,const ProviderConfig& provider,QString* error){
         if(!guard||guard->m_fileContextRemoved){if(error)*error="The file context host is unavailable or was removed.";return QJsonArray{};}
-        return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),{},error);
+        return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),ContextContentLimits::forProvider(provider),error);
     });
     engine->setHarnessInputPreparer([guard = QPointer<AgentToolHost>(this)](
                                         const QJsonArray &history,

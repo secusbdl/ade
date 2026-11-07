@@ -1,6 +1,7 @@
 #include "ClaudeStream.h"
 #include <QCryptographicHash>
 #include <QJsonDocument>
+#include <QRegularExpression>
 #include <cmath>
 namespace ade {
 namespace {
@@ -50,14 +51,32 @@ QString outputText(const QJsonValue &value, bool *unsupported) {
     return {};
   }
   QStringList output;
+  qsizetype size = 0;
   for (const auto &part : value.toArray()) {
     const auto item = part.toObject();
+    QString text;
     if (item.value("type") == "text" && item.value("text").isString())
-      output.append(item.value("text").toString());
-    else {
+      text = item.value("text").toString();
+    else if (item.value("type") == "image") {
+      const auto mime =
+          item.value("source").toObject().value("media_type").toString();
+      static const QRegularExpression imageType(
+          "\\Aimage/[A-Za-z0-9][A-Za-z0-9.+-]{0,63}\\z");
+      text = mime.size() <= 70 && imageType.match(mime).hasMatch()
+                 ? "[Image result: " + mime + "; preview unavailable]"
+                 : QString("[Image result: preview unavailable]");
+    } else {
       *unsupported = true;
       return {};
     }
+    const qsizetype separator = output.isEmpty() ? 0 : 1;
+    if (text.size() > MaxChars - size - separator ||
+        output.size() >= MaxParts) {
+      *unsupported = true;
+      return {};
+    }
+    size += text.size() + separator;
+    output.append(text);
   }
   return output.join("\n");
 }
@@ -124,6 +143,7 @@ bool ClaudeStream::applyBlock(const QString &parent, const QString &message,
     Block block;
     block.parent = parent;
     block.message = message;
+    block.streamed = !final;
     block.type =
         type == "thinking" || type == "redacted_thinking" ? "reasoning" : type;
     block.hidden = type == "redacted_thinking";
@@ -150,6 +170,7 @@ bool ClaudeStream::applyBlock(const QString &parent, const QString &message,
     }
     m_blocks.insert(id, block);
     m_order.append(id);
+    m_messageBlocks[key(parent, message, -1)].insert(index, id);
     if (!block.hidden && block.type != "tool")
       append(updates,
              {{"type", block.type}, {"itemId", block.id}, {"text", ""}});
@@ -161,6 +182,16 @@ bool ClaudeStream::applyBlock(const QString &parent, const QString &message,
           : (type == "tool_use" || type == "server_tool_use" ? "tool" : type);
   if (block.type != expected)
     return fail(error, "Claude changed a streamed content block type.");
+  const auto digest =
+      final ? QCryptographicHash::hash(
+                  QJsonDocument(value).toJson(QJsonDocument::Compact),
+                  QCryptographicHash::Sha256)
+            : QByteArray{};
+  if (final && block.finalized) {
+    if (block.finalDigest != digest)
+      return fail(error, "Claude changed a finalized content block.");
+    return true;
+  }
   if (block.type == "tool") {
     if (block.id != "tool/" + toolKey(parent, value.value("id").toString()) ||
         block.name != value.value("name").toString() ||
@@ -188,8 +219,115 @@ bool ClaudeStream::applyBlock(const QString &parent, const QString &message,
                     error))
       return false;
   }
-  if (final)
+  if (final) {
+    block.finalized = true;
+    block.finalDigest = digest;
     close(block, "done", updates);
+  }
+  return true;
+}
+bool ClaudeStream::applyFinal(const QJsonObject &frame, const QString &parent,
+                              QJsonArray *updates, QString *error) {
+  const auto message = frame.value("message").toObject();
+  const auto id = message.value("id").toString();
+  const auto content = message.value("content").toArray();
+  if (!identifier(id) || !message.value("content").isArray() ||
+      content.size() > MaxParts)
+    return fail(error, "Claude returned an invalid assistant message.");
+  const auto scope = key(parent, id, -1);
+  const auto uuidValue = frame.value("uuid");
+  const auto uuid = uuidValue.toString();
+  if (!uuidValue.isUndefined() && (!uuidValue.isString() || !identifier(uuid) ||
+                                   uuid.contains(QChar::Null)))
+    return fail(error, "Claude returned an invalid final event identity.");
+  const auto eventKey = QString::number(scope.size()) + ':' + scope + uuid;
+  const auto eventDigest = QCryptographicHash::hash(
+      QJsonDocument(content).toJson(QJsonDocument::Compact),
+      QCryptographicHash::Sha256);
+  if (!uuid.isEmpty() && m_finalFrames.contains(eventKey)) {
+    if (m_finalFrames.value(eventKey) != eventDigest)
+      return fail(error, "Claude changed a replayed final event.");
+    return true;
+  }
+  if (!uuid.isEmpty() && m_finalFrames.size() >= MaxParts)
+    return fail(error, "Claude final event history exceeded its limit.");
+  if (content.size() != 1) {
+    // Legacy complete snapshots have an explicit array position for each block.
+    for (qsizetype index = 0; index < content.size(); ++index)
+      if (!applyBlock(parent, id, int(index), content[index].toObject(), true,
+                      updates, error))
+        return false;
+  } else {
+    const auto value = content.first().toObject();
+    const auto sourceType = value.value("type").toString();
+    const auto type =
+        sourceType == "thinking" || sourceType == "redacted_thinking"
+            ? QString("reasoning")
+        : sourceType == "tool_use" || sourceType == "server_tool_use"
+            ? QString("tool")
+            : sourceType;
+    const auto ordered = m_messageBlocks.value(scope);
+    bool streamed = false;
+    for (const auto &blockKey : ordered)
+      streamed |= m_blocks.value(blockKey).streamed;
+    int selected = -1;
+    if (type == "tool") {
+      const auto toolId = toolKey(parent, value.value("id").toString());
+      const auto known = m_tools.value(toolId);
+      if (!known.isEmpty()) {
+        const auto &owned = m_blocks[known];
+        if (owned.parent != parent || owned.message != id)
+          return fail(error,
+                      "Claude changed a finalized tool's owning message.");
+        for (auto it = ordered.cbegin(); it != ordered.cend(); ++it)
+          if (it.value() == known)
+            selected = it.key();
+      }
+    } else {
+      QList<int> pending, exact, replay;
+      const auto digest = QCryptographicHash::hash(
+          QJsonDocument(value).toJson(QJsonDocument::Compact),
+          QCryptographicHash::Sha256);
+      for (auto it = ordered.cbegin(); it != ordered.cend(); ++it) {
+        const auto &candidate = m_blocks[it.value()];
+        if (candidate.type != type)
+          continue;
+        if (candidate.finalized) {
+          if (candidate.finalDigest == digest)
+            replay.append(it.key());
+          continue;
+        }
+        pending.append(it.key());
+        const auto field = type == "reasoning" ? "thinking" : "text";
+        if (sourceType == "redacted_thinking"
+                ? candidate.hidden
+                : value.value(field).isString() &&
+                      candidate.text == value.value(field).toString())
+          exact.append(it.key());
+      }
+      if (!pending.isEmpty()) {
+        if (exact.size() > 1 || (exact.isEmpty() && pending.size() > 1) ||
+            (!replay.isEmpty() && (uuid.isEmpty() || exact.isEmpty())))
+          return fail(error,
+                      "Claude supplied an ambiguous final content block.");
+        selected = exact.isEmpty() ? pending.first() : exact.first();
+      } else if (!replay.isEmpty() && (streamed || uuid.isEmpty())) {
+        selected = replay.first();
+      }
+    }
+    if (selected < 0) {
+      if (streamed)
+        return fail(error,
+                    "Claude final content has no matching streamed block.");
+      selected = ordered.isEmpty() ? 0 : ordered.lastKey() + 1;
+      if (selected >= MaxParts)
+        return fail(error, "Claude presentation exceeded its part limit.");
+    }
+    if (!applyBlock(parent, id, selected, value, true, updates, error))
+      return false;
+  }
+  if (!uuid.isEmpty())
+    m_finalFrames.insert(eventKey, eventDigest);
   return true;
 }
 bool ClaudeStream::consume(const QJsonObject &frame, QJsonArray *updates,
@@ -297,16 +435,7 @@ bool ClaudeStream::consume(const QJsonObject &frame, QJsonArray *updates,
                         {{"type", "text"}, {"text", result}}, true, updates,
                         error);
   } else if (type == "assistant") {
-    const auto message = frame.value("message").toObject();
-    const auto id = message.value("id").toString();
-    if (!identifier(id) || !message.value("content").isArray() ||
-        message.value("content").toArray().size() > MaxParts)
-      return fail(error, "Claude returned an invalid assistant message.");
-    const auto content = message.value("content").toArray();
-    for (qsizetype i = 0; i < content.size(); ++i)
-      if (!applyBlock(parent, id, int(i), content[i].toObject(), true, updates,
-                      error))
-        return false;
+    return applyFinal(frame, parent, updates, error);
   } else if (type == "user") {
     const auto content = frame.value("message").toObject().value("content");
     if (!content.isArray())

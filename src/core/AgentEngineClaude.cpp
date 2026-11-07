@@ -4,6 +4,16 @@
 #include <QJsonDocument>
 #include <QUuid>
 namespace ade {
+QJsonObject AgentEngine::modelTelemetry() const {
+  if (!m_provider.isClaudeHarness() || !m_claude)
+    return {};
+  const auto telemetry = m_claude->modelTelemetry();
+  if (telemetry.value("providerId") != m_provider.id ||
+      telemetry.value("requestedModel") != m_actualModel)
+    return {};
+  return telemetry;
+}
+
 void AgentEngine::requestClaudeHarness(const QJsonArray &originalInput,
                                        const QStringList &transcript) {
   const auto generation = m_generation;

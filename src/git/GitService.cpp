@@ -168,14 +168,20 @@ public:
         for(const auto &entry:context.mountedPaths) if(key(canonical(entry))==key(path)) return true;
         return false;
     }
-    GitSnapshot repository(const QString &requested,bool enforceTrust=true) {
+    GitSnapshot repository(const QString &requested,bool enforceTrust=true,bool allowAdministrativeBare=false) {
         const QString path=canonical(requested);
         if(path.isEmpty() || !QFileInfo(path).isDir()) fail(GitErrorCode::NotRepository,"Workspace is unavailable.");
         if(enforceTrust && !trusted(path)) fail(GitErrorCode::UntrustedPath,"Workspace has not been opened or mounted.");
         const auto top=command(path,{"rev-parse","--show-toplevel"});
         if(top.cancelled||top.timedOut||top.limited) requireProcess(top);
-        if(!top.ok()) fail(GitErrorCode::NotRepository,"Workspace is not a Git repository root.",top.exitCode);
-        const QString root=canonical(text(top.out));
+        QString root;
+        if(!top.ok()) {
+            // Used only after resolving a main administrative path from an
+            // already trusted linked worktree. Direct bare mounts still reject.
+            if(!allowAdministrativeBare || text(checked(path,{"rev-parse","--is-bare-repository"}))!="true")
+                fail(GitErrorCode::NotRepository,"Workspace is not a Git repository root.",top.exitCode);
+            root=canonical(text(checked(path,{"rev-parse","--absolute-git-dir"})));
+        } else root=canonical(text(top.out));
         if(root.isEmpty() || key(root)!=key(path)) fail(GitErrorCode::NotRepository,"Open the exact repository or worktree root.");
         const QString commonRaw=text(checked(root,{"rev-parse","--git-common-dir"}));
         const QString common=canonical(QDir::isAbsolutePath(commonRaw)?commonRaw:QDir(root).filePath(commonRaw));
@@ -187,6 +193,7 @@ public:
         if(!parseWorktrees(checked(repo.repoRoot,{"worktree","list","--porcelain","-z"}),&result)) fail(GitErrorCode::ProcessFailed,"Invalid Git worktree list.");
         QList<GitWorktree> existing;
         for(auto item:result) {
+            if(item.prunable && !item.main) continue;
             const auto path=canonical(item.path);
             if(path.isEmpty() && item.prunable) continue;
             item.path=path.isEmpty()?QDir::fromNativeSeparators(item.path):path;
@@ -329,9 +336,48 @@ public:
         else result.modified=diskBytes(repo.repoRoot,path,&result.modifiedExists,&result.mtimeMs);
         result.binary=result.original.left(8000).contains('\0')||result.modified.left(8000).contains('\0'); return result;
     }
-    GitDiffSummary diffSummary(const GitSnapshot &repo) {
+    // Best-effort summary statistics never authorize editable file content.
+    // Retain unavailable entries with zero counts (pinned source behavior), and
+    // bound aggregate reads without allocating every untracked file in memory.
+    bool countUntracked(const QString& root,const QString& relative,qint64& remaining,GitDiffEntry* entry) {
+        requireNotCancelled(cancel);
+        const auto path=safeChildPath(root,relative);
+        if(path.isEmpty()) return false;
+        qint64 added=0,total=0;int sniffRemaining=8000;char last=0;
+        const auto consume=[&](const char* bytes,qint64 count) {
+            if(count>remaining){remaining=0;return false;}
+            remaining-=count;total+=count;
+            const int sniff=int(qMin<qint64>(sniffRemaining,count));
+            if(sniff && QByteArrayView(bytes,sniff).contains('\0')) {entry->binary=true;return true;}
+            sniffRemaining-=sniff;
+            added+=QByteArrayView(bytes,count).count('\n');if(count)last=bytes[count-1];
+            return true;
+        };
+        QByteArray chunk(65536,Qt::Uninitialized);
+#ifdef Q_OS_WIN
+        const auto native=QDir::toNativeSeparators(path).toStdWString();
+        HANDLE handle=CreateFileW(native.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_FLAG_OPEN_REPARSE_POINT|FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
+        if(handle==INVALID_HANDLE_VALUE)return false;
+        const auto close=qScopeGuard([&]{CloseHandle(handle);});BY_HANDLE_FILE_INFORMATION info{};LARGE_INTEGER size{};
+        if(!GetFileInformationByHandle(handle,&info)||GetFileType(handle)!=FILE_TYPE_DISK||(info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT))||!GetFileSizeEx(handle,&size)||size.QuadPart<0||size.QuadPart>remaining||!inside(root,openedPath(handle)))return false;
+        while(true){
+            requireNotCancelled(cancel);DWORD count=0;
+            if(!ReadFile(handle,chunk.data(),DWORD(qMin<qint64>(chunk.size(),remaining+1)),&count,nullptr))return false;
+            if(!count)break;if(!consume(chunk.constData(),count))return false;if(entry->binary){requireNotCancelled(cancel);return true;}
+        }
+#else
+        const QFileInfo info(path);if(!info.isFile()||info.isSymLink()||!inside(root,canonical(path)))return false;
+        QFile file(path);if(!file.open(QIODevice::ReadOnly)||file.size()<0||file.size()>remaining)return false;
+        while(true){
+            requireNotCancelled(cancel);const auto count=file.read(chunk.data(),qMin<qint64>(chunk.size(),remaining+1));
+            if(count<0)return false;if(!count)break;if(!consume(chunk.constData(),count))return false;if(entry->binary){requireNotCancelled(cancel);return true;}
+        }
+#endif
+        requireNotCancelled(cancel);entry->added=added+(total&&last!='\n'?1:0);return true;
+    }
+    GitDiffSummary diffSummary(const GitSnapshot &repo,QStringList* warnings) {
         GitDiffSummary result; QMap<QString,GitDiffEntry> combined;
-        for(const bool staged:{false,true}) {
+        for(const bool staged:{true,false}) {
             QStringList base{"diff","--find-renames","--no-ext-diff","--no-textconv"}; if(staged) base<<"--cached";
             auto statArgs=base; statArgs<<"--numstat"<<"-z"<<"--";
             auto nameArgs=base; nameArgs<<"--name-status"<<"-z"<<"--";
@@ -342,19 +388,22 @@ public:
                 else {
                     auto &item=combined[entry.path]; item.added+=entry.added; item.deleted+=entry.deleted; item.staged|=entry.staged; item.binary|=entry.binary;
                     if(item.oldPath.isEmpty()) item.oldPath=entry.oldPath;
-                    if(entry.status=='D' || item.status=='D') item.status='D'; else if(entry.status=='A'||item.status=='A') item.status='A';
+                    if(entry.status=='D' || item.status=='D') item.status='D';
                 }
             }
         }
         const auto untracked=checked(repo.repoRoot,{"ls-files","--others","--exclude-standard","-z"}).split('\0');
+        qint64 remaining=options.outputLimit;bool countsComplete=true;
         for(const auto &name:untracked) {
-            if(name.isEmpty()) continue;
-            const auto path=QString::fromUtf8(name); const auto bytes=diskBytes(repo.repoRoot,path);
-            GitDiffEntry entry; entry.path=path; entry.status='U'; entry.binary=bytes.left(8000).contains('\0');
-            if(!entry.binary && !bytes.isEmpty()) entry.added=bytes.count('\n')+(bytes.endsWith('\n')?0:1);
+            requireNotCancelled(cancel);if(name.isEmpty()) continue;
+            const auto path=QString::fromUtf8(name);
+            if(combined.contains(path)&&combined[path].status!='D')continue;
+            GitDiffEntry entry;entry.path=path;entry.status='?';
+            countsComplete=countUntracked(repo.repoRoot,path,remaining,&entry)&&countsComplete;
             if(combined.contains(path)) { auto &item=combined[path]; item.status='M'; item.added+=entry.added; item.binary|=entry.binary; }
             else combined.insert(path,entry);
         }
+        if(!countsComplete&&warnings)warnings->append("Some untracked file line counts are unavailable or exceed the native read budget.");
         for(const auto &entry:combined) { result.entries.append(entry); result.added+=entry.added; result.deleted+=entry.deleted; }
         return result;
     }
@@ -633,7 +682,7 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
     case GitOperation::Inspect: result.snapshot=snapshot(repo); break;
     case GitOperation::UsageInspect: result.usage.append(usageFacts(repo,false)); break;
     case GitOperation::Status: result.status=getStatus(repo.repoRoot); break;
-    case GitOperation::Diff: result.diff=diffSummary(repo); break;
+    case GitOperation::Diff: result.diff=diffSummary(repo,&result.warnings); break;
     case GitOperation::FileDiff: result.fileDiff=content(repo,a,flag,b); break;
     case GitOperation::Branches: result.branches=branchList(repo,flag); break;
     case GitOperation::Worktrees: result.worktrees=treeList(repo); break;
@@ -698,7 +747,7 @@ GitResult Work::dispatch(GitOperation operation,const QString &workspace,const Q
     case GitOperation::SaveSetupScript: {
         if(b!="0"&&b!="1")fail(GitErrorCode::InvalidPath,"Unknown setup script variant.");
         const auto snap=snapshot(repo);
-        const auto main=repository(snap.mainWorktreePath,false);
+        const auto main=repository(snap.mainWorktreePath,false,true);
         if(key(main.commonGitDir)!=key(repo.commonGitDir))fail(GitErrorCode::InvalidPath,"Main worktree no longer belongs to the trusted repository.");
         if((expected.exists&&expected.sha256.size()!=32)||(!expected.exists&&!expected.sha256.isEmpty()))fail(GitErrorCode::InvalidPath,"Setup script baseline revision is invalid.");
         const auto old=script(main.repoRoot,flag);

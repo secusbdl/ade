@@ -1,0 +1,68 @@
+{
+  "integratedUtc": "2026-11-07T02:26:36.471309+00:00",
+  "privatePassesIncludingLifecycle": 28,
+  "expectedSuites": 186,
+  "files": [
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "beforeSha256Lf": "1865525a06d2e29261a37bcedbae98f3fee22a6ace3bf94f8c4d8a17a0323e33",
+      "afterSha256Lf": "a605a04e606121c363a7c822834bb7d7f74b52c7a5964e3f74a5157bc60563f7"
+    },
+    {
+      "path": "src/browser/browserwidget.cpp",
+      "beforeSha256Lf": "da0dc0ffc89addf340b4fb34a06f203705cf4069bdbf9befc2751b2c5722bd18",
+      "afterSha256Lf": "291a0a549a10581c07d36fb11f9a28730abc6a404cf8a252b0622acbabce62f4"
+    },
+    {
+      "path": "src/browser/browserwidget.h",
+      "beforeSha256Lf": "2c2e4e5f897f8f72f2fa8c27a3a125446f5e76d3a4f7efd9df36a3ce8485178a",
+      "afterSha256Lf": "b7dfbec1dab5864925cac960ba8409bf56519057e4041d65557f8dc85c9c9660"
+    },
+    {
+      "path": "src/ui/BrowserNavigationInput.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "0c060c030e1637c832e1b1bf152a0754b309818b766905d57cbf64b1d5cd5d82"
+    },
+    {
+      "path": "src/ui/BrowserNavigationInput.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "db39d5af69cad06c34f4c91a3c0998bdb3ceffedff79adae56813dd2412b2cbc"
+    },
+    {
+      "path": "tests/test_browser_navigation_followups.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "a20d26c453117d652ed395749e222374dcdec4b0bcf254bf11f3684ef70086c2"
+    },
+    {
+      "path": "tests/test_browser_history_followups.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "a0a7a87fce377f853257d40ba7a72dbc391952aea66241cca187ac0d3093e571"
+    }
+  ],
+  "evidence": {
+    "before.txt": "bdf2f172dad14df78c8dd1b79adfd8e0dc377abc72915bc5f9d41de1560ae975",
+    "after.txt": "717665d9501bb9d9babfb3f19e5373e9936782b4bccecf62465068cce8848ea8",
+    "history-before.txt": "d0dca997ffe064bea914b8acde96f6ba301be60a3e915b42e87d78d32a5ce10f",
+    "persistence-before.txt": "95d281a1ce7e5915dbe615c777813779c8691a489c2a499a4097a489605c2775",
+    "read-close-only.txt": "e89256df42c7d7e3e6a96ae8107b3730460f20634a15e953ff12a334ade34877",
+    "nav-verified.txt": "334e6866c4fb4fcc318b6dc098b8b71dfcd0a1bb5996850ef6480903ef17a7ec",
+    "history-verified.txt": "a92bccfc57374b5d40d097687ebede37bdcbb9b01381f06d35ec2740f38417a9"
+  },
+  "verified": "Six initial navigation failures; actual Windows history self-lock; after closing reader, truncation/failed-visit/SPA failures reproduced and fixed; actual Stop and explicit local file, reentrant navigation guards tested.",
+  "fixtureCorrections": [
+    "Private renderer included QJsonObject after compile failure in separate transcript stage.",
+    "Private browser host first rebuild omitted three late root CMake sources; linker failed before tests; corrected coherent host build.",
+    "Initial file-with-space fixture exposed overly strict new URL helper and fell back to external default search. Subsequent live fixtures replace all search engine endpoints with loopback and helper uses explicit-URL tolerant parsing. No user file content or credentials were part of that search."
+  ],
+  "nativeDifferences": [
+    "Uppercase localhost and bare IPv6 loopback normalize to valid HTTP authority.",
+    "about:blank remains a native supported URL; Stagewise internal routes are not emulated.",
+    "Local file visits remain excluded from persisted HTTP(S) history and current restorable-tab policy."
+  ],
+  "remainingReviewFindings": [
+    "Device-preview navigation race (F1) not yet independently validated.",
+    "Console navigation/filter behavior (F4) pending, source docs disagree with implementation.",
+    "Silent context capture drop on owner switch (F5) pending."
+  ],
+  "assembledGate": "pending"
+}

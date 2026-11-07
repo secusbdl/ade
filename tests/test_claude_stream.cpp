@@ -225,7 +225,7 @@ private slots:
     QTest::addColumn<QString>("kind");
     for (const auto *kind :
          {"missing-message", "unknown-index", "changed-type", "duplicate-tool",
-          "orphan-result", "generated-image", "result-image", "bad-json",
+          "orphan-result", "generated-image", "result-document", "bad-json",
           "changed-result", "empty-part-cap", "text-cap"})
       QTest::newRow(kind) << QString(kind);
   }
@@ -289,9 +289,9 @@ private slots:
                                             {"name", "Read"},
                                             {"input", QJsonObject{}}}),
                                   &output, &error);
-      else if (kind == "result-image")
+      else if (kind == "result-document")
         accepted = parser.consume(
-            result("t", QJsonArray{QJsonObject{{"type", "image"}}}), &output,
+            result("t", QJsonArray{QJsonObject{{"type", "document"}}}), &output,
             &error);
       else if (kind == "changed-result") {
         QVERIFY(parser.consume(result("t", "original"), &output, &error));

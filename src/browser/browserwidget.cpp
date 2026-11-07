@@ -678,12 +678,17 @@ void BrowserWidget::initialize() {
                 }));
                 view->add_WebMessageReceived(message.get(),&self->d->webMessageToken);
             }
-            ComPtr<SourceCallback> source(new SourceCallback([self, lifetime](ICoreWebView2* sender, ICoreWebView2SourceChangedEventArgs*) -> HRESULT {
+            ComPtr<SourceCallback> source(new SourceCallback([self, lifetime](ICoreWebView2* sender, ICoreWebView2SourceChangedEventArgs* args) -> HRESULT {
                 if (lifetime.expired() || !self) return S_OK;
                 LPWSTR value = nullptr;
                 if (SUCCEEDED(sender->get_Source(&value))) {
-                    self->d->currentUrl = QUrl(takeComString(value));
-                    emit self->urlChanged(self->d->currentUrl);
+                    const QUrl current(takeComString(value));
+                    self->d->currentUrl = current;
+                    const auto revision=self->d->navigationRevision;
+                    BOOL newDocument=TRUE;args->get_IsNewDocument(&newDocument);
+                    emit self->urlChanged(current);
+                    if(!newDocument&&!lifetime.expired()&&self&&revision==self->d->navigationRevision)
+                        emit self->sameDocumentNavigation(current);
                 }
                 return S_OK;
             }));
@@ -715,8 +720,12 @@ void BrowserWidget::initialize() {
                 if (navigationId != self->d->navigationId) return S_OK;
                 BOOL succeeded = FALSE;
                 args->get_IsSuccess(&succeeded);
+                const auto finishedUrl=self->d->currentUrl;
+                const auto revision=self->d->navigationRevision;
                 emit self->loadingChanged(false);
-                if (!lifetime.expired() && self && !succeeded) {
+                if(lifetime.expired()||!self||revision!=self->d->navigationRevision||navigationId!=self->d->navigationId)return S_OK;
+                emit self->navigationFinished(finishedUrl,succeeded);
+                if (!lifetime.expired() && self && revision==self->d->navigationRevision && !succeeded) {
                     COREWEBVIEW2_WEB_ERROR_STATUS status{};
                     args->get_WebErrorStatus(&status);
                     // Stop/replaced navigation is expected, not a browser failure.

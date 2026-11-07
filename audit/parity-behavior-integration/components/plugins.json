@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "scope": "Independent functional review of the installed Claude plugin report; private native Qt regression implementation, not a comprehensive security audit.",
+  "reviewedNativeCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceHashBasis": "canonical_git_text_LF",
+  "artifactHashBasis": "exact_bytes",
+  "reviewInput": {
+    "path": "private/claude-assistance/plugins-20261107T012738Z/REVIEW.md",
+    "sha256": "728cabde11a5745c7307535627b1573f64e8fe3c7b65089918a4d747a4d4dcc6",
+    "externalReviewerExecutedTests": false
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "classification": "Confirmed functional regression; repaired privately",
+      "effect": "Vercel rotation/removal or same-value encrypted resave revoked unchanged GitHub handles and cancelled its pending requests.",
+      "source": [
+        {
+          "path": "src/plugins/PluginCatalog.cpp",
+          "line": 237
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 114
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 151
+        }
+      ],
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/credentials/index.ts",
+          "lines": [
+            106,
+            139
+          ]
+        }
+      ],
+      "fix": "Host synchronization validates definition/fields, updates only changed type/value and revokes that type. Missing records remove saved credentials. Unchanged definitions/values preserve handles and requests. On credential-store reload, source registry overrides are restored; explicit register/reset APIs keep their previous semantics.",
+      "evidence": [
+        "before.txt",
+        "runtime-before.txt",
+        "final-plugin_findings.txt",
+        "final-plugin_runtime.txt"
+      ]
+    },
+    {
+      "id": "F2",
+      "classification": "Confirmed overbroad native cancellation policy; repaired privately",
+      "effect": "Disabling Figma, enabling a type or merely reordering the allow-list cancelled plain and unchanged GitHub requests.",
+      "source": [
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 160
+        },
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 404
+        }
+      ],
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/toolbox/index.ts",
+          "lines": [
+            1219,
+            1225,
+            1465,
+            1478,
+            1523,
+            1539
+          ]
+        }
+      ],
+      "previousTestPolicy": "tests/test_plugins.cpp deliberately expected the unchanged GitHub handle to rotate when Figma was disabled; this assertion is updated. Deletion callbacks now use affected credentialed requests, preserving their original lifetime coverage.",
+      "fix": "Revoke only removed types for the exact agent; cancel only requests pending at that transition that used a removed type. Plain, unchanged-type and other-agent requests survive. Re-enable creates a new removed-type handle. Explicit reset/cancel retains whole-agent semantics.",
+      "evidence": [
+        "before.txt",
+        "runtime-before.txt",
+        "final-plugin_findings.txt",
+        "final-network.txt",
+        "final-plugins.txt",
+        "final-plugin_runtime.txt"
+      ]
+    },
+    {
+      "id": "F3",
+      "classification": "Confirmed header behavior mismatch; repaired privately",
+      "effect": "The supplied User-Agent was prefixed by the ADE default in actual QNetworkRequest headers.",
+      "source": [
+        {
+          "path": "src/network/NetworkBroker.cpp",
+          "line": 312
+        }
+      ],
+      "upstream": [
+        {
+          "path": "reference/stagewise/apps/browser/src/backend/services/sandbox/utils/credential-fetch.ts",
+          "lines": [
+            322,
+            333
+          ]
+        }
+      ],
+      "fix": "Add the default only after caller headers if User-Agent is absent. Preserve case-insensitive repeated caller-header combination.",
+      "evidence": [
+        "before.txt",
+        "final-plugin_findings.txt"
+      ]
+    },
+    {
+      "id": "F4",
+      "classification": "Existing explicit compatibility limit, unchanged; not a newly discovered credential boundary defect",
+      "native": {
+        "responseBytes": 2097152,
+        "timeoutMs": 30000
+      },
+      "source": [
+        {
+          "path": "src/network/NetworkBroker.h",
+          "line": 18
+        },
+        {
+          "path": "src/sandbox/SandboxHost.cpp",
+          "line": 98
+        }
+      ],
+      "evidenceAlreadyPresent": [
+        "audit/sandbox-network.json",
+        "tests/test_network.cpp:190",
+        "tests/test_sandbox_network.cpp"
+      ],
+      "upstream": "Pinned credential-fetch.ts delegates to native Node fetch without this explicit byte/deadline cap.",
+      "decision": "Retain the limits and honest large/slow response divergence. No speculative increase to 16 MiB; larger/streamed transfers require a separate worker IPC and memory design."
+    },
+    {
+      "id": "R1",
+      "classification": "Additional reproduced callback regression; repaired privately",
+      "effect": "While old GitHub requests were cancelled, a completion observer saved/refreshed a newer Vercel token; the older outer refresh subsequently overwrote it.",
+      "fix": "Shared per-broker catalog operation token checks every callback boundary. Superseded refresh returns a clear error without clearing newer state or applying stale remaining records.",
+      "evidence": [
+        "nested-before.txt",
+        "final-plugin_findings.txt"
+      ]
+    }
+  ],
+  "intentionalDifferencesPreserved": [
+    "Five PAT credential definitions and allowed origins remain unchanged.",
+    "Disabled plugin types cannot obtain/use native handles; upstream only filters plugin skills.",
+    "Changed/removed types immediately revoke previously issued handles, stricter than pinned worker caches.",
+    "Response secret reflection checks, placeholder response URLs, manual credential redirects and header restrictions remain.",
+    "Read-only Settings token checks and PostHog region selection are native extensions.",
+    "Missing google-ai-key/stagewise-auth and unbundled Remotion/mini-apps/javascript-sandbox packages remain scope gaps; absent packages do not mean the separately implemented native mini-app/QuickJS features are absent."
+  ],
+  "validation": {
+    "newAndCompatibilityRows": 100,
+    "suites": [
+      {
+        "suite": "plugin_findings",
+        "passedIncludingInitCleanup": 18,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 58,
+        "report": "final-plugin_findings.txt",
+        "reportSha256": "ea5f11b8ae6fe9924e3f503eb59402c61a9478df97fda8445aa8813ed09abcdf",
+        "xml": "final-plugin_findings.xml",
+        "xmlSha256": "792c40d83408b9d162ceeb2679634ac74eeac91595bc81e9dfc8dd1debe43c55"
+      },
+      {
+        "suite": "network",
+        "passedIncludingInitCleanup": 19,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 2360,
+        "report": "final-network.txt",
+        "reportSha256": "4fcaae36e27cd826b8885590c8fd33511f9925d4b309e06d29d780c619a444cd",
+        "xml": "final-network.xml",
+        "xmlSha256": "4883a299f2a030685254587c4f026d9fbe9a10ef201892e34453978514560e55"
+      },
+      {
+        "suite": "plugins",
+        "passedIncludingInitCleanup": 20,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 943,
+        "report": "final-plugins.txt",
+        "reportSha256": "c061ced713ebaa305f7e3c2cd4c76fefbb89c2d30418203ca428b9f0b518c40a",
+        "xml": "final-plugins.xml",
+        "xmlSha256": "3c0e6da61499fec0d36d3d31b8802104e070e0734eaf688764190dc28899e4e6"
+      },
+      {
+        "suite": "plugin_connections",
+        "passedIncludingInitCleanup": 21,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 173,
+        "report": "final-plugin_connections.txt",
+        "reportSha256": "cb84c14d986eec36945085c2a0328f4683e8d986b0481113e900eee6da815b55",
+        "xml": "final-plugin_connections.xml",
+        "xmlSha256": "47be175a6d3b26a59e25d1599b612ab9a5a16f4be84a4e8946ad7fe08a27ccb4"
+      },
+      {
+        "suite": "plugin_runtime",
+        "passedIncludingInitCleanup": 22,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 13410,
+        "report": "final-plugin_runtime.txt",
+        "reportSha256": "79aa4ca28018fd27c5e5abaf4a9f9c07a2c27634a02d0108e80e3268073f2f14",
+        "xml": "final-plugin_runtime.xml",
+        "xmlSha256": "097a4d73f016dc62bbd52189f1e640792576846cbd2392d2f304fc05566d9f1e"
+      }
+    ],
+    "before": [
+      {
+        "report": "before.txt",
+        "passed": 3,
+        "failed": 8,
+        "sourcePhase": "original reviewed production cohort"
+      },
+      {
+        "report": "runtime-before.txt",
+        "passed": 2,
+        "failed": 4,
+        "sourcePhase": "original reviewed production cohort"
+      },
+      {
+        "report": "nested-before.txt",
+        "passed": 2,
+        "failed": 1,
+        "sourcePhase": "first private F1/F2/F3 repair, before catalog operation guard"
+      },
+      {
+        "report": "capacity-before.txt",
+        "passed": 2,
+        "failed": 1,
+        "sourcePhase": "private F2 repair before empty resolved-agent slot cleanup; not a defect in the old whole-agent reset implementation"
+      }
+    ],
+    "transport": "New component tests use a fake QNetworkAccessManager which never delegates to an external transport. Actual Engine/QuickJS runtime tests use that fake plugin transport plus a synthetic loopback model server. Existing network/catalog regressions use loopback fixtures only.",
+    "credentials": "Synthetic fake values; encrypted temporary ProviderStore files only. No real credential/profile files, live service requests or external model calls.",
+    "toolchain": "Static Qt 6.11.2, GCC 16.2.0, Windows 11; copied coherent private archives/headers. Modified network/catalog and unchanged PluginConnectionService caller compiled privately. No shared builds or source writes.",
+    "fixtureCorrection": "Private CMake initially omitted the copied unchanged PluginConnectionService header; added it, then rebuilt all five final targets. This was a private harness include issue, not a production finding.",
+    "peerReview": {
+      "reviewer": "qt_port_review",
+      "scope": "Source-only synchronizeCredential, setAllowedCredentialTypes, invalidation snapshots, catalog broker/operation guards",
+      "result": "No additional concrete callback defect found; no independent tests or broader broker review claimed."
+    }
+  },
+  "integration": {
+    "state": "Private tested candidate, production unchanged; root integration/full gate pending",
+    "patch": "plugin-functional-fixes.patch",
+    "patchSha256": "18f5d459b665964ab9a55361ac48eb4317a85fd715d0e580b16e347c4d075820",
+    "files": [
+      {
+        "path": "src/network/NetworkBroker.cpp",
+        "beforeSha256": "a6d92e66b5b6f3ca8a15226fa82b92974cfd7148d53d9deca6452d2c3364d0c2",
+        "afterSha256": "1af633bd84bd3902892eff172f43e3c0f61653c0072cdc33bd53490b11e7ec87"
+      },
+      {
+        "path": "src/network/NetworkBroker.h",
+        "beforeSha256": "1379ea7a1c8318a049b18cc9869782d31ce2401ed963eb8eb88b84c99b10b2f6",
+        "afterSha256": "3a2ff4f3fe98d9a86c42c3cdb9209d02d57e8dd2b098ede6dd5cda23f20d9d7a"
+      },
+      {
+        "path": "src/plugins/PluginCatalog.cpp",
+        "beforeSha256": "92793bcdc3567ca99aa9d1858d829b98121eda71f9b6bb3bf40247c07bea8c2f",
+        "afterSha256": "6edbc194adbc7c3bfa73497f14f0b3e0af94b499178c5db39b2cfa7adbdc94e8"
+      },
+      {
+        "path": "src/plugins/PluginCatalog.h",
+        "beforeSha256": "95d25095bbdc193e47cf1a7621e2e14f9afb636bfe0fd048410098ece1f8aa08",
+        "afterSha256": "3641aea5630673dacf8d3016b5a79841cf406c51d5962222245bbc59f3a82d60"
+      },
+      {
+        "path": "tests/test_plugins.cpp",
+        "beforeSha256": "d0a15b9c70a8475a730c833241597e7ac9911df13077cb0bcfa7a78e50e0d2e7",
+        "afterSha256": "c070075587ef3b826b02fed7b321b4acb706d31b31ea0457a94d0029ab8cff09"
+      },
+      {
+        "path": "tests/test_plugin_runtime.cpp",
+        "beforeSha256": "685ca287364b9b3b1c1b27f26694ab4b166504be2a6f455a0a057cf522dd80f3",
+        "afterSha256": "c351732a4bb07ed8ec1bf476a6d73ef7c98273c506fda42c5c3f4d962a31be7c"
+      },
+      {
+        "path": "tests/test_plugin_findings.cpp",
+        "beforeSha256": null,
+        "afterSha256": "87578d4b9b89a4d067a2aeaff90c9ef25d9dbc3abf275bac54ef2797d3376a03"
+      }
+    ],
+    "cmake": "cmake-additions.txt",
+    "headerDependency": "Rebuild all PluginCatalog header consumers; do not reuse mixed old/new private-state template ABI.",
+    "recommendedGate": [
+      "native_plugin_findings",
+      "native_network",
+      "native_plugins",
+      "native_plugin_connections",
+      "native_plugin_runtime",
+      "native_plugin_settings",
+      "native_sandbox_network",
+      "native_smoke_plugins"
+    ]
+  },
+  "limits": [
+    "Focused functional scope only; no claim of complete plugin or network parity.",
+    "Global MainWindow refresh orchestration was not redesigned; operation protection here is per catalog broker.",
+    "Private test success is not a shared assembled application or packaged GUI validation."
+  ]
+}

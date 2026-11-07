@@ -1,0 +1,85 @@
+{
+  "verifiedUtc": "2026-11-07T03:05:12.006334+00:00",
+  "binarySha256": "f009fb41df047f92631f11a4289b237c251627883762dd5f90a9da3adf7d8994",
+  "status": "bounded_direct_windows_checks_passed_with_two_display_findings",
+  "method": "Computer Use sky, real Windows application, isolated profiles and scratch workspace.",
+  "checks": {
+    "typedDraftEnablesSend": true,
+    "sendButtonStartsActualDeepSeekTurn": true,
+    "realReadToolAndExpectedMarker": true,
+    "markdownHeadingListAndCppBlockVisible": true,
+    "workspaceUnchanged": true,
+    "settingsButtonOpensSettings": true,
+    "apiKeyImportFileChooserOpensAndCancels": true,
+    "fivePluginCardsVisible": true,
+    "githubTokenConfigurationVisible": true,
+    "idleCloseFromSettingsExits": true,
+    "closeDuringPendingDirectMcpQuestionExits": true,
+    "pendingCloseProcessExitCode": 0,
+    "pendingCloseObservedLatencyMs": 313.269,
+    "ownedDirectMcpFixtureProcessesAbsentAfterClose": true
+  },
+  "liveProvider": "DeepSeek deepseek-flash; one main-window submitted read-only turn, separate from CLI smoke runs.",
+  "pendingClose": "Synthetic local Codex/MCP fixture; actual native form and process shutdown. No remote model call for this check.",
+  "screenshots": [
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/01-send-enabled.png",
+      "sha256": "4f6feb099ada1f2488bd4c39473b5be1a48fabe6977fa757592a19bc656e2e9b",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/02-submitted.png",
+      "sha256": "135ba0d950d1dc8eef8e78b1bafb4973c63a2e2678ddb5404f0a5dba02e2ce5d",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/03-completed.png",
+      "sha256": "2d068f0127d6b7df74756c684852c7c917c492a94b3ed80796af5cefd7a19f21",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/04-settings.png",
+      "sha256": "e0531136ec930c276c054823824365c71acf50916333985d0a0e99c67229965f",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/05-import-dialog.png",
+      "sha256": "3e41e61dd062d4710d925b5974e1ccc246c300c23e8f740ed270f6e58389d6a2",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/06-plugins.png",
+      "sha256": "5e5010e84a5e5c831aef941e584da4ef812c690556a19462566905fa4758e87a",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-gui-1/evidence/07-github-token-controls.png",
+      "sha256": "b95a0e07542230e1499a19147b24f20956eedcf75379f7f85e815604d350a942",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/behavior-close-gui-1/pending-question.png",
+      "sha256": "cf473e2b691a23374da15fdf51a46afdc6ce55442237e068831c7c93e3fd878f",
+      "publicRasterExport": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "legacy-provider-card-provenance",
+      "status": "reproduced_not_fixed_in_this_binary",
+      "details": "A custom DeepSeek instance without template provenance receives Qwen Token Plan description and mark. Connection and real DeepSeek inference work; the card identity is incorrect."
+    },
+    {
+      "id": "pending-question-stall-label",
+      "status": "observed_not_fixed_in_this_binary",
+      "details": "A pending shared question displays both Waiting for response and Still on it. Separate rendering follow-up is queued."
+    }
+  ],
+  "limits": [
+    "These cases do not test every control or establish pixel/semantic parity.",
+    "Import chooser reachability was verified; no new credential was imported through this GUI run.",
+    "No token was entered in the displayed GitHub card. Earlier live GitHub integration evidence remains separately identified.",
+    "Invalid/conflicted storage close recovery remains a reproduced issue under repair in a private stage. Valid-store close passes do not resolve it.",
+    "Busy-close input contained two NUL characters in persisted text after Computer Use injection; no source/engine Unicode defect is inferred. The synthetic fixture was deliberately insensitive to prompt content."
+  ]
+}

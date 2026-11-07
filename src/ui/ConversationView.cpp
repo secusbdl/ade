@@ -15,6 +15,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
+#include <QKeyEvent>
 #include <QPointer>
 #include <QPainter>
 #include <QRegularExpression>
@@ -34,6 +35,19 @@ namespace ade {
 namespace {
 bool darkFor(const QWidget *widget){return widget->palette().color(QPalette::Window).lightness()<128;}
 bool settled(const QString &state){return QStringList{"done","error","output-available","output-error","output-denied","canceled"}.contains(state);}
+// Native terminal states include cancellation/errors in addition to the source UI states.
+bool hasUnfinishedAssistant(const QJsonArray &messages) {
+    if(messages.isEmpty())return false;
+    const auto message=messages.last().toObject();
+    if(message["role"]!="assistant")return false;
+    for(const auto &value:message["parts"].toArray()) {
+        const auto part=value.toObject();const auto type=part["type"].toString();
+        const auto state=part["state"].toString();
+        if((type=="text"||type=="reasoning")&&!state.isEmpty()&&!settled(state))return true;
+        if(type=="tool"&&!settled(state))return true;
+    }
+    return false;
+}
 QJsonObject acpEntry(const QJsonObject &part) {
     const auto mapped=part["acpPresentation"].toObject();
     return AcpToolPresentation::valid(mapped)?mapped["entries"].toArray().first().toObject():QJsonObject{};
@@ -370,7 +384,7 @@ public:
     }
     void updateParts(QList<TranscriptPart> parts,bool last,bool busy) {
         const QPointer<ExplorationGroup> self(this);const auto epoch=++generation;
-        QSet<QString> keep;bool active=false;int completed=0;
+        QSet<QString> keep;bool active=false;bool reasoningOnly=true;int completed=0;
         for(qsizetype index=0;index<parts.size();++index){
             const auto& reference=parts[index];const auto part=reference.value;const auto id=reference.key();keep.insert(id);
             auto *widget=widgets.value(id);if(widget&&widget->property("partType")!=part["type"].toString()){delete widgets.take(id);widget=nullptr;}if(!widget){widget=new PartWidget(key+"/"+id,reference.messageId,part["type"].toString(),callbacks,disclosure->body);widgets.insert(id,widget);}
@@ -378,10 +392,10 @@ public:
             if(!item||item->widget()!=widget){disclosure->bodyLayout->removeWidget(widget);disclosure->bodyLayout->insertWidget(index,widget);}
             widget->updatePart(part,last&&index==parts.size()-1,busy);
             if(!self||generation!=epoch)return;
-            active=active||!settled(part["state"].toString());if(part["type"]=="tool"&&part["state"]=="output-available")++completed;
+            reasoningOnly=reasoningOnly&&part["type"]=="reasoning";active=active||!settled(part["state"].toString());if(part["type"]=="tool"&&part["state"]=="output-available")++completed;
         }
         const auto ids=widgets.keys();for(const auto &id:ids)if(!keep.contains(id))delete widgets.take(id);
-        disclosure->title(busy&&last&&active?QStringLiteral("Exploring..."):completed>0?QString("Explored · %1 %2").arg(completed).arg(completed==1?"operation":"operations"):QStringLiteral("Explored the codebase"));
+        disclosure->title(reasoningOnly?(busy&&last&&active?QStringLiteral("Thinking..."):QStringLiteral("Thought")):busy&&last&&active?QStringLiteral("Exploring..."):completed>0?QString("Explored · %1 %2").arg(completed).arg(completed==1?"operation":"operations"):QStringLiteral("Explored the codebase"));
         disclosure->policy(last);disclosure->inlineOnly(parts.size()==1);disclosure->scroll->setLimit(384);
     }
 private:
@@ -483,12 +497,13 @@ struct ConversationView::Private {
         return state;
     }
     void remember(){if(!id.isEmpty())states[id]=capture();}
+    void userScroll(){++epoch;pending=false;updating=false;scrollEnd.stop();}
     void clearRows(){imageRequests.clear();requestedImages.clear();imageBytes=0;turnRequests.clear();qDeleteAll(rows);rows.clear();rowGroups.clear();order.clear();}
     void scheduleScroll(bool force=false){
         if(pending&&!force)return;
-        pending=true;const auto generation=++epoch;const auto owner=id;const auto anchor=states.value(id);
+        pending=true;const auto generation=++epoch;const auto owner=id;
         const QPointer<ConversationView> self(q);
-        QTimer::singleShot(0,q,[this,generation,owner,anchor,self]{
+        QTimer::singleShot(0,q,[this,generation,owner,self]{
             if(generation!=epoch||owner!=id)return;
             pending=false;updating=true;
             layout->activate();
@@ -499,10 +514,11 @@ struct ConversationView::Private {
             if(!self||generation!=self->d->epoch||owner!=self->d->id)return;
             layout->activate();
             if(!self||generation!=self->d->epoch||owner!=self->d->id)return;
-            QTimer::singleShot(0,q,[this,generation,owner,anchor,self]{
+            QTimer::singleShot(0,q,[this,generation,owner,self]{
                 if(generation!=epoch||owner!=id)return;
                 auto *bar=scroll->verticalScrollBar();
-                if(states.value(id).follow)bar->setValue(bar->maximum());
+                const auto anchor=states.value(id);
+                if(anchor.follow)bar->setValue(bar->maximum());
                 else if(rows.contains(anchor.anchor))bar->setValue(rows[anchor.anchor]->y()+anchor.offset);
                 else bar->setValue(anchor.absolute);
                 // valueChanged is public and may synchronously close this view
@@ -531,13 +547,13 @@ ConversationView::ConversationView(QWidget *parent):QWidget(parent),d(std::make_
     connect(d->jump,&QToolButton::clicked,this,&ConversationView::scrollToBottom);
     auto *bar=d->scroll->verticalScrollBar();connect(bar,&QScrollBar::rangeChanged,this,[this]{d->updateJump();});
     connect(bar,&QScrollBar::valueChanged,this,[this](int value){
-        if(!d->updating&&!d->id.isEmpty()){if(value<d->previousValue&&d->scroll->verticalScrollBar()->maximum()-value>100)d->states[d->id].follow=false;d->scrollEnd.start();}
+        if(!d->updating&&!d->id.isEmpty()){if(value<d->previousValue&&d->scroll->verticalScrollBar()->maximum()-value>100)d->states[d->id].follow=false;d->remember();d->scrollEnd.start();}
         d->previousValue=value;d->updateJump();
     });
     connect(bar,&QScrollBar::sliderReleased,this,[this]{if(d->scroll->verticalScrollBar()->maximum()-d->scroll->verticalScrollBar()->value()<=100)d->states[d->id].follow=true;});
     d->scrollEnd.setSingleShot(true);d->scrollEnd.setInterval(120);connect(&d->scrollEnd,&QTimer::timeout,this,[this]{if(!d->id.isEmpty()&&d->scroll->verticalScrollBar()->maximum()-d->scroll->verticalScrollBar()->value()<=100)d->states[d->id].follow=true;});
     d->content->installEventFilter(this);d->scroll->viewport()->installEventFilter(this);d->updateMargins();qApp->installEventFilter(this);
-    d->stallTimer.setInterval(250);connect(&d->stallTimer,&QTimer::timeout,this,[this]{if(d->busy&&d->lastChange.isValid()&&d->lastChange.elapsed()>=5000){d->activity->setText("Still on it…");d->activity->show();}});
+    d->stallTimer.setInterval(250);connect(&d->stallTimer,&QTimer::timeout,this,[this]{if(d->busy&&hasUnfinishedAssistant(d->messages)&&d->lastChange.isValid()&&d->lastChange.elapsed()>=5000){d->activity->setText("Still on it…");d->activity->show();}});
 }
 ConversationView::~ConversationView(){qApp->removeEventFilter(this);d->stallTimer.stop();d->scrollEnd.stop();++d->epoch;for(auto *child:findChildren<QObject*>())disconnect(child,nullptr,this,nullptr);}
 
@@ -682,8 +698,14 @@ void ConversationView::scrollToBottom(){if(d->id.isEmpty())return;d->states[d->i
 bool ConversationView::eventFilter(QObject *object,QEvent *event){
     if(object==d->scroll->viewport()&&event->type()==QEvent::Resize)d->updateMargins();
     if(object==d->content&&event->type()==QEvent::LayoutRequest&&!d->id.isEmpty())d->scheduleScroll();
+    auto *bar=d->scroll->verticalScrollBar();
+    if(event->type()==QEvent::MouseButtonPress&&object==bar)d->userScroll();
+    if(event->type()==QEvent::KeyPress&&(object==bar||object==d->scroll||object==d->scroll->viewport())){
+        const auto key=static_cast<QKeyEvent*>(event)->key();
+        if(key==Qt::Key_Up||key==Qt::Key_Down||key==Qt::Key_PageUp||key==Qt::Key_PageDown||key==Qt::Key_Home||key==Qt::Key_End)d->userScroll();
+    }
     if(event->type()==QEvent::MouseButtonPress||event->type()==QEvent::KeyPress){auto *widget=qobject_cast<QWidget*>(object);if(widget&&(widget==this||isAncestorOf(widget))&&!d->pending)d->remember();}
-    if(event->type()==QEvent::Wheel){auto *widget=qobject_cast<QWidget*>(object);if(widget&&(widget==this||isAncestorOf(widget))){auto *wheel=static_cast<QWheelEvent*>(event);if(wheel->angleDelta().y()>0||wheel->pixelDelta().y()>0){d->states[d->id].follow=false;++d->epoch;d->pending=false;d->updating=false;}else if(d->scroll->verticalScrollBar()->maximum()-d->scroll->verticalScrollBar()->value()<=100)d->states[d->id].follow=true;}}
+    if(event->type()==QEvent::Wheel){auto *widget=qobject_cast<QWidget*>(object);if(widget&&(widget==this||isAncestorOf(widget))){auto *wheel=static_cast<QWheelEvent*>(event);if(wheel->angleDelta().y()>0||wheel->pixelDelta().y()>0){d->states[d->id].follow=false;d->userScroll();}else if(d->scroll->verticalScrollBar()->maximum()-d->scroll->verticalScrollBar()->value()<=100)d->states[d->id].follow=true;}}
     return QWidget::eventFilter(object,event);
 }
 void ConversationView::resizeEvent(QResizeEvent *event){if(!d->id.isEmpty()&&!d->pending)d->remember();QWidget::resizeEvent(event);d->jump->move(width()-45,height()-43);if(!d->id.isEmpty())d->scheduleScroll();}

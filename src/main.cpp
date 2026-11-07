@@ -162,6 +162,7 @@ int main(int argc,char** argv) {
             if(timeout){failure="Session timed out";engine.cancel();}
             const auto writeReport=[&]{
             QJsonObject report{{"native",true},{"provider",provider.publicJson()},{"actualModel",engine.actualModel()},
+                {"actualModelMeaning",provider.isClaudeHarness()?"requested CLI alias":"selected provider model"},{"modelTelemetry",engine.modelTelemetry()},
                 {"success",failure.isEmpty()&&!response.isEmpty()},{"error",failure},{"response",response},
                 {"tools",tools},{"messages",engine.messages()},{"elapsedMs",elapsed.elapsed()}};
             if(capture)report["transcriptCapture"]=capture->finish();

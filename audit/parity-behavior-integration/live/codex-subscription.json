@@ -1,0 +1,59 @@
+{
+  "recordedUtc": "2026-11-07T02:54:16.094970+00:00",
+  "packageSha256": "f009fb41df047f92631f11a4289b237c251627883762dd5f90a9da3adf7d8994",
+  "provider": "Codex installed native CLI, managed ChatGPT subscription",
+  "credentialsReadByRunnerOrADE": false,
+  "model": "gpt-6.1-sol",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "exactMarker": true,
+  "toolNames": [
+    "commandExecution"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 16630,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 18,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "b79e4791401023748abb92c1037bacb6d2d4bcde0d760de0de07831f0b4712d0",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "05b1ed6682a4768109eff544824ddd10051c59ac9ae3b8e426e5f049f813360f",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-text.png",
+        "sha256": "9e212b73e00a52d6e934176d51b2792da0379d469d8509c4e18d1c7903518bdd",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-completed.png",
+        "sha256": "86cf2ef11ab0018d262925a454c97836c37beccc842795c6514bf30ca29e11eb",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 4.3886,
+    "meanSetConversationMs": 1.0288111111111111,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 9,
+    "textDeltas": 7,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "usagePresent": true,
+  "scope": "Actual packaged native AgentEngine+AgentToolHost, live managed Codex, one read-only turn. Hidden transcript renders; not main-window input, native mutation-journal coverage, or complete parity."
+}

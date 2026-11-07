@@ -26,7 +26,7 @@ public:
     bool configureAgent(NetworkBroker &broker, const QString &agentId, const QString &dataDir,
                         const QJsonObject &preferences, QString *error = nullptr);
 private:
-    struct BrokerRevision { QPointer<NetworkBroker> broker; QByteArray revision; };
+    struct BrokerRevision { QPointer<NetworkBroker> broker; QByteArray revision; quint64 operation = 0; };
     // A broker cancellation callback may destroy the catalog's owning window.
     // An active configure call keeps only this non-secret cache state alive.
     std::shared_ptr<QList<BrokerRevision>> m_revisions = std::make_shared<QList<BrokerRevision>>();

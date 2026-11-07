@@ -211,7 +211,7 @@ void PluginsTest::encryptedCredentialsAreScopedAndRoutingIsSourceOwned() {
     QVERIFY(catalog.configureAgent(broker, "agent-a", data.path(), enabledOnly({"github"}), &failure));
     QVERIFY(broker.credential("agent-a", "figma-pat").isNull());
     const auto afterScopeChange = broker.credential("agent-a", "github-pat").toObject()["token"].toString();
-    QVERIFY(!afterScopeChange.isEmpty()); QVERIFY(afterScopeChange != handle);
+    QVERIFY(!afterScopeChange.isEmpty()); QCOMPARE(afterScopeChange, handle);
     QSignalSpy done(&broker, &NetworkBroker::completed);
     broker.fetch("blocked", "agent-a", {{"url", "https://untrusted-stored-origin.invalid/"}, {"headers", QJsonObject{{"Authorization", afterScopeChange}}}});
     QCOMPARE(done.size(), 1); QVERIFY(done[0][2].toString().contains("destination"));
@@ -293,14 +293,15 @@ void PluginsTest::cancellationMayDeleteBrokerOrCatalogOwner() {
     ProtectedOwner<NetworkBroker> network; ProtectedOwner<CatalogOwner> owner;
     QVERIFY(network.get()); QVERIFY(owner.get()); const QPointer<NetworkBroker> alive(network.get());
     QVERIFY(owner.get()->catalog.configureAgent(*network.get(), owner.get()->agentId, data.path(), {}, &failure));
-    QJsonObject request{{"url", server.url()}};
+    // All transitions revoke this credentialed request. Unrelated plain requests
+    // now intentionally survive a credential allow-list change.
+    QVERIFY(network.get()->registerCredentialType({"github-pat", {"token"}, {server.url()}, {}}, &failure));
+    QVERIFY(network.get()->setCredential("github-pat", {{"token", "FAKE_LOOPBACK_CATALOG_TOKEN_93abc"}}, &failure));
+    const auto handle = network.get()->credential("agent-a", "github-pat").toObject()["token"].toString();
+    QVERIFY(!handle.isEmpty());
+    QJsonObject request{{"url", server.url()}, {"headers", QJsonObject{{"Authorization", handle}}}};
     if (operation == "reload") {
-        // Fixture-only origin override: no real provider/plugin destination or
-        // credential is contacted. Reload must restore the source-owned registry.
-        QVERIFY(network.get()->registerCredentialType({"github-pat", {"token"}, {server.url()}, {}}, &failure));
-        QVERIFY(network.get()->setCredential("github-pat", {{"token", "FAKE_LOOPBACK_CATALOG_TOKEN_93abc"}}, &failure));
-        const auto handle = network.get()->credential("agent-a", "github-pat").toObject()["token"].toString();
-        QVERIFY(!handle.isEmpty()); request["headers"] = QJsonObject{{"Authorization", handle}};
+        // Reload must restore the source-owned registry.
         QVERIFY(ProviderStore::save(store, {credential("github", "FAKE_ROTATED_PLUGIN_TOKEN_93abc")}, &failure));
     }
     network.get()->fetch("held", "agent-a", request); QTRY_COMPARE(server.requests, 1);

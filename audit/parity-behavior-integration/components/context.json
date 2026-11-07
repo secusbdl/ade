@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "status": "frozen_verified_private_handoff",
+  "baseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "cohort": "baseline.json:848 coherent root-source files copied after custom-model and ACP-image integration; fresh one-job build, no shared binary archives",
+  "patch": "private/context-budget-stage/context-budget.patch",
+  "patchSha256Lf": "7177e221f09a8bd9b1ac231c4f2e092a58b561dad03241252c82a1cbe6af12ef",
+  "files": [
+    {
+      "path": "src/attachments/ContextContentLimits.h",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "c445d8e949c2d9262d2423399cd75ad9fca1bb3f3ee5273ca2ca0ca7ab903552"
+    },
+    {
+      "path": "src/attachments/ContextContentLimits.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "216ca2343c6ca78426c39de65953d1c0194226f5c82f171db18f3c8e1d1b6fcb"
+    },
+    {
+      "path": "src/attachments/ModelContextEntries.inc",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "4b5d457d570c375d26988f3fb17289526bf6bcf20856f303047bfd585f7a8489"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "beforeSha256Lf": "f1447b3b990535711475698affa0c323540f5c81597e1fabad317f1ac082c8fc",
+      "afterSha256Lf": "37935ef507c85eb2fa01648af7f58429039832ea6856e0c71b39a6fb0df86a56"
+    },
+    {
+      "path": "assets/models/pinned-context-policy.json",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "7e26798131300240472482b98a767132e633e4d47d7e646262095706ccc8c269"
+    },
+    {
+      "path": "scripts/extract-model-context-policy.py",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "5f8c83f7951e41af26b61c89b80e585812f477011320bf404fec01bfd5ac9d16"
+    },
+    {
+      "path": "tests/test_context_budget.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "2375ad00d226f2eaf57c5b24284a9fa16073cea02ca41195873e2a38bc0f9ae4"
+    },
+    {
+      "path": "tests/test_context_budget_host.cpp",
+      "beforeSha256Lf": null,
+      "afterSha256Lf": "aa1c289aef5eb37a8dd950ac493e053952bb91a9c47a73cef2827a5730de4a6e"
+    }
+  ],
+  "hashEncoding": "UTF-8 canonical LF",
+  "cmake": "private/context-budget-stage/cmake-additions.txt",
+  "newQtSuites": 2,
+  "privatePassedRows": 88,
+  "tests": [
+    {
+      "suite": "context_budget",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "text": "private/context-budget-stage/context_budget-after.txt",
+      "sha256Lf": "0347b293f5c7e5ef0ae7716779cc011b6313b05a767045cbd64b43c4b46ee129",
+      "xml": "private/context-budget-stage/context_budget-after.xml",
+      "xmlSha256Lf": "6d8b604cd086d5c1a1f5dc8826acaa3dd4ad66107810b635db315164276fe498"
+    },
+    {
+      "suite": "context_budget_host",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "text": "private/context-budget-stage/context_budget_host-after.txt",
+      "sha256Lf": "362ab126bdd62f214c28b3bfb2f80321d4ea53fe3ad1b75762a1965f1525a966",
+      "xml": "private/context-budget-stage/context_budget_host-after.xml",
+      "xmlSha256Lf": "f871a5e68be93f38db214d425807ca676d83d8350640ad3c8a42225fe865ef9d"
+    },
+    {
+      "suite": "read_lifecycle",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "text": "private/context-budget-stage/read_lifecycle-after.txt",
+      "sha256Lf": "bcf4cf164fc65ed26550de71c90995b212ce6246d21ee215d363eeb0ecb274f3",
+      "xml": "private/context-budget-stage/read_lifecycle-after.xml",
+      "xmlSha256Lf": "5e5632cc0562ee50889b97cbc153b95e49428aca880c5694376a60b5063f1f29"
+    },
+    {
+      "suite": "read_runtime",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "text": "private/context-budget-stage/read_runtime-after.txt",
+      "sha256Lf": "6f96291dd3b4a81a3aed123315ff1d1ba0a243b45a74fc99a577d31acaae6202",
+      "xml": "private/context-budget-stage/read_runtime-after.xml",
+      "xmlSha256Lf": "68f687eaa031b76fa9d6253a875af6a753b326ed6689ab461127aa1c0f885eee"
+    },
+    {
+      "suite": "attachments",
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "text": "private/context-budget-stage/attachments-after.txt",
+      "sha256Lf": "6f7832d6c947d01e8fb1cd3ee934c6156211ca422257c42cbc970aed3cc45d15",
+      "xml": "private/context-budget-stage/attachments-after.xml",
+      "xmlSha256Lf": "327adbf3f571a0f3d72c9bf898511501e98cc5651e6584a8ae281dc6bd8ca241"
+    }
+  ],
+  "before": {
+    "text": "private/context-budget-stage/host-before.txt",
+    "sha256Lf": "fd6987f435d4cfd108540444143a6d8e6160f600ecd45f63ed35552232e04054",
+    "xml": "private/context-budget-stage/host-before.xml",
+    "xmlSha256Lf": "be87839d31a28aaaf5959a52389d025fba4f923fd48a5950d7b9063bd6aa5694",
+    "passed": 4,
+    "failed": 6,
+    "failures": [
+      "Custom10k and32768 contexts sent lines beyond their derived character limits.",
+      "Pinned128k and1.05m models lost valid content to constant40k/64Ki-character limits.",
+      "Exact same-model/different-instance fallback did not rederive limits.",
+      "Saved read range replay used constant limits."
+    ],
+    "unchangedControls": [
+      "Unknown model default40k",
+      "Plain-text preview30 lines"
+    ]
+  },
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/base-agent.ts",
+      "lines": "1344-1359",
+      "behavior": "Each actual provider request looks up active exact model context and supplies explicit maxReadChars, preview30; lookup failure uses defaults."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/file-read-transformer/format-utils.ts",
+      "lines": "148-211,251-303",
+      "behavior": "Soft UTF-16 character limit max(4000,floor(contextTokens*0.1*4)); lines cost length+1; always returns at least one line. It is not a measured token bound."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-core/src/agents/shared/message-conversion.ts",
+      "lines": "521-541,568-586,616-634",
+      "behavior": "Explicit budget forwarded to tool-call range reads, remaining attachment references, and ordinary mentions. Captures and grants are independent of transient transformation budget."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/available-models.ts",
+      "lines": "152-2409",
+      "behavior": "Pinned54 built-in modelContextRaw declarations and3 explicit alias targets, no current external model-spec claim."
+    }
+  ],
+  "nativeContract": [
+    "Pure per-request resolver; explicit selected context wins, then valid complete exact-instance discovery, then54 pinned exact IDs/3 aliases. Unknown/unresolved custom/invalid explicit context and external kinds retain existing defaults.",
+    "Soft budget is max4000,floor(contextTokens*2/5), capped4,194,304 UTF-16 characters; this is not measured tokens.",
+    "Known context expands transformed inner-body hard ceiling to existing maximum1,048,576 UTF-16 characters (up to2MiB Qt UTF-16 storage before envelopes/encoding); unknown retains65,536.",
+    "Actual active provider argument is used each request, including fallback. Captures, hashes, read params, durable metadata and original bytes never change.",
+    "Existing raw workspace snapshot4MiB, attachment file64MiB, attachment count32 and image request20MiB bounds remain unchanged.",
+    "Existing previews, transformation metadata and typed owner/range checks remain; foreign-owner saved read is still unavailable even with larger context.",
+    "No mutable global budget and no transformed-output cache; unchanged raw cache supports budget changes/restart."
+  ],
+  "limits": [
+    "Pinned context metadata is a reproducible reference, not live model/account entitlement verification.",
+    "Per-file character budgeting is source-like; there is no claim that summed attachments fit the actual token context.",
+    "Native hard character ceilings, line count/file/decoder/format limits remain explicit departures from unbounded upstream transformations.",
+    "External Codex/Claude/OpenCode original attachment inputs and raw sandbox fs APIs are unchanged; no source-buffer mutation or CLI payload truncation.",
+    "No new support for previously unavailable AST/PDF/media transforms, and no claim of complete SDK parity.",
+    "No desktop/live credentials/network services/user-profile operations; actual loopback Engine/Host and native filesystem fixtures only.",
+    "Root combined gate/package validation pending; no shared production edits made."
+  ],
+  "peerReview": "native_core source-only bounded review found no concrete precedence/cap issue; it did not independently execute fixtures.",
+  "harnessCorrection": "Initial compatibility runner assumed bin/ for read_lifecycle/attachments; those two existing targets are at build root. Both were then explicitly executed with checked exit0 and retained21/23-row reports. No passing claim relies on the failed command lookup.",
+  "visualEvidence": "No UI/layout change in this slice; evidence is request-wire/bounds/history fixtures rather than a screenshot claim."
+}

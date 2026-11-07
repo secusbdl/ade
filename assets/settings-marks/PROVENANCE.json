@@ -1,0 +1,106 @@
+{
+  "purpose": "Settings provider and plugin identification only, no endorsement or ADE branding",
+  "sourceLicenseUrl": "https://raw.githubusercontent.com/lobehub/lobe-icons/ea434b96e75813517b377825e01c0df61dee8836/LICENSE",
+  "licenseSha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a",
+  "entries": [
+    {
+      "name": "deepseek",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/deepseek.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "72fa0ead4464ef467b032ba5722c6f39485574c3fc0b4e5b9c311449b27d1482",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "anthropic",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/anthropic.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "f51ed49d1aa2e03bad1cae0e29c7c687bb63deb575fd92ac505c9ee819a8b355",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "openai",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/openai.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "7977dfa6260ec9dcbf796dd64ca078832a9e500da8e0ef562b1cc3a82a7d82b7",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "alibaba",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/alibaba.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "75ad54089a6bd1f133152ebed77d905a97c9d58309b6a434a4923a804f1bdd70",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "minimax",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/minimax.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "ce45477dbbbd60fce9c36317307c43061888e5b9061d36aa61bf1a16891aba3f",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "moonshotai",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/moonshotai.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "b09f825d293ad7aba86f9c75f1c869a0a340bbbc6452f0762e37ccee0736b034",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "mistral",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/mistral.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "680429e95e1dd6bd16a5d28731a0810cd2d003ab40ff976a9e76fc5f8a6a281f",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "ollama",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/ollama.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "ab7d0acab82678e478619f1091230709156e61c198e8de64ec2e808dd3f7b939",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "z-ai",
+      "source": "upstream/stagewise/apps/browser/src/ui/components/provider-logos/z-ai.tsx",
+      "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+      "sourceSha256": "4fa96803166d8005de8d31ca47c7fa9880bbc04b53acf439532c3f85bb1a6e26",
+      "license": "MIT; copyright(c)2023 LobeHub, per explicit pinned source comment and retained official LICENSE",
+      "adaptation": "SVG extracted unchanged path geometry; JSX props removed and SVG attribute names normalized"
+    },
+    {
+      "name": "figma",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/ea434b96e75813517b377825e01c0df61dee8836/packages/static-svg/icons/figma.svg",
+      "sourceSha256": "0a943167b139b7c6540b87e0902a2d2b9fc77056ae97a6e01fe66cd1434651a5",
+      "license": "MIT; copyright(c)2023 LobeHub",
+      "adaptation": "Unchanged SVG content embedded; currentColor resolved to native theme when painted"
+    },
+    {
+      "name": "github",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/ea434b96e75813517b377825e01c0df61dee8836/packages/static-svg/icons/github.svg",
+      "sourceSha256": "1bd763b5d53ab1618e0afce72aacffc7e93d1249c395f713b3b055c087526625",
+      "license": "MIT; copyright(c)2023 LobeHub",
+      "adaptation": "Unchanged SVG content embedded; currentColor resolved to native theme when painted"
+    },
+    {
+      "name": "vercel",
+      "source": "https://raw.githubusercontent.com/lobehub/lobe-icons/ea434b96e75813517b377825e01c0df61dee8836/packages/static-svg/icons/vercel.svg",
+      "sourceSha256": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24",
+      "license": "MIT; copyright(c)2023 LobeHub",
+      "adaptation": "Unchanged SVG content embedded; currentColor resolved to native theme when painted"
+    }
+  ],
+  "limits": [
+    "Supabase/PostHog assets use original ADE category artwork; unverified pinned raw SVGs are not copied.",
+    "Other providers without explicit asset provenance use original category marks."
+  ],
+  "generatedHeader": "src/ui/SettingsServiceMarks.h",
+  "headerSha256": "df1b37ecaf81de19714bc21852287a601b9b0aed67cad766cb3526ef11c1aa69"
+}

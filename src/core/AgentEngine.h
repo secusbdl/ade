@@ -95,6 +95,7 @@ public:
     QString workspace() const { return m_tools.workspace(); }
     ProviderConfig provider() const { return m_provider; }
     QString actualModel() const { return m_actualModel; }
+    QJsonObject modelTelemetry() const;
     void setExternalTools(const QJsonArray &definitions);
     void setExternalToolTimeout(const QString& name,int milliseconds);
     void completeExternalTool(const QString &requestId, const QString &output, bool error);

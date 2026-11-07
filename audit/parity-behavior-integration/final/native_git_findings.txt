@@ -1,0 +1,19 @@
+********* Start testing of ClaudeGitFindingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeGitFindingsTest::initTestCase()
+PASS   : ClaudeGitFindingsTest::oversizedUntrackedDoesNotHideOrdinaryChanges()
+PASS   : ClaudeGitFindingsTest::unreadableUntrackedDoesNotHideOrdinaryChanges()
+PASS   : ClaudeGitFindingsTest::nestedRepositoryEntryDoesNotAbortSummary()
+PASS   : ClaudeGitFindingsTest::bareMainAllowsLinkedWorktreeInspection()
+PASS   : ClaudeGitFindingsTest::linkedBareSetupSaveUsesVerifiedAdministrativeRoot()
+QWARN  : ClaudeGitFindingsTest::aggregateSummaryBudgetKeepsEveryEntryAndWarns() This plugin does not support propagateSizeHints()
+PASS   : ClaudeGitFindingsTest::aggregateSummaryBudgetKeepsEveryEntryAndWarns()
+PASS   : ClaudeGitFindingsTest::binarySniffBoundaryPreservesPinnedLineCounting()
+PASS   : ClaudeGitFindingsTest::foreignJunctionSummaryDoesNotReadForeignLines()
+PASS   : ClaudeGitFindingsTest::stagedRenameSurvivesUnstagedModification()
+PASS   : ClaudeGitFindingsTest::prunableExistingDirectoryIsNotAnActiveWorktree()
+QWARN  : ClaudeGitFindingsTest::conflictAndUntrackedStatusesAreDistinct() This plugin does not support propagateSizeHints()
+PASS   : ClaudeGitFindingsTest::conflictAndUntrackedStatusesAreDistinct()
+PASS   : ClaudeGitFindingsTest::cleanupTestCase()
+Totals: 13 passed, 0 failed, 0 skipped, 0 blacklisted, 20781ms
+********* Finished testing of ClaudeGitFindingsTest *********

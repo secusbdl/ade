@@ -5,7 +5,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QFile>
-#include <QFileSystemModel>
+#include "ui/WorkspaceFileTreeModel.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
@@ -164,7 +164,7 @@ void GitHostTest::reviewedCleanupUiRetainsChatAndBranch(){
 void GitHostTest::noWorkspaceChatClearsFileTree() {
     Fixture f; QVERIFY(f.seed({f.chat("connected",f.root),f.chat("empty",{})})); MainWindow window(f.data); auto *files=openFiles(window); QVERIFY(files); QVERIFY(files->model());
     selectChat(window,"empty"); QCOMPARE(window.currentSessionId(),"empty"); QVERIFY2(!files->model(),"No-workspace chat must not expose the previous repository or the Computer root.");
-    selectChat(window,"connected"); QCOMPARE(window.currentSessionId(),"connected"); QVERIFY(files->model()); QCOMPARE(qobject_cast<QFileSystemModel *>(files->model())->filePath(files->rootIndex()),f.root);
+    selectChat(window,"connected"); QCOMPARE(window.currentSessionId(),"connected"); QVERIFY(files->model()); QCOMPARE(qobject_cast<WorkspaceFileTreeModel *>(files->model())->filePath(files->rootIndex()),f.root);
 }
 void GitHostTest::unopenedFilesViewIsDestroyedWithWindow() {
     Fixture f; QVERIFY(f.seed({f.chat("chat",f.root)}));

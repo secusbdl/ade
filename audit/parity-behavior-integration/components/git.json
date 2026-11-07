@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "status": "Frozen private handoff: 13 new real-Git/UI cases +17 changed-view compatibility +21 existing Git cases passed (51 total, zero failures/skips).",
+  "patch": "git-findings.patch",
+  "cmake": "cmake-additions.txt",
+  "publicAbiChanged": false,
+  "productionEdits": false,
+  "baseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "integrationPreimageCommit": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
+  "files": [
+    {
+      "path": "src/git/GitParsing.cpp",
+      "canonicalLfSha256": "a1b232475032a23973ec3b0e7c4ee7bab558745cbbc81c1dd498669241eea0d4",
+      "preimageCanonicalLfSha256": "270dbed98a2c41eb3c20e2c574fe7b071660d04b81849f0b166a88cbebb1ddae"
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "canonicalLfSha256": "98ca183328de2ef5ff56bc201d467e51980110bcb043d77153b3ee5f1b4a7166",
+      "preimageCanonicalLfSha256": "1d4a890d357b00fd95d3464147f395e0334f856b24b637f1a4571acf2e473b3c"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesController.cpp",
+      "canonicalLfSha256": "eb1332ade5af0c4ce64e7d1542dccd0594d54537e4bc2866dc8d7df6feda286d",
+      "preimageCanonicalLfSha256": "d3b7fa2593c9648a40ec1555f2d82fbcc30dc2d00b01e93be35ac98846efc4a7"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesView.cpp",
+      "canonicalLfSha256": "c69fb1786bb1a5ee9efb70b25a7687010500ae0eac6815fdd5c179d72ec43d8c",
+      "preimageCanonicalLfSha256": "00c68eeac6d349f63213897c18825d0cc88b9883de6bfa61878b7e9a86bd7597"
+    },
+    {
+      "path": "tests/test_workspace_changes.cpp",
+      "canonicalLfSha256": "4f849182d609a9dc7ca3e20575484187af2a2b3ddbf0964373dbc6ea585224ff",
+      "preimageCanonicalLfSha256": "01d9cd2ff5ebf9765b20b58e468165f907092ec3240cc601e16ba46ea15ef835"
+    },
+    {
+      "path": "tests/test_git_findings.cpp",
+      "canonicalLfSha256": "51226ad5b627c634e303674806ebf643c385979971190fee58493f87502a12ed"
+    }
+  ],
+  "patchCanonicalLfSha256": "7f27279c2e4b0d5443c1fc45d726db51e8a1f7a239a03336ba3b82fe86c64b05",
+  "reports": [
+    {
+      "path": "before.txt",
+      "canonicalLfSha256": "e0d95bdcbe7e646977a26332d32a175735fad301da1c09b5ac30de8a3580f7c5",
+      "counts": {
+        "passed": 2,
+        "failed": 7,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 8934
+      }
+    },
+    {
+      "path": "first-after.txt",
+      "canonicalLfSha256": "fe2a8cd38d55952b68be4ea9ae9f7a667b5cade3dbc6594a24554153b1a2fef9",
+      "counts": {
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 9812
+      }
+    },
+    {
+      "path": "bare-setup-before.txt",
+      "canonicalLfSha256": "d1d22bef251b7e6b4346f3b56d7e7eaa170d708c4d31de8318dd3706982f2552",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 1558
+      }
+    },
+    {
+      "path": "git_findings-final.txt",
+      "canonicalLfSha256": "0f2acac4ace7c3aa7e5f633aa1129418488784de03c02184f8bc578a0fb180c4",
+      "counts": {
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 20929
+      }
+    },
+    {
+      "path": "workspace_changes-final.txt",
+      "canonicalLfSha256": "c42ea331c8b770c4d78d30dea79d4eec8b9d576b1823e74a24976ab706eb40fa",
+      "counts": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 25249
+      }
+    },
+    {
+      "path": "git-final.txt",
+      "canonicalLfSha256": "370a3548b0a635a7502fc5ef0f62c288b2d33a998b406863cfc01290e72345a5",
+      "counts": {
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 103770
+      }
+    }
+  ],
+  "renders": [
+    "renders/conflict-and-untracked.png",
+    "renders/changed-files-light-narrow.png",
+    "renders/changed-files-dark-narrow.png"
+  ],
+  "reviewScope": "qt_port_review read countUntracked and internal bare-main authority path only; no new concrete issue found, no independent execution.",
+  "limits": [
+    "No merge-resolution editor; staged unmerged file content still reports explicit unavailable rather than resolving conflicts.",
+    "No editable working-file diff or source hunk accept/reject/contributor sessions.",
+    "Summary read cancellation is checked between chunks; no promise to interrupt a blocked filesystem ReadFile.",
+    "Concurrent in-place writes are best-effort, not an atomic content snapshot.",
+    "Windows opened-handle scope is exercised; non-Windows fallback remains more conservative/weaker and is not runtime-tested in this slice.",
+    "Per-file diff reader is unchanged and this is not an audit of every Git mutation race.",
+    "Private component captures use offscreen widgets; no real user repositories, credentials, remotes or desktop actions."
+  ],
+  "dependencies": "Private UI compatibility links the previously copied matching ade_editor archive from workspace-tree-stage/cohort; all Git sources compiled privately. No shared archive reads after cohort capture.",
+  "integration": [
+    "Apply patch with --ignore-space-change for CRLF checkout after checking exact preimages.",
+    "Append cmake-additions.txt.",
+    "Run new native_git_findings plus existing native_git/native_workspace_changes in root integration; full shared gate remains root-owned.",
+    "Tests alter only untracked marker assertions/render fixtures, preserving original payload and staged/unstaged assertions."
+  ],
+  "applyCheckExitCode": 0
+}

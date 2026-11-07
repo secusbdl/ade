@@ -3,6 +3,7 @@
 #include "QuestionMcpProtocol.h"
 #include <QJsonDocument>
 #include <QStandardPaths>
+#include <QRegularExpression>
 #include <QUuid>
 #include <cmath>
 
@@ -146,6 +147,9 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
   m_resumeId.clear();
   m_resumeRecoveryUsed = m_resumeActivity = m_recoveryQueued = false;
   m_usage = {};
+  m_observedModel.clear();
+  m_modelObservationSource.clear();
+  m_modelObservationConflict = false;
   m_eventCount = 0;
   m_waitRemaining = -1;
   m_pending.clear();
@@ -358,6 +362,50 @@ bool ClaudeHarnessSession::publishUpdates(const QJsonArray &updates) {
   }
   return true;
 }
+QJsonObject ClaudeHarnessSession::modelTelemetry() const {
+  return {{"providerId", m_options.providerId},
+          {"requestedModel", m_options.model},
+          {"observedModel", m_observedModel},
+          {"observedModelSource", m_modelObservationSource},
+          {"observedModelConflict", m_modelObservationConflict}};
+}
+void ClaudeHarnessSession::observeModel(const QJsonObject &frame) {
+  // Only an explicit owning root event can report the selected CLI model.
+  // Initialization may report an alias; root assistant output is authoritative.
+  if (frame.value("session_id").toString() != m_sessionId ||
+      !frame.value("parent_tool_use_id").toString().isEmpty() ||
+      (!frame.value("parent_tool_use_id").isUndefined() &&
+       !frame.value("parent_tool_use_id").isNull() &&
+       !frame.value("parent_tool_use_id").isString()))
+    return;
+  QString source, model;
+  if (frame.value("type") == "system" && frame.value("subtype") == "init") {
+    source = "system/init";
+    model = frame.value("model").toString();
+  } else if (frame.value("type") == "assistant") {
+    source = "assistant/message";
+    model = frame.value("message").toObject().value("model").toString();
+  }
+  static const QRegularExpression valid("\\A[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}\\z");
+  if (source.isEmpty() || !valid.match(model).hasMatch() ||
+      m_modelObservationConflict)
+    return;
+  if (source == "system/init" &&
+      m_modelObservationSource == "assistant/message")
+    return;
+  if (m_modelObservationSource.isEmpty() ||
+      (source == "assistant/message" &&
+       m_modelObservationSource == "system/init")) {
+    m_observedModel = model;
+    m_modelObservationSource = source;
+  } else if (m_observedModel != model) {
+    // Contradictory equally authoritative observations cannot be labeled
+    // actual.
+    m_observedModel.clear();
+    m_modelObservationSource.clear();
+    m_modelObservationConflict = true;
+  }
+}
 void ClaudeHarnessSession::consume(const QJsonObject &frame) {
   if (m_recoveryQueued)
     return;
@@ -390,6 +438,7 @@ void ClaudeHarnessSession::consume(const QJsonObject &frame) {
   }
   if (!m_busy || !m_promptSent)
     return;
+  observeModel(frame);
   if (type == "assistant" && frame.value("error").isString()) {
     const auto code = frame.value("error").toString();
     if (code == "authentication_failed") {
@@ -640,7 +689,8 @@ void ClaudeHarnessSession::finish(const QString &status, const QString &error) {
   const QJsonObject result{
       {"status", finalStatus},          {"error", error},
       {"events", m_stream.snapshot()},  {"usage", m_usage},
-      {"sessionState", sessionState()}, {"turnId", m_turnId}};
+      {"sessionState", sessionState()}, {"turnId", m_turnId},
+      {"modelTelemetry", modelTelemetry()}};
   if (finalStatus != "completed") {
     m_process.stop();
     m_initialized = false;

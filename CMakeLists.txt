@@ -1098,3 +1098,105 @@ set_target_properties(test_custom_model_smoke PROPERTIES WIN32_EXECUTABLE FALSE 
 add_test(NAME native_custom_model_smoke COMMAND test_custom_model_smoke -o "${CMAKE_BINARY_DIR}/Testing/native_custom_model_smoke.txt,txt")
 set_tests_properties(native_custom_model_smoke PROPERTIES TIMEOUT 90)
 # Do not integrate v1-reader/probe: those are a frozen private old-binary proof, not production/test support.
+
+# ade_ui already links Qt6::Svg; the new header is discovered by UI_SOURCES.
+# Standalone Settings executables compile SettingsPage.cpp directly and now
+# consume validated ProviderCatalog descriptions and bounded SVG mark rendering.
+foreach(settings_target IN ITEMS render_settings test_settings test_settings_audit)
+  target_sources(${settings_target} PRIVATE src/ui/ProviderCatalog.cpp)
+  target_link_libraries(${settings_target} PRIVATE Qt6::Svg)
+endforeach()
+
+qt_add_executable(test_settings_presentation tests/test_settings_presentation.cpp)
+target_link_libraries(test_settings_presentation PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_settings_presentation INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_settings_presentation PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_settings_presentation COMMAND test_settings_presentation -o "${CMAKE_BINARY_DIR}/Testing/native_settings_presentation.txt,txt")
+set_tests_properties(native_settings_presentation PROPERTIES TIMEOUT 60 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts;ADE_SETTINGS_RENDER_DIR=${CMAKE_BINARY_DIR}/Testing/settings-presentation-renders")
+# Optional render row uses ADE_SETTINGS_RENDER_DIR; without it one evidence-only
+# row skips, while all functional/geometry/owner tests still execute.
+
+# WorkspaceFileTreeModel is included by the existing ade_ui source glob.
+# Component barriers alter only this independently linked test class layout;
+# never enable ADE_WORKSPACE_TREE_TESTING on ade_ui or a consumer alone.
+add_library(ade_workspace_tree_test STATIC
+  src/ui/WorkspaceFileTreeModel.cpp src/ui/WorkspaceFileTreeModel.h
+  src/ui/ComposerWorkspaceSearch.cpp src/ui/ComposerWorkspaceSearch.h)
+target_compile_definitions(ade_workspace_tree_test PUBLIC ADE_WORKSPACE_TREE_TESTING)
+target_include_directories(ade_workspace_tree_test PUBLIC src)
+target_link_libraries(ade_workspace_tree_test PUBLIC ade_core Qt6::Widgets Qt6::Concurrent)
+qt_add_executable(test_workspace_tree tests/test_workspace_tree.cpp)
+target_link_libraries(test_workspace_tree PRIVATE ade_workspace_tree_test ade_editor Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_add_executable(test_workspace_tree_host tests/test_workspace_tree_host.cpp)
+target_link_libraries(test_workspace_tree_host PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+foreach(suite workspace_tree workspace_tree_host)
+  qt_import_plugins(test_${suite} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_target_properties(test_${suite} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${suite} COMMAND test_${suite} -o "${CMAKE_BINARY_DIR}/Testing/native_${suite}.txt,txt")
+  set_tests_properties(native_${suite} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts;ADE_TREE_RENDER_DIR=${CMAKE_BINARY_DIR}/Testing/workspace-tree-renders;ADE_TREE_HOST_RENDER_DIR=${CMAKE_BINARY_DIR}/Testing/workspace-tree-renders")
+endforeach()
+# Existing test_workbench_layout, test_git_host, render_workbench, render_workbench_layout
+# contain narrow cast migrations to the scoped model; retain their original assertions.
+
+# ContextContentLimits.cpp/.h are discovered by existing attachment source glob.
+foreach(name context_budget context_budget_host)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  target_link_libraries(test_${name} PRIVATE ade_host Qt6::Test)
+  qt_import_plugins(test_${name} INCLUDE Qt6::QSQLiteDriverPlugin)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 90)
+endforeach()
+# Source/data verification (no network or TypeScript execution):
+# python scripts/extract-model-context-policy.py --check
+
+# Add only after integrating the seven-path patch; existing four test targets remain.
+qt_add_executable(test_plugin_findings tests/test_plugin_findings.cpp)
+target_link_libraries(test_plugin_findings PRIVATE ade_plugins Qt6::Test)
+set_target_properties(test_plugin_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_plugin_findings COMMAND test_plugin_findings -o "${CMAKE_BINARY_DIR}/Testing/native_plugin_findings.txt,txt")
+set_tests_properties(native_plugin_findings PROPERTIES TIMEOUT 30)
+
+qt_add_executable(test_streaming_followups tests/test_streaming_followups.cpp)
+target_link_libraries(test_streaming_followups PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_streaming_followups INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_streaming_followups PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_streaming_followups COMMAND test_streaming_followups -o "${CMAKE_BINARY_DIR}/Testing/native_streaming_followups.txt,txt")
+set_tests_properties(native_streaming_followups PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+# No public Git structure/class layout changed in this slice.
+qt_add_executable(test_git_findings tests/test_git_findings.cpp)
+target_link_libraries(test_git_findings PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_git_findings INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_git_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_git_findings COMMAND test_git_findings -o "${CMAKE_BINARY_DIR}/Testing/native_git_findings.txt,txt")
+set_tests_properties(native_git_findings PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts;ADE_GIT_FINDINGS_RENDER_DIR=${CMAKE_BINARY_DIR}/Testing/git-findings-renders")
+# Existing native_git + native_workspace_changes remain compatibility gates.
+
+# Reconfigure/rebuild all consumers: ClaudeStream/ClaudeHarnessSession layouts change.
+qt_add_executable(claude_followups_fixture tests/support/ClaudeFollowupsFixture.cpp)
+target_link_libraries(claude_followups_fixture PRIVATE Qt6::Core)
+set_target_properties(claude_followups_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+foreach(name IN ITEMS claude_followups_stream claude_followups_session claude_followups_engine)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  target_include_directories(test_${name} PRIVATE src/harness)
+  target_link_libraries(test_${name} PRIVATE ade_core Qt6::Test)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_dependencies(test_${name} claude_followups_fixture)
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 90)
+endforeach()
+
+qt_add_executable(test_browser_navigation_followups tests/test_browser_navigation_followups.cpp)
+target_link_libraries(test_browser_navigation_followups PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_browser_navigation_followups INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_browser_navigation_followups PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_browser_navigation_followups COMMAND test_browser_navigation_followups -o "${CMAKE_BINARY_DIR}/Testing/native_browser_navigation_followups.txt,txt")
+set_tests_properties(native_browser_navigation_followups PROPERTIES TIMEOUT 60 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+qt_add_executable(test_browser_history_followups tests/test_browser_history_followups.cpp)
+target_link_libraries(test_browser_history_followups PRIVATE ade_ui Qt6::Test Qt6::QWindowsIntegrationPlugin)
+qt_import_plugins(test_browser_history_followups INCLUDE Qt6::QWindowsIntegrationPlugin)
+set_target_properties(test_browser_history_followups PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_custom_command(TARGET test_browser_history_followups POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/third_party/webview2/x64/WebView2Loader.dll" "$<TARGET_FILE_DIR:test_browser_history_followups>")
+add_test(NAME native_browser_history_followups COMMAND test_browser_history_followups -o "${CMAKE_BINARY_DIR}/Testing/native_browser_history_followups.txt,txt")
+set_tests_properties(native_browser_history_followups PROPERTIES TIMEOUT 180 ENVIRONMENT "QT_QPA_PLATFORM=windows;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts;ADE_BROWSER_CAPTURE_DIR=${CMAKE_BINARY_DIR}/Testing/browser-followup-renders")

@@ -33,7 +33,7 @@ bool parseWorktrees(const QByteArray &bytes, QList<GitWorktree> *worktrees) {
         else if(record=="detached") current.detached=true;
         else if(record.startsWith("locked")) current.locked=true;
         else if(record.startsWith("prunable")) current.prunable=true;
-        else if(record=="bare") return false; // Bare roots are not mounted editor workspaces.
+        else if(record=="bare") current.detached=true; // Administrative main entry; linked worktrees remain valid.
     }
     flush(); return !worktrees->isEmpty();
 }

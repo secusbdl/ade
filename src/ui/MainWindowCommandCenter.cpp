@@ -17,7 +17,7 @@
 #include <QDateTime>
 #include <QElapsedTimer>
 #include <QFileInfo>
-#include <QFileSystemModel>
+#include "WorkspaceFileTreeModel.h"
 #include <QFutureWatcher>
 #include <QLabel>
 #include <QShortcut>
@@ -93,7 +93,7 @@ void MainWindow::initializeCommandCenter(){
         if(kind=="file"){
             const auto root=item["workspace"].toString();QString owner;for(const auto& session:m_sessions)if(!session.archived&&GitService::canonicalPath(session.workspace)==root){owner=session.id;if(owner==m_currentId)break;}if(owner.isEmpty()){conversationError("The file's workspace is no longer connected.");return;}
             QString error;const auto pin=ComposerWorkspaceSearch::pin(root,item["relativePath"].toString(),item["workspaceIdentity"].toString(),&error);if(!pin){conversationError(error);return;}
-            if(pin.directory){if(owner!=m_currentId)selectConversation(owner);if(!self||m_currentId!=owner)return;m_splitter->setFileTreeVisible(true);const auto index=m_fileModel->index(pin.absolutePath);auto ancestor=index;while(ancestor.isValid()){m_files->expand(ancestor);ancestor=ancestor.parent();}m_files->setCurrentIndex(index);m_files->scrollTo(index);m_files->setFocus();}
+            if(pin.directory){if(owner!=m_currentId)selectConversation(owner);if(!self||m_currentId!=owner)return;m_splitter->setFileTreeVisible(true);if(!self||m_currentId!=owner)return;const auto generation=m_fileModel->generation();const auto index=m_fileModel->index(pin.absolutePath);if(!self||m_currentId!=owner||m_fileModel->generation()!=generation||!index.isValid())return;auto ancestor=index;while(ancestor.isValid()){m_files->expand(ancestor);if(!self||m_currentId!=owner||m_fileModel->generation()!=generation)return;ancestor=ancestor.parent();}m_files->setCurrentIndex(index);if(!self||m_currentId!=owner||m_fileModel->generation()!=generation)return;m_files->scrollTo(index);m_files->setFocus();}
             else {openFile(pin.absolutePath);if(!self)return;if(auto* editor=qobject_cast<EditorWidget*>(m_tabs->currentWidget());editor&&GitService::canonicalPath(editor->filePath())==GitService::canonicalPath(pin.absolutePath)){const int line=item["line"].toInt();if(line>0){auto cursor=editor->editor()->textCursor();const auto block=editor->editor()->document()->findBlockByNumber(line-1);if(block.isValid()){cursor.setPosition(block.position());editor->editor()->setTextCursor(cursor);editor->editor()->centerCursor();}}editor->editor()->setFocus();}}
         }
     });

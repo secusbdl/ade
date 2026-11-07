@@ -146,6 +146,30 @@ public:
 class PluginRuntimeTest:public QObject {
     Q_OBJECT
 private slots:
+    void unrelatedPluginChangesPreserveActiveWorkerFetch_data(){
+        QTest::addColumn<QString>("change");
+        for(const auto* name:{"rotate-vercel","remove-vercel","resave","disable-figma"})
+            QTest::newRow(name)<<QString::fromLatin1(name);
+    }
+    void unrelatedPluginChangesPreserveActiveWorkerFetch(){
+        QFETCH(QString,change);Runtime runtime;QVERIFY2(runtime.init(),qPrintable(runtime.failure));
+        const auto item=plugin("github");auto result=runtime.run(pinnedScript(item));QVERIFY(result.completed&&!result.error);
+        const auto originalHandle=runtime.handle(item);const auto priorFinished=runtime.finished.size(),priorTools=runtime.tools.size();
+        ReplyPlan held;held.hold=true;runtime.transport.plans.append(held);runtime.begin(savedFetch(item));
+        QVERIFY(waitFor([&]{return runtime.transport.requests.size()==2;}));QVERIFY(runtime.engine.isBusy());
+        const auto pending=runtime.transport.replies.last();QVERIFY(pending);
+        if(change=="rotate-vercel"){
+            runtime.tokens["vercel"]="FAKE_UNRELATED_VERCEL_ROTATED_8215";runtime.allTokens.append(runtime.tokens["vercel"]);
+        }else if(change=="remove-vercel")runtime.tokens.remove("vercel");
+        if(change!="disable-figma")QVERIFY(runtime.save());
+        QVERIFY2(runtime.configure(change=="disable-figma"?"figma":QString()),qPrintable(runtime.failure));
+        QCOMPARE(runtime.handle(item),originalHandle);QVERIFY(runtime.engine.isBusy());QCOMPARE(runtime.tools.size(),priorTools);
+        QVERIFY(pending&&!pending->isFinished());pending->complete(ReplyPlan{});
+        QVERIFY(waitFor([&]{return runtime.finished.size()==priorFinished+1&&!runtime.engine.isBusy();}));
+        QCOMPARE(runtime.tools.size(),priorTools+1);QVERIFY2(!runtime.tools.last()[2].toBool(),qPrintable(runtime.tools.last()[1].toString()));
+        result=runtime.run(savedFetch(item));QVERIFY2(result.completed&&!result.error,qPrintable(result.output));
+        QCOMPARE(runtime.handle(item),originalHandle);QVERIFY(runtime.hasNoRawTokens());
+    }
     void encryptedCatalogToPinnedSkillToNativeFetch_data(){
         QTest::addColumn<QString>("id");QTest::addColumn<QString>("region");
         for(const auto& id:QStringList{"github","supabase","posthog","vercel","figma"})QTest::newRow(qPrintable(id))<<id<<QString();

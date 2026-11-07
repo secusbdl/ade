@@ -80,6 +80,7 @@ private:
     bool savePreferences(const QJsonObject &preferences);
     void showStatus(const QString &text, bool error = false);
     void applyAppearance();
+    void updateResponsiveLayout();
     QString m_dataDir;
     QString m_contextWorkspace;
     QString m_section = QStringLiteral("models-providers");

@@ -1,3 +1,4 @@
+#include "BrowserNavigationInput.h"
 #include "MainWindow.h"
 #include "ModelSelector.h"
 #include <QStandardItemModel>
@@ -39,7 +40,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFileDialog>
-#include <QFileSystemModel>
+#include "WorkspaceFileTreeModel.h"
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QJsonDocument>
@@ -166,7 +167,12 @@ void MainWindow::buildUi() {
     auto* workspaceButton=new ChevronToolButton;workspaceButton->setChevronVisible(false);m_workspace=workspaceButton;m_workspace->setObjectName("connectWorkspaceButton");m_workspace->setIcon(icon("folder"));m_workspace->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);m_workspace->setText("Connect workspace  +");m_workspace->setAutoRaise(true);chatLayout->addWidget(m_workspace,0,Qt::AlignLeft);
     m_tabs=new QTabWidget;m_tabs->setObjectName("contentTabs");m_tabs->setDocumentMode(true);m_tabs->setTabsClosable(true);m_tabs->setMovable(true);m_tabs->setMinimumWidth(0);
     auto* tabControls=new QWidget;auto* tc=new QHBoxLayout(tabControls);tc->setContentsMargins(0,0,4,0);tc->setSpacing(1);auto* plus=button("plus","New browser tab");plus->setObjectName("newBrowserTabButton");auto* files=button("folder","Show file tree (Ctrl+Shift+B)");files->setObjectName("contentFileTreeButton");auto* terminal=button("terminal","Open terminal");terminal->setObjectName("newTerminalTabButton");tc->addWidget(plus);tc->addWidget(terminal);tc->addWidget(files);m_tabs->setCornerWidget(tabControls);
-    m_fileModel=new QFileSystemModel(this);m_files=new QTreeView(this);m_files->hide();m_files->setObjectName("workspaceFiles");m_files->setModel(m_fileModel);m_files->setHeaderHidden(true);for(int col=1;col<4;++col)m_files->hideColumn(col);
+    m_fileModel=new WorkspaceFileTreeModel(this);m_files=new QTreeView(this);m_files->hide();m_files->setObjectName("workspaceFiles");m_files->setModel(m_fileModel);m_files->setHeaderHidden(true);
+    connect(m_fileModel,&WorkspaceFileTreeModel::rootIndexChanged,m_files,&QTreeView::setRootIndex);
+    connect(m_fileModel,&WorkspaceFileTreeModel::directoryError,this,[this](const QString&,const QString& error){m_status->setText(error);});
+    connect(m_fileModel,&WorkspaceFileTreeModel::watchCoverageChanged,this,[this](bool complete){if(!complete)m_status->setText("Some folders exceed the native watch limit. Refresh the selected folder with F5.");});
+    auto* refreshFiles=new QShortcut(QKeySequence(Qt::Key_F5),m_files);refreshFiles->setContext(Qt::WidgetWithChildrenShortcut);
+    connect(refreshFiles,&QShortcut::activated,this,[this]{auto index=m_files->currentIndex();if(index.isValid()&&!m_fileModel->isDir(index))index=index.parent();m_fileModel->refresh(index);});
     m_downloads=new DownloadsPage(m_store.directory(),this);m_downloads->hide();
     connect(m_downloads,&DownloadsPage::storageErrorOccurred,this,[this](const QString& error){m_status->setText(error);});
     auto* downloads=button("download","Downloads (Ctrl+J)");tc->addWidget(downloads);connect(downloads,&QToolButton::clicked,this,&MainWindow::showDownloads);
@@ -201,7 +207,13 @@ void MainWindow::buildUi() {
     connect(plus,&QToolButton::clicked,this,[this]{addBrowserTab();});
     connect(terminal,&QToolButton::clicked,this,&MainWindow::showTerminal);
     connect(files,&QToolButton::clicked,m_splitter,&WorkbenchSplitter::toggleFileTree);
-    connect(m_files,&QTreeView::doubleClicked,this,[this](const QModelIndex& index){if(!m_fileModel->isDir(index))openFile(m_fileModel->filePath(index));});
+    connect(m_files,&QTreeView::doubleClicked,this,[this](const QModelIndex& index){
+        if(m_fileModel->isDir(index))return;
+        QString error;const auto pin=m_fileModel->pinFile(index,&error);
+        if(!pin){m_status->setText(error);return;}
+        // Keep the physical root, ancestors and file stable through the editor read.
+        openFile(pin.absolutePath);
+    });
     connect(m_tabs,&QTabWidget::tabCloseRequested,this,[this](int index){
         auto* page=m_tabs->widget(index);if(!page)return;
         const auto sideId=page->property("sideChatAgentId").toString();if(!sideId.isEmpty()){discardSideChat(sideId);return;}
@@ -307,8 +319,13 @@ void MainWindow::selectConversation(const QString& id){
     {const QSignalBlocker block(m_composer);m_composer->setPlainText(s->draft);}
     refreshAttachments();
     m_workspace->setText(s->workspace.isEmpty()?"Connect workspace  +":QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);
-    m_files->setModel(s->workspace.isEmpty()?nullptr:m_fileModel);
-    if(!s->workspace.isEmpty())m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));
+    const auto treeWorkspace=s->workspace;const QPointer<MainWindow> treeOwner(this);
+    m_files->setModel(treeWorkspace.isEmpty()?nullptr:m_fileModel);
+    if(!treeOwner||m_currentId!=id)return;
+    const auto treeRoot=m_fileModel->setRootPath(treeWorkspace);
+    if(!treeOwner||m_currentId!=id)return;
+    s=find(id);if(!s||s->workspace!=treeWorkspace)return;
+    if(!treeWorkspace.isEmpty())m_files->setRootIndex(treeRoot);
     const bool busy=m_engines.contains(id)&&m_engines[id]->isBusy();m_models->setEnabled(!busy&&!s->archived);m_permissions->setEnabled(!busy&&!s->archived);m_workspace->setEnabled(!busy&&!s->archived);m_composer->setReadOnly(s->archived);updateComposerState();
     m_sidebarSplitter->showWorkbench();m_status->clear();renderConversation();refreshAgents();
     if(!s->archived){QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("lastConversationId",id);}
@@ -641,7 +658,12 @@ void MainWindow::connectWorkspace(const QString& path){
     m_liveConversationOwners.insert(s->id);
     if(auto* host=m_toolHosts.value(s->id)){QString error;if(!host->setWorkspace(s->workspace,&error)){s->workspace=previous;s->draftAttachments=previousAttachments;saveSessions();m_status->setText(error);return;}}
     if(m_engines.contains(s->id))m_engines[s->id]->setWorkspace(s->workspace);
-    m_files->setModel(m_fileModel);m_files->setRootIndex(m_fileModel->setRootPath(s->workspace));m_workspace->setText(QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();refreshWorkbench();refreshCompletionContext();refreshFileChanges();
+    const auto treeOwnerId=s->id,treeWorkspace=s->workspace;const QPointer<MainWindow> treeOwner(this);
+    m_files->setModel(m_fileModel);if(!treeOwner||m_currentId!=treeOwnerId)return;
+    const auto treeRoot=m_fileModel->setRootPath(treeWorkspace,true);
+    if(!treeOwner||m_currentId!=treeOwnerId)return;
+    s=find(treeOwnerId);if(!s||s->workspace!=treeWorkspace)return;
+    m_files->setRootIndex(treeRoot);m_workspace->setText(QFileInfo(s->workspace).fileName());static_cast<ChevronToolButton*>(m_workspace)->setChevronVisible(!s->workspace.isEmpty());m_workspace->setToolTip(s->workspace);refreshAttachments();updateGitContext();refreshWorkbench();refreshCompletionContext();refreshFileChanges();
 }
 void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const QString& restoredTitle){
     const QPointer<MainWindow> self(this);const QPointer<BrowserToolBridge> bridge(m_browserBridge);
@@ -675,8 +697,19 @@ void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const Q
     emit m_tabs->currentChanged(index);if(!owned())return;
     revealContent();if(!owned())return;
     address->setFocus();if(!owned())return;
-    connect(address,&QLineEdit::returnPressed,page,[this,browser,address,page]{QString text=address->text().trimmed();if(text.isEmpty())return;QUrl target;if(text.contains(' ')||(!text.contains('.')&&!text.contains(':')&&text!="localhost")){QString searchTemplate="https://www.google.com/search?q=%s";if(m_settings){const auto selected=m_settings->preference("browsing.defaultEngineId").toString();for(const auto& value:m_settings->preference("browsing.searchEngines").toArray()){const auto engine=value.toObject();if(engine["id"].toString()==selected){searchTemplate=engine["url"].toString();break;}}}target=QUrl(searchTemplate.replace("%s",QString::fromUtf8(QUrl::toPercentEncoding(text))));}else target=QUrl::fromUserInput(text);if(target.scheme()=="https"||target.scheme()=="http"||target.scheme()=="about"){page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(target));scheduleBrowserSessionSave();browser->navigate(target);}});
-    connect(back,&QToolButton::clicked,browser,&BrowserWidget::back);connect(forward,&QToolButton::clicked,browser,&BrowserWidget::forward);connect(reload,&QToolButton::clicked,browser,&BrowserWidget::reload);
+    connect(address,&QLineEdit::returnPressed,page,[this,browser,address,page]{
+        const auto text=address->text().trimmed();if(text.isEmpty())return;
+        QString searchTemplate="https://www.google.com/search?q=%s";
+        if(m_settings){const auto selected=m_settings->preference("browsing.defaultEngineId").toString();for(const auto& value:m_settings->preference("browsing.searchEngines").toArray()){const auto engine=value.toObject();if(engine["id"].toString()==selected){searchTemplate=engine["url"].toString();break;}}}
+        const auto target=browserNavigationInput(text,searchTemplate);
+        if(!target.isValid()||target.isEmpty()||!QStringList{"https","http","about","file"}.contains(target.scheme())){m_status->setText("Enter a valid page address or search query.");return;}
+        page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(target));scheduleBrowserSessionSave();browser->navigate(target);
+    });
+    back->setEnabled(false);forward->setEnabled(false);
+    connect(back,&QToolButton::clicked,browser,&BrowserWidget::back);connect(forward,&QToolButton::clicked,browser,&BrowserWidget::forward);
+    connect(browser,&BrowserWidget::canGoBackChanged,back,&QToolButton::setEnabled);connect(browser,&BrowserWidget::canGoForwardChanged,forward,&QToolButton::setEnabled);
+    connect(reload,&QToolButton::clicked,browser,[browser,reload]{if(reload->property("navigationLoading").toBool())browser->stop();else browser->reload();});
+    connect(browser,&BrowserWidget::loadingChanged,reload,[guard=QPointer<QToolButton>(reload)](bool loading){if(!guard)return;guard->setProperty("navigationLoading",loading);if(!guard)return;guard->setIcon(icon(loading?"stop":"reload"));if(!guard)return;guard->setToolTip(loading?"Stop loading":"Reload");if(guard)guard->setAccessibleName(loading?"Stop loading":"Reload");});
     connect(browser,&BrowserWidget::urlChanged,address,[this,page,address](const QUrl& value){page->setProperty("browserSessionUrl",BrowserSessionStore::restorableUrl(value));scheduleBrowserSessionSave();address->setText(value==QUrl("about:blank")?QString():value.toDisplayString());});
     connect(browser,&BrowserWidget::titleChanged,page,[this,page](const QString& title){page->setProperty("browserSessionTitle",title.left(1024));scheduleBrowserSessionSave();auto i=m_tabs->indexOf(page);if(i>=0)m_tabs->setTabText(i,title.isEmpty()?"New tab":title.left(28));});
     connect(browser,&BrowserWidget::errorOccurred,page,[this](const QString& message){m_status->setText(message);});
@@ -694,14 +727,28 @@ void MainWindow::addBrowserTab(const QUrl& url,const QString& restoredId,const Q
         connect(browser,&BrowserWidget::permissionRequestFinished,box,[box,requestId](const QString& settled,bool){if(settled==requestId)box->reject();});
         connect(browser,&QObject::destroyed,box,&QDialog::reject);box->open();
     });
-    connect(browser,&BrowserWidget::loadingChanged,page,[this,browser,page](bool loading){if(!loading){const auto index=m_tabs->indexOf(page);recordBrowserHistory(browser->currentUrl(),index>=0?m_tabs->tabText(index):QString());}});
-    connect(browser,&BrowserWidget::titleChanged,page,[this,browser](const QString& title){recordBrowserHistory(browser->currentUrl(),title);});
+    connect(browser,&BrowserWidget::loadingChanged,page,[preview](bool loading){if(!preview)return;preview->setProperty("browserHistoryLoading",loading);if(preview&&loading)preview->setProperty("browserHistoryCommitted",false);});
+    connect(browser,&BrowserWidget::navigationFinished,page,[this,preview,owned](const QUrl& url,bool success){
+        if(!owned()||!success)return;
+        preview->setProperty("browserHistoryCommitted",true);if(!owned())return;
+        preview->setProperty("browserHistoryUrl",url);if(!owned())return;
+        recordBrowserHistory(url,preview->property("browserSessionTitle").toString());
+    });
+    connect(browser,&BrowserWidget::sameDocumentNavigation,page,[this,preview,owned](const QUrl& url){
+        if(!owned()||preview->property("browserHistoryLoading").toBool()||!preview->property("browserHistoryCommitted").toBool())return;
+        preview->setProperty("browserHistoryUrl",url);if(!owned())return;
+        recordBrowserHistory(url,preview->property("browserSessionTitle").toString());
+    });
+    connect(browser,&BrowserWidget::titleChanged,page,[this,browserGuard,preview,owned](const QString& title){
+        if(owned()&&!preview->property("browserHistoryLoading").toBool()&&preview->property("browserHistoryCommitted").toBool()&&preview->property("browserHistoryUrl").toUrl()==browserGuard->currentUrl())recordBrowserHistory(browserGuard->currentUrl(),title);
+    });
     address->setText(target==QUrl("about:blank")?QString():target.toDisplayString());if(!owned())return;scheduleBrowserSessionSave();browser->navigate(target);
 }
 void MainWindow::recordBrowserHistory(const QUrl& url,const QString& title){
     if(url.scheme()!="https"&&url.scheme()!="http")return;
     const QString path=m_store.directory()+"/browsing-history.json";QFile file(path);QJsonArray entries;
     if(file.exists()){if(!file.open(QIODevice::ReadOnly)||file.size()>4*1024*1024)return;QJsonParseError parse;const auto doc=QJsonDocument::fromJson(file.readAll(),&parse);if(parse.error!=QJsonParseError::NoError)return;entries=doc.isArray()?doc.array():doc.object()["entries"].toArray();}
+    file.close(); // Release the Windows read handle before atomic replacement.
     QUrl clean=url;clean.setUserInfo(QString());const QString address=clean.toString();const auto now=QDateTime::currentMSecsSinceEpoch();
     if(!entries.isEmpty()&&entries.first().toObject()["url"].toString()==address){auto entry=entries.first().toObject();entry["title"]=title;entries.replace(0,entry);}else entries.prepend(QJsonObject{{"url",address},{"title",title},{"visitedAt",now}});
     while(entries.size()>5000)entries.removeLast();

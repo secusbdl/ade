@@ -10,7 +10,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <QFile>
-#include <QFileSystemModel>
+#include "ui/WorkspaceFileTreeModel.h"
 #include <QPixmap>
 #include <QProcess>
 #include <QElapsedTimer>
@@ -46,7 +46,7 @@ int main(int argc,char** argv){
     auto* composer=window.findChild<ade::Composer*>();composer->setPlainText("Use the attached notes to refine the dashboard.");emit composer->filesAttached({attachment.fileName()});
     if(auto* button=window.findChild<QToolButton*>("toggleFileTreeButton"))button->click();
     auto* tree=window.findChild<QTreeView*>("workspaceFiles");if(!tree)return 8;
-    auto* model=qobject_cast<QFileSystemModel*>(tree->model());if(!model)return 8;emit tree->doubleClicked(model->index(code));
+    auto* model=qobject_cast<WorkspaceFileTreeModel*>(tree->model());if(!model)return 8;emit tree->doubleClicked(model->index(code));
     window.show();auto* settings=window.findChild<ade::SettingsPage*>();
     for(const auto& theme:{"light","dark"}){settings->setPreference("personalization.appearance",theme);app.processEvents();if(!window.grab().save(QDir(output).filePath(QString("workbench-")+theme+".png")))return 9;}
     auto* settingsButton=window.findChild<QToolButton*>("settingsButton");if(!settingsButton)return 11;settingsButton->click();settings->selectSection("worktree-setup");

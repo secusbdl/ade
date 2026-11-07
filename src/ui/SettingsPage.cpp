@@ -1,5 +1,9 @@
 #include "SettingsPage.h"
 #include "ProviderModelsDialog.h"
+#include "ProviderCatalog.h"
+#include "FlowLayout.h"
+#include "SettingsServiceMarks.h"
+#include <QSvgRenderer>
 
 #include "SessionStore.h"
 #include "ModelSelection.h"
@@ -48,6 +52,7 @@
 #include <QSet>
 #include <QSignalBlocker>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QSlider>
 #include <QSpinBox>
 #include <QStyleHints>
@@ -190,6 +195,80 @@ QWidget *card(QVBoxLayout *layout, const QString &title, const QString &descript
     if (row) *row = horizontal;
     return widget;
 }
+// Source cards identify the configured provider, rather than its selected model.
+// Legacy instances may be recognized only by the catalog's exact endpoint/kind
+// contract; edited or unrecognized endpoints remain explicitly custom.
+QString providerDescription(const ProviderConfig& provider) {
+    for(const auto& entry:ProviderCatalog::all()) {
+        auto candidate=provider;
+        if(candidate.templateId.isEmpty())candidate.templateId=entry.id;
+        if(ProviderCatalog::matches(candidate,entry))return entry.description;
+    }
+    return provider.isExternalHarness()?QStringLiteral("External coding agent using its own configured account.")
+        :QStringLiteral("Custom model endpoint using %1.").arg(provider.protocol);
+}
+
+QString providerMark(const ProviderConfig& provider) {
+    const QMap<QString,QString> marks={{"deepseek-api","deepseek"},{"claude-code","anthropic"},{"anthropic-api","anthropic"},{"codex","openai"},{"openai-api","openai"},{"alibaba-api","alibaba"},{"qwen-plan","alibaba"},{"qwen-token-plan","alibaba"},{"minimax-api","minimax"},{"minimax-plan","minimax"},{"moonshotai-api","moonshotai"},{"kimi-plan","moonshotai"},{"mistral-api","mistral"},{"z-ai-api","z-ai"},{"glm-coding-plan","z-ai"},{"ollama","ollama"}};
+    for(const auto& entry:ProviderCatalog::all()) {
+        auto candidate=provider;if(candidate.templateId.isEmpty())candidate.templateId=entry.id;
+        if(ProviderCatalog::matches(candidate,entry)&&marks.contains(entry.id))return marks.value(entry.id);
+    }
+    return provider.isExternalHarness()?QStringLiteral("terminal"):QStringLiteral("brain");
+}
+
+QPixmap settingsPixmap(const QString& name,const QColor& foreground,int size) {
+    auto data=settingsServiceSvg(name);
+    if(!data.isEmpty()) {
+        data.replace("currentColor",foreground.name().toUtf8());
+        QSvgRenderer renderer(data);
+        QPixmap result(size,size);result.fill(Qt::transparent);QPainter painter(&result);renderer.render(&painter);
+        return result;
+    }
+    if(name=="supabase"||name=="posthog") {
+        // Original category artwork, not copies of the service trademarks.
+        QPixmap result(size,size);result.fill(Qt::transparent);QPainter painter(&result);painter.setRenderHint(QPainter::Antialiasing);painter.scale(size/24.0,size/24.0);painter.setPen(QPen(foreground,1.6,Qt::SolidLine,Qt::RoundCap,Qt::RoundJoin));
+        if(name=="posthog") {
+            painter.drawLine(4,20,21,20);painter.drawLine(4,20,4,4);
+            painter.drawRoundedRect(QRectF(7,12,3,8),.7,.7);painter.drawRoundedRect(QRectF(12,8,3,12),.7,.7);painter.drawRoundedRect(QRectF(17,4,3,16),.7,.7);
+        } else {
+            painter.drawEllipse(QRectF(4,3,16,6));painter.drawLine(4,6,4,18);painter.drawLine(20,6,20,18);painter.drawArc(QRectF(4,9,16,6),180*16,180*16);painter.drawArc(QRectF(4,15,16,6),180*16,180*16);
+        }
+        return result;
+    }
+    return icon(name,foreground).pixmap(size,size);
+}
+
+// Selected MIT service assets and original ADE category marks; no Nucleo.
+QLabel* settingsMark(const QString& glyph,int size) {
+    auto* mark=new QLabel;
+    mark->setObjectName("settingsCategoryMark");
+    mark->setProperty("settingsGlyph",glyph);
+    mark->setProperty("settingsMarkSize",size);
+    mark->setFixedSize(size,size);
+    mark->setAlignment(Qt::AlignCenter);
+    mark->setAttribute(Qt::WA_TransparentForMouseEvents);
+    return mark;
+}
+
+QVBoxLayout* sectionHeader(QVBoxLayout* parent,const QString& title,const QString& description={}) {
+    auto* labels=new QVBoxLayout;
+    labels->setSpacing(2);
+    labels->addWidget(text(title,"settingHeading"));
+    if(!description.isEmpty())labels->addWidget(text(description));
+    parent->addLayout(labels);
+    return labels;
+}
+
+QWidget* actionRow(QVBoxLayout* layout,const QList<QPushButton*>& buttons,Qt::Alignment alignment={}) {
+    auto* row=new QWidget;
+    row->setObjectName("settingsActionRow");
+    auto* flow=new FlowLayout(row);
+    for(auto* button:buttons)flow->addWidget(button);
+    layout->addWidget(row,0,alignment);
+    return row;
+}
+
 QJsonValue getPath(const QJsonObject &object, const QStringList &parts, const QJsonValue &fallback) {
     QJsonValue current(object);
     for (const auto &part : parts) {
@@ -368,16 +447,23 @@ SettingsPage::SettingsPage(QString dataDir, QWidget *parent)
     root->addWidget(right,1);
     setStyleSheet(QStringLiteral(
         "QWidget#adeSettings{background:#eff3f8;color:#232629;}"
-        "QWidget#settingsNavigation{background:#eff3f8;}"
+        "QLabel{color:#232629;}"
+        "QWidget#adeSettings QLabel[settingsMuted=true]{color:#777c81;}"
+        "QWidget#settingsNavigation,QScrollArea#settingsNavigationScroll,QWidget#settingsNavigationBody{background:#eff3f8;border:0;}"
         "QWidget#settingsSurface,QScrollArea#settingsScroll,QWidget#settingsScrollBody,QWidget#settingsContent{background:#fdfdfd;}"
         "QPushButton[settingsNav=true]{background:transparent;border:0;text-align:left;padding:6px 8px;border-radius:8px;color:#62676c;font-size:14px;}"
         "QPushButton[settingsNav=true]:checked{background:#e1e6eb;color:#22272c;}"
         "QPushButton[settingsNav=true]:hover{background:#e7ebef;}"
-        "QLabel#settingsNavGroup{color:#7b8186;font-size:12px;padding:8px 8px 2px 8px;}"
-        "QLabel#settingsTitle{font-size:20px;font-weight:600;color:#202225;}"
-        "QLabel#settingHeading{font-size:18px;font-weight:500;color:#282b2d;}"
+        "QLabel#settingsNavGroup{color:#7b8186;font-size:12px;padding:0 6px 4px 6px;}"
+        "QLabel#settingsTitle{min-height:28px;font-size:20px;font-weight:600;color:#202225;}"
+        "QLabel#settingHeading{min-height:28px;font-size:18px;font-weight:500;color:#282b2d;}"
         "QLabel#settingCardTitle{font-size:14px;font-weight:500;color:#232629;}"
-        "QLabel#settingDescription{color:#777c81;font-size:14px;}"
+        "QLabel#settingDescription{color:#777c81;font-size:14px;min-height:20px;}"
+        "QLabel#providerDescription,QLabel#pluginUsageStatus{color:#777c81;font-size:12px;}"
+        "QPushButton[providerSettingsCard=true]{padding:0;background:#f3f4f4;border:1px solid #e7e9eb;border-radius:8px;text-align:left;}"
+        "QPushButton[providerSettingsCard=true]:hover,QPushButton[providerSettingsCard=true]:focus{background:#e9edf1;border-color:#aab0bb;}"
+        "QFrame#pluginCredentialCard{background:transparent;border:1px solid #e7e9eb;border-radius:8px;}"
+        "QWidget#settingsContent QPushButton#allPlugins{padding:0;background:transparent;border:0;}"
         "QFrame#settingCard{background:#f3f4f4;border:1px solid #e7e9eb;border-radius:8px;}"
         "QFrame#settingsEmptyState{background:transparent;border:1px dashed #e7e9eb;border-radius:6px;}"
         "QFrame#archivedCard{background:#fdfdfd;border:1px solid #e7e9eb;border-radius:12px;}"
@@ -392,6 +478,7 @@ SettingsPage::SettingsPage(QString dataDir, QWidget *parent)
         "QWidget#settingsContent QPushButton{padding:6px 13px;background:#f2f3f3;border:1px solid #e4e7e9;border-radius:6px;color:#232629;}"
         "QWidget#settingsContent QPushButton#pluginCard{padding:0;background:#f3f4f4;border:1px solid #e7e9eb;border-radius:8px;}"
         "QWidget#settingsContent QPushButton:hover{background:#e9edf1;}"
+        "QWidget#settingsContent QPushButton:disabled{color:#92969a;}"
         "QWidget#settingsContent QPushButton[compactAdd=true]{padding:2px;background:transparent;border:1px dashed #e7e9eb;font-size:12px;}"
         "QWidget#settingsContent QLineEdit,QWidget#settingsContent QPlainTextEdit,QWidget#settingsContent QListWidget{background:#fff;border:1px solid #e1e4e7;border-radius:6px;padding:6px;color:#232629;}"
         "QWidget#settingsContent QComboBox,QWidget#settingsContent QSpinBox{padding:5px;border:1px solid #e1e4e7;border-radius:5px;background:#f7f7f7;color:#232629;}"
@@ -414,14 +501,10 @@ void SettingsPage::applyAppearance() {
             {"#e7ebef","#303846"},{"#7b8186","#aab0bb"},{"#202225","#eceef4"},
             {"#282b2d","#eceef4"},{"#777c81","#b7bdc8"},{"#f3f4f4","#2b303a"},
             {"#e7e9eb","#3d424b"},{"#f2f3f3","#303846"},{"#e4e7e9","#424955"},
-            {"#e9edf1","#394354"},{"#e1e4e7","#424955"},{"#f7f7f7","#2b303a"},{"#fff","#252a33"}
+            {"#92969a","#747d89"},{"#e9edf1","#394354"},{"#e1e4e7","#424955"},{"#f7f7f7","#2b303a"},{"#fff","#252a33"}
         };
         for(const auto &pair:colors)style.replace(pair.first,pair.second,Qt::CaseInsensitive);
     }
-    const QMap<QString,QString> colors={{"blue","#4778d7"},{"violet","#855ad2"},{"green","#348a67"},{"amber","#ac7a24"},{"neutral","#777f8c"}};
-    const QColor accent(colors.value(preference("personalization.theme").toString(),"#4778d7"));
-    style += QString("QPushButton[settingsNav=true]:checked{background:%1;color:%2;}")
-        .arg((dark?accent.darker(230):accent.lighter(190)).name(),(dark?accent.lighter(150):accent.darker(130)).name());
     const double scale=preference("personalization.uiZoom").toInt(100)/100.0;
     if(scale!=1.0){
         const QRegularExpression expression("([0-9]+)px");
@@ -432,43 +515,61 @@ void SettingsPage::applyAppearance() {
             style.replace(it->capturedStart(),it->capturedLength(),QString::number(qMax(1,qRound(it->captured(1).toInt()*scale)))+"px");
     }
     setStyleSheet(style);
-    if(auto *navigation=findChild<QWidget *>("settingsNavigation"))navigation->setFixedWidth(qRound(230*scale));
+    updateResponsiveLayout();
 }
 
 void SettingsPage::buildNavigation() {
     auto *navigation = new QWidget;
     navigation->setObjectName("settingsNavigation");
-    navigation->setFixedWidth(230);
+    navigation->setFixedWidth(250);
     auto *layout = new QVBoxLayout(navigation);
-    layout->setContentsMargins(10,12,12,14);
-    layout->setSpacing(2);
+    layout->setContentsMargins(8,4,8,10);
+    layout->setSpacing(0);
     auto *back = new QPushButton("← Back");
     back->setObjectName("settingsBack");
     back->setProperty("settingsNav",true);
     layout->addWidget(back);
     connect(back,&QPushButton::clicked,this,&SettingsPage::backRequested);
-    layout->addSpacing(14);
+    layout->addSpacing(20);
+    auto* scroll=new QScrollArea;
+    scroll->setObjectName("settingsNavigationScroll");
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setWidgetResizable(true);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    auto* navBody=new QWidget;
+    navBody->setObjectName("settingsNavigationBody");
+    auto* navLayout=new QVBoxLayout(navBody);
+    navLayout->setContentsMargins(2,0,6,12);
+    navLayout->setSpacing(1);
+    scroll->setWidget(navBody);
+    layout->addWidget(scroll,1);
+    bool firstGroup=true;
     for (const auto &section : sections) {
         if (*section.group) {
-            if (QString::fromUtf8(section.group).trimmed().isEmpty()) layout->addSpacing(25);
-            else {
+            if(!firstGroup)navLayout->addSpacing(16);
+            firstGroup=false;
+            if (!QString::fromUtf8(section.group).trimmed().isEmpty())
+            {
                 auto *group = text(QString::fromUtf8(section.group),"settingsNavGroup");
-                layout->addWidget(group);
+                navLayout->addWidget(group);
             }
         }
         const QMap<QString,QString> navIcons={{"agent-general","settings"},{"models-providers","brain"},{"skills-context","document"},{"worktree-setup","branch"},{"plugins","plugin"},{"archived-agents","archive"},{"personalization","palette"},{"browsing","globe"},{"clear-data","trash"},{"history","clock"},{"account","user"},{"about","info"}};
         auto *button = new QPushButton(icon(navIcons.value(section.id),QColor("#70757b")),QString::fromUtf8(section.label).replace("&","&&"));button->setIconSize(QSize(18,18));
         button->setProperty("settingsNav",true);
+        button->setProperty("settingsGlyph",navIcons.value(section.id));
         button->setProperty("sectionId",QString::fromLatin1(section.id));
         button->setObjectName("settingsNav_"+QString::fromLatin1(section.id));
         button->setAccessibleName(QString::fromUtf8(section.label));
         button->setCheckable(true);
         button->setMinimumHeight(32);
+        button->setToolTip(QString::fromUtf8(section.label));
+        button->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);
         m_navigation->addButton(button);
-        layout->addWidget(button);
+        navLayout->addWidget(button);
         connect(button,&QPushButton::clicked,this,[this,id=QString::fromLatin1(section.id)]{selectSection(id);});
     }
-    layout->addStretch();
+    navLayout->addStretch();
     static_cast<QHBoxLayout *>(this->layout())->addWidget(navigation);
 }
 
@@ -583,8 +684,11 @@ void SettingsPage::buildContent() {
     auto *layout = new QVBoxLayout(content);
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(10);
-    for (const auto &s : sections) if (m_section==s.id) layout->addWidget(text(QString::fromUtf8(s.label),"settingsTitle"));
-    if(m_section!="plugins"&&m_section!="archived-agents")layout->addSpacing(18);
+    if(m_section=="models-providers")layout->setSpacing(0);
+    if(m_section!="plugins"||m_plugin.isEmpty())
+        for (const auto &s : sections) if (m_section==s.id) layout->addWidget(text(QString::fromUtf8(s.label),"settingsTitle"));
+    if(m_section=="models-providers")layout->addSpacing(32);
+    else if(m_section!="plugins"&&m_section!="archived-agents")layout->addSpacing(18);
     if (m_section=="agent-general") buildGeneral(layout);
     else if(m_section=="models-providers") buildProviders(layout);
     else if(m_section=="skills-context") buildSkills(layout);
@@ -602,6 +706,9 @@ void SettingsPage::buildContent() {
     row->addStretch();
     m_scroll->setWidget(body);
     showStatus(m_storageError,!m_storageValid);
+    updateResponsiveLayout();
+    if(!alive||generation!=m_pluginViewGeneration)return;
+    m_scroll->verticalScrollBar()->setValue(0);
 }
 
 void SettingsPage::buildGeneral(QVBoxLayout *layout) {
@@ -624,35 +731,60 @@ void SettingsPage::buildGeneral(QVBoxLayout *layout) {
 }
 
 void SettingsPage::buildProviders(QVBoxLayout *layout) {
-    heading(layout,"Providers","Configure how the agent connects to model providers. Add API keys or configure custom endpoints.");
+    auto* providerSection=new QVBoxLayout;
+    providerSection->setSpacing(24);
+    layout->addLayout(providerSection);
+    sectionHeader(providerSection,"Providers","Configure how the agent connects to LLM providers. Add API keys, connect coding plans, or set up custom endpoints.");
+    auto* cards=new QVBoxLayout;
+    cards->setSpacing(12);
+    providerSection->addLayout(cards);
     QString error;
-    auto providers = ProviderStore::load(m_dataDir+"/providers.json",&error);
-    for (auto &provider : providers) provider.apiKey.clear();
-    if (!error.isEmpty()) layout->addWidget(text(error));
-    for (const auto &provider : providers) {
-        QHBoxLayout *row;
-        card(layout,provider.name,provider.model.isEmpty()?"Choose a model":provider.model,&row);
-        auto *edit = new QPushButton("›");
-        edit->setAccessibleName("Configure "+provider.name);
-        auto* models=new QPushButton("Models");models->setObjectName("manageProviderModels_"+provider.id);models->setAccessibleName("Manage models for "+provider.name);row->addWidget(models);
+    auto providers=ProviderStore::load(m_dataDir+"/providers.json",&error);
+    for(auto& provider:providers)provider.apiKey.clear();
+    if(!error.isEmpty())cards->addWidget(text(error));
+    for(const auto& provider:providers) {
+        auto* entry=new QPushButton;
+        entry->setObjectName("providerSettingsCard_"+provider.id);
+        entry->setProperty("providerSettingsCard",true);
+        entry->setAccessibleName("Configure "+provider.name);
+        entry->setCursor(Qt::PointingHandCursor);
+        entry->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+        auto* row=new QHBoxLayout(entry);
+        row->setContentsMargins(12,12,12,12);row->setSpacing(12);
+        row->addWidget(settingsMark(providerMark(provider),36));
+        auto* labels=new QVBoxLayout;labels->setSpacing(2);
+        labels->addWidget(new ElidedLine(provider.name,"settingCardTitle"));
+        labels->addWidget(new ElidedLine(providerDescription(provider),"providerDescription"));
+        row->addLayout(labels,1);
+        auto* models=new QPushButton("Models");
+        models->setObjectName("manageProviderModels_"+provider.id);
+        models->setAccessibleName("Manage models for "+provider.name);row->addWidget(models);
         connect(models,&QPushButton::clicked,this,[this,id=provider.id]{
             auto* dialog=new ProviderModelsDialog(m_dataDir,id,preference("modelCatalogs").toObject().value(id).toObject(),this);
             dialog->setAttribute(Qt::WA_DeleteOnClose);
             connect(dialog,&ProviderModelsDialog::modelsChanged,this,[this]{emit providerVisibilityChanged();});
             dialog->open();
         });
-        row->addWidget(edit);
-        connect(edit,&QPushButton::clicked,this,[this,id=provider.id]{emit providerEditRequested(id);});
+        row->addWidget(settingsMark("forward",14));
+        cards->addWidget(entry);
+        connect(entry,&QPushButton::clicked,this,[this,id=provider.id]{emit providerEditRequested(id);});
     }
-    if (providers.isEmpty()) card(layout,"No providers configured","Connect your own provider to start an agent session.");
-    connect(action(layout,"+ Add Provider","settingsAddProvider",Qt::AlignRight),&QPushButton::clicked,this,&SettingsPage::addProviderRequested);
-    connect(action(layout,"Import API key file…","settingsImportProviderKeys"),&QPushButton::clicked,this,&SettingsPage::providerKeyImportRequested);
-    heading(layout,"Default utility models","These models are used for background tasks when no preset-specific configuration is set. The agent tries each model in order until one succeeds.");
-    buildUtilityModels(layout,"utilityModels.titleGeneration","Title generation");
-    buildUtilityModels(layout,"utilityModels.contextCompression","Context compression");
-    layout->addSpacing(18);auto* presetHeading=new QHBoxLayout;auto* presetLabels=new QVBoxLayout;presetLabels->setSpacing(4);
+    if(providers.isEmpty())card(cards,"No providers configured","Connect your own provider to start an agent session.");
+    auto* add=new QPushButton("+ Add Provider");add->setObjectName("settingsAddProvider");
+    auto* import=new QPushButton("Import API key file…");import->setObjectName("settingsImportProviderKeys");
+    actionRow(cards,{import,add},Qt::AlignRight);
+    connect(add,&QPushButton::clicked,this,&SettingsPage::addProviderRequested);
+    connect(import,&QPushButton::clicked,this,&SettingsPage::providerKeyImportRequested);
+    layout->addSpacing(32);
+    auto* utilities=new QVBoxLayout;utilities->setSpacing(16);layout->addLayout(utilities);
+    sectionHeader(utilities,"Default utility models","These models are used for background tasks when no preset-specific configuration is set. The agent tries each model in order until one succeeds.");
+    auto* lists=new QVBoxLayout;lists->setSpacing(24);utilities->addLayout(lists);
+    for(const auto& pair:QList<QPair<QString,QString>>{{"utilityModels.titleGeneration","Title generation"},{"utilityModels.contextCompression","Context compression"}}){
+        auto* list=new QVBoxLayout;list->setSpacing(8);lists->addLayout(list);buildUtilityModels(list,pair.first,pair.second);
+    }
+    layout->addSpacing(32);auto* presetHeading=new QHBoxLayout;auto* presetLabels=new QVBoxLayout;presetLabels->setSpacing(2);
     presetLabels->addWidget(text("Presets","settingHeading"));presetLabels->addWidget(text("Named model configurations for one-click switching. Shown at the top of the model selector."));presetHeading->addLayout(presetLabels,1);
-    auto* addPreset=new QPushButton("+ Add preset");addPreset->setObjectName("addModelPreset");presetHeading->addWidget(addPreset,0,Qt::AlignTop);layout->addLayout(presetHeading);
+    auto* addPreset=new QPushButton("+ Add preset");addPreset->setObjectName("addModelPreset");presetHeading->addWidget(addPreset,0,Qt::AlignTop);layout->addLayout(presetHeading);layout->addSpacing(16);
     connect(addPreset,&QPushButton::clicked,this,[this]{editModelPreset();});
     const auto presets = preference("modelPresets").toArray();
     for (int i=0;i<presets.size();++i) {
@@ -738,7 +870,7 @@ void SettingsPage::editModelPreset(const QString &id) {
 }
 
 void SettingsPage::buildUtilityModels(QVBoxLayout *layout,const QString &path,const QString &title) {
-    layout->addSpacing(14);auto* captions=new QVBoxLayout;captions->setSpacing(2);captions->addWidget(text(title,"settingCardTitle"));
+    auto* captions=new QVBoxLayout;captions->setSpacing(2);captions->addWidget(text(title,"settingCardTitle"));
     auto* description=text(path.endsWith("titleGeneration")?"Models used to generate conversation titles.":"Models used to compress conversation history.");description->setStyleSheet("font-size:12px;");captions->addWidget(description);layout->addLayout(captions);
     const auto entries=preference(path).toArray();
     QString providerError;const auto providers=ProviderStore::load(m_dataDir+"/providers.json",&providerError);
@@ -864,9 +996,83 @@ void SettingsPage::buildWorktrees(QVBoxLayout *layout) {
     }
 }
 
+void SettingsPage::updateResponsiveLayout() {
+    const QPointer<SettingsPage> self(this);
+    const auto generation=m_pluginViewGeneration;
+    const auto preferences=m_preferences;
+    const auto requestedSize=size();
+    const auto current=[self,generation,preferences,requestedSize]{
+        return self&&self->m_pluginViewGeneration==generation&&self->m_preferences==preferences&&self->size()==requestedSize;
+    };
+    const qreal scale=preference("personalization.uiZoom").toInt(100)/100.0;
+    const bool compact=width()<qRound(700*scale);
+    const QColor foreground=preference("personalization.appearance").toString()=="dark"
+        ||(preference("personalization.appearance").toString()=="system"&&QGuiApplication::styleHints()->colorScheme()==Qt::ColorScheme::Dark)
+        ?QColor("#c4c8d0"):QColor("#62676c");
+    if(auto* nav=findChild<QWidget*>("settingsNavigation")) {
+        nav->setFixedWidth(qRound((compact?64:250)*scale));
+        if(!current())return;
+        if(auto* body=nav->findChild<QWidget*>("settingsNavigationBody"))body->layout()->setContentsMargins(compact?0:2,0,compact?0:6,12);
+        for(auto* label:nav->findChildren<QLabel*>("settingsNavGroup")){label->setVisible(!compact);if(!current())return;}
+        for(auto* button:m_navigation->buttons()) {
+            button->setText(compact?QString():button->accessibleName().replace("&","&&"));
+            if(!current())return;
+            button->setIcon(icon(button->property("settingsGlyph").toString(),foreground));
+            if(!current())return;
+            button->setIconSize(QSize(qRound(18*scale),qRound(18*scale)));
+            button->setFixedHeight(qRound(32*scale));
+            if(!current())return;
+        }
+        if(auto* back=nav->findChild<QPushButton*>("settingsBack")) {
+            back->setText(compact?QStringLiteral("←"):QStringLiteral("← Back"));
+            if(!current())return;
+            back->setAccessibleName("Back");back->setToolTip("Back");
+        }
+    }
+    if(!m_scroll||!m_scroll->widget())return;
+    auto* body=m_scroll->widget();
+    if(auto* row=qobject_cast<QHBoxLayout*>(body->layout()))
+        row->setContentsMargins(qRound((compact?16:24)*scale),qRound((compact?32:96)*scale),qRound((compact?16:24)*scale),qRound(96*scale));
+    if(auto* content=body->findChild<QWidget*>("settingsContent"))content->setMaximumWidth(qRound((m_section=="archived-agents"?896:768)*scale));
+    if(!current())return;
+    for(auto* mark:body->findChildren<QLabel*>("settingsCategoryMark")) {
+        const int size=qRound(mark->property("settingsMarkSize").toInt()*scale);
+        mark->setFixedSize(size,size);
+        if(!current())return;
+        const int glyph=qRound(qMin(24,mark->property("settingsMarkSize").toInt())*scale);
+        mark->setPixmap(settingsPixmap(mark->property("settingsGlyph").toString(),foreground,glyph));
+        if(!current())return;
+    }
+    for(auto* card:body->findChildren<QPushButton*>())if(card->property("providerSettingsCard").toBool()) {
+        card->setMinimumHeight(qMax(qRound(64*scale),card->layout()->minimumSize().height()));
+        if(!current())return;
+    }
+    if(auto* overview=body->findChild<QWidget*>("pluginOverview")) {
+        auto* grid=qobject_cast<QGridLayout*>(overview->layout());
+        auto* mark=overview->findChild<QLabel*>("settingsCategoryMark");
+        auto* summary=overview->findChild<QWidget*>("pluginOverviewSummary");
+        auto* enabled=overview->findChild<QCheckBox*>();
+        if(grid&&mark&&summary&&enabled) {
+            const bool stacked=body->findChild<QWidget*>("settingsContent")->width()<qRound(440*scale);
+            grid->addWidget(mark,0,0,1,1,Qt::AlignTop);
+            if(!current())return;
+            grid->addWidget(summary,stacked?1:0,stacked?0:1,1,stacked?2:1);
+            if(!current())return;
+            grid->addWidget(enabled,0,stacked?1:2,1,1,Qt::AlignRight|Qt::AlignTop);
+            if(!current())return;
+            grid->setColumnStretch(1,1);
+        }
+    }
+}
+
 void SettingsPage::resizeEvent(QResizeEvent* event){
+    const QPointer<SettingsPage> self(this);
     QWidget::resizeEvent(event);
-    if(m_scroll&&m_section=="plugins"&&m_plugin.isEmpty()&&m_pluginColumns!=(width()>=1024?2:1))buildContent();
+    if(!self)return;
+    updateResponsiveLayout();
+    if(!self)return;
+    const double scale=preference("personalization.uiZoom").toInt(100)/100.0;
+    if(m_scroll&&m_section=="plugins"&&m_plugin.isEmpty()&&m_pluginColumns!=(width()>=qRound(1024*scale)?2:1))buildContent();
 }
 
 void SettingsPage::buildPlugins(QVBoxLayout *layout) {
@@ -874,7 +1080,7 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
         QString credentialError;const auto saved=ProviderStore::load(m_dataDir+"/plugin-credentials.json",&credentialError);
         layout->addWidget(text("Enable or disable plugins to extend the agent's capabilities with additional skills."));
         if(!credentialError.isEmpty())layout->addWidget(text("Saved plugin credentials could not be read. Open a plugin to review the storage error."));
-        m_pluginColumns=width()>=1024?2:1;
+        m_pluginColumns=width()>=qRound(1024*preference("personalization.uiZoom").toInt(100)/100.0)?2:1;
         for(const bool enabled:{true,false}){
             QList<const Plugin*> entries;for(const auto& plugin:plugins)if(preference("plugins."+QString(plugin.id)+".enabled",true).toBool()==enabled)entries.append(&plugin);
             if(entries.isEmpty())continue;
@@ -883,15 +1089,12 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
             int index=0;for(const auto* plugin:entries){
                 auto* details=new QPushButton;details->setObjectName("pluginCard");details->setAccessibleName("Configure "+QString(plugin->name));details->setCursor(Qt::PointingHandCursor);details->setMinimumHeight(80);details->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
                 auto* row=new QHBoxLayout(details);row->setContentsMargins(14,10,12,10);row->setSpacing(16);
-                auto* logo=new QLabel;logo->setFixedSize(28,28);logo->setAttribute(Qt::WA_TransparentForMouseEvents);const QIcon brand(":/plugin-icons/"+QString(plugin->id)+".svg");auto mark=(brand.isNull()?icon("plugin"):brand).pixmap(28,28);
-                const auto appearance=preference("personalization.appearance").toString("system");const bool dark=appearance=="dark"||(appearance=="system"&&QGuiApplication::styleHints()->colorScheme()==Qt::ColorScheme::Dark);
-                if(dark&&(QString(plugin->id)=="github"||QString(plugin->id)=="vercel")){QPainter tint(&mark);tint.setCompositionMode(QPainter::CompositionMode_SourceIn);tint.fillRect(mark.rect(),QColor("#eceef4"));}
-                logo->setPixmap(mark);row->addWidget(logo);
+                row->addWidget(settingsMark(plugin->id,28));
                 auto* labels=new QVBoxLayout;labels->setSpacing(2);auto* titleRow=new QHBoxLayout;titleRow->setSpacing(7);
                 auto* title=text(plugin->name,"settingCardTitle");title->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(title);
                 const bool configured=std::any_of(saved.begin(),saved.end(),[&](const ProviderConfig& value){return value.id==plugin->id&&value.protocol=="credential"&&!value.apiKey.isEmpty();});
                 const QString savedState=!credentialError.isEmpty()?"Storage error":configured?"Token saved":"Needs token";
-                auto* meta=text("1 skill · "+savedState);meta->setObjectName("pluginCardStatus_"+QString(plugin->id));meta->setStyleSheet("font-size:12px;");meta->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);meta->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(meta,1);labels->addLayout(titleRow);
+                auto* meta=new ElidedLine("1 skill · "+savedState,"pluginCardStatus_"+QString(plugin->id));meta->setProperty("settingsMuted",true);meta->setStyleSheet("font-size:12px;");meta->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);meta->setAttribute(Qt::WA_TransparentForMouseEvents);titleRow->addWidget(meta,1);labels->addLayout(titleRow);
                 auto* description=new TwoLineDescription(plugin->description);labels->addWidget(description);row->addLayout(labels,1);
                 auto* arrow=new QLabel;arrow->setPixmap(icon("forward",QColor("#777c81")).pixmap(14,14));arrow->setAttribute(Qt::WA_TransparentForMouseEvents);row->addWidget(arrow,0,Qt::AlignTop);
                 details->setToolTip(plugin->description);grid->addWidget(details,index/m_pluginColumns,index%m_pluginColumns);++index;
@@ -902,12 +1105,23 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
         return;
     }
     const Plugin *selected=nullptr;for(const auto &plugin:plugins)if(m_plugin==plugin.id)selected=&plugin;if(!selected)return;
-    connect(action(layout,"← All plugins","allPlugins"),&QPushButton::clicked,this,[this]{m_plugin.clear();buildContent();});
-    auto* enabled=new QCheckBox("Enabled");enabled->setObjectName("pluginEnabled_"+m_plugin);enabled->setChecked(preference("plugins."+m_plugin+".enabled",true).toBool());layout->addWidget(enabled);
-    heading(layout,QString::fromUtf8(selected->name),QString::fromUtf8(selected->description));
-    auto* usage=text({});usage->setObjectName("pluginUsageStatus");layout->addWidget(usage);
-    heading(layout,QString::fromUtf8(selected->credentialName),"Stored with Windows account encryption. Saved tokens are never displayed again.");
-    layout->addWidget(text(QString::fromUtf8(selected->fieldLabel)));
+    auto* header=new QHBoxLayout;header->setSpacing(12);
+    auto* back=new QPushButton("←");back->setObjectName("allPlugins");back->setAccessibleName("All plugins");back->setToolTip("All plugins");back->setFixedSize(32,32);
+    header->addWidget(back);header->addWidget(text(selected->name,"settingsTitle"),1);layout->addLayout(header);
+    connect(back,&QPushButton::clicked,this,[this]{m_plugin.clear();buildContent();});
+    layout->addSpacing(16);
+    auto* overview=new QWidget;overview->setObjectName("pluginOverview");
+    auto* grid=new QGridLayout(overview);grid->setContentsMargins(0,0,0,0);grid->setSpacing(16);grid->setColumnStretch(1,1);
+    grid->addWidget(settingsMark(selected->id,40),0,0,Qt::AlignTop);
+    auto* summaryWidget=new QWidget;summaryWidget->setObjectName("pluginOverviewSummary");
+    auto* summary=new QVBoxLayout(summaryWidget);summary->setContentsMargins(0,0,0,0);summary->setSpacing(4);summary->addWidget(text(selected->description));
+    auto* usage=text({});usage->setObjectName("pluginUsageStatus");usage->setProperty("settingsMuted",true);summary->addWidget(usage);grid->addWidget(summaryWidget,0,1);
+    auto* enabled=new QCheckBox("Enabled");enabled->setObjectName("pluginEnabled_"+m_plugin);enabled->setChecked(preference("plugins."+m_plugin+".enabled",true).toBool());grid->addWidget(enabled,0,2,Qt::AlignTop);
+    layout->addWidget(overview);layout->addSpacing(22);
+    auto* credentialCard=new QFrame;credentialCard->setObjectName("pluginCredentialCard");layout->addWidget(credentialCard);
+    layout=new QVBoxLayout(credentialCard);layout->setContentsMargins(16,16,16,16);layout->setSpacing(10);
+    auto* credentialTitle=text(QString::fromUtf8(selected->credentialName),"settingCardTitle");layout->addWidget(credentialTitle);
+    auto* encrypted=text("Stored with Windows account encryption. Saved tokens are never displayed again.");encrypted->setStyleSheet("font-size:12px;");layout->addWidget(encrypted);
     const QString credentialPath=m_dataDir+"/plugin-credentials.json";
     auto repository=std::make_shared<ProviderRepository>(credentialPath);
     QString error;auto records=std::make_shared<QList<ProviderConfig>>(repository->load(&error));
@@ -917,10 +1131,11 @@ void SettingsPage::buildPlugins(QVBoxLayout *layout) {
     layout->addWidget(text(QString::fromUtf8(selected->helpText)));
     const auto plugin=*selected;
     connect(action(layout,"Create or manage token","pluginTokenHelp"),&QPushButton::clicked,this,[this,plugin]{emit openUrlRequested(QUrl(plugin.helpUrl));});
-    auto* status=text(*configured?"Token saved — connection has not been checked.":"No token saved.");status->setObjectName("pluginConnectionStatus");layout->addWidget(status);m_pluginCheckStatus=status;
-    auto* save=action(layout,"Save token","savePluginCredential");
-    auto* check=action(layout,"Check saved token","checkPluginConnection");m_pluginCheckButton=check;
-    auto* remove=action(layout,"Remove token","removePluginCredential");
+    auto* status=text(*configured?"Token saved — connection has not been checked.":"No token saved.");status->setObjectName("pluginConnectionStatus");status->setProperty("settingsMuted",true);layout->addWidget(status);m_pluginCheckStatus=status;
+    auto* save=new QPushButton("Save token");save->setObjectName("savePluginCredential");
+    auto* check=new QPushButton("Check saved token");check->setObjectName("checkPluginConnection");m_pluginCheckButton=check;
+    auto* remove=new QPushButton("Remove token");remove->setObjectName("removePluginCredential");
+    actionRow(layout,{save,check,remove});
     const auto generation=m_pluginViewGeneration;
     const auto refresh=[this,token,save,check,remove,usage,configured,plugin,error]{
         const bool draft=!token->text().isEmpty();save->setEnabled(error.isEmpty()&&!token->text().trimmed().isEmpty());remove->setEnabled(error.isEmpty()&&*configured);
@@ -1138,7 +1353,7 @@ void SettingsPage::buildHistory(QVBoxLayout *layout) {
 void SettingsPage::buildAccount(QVBoxLayout *layout) {
     heading(layout,"Use your own models","Connect API keys and compatible endpoints to run agents with your own providers.");
     connect(action(layout,"Configure Models & Providers","accountProviders"),&QPushButton::clicked,this,[this]{selectSection("models-providers");});
-    heading(layout,"Existing subscriptions","Stagewise supports coding plans and external coding-agent subscriptions. Native subscription login and account services are not available in this build.");
+    heading(layout,"Coding subscriptions","Use installed Codex, Claude Code, or OpenCode agents through Models & Providers. Sign in using the selected agent’s own supported login flow.");
     card(layout,"Google · GitHub · Email","ADE has no account authentication service configured. Your existing Stagewise account and chats are unchanged.");
 }
 

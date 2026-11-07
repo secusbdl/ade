@@ -47,6 +47,7 @@ public:
   bool hasBackgroundTasks() const { return !m_tasks.isEmpty(); }
   QString turnId() const { return m_turnId; }
   QJsonObject sessionState() const;
+  QJsonObject modelTelemetry() const;
 signals:
   void stagewiseQuestionRequired(QString token, QJsonObject form);
   void stagewiseQuestionCancelled(QString token);
@@ -69,6 +70,7 @@ private:
   bool launchProcess(const QString &resumeId = {}, bool fork = false);
   bool recoverMissingSession(const QJsonObject &frame);
   void consume(const QJsonObject &frame);
+  void observeModel(const QJsonObject &frame);
   void request(const QString &id, const QString &subtype,
                const QJsonObject &request);
   void finish(const QString &status, const QString &error = {});
@@ -82,6 +84,8 @@ private:
   QJsonArray m_input;
   ClaudeStream m_stream;
   QJsonObject m_usage;
+  QString m_observedModel, m_modelObservationSource;
+  bool m_modelObservationConflict = false;
   QHash<QString, Pending> m_pending;
   QSet<QString> m_tasks;
   QString m_sessionId, m_initializeId, m_turnId;

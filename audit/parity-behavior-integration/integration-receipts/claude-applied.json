@@ -1,0 +1,100 @@
+{
+  "integratedUtc": "2026-11-07T02:25:34.561608+00:00",
+  "handoffSha256Lf": "ae412b740ab36383ff67dd62b19518a07c890ac5f4fbd85baef82c585802d86f",
+  "patchSha256Lf": "856c21aa1b1cb720574e5ba2e37b4c4be47bc2402a9c35843a613efea344c2ac",
+  "files": [
+    {
+      "path": "src/harness/ClaudeStream.cpp",
+      "kind": "modified",
+      "beforeSha256": "2b88031480acab64240e3354e9afc119c589ee02d3ab44ac7137ddc1f2fd41bf",
+      "afterSha256": "27902d09b808cf62536f80381f832afe04f851e3c418b59a64bbfda6915e5681",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/harness/ClaudeStream.h",
+      "kind": "modified",
+      "beforeSha256": "e84e7e8c0771e057fc128264a29e11edeb6fbc09e15e3b2577f6753c064ecd41",
+      "afterSha256": "6d05a9bf19a5d1f18fcefee1a6755eef1e8914d65f59464e07cbea085f836a9e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/harness/ClaudeHarnessSession.cpp",
+      "kind": "modified",
+      "beforeSha256": "8fa87289f54f1ce59bf5a40269d0760f05a866b6c8a5a5fa84726acbf4f15659",
+      "afterSha256": "178eda3333c48fafa9ea3bd5df8f278d6f8a80ba69d9aad4b1e3e6cc862e72bf",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/harness/ClaudeHarnessSession.h",
+      "kind": "modified",
+      "beforeSha256": "bf48365bbf86699b4ccf64315b7dd98344184395e65d3b0bb17908357408d00d",
+      "afterSha256": "ac9514fd7b955d4d6c6636d2f941ad00b350db8b08fa84accb4984833defac62",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngine.h",
+      "kind": "modified",
+      "beforeSha256": "06bfbdb66f1ab1312bcce9b6fcbd8a671b26767beab696339bc6227847eff229",
+      "afterSha256": "3e55e0e2b922f14f5931d8352d02d2e5e67d6e25e44ddfa681bcc04794697dbb",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngineClaude.cpp",
+      "kind": "modified",
+      "beforeSha256": "a41cb632f63c2d602d12f1bdea37a0a9c87e3ed85a59c696f059b59b54ccd0eb",
+      "afterSha256": "439c25275dfc16086dedca91a4041e17f281d1e470cb6c816b05bd4539be1f19",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/core/AgentEngineHarness.cpp",
+      "kind": "modified",
+      "beforeSha256": "87b4a0c5160624cc21afdb96aa317c56146075544168651edf37bd0b7d83356a",
+      "afterSha256": "df18eff2d3bbf6fa3f193ab3b9a5c4603ad927c80eaff2185ebd1bbc44587e4a",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "src/main.cpp",
+      "kind": "modified",
+      "beforeSha256": "402112fa654fc2e729cd52ab73b504c603593fe9e48888bcc0d162c1db7e9374",
+      "afterSha256": "114cc5031d46382d66b307e38e2cc8b8d1cdbffeafda740f2dfa1e95272edfb8",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_claude_stream.cpp",
+      "kind": "modified",
+      "beforeSha256": "ccdfb7639b94b1c0611ad3be129682e89fcd3d12f6350b65929d959f876da7e2",
+      "afterSha256": "bd76569d8fa3d9a38e14179cad765485cc47a4262daf6d079f3af4bf898a77a4",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_claude_followups_stream.cpp",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "cb74cdae05ba8b1f83184528cd9f6da24a15cda385b24d5c04828868e70f0e7e",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_claude_followups_session.cpp",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "65747168a4a5c4f901ef06144bffea380bbdc683820c5fe9e371065c09d1743f",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/test_claude_followups_engine.cpp",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "f9df40f45c14d71bc2c4da2068764dc4f2296ded5b14fb1d8e9a050dfe03baef",
+      "hashBasis": "canonical_git_text_LF"
+    },
+    {
+      "path": "tests/support/ClaudeFollowupsFixture.cpp",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "028c5571771230f4927a9dc46ccd9b6920b78c2be41724e4e7a6ad500be50baa",
+      "hashBasis": "canonical_git_text_LF"
+    }
+  ],
+  "expectedSuites": 184,
+  "verification": "private166 passed; coherent full assembled rebuild pending"
+}

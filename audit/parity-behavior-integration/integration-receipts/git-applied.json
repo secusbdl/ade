@@ -1,0 +1,38 @@
+{
+  "integratedUtc": "2026-11-07T02:10:15.760924+00:00",
+  "handoffSha256Lf": "dfdb44c78c8ff7eb2f214885def936a259e3cc190e79276448799cdc02c0c04e",
+  "patchSha256Lf": "7f27279c2e4b0d5443c1fc45d726db51e8a1f7a239a03336ba3b82fe86c64b05",
+  "files": [
+    {
+      "path": "src/git/GitParsing.cpp",
+      "canonicalLfSha256": "a1b232475032a23973ec3b0e7c4ee7bab558745cbbc81c1dd498669241eea0d4",
+      "preimageCanonicalLfSha256": "270dbed98a2c41eb3c20e2c574fe7b071660d04b81849f0b166a88cbebb1ddae"
+    },
+    {
+      "path": "src/git/GitService.cpp",
+      "canonicalLfSha256": "98ca183328de2ef5ff56bc201d467e51980110bcb043d77153b3ee5f1b4a7166",
+      "preimageCanonicalLfSha256": "1d4a890d357b00fd95d3464147f395e0334f856b24b637f1a4571acf2e473b3c"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesController.cpp",
+      "canonicalLfSha256": "eb1332ade5af0c4ce64e7d1542dccd0594d54537e4bc2866dc8d7df6feda286d",
+      "preimageCanonicalLfSha256": "d3b7fa2593c9648a40ec1555f2d82fbcc30dc2d00b01e93be35ac98846efc4a7"
+    },
+    {
+      "path": "src/ui/WorkspaceChangesView.cpp",
+      "canonicalLfSha256": "c69fb1786bb1a5ee9efb70b25a7687010500ae0eac6815fdd5c179d72ec43d8c",
+      "preimageCanonicalLfSha256": "00c68eeac6d349f63213897c18825d0cc88b9883de6bfa61878b7e9a86bd7597"
+    },
+    {
+      "path": "tests/test_workspace_changes.cpp",
+      "canonicalLfSha256": "4f849182d609a9dc7ca3e20575484187af2a2b3ddbf0964373dbc6ea585224ff",
+      "preimageCanonicalLfSha256": "01d9cd2ff5ebf9765b20b58e468165f907092ec3240cc601e16ba46ea15ef835"
+    },
+    {
+      "path": "tests/test_git_findings.cpp",
+      "canonicalLfSha256": "51226ad5b627c634e303674806ebf643c385979971190fee58493f87502a12ed"
+    }
+  ],
+  "expectedSuites": 181,
+  "verification": "private51passed; assembled pending"
+}

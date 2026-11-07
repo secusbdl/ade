@@ -1,0 +1,34 @@
+********* Start testing of StreamingFollowups *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : StreamingFollowups::initTestCase()
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(wheel) This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::independentLayoutPreservesReading(wheel) 'qAbs(scroll->value()-before)<=2' returned FALSE. (reading=2727 restored=0 maximum=3027)
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(33) : failure location
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(page-up) This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::independentLayoutPreservesReading(page-up) 'qAbs(scroll->value()-before)<=2' returned FALSE. (reading=2627 restored=3027 maximum=3027)
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(33) : failure location
+QWARN  : StreamingFollowups::independentLayoutPreservesReading(scrollbar-value) This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::independentLayoutPreservesReading(scrollbar-value) 'qAbs(scroll->value()-before)<=2' returned FALSE. (reading=2527 restored=0 maximum=3027)
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(33) : failure location
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(waiting-first-response) This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(waiting-first-response) Compared values are not the same
+   Actual   (activity->isVisible()): 1
+   Expected (expected)             : 0
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(46) : failure location
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(between-tool-steps) This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(between-tool-steps) Compared values are not the same
+   Actual   (activity->isVisible()): 1
+   Expected (expected)             : 0
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(46) : failure location
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(running-tool) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(running-tool)
+QWARN  : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(streaming-reasoning) This plugin does not support propagateSizeHints()
+PASS   : StreamingFollowups::stallIndicatorMatchesUnfinishedAssistant(streaming-reasoning)
+QWARN  : StreamingFollowups::reasoningOnlyGroupHasThinkingLabel() This plugin does not support propagateSizeHints()
+FAIL!  : StreamingFollowups::reasoningOnlyGroupHasThinkingLabel() Compared values are not the same
+   Actual   (title->text())         : "Exploring..."
+   Expected (QString("Thinking...")): "Thinking..."
+D:/age/ADE/private/streaming-followups-stage/test_streaming_followups.cpp(50) : failure location
+PASS   : StreamingFollowups::cleanupTestCase()
+Totals: 4 passed, 6 failed, 0 skipped, 0 blacklisted, 22726ms
+********* Finished testing of StreamingFollowups *********

@@ -22,8 +22,9 @@ QString statusName(char state) {
   case 'R':
     return "Renamed";
   case '?':
-  case 'U':
     return "Untracked";
+  case 'U':
+    return "Conflicted";
   default:
     return "Modified";
   }
@@ -143,7 +144,7 @@ QVariant WorkspaceChangesModel::data(const QModelIndex &index, int role) const {
   case StagedRole:
     return e.staged;
   case StatusRole:
-    return QString(QChar(e.status == '?' ? 'U' : e.status));
+    return QString(QChar(e.status == '?' ? 'U' : e.status == 'U' ? '!' : e.status));
   case AddedRole:
     return e.added;
   case DeletedRole:
@@ -279,6 +280,8 @@ void WorkspaceChangesView::setSnapshot(const QString &workspace,
         error;
   else if (!hasSnapshot)
     status = "Loading changed files…";
+  else if (!error.isEmpty())
+    status = error;
   else if (summary.entries.isEmpty())
     status = "Working tree clean";
   // A same-workspace background refresh keeps the viewport geometry stable.

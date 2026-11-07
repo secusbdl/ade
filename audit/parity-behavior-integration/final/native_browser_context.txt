@@ -1,0 +1,27 @@
+********* Start testing of BrowserContextTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserContextTest::initTestCase()
+PASS   : BrowserContextTest::invalidOwnerNeverMeansGlobal()
+PASS   : BrowserContextTest::emptyValidRegistry()
+PASS   : BrowserContextTest::scopedMruSnapshotUsesExactOwner()
+PASS   : BrowserContextTest::stableNeverFocusedAndRepeatedFocus()
+PASS   : BrowserContextTest::closeAndOwnerChangeAreFresh()
+PASS   : BrowserContextTest::plainSnapshotHasNoWidgetAuthority()
+PASS   : BrowserContextTest::escapedMetadataRoundTrips()
+PASS   : BrowserContextTest::invalidTitleCharactersAreReplaced()
+PASS   : BrowserContextTest::titleClippingKeepsWholeCodePoints()
+PASS   : BrowserContextTest::urlsAreOmittedNeverShortened(long)
+PASS   : BrowserContextTest::urlsAreOmittedNeverShortened(surrogate)
+PASS   : BrowserContextTest::urlsAreOmittedNeverShortened(control)
+PASS   : BrowserContextTest::rowAndUtf8BudgetsAreExplicit()
+PASS   : BrowserContextTest::tableCapAndProjectionOmissionsAccumulate()
+PASS   : BrowserContextTest::badIdCannotIntroduceXml()
+PASS   : BrowserContextTest::omissionDoesNotHideLaterSmallRows()
+PASS   : BrowserContextTest::descriptiveMarkdownActuallyHasVisibleAnchor()
+PASS   : BrowserContextTest::focusIsExplicitAndClearSurvivesBackgroundRegistration()
+PASS   : BrowserContextTest::selectionObserverCanReplaceOrDeleteBridge()
+PASS   : BrowserContextTest::registryCapCountsOnlyAccessibleRows()
+PASS   : BrowserContextTest::wrongThreadReturnsNoSnapshot()
+PASS   : BrowserContextTest::cleanupTestCase()
+Totals: 23 passed, 0 failed, 0 skipped, 0 blacklisted, 111ms
+********* Finished testing of BrowserContextTest *********

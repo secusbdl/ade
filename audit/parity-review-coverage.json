@@ -7937,6 +7937,12 @@
       "sha256CanonicalLf": "3b24b532ebd068dd80500167178d1361c847221496bd6d54455c54a774ae0c81",
       "linkedFeatureRows": 9,
       "scope": "Incremental verified behavior, explicit option/media limits and deferred direct Windows QA; whole features and indexed functions are not declared complete."
+    },
+    {
+      "path": "audit/parity-behavior-integration.json",
+      "sha256CanonicalLf": "0375b5f5e2b0858bdac23e5c7aed12a4dbfdfbcc1a9da9b2a35da7a4a522012b",
+      "linkedFeatureRows": 0,
+      "scope": "Checkpoint-level source/test/live/GUI evidence with explicit findings; no whole feature row or source function is declared completed."
     }
   ]
 }

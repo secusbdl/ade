@@ -172,7 +172,7 @@ void WorkspaceChangesTests::untrackedBinaryAndNonRepository() {
   controller.setWorkspace(repo.root);
   controller.setActive(true);
   QTRY_VERIFY_WITH_TIMEOUT(controller.hasSnapshot(), 10000);
-  QCOMPARE(controller.summary().entries.first().status, 'U');
+  QCOMPARE(controller.summary().entries.first().status, '?');
   QVERIFY(controller.summary().entries.first().binary);
   GitDiffTab tab(&service);
   tab.load(repo.root, "new.bin", false);
@@ -460,9 +460,9 @@ void WorkspaceChangesTests::renderLightDarkNarrow() {
   for (int i = 0; i < 14; ++i) {
     GitDiffEntry e;
     e.path = QString("src/components/item-%1.cpp").arg(i);
-    e.status = i == 0 ? 'R' : i == 1 ? 'U' : 'M';
+    e.status = i == 0 ? 'R' : i == 1 ? '?' : 'M';
     e.oldPath = i == 0 ? "src/old-name.cpp" : QString();
-    e.staged = i % 2 && e.status != 'U';
+    e.staged = i % 2 && e.status != '?';
     e.added = i + 2;
     e.deleted = i;
     data.entries.append(e);

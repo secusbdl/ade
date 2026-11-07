@@ -1,0 +1,12 @@
+Selected Settings service marks
+
+Copyright (c) 2023 LobeHub. MIT License; full text in LICENSE.lobe-icons.
+Exact source URLs, pinned Stagewise file attribution, adaptation notes and
+SHA-256 hashes are recorded in PROVENANCE.json.
+
+The selected marks identify configured third-party services. They are not ADE
+product branding and do not imply endorsement. No Stagewise product logo or
+proprietary Nucleo geometry is included.
+
+Supabase and PostHog category artwork in SettingsPage.cpp is original ADE work,
+under this repository's license. It is not a copy of either service logo.

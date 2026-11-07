@@ -5,7 +5,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFile>
-#include <QFileSystemModel>
+#include "ui/WorkspaceFileTreeModel.h"
 #include <QTemporaryDir>
 #include <QToolButton>
 #include <QTreeView>
@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
             if (state.startsWith("content")) {
                 window.findChild<QToolButton*>("toggleFileTreeButton")->click();
                 auto* tree = window.findChild<QTreeView*>("workspaceFiles");
-                auto* model = qobject_cast<QFileSystemModel*>(tree->model());
+                auto* model = qobject_cast<WorkspaceFileTreeModel*>(tree->model());
                 emit tree->doubleClicked(model->index(file.fileName()));
                 window.findChild<QToolButton*>("closeFileTreeButton")->click();
             }

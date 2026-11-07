@@ -1,0 +1,15 @@
+********* Start testing of AcpMcpTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpMcpTests::initTestCase()
+PASS   : AcpMcpTests::completeThroughActualConfiguredHelper()
+PASS   : AcpMcpTests::cancellationStopsPendingForm()
+PASS   : AcpMcpTests::disabledPresenterDoesNotAdvertiseMcp()
+PASS   : AcpMcpTests::nativeElicitationAndMcpShareOneForm()
+PASS   : AcpMcpTests::humanWaitPausesOnlyPromptRemainingBudget()
+PASS   : AcpMcpTests::nativeApprovalAlsoPausesPrompt()
+PASS   : AcpMcpTests::processDeathCancelsWaitingForm()
+PASS   : AcpMcpTests::helperDeathResumesPromptBudget()
+PASS   : AcpMcpTests::questionCallbackCanDeleteSession()
+PASS   : AcpMcpTests::cleanupTestCase()
+Totals: 11 passed, 0 failed, 0 skipped, 0 blacklisted, 5381ms
+********* Finished testing of AcpMcpTests *********

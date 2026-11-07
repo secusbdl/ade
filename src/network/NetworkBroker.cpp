@@ -43,6 +43,34 @@ bool controlBytes(const QByteArray &value) {
     for (const auto c : value) if ((static_cast<unsigned char>(c) < 0x20 && c != '\t') || c == 0x7f) return true;
     return false;
 }
+QString definitionError(const CredentialType &definition) {
+    if (!QRegularExpression("^[a-z0-9][a-z0-9-]{0,63}$").match(definition.id).hasMatch()
+        || definition.secretFields.isEmpty() || definition.secretFields.size() > 16 || definition.publicFields.size() > 16
+        || definition.allowedOrigins.isEmpty() || definition.allowedOrigins.size() > 16)
+        return "Invalid credential type definition.";
+    QSet<QString> fields;
+    for (const auto &field : definition.secretFields + definition.publicFields) {
+        if (!QRegularExpression("^[A-Za-z_][A-Za-z0-9_]{0,63}$").match(field).hasMatch() || fields.contains(field))
+            return "Credential fields must be valid and unique.";
+        fields.insert(field);
+    }
+    for (const auto &pattern : definition.allowedOrigins) if (!validPattern(pattern)) return "Invalid credential origin pattern.";
+    return {};
+}
+QString credentialError(const CredentialType &type, const QJsonObject &fields) {
+    const auto names = type.secretFields + type.publicFields;
+    if (fields.size() != names.size()) return "Credential fields do not match the registered type.";
+    for (const auto &name : names) {
+        const auto value = fields[name];
+        if (!value.isString() || value.toString().contains(QChar::Null) || value.toString().size() > 65536
+            || (type.secretFields.contains(name) && value.toString().isEmpty())) return "Invalid credential field value.";
+    }
+    if (QJsonDocument(fields).toJson(QJsonDocument::Compact).size() > 256 * 1024) return "Credential record exceeds its size limit.";
+    return {};
+}
+bool sameDefinition(const CredentialType &a, const CredentialType &b) {
+    return a.id == b.id && a.secretFields == b.secretFields && a.publicFields == b.publicFields && a.allowedOrigins == b.allowedOrigins;
+}
 const QRegularExpression &placeholderRegex() {
     static const QRegularExpression regex("\\{\\{CRED:[^{}]+\\}\\}"); return regex;
 }
@@ -114,35 +142,42 @@ bool NetworkBroker::originMatches(const QString &urlString, const QString &patte
 bool NetworkBroker::registerCredentialType(const CredentialType &definition, QString *error) {
     if (error) error->clear();
     auto reject = [&](const QString &message) { if (error) *error = message; return false; };
-    if (!QRegularExpression("^[a-z0-9][a-z0-9-]{0,63}$").match(definition.id).hasMatch()
-        || definition.secretFields.isEmpty() || definition.secretFields.size() > 16 || definition.publicFields.size() > 16
-        || definition.allowedOrigins.isEmpty() || definition.allowedOrigins.size() > 16)
-        return reject("Invalid credential type definition.");
-    QSet<QString> fields;
-    for (const auto &field : definition.secretFields + definition.publicFields) {
-        if (!QRegularExpression("^[A-Za-z_][A-Za-z0-9_]{0,63}$").match(field).hasMatch() || fields.contains(field))
-            return reject("Credential fields must be valid and unique.");
-        fields.insert(field);
-    }
-    for (const auto &pattern : definition.allowedOrigins) if (!validPattern(pattern)) return reject("Invalid credential origin pattern.");
+    const auto invalid = definitionError(definition);
+    if (!invalid.isEmpty()) return reject(invalid);
     if (!m_types.contains(definition.id) && m_types.size() >= 64) return reject("Credential type limit reached.");
     const QPointer<NetworkBroker> alive(this);
     removeCredential(definition.id);
     if (!alive) return false;
     m_types[definition.id] = definition; return true;
 }
+bool NetworkBroker::synchronizeCredential(const CredentialType &definition, const QJsonObject &fields, QString *error) {
+    if (error) error->clear();
+    auto reject = [&](const QString &message) { if (error) *error = message; return false; };
+    const auto invalidDefinition = definitionError(definition);
+    if (!invalidDefinition.isEmpty()) return reject(invalidDefinition);
+    if (!m_types.contains(definition.id) && m_types.size() >= 64) return reject("Credential type limit reached.");
+    if (!fields.isEmpty()) {
+        const auto invalidFields = credentialError(definition, fields);
+        if (!invalidFields.isEmpty()) return reject(invalidFields);
+    }
+    if (m_types.contains(definition.id) && sameDefinition(m_types.value(definition.id), definition)
+        && (fields.isEmpty() ? !m_credentials.contains(definition.id) : m_credentials.value(definition.id) == fields)) return true;
+    // Publish the complete new type/value before cancellation callbacks. Reentrant
+    // synchronization can supersede it; this frame never writes configuration afterward.
+    const QString typeId = definition.id;
+    m_types[typeId] = definition;
+    if (fields.isEmpty()) m_credentials.remove(typeId);
+    else m_credentials[typeId] = fields;
+    const QPointer<NetworkBroker> alive(this);
+    invalidateType(typeId);
+    return !alive.isNull();
+}
 bool NetworkBroker::setCredential(const QString &typeId, const QJsonObject &fields, QString *error) {
     if (error) error->clear();
     auto reject = [&](const QString &message) { if (error) *error = message; return false; };
     if (!m_types.contains(typeId)) return reject("Unknown credential type.");
-    const auto type = m_types[typeId]; const auto names = type.secretFields + type.publicFields;
-    if (fields.size() != names.size()) return reject("Credential fields do not match the registered type.");
-    for (const auto &name : names) {
-        const auto value = fields[name];
-        if (!value.isString() || value.toString().contains(QChar::Null) || value.toString().size() > 65536
-            || (type.secretFields.contains(name) && value.toString().isEmpty())) return reject("Invalid credential field value.");
-    }
-    if (QJsonDocument(fields).toJson(QJsonDocument::Compact).size() > 256 * 1024) return reject("Credential record exceeds its size limit.");
+    const auto invalid = credentialError(m_types[typeId], fields);
+    if (!invalid.isEmpty()) return reject(invalid);
     m_credentials[typeId] = fields;
     const QPointer<NetworkBroker> alive(this);
     invalidateType(typeId); return !alive.isNull();
@@ -159,7 +194,33 @@ void NetworkBroker::invalidateType(const QString &typeId) {
 }
 void NetworkBroker::setAllowedCredentialTypes(const QString &agentId, const QStringList &typeIds) {
     if (m_allowedTypes.value(agentId) == typeIds) return;
-    m_allowedTypes[agentId] = typeIds; resetAgent(agentId);
+    const QString owner = agentId;
+    QSet<QString> removed;
+    for (const auto &type : m_allowedTypes.value(owner)) if (!typeIds.contains(type)) removed.insert(type);
+    m_allowedTypes[owner] = typeIds;
+    if (removed.isEmpty()) return;
+    for (auto it = m_secrets.begin(); it != m_secrets.end();) {
+        if (it->agentId == owner && removed.contains(it->typeId)) it = m_secrets.erase(it);
+        else ++it;
+    }
+    auto resolved = m_resolved.find(owner);
+    if (resolved != m_resolved.end()) {
+        for (const auto &type : removed) resolved->remove(type);
+        if (resolved->isEmpty()) m_resolved.erase(resolved);
+    }
+    const QPointer<NetworkBroker> alive(this);
+    // Snapshot only requests pending at the policy transition. A callback may
+    // re-enable a type and start a new request, which belongs to that newer state.
+    const auto pending = m_pending.values();
+    for (const auto &state : pending) {
+        if (state->agent != owner) continue;
+        bool revoked = false;
+        for (const auto &type : state->credentialTypes) if (removed.contains(type)) { revoked = true; break; }
+        if (revoked) {
+            finish(state, {}, "Credential permission changed; request cancelled.");
+            if (!alive) return;
+        }
+    }
 }
 QJsonValue NetworkBroker::credential(const QString &agentId, const QString &typeId, QString *error) {
     if (error) error->clear();
@@ -309,11 +370,11 @@ void NetworkBroker::send(const QSharedPointer<Request> &state) {
     request.setAttribute(QNetworkRequest::CookieLoadControlAttribute, QNetworkRequest::Manual);
     request.setAttribute(QNetworkRequest::CookieSaveControlAttribute, QNetworkRequest::Manual);
     request.setAttribute(QNetworkRequest::AuthenticationReuseAttribute, QNetworkRequest::Manual);
-    request.setRawHeader("User-Agent", "ADE-Native-Sandbox/0.1");
     for (const auto &header : state->headers) {
         if (request.hasRawHeader(header.first)) request.setRawHeader(header.first, request.rawHeader(header.first) + ", " + header.second);
         else request.setRawHeader(header.first, header.second);
     }
+    if (!request.hasRawHeader("User-Agent")) request.setRawHeader("User-Agent", "ADE-Native-Sandbox/0.1");
     request.setTransferTimeout(m_limits.timeoutMs); state->response.clear();
     const QPointer<NetworkBroker> alive(this);
     const QPointer<QNetworkAccessManager> manager(m_network);

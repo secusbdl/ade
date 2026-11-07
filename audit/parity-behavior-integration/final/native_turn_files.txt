@@ -1,0 +1,27 @@
+********* Start testing of TurnFilesTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : TurnFilesTest::initTestCase()
+QWARN  : TurnFilesTest::treeFoldersFirstWithFullPathsAndCounts() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::treeFoldersFirstWithFullPathsAndCounts()
+QWARN  : TurnFilesTest::collapseAllAndIndividualStateSurviveUpdates() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::collapseAllAndIndividualStateSurviveUpdates()
+QWARN  : TurnFilesTest::externalTypesAreExplicitAndDoNotInventCounts() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::externalTypesAreExplicitAndDoNotInventCounts()
+QWARN  : TurnFilesTest::invalidSummaryDoesNotExposeActions() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::invalidSummaryDoesNotExposeActions()
+PASS   : TurnFilesTest::adjacentRoundsGroupOnlyWithinOneUserTurn()
+QWARN  : TurnFilesTest::unsettledTurnRequestsOnlyAfterCompletion() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::unsettledTurnRequestsOnlyAfterCompletion()
+PASS   : TurnFilesTest::staleResponseCannotCrossChatOrReplacementTurn()
+QWARN  : TurnFilesTest::actionsCarryExactIdentityAndCanDeleteView() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::actionsCarryExactIdentityAndCanDeleteView()
+PASS   : TurnFilesTest::failedQueryCanRetryAndDoesNotLoopOnTextUpdate()
+PASS   : TurnFilesTest::collapseSurvivesChatSwitchAndRetainsOtherRows()
+QWARN  : TurnFilesTest::treeHeightIsBoundedAndNarrowControlsAccessible() This plugin does not support propagateSizeHints()
+PASS   : TurnFilesTest::treeHeightIsBoundedAndNarrowControlsAccessible()
+PASS   : TurnFilesTest::transparentSurfaceUsesExplicitThemeColors()
+PASS   : TurnFilesTest::ordinaryRowsDoNotAllocateHiddenTrees()
+PASS   : TurnFilesTest::chronologicalSummaryIdsKeepProjectedActionOrder()
+PASS   : TurnFilesTest::cleanupTestCase()
+Totals: 16 passed, 0 failed, 0 skipped, 0 blacklisted, 315ms
+********* Finished testing of TurnFilesTest *********

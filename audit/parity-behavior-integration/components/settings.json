@@ -1,0 +1,234 @@
+{
+  "status": "frozen_private_handoff",
+  "stage": "private/settings-presentation-stage",
+  "baseline": {
+    "head": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+    "source": "current working tree frozen copy; only SettingsPage.cpp/h proposed changes",
+    "scope": "private synthetic profiles, no network/GUI foreground",
+    "pairedEvidence": "private/paired-settings-package6/REVIEW.json"
+  },
+  "scope": "Source-backed Settings presentation/navigation/card affordances. No production, shared-build, desktop-input, user-data or live API changes.",
+  "patch": "settings-presentation.patch",
+  "patchSha256": "5e819c8087e8f7e9b48b1cf75c9ab67017ea174233c5ab5401e62fe7b51096a1",
+  "artifactHashBasis": "exact_bytes_LF",
+  "gitApplyCheck": "pass against current root working tree",
+  "files": [
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "baselineSha256": "abed524f8c24253fe40932686a32dae9bdd7a0a1b4bdb68894203674f41eaf9f",
+      "sha256": "8ec489c5d010920dbcefd00076b20b9a9f8dcc434867d796cbfa1b6a508018e8",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "src/ui/SettingsPage.h",
+      "baselineSha256": "66955c420de311b5e69e4585e8f5740815fa64dc9db1169c849b6fa677d9a8f4",
+      "sha256": "c3cbc260dca946f2cc6536604ac5edb5c9fc43578620b194e8b502d34c04adc0",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "src/ui/SettingsServiceMarks.h",
+      "baselineSha256": null,
+      "sha256": "df1b37ecaf81de19714bc21852287a601b9b0aed67cad766cb3526ef11c1aa69",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "tests/test_settings_presentation.cpp",
+      "baselineSha256": null,
+      "sha256": "fd5d71b3666ba771a922dfa06268b7414391316b46b56938946b9a2552aa441d",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "assets/settings-marks/LICENSE.lobe-icons",
+      "baselineSha256": null,
+      "sha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "assets/settings-marks/PROVENANCE.json",
+      "baselineSha256": null,
+      "sha256": "54469a40bde8815680ad6cb44d6bd01e3586772b09d8953e10f3f58f03b4de07",
+      "hashBasis": "canonical_LF"
+    },
+    {
+      "path": "assets/settings-marks/NOTICE.txt",
+      "baselineSha256": null,
+      "sha256": "3366616127f38f849e17af29f43052e93d18b40b996a84de01e8a8efa230fb63",
+      "hashBasis": "canonical_LF"
+    }
+  ],
+  "cmake": "cmake-additions.txt",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "contracts": [
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/settings/sidebar.tsx:64",
+      "behavior": "scrollable grouped navigation;32px rows, 1px rowgap,16px group spacing,neutral selected treatment"
+    },
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/main/_components/sidebar-panel-config.ts:3",
+      "behavior": "Source uses persisted resizable main sidebar default18%,176..672px bounds. Captured paired250px is adopted only as native Settings default; shared resizing is not implemented here."
+    },
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx:358",
+      "behavior": "Full-card configure action, icon/title/providerdescription,12pxcardpadding; native independent Models action retained"
+    },
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx:3773",
+      "behavior": "768pxmaxcontent,24pxside/96pxtop padding,32pxsection spacing; scaled native geometry"
+    },
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/model-presets-section.tsx",
+      "behavior": "Grouped utility lists with separate title/descriptions and24px list separation"
+    },
+    {
+      "source": "reference/stagewise/apps/browser/src/ui/screens/settings/sections/plugins-section.tsx:62",
+      "behavior": "Two-column desktop plugin cards, compact name/back/detail and enabled summary; native explicit Save/Check/Remove preserved"
+    }
+  ],
+  "changes": [
+    "250pxbase scrollable rail; compact64px icon+tooltip navigation below700px scaled threshold; valid accessible names retained",
+    "Validated ProviderCatalog descriptions and fixed-ID whole-card routing; independent Models button; wrapping import/add action row",
+    "Compact plugin title/back, licensed service mark/description/enabled overview and bordered credential group; wrapped explicit actions",
+    "64px minimum provider card with child-layout bounds, muted dark status contrast, neutral navigation selection",
+    "Newer size/zoom/section supersedes an in-progress responsive layout; normal deferred owner destruction covered"
+  ],
+  "evidence": {
+    "privateTests": [
+      {
+        "name": "settings_presentation",
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-settings_presentation.txt",
+        "textSha256": "1e40263f5d20ba463ed7fa7afa3b2f30fcbe7bdb5d7ae78de42105862ce430f6",
+        "xml": "final-settings_presentation.xml",
+        "xmlSha256": "aa9bd9131eec2e77f0ebda1983e51c1b9e11beda71863dd6ae1c15a14da472c1",
+        "reportHashBasis": "exact_artifact_bytes"
+      },
+      {
+        "name": "settings",
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-settings.txt",
+        "textSha256": "61c8a49edf5382ce6b821853e42b6dec539bf3da79f078b48545e64c9998ec9f",
+        "xml": "final-settings.xml",
+        "xmlSha256": "0a52868e31c05b1887631581966d7d91a684d23b854184cf4579a018735c7146",
+        "reportHashBasis": "exact_artifact_bytes"
+      },
+      {
+        "name": "settings_audit",
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-settings_audit.txt",
+        "textSha256": "6dd5a21cfcbd7b0e197a4cc7b9833cc64c48f800d8ea458555d36d8057813c5e",
+        "xml": "final-settings_audit.xml",
+        "xmlSha256": "8105492c056ad4ad11cbc6c622c90f99873f59d810278d6ed753ecf7f927d21f",
+        "reportHashBasis": "exact_artifact_bytes"
+      },
+      {
+        "name": "plugin_settings",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-plugin_settings.txt",
+        "textSha256": "7a7749f54463fe6e50eb8f82e912f47de289a8c207fd9e342f4320553a0643ba",
+        "xml": "final-plugin_settings.xml",
+        "xmlSha256": "36aed8f60905bbf1bd9099110d0cf4ffc7fde3a3cef8f0ac5aaf28e93c88b822",
+        "reportHashBasis": "exact_artifact_bytes"
+      }
+    ],
+    "passedTotal": 75,
+    "before": [
+      "before.txt:4pass7fail baseline requested layout/affordance gaps",
+      "geometry-before.txt:2pass2fail; provider child clipping introduced in private first layout, dark status contrast inherited",
+      "zoom-reentry-before.txt:2pass1fail; newer70% preference overwritten by stale130% maxwidth"
+    ],
+    "excludedExperiment": "reentry-before-stack.txt: immediate deletion of watched navigation/page from Resize filter crashes within Qt QWidgetPrivate::setGeometry_sys before setFixedWidth returns. Not represented as an application fix or supported deletion contract; retained deferred deletion fixture passes.",
+    "pairedActualWindows": "private/paired-settings-package6/REVIEW.json",
+    "renders": [
+      {
+        "path": "renders-after/github-dark-1707.png",
+        "sha256": "24a5d654b107007b42be30788b7b3c220e4d4a4b1941b759364ef8fc3946979b",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/github-dark-350.png",
+        "sha256": "1949702b7da760d34ca6fce9ab59b405541c5b660e961502c03cd97ee481dbc6",
+        "visuallyReviewed": true
+      },
+      {
+        "path": "renders-after/github-light-1707.png",
+        "sha256": "e94d9206af49732c6f1aaa4cb05abaab8695b1918dec6926fa6570dd2c1cba44",
+        "visuallyReviewed": true
+      },
+      {
+        "path": "renders-after/github-light-350.png",
+        "sha256": "007a9ee93f939ca172e698b22c7050f5795a130e8e71e8b479aa3c36ebdec954",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/models-providers-dark-1707.png",
+        "sha256": "ff39463bb6132ca4e4f5961b6d7ea34c2e21ea1f54726bf87cedf0cc1e20b5d4",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/models-providers-dark-350.png",
+        "sha256": "555d3f823bc83871bbb76212d570953f8c83ab0c5e758c182822795c2b0c55bf",
+        "visuallyReviewed": true
+      },
+      {
+        "path": "renders-after/models-providers-light-1707.png",
+        "sha256": "5eb05565dca7f78272f0eb95a7b57b6c8f288ede479cc54e96c42a2b97a8c7b0",
+        "visuallyReviewed": true
+      },
+      {
+        "path": "renders-after/models-providers-light-350.png",
+        "sha256": "435971b1c1390501ffeed18efc3f40dcc4c998961baaca47970f0a27b87b158e",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/plugins-dark-1707.png",
+        "sha256": "698dbfe6fa27564e604fb4a3c946b669b5b569ddbecfba222c35b0ad7adeea5d",
+        "visuallyReviewed": true
+      },
+      {
+        "path": "renders-after/plugins-dark-350.png",
+        "sha256": "ba162cd39503f6e0ba3fea47a52476fffbb755362f88673eb271ecc14c660ede",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/plugins-light-1707.png",
+        "sha256": "a000fe930c074bdd8f7de9d872273e91e252f9fdbc53cb21302f8a45d793e3e0",
+        "visuallyReviewed": false
+      },
+      {
+        "path": "renders-after/plugins-light-350.png",
+        "sha256": "c6ec476f85d0246859667e0b45f9e68fcb5a1cffdf6d0fc591ddb0243547325e",
+        "visuallyReviewed": true
+      }
+    ],
+    "reviewedRenderCount": 6,
+    "runtime": "Qt6.11.2 static, GCC16.2, Windows11, offscreen synthetic profiles; no network requests"
+  },
+  "licensing": {
+    "manifest": "assets/settings-marks/PROVENANCE.json",
+    "license": "assets/settings-marks/LICENSE.lobe-icons",
+    "notice": "assets/settings-marks/NOTICE.txt",
+    "marks": "12 selected MIT marks; nine path geometries traced through pinned source attribution, three exact official LobeHub SVGs at immutable commit ea434b96e75813517b377825e01c0df61dee8836. No new runtime dependency or asset network load."
+  },
+  "remainingLimits": [
+    "No full UI/pixel parity claim; actual assembled MainWindow/Windows packaged QA still pending root integration.",
+    "Settings sidebar does not share main sidebar resize persistence;250px is a native captured-default approximation, not upstream fixed width.",
+    "Narrow rail and wrapping credential actions are native usability adaptations.",
+    "Some original category marks remain, including Supabase/PostHog; brand-color fidelity is not claimed.",
+    "Provider configure still opens existing native dialog rather than upstream in-page detail; source context-menu rename/delete and all sidebar footer behavior are not part of this slice.",
+    "Native explicit encrypted token save/check/remove and import/model actions intentionally remain; service/token semantics unchanged.",
+    "Platform-native scrollbar/checkbox rendering remains; no app-wide control palette change."
+  ],
+  "integrationChecks": [
+    "Apply7-path patch; add CMake fragment (ProviderCatalog+Svg for standalone Settings targets).",
+    "Rebuild ade_ui and all standalone Settings targets; run new suite plus settings/settings_audit/plugin_settings and existing provider/host tests.",
+    "Recheck equal-maximized source/native Settings screenshots and narrow/native control reachability before ready package claims."
+  ]
+}

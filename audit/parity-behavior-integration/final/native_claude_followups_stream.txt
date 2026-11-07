@@ -1,0 +1,24 @@
+********* Start testing of ClaudeFollowupsStreamTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeFollowupsStreamTest::initTestCase()
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(changed-uuid)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(changed-tool-name)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(foreign-tool-owner)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(contradictory-type)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(ambiguous-no-uuid)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(ambiguous-new-uuid)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(ambiguous-identical)
+PASS   : ClaudeFollowupsStreamTest::contradictionsAndAmbiguousFramesReject(ambiguous-replay-new-uuid)
+PASS   : ClaudeFollowupsStreamTest::outOfOrderToolFinalsMatchExactIds()
+PASS   : ClaudeFollowupsStreamTest::assistantOnlySplitBlocksAndReset()
+PASS   : ClaudeFollowupsStreamTest::trailingNewlineIsNotAnImageMimeLabel()
+PASS   : ClaudeFollowupsStreamTest::imageMetadataAndBudgetsStayBounded()
+PASS   : ClaudeFollowupsStreamTest::recordedShapeSeparateThinkingAndTextFinals()
+PASS   : ClaudeFollowupsStreamTest::recordedShapeMultipleToolsKeepTheirIds()
+PASS   : ClaudeFollowupsStreamTest::sameTypeBlocksAndReplayRemainDistinct(different)
+PASS   : ClaudeFollowupsStreamTest::sameTypeBlocksAndReplayRemainDistinct(identical)
+PASS   : ClaudeFollowupsStreamTest::interleavedParentMessageIdsNeverMerge()
+PASS   : ClaudeFollowupsStreamTest::imageToolResultDoesNotAbortUsefulText()
+PASS   : ClaudeFollowupsStreamTest::cleanupTestCase()
+Totals: 20 passed, 0 failed, 0 skipped, 0 blacklisted, 42ms
+********* Finished testing of ClaudeFollowupsStreamTest *********

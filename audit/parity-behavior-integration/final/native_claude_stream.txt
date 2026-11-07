@@ -1,0 +1,23 @@
+********* Start testing of ClaudeStreamTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeStreamTest::initTestCase()
+PASS   : ClaudeStreamTest::streamedReasoningTextToolAndFinalSnapshotAreOrderedOnce()
+PASS   : ClaudeStreamTest::assistantOnlyAndCorrectedSnapshotUseSameStablePart()
+PASS   : ClaudeStreamTest::parentChannelsAndPrefixMessageNamesRemainSeparate()
+PASS   : ClaudeStreamTest::hiddenInternalToolsRemainAssociatedWithoutDisplay()
+PASS   : ClaudeStreamTest::childTextCannotSuppressRootResultFallback()
+PASS   : ClaudeStreamTest::interruptedReasoningAndToolAreClosedWithoutInventedOutput()
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(missing-message)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(unknown-index)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(changed-type)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(duplicate-tool)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(orphan-result)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(generated-image)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(result-document)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(bad-json)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(changed-result)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(empty-part-cap)
+PASS   : ClaudeStreamTest::malformedAndUnsupportedFrames(text-cap)
+PASS   : ClaudeStreamTest::cleanupTestCase()
+Totals: 19 passed, 0 failed, 0 skipped, 0 blacklisted, 168ms
+********* Finished testing of ClaudeStreamTest *********

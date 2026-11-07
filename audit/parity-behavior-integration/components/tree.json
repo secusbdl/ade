@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "status": "Frozen private handoff. Component 21 passed/0 failed/1 unavailable file-symlink privilege skip; actual MainWindow host 8 passed/0 failed. Shared integration remains pending.",
+  "baseCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
+  "cohort": "cohort/MANIFEST.json: copies of 18 completed root static archives and matching 153 headers; changed MainWindow cpp/model compiled and linked privately. No shared build writes.",
+  "patch": "workspace-tree.patch",
+  "cmake": "cmake-additions.txt",
+  "files": [
+    {
+      "path": "src/ui/MainWindow.h",
+      "canonicalLfSha256": "11d98083e809b37a59d5a3d43b32c0b4d1e247619d29ba438083defdadf5cb7b",
+      "baseCanonicalLfSha256": "68408f75aad8efc0f7fcc698237523a3fdd12b701884e34a67753069c056de8e"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "canonicalLfSha256": "1865525a06d2e29261a37bcedbae98f3fee22a6ace3bf94f8c4d8a17a0323e33",
+      "baseCanonicalLfSha256": "e88c4e116caecee86a36090082ed40b48111892a2ef1370f5603263442af748a"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "canonicalLfSha256": "8629f86c3c90027554450d4db6c51bf3ea358de424c1929dd4d07acd625fd03c",
+      "baseCanonicalLfSha256": "74fc4d33185f5af26f70cb0e2f5c3e6eca14b1a686a17d93cb9d9147677918c2"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "canonicalLfSha256": "0671e5e025528dbf69e0b58a1c01fa53fb39199d7220cc3ed113d511376952f2",
+      "baseCanonicalLfSha256": "e4a3d1323d47cf33fa10840a542841150be098a7994a995ee6f31e5e8b58ed55"
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "canonicalLfSha256": "8a2d03dab1bbacbc95c403bb713104b768519efa165d547482670da0a96dd62e",
+      "baseCanonicalLfSha256": "f9846ba83d337bf592a507b4cb2dcfef343623b06144f8e14d5f1e85e62a8491"
+    },
+    {
+      "path": "tests/test_git_host.cpp",
+      "canonicalLfSha256": "a93e075c746b9170ad942d87e3dc669abcec0b77980ddb20648256e49383a9e5",
+      "baseCanonicalLfSha256": "be2f4c4cfa14286a354dec4dc287f31d4b612cc9ba31f5d77e458b9d1c04e7f3"
+    },
+    {
+      "path": "tests/render_workbench_layout.cpp",
+      "canonicalLfSha256": "02151f000ea5c745f4e65ac49295fd08f86d07231d50b47d00a0ced30e2e14b9",
+      "baseCanonicalLfSha256": "25656de742a0ffc37d0e5f58e2ab4dbadbe7c4bad4f3ad083738494197bca5d8"
+    },
+    {
+      "path": "tests/render_workbench.cpp",
+      "canonicalLfSha256": "217b932ab4dd93f8f28f11d370d7a00595b65349522fc37fb19fc1f236485a04",
+      "baseCanonicalLfSha256": "c5fd55546ea8256098c415e74b2d33b6c117d06d59b63db9798f8720cc054d69"
+    },
+    {
+      "path": "src/ui/WorkspaceFileTreeModel.h",
+      "canonicalLfSha256": "c4515d2d3d859fd7e06bd7fa47c2c5fcfdd9197b8c8f4f5b9132e0ad7d02dbf5"
+    },
+    {
+      "path": "src/ui/WorkspaceFileTreeModel.cpp",
+      "canonicalLfSha256": "845041b31ec320688b24e3b428406479665c9aae93fcb3fe4b7a888cec2ccd19"
+    },
+    {
+      "path": "tests/test_workspace_tree.cpp",
+      "canonicalLfSha256": "cd14b821e11316c9f7e3dc2a62b0c3e198ad0e923c9e3508e4ded8ddbc33f2b8"
+    },
+    {
+      "path": "tests/test_workspace_tree_host.cpp",
+      "canonicalLfSha256": "84799ceac1814d61cb3f0aa48c7562ceff09f755feca58dcedd85a117ade36e2"
+    }
+  ],
+  "reports": [
+    {
+      "path": "before.txt",
+      "canonicalLfSha256": "2a7e9f94b5760c1a2857fcfdab32b6681db378bba28b8d77a3965950fedc3ae6",
+      "counts": {
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 328
+      }
+    },
+    {
+      "path": "after-first.txt",
+      "canonicalLfSha256": "6fdd606b3bb54900b504043b670976155a94759fc169ef8a2df3ae093f9a4632",
+      "counts": {
+        "passed": 10,
+        "failed": 1,
+        "skipped": 1,
+        "blacklisted": 0,
+        "durationMs": 1398
+      }
+    },
+    {
+      "path": "expanded.txt",
+      "canonicalLfSha256": "55c04273f85ff63cbc8c8a8ac51fddfbb1ace24423e3c69c37ddef6280893d41",
+      "counts": {
+        "passed": 16,
+        "failed": 1,
+        "skipped": 1,
+        "blacklisted": 0,
+        "durationMs": 24694
+      }
+    },
+    {
+      "path": "watch-count-assumption.txt",
+      "canonicalLfSha256": "89c40f233631ea297e39bb69956f5fe1fed115de23d38b2fc77494fadccda8fd",
+      "counts": {
+        "passed": 18,
+        "failed": 1,
+        "skipped": 1,
+        "blacklisted": 0,
+        "durationMs": 59787
+      }
+    },
+    {
+      "path": "watch-cap-before.txt",
+      "canonicalLfSha256": "46c2e55a5efc05f48e54db86c722a0ecd982013766edcb0292583aad4f4ee274",
+      "counts": {
+        "passed": 20,
+        "failed": 1,
+        "skipped": 1,
+        "blacklisted": 0,
+        "durationMs": 9034
+      }
+    },
+    {
+      "path": "deferred-before.txt",
+      "canonicalLfSha256": "64896a87c4dc175adaa1e42e93d9a832cc270994aa7aea17ea4b833025b6b789",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 63
+      }
+    },
+    {
+      "path": "host-first.txt",
+      "canonicalLfSha256": "25651cb91c29d5dc8de08e430c646d4664ed838b589fa8848857d3fbf1eb35a8",
+      "counts": {
+        "passed": 7,
+        "failed": 1,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 2484
+      }
+    },
+    {
+      "path": "component-final.txt",
+      "canonicalLfSha256": "a1a913676094fd0d4ea95c74434fb4d6d1f672d1fc4d16bc5dc9de8a96cfc36e",
+      "counts": {
+        "passed": 21,
+        "failed": 0,
+        "skipped": 1,
+        "blacklisted": 0,
+        "durationMs": 9384
+      }
+    },
+    {
+      "path": "host-final.txt",
+      "canonicalLfSha256": "a0fcf698cc3da8e2fa9c9fcef7fc0a0d07a623b518477f454d432aca6a4cb9fe",
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 2844
+      }
+    }
+  ],
+  "review": "license_review bounded source-only read of open pinning, root identity, worker captures and model publication; no additional blocker reported. Deferred reconnect follow-up pending.",
+  "renders": [
+    "renders/tree-light.png",
+    "renders/tree-dark.png",
+    "renders/host-light.png",
+    "renders/host-dark.png"
+  ],
+  "limits": [
+    "Windows handle-validated open only; no cross-platform parity claim.",
+    "Concurrent in-place writes remain possible; the loan preserves identity/replacement exclusion, not atomic file bytes.",
+    "No create/rename/delete/copy/cut/paste context menu or source file-tab updates on those operations.",
+    "No root .gitignore/generated-folder muted styling, nested ignore processing, source preview tabs, rich tree metadata or full source tree action parity.",
+    "Safe direct paths through intermediate directory links remain more conservative than source validatePath.",
+    "Actual host renders are offscreen QWidget captures with real AppStyle and appearance settings, not desktop/compositor screenshots."
+  ],
+  "productionEdits": false,
+  "credentialsOrLiveNetworkUsed": false,
+  "integration": [
+    "Apply workspace-tree.patch against matching current source; no full stale source replacement.",
+    "Append cmake-additions.txt. ade_ui glob finds the new class.",
+    "Build the two new targets and affected existing workbench/Git host targets before aggregate gate.",
+    "Do not link ADE_WORKSPACE_TREE_TESTING class to production ade_ui; the component test uses an independent small library to keep class layouts coherent.",
+    "Scope inventory rows remain partial; CRUD/ignore/preview gaps are explicit in PLAN.json."
+  ],
+  "applyCheck": "git apply --check --ignore-space-change private/workspace-tree-stage/workspace-tree.patch succeeds against current root (CRLF checkout).",
+  "patchCanonicalLfSha256": "b48bdb237b8af9c308e99ea54bd6b08ee00c60d1fdc9254bf21fbdd81f4dcf30",
+  "corrections": [
+    {
+      "before": "deferred-before.txt",
+      "failure": "New model deferred ordinary same-root call could implicitly accept replacement identity.",
+      "fix": "Preserve explicit reconnect flag and apply deferred call through normal setter; source-level review and before/after fixture."
+    },
+    {
+      "before": "watch-cap-before.txt",
+      "failure": "New watcher strategy selected arbitrary 200 desired entries and churned registrations; actual registered watcher count exceeded cap.",
+      "fix": "Keep useful watches stable, count actual registrations after removals, add only remaining slots, disclose any missing desired watch. Underlying OS/Qt removal timing was not independently isolated."
+    },
+    {
+      "before": "host-first.txt",
+      "failure": "Test used personalization.theme (accent) instead of personalization.appearance for dark.",
+      "fix": "Correct real appearance setting and verify actual application Base lightness; all host rows now pass."
+    },
+    {
+      "before": "expanded.txt",
+      "failure": "Component render expanded lazily before its view was shown.",
+      "fix": "Show offscreen widget before requesting actual view expansion."
+    },
+    {
+      "before": "watch-count-assumption.txt",
+      "failure": "Fixture expected exact OS notification count; other temporary-directory events can trigger extra parent refresh.",
+      "fix": "Require every distinct expected loaded directory and actual watcher limit, not exact notification count."
+    }
+  ]
+}

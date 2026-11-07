@@ -1,0 +1,381 @@
+Test project D:/age/ADE/build-next
+        Start   1: native_codex_harness
+  1/186 Test   #1: native_codex_harness ....................   Passed    4.73 sec
+        Start   2: native_codex_engine
+  2/186 Test   #2: native_codex_engine .....................   Passed    3.24 sec
+        Start   3: native_codex_provider_ui
+  3/186 Test   #3: native_codex_provider_ui ................   Passed    0.47 sec
+        Start   4: native_codex_host
+  4/186 Test   #4: native_codex_host .......................   Passed    3.16 sec
+        Start   5: native_provider_operations
+  5/186 Test   #5: native_provider_operations ..............   Passed    1.13 sec
+        Start   6: native_link_provenance_codec
+  6/186 Test   #6: native_link_provenance_codec ............   Passed    0.04 sec
+        Start   7: native_retired_wire
+  7/186 Test   #7: native_retired_wire .....................   Passed    0.19 sec
+        Start   8: native_navigation_shortcuts
+  8/186 Test   #8: native_navigation_shortcuts .............   Passed    1.87 sec
+        Start   9: native_browser_session
+  9/186 Test   #9: native_browser_session ..................   Passed    0.12 sec
+        Start  10: native_browser_session_host
+ 10/186 Test  #10: native_browser_session_host .............   Passed    1.86 sec
+        Start  11: native_usage_compression
+ 11/186 Test  #11: native_usage_compression ................   Passed    4.92 sec
+        Start  12: native_usage_settings
+ 12/186 Test  #12: native_usage_settings ...................   Passed    0.11 sec
+        Start  13: native_git_usage
+ 13/186 Test  #13: native_git_usage ........................   Passed    2.02 sec
+        Start  14: native_git_cleanup
+ 14/186 Test  #14: native_git_cleanup ......................   Passed   96.77 sec
+        Start  15: native_session_logs
+ 15/186 Test  #15: native_session_logs .....................   Passed    0.42 sec
+        Start  16: native_shell_log_mount
+ 16/186 Test  #16: native_shell_log_mount ..................   Passed    0.61 sec
+        Start  17: native_shell_service
+ 17/186 Test  #17: native_shell_service ....................   Passed   41.25 sec
+        Start  18: native_shell_engine
+ 18/186 Test  #18: native_shell_engine .....................   Passed    4.72 sec
+        Start  19: native_shell_view
+ 19/186 Test  #19: native_shell_view .......................   Passed    1.32 sec
+        Start  20: native_conversation_control
+ 20/186 Test  #20: native_conversation_control .............   Passed    4.31 sec
+        Start  21: native_file_mutations
+ 21/186 Test  #21: native_file_mutations ...................   Passed    3.50 sec
+        Start  22: native_question_panel
+ 22/186 Test  #22: native_question_panel ...................   Passed    0.20 sec
+        Start  23: native_transcript_rich
+ 23/186 Test  #23: native_transcript_rich ..................   Passed    0.92 sec
+        Start  24: native_composer_completion
+ 24/186 Test  #24: native_composer_completion ..............   Passed    2.23 sec
+        Start  25: native_composer_search
+ 25/186 Test  #25: native_composer_search ..................   Passed    0.16 sec
+        Start  26: native_composer_host
+ 26/186 Test  #26: native_composer_host ....................   Passed    2.82 sec
+        Start  27: native_reference_controls
+ 27/186 Test  #27: native_reference_controls ...............   Passed    0.56 sec
+        Start  28: native_agent_control_ui
+ 28/186 Test  #28: native_agent_control_ui .................   Passed    2.40 sec
+        Start  29: native_command_center
+ 29/186 Test  #29: native_command_center ...................   Passed    0.29 sec
+        Start  30: native_command_file_search
+ 30/186 Test  #30: native_command_file_search ..............   Passed    0.67 sec
+        Start  31: native_command_center_host
+ 31/186 Test  #31: native_command_center_host ..............   Passed    3.53 sec
+        Start  32: native_side_chat
+ 32/186 Test  #32: native_side_chat ........................   Passed    0.28 sec
+        Start  33: native_side_chat_host
+ 33/186 Test  #33: native_side_chat_host ...................   Passed    8.12 sec
+        Start  34: native_file_diff
+ 34/186 Test  #34: native_file_diff ........................   Passed    0.20 sec
+        Start  35: native_image_preview
+ 35/186 Test  #35: native_image_preview ....................   Passed    0.37 sec
+        Start  36: native_mutation_runtime
+ 36/186 Test  #36: native_mutation_runtime .................   Passed    5.85 sec
+        Start  37: native_shell_runtime
+ 37/186 Test  #37: native_shell_runtime ....................   Passed   11.86 sec
+        Start  38: native_transcript_links
+ 38/186 Test  #38: native_transcript_links .................   Passed    0.18 sec
+        Start  39: native_transcript_link_ui
+ 39/186 Test  #39: native_transcript_link_ui ...............   Passed    4.38 sec
+        Start  40: native_transcript_tabs_real
+ 40/186 Test  #40: native_transcript_tabs_real .............   Passed    1.35 sec
+        Start  41: native_workbench_layout
+ 41/186 Test  #41: native_workbench_layout .................   Passed    7.38 sec
+        Start  42: native_workbench_helpers
+ 42/186 Test  #42: native_workbench_helpers ................   Passed    0.06 sec
+        Start  43: native_chevron
+ 43/186 Test  #43: native_chevron ..........................   Passed    0.23 sec
+        Start  44: native_sidebar_model
+ 44/186 Test  #44: native_sidebar_model ....................   Passed    0.03 sec
+        Start  45: native_sidebar_navigation
+ 45/186 Test  #45: native_sidebar_navigation ...............   Passed    4.35 sec
+        Start  46: native_presentation
+ 46/186 Test  #46: native_presentation .....................   Passed   17.00 sec
+        Start  47: native_history_projection
+ 47/186 Test  #47: native_history_projection ...............   Passed    1.26 sec
+        Start  48: native_workspace_changes
+ 48/186 Test  #48: native_workspace_changes ................   Passed   28.20 sec
+        Start  49: native_workspace_changes_host
+ 49/186 Test  #49: native_workspace_changes_host ...........   Passed   34.68 sec
+        Start  50: native_smoke_capture
+ 50/186 Test  #50: native_smoke_capture ....................   Passed    0.29 sec
+        Start  51: native_turn_files
+ 51/186 Test  #51: native_turn_files .......................   Passed    0.37 sec
+        Start  52: native_turn_files_host
+ 52/186 Test  #52: native_turn_files_host ..................   Passed   16.69 sec
+        Start  53: native_turn_file_snapshots
+ 53/186 Test  #53: native_turn_file_snapshots ..............   Passed    0.65 sec
+        Start  54: native_transcript
+ 54/186 Test  #54: native_transcript .......................   Passed    3.31 sec
+        Start  55: native_transcript_ui
+ 55/186 Test  #55: native_transcript_ui ....................   Passed    2.38 sec
+        Start  56: native_main_chrome
+ 56/186 Test  #56: native_main_chrome ......................   Passed    5.10 sec
+        Start  57: native_formatted_att
+ 57/186 Test  #57: native_formatted_att ....................   Passed    3.41 sec
+        Start  58: native_conversations
+ 58/186 Test  #58: native_conversations ....................   Passed   27.76 sec
+        Start  59: native_history_recovery
+ 59/186 Test  #59: native_history_recovery .................   Passed    1.57 sec
+        Start  60: native_session_cleanup
+ 60/186 Test  #60: native_session_cleanup ..................   Passed    0.56 sec
+        Start  61: native_raw_enumeration_races
+ 61/186 Test  #61: native_raw_enumeration_races ............   Passed    1.82 sec
+        Start  62: native_git_watcher
+ 62/186 Test  #62: native_git_watcher ......................   Passed   29.49 sec
+        Start  63: native_git_watcher_ui
+ 63/186 Test  #63: native_git_watcher_ui ...................   Passed   19.98 sec
+        Start  64: native_file_tools_races
+ 64/186 Test  #64: native_file_tools_races .................   Passed    0.75 sec
+        Start  65: native_archive_transformer
+ 65/186 Test  #65: native_archive_transformer ..............   Passed    0.07 sec
+        Start  66: native_file_tools
+ 66/186 Test  #66: native_file_tools .......................   Passed    0.08 sec
+        Start  67: native_attachment_mount
+ 67/186 Test  #67: native_attachment_mount .................   Passed    0.93 sec
+        Start  68: native_file_transformer
+ 68/186 Test  #68: native_file_transformer .................   Passed    0.03 sec
+        Start  69: native_worktree_settings
+ 69/186 Test  #69: native_worktree_settings ................   Passed   41.06 sec
+        Start  70: native_git_host
+ 70/186 Test  #70: native_git_host .........................   Passed   80.47 sec
+        Start  71: native_sandbox_apps
+ 71/186 Test  #71: native_sandbox_apps .....................   Passed    2.18 sec
+        Start  72: native_runtime_apps
+ 72/186 Test  #72: native_runtime_apps .....................   Passed    7.35 sec
+        Start  73: native_git
+ 73/186 Test  #73: native_git ..............................   Passed  107.85 sec
+        Start  74: native_git_ui
+ 74/186 Test  #74: native_git_ui ...........................   Passed   48.42 sec
+        Start  75: native_app_resources
+ 75/186 Test  #75: native_app_resources ....................   Passed    0.11 sec
+        Start  76: native_mini_apps
+ 76/186 Test  #76: native_mini_apps ........................   Passed    3.17 sec
+        Start  77: native_attachments
+ 77/186 Test  #77: native_attachments ......................   Passed    1.03 sec
+        Start  78: native_read_lifecycle
+ 78/186 Test  #78: native_read_lifecycle ...................   Passed    0.54 sec
+        Start  79: native_read_runtime
+ 79/186 Test  #79: native_read_runtime .....................   Passed    3.14 sec
+        Start  80: native_plugins
+ 80/186 Test  #80: native_plugins ..........................   Passed    0.95 sec
+        Start  81: native_plugin_connections
+ 81/186 Test  #81: native_plugin_connections ...............   Passed    0.25 sec
+        Start  82: native_plugin_runtime
+ 82/186 Test  #82: native_plugin_runtime ...................   Passed   13.89 sec
+        Start  83: native_plugin_settings
+ 83/186 Test  #83: native_plugin_settings ..................   Passed    0.51 sec
+        Start  84: native_smoke_plugins
+ 84/186 Test  #84: native_smoke_plugins ....................   Passed    2.07 sec
+        Start  85: native_sandbox_network
+ 85/186 Test  #85: native_sandbox_network ..................   Passed    5.34 sec
+        Start  86: native_downloads
+ 86/186 Test  #86: native_downloads ........................   Passed    8.32 sec
+        Start  87: native_settings_audit
+ 87/186 Test  #87: native_settings_audit ...................   Passed    0.48 sec
+        Start  88: native_network
+ 88/186 Test  #88: native_network ..........................   Passed    2.19 sec
+        Start  89: native_terminal
+ 89/186 Test  #89: native_terminal .........................   Passed    3.42 sec
+        Start  90: native_engine_observers
+ 90/186 Test  #90: native_engine_observers .................   Passed    9.03 sec
+        Start  91: native_core
+ 91/186 Test  #91: native_core .............................   Passed    8.66 sec
+        Start  92: native_context
+ 92/186 Test  #92: native_context ..........................   Passed    0.22 sec
+        Start  93: native_ui
+ 93/186 Test  #93: native_ui ...............................   Passed    1.89 sec
+        Start  94: native_ui_audit
+ 94/186 Test  #94: native_ui_audit .........................   Passed    5.51 sec
+        Start  95: native_editor
+ 95/186 Test  #95: native_editor ...........................   Passed    1.17 sec
+        Start  96: native_sandbox
+ 96/186 Test  #96: native_sandbox ..........................   Passed    4.60 sec
+        Start  97: native_runtime
+ 97/186 Test  #97: native_runtime ..........................   Passed    5.61 sec
+        Start  98: native_fonts
+ 98/186 Test  #98: native_fonts ............................   Passed    0.33 sec
+        Start  99: native_browser
+ 99/186 Test  #99: native_browser ..........................   Passed    5.73 sec
+        Start 100: native_settings
+100/186 Test #100: native_settings .........................   Passed    0.67 sec
+        Start 101: native_browser_inspector
+101/186 Test #101: native_browser_inspector ................   Passed    5.98 sec
+        Start 102: native_browser_tools
+102/186 Test #102: native_browser_tools ....................   Passed   15.74 sec
+        Start 103: native_harness_files
+103/186 Test #103: native_harness_files ....................   Passed    0.17 sec
+        Start 104: native_codex_files_runtime
+104/186 Test #104: native_codex_files_runtime ..............   Passed    0.90 sec
+        Start 105: native_provider_picker
+105/186 Test #105: native_provider_picker ..................   Passed    0.78 sec
+        Start 106: native_provider_picker_host
+106/186 Test #106: native_provider_picker_host .............   Passed    0.21 sec
+        Start 107: native_provider_picker_window
+107/186 Test #107: native_provider_picker_window ...........   Passed    1.78 sec
+        Start 108: native_transcript_polish
+108/186 Test #108: native_transcript_polish ................   Passed    1.94 sec
+        Start 109: native_opencode_harness
+109/186 Test #109: native_opencode_harness .................   Passed    8.71 sec
+        Start 110: native_opencode_engine
+110/186 Test #110: native_opencode_engine ..................   Passed    3.34 sec
+        Start 111: native_provider_removal
+111/186 Test #111: native_provider_removal .................   Passed    0.19 sec
+        Start 112: native_provider_removal_window
+112/186 Test #112: native_provider_removal_window ..........   Passed    0.86 sec
+        Start 113: native_agent_prompt
+113/186 Test #113: native_agent_prompt .....................   Passed    1.15 sec
+        Start 114: native_external_context
+114/186 Test #114: native_external_context .................   Passed    0.07 sec
+        Start 115: native_agent_cycle
+115/186 Test #115: native_agent_cycle ......................   Passed    0.15 sec
+        Start 116: native_agent_cycle_host
+116/186 Test #116: native_agent_cycle_host .................   Passed    1.46 sec
+        Start 117: native_opencode_provider_ui
+117/186 Test #117: native_opencode_provider_ui .............   Passed    0.89 sec
+        Start 118: native_opencode_host
+118/186 Test #118: native_opencode_host ....................   Passed    3.51 sec
+        Start 119: native_transcript_grouping
+119/186 Test #119: native_transcript_grouping ..............   Passed    0.15 sec
+        Start 120: native_provider_model_visibility
+120/186 Test #120: native_provider_model_visibility ........   Passed    0.45 sec
+        Start 121: native_provider_model_visibility_host
+121/186 Test #121: native_provider_model_visibility_host ...   Passed    1.20 sec
+        Start 122: native_transcript_image_lifecycle
+122/186 Test #122: native_transcript_image_lifecycle .......   Passed    0.47 sec
+        Start 123: native_question_mcp
+123/186 Test #123: native_question_mcp .....................   Passed    4.02 sec
+        Start 124: native_rpc_deadline
+124/186 Test #124: native_rpc_deadline .....................   Passed    3.92 sec
+        Start 125: native_acp_mcp
+125/186 Test #125: native_acp_mcp ..........................   Passed    5.42 sec
+        Start 126: native_mcp_engine
+126/186 Test #126: native_mcp_engine .......................   Passed    4.28 sec
+        Start 127: native_acp_tool_presentation
+127/186 Test #127: native_acp_tool_presentation ............   Passed    0.05 sec
+        Start 128: native_acp_presentation_engine
+128/186 Test #128: native_acp_presentation_engine ..........   Passed    1.33 sec
+        Start 129: native_acp_presentation_ui
+129/186 Test #129: native_acp_presentation_ui ..............   Passed    0.57 sec
+        Start 130: native_claude_control
+130/186 Test #130: native_claude_control ...................   Passed    2.09 sec
+        Start 131: native_claude_stream
+131/186 Test #131: native_claude_stream ....................   Passed    0.20 sec
+        Start 132: native_claude_session
+132/186 Test #132: native_claude_session ...................   Passed    7.18 sec
+        Start 133: native_claude_discovery
+133/186 Test #133: native_claude_discovery .................   Passed    0.57 sec
+        Start 134: native_claude_engine
+134/186 Test #134: native_claude_engine ....................   Passed    2.56 sec
+        Start 135: native_claude_provider_ui
+135/186 Test #135: native_claude_provider_ui ...............   Passed    0.93 sec
+        Start 136: native_claude_host
+136/186 Test #136: native_claude_host ......................   Passed    3.08 sec
+        Start 137: native_harness_media
+137/186 Test #137: native_harness_media ....................   Passed    0.27 sec
+        Start 138: native_browser_context
+138/186 Test #138: native_browser_context ..................   Passed    0.15 sec
+        Start 139: native_browser_context_runtime
+139/186 Test #139: native_browser_context_runtime ..........   Passed    2.61 sec
+        Start 140: native_model_discovery
+140/186 Test #140: native_model_discovery ..................   Passed    0.60 sec
+        Start 141: native_model_discovery_host
+141/186 Test #141: native_model_discovery_host .............   Passed    1.76 sec
+        Start 142: native_harness_forms_host
+142/186 Test #142: native_harness_forms_host ...............   Passed    2.61 sec
+        Start 143: native_harness_continuity
+143/186 Test #143: native_harness_continuity ...............   Passed    7.04 sec
+        Start 144: native_acp_settlement
+144/186 Test #144: native_acp_settlement ...................   Passed   12.31 sec
+        Start 145: native_utility_model_selection
+145/186 Test #145: native_utility_model_selection ..........   Passed    0.50 sec
+        Start 146: native_utility_models_host
+146/186 Test #146: native_utility_models_host ..............   Passed    4.18 sec
+        Start 147: native_claude_resume
+147/186 Test #147: native_claude_resume ....................   Passed    8.18 sec
+        Start 148: native_mcp_presentation
+148/186 Test #148: native_mcp_presentation .................   Passed    3.27 sec
+        Start 149: native_harness_attachment_store
+149/186 Test #149: native_harness_attachment_store .........   Passed    1.04 sec
+        Start 150: native_harness_attachment_wire
+150/186 Test #150: native_harness_attachment_wire ..........   Passed    2.24 sec
+        Start 151: native_harness_attachments_host
+151/186 Test #151: native_harness_attachments_host .........   Passed    8.37 sec
+        Start 152: native_harness_cleanup_host
+152/186 Test #152: native_harness_cleanup_host .............   Passed    0.94 sec
+        Start 153: native_question_presentation
+153/186 Test #153: native_question_presentation ............   Passed    0.37 sec
+        Start 154: native_question_presentation_host
+154/186 Test #154: native_question_presentation_host .......   Passed    0.79 sec
+        Start 155: native_direct_question_mcp
+155/186 Test #155: native_direct_question_mcp ..............   Passed   18.67 sec
+        Start 156: native_harness_attachment_mime
+156/186 Test #156: native_harness_attachment_mime ..........   Passed    3.59 sec
+        Start 157: native_historical_attachments
+157/186 Test #157: native_historical_attachments ...........   Passed    5.70 sec
+        Start 158: native_harness_attachment_source
+158/186 Test #158: native_harness_attachment_source ........   Passed    0.24 sec
+        Start 159: native_model_selector_display
+159/186 Test #159: native_model_selector_display ...........   Passed    1.38 sec
+        Start 160: native_acp_original_images
+160/186 Test #160: native_acp_original_images ..............   Passed   12.31 sec
+        Start 161: native_acp_original_lifecycle
+161/186 Test #161: native_acp_original_lifecycle ...........   Passed    3.33 sec
+        Start 162: native_acp_original_host
+162/186 Test #162: native_acp_original_host ................   Passed    0.34 sec
+        Start 163: native_custom_model_options
+163/186 Test #163: native_custom_model_options .............   Passed    1.07 sec
+        Start 164: native_custom_model_engine
+164/186 Test #164: native_custom_model_engine ..............   Passed    1.87 sec
+        Start 165: native_custom_model_config
+165/186 Test #165: native_custom_model_config ..............   Passed    0.05 sec
+        Start 166: native_custom_model_inventory
+166/186 Test #166: native_custom_model_inventory ...........   Passed    0.04 sec
+        Start 167: native_custom_model_storage
+167/186 Test #167: native_custom_model_storage .............   Passed    0.15 sec
+        Start 168: native_custom_model_media
+168/186 Test #168: native_custom_model_media ...............   Passed    0.04 sec
+        Start 169: native_custom_model_ui
+169/186 Test #169: native_custom_model_ui ..................   Passed    0.33 sec
+        Start 170: native_custom_model_host
+170/186 Test #170: native_custom_model_host ................   Passed    3.95 sec
+        Start 171: native_custom_model_smoke
+171/186 Test #171: native_custom_model_smoke ...............   Passed    0.44 sec
+        Start 172: native_settings_presentation
+172/186 Test #172: native_settings_presentation ............   Passed    1.74 sec
+        Start 173: native_workspace_tree
+173/186 Test #173: native_workspace_tree ...................   Passed   11.07 sec
+        Start 174: native_workspace_tree_host
+174/186 Test #174: native_workspace_tree_host ..............   Passed    3.04 sec
+        Start 175: native_context_budget
+175/186 Test #175: native_context_budget ...................   Passed    0.07 sec
+        Start 176: native_context_budget_host
+176/186 Test #176: native_context_budget_host ..............   Passed    2.75 sec
+        Start 177: native_plugin_findings
+177/186 Test #177: native_plugin_findings ..................   Passed    0.12 sec
+        Start 178: native_streaming_followups
+178/186 Test #178: native_streaming_followups ..............   Passed   23.32 sec
+        Start 179: native_git_findings
+179/186 Test #179: native_git_findings .....................   Passed   20.83 sec
+        Start 180: native_claude_followups_stream
+180/186 Test #180: native_claude_followups_stream ..........   Passed    0.07 sec
+        Start 181: native_claude_followups_session
+181/186 Test #181: native_claude_followups_session .........   Passed    3.34 sec
+        Start 182: native_claude_followups_engine
+182/186 Test #182: native_claude_followups_engine ..........   Passed    1.09 sec
+        Start 183: native_browser_navigation_followups
+183/186 Test #183: native_browser_navigation_followups .....   Passed    0.95 sec
+        Start 184: native_browser_history_followups
+184/186 Test #184: native_browser_history_followups ........   Passed    6.38 sec
+        Start 185: reference_file_mutations
+185/186 Test #185: reference_file_mutations ................   Passed    1.75 sec
+        Start 186: reference_git_usage
+186/186 Test #186: reference_git_usage .....................   Passed    1.99 sec
+
+100% tests passed out of 186
+
+Label Time Summary:
+experimental    =   3.74 sec*proc (2 tests)
+reference       =   3.74 sec*proc (2 tests)
+
+Total Test time (real) = 1083.34 sec

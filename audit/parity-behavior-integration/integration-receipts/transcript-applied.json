@@ -1,0 +1,23 @@
+{
+  "integratedUtc": "2026-11-07T01:59:45.052444+00:00",
+  "privatePassesIncludingLifecycle": 89,
+  "reproducedBeforeFailures": 6,
+  "adjacentQueuedKeyboardFailure": 1,
+  "files": {
+    "src/ui/ConversationView.cpp": "ed1ec4e3cd32dcd4c4fd218fc3ee25d040b2f8082b56542a822c13ea6ac727c5",
+    "tests/test_streaming_followups.cpp": "07e6f8eed4db570e5af3d2c99f6d5ac9387020dfb564bed8c5a534218de4f421",
+    "src/ui/SettingsPage.cpp": "da6ec2dd80a2727f7f558b5dee33aefb1f0fcca3c369fc784df3c394773b0b1c"
+  },
+  "evidence": {
+    "before.txt": "1e1bf928ad88e3dc1a687bb3052dd10fd70298de449ad559193c5e3abfb13546",
+    "queued-before.txt": "114162e5e4e06aaed17359d1f326f144815d760227890e61a11584050c05fa33",
+    "final.txt": "8fc8318144cb7623fa4e1bff1eb146589173cba842a7a45b1adb0715be31864b",
+    "compat-transcript.txt": "5dbe918298f56c2135db7fe6a974d9c02568a934c7a836b550de72d9f7d04708",
+    "compat-transcript_polish.txt": "ae8fdedc75b56c1f141888cff8fe7f5be58225e8cde86a7e61e8dbd9963e0689",
+    "compat-transcript_grouping.txt": "0c1221a725b8b09e7e08e3ce98541d7c46492d2855472e7cfe278408859bc4b3",
+    "compat-transcript_image_lifecycle.txt": "d67623169c77657946237cf222cbf78ea11c6e0f8bb7a2632f6745badb875784"
+  },
+  "settingsCopyCorrection": "Account distinguishes managed coding CLI subscriptions from unconfigured hosted account services. Text-only; existing Settings gate covers navigation.",
+  "expectedSuites": 180,
+  "assembledVerification": "pending"
+}

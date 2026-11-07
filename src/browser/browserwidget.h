@@ -84,6 +84,10 @@ signals:
     void downloadStateChanged(const QString& downloadId, const QString& state, bool canResume, const QString& error);
     void downloadFinished(const QString& downloadId, const QString& path, bool success, const QString& error);
 
+    // Completed document and same-document visits are distinct from loading state.
+    void navigationFinished(const QUrl& url, bool success);
+    void sameDocumentNavigation(const QUrl& url);
+
 protected:
     void showEvent(QShowEvent* event) override;
     void hideEvent(QHideEvent* event) override;

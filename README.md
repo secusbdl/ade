@@ -93,6 +93,15 @@ identical model reasoning or output.
   pending after the user stopped Computer Use; earlier control evidence is
   identified as a different binary.
 
+- [`audit/parity-behavior-integration.json`](audit/parity-behavior-integration.json)
+  records the **186-suite checkpoint**: Settings layout, watched workspace tree,
+  model-aware context budgets, plugin ownership, transcript scrolling, Git state,
+  Claude final-message reconciliation and browser history/navigation. The exact
+  packaged executable passed live DeepSeek and Codex checks plus direct Windows
+  Send, Settings, import-chooser, plugin-control and close checks. Two test cases
+  have qualified skips. Invalid-store recovery and two display defects found in
+  GUI testing remain open; the report identifies them explicitly.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |

@@ -1,0 +1,154 @@
+{
+  "integratedUtc": "2026-11-07T01:55:42.015979+00:00",
+  "developmentBase": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
+  "files": [
+    {
+      "path": "assets/models/pinned-context-policy.json",
+      "sha256CanonicalLf": "7e26798131300240472482b98a767132e633e4d47d7e646262095706ccc8c269"
+    },
+    {
+      "path": "assets/settings-marks/LICENSE.lobe-icons",
+      "sha256CanonicalLf": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a"
+    },
+    {
+      "path": "assets/settings-marks/NOTICE.txt",
+      "sha256CanonicalLf": "3366616127f38f849e17af29f43052e93d18b40b996a84de01e8a8efa230fb63"
+    },
+    {
+      "path": "assets/settings-marks/PROVENANCE.json",
+      "sha256CanonicalLf": "54469a40bde8815680ad6cb44d6bd01e3586772b09d8953e10f3f58f03b4de07"
+    },
+    {
+      "path": "scripts/extract-model-context-policy.py",
+      "sha256CanonicalLf": "5f8c83f7951e41af26b61c89b80e585812f477011320bf404fec01bfd5ac9d16"
+    },
+    {
+      "path": "src/attachments/ContextContentLimits.cpp",
+      "sha256CanonicalLf": "216ca2343c6ca78426c39de65953d1c0194226f5c82f171db18f3c8e1d1b6fcb"
+    },
+    {
+      "path": "src/attachments/ContextContentLimits.h",
+      "sha256CanonicalLf": "c445d8e949c2d9262d2423399cd75ad9fca1bb3f3ee5273ca2ca0ca7ab903552"
+    },
+    {
+      "path": "src/attachments/ModelContextEntries.inc",
+      "sha256CanonicalLf": "4b5d457d570c375d26988f3fb17289526bf6bcf20856f303047bfd585f7a8489"
+    },
+    {
+      "path": "src/network/NetworkBroker.cpp",
+      "sha256CanonicalLf": "1af633bd84bd3902892eff172f43e3c0f61653c0072cdc33bd53490b11e7ec87"
+    },
+    {
+      "path": "src/network/NetworkBroker.h",
+      "sha256CanonicalLf": "3a2ff4f3fe98d9a86c42c3cdb9209d02d57e8dd2b098ede6dd5cda23f20d9d7a"
+    },
+    {
+      "path": "src/plugins/PluginCatalog.cpp",
+      "sha256CanonicalLf": "6edbc194adbc7c3bfa73497f14f0b3e0af94b499178c5db39b2cfa7adbdc94e8"
+    },
+    {
+      "path": "src/plugins/PluginCatalog.h",
+      "sha256CanonicalLf": "3641aea5630673dacf8d3016b5a79841cf406c51d5962222245bbc59f3a82d60"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "sha256CanonicalLf": "37935ef507c85eb2fa01648af7f58429039832ea6856e0c71b39a6fb0df86a56"
+    },
+    {
+      "path": "src/ui/MainWindow.cpp",
+      "sha256CanonicalLf": "1865525a06d2e29261a37bcedbae98f3fee22a6ace3bf94f8c4d8a17a0323e33"
+    },
+    {
+      "path": "src/ui/MainWindow.h",
+      "sha256CanonicalLf": "11d98083e809b37a59d5a3d43b32c0b4d1e247619d29ba438083defdadf5cb7b"
+    },
+    {
+      "path": "src/ui/MainWindowCommandCenter.cpp",
+      "sha256CanonicalLf": "0671e5e025528dbf69e0b58a1c01fa53fb39199d7220cc3ed113d511376952f2"
+    },
+    {
+      "path": "src/ui/MainWindowWorkbench.cpp",
+      "sha256CanonicalLf": "8629f86c3c90027554450d4db6c51bf3ea358de424c1929dd4d07acd625fd03c"
+    },
+    {
+      "path": "src/ui/SettingsPage.cpp",
+      "sha256CanonicalLf": "8ec489c5d010920dbcefd00076b20b9a9f8dcc434867d796cbfa1b6a508018e8"
+    },
+    {
+      "path": "src/ui/SettingsPage.h",
+      "sha256CanonicalLf": "c3cbc260dca946f2cc6536604ac5edb5c9fc43578620b194e8b502d34c04adc0"
+    },
+    {
+      "path": "src/ui/SettingsServiceMarks.h",
+      "sha256CanonicalLf": "df1b37ecaf81de19714bc21852287a601b9b0aed67cad766cb3526ef11c1aa69"
+    },
+    {
+      "path": "src/ui/WorkspaceFileTreeModel.cpp",
+      "sha256CanonicalLf": "845041b31ec320688b24e3b428406479665c9aae93fcb3fe4b7a888cec2ccd19"
+    },
+    {
+      "path": "src/ui/WorkspaceFileTreeModel.h",
+      "sha256CanonicalLf": "c4515d2d3d859fd7e06bd7fa47c2c5fcfdd9197b8c8f4f5b9132e0ad7d02dbf5"
+    },
+    {
+      "path": "tests/render_workbench.cpp",
+      "sha256CanonicalLf": "217b932ab4dd93f8f28f11d370d7a00595b65349522fc37fb19fc1f236485a04"
+    },
+    {
+      "path": "tests/render_workbench_layout.cpp",
+      "sha256CanonicalLf": "02151f000ea5c745f4e65ac49295fd08f86d07231d50b47d00a0ced30e2e14b9"
+    },
+    {
+      "path": "tests/test_context_budget.cpp",
+      "sha256CanonicalLf": "2375ad00d226f2eaf57c5b24284a9fa16073cea02ca41195873e2a38bc0f9ae4"
+    },
+    {
+      "path": "tests/test_context_budget_host.cpp",
+      "sha256CanonicalLf": "aa1c289aef5eb37a8dd950ac493e053952bb91a9c47a73cef2827a5730de4a6e"
+    },
+    {
+      "path": "tests/test_git_host.cpp",
+      "sha256CanonicalLf": "a93e075c746b9170ad942d87e3dc669abcec0b77980ddb20648256e49383a9e5"
+    },
+    {
+      "path": "tests/test_plugin_findings.cpp",
+      "sha256CanonicalLf": "87578d4b9b89a4d067a2aeaff90c9ef25d9dbc3abf275bac54ef2797d3376a03"
+    },
+    {
+      "path": "tests/test_plugin_runtime.cpp",
+      "sha256CanonicalLf": "c351732a4bb07ed8ec1bf476a6d73ef7c98273c506fda42c5c3f4d962a31be7c"
+    },
+    {
+      "path": "tests/test_plugins.cpp",
+      "sha256CanonicalLf": "c070075587ef3b826b02fed7b321b4acb706d31b31ea0457a94d0029ab8cff09"
+    },
+    {
+      "path": "tests/test_settings_presentation.cpp",
+      "sha256CanonicalLf": "fd5d71b3666ba771a922dfa06268b7414391316b46b56938946b9a2552aa441d"
+    },
+    {
+      "path": "tests/test_workbench_layout.cpp",
+      "sha256CanonicalLf": "8a2d03dab1bbacbc95c403bb713104b768519efa165d547482670da0a96dd62e"
+    },
+    {
+      "path": "tests/test_workspace_tree.cpp",
+      "sha256CanonicalLf": "cd14b821e11316c9f7e3dc2a62b0c3e198ad0e923c9e3508e4ded8ddbc33f2b8"
+    },
+    {
+      "path": "tests/test_workspace_tree_host.cpp",
+      "sha256CanonicalLf": "84799ceac1814d61cb3f0aa48c7562ceff09f755feca58dcedd85a117ade36e2"
+    }
+  ],
+  "handoffs": {
+    "private/settings-presentation-stage": "921a7d14e5833072bec48237b49b4516190967f7256f0c0105e8b445e815b408",
+    "private/workspace-tree-stage": "00d86be032084c193f5e300e23fa0654dd32f325760eaf0181ee828715a809ff",
+    "private/context-budget-stage": "ae6cf0bae2c677bb9599b37dc2c49fd914619584422b79c815375d400c019672",
+    "private/claude-plugin-findings-stage": "b80f856e318e6f789965a389366c5e3b9cdf01fb92efcc570b18020a342c6d90"
+  },
+  "cmakeSha256": "3481864d9b33f4554689945e71fca54f724ae72a13606b580f260b41f0d5a7da",
+  "expectedSuites": 179,
+  "combinedGate": "pending",
+  "publicPush": "pending after desktop stop",
+  "publicationCommitPrepared": "e65b20e229ed17b8a3b7106f498db4afb13a1278",
+  "latestReadyBuild": "out/parity-integration-7"
+}

@@ -1,0 +1,19 @@
+********* Start testing of BrowserHistoryLive *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserHistoryLive::initTestCase()
+QWARN  : BrowserHistoryLive::laterDocumentVisitIsRecorded() history commit diagnostic: "Access is denied."
+QWARN  : BrowserHistoryLive::laterDocumentVisitIsRecorded() history commit diagnostic: "Access is denied."
+FAIL!  : BrowserHistoryLive::laterDocumentVisitIsRecorded() Compared values are not the same
+   Actual   (entries(dir.path()).first().toObject()["url"].toString()): "http://127.0.0.1:53859/"
+   Expected (url("/second-document").toString())                      : "http://127.0.0.1:53859/second-document"
+D:/age/ADE/private/claude-browser-findings-stage/test_browser_history_live.cpp(31) : failure location
+QWARN  : BrowserHistoryLive::laterDocumentVisitIsRecorded() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-seNjMK" most likely due to the presence of read-only files.
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() history commit diagnostic: "Access is denied."
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() history commit diagnostic: "Access is denied."
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() history commit diagnostic: "Access is denied."
+QINFO  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() tab= "A complete browser history t" history= "A complete browser history title longer than twenty-eight characters"
+QWARN  : BrowserHistoryLive::completionAfterTitleRetainsFullTitle() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\browser_history_live-ehTCQg" most likely due to the presence of read-only files.
+PASS   : BrowserHistoryLive::completionAfterTitleRetainsFullTitle()
+PASS   : BrowserHistoryLive::cleanupTestCase()
+Totals: 3 passed, 1 failed, 0 skipped, 0 blacklisted, 1846ms
+********* Finished testing of BrowserHistoryLive *********

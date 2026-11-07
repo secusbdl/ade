@@ -109,6 +109,8 @@ void AgentEngine::retainHarnessResponse(bool completed) {
     metadata["harness"] = m_harnessState;
   if (!m_harnessUsage.isEmpty())
     metadata["harnessUsage"] = m_harnessUsage;
+  const auto telemetry = modelTelemetry();
+  if (!telemetry.isEmpty()) metadata["modelTelemetry"] = telemetry;
   QJsonObject row{
       {"role", "assistant"}, {"content", m_streamText}, {"metadata", metadata}};
   m_displayHistoryIndex = m_messages.size();

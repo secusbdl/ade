@@ -190,11 +190,20 @@ bool PluginCatalog::configureAgent(NetworkBroker &broker, const QString &agentId
     const QPointer<NetworkBroker> alive(&broker);
     auto *const identity = &broker;
     const QString hostAgentId = agentId;
+    revisions->erase(std::remove_if(revisions->begin(), revisions->end(), [](const BrokerRevision &entry) { return entry.broker.isNull(); }), revisions->end());
+    auto entry = std::find_if(revisions->begin(), revisions->end(), [identity](const BrokerRevision &item) { return item.broker == identity; });
+    if (entry == revisions->end()) { revisions->append({alive, {}, 0}); entry = revisions->end() - 1; }
+    const auto operation = ++entry->operation;
     QString failure; QStringList enabled;
-    auto forget = [revisions, identity] { revisions->erase(std::remove_if(revisions->begin(), revisions->end(), [identity](const BrokerRevision &entry) { return entry.broker.isNull() || entry.broker == identity; }), revisions->end()); };
+    auto forget = [revisions, identity, operation] {
+        for (auto &item : *revisions) if (item.broker == identity && item.operation == operation) item.revision.clear();
+        revisions->erase(std::remove_if(revisions->begin(), revisions->end(), [](const BrokerRevision &item) { return item.broker.isNull(); }), revisions->end());
+    };
     auto brokerAvailable = [&] {
-        if (alive) return true;
-        forget(); if (error) *error = "Plugin network broker was destroyed during configuration."; return false;
+        if (!alive) { forget(); if (error) *error = "Plugin network broker was destroyed during configuration."; return false; }
+        const bool current = std::any_of(revisions->cbegin(), revisions->cend(), [identity, operation](const BrokerRevision &item) { return item.broker == identity && item.operation == operation; });
+        if (!current && error) *error = "Plugin configuration was superseded by a newer refresh.";
+        return current;
     };
     auto reject = [&](const QString &message) {
         forget(); if (error) *error = message;
@@ -234,17 +243,13 @@ bool PluginCatalog::configureAgent(NetworkBroker &broker, const QString &agentId
         if (existsAfter) after = readBounded(path, 4 * 1024 * 1024, &failure);
         if (!failure.isEmpty() || bytes != after || existed != existsAfter) return reject("Plugin credentials changed during loading; retry after the save completes.");
         // Restore the host's exact source registry; stored base URLs are never authority for secret routing.
+        // A changed encrypted file must not revoke unchanged plugin credentials.
         for (const auto &definition : NetworkBroker::builtinCredentialTypes()) {
-            const bool registered = alive->registerCredentialType(definition, &failure);
-            if (!brokerAvailable()) return false;
-            if (!registered) return reject(failure);
-        }
-        for (auto it = credentials.cbegin(); it != credentials.cend(); ++it) {
-            const bool configured = alive->setCredential(it.key(), it.value(), &failure);
+            const bool configured = alive->synchronizeCredential(definition, credentials.value(definition.id), &failure);
             if (!brokerAvailable()) return false;
             if (!configured) return reject("Plugin credential fields could not be configured.");
         }
-        forget(); revisions->append({alive, revision});
+        for (auto &item : *revisions) if (item.broker == identity && item.operation == operation) item.revision = revision;
     }
     QStringList allowed;
     for (const auto &definition : definitions()) if (enabled.contains(definition.id)) allowed.append(definition.credentialType);

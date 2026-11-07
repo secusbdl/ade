@@ -11,7 +11,7 @@
 #include <QUuid>
 #include <memory>
 #include <functional>
-class QComboBox; class QFileSystemModel; class QLabel; class QLineEdit; class QListWidget;
+class QComboBox; class QLabel; class QLineEdit; class QListWidget;
 class QPlainTextEdit; class QSplitter; class QStackedWidget; class QTabWidget; class QTextBrowser;
 class QToolButton; class QTreeView;
 class QHBoxLayout;
@@ -21,6 +21,7 @@ class QImage;
 namespace ade {
 class AgentEngine; class AgentToolHost; class BrowserWidget; class BrowserToolBridge; class Composer; class SettingsPage; class UtilityService;
 class DownloadsPage;
+class WorkspaceFileTreeModel;
 class AttachmentStrip;
 class SidebarSplitter;class SidebarNavigation;class WorkbenchSplitter;class ChatSurface;
 class ConversationView;
@@ -161,7 +162,7 @@ private:
     ConversationView* m_transcript;QTimer* m_transcriptRefresh=nullptr;Composer* m_composer;QComboBox *m_models,*m_permissions;
     QToolButton *m_send,*m_stop,*m_workspace;
     QLabel* m_status;WorkbenchSplitter* m_splitter;QTabWidget* m_tabs;QTreeView* m_files;
-    QFileSystemModel* m_fileModel;
+    WorkspaceFileTreeModel* m_fileModel;
     QStackedWidget* m_pages;
     SettingsPage* m_settings=nullptr;
     BrowserToolBridge* m_browserBridge=nullptr;
