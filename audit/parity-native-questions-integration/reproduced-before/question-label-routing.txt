@@ -1,0 +1,11 @@
+********* Start testing of QuestionPresentationHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionPresentationHostTest::initTestCase()
+FAIL!  : QuestionPresentationHostTest::ownedQuestionLabelOpensExactOwnerAttachment() 'text' returned FALSE. ()
+D:/age/ADE/private/question-presentation-stage/tests/test_question_presentation_host.cpp(35) : failure location
+FAIL!  : QuestionPresentationHostTest::foreignBlobAndUnboundWorkspaceAreRejected() '!window.findChild<QLabel*>("sessionStatus")->text().isEmpty()' returned FALSE. ()
+D:/age/ADE/private/question-presentation-stage/tests/test_question_presentation_host.cpp(36) : failure location
+PASS   : QuestionPresentationHostTest::staleChatRowAndPartCannotOpen()
+PASS   : QuestionPresentationHostTest::cleanupTestCase()
+Totals: 3 passed, 2 failed, 0 skipped, 0 blacklisted, 757ms
+********* Finished testing of QuestionPresentationHostTest *********

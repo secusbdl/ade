@@ -1,0 +1,26 @@
+********* Start testing of DirectMcpTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : DirectMcpTests::initTestCase()
+FAIL!  : DirectMcpTests::ownedWrapperPresentation(codex-wrapper) Compared values are not the same
+   Actual   (AcpToolPresentation::suppressQuestionWrapperPart(p)): 0
+   Expected (hidden)                                             : 1
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(110) : failure location
+FAIL!  : DirectMcpTests::ownedWrapperPresentation(codex-wrapper) Compared values are not the same
+   Actual   (done.size()): 0
+   Expected (1)          : 1
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(113) : failure location
+PASS   : DirectMcpTests::ownedWrapperPresentation(codex-wrapper-foreign)
+PASS   : DirectMcpTests::ownedWrapperPresentation(codex-wrapper-similar)
+FAIL!  : DirectMcpTests::ownedWrapperPresentation(claude-code-wrapper) Compared values are not the same
+   Actual   (AcpToolPresentation::suppressQuestionWrapperPart(p)): 0
+   Expected (hidden)                                             : 1
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(110) : failure location
+FAIL!  : DirectMcpTests::ownedWrapperPresentation(claude-code-wrapper) Compared values are not the same
+   Actual   (done.size()): 0
+   Expected (1)          : 1
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(113) : failure location
+PASS   : DirectMcpTests::ownedWrapperPresentation(claude-code-wrapper-foreign)
+PASS   : DirectMcpTests::ownedWrapperPresentation(claude-code-wrapper-similar)
+PASS   : DirectMcpTests::cleanupTestCase()
+Totals: 6 passed, 2 failed, 0 skipped, 0 blacklisted, 2087ms
+********* Finished testing of DirectMcpTests *********

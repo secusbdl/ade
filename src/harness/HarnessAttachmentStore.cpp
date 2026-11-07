@@ -507,14 +507,28 @@ QJsonArray HarnessAttachmentLease::resourceLinks(QString *error) const {
     setError(error, "Attachment lease is unavailable or revoked.");
     return {};
   }
+  // Match the pinned ACP prompt builder's extension hints. This describes
+  // the captured filename; it neither sniffs content nor trusts input MIME.
+  static const QMap<QString, QString> imageMimeTypes{
+      {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"},
+      {"png", "image/png"}, {"webp", "image/webp"}};
   QJsonArray result;
-  for (const auto &e : m_data->entries)
-    result.append(QJsonObject{
+  for (const auto &e : m_data->entries) {
+    QJsonObject link{
         {"type", "resource_link"},
         {"name", e.name},
         {"uri", QUrl::fromLocalFile(m_data->state->path + '/' + e.file)
                     .toString(QUrl::FullyEncoded)},
-        {"size", e.size}});
+        {"size", e.size}};
+    const auto basename = QFileInfo(e.name).fileName();
+    const auto dot = basename.lastIndexOf('.');
+    // Node path.extname treats a lone leading dot as part of the basename.
+    const auto extension = dot > 0 ? basename.mid(dot + 1).toLower() : QString{};
+    const auto mimeType = imageMimeTypes.value(extension);
+    if (!mimeType.isEmpty())
+      link["mimeType"] = mimeType;
+    result.append(link);
+  }
   return result;
 }
 QString HarnessAttachmentLease::textDescriptors(QString *error) const {
@@ -556,6 +570,9 @@ HarnessAttachmentStore::HarnessAttachmentStore(const QString &data,
                                                bool allowCreate)
     : m_state(std::make_shared<State>(data, owner, requireNew, allowCreate)) {}
 QString HarnessAttachmentStore::error() const { return m_state->error; }
+QString HarnessAttachmentStore::profileDirectory() const {
+  return m_state->error.isEmpty() && !m_state->revoked.load() ? m_state->data : QString{};
+}
 QString HarnessAttachmentStore::rootDirectory() const {
   return m_state->error.isEmpty() ? m_state->path : QString{};
 }

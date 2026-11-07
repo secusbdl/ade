@@ -1,7 +1,8 @@
 #pragma once
-#include "HarnessPreparedTurn.h"
 #include "ClaudeControlProcess.h"
 #include "ClaudeStream.h"
+#include "HarnessPreparedTurn.h"
+#include "HarnessQuestionMcp.h"
 #include "harness/HarnessWorkspace.h"
 #include <QHash>
 
@@ -15,6 +16,7 @@ struct ClaudeHarnessOptions {
   bool questionsEnabled = false;
   int turnTimeoutMs = 600000;
   HarnessAttachments attachments;
+  QString questionMcpExecutable;
 };
 // Private direct-CLI session foundation; unsupported control types fail
 // explicitly.
@@ -33,10 +35,21 @@ public:
   bool answerQuestion(const QString &token, const QJsonObject &answers);
   bool cancelQuestion(const QString &token);
   bool isBusy() const { return m_busy; }
+  bool isStagewiseQuestion(const QString &token) const {
+    return m_questionMcp.owns(token);
+  }
+  QString questionTurnId() const { return m_questionMcp.turn(); }
+  bool completeStagewiseQuestion(const QString &token,
+                                 const QJsonObject &result,
+                                 const QString &error = {}) {
+    return m_busy && m_questionMcp.complete(token, result, error);
+  }
   bool hasBackgroundTasks() const { return !m_tasks.isEmpty(); }
   QString turnId() const { return m_turnId; }
   QJsonObject sessionState() const;
 signals:
+  void stagewiseQuestionRequired(QString token, QJsonObject form);
+  void stagewiseQuestionCancelled(QString token);
   void event(QJsonObject frame);
   void approvalRequired(QString token, QJsonObject request);
   void questionRequired(QString token, QJsonObject request, QJsonObject form);
@@ -46,6 +59,7 @@ signals:
   void failed(QString error);
 
 private:
+  HarnessQuestionMcp m_questionMcp;
   struct Pending {
     QString requestId, toolId;
     QJsonObject input;

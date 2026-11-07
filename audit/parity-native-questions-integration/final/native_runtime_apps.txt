@@ -1,0 +1,23 @@
+********* Start testing of RuntimeAppTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : RuntimeAppTests::initTestCase()
+PASS   : RuntimeAppTests::nativeToolsAuthorAppsWithoutWorkspace()
+QWARN  : RuntimeAppTests::authoredSiblingAssetsLoadAndReloadInActualApp() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-qiPEec" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::authoredSiblingAssetsLoadAndReloadInActualApp()
+PASS   : RuntimeAppTests::authoringRootsAreAgentScopedAndSurviveWorkspaceChanges()
+PASS   : RuntimeAppTests::cancelQueuedBinaryAppWritePreventsDiskMutation()
+PASS   : RuntimeAppTests::cancelQueuedSandboxWritePreventsDiskMutation()
+PASS   : RuntimeAppTests::workspaceChangeResetsIdleRealmAndOldCallbacks()
+PASS   : RuntimeAppTests::workspaceSwapDuringQueuedFileKeepsFileAndAttachmentRootsAligned()
+PASS   : RuntimeAppTests::sameCanonicalWorkspacePreservesPersistentState()
+PASS   : RuntimeAppTests::invalidWorkspaceDoesNotSilentlyReplaceAcceptedRoot()
+QWARN  : RuntimeAppTests::contextResetCanDeleteHostFromActualAppClose() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-NKNLpR" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::contextResetCanDeleteHostFromActualAppClose()
+PASS   : RuntimeAppTests::synchronousBrowserCancellationCanDeleteItsHost()
+QWARN  : RuntimeAppTests::idleAppCallbackCompletesThroughActualHost() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-CLlznl" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::idleAppCallbackCompletesThroughActualHost()
+QWARN  : RuntimeAppTests::otherAgentCannotAccessAppThroughDirectOrSandboxBrowserTools() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_runtime_apps-LBStTE" most likely due to the presence of read-only files.
+PASS   : RuntimeAppTests::otherAgentCannotAccessAppThroughDirectOrSandboxBrowserTools()
+PASS   : RuntimeAppTests::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 7447ms
+********* Finished testing of RuntimeAppTests *********

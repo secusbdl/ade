@@ -44,6 +44,7 @@ public:
                                   const QString &ownerId);
   QString error() const;
   QString rootDirectory() const;
+  QString profileDirectory() const;
   HarnessAttachmentLease prepare(const QList<HarnessAttachmentCapture> &files,
                                  const std::atomic_bool *cancelled,
                                  QString *error = nullptr) const;

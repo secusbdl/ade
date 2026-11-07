@@ -1,0 +1,69 @@
+{
+  "status": "private_frozen_ready_for_root_integration",
+  "scope": "Only provably absent historical attachments degrade to bounded ephemeral notice; current and invalid inputs fail closed.",
+  "sourceHashBasis": "canonical_git_text_LF",
+  "patch": "historical-attachments.patch",
+  "patchSha256": "4cb52b965bd5b717fbf63ce79a5cbfaf900d4cf6a0d691ebfe3ffe68d1033857",
+  "sourceManifest": "source-manifest.json",
+  "cmake": "CMAKE-ADDITIONS.cmake",
+  "implementation": [
+    "Dedicated typed Available/Missing/Invalid native source; immutable owner and physical profile/mount roots captured on host thread; read handles with no delete sharing plus final-path/identity checks.",
+    "Snapshot fallback permitted only on Missing. Invalid snapshot remains fatal even if original SHA would match. Existing HTTP AttachmentStore and AttachmentPipeline methods unchanged.",
+    "Current-row-first exact ref/hash selection and newest summary boundary retained. Missing current is fatal; missing historical only omitted after absent cache and original; recorded durable file deletion/corruption remains fatal.",
+    "Notice preserves canonical history, sends only logical labels as JSON; <=32 labels and8192 encoded label bytes with total/omitted counts.",
+    "No adapter, Engine, raw history, credentials, image transport or permission changes."
+  ],
+  "evidence": {
+    "privatePassCases": 66,
+    "reports": [
+      {
+        "path": "source-final.xml",
+        "cases": 8,
+        "failures": 0,
+        "sha256": "1fbaa7a5eba949747c5aeb98f69af30353bbe84dea39806f31b72e569c4b9cbb",
+        "textSha256": "8e917b0692f376bd161017c333545eccfee522a69145121f22ec92e623215d27"
+      },
+      {
+        "path": "host-final.xml",
+        "cases": 32,
+        "failures": 0,
+        "sha256": "b49862a5bfa2b38e33bd6bfc88fcc51adc14e54bf6bb13be6271d63db1ce72d9",
+        "textSha256": "b54697ddeee71f039e495f67dbe0381829fd40926af9578f9c3b1c4655c0eac6"
+      },
+      {
+        "path": "compatibility-final.xml",
+        "cases": 26,
+        "failures": 0,
+        "sha256": "a013165a3df432bd827d93dd0121f8d89b2f7ae8adabd23f477b4fb361a57ef1",
+        "textSha256": "f4ead05b5019a586e4b180b421e6ebe219b2b313791b1753e0158a904917ad79"
+      }
+    ],
+    "before": {
+      "path": "before.txt",
+      "sha256": "13787a0f1eab99e81663e2098ffa85039551893241a6b01e0eadb73aff81a5d0",
+      "cases": 11,
+      "pass": 2,
+      "fail": 9,
+      "interpretation": "Three unavailable-history rows reproduce blocked turns. Six corrupt/locked snapshot rows reproduce prior fallback to matching SHA-verified original, not changed-byte dispatch or an owner bypass; strict Invalid-vs-Missing policy is intentional tightening."
+    },
+    "scopePinBefore": {
+      "path": "source-first.txt",
+      "sha256": "f0264c20742e5b8edf964aea60cebeff02156c0b7d4c1967eae509902f0639cf",
+      "pass": 7,
+      "fail": 1,
+      "interpretation": "READ_ATTRIBUTES handle did not deny directory rename on this Windows build. Dedicated helper now retains GENERIC_READ no-delete-sharing handles; same assertion passes."
+    }
+  },
+  "review": {
+    "qt_port_review": "Bounded source review found no extra classification/lifetime defect before final strong-handle refinement; no independent runtime tests claimed."
+  },
+  "limits": [
+    "Windows MinGW only; typed absence unsupported elsewhere.",
+    "Availability is checked during preparation; no atomic snapshot across all historical files is claimed.",
+    "Historical durable replay is a native extension; pinned ACP replays historical text only and uses a textual fallback for failed current-file reads.",
+    "This strict Invalid-vs-Missing distinction is intentionally narrower than pinned catch-all fallback.",
+    "This private66-case run is not the parent full shared gate or universal parity proof.",
+    "Direct CLI filesystem permissions for external captured paths remain unchanged; these tests use native fake child protocols, not live models."
+  ],
+  "imagePlan": "IMAGE-TRANSPORT-PLAN.json"
+}

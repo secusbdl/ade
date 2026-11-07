@@ -1,4 +1,5 @@
 #include "CodexHarnessSession.h"
+#include "QuestionMcpProtocol.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QJsonDocument>
@@ -22,7 +23,23 @@ QString safeId(const QJsonValue &value) {
 }
 } // namespace
 CodexHarnessSession::CodexHarnessSession(QObject *parent)
-    : QObject(parent), m_server(this) {
+    : QObject(parent), m_questionMcp(this), m_server(this) {
+  connect(&m_questionMcp, &HarnessQuestionMcp::pendingChanged, this,
+          [this](bool pending) {
+            if (pending)
+              pauseForDecision();
+            else
+              resumeAfterDecision();
+          });
+  connect(&m_questionMcp, &HarnessQuestionMcp::event, this,
+          [this](const QJsonObject &value) {
+            if (m_busy)
+              emit event(value);
+          });
+  connect(&m_questionMcp, &HarnessQuestionMcp::required, this,
+          &CodexHarnessSession::stagewiseQuestionRequired);
+  connect(&m_questionMcp, &HarnessQuestionMcp::cancelled, this,
+          &CodexHarnessSession::stagewiseQuestionCancelled);
   m_timeout.setSingleShot(true);
   connect(&m_timeout, &QTimer::timeout, this, [this] {
     if (!m_busy)
@@ -71,6 +88,7 @@ bool CodexHarnessSession::startTurn(const CodexHarnessOptions &options,
   if (executable.isEmpty() || workspace.isEmpty() ||
       !QFileInfo(workspace).isDir() || options.providerId.isEmpty() ||
       options.model.isEmpty() || input.isEmpty() ||
+      options.turnTimeoutMs < 100 || options.turnTimeoutMs > 600000 ||
       QJsonDocument(input).toJson(QJsonDocument::Compact).size() >
           4 * 1024 * 1024) {
     emit failed("Codex requires an installed executable, a workspace, a "
@@ -97,6 +115,9 @@ bool CodexHarnessSession::startTurn(const CodexHarnessOptions &options,
                      m_workspaceBinding.identity == binding.identity &&
                      m_options.providerId == options.providerId;
   ++m_generation;
+  m_previouslyConfiguredQuestions =
+      !m_options.questionMcpExecutable.isEmpty() ||
+      savedState.value("questionMcp").toBool();
   m_options = options;
   m_workspaceBinding=binding;
   m_options.executable = executable;
@@ -109,6 +130,7 @@ bool CodexHarnessSession::startTurn(const CodexHarnessOptions &options,
   m_reasoning.clear();
   m_requests.clear();
   m_pending.clear();
+  m_questionMcp.setBlocked(false);
   m_usage = {};
   m_outputChars = 0;
   m_itemBytes = 0;
@@ -132,7 +154,8 @@ bool CodexHarnessSession::startTurn(const CodexHarnessOptions &options,
     m_saved = {};
     m_threadId.clear();
   }
-  m_timeout.start(300000);
+  m_waitRemaining = -1;
+  m_timeout.start(options.turnTimeoutMs);
   if (reuse) {
     m_server.readAccount();
     return true;
@@ -154,8 +177,9 @@ QJsonObject CodexHarnessSession::sessionState() const {
           {"providerId", m_options.providerId},
           {"executable", m_options.executable},
           {"workspace", m_options.workspace},
-          {"workspaceIdentity",m_workspaceBinding.identity},
-          {"threadId", m_threadId}};
+          {"workspaceIdentity", m_workspaceBinding.identity},
+          {"threadId", m_threadId},
+          {"questionMcp", !m_options.questionMcpExecutable.isEmpty()}};
 }
 QJsonObject CodexHarnessSession::forkState(QJsonObject source) {
   if (source.value("version").toInt() != 1 ||
@@ -174,6 +198,26 @@ void CodexHarnessSession::beginThread() {
       {"sandbox", m_options.alwaysAllow ? "workspace-write" : "read-only"}};
   if (!m_options.instructions.isEmpty())
     params["developerInstructions"] = m_options.instructions;
+  if (!m_options.questionMcpExecutable.isEmpty()) {
+    QString error;
+    auto config =
+        m_questionMcp.configure(m_options.questionMcpExecutable, &error);
+    if (config.isEmpty()) {
+      finish("failed", error);
+      return;
+    }
+    config["required"] = true;
+    config["tool_timeout_sec"] = 43200;
+    params["config"] = QJsonObject{{"mcp_servers.stagewise", config}};
+  } else {
+    m_questionMcp.revoke();
+    if (m_previouslyConfiguredQuestions)
+      params["config"] =
+          QJsonObject{{"mcp_servers.stagewise",
+                       QJsonObject{{"command", m_options.executable},
+                                   {"args", QJsonArray{"--version"}},
+                                   {"enabled", false}}}};
+  }
   QString method = "thread/start";
   const auto savedId = safeId(m_saved.value("threadId"));
   if (!savedId.isEmpty()) {
@@ -199,6 +243,23 @@ void CodexHarnessSession::sendTurn() {
   QString attachmentError;
   auto input = mapHarnessAttachments(m_input,m_options.attachments,false,true,m_sessionCreated,&attachmentError);
   if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
+  if (!m_options.questionMcpExecutable.isEmpty()) {
+    m_questionMcp.beginTurn(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    // Some installed Codex model interfaces defer MCP declarations into the
+    // exec registry. Keep the configured question preference and describe the
+    // discovery path conditionally; never change the selected model or claim
+    // that every CLI/model supplies this interface.
+    const auto preference = HarnessQuestionMcp::preference() +
+        "\n<stagewise-tool-discovery>\nIf your runtime exposes `functions.exec` and `ALL_TOOLS`, "
+        "MCP tools may be deferred rather than listed directly. Before concluding the "
+        "question tool is unavailable, find the exact registered name "
+        "`mcp__stagewise__stagewise_request_user_input` in `ALL_TOOLS` and invoke it "
+        "through `tools[name]` inside `functions.exec`. Use the registered tool schema. "
+        "Do not invent a tool, call a similarly named server, or substitute a "
+        "different model. If this interface is absent, use your runtime's normal "
+        "configured MCP tool interface.\n</stagewise-tool-discovery>";
+    input.prepend(QJsonObject{{"type", "text"}, {"text", preference}});
+  }
   if (m_sessionCreated && !m_options.historyContext.isEmpty())
     input.prepend(
         QJsonObject{{"type", "text"}, {"text", m_options.historyContext}});
@@ -388,15 +449,25 @@ void CodexHarnessSession::publishItem(const QJsonObject &item, bool completed) {
   else
     arguments = {{"kind", type}};
   const auto status = item.value("status").toString();
-  publish({{"type", "tool"},
-           {"itemId", id},
-           {"name", item.value("tool").toString(type)},
-           {"arguments", arguments},
-           {"output", output.left(65536)},
-           {"state", completed ? (status == "failed" || status == "declined"
-                                      ? "output-error"
-                                      : "output-available")
-                               : "input-available"}});
+  QJsonObject event{{"type", "tool"},
+                    {"itemId", id},
+                    {"name", item.value("tool").toString(type)},
+                    {"arguments", arguments},
+                    {"output", output.left(65536)},
+                    {"state", completed
+                                  ? (status == "failed" || status == "declined"
+                                         ? "output-error"
+                                         : "output-available")
+                                  : "input-available"}};
+  const bool ownedWrapper =
+      !m_options.questionMcpExecutable.isEmpty() && type == "mcpToolCall" &&
+      item.value("server") == "stagewise" &&
+      item.value("tool") == "stagewise_request_user_input";
+  event["acpPresentation"] = ownedWrapper
+                                 ? HarnessQuestionMcp::wrapperPresentation(
+                                       event.value("name").toString())
+                                 : QJsonObject{};
+  publish(event);
 }
 void CodexHarnessSession::receiveNotification(const QString &method,
                                               const QJsonObject &params) {
@@ -507,7 +578,7 @@ void CodexHarnessSession::receiveRequest(const QJsonValue &id,
   if (method == "item/commandExecution/requestApproval" ||
       method == "item/fileChange/requestApproval") {
     m_pending.insert(token, {id, method, itemId, params});
-    m_timeout.stop();
+    pauseForDecision();
     emit approvalRequired(token,
                           method == "item/fileChange/requestApproval"
                               ? "Codex file change"
@@ -516,6 +587,10 @@ void CodexHarnessSession::receiveRequest(const QJsonValue &id,
     return;
   }
   if (method == "item/tool/requestUserInput") {
+    if (m_questionMcp.pending()) {
+      m_server.respond(id, QJsonObject{{"answers", QJsonObject{}}});
+      return;
+    }
     const auto questions = params.value("questions").toArray();
     if (questions.isEmpty() || questions.size() > 20 ||
         QJsonDocument(questions).toJson(QJsonDocument::Compact).size() >
@@ -524,7 +599,8 @@ void CodexHarnessSession::receiveRequest(const QJsonValue &id,
       return;
     }
     m_pending.insert(token, {id, method, itemId, params});
-    m_timeout.stop();
+    refreshQuestionBlock();
+    pauseForDecision();
     emit questionRequired(token, questions);
     return;
   }
@@ -547,8 +623,7 @@ bool CodexHarnessSession::answerApproval(const QString &token, bool allow) {
   m_pending.remove(token);
   const bool sent = m_server.respond(
       pending.id, QJsonObject{{"decision", allow ? "accept" : "decline"}});
-  if (m_pending.isEmpty())
-    m_timeout.start(300000);
+  resumeAfterDecision();
   return sent;
 }
 bool CodexHarnessSession::answerQuestion(const QString &token,
@@ -582,20 +657,51 @@ bool CodexHarnessSession::answerQuestion(const QString &token,
   m_pending.remove(token);
   const bool sent =
       m_server.respond(pending.id, QJsonObject{{"answers", response}});
-  if (m_pending.isEmpty())
-    m_timeout.start(300000);
+  refreshQuestionBlock();
+  resumeAfterDecision();
   return sent;
 }
 bool CodexHarnessSession::cancelQuestion(const QString &token) {
+  if (m_questionMcp.owns(token))
+    return m_questionMcp.complete(token,
+                                  QuestionMcpProtocol::cancelledResult());
   if (!m_pending.contains(token) ||
       m_pending.value(token).method != "item/tool/requestUserInput")
     return false;
   const auto pending = m_pending.take(token);
   const bool sent =
       m_server.respond(pending.id, QJsonObject{{"answers", QJsonObject{}}});
-  if (m_pending.isEmpty())
-    m_timeout.start(300000);
+  refreshQuestionBlock();
+  resumeAfterDecision();
   return sent;
+}
+void CodexHarnessSession::refreshQuestionBlock() {
+  bool blocked = false;
+  for (const auto &request : m_pending)
+    blocked |= request.method == "item/tool/requestUserInput";
+  m_questionMcp.setBlocked(blocked);
+}
+void CodexHarnessSession::pauseForDecision() {
+  if (m_waitRemaining < 0) {
+    m_waitRemaining = qMax(1, m_timeout.remainingTime());
+    m_timeout.stop();
+  }
+  for (auto it = m_requests.cbegin(); it != m_requests.cend(); ++it)
+    if (it.value() == "turn/start")
+      m_server.suspendDeadline(it.key());
+}
+void CodexHarnessSession::resumeAfterDecision() {
+  if (!m_busy || m_interrupted || !m_pending.isEmpty() ||
+      m_questionMcp.pending())
+    return;
+  if (m_waitRemaining >= 0) {
+    const auto remaining = m_waitRemaining;
+    m_waitRemaining = -1;
+    m_timeout.start(remaining);
+  }
+  for (auto it = m_requests.cbegin(); it != m_requests.cend(); ++it)
+    if (it.value() == "turn/start")
+      m_server.resumeDeadline(it.key());
 }
 void CodexHarnessSession::settleInputs() {
   const auto pending = m_pending;
@@ -611,6 +717,11 @@ void CodexHarnessSession::interrupt() {
   if (!m_busy)
     return;
   m_interrupted = true;
+  const auto generation = m_generation;
+  const QPointer<CodexHarnessSession> self(this);
+  m_questionMcp.endTurn();
+  if (!self || generation != m_generation || !m_busy)
+    return;
   settleInputs();
   if (m_turnId.isEmpty()) {
     m_server.stop();
@@ -630,12 +741,18 @@ void CodexHarnessSession::shutdown() {
   m_timeout.stop();
   m_pending.clear();
   m_requests.clear();
+  m_questionMcp.revoke();
   m_server.stop();
   m_options.attachments={};
   m_workspaceBinding={};m_threadId.clear();m_turnId.clear();
 }
 void CodexHarnessSession::finish(const QString &status, const QString &error) {
   if (!m_busy)
+    return;
+  const auto generation = m_generation;
+  const QPointer<CodexHarnessSession> self(this);
+  m_questionMcp.endTurn();
+  if (!self || generation != m_generation || !m_busy)
     return;
   settleInputs();
   m_timeout.stop();

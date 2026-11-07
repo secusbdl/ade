@@ -1,0 +1,75 @@
+{
+  "status": "private_frozen_ready_for_root",
+  "patch": "mime.patch",
+  "patchSha256": "8d02f8e5e2f1ba045a0434639901d8f15a08947a707da5189343fe955577c419",
+  "sourceManifest": "source-manifest.json",
+  "hashBasis": "canonical_git_text_LF",
+  "paths": [
+    "src/harness/HarnessAttachmentStore.cpp",
+    "tests/test_harness_attachment_mime.cpp"
+  ],
+  "scope": "Optional ACP resource_link mimeType only, derived from validated captured entry filename. No arbitrary MIME input accepted as authority.",
+  "upstream": {
+    "commit": "17a0123a0e896885465df36169457199d5225eb5",
+    "path": "reference/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+    "lines": [
+      11,
+      18,
+      93,
+      115
+    ],
+    "contract": "gif/jpeg/jpg/png/webp extension map, case-insensitive extension, optional mimeType on file resources. Leading-only dot is not a Node path extension."
+  },
+  "evidence": {
+    "passCases": 32,
+    "reports": [
+      {
+        "path": "final.xml",
+        "sha256": "aa9dd93a0e5465c7cce2ba4df79205aa15f1aac398329d132997e4558cafb5b3",
+        "textSha256": "546e3c1b3d4e7c9ed77e94ec4330943ad31bf26bc7dfae77729d267b46afff76"
+      },
+      {
+        "path": "compatibility-final.xml",
+        "sha256": "bec378beba16dd46c0c155333ea021313b11d60e29067ac4fb2dcbdd24c510fe",
+        "textSha256": "7523e70b1e9ae92e31aacf58f80290c691a73ee2048ac5d7fce28a8effeca3ee"
+      }
+    ],
+    "before": {
+      "path": "before.txt",
+      "sha256": "3627aa89ea097120df8e690c0a34b68661b36f4e4f6b6575ba3a2a939eb8ee42",
+      "pass": 9,
+      "fail": 9,
+      "meaning": "Actual native ACP fixture showed missing metadata for supported extension names, unsupported-inline fallback and restart."
+    },
+    "privateCandidateCorrection": {
+      "path": "dot-name-before.txt",
+      "sha256": "999f98a12ebf23ae134eb6910076db6e7d985adb808b2edbf1c60e4ec744d43a",
+      "pass": 3,
+      "fail": 1,
+      "meaning": "Initial private QFileInfo suffix mapping treated .png as extension; corrected to match Node leading-dot behavior before handoff."
+    }
+  },
+  "coverage": [
+    "Exact gif/jpeg/jpg/png/webp MIME hints, uppercase and Unicode names",
+    "Non-image/SVG/deceptive suffix and extensionless omissions; .png omitted while .hidden.PNG maps",
+    "Unsupported image capability drops inline part and uses captured name instead of input mimeType",
+    "Actual Host ignores untrusted attachment MIME/URI fields; no external URI authority",
+    "Restart derives metadata from unchanged stored name/schema",
+    "Exact original fixture byte hashes and sizes, unchanged session cwd/additional-directory policy",
+    "4MiB mapped payload rejection unchanged",
+    "Existing12-case Codex/ACP/Claude native wire suite passes"
+  ],
+  "unchanged": [
+    "Durable bytes and store schema",
+    "Native filesystem permissions and CLI approvals",
+    "Original-image transport conversion and all transport limits",
+    "Historical missing-attachment handoff remains separate and frozen"
+  ],
+  "limits": [
+    "MIME is an extension hint, not content sniffing or file-type authentication.",
+    "Original 20MiB inline image transport remains plan-only, as requested.",
+    "Native fake child protocols are used; no live APIs, GUI, credentials or model requests."
+  ],
+  "buildInputs": "../historical-attachment-stage/frozen-inputs.json",
+  "cmake": "CMAKE-ADDITIONS.cmake"
+}

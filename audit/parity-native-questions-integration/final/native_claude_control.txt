@@ -1,0 +1,22 @@
+********* Start testing of ClaudeControlTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeControlTest::initTestCase()
+PASS   : ClaudeControlTest::nativeControlShapeAndMultipleTurns()
+PASS   : ClaudeControlTest::permissionResponsesAreOneShot()
+PASS   : ClaudeControlTest::cancellationRevokesInboundResponse()
+PASS   : ClaudeControlTest::invalidProtocolFailsClosed(invalid-json)
+PASS   : ClaudeControlTest::invalidProtocolFailsClosed(invalid-utf8)
+PASS   : ClaudeControlTest::invalidProtocolFailsClosed(oversize)
+PASS   : ClaudeControlTest::invalidProtocolFailsClosed(duplicate-permission)
+PASS   : ClaudeControlTest::timeoutAndErrorAreRedacted(timeout)
+PASS   : ClaudeControlTest::timeoutAndErrorAreRedacted(error)
+PASS   : ClaudeControlTest::nullableSuccessMatchesOfficialControlSchema()
+PASS   : ClaudeControlTest::subscriptionEnvironmentDoesNotImpersonateParentOrForwardKeys()
+PASS   : ClaudeControlTest::unknownResponseCannotCompleteOwnedRequest()
+PASS   : ClaudeControlTest::deletionFromFrameAndPermissionIsSafe(stream)
+PASS   : ClaudeControlTest::deletionFromFrameAndPermissionIsSafe(permission)
+PASS   : ClaudeControlTest::stopRetiresPendingAndReplacementUsesFreshIdentity()
+PASS   : ClaudeControlTest::invalidExecutableFailsWithoutLeakingInput()
+PASS   : ClaudeControlTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 2127ms
+********* Finished testing of ClaudeControlTest *********

@@ -1,0 +1,24 @@
+{
+  "verifiedUtc": "2026-11-07T00:22:07.703676+00:00",
+  "repository": "https://github.com/secusbdl/ade",
+  "branch": "main",
+  "method": "GitHub Desktop Push origin",
+  "observedDesktopStatus": "push complete; Fetch origin; no local changes",
+  "developmentCommit": "727c57fd49a97aeded7baf543096c92a2587d52b",
+  "publishedCommit": "226c21a3f0c71c875b3cab863d06fa1a03c044cb",
+  "remoteCommit": "226c21a3f0c71c875b3cab863d06fa1a03c044cb",
+  "export": "out/parity-integration-5-source-export",
+  "exportVerification": "private/parity-harness-followups-export-verification.json",
+  "package": "out/parity-integration-5",
+  "fullNativeParity": false,
+  "localScreenshots": [
+    {
+      "name": "after-push.jpg",
+      "sha256": "e1c94c8488f2e0cca033b31c1d29fc943f911e73700fc3ef28cc92deda6a5ea0"
+    },
+    {
+      "name": "before-push.jpg",
+      "sha256": "50be3eb4b8a68023e65354a5f9f5bad5272f533925e61fcfea8be2d38fcec04c"
+    }
+  ]
+}

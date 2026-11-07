@@ -1,0 +1,12 @@
+********* Start testing of ModelSelectorDisplayTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ModelSelectorDisplayTest::initTestCase()
+FAIL!  : ModelSelectorDisplayTest::idleSelectedLabelDoesNotScrollWithCaret() 'beginning==end' returned FALSE. (An idle selected model must show the same beginning and right ellipsis regardless of its hidden editing caret.)
+D:/age/ADE/private/model-selector-display-stage/tests/test_model_selector_display.cpp(31) : failure location
+QWARN  : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft() This plugin does not support raise()
+QWARN  : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft() This plugin does not support grabbing the keyboard
+PASS   : ModelSelectorDisplayTest::focusedSearchAndUnmatchedSendKeepExactDraft()
+PASS   : ModelSelectorDisplayTest::restoredSecondInstanceKeepsFullLabelAndIdentity()
+PASS   : ModelSelectorDisplayTest::cleanupTestCase()
+Totals: 4 passed, 1 failed, 0 skipped, 0 blacklisted, 642ms
+********* Finished testing of ModelSelectorDisplayTest *********

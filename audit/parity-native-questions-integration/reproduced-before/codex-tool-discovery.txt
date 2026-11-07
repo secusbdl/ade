@@ -1,0 +1,9 @@
+********* Start testing of QuestionDiscoveryTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionDiscoveryTest::initTestCase()
+FAIL!  : QuestionDiscoveryTest::questionPrompt(enabled) 'text.contains("If your runtime exposes `functions.exec` and `ALL_TOOLS`")' returned FALSE. ()
+D:/age/ADE/private/direct-question-discovery-stage/tests/test_question_discovery.cpp(30) : failure location
+PASS   : QuestionDiscoveryTest::questionPrompt(disabled)
+PASS   : QuestionDiscoveryTest::cleanupTestCase()
+Totals: 3 passed, 1 failed, 0 skipped, 0 blacklisted, 507ms
+********* Finished testing of QuestionDiscoveryTest *********

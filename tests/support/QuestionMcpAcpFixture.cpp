@@ -76,8 +76,11 @@ public:
           continue;
         const auto result = message["result"].toObject();
         if(scenario.startsWith("wrapper"))wrapper("completed",true);
-        update(QString::fromUtf8(
-            QJsonDocument(result).toJson(QJsonDocument::Compact)));
+        // The layout-only scenario uses an ordinary acknowledgement. Other
+        // scenarios preserve the raw echo for protocol/result regression checks.
+        update(scenario == "wrapper-render"
+                   ? QStringLiteral("Thanks, I have your answer.")
+                   : QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Compact)));
         helper.closeWriteChannel();
         if (scenario != "elicitation" && scenario != "hold-after-answer")
           done();

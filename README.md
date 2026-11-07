@@ -79,6 +79,12 @@ identical model reasoning or output.
   question-wrapper presentation and durable external file attachments. Exact
   packaged UI and live smoke evidence are recorded with their binary identities.
 
+- [`audit/parity-native-questions-integration.json`](audit/parity-native-questions-integration.json)
+  records the **161-suite checkpoint**: compact native question cards, shared
+  question MCP for direct Codex/Claude sessions, historical attachment handling,
+  ACP MIME hints, selected-model label display and deferred Codex tool discovery.
+  Exact candidate bytes passed native Windows shutdown and a real Codex form flow.
+
 ## Native components to reuse
 
 | Area | Working native foundation | Source |
@@ -200,27 +206,41 @@ protocol. **Fetch Claude models** performs initialization only; it does not veri
 account entitlement or spend a model request. Questions, approvals, cancellation
 and streamed tool state use correlated native protocol handling.
 
-OpenCode can call ADE's **stagewise_request_user_input** MCP tool. The same ADE
-executable has an early stdio-helper mode; it opens the owner chat's native form
-and returns completed steps, answers and cancellation status. The real
-OpenCode/DeepSeek GUI smoke is recorded in `audit/harness-candidate-gui-native.json`.
-The direct Claude question flow has separate actual-host fixture coverage.
+OpenCode and direct Codex/Claude sessions can call ADE's
+**stagewise_request_user_input** MCP tool. The same ADE executable has an early
+stdio-helper mode; it opens the owner chat's native form and returns completed
+steps, answers and cancellation status. Human-wait deadlines pause independently
+from command approvals. Canonical wrapper records remain stored while the UI
+shows one compact question card. Declared password answers are masked in that
+card; independently authored assistant text is unchanged.
+
+The real OpenCode/DeepSeek GUI smoke is recorded in
+`audit/harness-candidate-gui-native.json`. The 161-suite checkpoint adds a real
+managed Codex native-form round trip using the same selected model before and
+after a deferred-tool discovery repair. Direct Claude has actual-host fixture
+coverage; paid Claude inference is not established by that fixture.
 
 External coding-agent attachments now keep owner-scoped copies of captured
-+original bytes. OpenCode receives native ACP file links; direct Codex and Claude
-+receive real local-path descriptors. Existing runtime permissions still apply.
-+Original files can be moved or changed after capture without changing the stored
-+input. Forks get independent copies, deletion includes owned cleanup, and context
-+replay excludes removed or pre-summary references. Inline images retain the
-+native size/encoding limits described in the checkpoint.
-+
-+Coding-agent resumes now require a binding to the immediately preceding completed
-+canonical history. Provider switches, edits and interrupted legacy history use a
-+fresh session with bounded replay. Utility tasks can use configured HTTP models
-+even when the main conversation uses a coding-agent CLI; fallback order and exact
-+provider identity are retained.
-+
-+Discovered models and visibility choices now save atomically with their provider.
+original bytes. OpenCode receives native ACP file links; direct Codex and Claude
+receive real local-path descriptors. Existing runtime permissions still apply.
+Original files can be moved or changed after capture without changing the stored
+input. Forks get independent copies, deletion includes owned cleanup, and context
+replay excludes removed or pre-summary references. Inline images retain the
+native size/encoding limits described in the checkpoint.
+
+Coding-agent resumes now require a binding to the immediately preceding completed
+canonical history. Provider switches, edits and interrupted legacy history use a
+fresh session with bounded replay. Utility tasks can use configured HTTP models
+even when the main conversation uses a coding-agent CLI; fallback order and exact
+provider identity are retained.
+
+When a retained historical attachment is provably absent from both its cache and
+original location, replay omits it with a bounded logical-label notice. Invalid
+captured bytes and missing current attachments remain errors. ACP captured-file
+links carry optional extension-derived image MIME hints; original large-image
+inline transport remains a separate gap at this checkpoint.
+
+Discovered models and visibility choices now save atomically with their provider.
 Eligible pinned provider templates apply source-derived defaults on first discovery;
 manual enable/disable choices survive refresh and restart. A complete inventory
 with no enabled models can be saved, then enabled through **Models**. Endpoint or

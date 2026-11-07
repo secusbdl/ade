@@ -1,5 +1,6 @@
 #include "AgentEngine.h"
 #include "harness/ClaudeHarnessSession.h"
+#include <QCoreApplication>
 #include <QJsonDocument>
 #include <QUuid>
 namespace ade {
@@ -102,6 +103,38 @@ void AgentEngine::requestClaudeHarness(const QJsonArray &originalInput,
               emit displayChanged();
             }
           });
+  connect(
+      m_claude, &ClaudeHarnessSession::stagewiseQuestionRequired, this,
+      [this, generation](const QString &token, const QJsonObject &definition) {
+        if (!m_busy || generation != m_generation)
+          return;
+        if (!m_questionToolEnabled || !m_questionToken.isEmpty()) {
+          m_claude->cancelQuestion(token);
+          return;
+        }
+        QuestionForm form;
+        QString error;
+        if (!form.begin(definition, &error)) {
+          m_claude->completeStagewiseQuestion(token, {}, error);
+          return;
+        }
+        m_question = std::move(form);
+        m_harnessQuestionToken = token;
+        m_questionToken = QUuid::createUuid().toString(QUuid::WithoutBraces);
+        m_questionCallId = "claude-code/" + m_claude->questionTurnId() +
+                           "/stagewise-mcp:" + token;
+        emit questionChanged();
+      });
+  connect(m_claude, &ClaudeHarnessSession::stagewiseQuestionCancelled, this,
+          [this, generation](const QString &token) {
+            if (generation != m_generation || token != m_harnessQuestionToken)
+              return;
+            m_harnessQuestionToken.clear();
+            m_questionToken.clear();
+            m_questionCallId.clear();
+            m_questionStopReason.clear();
+            emit questionChanged();
+          });
   connect(m_claude, &ClaudeHarnessSession::failed, this,
           [this, generation](const QString &error) {
             if (m_busy && generation == m_generation)
@@ -155,6 +188,8 @@ void AgentEngine::requestClaudeHarness(const QJsonArray &originalInput,
   options.workspace = m_tools.workspace().isEmpty() ? m_harnessFallbackWorkspace
                                                     : m_tools.workspace();
   options.alwaysAllow = m_alwaysAllow;
+  if (m_questionToolEnabled)
+    options.questionMcpExecutable = QCoreApplication::applicationFilePath();
   options.questionsEnabled = m_questionToolEnabled;
   if (!transcript.isEmpty())
     options.historyContext = "<conversation-history>\n" +

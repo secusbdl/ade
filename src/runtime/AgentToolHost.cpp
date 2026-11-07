@@ -50,13 +50,12 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         return {};
       }
       const auto handoff = guard->m_harnessAttachments;
-      const auto original = guard->m_attachmentStore;
-      const auto owner = guard->m_agentId;
-      const auto mounts = guard->m_attachmentMounts;
+      const HarnessAttachmentSource source(handoff.profileDirectory(), guard->m_agentId,
+                                           guard->m_attachmentMounts);
       const auto media = ModelMediaCatalog::resolve(provider);
-      return [handoff, original, owner, history, mounts,
+      return [handoff, source, history,
               media](const std::atomic_bool *cancelled) {
-        return prepareHarnessInput(handoff, original, owner, history, mounts,
+        return prepareHarnessInput(handoff, source, history,
                                    media, cancelled);
       };
     });

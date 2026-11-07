@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "ModelSelector.h"
 #include <QStandardItemModel>
 #include "AgentCycleController.h"
 #include "ChevronToolButton.h"
@@ -142,7 +143,7 @@ void MainWindow::buildUi() {
     connect(draftTimer,&QTimer::timeout,this,&MainWindow::saveSessions);
     auto* controls=new QHBoxLayout;controls->setContentsMargins(0,0,0,0);controls->setSpacing(4);
     auto* selectors=new QWidget;selectors->setObjectName("composerSelectors");selectors->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);auto* flow=new FlowLayout(selectors);
-    m_models=new QComboBox;m_models->setObjectName("modelSelector");m_models->setSizeAdjustPolicy(QComboBox::AdjustToContents);m_models->setMinimumWidth(0);m_models->setMaximumWidth(270);flow->addWidget(m_models);
+    m_models=new ModelSelector;m_models->setObjectName("modelSelector");m_models->setSizeAdjustPolicy(QComboBox::AdjustToContents);m_models->setMinimumWidth(0);m_models->setMaximumWidth(270);flow->addWidget(m_models);
     m_permissions=new QComboBox;m_permissions->setObjectName("permissionSelector");m_permissions->addItem("Ask before changes",false);m_permissions->addItem("Always allow",true);flow->addWidget(m_permissions);controls->addWidget(selectors,1);
     connect(m_permissions,&QComboBox::currentIndexChanged,this,[this]{
         const auto* session=current();if(!session)return;

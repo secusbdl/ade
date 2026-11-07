@@ -1,0 +1,25 @@
+********* Start testing of ComposerHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ComposerHostTest::initTestCase()
+QWARN  : ComposerHostTest::fileSelectionCapturesAttachmentAndPersistsDraft() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::fileSelectionCapturesAttachmentAndPersistsDraft() This plugin does not support raise()
+PASS   : ComposerHostTest::fileSelectionCapturesAttachmentAndPersistsDraft()
+QWARN  : ComposerHostTest::workspaceChoiceHasPhysicalIdentityAndNoAttachment() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::workspaceChoiceHasPhysicalIdentityAndNoAttachment() This plugin does not support raise()
+PASS   : ComposerHostTest::workspaceChoiceHasPhysicalIdentityAndNoAttachment()
+QWARN  : ComposerHostTest::staleSearchDoesNotAppearInAnotherChat() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::staleSearchDoesNotAppearInAnotherChat() This plugin does not support raise()
+PASS   : ComposerHostTest::staleSearchDoesNotAppearInAnotherChat()
+QWARN  : ComposerHostTest::saveConflictPreservesTokenAndAttachmentList() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::saveConflictPreservesTokenAndAttachmentList() This plugin does not support raise()
+PASS   : ComposerHostTest::saveConflictPreservesTokenAndAttachmentList()
+QWARN  : ComposerHostTest::skillsRespectInvocabilityAndDisabledPreferences() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::skillsRespectInvocabilityAndDisabledPreferences() This plugin does not support raise()
+QWARN  : ComposerHostTest::skillsRespectInvocabilityAndDisabledPreferences() This plugin does not support raise()
+PASS   : ComposerHostTest::skillsRespectInvocabilityAndDisabledPreferences()
+QWARN  : ComposerHostTest::slashInvocationReachesActualTurnContext() This plugin does not support propagateSizeHints()
+QWARN  : ComposerHostTest::slashInvocationReachesActualTurnContext() This plugin does not support raise()
+PASS   : ComposerHostTest::slashInvocationReachesActualTurnContext()
+PASS   : ComposerHostTest::cleanupTestCase()
+Totals: 8 passed, 0 failed, 0 skipped, 0 blacklisted, 3037ms
+********* Finished testing of ComposerHostTest *********

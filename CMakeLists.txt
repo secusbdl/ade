@@ -974,3 +974,64 @@ foreach(test IN ITEMS harness_attachments_host harness_cleanup_host)
 endforeach()
 # Existing native_harness_files includes its new deferred-cleanup case.
 # Existing native_attachments verifies unchanged HTTP image/text transformations.
+
+# New helpers are discovered by production UI_SOURCES CONFIGURE_DEPENDS glob.
+# Both standalone targets compile ConversationView directly and need its helper.
+foreach(question_standalone IN ITEMS test_file_diff test_transcript)
+  target_sources(${question_standalone} PRIVATE src/ui/QuestionToolPart.cpp src/ui/QuestionToolPart.h)
+endforeach()
+foreach(question_test IN ITEMS question_presentation question_presentation_host)
+  qt_add_executable(test_${question_test} tests/test_${question_test}.cpp)
+  target_link_libraries(test_${question_test} PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${question_test} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_target_properties(test_${question_test} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${question_test} COMMAND test_${question_test} -o "${CMAKE_BINARY_DIR}/Testing/native_${question_test}.txt,txt")
+  set_tests_properties(native_${question_test} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+# Existing test_mcp_presentation/acp_mcp_fixture targets remain unchanged.
+# Optional saved captures:
+# ADE_QUESTION_RENDER_DIRECTORY=<path> test_question_presentation
+# ADE_MCP_RENDER_DIRECTORY=<path> test_mcp_presentation
+
+# HarnessQuestionMcp.cpp/.h are included by the existing ade_harness glob.
+# Reconfigure and rebuild all consumers: both session option/class layouts change.
+qt_add_executable(direct_mcp_fixture tests/support/DirectMcpFixture.cpp)
+target_link_libraries(direct_mcp_fixture PRIVATE Qt6::Core)
+set_target_properties(direct_mcp_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_direct_question_mcp tests/test_direct_question_mcp.cpp)
+target_link_libraries(test_direct_question_mcp PRIVATE ade_core Qt6::Test)
+target_compile_definitions(test_direct_question_mcp PRIVATE DIRECT_MCP_ADAPTER_CASES)
+set_target_properties(test_direct_question_mcp PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_dependencies(test_direct_question_mcp direct_mcp_fixture)
+add_test(NAME native_direct_question_mcp COMMAND test_direct_question_mcp -o "${CMAKE_BINARY_DIR}/Testing/native_direct_question_mcp.txt,txt")
+set_tests_properties(native_direct_question_mcp PROPERTIES TIMEOUT 90)
+
+qt_add_executable(test_harness_attachment_mime tests/test_harness_attachment_mime.cpp)
+target_link_libraries(test_harness_attachment_mime PRIVATE ade_host Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_harness_attachment_mime INCLUDE Qt6::QSQLiteDriverPlugin Qt6::QOffscreenIntegrationPlugin)
+add_dependencies(test_harness_attachment_mime attachment_acp_fixture)
+set_target_properties(test_harness_attachment_mime PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_harness_attachment_mime COMMAND test_harness_attachment_mime -o "${CMAKE_BINARY_DIR}/Testing/native_harness_attachment_mime.txt,txt")
+set_tests_properties(native_harness_attachment_mime PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+# Additive integration only; existing attachment test fixtures stay unchanged.
+target_sources(ade_host PRIVATE src/runtime/HarnessAttachmentSource.cpp src/runtime/HarnessAttachmentSource.h)
+foreach(name historical_attachments harness_attachment_source)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  target_link_libraries(test_${name} PRIVATE ade_host Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${name} INCLUDE Qt6::QSQLiteDriverPlugin Qt6::QOffscreenIntegrationPlugin)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+add_dependencies(test_historical_attachments attachment_codex_fixture attachment_acp_fixture attachment_claude_fixture)
+
+# ModelSelector.cpp/.h discovered by existing UI source glob.
+qt_add_executable(test_model_selector_display tests/test_model_selector_display.cpp)
+target_link_libraries(test_model_selector_display PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_model_selector_display INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_model_selector_display PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_model_selector_display COMMAND test_model_selector_display -o "${CMAKE_BINARY_DIR}/Testing/native_model_selector_display.txt,txt")
+set_tests_properties(native_model_selector_display PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+# Optional actual MainWindow crops/full images:
+# ADE_MODEL_SELECTOR_RENDER_DIRECTORY=<path> test_model_selector_display

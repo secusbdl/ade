@@ -1,4 +1,5 @@
 #include "ConversationView.h"
+#include "QuestionToolPart.h"
 #include "ImagePreview.h"
 #include "TrustedImage.h"
 #include "MainWindow.h"
@@ -114,7 +115,7 @@ void MainWindow::routeTranscriptLink(const QString& id, const QString& rowId, co
             continue;
         for (const auto& entry : row["parts"].toArray()) {
             const auto part = entry.toObject();
-            if (part["id"] == partId && (part["type"] == "text" || part["type"] == "reasoning"))
+            if (part["id"] == partId && (part["type"] == "text" || part["type"] == "reasoning" || isNativeQuestionPart(part)))
                 present = true;
         }
     }

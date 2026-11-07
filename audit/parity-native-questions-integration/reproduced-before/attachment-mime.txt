@@ -1,0 +1,49 @@
+********* Start testing of HarnessAttachmentMimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HarnessAttachmentMimeTest::initTestCase()
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.gif) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/gif"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.jpeg) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/jpeg"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.jpg) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/jpeg"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/png"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.webp) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/webp"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(Unicode-é.PNG) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/png"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(UPPER.JPEG) Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/jpeg"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.txt)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.svg)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png.exe)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(a.png?mimeType=image/png)
+PASS   : HarnessAttachmentMimeTest::extensionHintReachesActualAcpWire(no-extension)
+FAIL!  : HarnessAttachmentMimeTest::unsupportedInlineImageUsesCapturedNameNotInputMime() Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/png"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+FAIL!  : HarnessAttachmentMimeTest::restartReconstructsHintWithoutSchemaChange() Compared values are not the same
+   Actual   (object["mimeType"].toString()): ""
+   Expected (expected)                     : "image/webp"
+D:/age/ADE/private/harness-attachment-mime-stage/tests/test_harness_attachment_mime.cpp(53) : failure location
+PASS   : HarnessAttachmentMimeTest::explicitMetadataCannotInventMime()
+PASS   : HarnessAttachmentMimeTest::transportBoundRemainsFourMiB()
+PASS   : HarnessAttachmentMimeTest::cleanupTestCase()
+Totals: 9 passed, 9 failed, 0 skipped, 0 blacklisted, 3243ms
+********* Finished testing of HarnessAttachmentMimeTest *********

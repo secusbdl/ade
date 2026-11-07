@@ -1,0 +1,42 @@
+********* Start testing of HistoricalAttachmentTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : HistoricalAttachmentTest::initTestCase()
+FAIL!  : HistoricalAttachmentTest::missingHistoricalContinuesWithNotice(codex) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 0
+   Expected (success)                   : 1
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::missingHistoricalContinuesWithNotice(opencode) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 0
+   Expected (success)                   : 1
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::missingHistoricalContinuesWithNotice(claude-code) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 0
+   Expected (success)                   : 1
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::corruptSnapshotCannotFallBackToValidOriginal(codex) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::corruptSnapshotCannotFallBackToValidOriginal(opencode) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::corruptSnapshotCannotFallBackToValidOriginal(claude-code) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::inaccessibleHistoricalSnapshotStillFails(codex) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::inaccessibleHistoricalSnapshotStillFails(opencode) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+FAIL!  : HistoricalAttachmentTest::inaccessibleHistoricalSnapshotStillFails(claude-code) Compared values are not the same
+   Actual   (engine.lastTurnSucceeded()): 1
+   Expected (success)                   : 0
+D:/age/ADE/private/historical-attachment-stage/tests/test_historical_attachments.cpp(119) : failure location
+PASS   : HistoricalAttachmentTest::cleanupTestCase()
+Totals: 2 passed, 9 failed, 0 skipped, 0 blacklisted, 3502ms
+********* Finished testing of HistoricalAttachmentTest *********

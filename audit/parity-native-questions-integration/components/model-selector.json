@@ -1,0 +1,87 @@
+{
+  "status": "frozen_private_ready_for_parent_integration",
+  "date": "2026-11-07",
+  "nativeHeadAtHandoff": "727c57fd49a97aeded7baf543096c92a2587d52b",
+  "patch": "model-selector-display.patch",
+  "patchCanonicalLfSha256": "28665531c7f072a952b9ee4c71d335f742912645de4f767ed9c81fa013539532",
+  "manifest": "manifest.json",
+  "cmake": "CMAKE-HANDOFF.txt",
+  "applyCheck": {
+    "path": "apply-check.txt",
+    "exitCode": 0
+  },
+  "source": {
+    "path": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/model-select.tsx",
+    "lines": "899-924",
+    "contract": "Selected display name is a min-width-zero truncate span in the trigger; query is separate popup input. Native still retains existing editable combo, not full source popup parity."
+  },
+  "observedDefect": "Actual package selected label showed its tail because editable QLineEdit horizontally scrolls to its editing caret. MainWindow refreshModels blocks combo signals, so its existing currentIndexChanged cursor-reset hook cannot reliably anchor restored text. Actual host regression reproduces differing idle images at caret0/end.",
+  "fix": [
+    "New ModelSelector uses ordinary QLineEdit when focused or displaying an unmatched/manual query.",
+    "Only an unfocused exact selected label paints left anchored with right ellipsis using native style/font/palette/content rect. Full underlying text, caret, model identity and selection persistence are untouched.",
+    "Full selected/query text remains tooltip via child textChanged even when combo signals are blocked; handler is terminal.",
+    "MainWindow change is include + replacing only the model combo construction. No header ABI, provider, composer send, SideChat or filtering contract changes."
+  ],
+  "before": {
+    "report": "before.txt",
+    "junit": "before.xml",
+    "passed": 4,
+    "failed": 1,
+    "failedCase": "idleSelectedLabelDoesNotScrollWithCaret",
+    "render": "renders/before/idle-at-end.png"
+  },
+  "final": {
+    "tests": 18,
+    "failures": 0,
+    "reports": [
+      {
+        "report": "final.txt",
+        "junit": "final.xml",
+        "tests": 9,
+        "failures": 0,
+        "scope": "new complete suite"
+      },
+      {
+        "report": "compat-navigation.txt",
+        "junit": "compat-navigation.xml",
+        "tests": 5,
+        "failures": 0,
+        "scope": "focused existing cases only"
+      },
+      {
+        "report": "compat-ui.txt",
+        "junit": "compat-ui.xml",
+        "tests": 4,
+        "failures": 0,
+        "scope": "focused existing cases only"
+      }
+    ],
+    "notes": "9/9 new actual MainWindow cases plus5/5 focused navigation and4/4 focused UI-audit rows. Not full existing-suite runs."
+  },
+  "fixtureCorrection": {
+    "reports": [
+      "expanded-initial.txt",
+      "baseline-completion.txt"
+    ],
+    "explanation": "Initial new completion fixture sent keys to the edit while completion popup owned input; it failed identically on unmodified baseline and patched host. Revised fixture clicks the real completion popup viewport row after proving one case-insensitive substring match. No production completion behavior change was made."
+  },
+  "captures": "renders/index.json",
+  "peerReview": {
+    "reviewer": "license_review",
+    "scope": "Bounded source-only idle-paint/owner/callback review found no concrete issue. Focused/manual-query paint remains base QLineEdit; tooltip handler terminal; no independent runtime test or universal custom-style callback guarantee."
+  },
+  "dependencies": {
+    "cohort": "../question-presentation-stage/host/cohort/manifest.json",
+    "scope": "Uses the previously copied coherent154-suite root headers/libraries, replacing only MainWindow/ModelSelector object implementation. No mutable shared archive dependencies."
+  },
+  "limits": [
+    "Focused editable search may horizontally scroll normally to its caret; idle exact-selected display is the repaired contract.",
+    "Existing native combo still lacks source provider logo and separate query-popup layout; this narrow fix does not claim full model-selector parity.",
+    "Current geometry gates cover1100/350 widths,light/dark and long Latin fixture labels. Qt handles font/elision; no assertion of universal glyph/layout behavior.",
+    "Full shared rebuild, integration and packaged Windows confirmation remain parent-owned/pending."
+  ],
+  "productionChanges": false,
+  "desktopInput": false,
+  "credentialsOrLiveServices": false,
+  "runningPrivateProcesses": []
+}

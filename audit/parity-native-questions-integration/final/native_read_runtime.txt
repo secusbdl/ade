@@ -1,0 +1,19 @@
+********* Start testing of ReadRuntimeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ReadRuntimeTest::initTestCase()
+PASS   : ReadRuntimeTest::currentEngineAndHostPrepareCapturedRanges(openai)
+PASS   : ReadRuntimeTest::currentEngineAndHostPrepareCapturedRanges(responses)
+PASS   : ReadRuntimeTest::currentEngineAndHostPrepareCapturedRanges(anthropic)
+PASS   : ReadRuntimeTest::currentEngineAndHostPrepareCapturedRanges(google)
+PASS   : ReadRuntimeTest::samePathDifferentCallsCaptureEachVersion()
+PASS   : ReadRuntimeTest::appsImageAndDirectoryProduceTransientParts()
+PASS   : ReadRuntimeTest::sessionCloneRetainsReadsAndAttachmentsAfterSourceDeletion()
+PASS   : ReadRuntimeTest::deleteDuringCaptureDoesNotRecreateStorage()
+PASS   : ReadRuntimeTest::cloneRefusesAnOwnedDestinationWithoutChangingIt()
+PASS   : ReadRuntimeTest::emptySourceCannotCloneOverUnownedAttachmentContext()
+PASS   : ReadRuntimeTest::sessionConflictKeepsSourceAndRollsBackOnlyFreshClone()
+PASS   : ReadRuntimeTest::busySourceCanClonePublishedToolContextWithoutCancellation()
+PASS   : ReadRuntimeTest::busyUnpublishedCaptureDoesNotBlockOrAlterClonedHistory()
+PASS   : ReadRuntimeTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 2944ms
+********* Finished testing of ReadRuntimeTest *********

@@ -1,0 +1,142 @@
+********* Start testing of DirectMcpTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : DirectMcpTests::initTestCase()
+FAIL!  : DirectMcpTests::actualBridge(codex) '!e.pendingQuestion().isEmpty()' returned FALSE. ([
+    {
+        "content": "Ask shared form",
+        "metadata": {
+            "display": {
+                "id": "690d0125-ce02-4cc6-b993-c57ff6012a29",
+                "parts": [
+                    {
+                        "id": "690d0125-ce02-4cc6-b993-c57ff6012a29/0",
+                        "state": "done",
+                        "text": "Ask shared form",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            },
+            "harness": {
+                "executable": "D:/age/ADE/private/direct-question-mcp-stage/bin/direct_mcp_fixture.exe",
+                "kind": "codex",
+                "ownerId": "owner",
+                "providerId": "codex",
+                "threadId": "thread-1",
+                "version": 1,
+                "workspace": "C:/Users/secus/AppData/Local/Temp/test_direct_question_before-EfEDuF",
+                "workspaceIdentity": "ce14355b1435482b:71300900000074000000000000000000:1dd6e49:7b841925"
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "NO_MCP",
+        "metadata": {
+            "display": {
+                "id": "e9e478f0-6dcf-461b-af77-a3474082f350",
+                "parts": [
+                    {
+                        "id": "e9e478f0-6dcf-461b-af77-a3474082f350/0",
+                        "state": "done",
+                        "text": "NO_MCP",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            },
+            "harness": {
+                "continuity": {
+                    "digest": "d034cfcca5923aed0e7d3f43d9417baf74735bb320cbc1dbbec40237c3e2947a",
+                    "kind": "codex",
+                    "ownerId": "owner",
+                    "providerId": "codex",
+                    "version": 1
+                },
+                "executable": "D:/age/ADE/private/direct-question-mcp-stage/bin/direct_mcp_fixture.exe",
+                "kind": "codex",
+                "ownerId": "owner",
+                "providerId": "codex",
+                "threadId": "thread-1",
+                "version": 1,
+                "workspace": "C:/Users/secus/AppData/Local/Temp/test_direct_question_before-EfEDuF",
+                "workspaceIdentity": "ce14355b1435482b:71300900000074000000000000000000:1dd6e49:7b841925"
+            }
+        },
+        "role": "assistant"
+    }
+]
+)
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(31) : failure location
+FAIL!  : DirectMcpTests::actualBridge(claude) '!e.pendingQuestion().isEmpty()' returned FALSE. ([
+    {
+        "content": "Ask shared form",
+        "metadata": {
+            "display": {
+                "id": "a46705fb-01c3-4f16-874b-f5e6e6faf155",
+                "parts": [
+                    {
+                        "id": "a46705fb-01c3-4f16-874b-f5e6e6faf155/0",
+                        "state": "done",
+                        "text": "Ask shared form",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            },
+            "harness": {
+                "alwaysAllow": false,
+                "executable": "D:/age/ADE/private/direct-question-mcp-stage/bin/direct_mcp_fixture.exe",
+                "kind": "claude-code",
+                "ownerId": "owner",
+                "providerId": "claude-code",
+                "sessionId": "8a010488-bbca-4caf-b7d9-b68e2f2ef9a9",
+                "version": 1,
+                "workspace": "C:/Users/secus/AppData/Local/Temp/test_direct_question_before-DqsSbA",
+                "workspaceIdentity": "ce14355b1435482b:71300900000075000000000000000000:1dd6e49:7bb23417"
+            }
+        },
+        "role": "user"
+    },
+    {
+        "content": "NO_MCP",
+        "metadata": {
+            "display": {
+                "id": "f77753cc-f5d3-4097-b525-574ea3707fe3",
+                "parts": [
+                    {
+                        "id": "f77753cc-f5d3-4097-b525-574ea3707fe3/0",
+                        "state": "done",
+                        "text": "NO_MCP",
+                        "type": "text"
+                    }
+                ],
+                "version": 1
+            },
+            "harness": {
+                "alwaysAllow": false,
+                "continuity": {
+                    "digest": "d034cfcca5923aed0e7d3f43d9417baf74735bb320cbc1dbbec40237c3e2947a",
+                    "kind": "claude-code",
+                    "ownerId": "owner",
+                    "providerId": "claude-code",
+                    "version": 1
+                },
+                "executable": "D:/age/ADE/private/direct-question-mcp-stage/bin/direct_mcp_fixture.exe",
+                "kind": "claude-code",
+                "ownerId": "owner",
+                "providerId": "claude-code",
+                "sessionId": "8a010488-bbca-4caf-b7d9-b68e2f2ef9a9",
+                "version": 1,
+                "workspace": "C:/Users/secus/AppData/Local/Temp/test_direct_question_before-DqsSbA",
+                "workspaceIdentity": "ce14355b1435482b:71300900000075000000000000000000:1dd6e49:7bb23417"
+            }
+        },
+        "role": "assistant"
+    }
+]
+)
+D:/age/ADE/private/direct-question-mcp-stage/tests/test_direct_question_mcp.cpp(31) : failure location
+PASS   : DirectMcpTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 499ms
+********* Finished testing of DirectMcpTests *********

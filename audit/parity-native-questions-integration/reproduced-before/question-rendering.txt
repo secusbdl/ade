@@ -1,0 +1,12 @@
+********* Start testing of QuestionPresentationTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionPresentationTest::initTestCase()
+QWARN  : QuestionPresentationTest::pendingUsesCompactSourceStatus() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionPresentationTest::pendingUsesCompactSourceStatus() 'view.toPlainText().contains("Waiting for response...")' returned FALSE. ()
+D:/age/ADE/private/question-presentation-stage/tests/test_question_presentation.cpp(25) : failure location
+QWARN  : QuestionPresentationTest::completionFormatsAndMasksWithoutMutatingCanonical() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionPresentationTest::completionFormatsAndMasksWithoutMutatingCanonical() '!rendered.contains("SYNTHETIC_PRIVATE_ANSWER")' returned FALSE. (Question transcript must mask password answers.)
+D:/age/ADE/private/question-presentation-stage/tests/test_question_presentation.cpp(26) : failure location
+PASS   : QuestionPresentationTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 71ms
+********* Finished testing of QuestionPresentationTest *********

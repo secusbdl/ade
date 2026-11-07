@@ -1,5 +1,6 @@
 #include "ClaudeHarnessSession.h"
 #include "ClaudeQuestion.h"
+#include "QuestionMcpProtocol.h"
 #include <QJsonDocument>
 #include <QStandardPaths>
 #include <QUuid>
@@ -27,7 +28,24 @@ QJsonObject usage(const QJsonObject &value) {
 }
 } // namespace
 ClaudeHarnessSession::ClaudeHarnessSession(QObject *parent)
-    : QObject(parent), m_process(this) {
+    : QObject(parent), m_questionMcp(this), m_process(this) {
+  connect(&m_questionMcp, &HarnessQuestionMcp::pendingChanged, this,
+          [this](bool pending) {
+            if (pending) {
+              m_resumeActivity = true;
+              pauseForDecision();
+            } else
+              resumeAfterDecision();
+          });
+  connect(&m_questionMcp, &HarnessQuestionMcp::event, this,
+          [this](const QJsonObject &value) {
+            if (m_busy)
+              emit event(value);
+          });
+  connect(&m_questionMcp, &HarnessQuestionMcp::required, this,
+          &ClaudeHarnessSession::stagewiseQuestionRequired);
+  connect(&m_questionMcp, &HarnessQuestionMcp::cancelled, this,
+          &ClaudeHarnessSession::stagewiseQuestionCancelled);
   m_deadline.setSingleShot(true);
   m_cancelDeadline.setSingleShot(true);
   connect(&m_deadline, &QTimer::timeout, this,
@@ -110,14 +128,15 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
     emit failed("Claude thinking settings are outside the supported range.");
     return false;
   }
-  const bool sameIdentity = m_options.executable == executable &&
-                            m_options.providerId == options.providerId &&
-                            m_workspace.identity == workspace.identity &&
-                            m_options.alwaysAllow == options.alwaysAllow &&
-                            m_options.model == options.model &&
-                            m_options.effort == options.effort &&
-                            m_options.thinkingMode == options.thinkingMode &&
-                            m_options.thinkingBudget == options.thinkingBudget;
+  const bool sameIdentity =
+      m_options.executable == executable &&
+      m_options.providerId == options.providerId &&
+      m_workspace.identity == workspace.identity &&
+      m_options.alwaysAllow == options.alwaysAllow &&
+      m_options.model == options.model && m_options.effort == options.effort &&
+      m_options.thinkingMode == options.thinkingMode &&
+      m_options.thinkingBudget == options.thinkingBudget &&
+      m_options.questionMcpExecutable == options.questionMcpExecutable;
   const bool reuse = sameIdentity && m_initialized && m_process.isRunning() &&
                      !saved.value("fork").toBool();
   ++m_generation;
@@ -130,6 +149,7 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
   m_eventCount = 0;
   m_waitRemaining = -1;
   m_pending.clear();
+  m_questionMcp.setBlocked(false);
   m_input = input;
   m_options = options;
   m_options.executable = executable;
@@ -162,6 +182,18 @@ bool ClaudeHarnessSession::startTurn(const ClaudeHarnessOptions &options,
 }
 bool ClaudeHarnessSession::launchProcess(const QString &resumeId, bool fork) {
   const auto &options = m_options;
+  QJsonObject mcpConfig;
+  if (!options.questionMcpExecutable.isEmpty()) {
+    QString error;
+    const auto config =
+        m_questionMcp.configure(options.questionMcpExecutable, &error);
+    if (config.isEmpty()) {
+      finish("failed", error);
+      return false;
+    }
+    mcpConfig = QJsonObject{{"mcpServers", QJsonObject{{"stagewise", config}}}};
+  } else
+    m_questionMcp.revoke();
   QStringList args{"--print",
                    "--input-format",
                    "stream-json",
@@ -179,6 +211,10 @@ bool ClaudeHarnessSession::launchProcess(const QString &resumeId, bool fork) {
       args << "--fork-session";
   } else
     args << "--session-id=" + m_sessionId;
+  if (!mcpConfig.isEmpty())
+    args << "--mcp-config"
+         << QString::fromUtf8(
+                QJsonDocument(mcpConfig).toJson(QJsonDocument::Compact));
   if (!options.model.isEmpty() && options.model != "default")
     args << "--model" << options.model;
   if (!options.effort.isEmpty())
@@ -264,6 +300,11 @@ void ClaudeHarnessSession::sendPrompt() {
   const auto prepared=mapHarnessAttachments(m_input,m_options.attachments,false,true,m_created,&attachmentError);
   if(!attachmentError.isEmpty()){finish("failed",attachmentError);return;}
   QJsonArray content;
+  if (!m_options.questionMcpExecutable.isEmpty()) {
+    m_questionMcp.beginTurn(m_turnId);
+    content.append(QJsonObject{{"type", "text"},
+                               {"text", HarnessQuestionMcp::preference()}});
+  }
   // Per-turn context avoids relying on a stale resumed system-prompt snapshot.
   if (!m_options.instructions.isEmpty())
     content.append(QJsonObject{
@@ -300,7 +341,18 @@ bool ClaudeHarnessSession::publishUpdates(const QJsonArray &updates) {
       finish("failed", "Claude turn output exceeded its event limit.");
       return false;
     }
-    emit event(value.toObject());
+    auto display = value.toObject();
+    if (display.value("type") == "tool") {
+      const bool ownedWrapper =
+          !m_options.questionMcpExecutable.isEmpty() &&
+          display.value("name") ==
+              "claude.mcp__stagewise__stagewise_request_user_input";
+      display["acpPresentation"] =
+          ownedWrapper ? HarnessQuestionMcp::wrapperPresentation(
+                             display.value("name").toString())
+                       : QJsonObject{};
+    }
+    emit event(display);
     if (!self || generation != m_generation || !m_busy || m_interrupted)
       return false;
   }
@@ -417,7 +469,7 @@ void ClaudeHarnessSession::request(const QString &id, const QString &subtype,
   const auto input = request.value("input").toObject();
   if (name == "AskUserQuestion") {
     const auto form = claudeQuestionForm(input);
-    bool otherQuestion = false;
+    bool otherQuestion = m_questionMcp.pending();
     for (const auto &pending : m_pending)
       otherQuestion |= pending.question;
     if (!m_options.questionsEnabled || form.isEmpty() || otherQuestion) {
@@ -429,6 +481,7 @@ void ClaudeHarnessSession::request(const QString &id, const QString &subtype,
     }
     const auto token = QUuid::createUuid().toString(QUuid::WithoutBraces);
     m_pending.insert(token, {id, toolId, input, true});
+    m_questionMcp.setBlocked(true);
     pauseForDecision();
     emit questionRequired(token, request, form);
     return;
@@ -458,13 +511,18 @@ bool ClaudeHarnessSession::answerApproval(const QString &token, bool allow) {
 }
 bool ClaudeHarnessSession::validQuestionAnswer(
     const QString &token, const QJsonObject &answers) const {
+  if (m_questionMcp.owns(token))
+    return m_busy && !m_interrupted;
   const auto it = m_pending.constFind(token);
   return m_busy && !m_interrupted && it != m_pending.cend() && it->question &&
          claudeQuestionResponse(it->input, answers, nullptr);
 }
 bool ClaudeHarnessSession::answerQuestion(const QString &token,
                                           const QJsonObject &answers) {
-  if (!validQuestionAnswer(token, answers))
+  // Shared MCP answers require the full completed/cancelled/steps envelope.
+  // validQuestionAnswer also serves Engine preflight, but this API is
+  // native-only.
+  if (m_questionMcp.owns(token) || !validQuestionAnswer(token, answers))
     return false;
   const auto pending = m_pending.value(token);
   QJsonObject updated;
@@ -475,6 +533,9 @@ bool ClaudeHarnessSession::answerQuestion(const QString &token,
                            {{"behavior", "allow"}, {"updatedInput", updated}});
 }
 bool ClaudeHarnessSession::cancelQuestion(const QString &token) {
+  if (m_questionMcp.owns(token))
+    return m_questionMcp.complete(token,
+                                  QuestionMcpProtocol::cancelledResult());
   const auto it = m_pending.constFind(token);
   if (!m_busy || it == m_pending.cend() || !it->question)
     return false;
@@ -504,7 +565,12 @@ void ClaudeHarnessSession::pauseForDecision() {
   }
 }
 void ClaudeHarnessSession::resumeAfterDecision() {
-  if (m_busy && !m_interrupted && m_pending.isEmpty() && m_waitRemaining >= 0) {
+  bool blocked = false;
+  for (const auto &request : m_pending)
+    blocked |= request.question;
+  m_questionMcp.setBlocked(blocked);
+  if (m_busy && !m_interrupted && m_pending.isEmpty() &&
+      !m_questionMcp.pending() && m_waitRemaining >= 0) {
     const auto remaining = m_waitRemaining;
     m_waitRemaining = -1;
     m_deadline.start(remaining);
@@ -514,6 +580,11 @@ void ClaudeHarnessSession::interrupt() {
   if (!m_busy)
     return;
   m_interrupted = true;
+  const auto generation = m_generation;
+  const QPointer<ClaudeHarnessSession> self(this);
+  m_questionMcp.endTurn();
+  if (!self || generation != m_generation || !m_busy)
+    return;
   const auto pending = m_pending;
   m_pending.clear();
   for (const auto &item : pending)
@@ -531,13 +602,29 @@ void ClaudeHarnessSession::interrupt() {
 void ClaudeHarnessSession::finish(const QString &status, const QString &error) {
   if (!m_busy)
     return;
+  const auto originalGeneration = m_generation;
+  const QPointer<ClaudeHarnessSession> originalSelf(this);
+  m_questionMcp.endTurn();
+  if (!originalSelf || originalGeneration != m_generation || !m_busy)
+    return;
   // Normalize terminal state before observers see completion. Emit snapshots
   // only here, keeping growing streamed tool inputs out of retained history.
   const auto closing = m_stream.finish(status);
   const auto generation = m_generation;
   const QPointer<ClaudeHarnessSession> self(this);
   for (const auto &value : closing) {
-    emit event(value.toObject());
+    auto display = value.toObject();
+    if (display.value("type") == "tool") {
+      const bool ownedWrapper =
+          !m_options.questionMcpExecutable.isEmpty() &&
+          display.value("name") ==
+              "claude.mcp__stagewise__stagewise_request_user_input";
+      display["acpPresentation"] =
+          ownedWrapper ? HarnessQuestionMcp::wrapperPresentation(
+                             display.value("name").toString())
+                       : QJsonObject{};
+    }
+    emit event(display);
     if (!self || generation != m_generation || !m_busy)
       return;
   }
@@ -577,6 +664,7 @@ void ClaudeHarnessSession::shutdown() {
   m_cancelDeadline.stop();
   m_pending.clear();
   m_tasks.clear();
+  m_questionMcp.revoke();
   m_process.stop();
   m_options.attachments={};
 }

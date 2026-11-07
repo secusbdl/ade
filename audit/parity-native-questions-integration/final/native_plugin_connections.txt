@@ -1,0 +1,25 @@
+********* Start testing of PluginConnectionsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PluginConnectionsTest::initTestCase()
+PASS   : PluginConnectionsTest::serviceContracts(github)
+PASS   : PluginConnectionsTest::serviceContracts(supabase)
+PASS   : PluginConnectionsTest::serviceContracts(figma)
+PASS   : PluginConnectionsTest::serviceContracts(vercel)
+PASS   : PluginConnectionsTest::serviceContracts(posthog-us)
+PASS   : PluginConnectionsTest::serviceContracts(posthog-eu)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(unauthorized)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(permission)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(limit)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(server)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(redirect)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(not-found)
+PASS   : PluginConnectionsTest::failuresAreSafeAndSpecific(wrong-success-shape)
+PASS   : PluginConnectionsTest::cancellationAndSuperseding()
+PASS   : PluginConnectionsTest::noTokenOrInvalidStoreNeverConnects()
+PASS   : PluginConnectionsTest::secretReflectionAndResponseBounds()
+PASS   : PluginConnectionsTest::completionMayDeleteOrRestartService()
+PASS   : PluginConnectionsTest::borrowedTransportDestruction()
+PASS   : PluginConnectionsTest::abortObserversMayRestartOrDeleteService()
+PASS   : PluginConnectionsTest::cleanupTestCase()
+Totals: 21 passed, 0 failed, 0 skipped, 0 blacklisted, 207ms
+********* Finished testing of PluginConnectionsTest *********

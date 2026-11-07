@@ -14,6 +14,8 @@ public:
   ~CodexAppServer() override;
   bool start(const QString &executable = {}, const QString &directory = {});
   void stop();
+  bool suspendDeadline(const QString &id) { return m_rpc.suspendDeadline(id); }
+  bool resumeDeadline(const QString &id) { return m_rpc.resumeDeadline(id); }
   bool isReady() const { return m_ready; }
   bool isAuthenticated() const { return m_authenticated; }
   QString executable() const { return m_executable; }

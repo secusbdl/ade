@@ -1,0 +1,41 @@
+{
+  "verifiedUtc": "2026-11-07T00:57:18.453882+00:00",
+  "binarySha256": "8f9dce9c969b1298508c2fac9662efcec482cd64c02d69a976e38cf5381f4549",
+  "testedDirectory": "out/native-questions-candidate-2",
+  "finalPackageBytesIdentical": true,
+  "identityBasis": "Application, sandbox worker and WebView2 loader exact hashes match packaged bytes.",
+  "syntheticProtocolFixtures": true,
+  "modelNetworkRequests": 0,
+  "checks": [
+    "Settings opens Models & Providers and exposes utility models and model management.",
+    "API-key import opens the native picker; cancelled without reading credentials.",
+    "Typing enables Send in the Windows composer.",
+    "Direct Codex fixture opens one compact pending card and one native shared-question form.",
+    "Titlebar X closes ADE while that form is pending; application and both observed owned helper processes exit."
+  ],
+  "close": {
+    "pid": 24152,
+    "exitCode": 0,
+    "ownedTestProcessesRemaining": 0
+  },
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/native-questions-close-candidate-2/01-settings-api-import-visible.jpg",
+      "sha256": "35f1e4393d6177055fcf744a31c33eb30c0eac4918617377386f57be087c7d0b"
+    },
+    {
+      "localPath": "private/native-questions-close-candidate-2/02-api-import-dialog.jpg",
+      "sha256": "3c6f55106dd1a121df4c7033167d1a9ba27daa23ade9dd837902933261ccb717"
+    },
+    {
+      "localPath": "private/native-questions-close-candidate-2/03-send-enabled.jpg",
+      "sha256": "35364abf3aff99a8d016eb8e58bbc60a887acfc9b1844cb2f70964e75c1c7c08"
+    },
+    {
+      "localPath": "private/native-questions-close-candidate-2/04-native-question-pending.jpg",
+      "sha256": "368a4dea68e6ee05688abec87a83ee49f7dcd27a5e7cb5615261008f7074d44d"
+    }
+  ],
+  "limits": "This verifies the named actual UI paths, not every control or pixel-level parity. The direct protocol response is synthetic."
+}

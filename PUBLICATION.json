@@ -1,7 +1,7 @@
 {
-  "createdUtc": "2026-11-07T00:19:57.403791+00:00",
+  "createdUtc": "2026-11-07T00:58:39.699665+00:00",
   "purpose": "ADE native/source reference for a future app; full parity is not claimed.",
-  "developmentCommit": "727c57fd49a97aeded7baf543096c92a2587d52b",
+  "developmentCommit": "f5bc52f0e0f1ce7a4ab127515bd318f1d7321049",
   "developmentHistoryIncluded": false,
   "excludedAuditImages": [
     "audit/authoring-previews-settings-renders/workbench-dark.png",
@@ -54,8 +54,8 @@
     "audit/worktree-settings-dark.png",
     "audit/worktree-settings-light.png"
   ],
-  "fileCount": 3909,
-  "bytes": 42398619,
+  "fileCount": 4109,
+  "bytes": 43132265,
   "files": [
     {
       "path": ".gitattributes",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CMakeLists.txt",
-      "bytes": 79817,
-      "sha256": "a25a511072a574a987e915e9cf971ec846d1ca406e3bc72a43ee4eaa4551a03d"
+      "bytes": 84976,
+      "sha256": "538c6556a68f9917cda24f3b75caf95aa2117265152de229153acbc5749e2d35"
     },
     {
       "path": "CMakePresets.json",
@@ -94,8 +94,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 24930,
-      "sha256": "8a654b52c323373796a8edf7fbe6b1f0010e6d05241fa71c4d1ae125907eb661"
+      "bytes": 26196,
+      "sha256": "746dd4dda5cab378f03285494eeeed6e596781d97b17af41202d7f238af99fdb"
     },
     {
       "path": "assets/fonts/Geist-Italic-Variable.ttf",
@@ -5498,6 +5498,921 @@
       "sha256": "7668cc9a3f39023aa608052b5340d427f6ae6fe886236a9de316df41282cfa02"
     },
     {
+      "path": "audit/parity-native-questions-integration.json",
+      "bytes": 74777,
+      "sha256": "c8f658569e0007a3a09ec26017bca2ef3841dc27dfa5132f2f2c23ce2e4105ed"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/build.txt",
+      "bytes": 9233,
+      "sha256": "d73df406ce8beddede1cdbf9e660c0be1b245492968671ba8b33d27c4d6c818e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/attachment-mime.json",
+      "bytes": 3384,
+      "sha256": "923d801bcef85ce21c5e11a0964c703d21612c5c188c9a90c3173d07521a23b5"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/codex-tool-discovery.json",
+      "bytes": 2271,
+      "sha256": "5b85d3f6efdcbc47e49422977cc4eea853784f0a186b49cbf7a3f247927791b1"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/direct-question-mcp.json",
+      "bytes": 14356,
+      "sha256": "bc4e7138bffe38671f19313c0b6f69c3761c479f83794d69e70f89ab7bd92307"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/historical-attachments.json",
+      "bytes": 4010,
+      "sha256": "82c3a9adea4513745ff42d5f00e29f34da1430601a653c0ce2efd3595e7ab098"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/model-selector.json",
+      "bytes": 4489,
+      "sha256": "b58d5d0812d752cda205d724d96eed04eac27fcd83cbe767dd60041999cdcfbb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/components/question-rendering.json",
+      "bytes": 7920,
+      "sha256": "45a107a059ccdfc88bc8b358bc2062098ac78818e0f0c8db3fa159b92985aeda"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_acp_mcp.txt",
+      "bytes": 887,
+      "sha256": "d60ed35339d5da2a9062374ccc2322cb8917d82aef770377954a4bf281d28b05"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_acp_presentation_engine.txt",
+      "bytes": 889,
+      "sha256": "1ca872970fad5d407f7dae4c376836d595468c91997429d63c7abbdd4757a653"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_acp_presentation_ui.txt",
+      "bytes": 3665,
+      "sha256": "f8f4b6b8cfa8e858311494ad5ce5845947915fd1f2a72160859f72a5e473cc61"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_acp_settlement.txt",
+      "bytes": 1272,
+      "sha256": "636ee1a3a425ed4d880522eb0872d7d1ed223376377b7a2bb92c6c14c6bd78dd"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_acp_tool_presentation.txt",
+      "bytes": 2043,
+      "sha256": "09520892f8f3c7928dd2a0543dc277f45c545482ad5a62acb27e600563f8024a"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_agent_control_ui.txt",
+      "bytes": 789,
+      "sha256": "6159b473437b48ae2661bd425ede61b3ee404849dd5a33c9d26d613b1e4ae358"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_agent_cycle.txt",
+      "bytes": 5115,
+      "sha256": "30a4445d1a550b282288e7412e8b2e4568444eadb3627c67f81c61d9e0e48f3e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_agent_cycle_host.txt",
+      "bytes": 867,
+      "sha256": "98750b752ce0c7e3419e798c96d2d3ded169738ca9157c4e1f4b0da4284260fc"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_agent_prompt.txt",
+      "bytes": 1711,
+      "sha256": "b7c08c478332abd6eede595a96d8da7cd70eaf5a7a6d722e7fe4f0657fee52db"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_app_resources.txt",
+      "bytes": 626,
+      "sha256": "f300d44caf7f4cf4d1157d0d2f15884b2dd924d2a6f929128141d943de3b0f45"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_archive_transformer.txt",
+      "bytes": 2218,
+      "sha256": "f768b0edee06da6a198ca74ef0a91401eb09e308700a0f0b333f96af488f1e67"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_attachment_mount.txt",
+      "bytes": 1475,
+      "sha256": "d054c50b61ee9d6800ecb3e4b7f40f44e8a7b4a46ff400b6a1118dee79bb2cce"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_attachments.txt",
+      "bytes": 1702,
+      "sha256": "fa28c7ee3e8e334a5e370ed00b7fd9c1f8d9a4509baa12a2910a8b2579ef9b4e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser.txt",
+      "bytes": 977,
+      "sha256": "6a872260872de94538fa642ff42d4acc85d62f6f39e67a98ec5065e959225371"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_context.txt",
+      "bytes": 1753,
+      "sha256": "f42682fc5605c6605004ef80dad25686afb75e43854e68a06424ba6c86eb6905"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_context_runtime.txt",
+      "bytes": 1425,
+      "sha256": "6126c49ee66ac639f3197137877ecaffa295f69557693fbaceb09582a877fe25"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_inspector.txt",
+      "bytes": 1163,
+      "sha256": "3f501b3656ccfdfb3e3e41fd904b0a0787914a773729a051b208efe2a8890744"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_session.txt",
+      "bytes": 1743,
+      "sha256": "be817b56b6b6b3a84bc3197ffea6a11bba00701ccc858ddf16324a65d8529b07"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_session_host.txt",
+      "bytes": 1363,
+      "sha256": "7db34493347764bd7d90c927fae3738ad06807a6edd43308191a2cf70e50568b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_browser_tools.txt",
+      "bytes": 1883,
+      "sha256": "d49d87ef5e1aa33fdc9ac3f1b09812acc302c7679ec29bbf731d84b0c4fcb560"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_chevron.txt",
+      "bytes": 725,
+      "sha256": "b6ec44c7b7ff6a4f5b195f47e848d6e271fa4b880e06368ec8674a02d7b3ccec"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_control.txt",
+      "bytes": 1523,
+      "sha256": "e7e9e2a6599dc864d67a8c864d4c7e31d348f9370adc3a394e23cfa41b863f97"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_discovery.txt",
+      "bytes": 962,
+      "sha256": "389691ccadbd714feddbe06a4a538acafe08defb29a616f51bdabef0e2de8124"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_engine.txt",
+      "bytes": 1347,
+      "sha256": "e20c677956e404b1fbf20d1219b80ffc5affa2cc6d9b6e4913a5734ee8e3ac24"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_host.txt",
+      "bytes": 645,
+      "sha256": "6da43e7dde31c5047ebd6b52392da1e256174e1646014f2d66b8bd48fe93c3ea"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_provider_ui.txt",
+      "bytes": 2947,
+      "sha256": "03867a1cb0a5eaab7d40bd9447afb6c0fefc3373824087619ab57de58b8dc526"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_resume.txt",
+      "bytes": 2341,
+      "sha256": "0c4d29f40ec3db71d4d65fe715c3875a23290b21c2b8c2d0211f76469497d250"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_session.txt",
+      "bytes": 1920,
+      "sha256": "b72d0477d380902b3e16db46151c92f5c133ecc8b50dc9c0906449eb9a081fdf"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_claude_stream.txt",
+      "bytes": 1651,
+      "sha256": "ffff2a1727b7586cc1134344b029eb693e7d6ea24592a93000692421f9acff33"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_codex_engine.txt",
+      "bytes": 1279,
+      "sha256": "ef19d6d93cdf7cfbd2936017b697eb50d6a64cc133fa15941fa1b4cf8e5e6cbd"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_codex_files_runtime.txt",
+      "bytes": 628,
+      "sha256": "6252091eee3011bb6dc60429beff7f58b71c3f87e3d06c3c15736fcdb9493c4f"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_codex_harness.txt",
+      "bytes": 1965,
+      "sha256": "4aeacb339efcacaf24ff5953bf504e445ec080102aa4110c1aa4441bcb2085c6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_codex_host.txt",
+      "bytes": 571,
+      "sha256": "0d7bfc337b08cd57f8d105be4bd232e31f1a9f0c428121e5f5f62c1390509c29"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_codex_provider_ui.txt",
+      "bytes": 2659,
+      "sha256": "f444bcbd04cf4a382421a9509cb8477dd61a4a51f60fed42767b4f23c2dcc7eb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_command_center.txt",
+      "bytes": 3334,
+      "sha256": "b4be3856638b8c4e0efaa7d690042ec5cb856a97dd00bee0b043de3ede8a19c4"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_command_center_host.txt",
+      "bytes": 3235,
+      "sha256": "5cdad72f85c03b0e2e9f4be1e08719a629a8445740e1fea955953d167eb4d7f6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_command_file_search.txt",
+      "bytes": 670,
+      "sha256": "9f045e4296d70ede9d3ee549970b954547c21caaca1c02068ab14117f2411a2b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_composer_completion.txt",
+      "bytes": 13045,
+      "sha256": "eafd1f9b9c425359fc6da4e2d2813bb37f094da7320d4110e67577e6989f0d4c"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_composer_host.txt",
+      "bytes": 2345,
+      "sha256": "13834ebfba61fe60ad1765deb2268c2b5d1e6aa6377d958537e84671406c21ee"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_composer_search.txt",
+      "bytes": 1178,
+      "sha256": "b272b01b895e5cdd52293bcc31253817130b46e53dd778c496bde881a958101b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_context.txt",
+      "bytes": 742,
+      "sha256": "2a5936b02d133c117ab0fde0616ec0a40c2e5f38c098602d8ca85f5864bff621"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_conversation_control.txt",
+      "bytes": 2353,
+      "sha256": "e3aee48349dedf59c9708cdf5d2c90faeb459704f49b6d26de8deb4dcc5baf84"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_conversations.txt",
+      "bytes": 8709,
+      "sha256": "c4fe7e62285e35105fc70486c3b9ea355084cc39bd2aaabf8432508293701557"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_core.txt",
+      "bytes": 2674,
+      "sha256": "f836061b34be889841ddebabf45bc649f396c70e740215daa95e8b9653bf22d5"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_direct_question_mcp.txt",
+      "bytes": 3017,
+      "sha256": "b876bc558fd06886a98723a8d3171664807b359249d377a43594fb712e9bb067"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_downloads.txt",
+      "bytes": 924,
+      "sha256": "e6d8207de6416ea302858549ca449ce7ca298c463d55616a42df3dc64fe7e466"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_editor.txt",
+      "bytes": 2488,
+      "sha256": "065c4670ba205b845fa29fe1f3b7d98cef9eb5b2d29ff9fc64705e056547bc1b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_engine_observers.txt",
+      "bytes": 3940,
+      "sha256": "23f301eeeb64f2bb613f988832bef1ce510a3a5c10d1abe3ddff4e021519947c"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_external_context.txt",
+      "bytes": 791,
+      "sha256": "d66aeb16ca9b6d3dd16b7a8123b308cd3c7e04a56f129617db06f45f5fef693e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_file_diff.txt",
+      "bytes": 1266,
+      "sha256": "e08e9cd49d376214cab7e968c9488d56333f9bb55293b0edf52b097042a0d8f9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_file_mutations.txt",
+      "bytes": 4355,
+      "sha256": "7a719aabc41fb7d3cb1e2b07ee9c060524a1111afe3a579c68bb779df0f75222"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_file_tools.txt",
+      "bytes": 1518,
+      "sha256": "27fdfb0e691fbfb7366c6c868c4816291bb5de703b657997d9aae27396e802b3"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_file_tools_races.txt",
+      "bytes": 1045,
+      "sha256": "a120fd1bff87d803837a20cd35c71ba8de00cd2965458fbbfa8ed682d7e1924a"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_file_transformer.txt",
+      "bytes": 2304,
+      "sha256": "786805dffe1b274e04d0a2d1ba6ed5fff1565ccbff9b05982357dc49e88616a6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_fonts.txt",
+      "bytes": 563,
+      "sha256": "305011365a3963a276fdf348a28797a5ca105650292032c69bf49eda1ac41b3e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_formatted_att.txt",
+      "bytes": 2578,
+      "sha256": "20ed5d48a1652bab8ef206e24e94160c6b73d955a895b40e66afa94fc3cd237c"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git.txt",
+      "bytes": 1210,
+      "sha256": "e5d1316f0caec5731e4d1fe05819a2fad4af1315e97bb97ac84d3cc90f437b5d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_cleanup.txt",
+      "bytes": 1738,
+      "sha256": "b60bd0f6163789679a510cc1704bff4e18c058448c1ae91078dc815bfc62d76d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_host.txt",
+      "bytes": 3258,
+      "sha256": "dbbdb9fd8ebfa7cf32363e6772e622d86cc663ff2e081a9525b3ffbf04882ebb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_ui.txt",
+      "bytes": 1466,
+      "sha256": "a771486353d5b251fb5175e600fc5bde5965590d241977a811426cbf2e33c338"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "f7363a4e75e4f8aa57b541aa1acffb173dcca5ad8bd4ce9f656651bb0854f4b9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_watcher.txt",
+      "bytes": 2637,
+      "sha256": "8ef4bb06935a1cd7257bd9a3760249bae60db05874a04253b3b942c0156502d8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_git_watcher_ui.txt",
+      "bytes": 541,
+      "sha256": "6e10e53ec138068e69503c0010628182e5cf54832ca9c947da69c13ea1588763"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_attachment_mime.txt",
+      "bytes": 1857,
+      "sha256": "739720a7a68991f7d76b296625b04c9b2bed56bcefaa6a0f2663da303887b705"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_attachment_source.txt",
+      "bytes": 814,
+      "sha256": "2a741fdde3a48b6d16edd439367e0a8f99cb976d044c59af99e05b7864e24e01"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_attachment_store.txt",
+      "bytes": 2436,
+      "sha256": "bd9659247969b80d8c2d748384bb13899cd79cbeb150a5a4fe781fb3ed0318f6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_attachment_wire.txt",
+      "bytes": 1288,
+      "sha256": "abbaedc2cf68e1ccdf2f0cd7e77e672ddb6842d45bbec7bc9802855c3a4468ec"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_attachments_host.txt",
+      "bytes": 2665,
+      "sha256": "16b11c1b00bc7d551aad2a54bcb0a0cee4b59871fa6919e055e64199adb7b903"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_cleanup_host.txt",
+      "bytes": 867,
+      "sha256": "9f4fd069e36cde08e4b69b2018c83cb6103a2eeb88847bbd9c868cc1ef19cf8d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_continuity.txt",
+      "bytes": 2859,
+      "sha256": "a03c608d27ea78b05cbccd4a860414c07e2e9e9a2f00e7302faf6cb6539f503f"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_files.txt",
+      "bytes": 1119,
+      "sha256": "d79253c94b0fb4dd967742d658f7fca2ecba2956a98d4c74141163f952f1f972"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_forms_host.txt",
+      "bytes": 1005,
+      "sha256": "0151d34c84b1844e2b6c6276ae6f526c22c9fedb93761bb109ac10f6437cd059"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_harness_media.txt",
+      "bytes": 752,
+      "sha256": "5cdbe641e7fb4dd3847d9406134dea5b9915ab986585849ba265f67d35283861"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_historical_attachments.txt",
+      "bytes": 2864,
+      "sha256": "d2998337f64af99fb5e76192700f2783d999e17175cdd3c20c0e29b56a3950ad"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_history_projection.txt",
+      "bytes": 1127,
+      "sha256": "b373ad9dd39fce5984c078504c91412be0ede2c49db4b48a2d1b7afad3db1d39"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_history_recovery.txt",
+      "bytes": 2542,
+      "sha256": "3eff8d42e5afa529232d96ee7a117f4dbca35dc46fd7238f6a9ef3d7b55a7c86"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_image_preview.txt",
+      "bytes": 991,
+      "sha256": "528572783adce139a96c18d0bec424836ce3402678dc0d6ffd59e0b91355d6e5"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_link_provenance_codec.txt",
+      "bytes": 621,
+      "sha256": "8866d869f11026abb016ebb007bc225bf708300580f625681175993703ca6394"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_main_chrome.txt",
+      "bytes": 5050,
+      "sha256": "471c14ea30da2e229f4efcafa9db8ee8ef05626e03936a8440b7558347fe1d1b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_mcp_engine.txt",
+      "bytes": 1198,
+      "sha256": "de52d81aa64dbb75e7f12a9338323ef0b01be34c4c03730afc62561e610b5122"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_mcp_presentation.txt",
+      "bytes": 4293,
+      "sha256": "165830b45586ba9f4bc42f976872d1ef63b9ee41206ec7e9f4edbd6f720e775d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_mini_apps.txt",
+      "bytes": 626,
+      "sha256": "4bd87f5956d8f6546f5219e8dd2a5eabc9255a83d4a91ce6ff5ff9e2b0c86eb1"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_model_discovery.txt",
+      "bytes": 2834,
+      "sha256": "5bbe603b1bde729158e5c66a13d32fac9fee0d22ba70adb6c31d34fd19294844"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_model_discovery_host.txt",
+      "bytes": 3299,
+      "sha256": "258d16434862e5ab421cc8d5f684fde1ba708aacc65b74c7654ee5e6b67d3639"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_model_selector_display.txt",
+      "bytes": 1514,
+      "sha256": "4fa2dc39d0974b1b2c8be2dcd2683252c76a47bde2237638d95a077eddadf7ed"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_mutation_runtime.txt",
+      "bytes": 1765,
+      "sha256": "c73f555e9cc326c8f21581b807056f46953529fa89b4df9f8d42a8c527496290"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_navigation_shortcuts.txt",
+      "bytes": 2752,
+      "sha256": "a1b29df66050d23bf9b0cc219ef974c3f726d4a484a11f3d126e19bf4b9bd9f1"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_network.txt",
+      "bytes": 1383,
+      "sha256": "1753cf886b8730cc7ef4e9558ffe6fc6bea1040a61b65d5728c5245c495894c7"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_opencode_engine.txt",
+      "bytes": 1219,
+      "sha256": "228b82ce08a0a233f3de39d7096c4771b79c9267ad12013a393b93bb1debfbfb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_opencode_harness.txt",
+      "bytes": 2127,
+      "sha256": "e503741b7ad3543bd3fababd0df00b3d757f17479666013843f43d6d2f5f7fd6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_opencode_host.txt",
+      "bytes": 661,
+      "sha256": "da600f1feb171110b7a1e7ac946119772a15fd12538b5bb09efbf02bafea6d6b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_opencode_provider_ui.txt",
+      "bytes": 4215,
+      "sha256": "0b59fb753508fe4d89fdf93957d0d38afb63aec0ceffb36d7d63426a608643f7"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_plugin_connections.txt",
+      "bytes": 1655,
+      "sha256": "cbac8e78e18820e6816137f514724c8d5e3c483592d0fc157e7c780e6f3f8e7f"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_plugin_runtime.txt",
+      "bytes": 1639,
+      "sha256": "fc8ba6f438c106dae24ff785ad8c781a22a6a45204abc960a2941d8726be95c2"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_plugin_settings.txt",
+      "bytes": 1669,
+      "sha256": "466e0d50f706ae2654003c4e2284aa3a20e623e2722ddede00c3e542ef08c6b9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_plugins.txt",
+      "bytes": 1718,
+      "sha256": "1afeef97e1c542b95aeed27e8aa5e34eb60386d1bcc40878df17061d77f52e8d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_presentation.txt",
+      "bytes": 5530,
+      "sha256": "e1f766dc17151b37ba9881a10be1cad80bbc5fc198a20e2669898fa2f5acae59"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_model_visibility.txt",
+      "bytes": 3130,
+      "sha256": "c6ea6b7e4fa6e70d841cfddd8e705c958b91b583276046b0f74934bf0abba329"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_model_visibility_host.txt",
+      "bytes": 828,
+      "sha256": "39bb76781789491b15b472c8a2d0d289e3f49dc4d08adba140d2146c5b869308"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_operations.txt",
+      "bytes": 3804,
+      "sha256": "6cdc0e8c68a722f05085df025fbbbee8db2f3f3f4a49cc66a423b53f5b7dfbb4"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_picker.txt",
+      "bytes": 2562,
+      "sha256": "a121c703c84611a669bb148125c905bbb2063579fe0ce83876a22f891587693b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_picker_host.txt",
+      "bytes": 3444,
+      "sha256": "965f88f0305d23e6c46fd987f62c36abd78a721bdbf18de5a2251815cd688b52"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_picker_window.txt",
+      "bytes": 3100,
+      "sha256": "4868434e9be77e7c033787c61b098f5e96f01fce94fd90857f62e1fddf752e9a"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_removal.txt",
+      "bytes": 4800,
+      "sha256": "63ad76e92a09f83b58f1801d832f3ed222c26b2dea63af4d485c01ef7d1afff9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_provider_removal_window.txt",
+      "bytes": 1555,
+      "sha256": "54fc68121ca82e2ea69567f6ecc4ed14cf8bc4559f0ce98034f2b0b666b3f606"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_question_mcp.txt",
+      "bytes": 2010,
+      "sha256": "61e3abc944820c9525f368ce2463a53e4128a6197d93766818e423c48227db26"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_question_panel.txt",
+      "bytes": 1594,
+      "sha256": "e1679b47c18cb1caa9b06b4ae4d570f321c4761a8513dfbeffa2106692a1cfb8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_question_presentation.txt",
+      "bytes": 4414,
+      "sha256": "d884535bc23ad1bd8df6fdc3114e1c54d6dd22f5eb94599cb5070ca4ef3a46ad"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_question_presentation_host.txt",
+      "bytes": 669,
+      "sha256": "482b5b6dc9de4cb76850bf2de7766d4a662d543781ebdda1c633caa667cbed34"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_raw_enumeration_races.txt",
+      "bytes": 1244,
+      "sha256": "b6be979466d5c43e142d269d64a9e1224bcbeb8836391ff2a5bb21c3cdba8555"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_read_lifecycle.txt",
+      "bytes": 1712,
+      "sha256": "4ef6b992887c845597904ec514a4416a4ae6eb8b8b177905cb5c4e3decbc9ab0"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_read_runtime.txt",
+      "bytes": 1391,
+      "sha256": "15b987ea5b41108b316193d65c972b240b682c8bde704359ed0e457df0bbdd06"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_reference_controls.txt",
+      "bytes": 715,
+      "sha256": "0f8c64dda2ab6b35bc87ed82700690e2bd170d6308ca605c737b936df7b667cb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_retired_wire.txt",
+      "bytes": 413,
+      "sha256": "cb761001aca58db964dfd615cb0bc5da82e666b4fd44463d93e7e6be274c02d8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_rpc_deadline.txt",
+      "bytes": 662,
+      "sha256": "863cb65b7fea240f6cbf53daf5a5cf340545341a8fe6a4b90086a9954a8aeb0e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_runtime.txt",
+      "bytes": 1806,
+      "sha256": "50669b22baed449372648977760e7a94d736f238f9931e482f498f5be286f440"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_runtime_apps.txt",
+      "bytes": 2284,
+      "sha256": "b8142808ea9d31b9f22309fb8dfa4e6c6e4ec841caeaf6596e332bf413d46425"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_sandbox.txt",
+      "bytes": 2081,
+      "sha256": "438f20277894e92e3b244a56b0c96715317173ac169e82c22fd2b5e64cff5338"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_sandbox_apps.txt",
+      "bytes": 536,
+      "sha256": "12f8f2ecfaa23d6c767912995cff3ad182810e0dad8de4fd5770a299df30b6e8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_sandbox_network.txt",
+      "bytes": 1158,
+      "sha256": "b50f9f913e1774dfa0a5ee5f6ed76f57762a5d35f3a2903b6efd7f4293587f1c"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_session_cleanup.txt",
+      "bytes": 2515,
+      "sha256": "0c84d010ea2ff43abb4a1383201be9174dd16fe9331857415c034b818b56e04a"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_session_logs.txt",
+      "bytes": 1267,
+      "sha256": "742c9466f01bcc1f727d2638f2b047146af2346b7fc629ef9427f45cae0622ad"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_settings.txt",
+      "bytes": 4373,
+      "sha256": "38b2a28b534696a801e1394df0d34024d6b6b8eb0e8403d2fe70ec29fd68e739"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_settings_audit.txt",
+      "bytes": 1393,
+      "sha256": "ef9e458fe1d07680c52ec2e761d75ff4d6806093d7ac179eabe3abd650ba0e58"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_shell_engine.txt",
+      "bytes": 1247,
+      "sha256": "37b1af2ec9fac1a358c575acc70d629215252a3c2178acd93bf8a949ca6ab51d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_shell_log_mount.txt",
+      "bytes": 671,
+      "sha256": "1345c7ba380bbac1651ce1e57d216c0bb2a41f85e9875f9e138147d3898ed38e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_shell_runtime.txt",
+      "bytes": 1188,
+      "sha256": "d203a5f0fcafbd9efd6ffc5803994c1064aecb48368238bfb403f8bfc11fcfb6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_shell_service.txt",
+      "bytes": 1589,
+      "sha256": "46362eb3bca530b169c29b47a18192868d5b78612b5e3ca61f336f332d8bb9a1"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_shell_view.txt",
+      "bytes": 572,
+      "sha256": "61cd1c4f305ca7ab7d5e8b277597320882c09f745abd225471481d519c7ffdae"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_side_chat.txt",
+      "bytes": 1675,
+      "sha256": "48bfe7e90e68cc501d01f089e8fa2647b3fde68e7d5642d34f727b0e09b7b875"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_side_chat_host.txt",
+      "bytes": 3168,
+      "sha256": "4acaae75e0d8b7e441ef4c785b0c875e940aaa55e32eb366ea329b26dac43a0d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_sidebar_model.txt",
+      "bytes": 1354,
+      "sha256": "c9b407e692dfc6312af9f6174a063060e21d8ffca77d9770d205ee14ac9d2d1e"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_sidebar_navigation.txt",
+      "bytes": 1612,
+      "sha256": "489f4c2354ddbf36725d690007a633f16cf3b2a060deada4e60fd6e6720a59b8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_smoke_capture.txt",
+      "bytes": 692,
+      "sha256": "6e8ab4a80b0246ab6d9e91c4f4841cda5161fb3d263cd2b7bce1fbce4254ec1f"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_smoke_plugins.txt",
+      "bytes": 1131,
+      "sha256": "35c99a7e64def852d3d2763a139022fba891112e3c44e0cbf9c8e95e75171491"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_terminal.txt",
+      "bytes": 1227,
+      "sha256": "82a2d29c1b58a9556bc8533ff3f2512fdf5110405ad9926c12d08f34a45610cd"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript.txt",
+      "bytes": 6514,
+      "sha256": "4f7b1188e8addf0164ed0f4121b14668e779c9f9644d43704c89d7c76aeacea6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_grouping.txt",
+      "bytes": 1369,
+      "sha256": "ac6f019a6eba16ac23313ff5aa9445c8451ea9d536ae5a1624756234853ac537"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_image_lifecycle.txt",
+      "bytes": 2187,
+      "sha256": "de3c65d5603ecb908a41663334c38378dfb3835f935b3705eb0a285eb8a4fbf7"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_link_ui.txt",
+      "bytes": 1876,
+      "sha256": "1ffa47a2516a065495882d6b5daa907bdcdde911368e7adfc91b6ba54779535c"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_links.txt",
+      "bytes": 2497,
+      "sha256": "abf5c3bf2be9639882ce008e293718c802ea94556528861fa35ceb631addd64a"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_polish.txt",
+      "bytes": 1564,
+      "sha256": "a3b82fad7747a74bd5e572f530cf40262c631af5645efe2bf7094f0f16ca3baa"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_rich.txt",
+      "bytes": 1494,
+      "sha256": "1137de82551f4ace86b9215ec2b3b6facd43c106cc0161db9d3027727165dfb8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_tabs_real.txt",
+      "bytes": 872,
+      "sha256": "fada0f96633eb19de8129361671d588dade4da3610b323cc379d5a386ac1aae8"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_transcript_ui.txt",
+      "bytes": 565,
+      "sha256": "037c5c349d45240c670e2917966f8dae141f1e25447b729956b9db36b0da6367"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_turn_file_snapshots.txt",
+      "bytes": 1603,
+      "sha256": "64a3c614348408799b105d085d4980e1cf286c8c2b08838f0c704129886062ba"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_turn_files.txt",
+      "bytes": 2159,
+      "sha256": "dad69582e57b83002f782f1ce8636167ced5693b2dfb3c1e42042fe668eb0c22"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_turn_files_host.txt",
+      "bytes": 1243,
+      "sha256": "32438d0326f343dd2f0203ebce1a6bac311ebb9476ea54c6d6ff263bc549c707"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_ui.txt",
+      "bytes": 965,
+      "sha256": "e4526fdd06f7727cc1744a8b3fac06d87ef8323be724db1e04913aec57bc88b9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_ui_audit.txt",
+      "bytes": 2349,
+      "sha256": "91e23199d8588e2d8ebe608ec3e6ce02ea6a50bba2bb595c5d5cb4800a9c5e84"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_usage_compression.txt",
+      "bytes": 2754,
+      "sha256": "95b5126347eb7cee6e0c6741ed6553959458ed3ef6fdd12f6fc677ac894e5dca"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_usage_settings.txt",
+      "bytes": 549,
+      "sha256": "faee5adfa4e6886ed9f10db62013f76e3dea30ed572d972fec4254f46ce87fe9"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_utility_model_selection.txt",
+      "bytes": 3675,
+      "sha256": "61f8ab145681fc0fb1200effb54192085b92503054d594f5ecf107d323c3968d"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_utility_models_host.txt",
+      "bytes": 1095,
+      "sha256": "f05a42a7171e91fb545c79ab48ce012f5d7b9e884dd6d8b5080fca280cc4f672"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_workbench_helpers.txt",
+      "bytes": 773,
+      "sha256": "57e460a1a92d649568949992930fb2d107de176eeee593a5944375e563926e69"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_workbench_layout.txt",
+      "bytes": 5564,
+      "sha256": "4663745ac77310c459a2f869fdc0f3bdcd1ab576f2476b6bbd4a70525e1b7af7"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_workspace_changes.txt",
+      "bytes": 1758,
+      "sha256": "3051d3eb6ed4dd4c607c12c951633d0716311d78dfef64e8cfc9569c3f0da500"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_workspace_changes_host.txt",
+      "bytes": 712,
+      "sha256": "6a2a7563569ea53e51009ccbe566f980b55fdf7cd7cd54fa05bc05eec69965ba"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/native_worktree_settings.txt",
+      "bytes": 1543,
+      "sha256": "fb19d651a653197fa6830713baf22350e7d65a75e3c49d67054f9e1c9b889b65"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/reference_file_mutations.txt",
+      "bytes": 2950,
+      "sha256": "f71b371f8b198e1794982fdb2d7fab1398e2a6a03aa390ec7bc37e601d0a3468"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/final/reference_git_usage.txt",
+      "bytes": 2223,
+      "sha256": "0c7ef1fb480478ca2ea207b4a6bf1dc940a1fc4ae54889782d345ee4c7ea4bf6"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/full-ctest.txt",
+      "bytes": 20163,
+      "sha256": "4566e9ea52ec14f2cf6eaccbcccb8b7b2f3d802b2c27c05ed50be9da19c558e4"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/full-ctest.xml",
+      "bytes": 27255,
+      "sha256": "a72cc83130473910caf1b65c96367bcfecb96e8eb95fa3e1764622b41bf62fe4"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/packaged-gui.json",
+      "bytes": 1908,
+      "sha256": "da35a58cfc0625b6e2f7933941b35d67ba4933f0b56d9b052840db2e093636ed"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/packaged-live-codex-question.json",
+      "bytes": 3206,
+      "sha256": "0d426c927b21a852529fdf3d7143bfb407ed00b207af1e2f89845a462813ddb2"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/packaged-mcp.json",
+      "bytes": 962,
+      "sha256": "e2148dc2ff6aef26f499933c39f5e8467e725c758317ce8f21b44cc6842b2406"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/attachment-mime.txt",
+      "bytes": 3943,
+      "sha256": "28dbdaca0538f8ed288e0a3a43dc850ffa1d5240f05f22f075c7ed2ddcc71c20"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/codex-tool-discovery.txt",
+      "bytes": 718,
+      "sha256": "7f40fab6ff26d95c68effe746908b2ee5ccbf1170cf326c7cbef95803867199b"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/direct-mcp-missing.txt",
+      "bytes": 5769,
+      "sha256": "790ec58cfadc8110b575a152f63d9332411a67e26e1a11b67003a7de7390c6d4"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/direct-wrapper.txt",
+      "bytes": 1891,
+      "sha256": "545e5e57a63b5d4cbde1a5fcd9ff009795fd58f599a379d6c7739e6b21cddee5"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/historical-attachments.txt",
+      "bytes": 3259,
+      "sha256": "69842dfce70d9d378301fd22d368a7a1536d1725b5bb1e61d3e76fef619be263"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/model-selector.txt",
+      "bytes": 1162,
+      "sha256": "a63532d9b4ee668409c59d5fb5d6ccc3781ab1a3b239a82267e905f5eb5b5010"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/question-label-routing.txt",
+      "bytes": 1002,
+      "sha256": "5d495d6300b554d8bc2af37489dd348bf4c092bd80dc503cefef65a42d290beb"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/reproduced-before/question-rendering.txt",
+      "bytes": 1228,
+      "sha256": "fd99c7437f93765b7e278c2243d86848da476cd44a4bda7ee3da9a5599bb4a04"
+    },
+    {
+      "path": "audit/parity-native-questions-integration/tested-source-hashes.json",
+      "bytes": 63052,
+      "sha256": "a4091d59eaf6fc13f5cad0f644315fe5354016ed51600d9a41fd0dd8eca534a5"
+    },
+    {
       "path": "audit/parity-next-integration.json",
       "bytes": 51450,
       "sha256": "330919cf2e005d73efd3df83e9b04a59459374024021724efc0b876586b89302"
@@ -6109,8 +7024,8 @@
     },
     {
       "path": "audit/parity-review-coverage.json",
-      "bytes": 266469,
-      "sha256": "0d4d156b796422dcc63b0987ad959d3b75941977f7e085b83b8a68abe03f9904"
+      "bytes": 268400,
+      "sha256": "6a178d0faab899d2e931829a23a789422558f523f2d9fff056b1622b6c6f9c81"
     },
     {
       "path": "audit/parity-review-integrations.json",
@@ -6891,6 +7806,11 @@
       "path": "audit/publication-parity-harness-desktop.json",
       "bytes": 923,
       "sha256": "60e6dcc550fdae68373b432f7974b787c8e0bc0923dbb8b64f52c5b618628442"
+    },
+    {
+      "path": "audit/publication-parity-harness-followups-desktop.json",
+      "bytes": 933,
+      "sha256": "71c6a6bf672e83abb8b212c652167d96382425d439efe8feaf90d2021fd10c3b"
     },
     {
       "path": "audit/publication-parity-integration-desktop.json",
@@ -15894,8 +16814,8 @@
     },
     {
       "path": "src/core/AgentEngineClaude.cpp",
-      "bytes": 7405,
-      "sha256": "cdbedff95d2c4762a3d60f6e27b1d582a741e092d3f69b7b9c30aa5e77583ebe"
+      "bytes": 8867,
+      "sha256": "a41cb632f63c2d602d12f1bdea37a0a9c87e3ed85a59c696f059b59b54ccd0eb"
     },
     {
       "path": "src/core/AgentEngineCompression.cpp",
@@ -15909,8 +16829,8 @@
     },
     {
       "path": "src/core/AgentEngineHarness.cpp",
-      "bytes": 20107,
-      "sha256": "ddaae5df36bf4dca6285423403e655d61d20d74bac9e0b080049fd096c38d667"
+      "bytes": 21933,
+      "sha256": "87b4a0c5160624cc21afdb96aa317c56146075544168651edf37bd0b7d83356a"
     },
     {
       "path": "src/core/AgentEngineMutations.cpp",
@@ -16344,13 +17264,13 @@
     },
     {
       "path": "src/harness/ClaudeHarnessSession.cpp",
-      "bytes": 22441,
-      "sha256": "b1fd3eb211013711983c5335433e469a26416b0d641b6cdab44135ca445cd07e"
+      "bytes": 25930,
+      "sha256": "8fa87289f54f1ce59bf5a40269d0760f05a866b6c8a5a5fa84726acbf4f15659"
     },
     {
       "path": "src/harness/ClaudeHarnessSession.h",
-      "bytes": 3018,
-      "sha256": "1a5a118494aed8dab4040b0cd9567ad2b591587014e69169c32d193dd5bc1a65"
+      "bytes": 3649,
+      "sha256": "bf48365bbf86699b4ccf64315b7dd98344184395e65d3b0bb17908357408d00d"
     },
     {
       "path": "src/harness/ClaudeModelDiscovery.cpp",
@@ -16389,28 +17309,28 @@
     },
     {
       "path": "src/harness/CodexAppServer.h",
-      "bytes": 2264,
-      "sha256": "54fff373e9947a41dedb819f7e6e9a556d37c16f86c4e62a6070af5e82cc122c"
+      "bytes": 2422,
+      "sha256": "2765f0ec296c7f3cf4de6ace146ffd00880442081213a30ccd1e0920c587e020"
     },
     {
       "path": "src/harness/CodexHarnessSession.cpp",
-      "bytes": 24980,
-      "sha256": "00305a350e04e0961d1941e849c3a77b62786f17ae42434dbb7bedbf1b4b5109"
+      "bytes": 30188,
+      "sha256": "b28b7cd84713e0eafb051c43ab526e5bbdf9d554daf005291655b2af461238a8"
     },
     {
       "path": "src/harness/CodexHarnessSession.h",
-      "bytes": 2927,
-      "sha256": "27507ae3bfccfd71388467d6daaa3e405f878c6f15aabb6fa38e46f1907bf048"
+      "bytes": 3745,
+      "sha256": "25aaff457d076a31eedd63828ea702d666297da6581cb3d251a69ff6450eeddf"
     },
     {
       "path": "src/harness/HarnessAttachmentStore.cpp",
-      "bytes": 34862,
-      "sha256": "a008b96f87e935ca628cfb76b271ecd0726f76d8bfb57a92addf5063d0fe9c0f"
+      "bytes": 35754,
+      "sha256": "959f366c199ed64b079f782fd853c3b36bab0d6819521429cc500ff471011c6b"
     },
     {
       "path": "src/harness/HarnessAttachmentStore.h",
-      "bytes": 3072,
-      "sha256": "7255e8419d91922c57455bf63e345089bb142e2c5df6ddb5154f1f6116e9f60d"
+      "bytes": 3108,
+      "sha256": "1c4dcb61a82dfd2920936dcd9e85f8a7869dc4f0beafbc715d1f926304d952f7"
     },
     {
       "path": "src/harness/HarnessPreparedTurn.cpp",
@@ -16421,6 +17341,16 @@
       "path": "src/harness/HarnessPreparedTurn.h",
       "bytes": 977,
       "sha256": "f69868032dee2db7dc8265dd47f6b55b8df5c1512f4783f6cefa59b460a4300b"
+    },
+    {
+      "path": "src/harness/HarnessQuestionMcp.cpp",
+      "bytes": 6375,
+      "sha256": "525b5d5d353d48d08b9e702b8fc81a20f2e3b86828b60ce1f3724f91c9affcf6"
+    },
+    {
+      "path": "src/harness/HarnessQuestionMcp.h",
+      "bytes": 1741,
+      "sha256": "ae634539f71f52c8f194950e43006b8c33e9e72b6cfaeec7e42ab13555f290ab"
     },
     {
       "path": "src/harness/HarnessWorkspace.cpp",
@@ -16574,8 +17504,8 @@
     },
     {
       "path": "src/runtime/AgentToolHost.cpp",
-      "bytes": 33518,
-      "sha256": "5d0c2099d817f7cdbb89fca546f815178ea3fa0e38558aec13c533687b13d32e"
+      "bytes": 33494,
+      "sha256": "ca843599e44bd904184246d87afbc5497a6d9cdc715abef5fce957d27b93ad2e"
     },
     {
       "path": "src/runtime/AgentToolHost.h",
@@ -16593,6 +17523,16 @@
       "sha256": "a05fd1ddd88f5bae8a229be5cbab58a103385750986d01814f78f6f573e54f0d"
     },
     {
+      "path": "src/runtime/HarnessAttachmentSource.cpp",
+      "bytes": 10093,
+      "sha256": "cd99f97077c92b371248a441e114c319f3cbcaa07a5411c7e86c909bf605ad9c"
+    },
+    {
+      "path": "src/runtime/HarnessAttachmentSource.h",
+      "bytes": 1079,
+      "sha256": "86c2b4635517c4f9bb84bd3e4f8dc6e1ee9a1d84ad6066ed607ccd630545a6a4"
+    },
+    {
       "path": "src/runtime/HarnessFileContext.cpp",
       "bytes": 15835,
       "sha256": "e800c63a9988e53e6a14976fe0cd48b7a08bf653b7f090d3ad36795c7dd6f7a5"
@@ -16604,13 +17544,13 @@
     },
     {
       "path": "src/runtime/HarnessInputPreparation.cpp",
-      "bytes": 8070,
-      "sha256": "8afc86e175defcb24d795c4f02c67bd5930c96fcd00a2c364abfae2b99884cb7"
+      "bytes": 9827,
+      "sha256": "3f645b0992180f3f2dd09bbef62d30cdb2ed944d3276e75104323fca9f99ec68"
     },
     {
       "path": "src/runtime/HarnessInputPreparation.h",
-      "bytes": 824,
-      "sha256": "cc686f19b689565a0e506ce114926af5a7aaf62e37d07690690cece03505b79e"
+      "bytes": 695,
+      "sha256": "0da7b160497f20b8b542f59afaf76e52fb1285ab4642b7df429198da4fe8ef33"
     },
     {
       "path": "src/sandbox/SandboxHost.cpp",
@@ -17184,8 +18124,8 @@
     },
     {
       "path": "src/ui/ConversationView.cpp",
-      "bytes": 57769,
-      "sha256": "0ef149a59dd4d251220e47e505fe652ff26a8a7d4bfe75ef0daf4a0c4dea376a"
+      "bytes": 60526,
+      "sha256": "8b78419e962a8a9ef1b5aee873e7d757235afe7c165d10ce5474af5c8d9e33b2"
     },
     {
       "path": "src/ui/ConversationView.h",
@@ -17259,8 +18199,8 @@
     },
     {
       "path": "src/ui/MainWindow.cpp",
-      "bytes": 73507,
-      "sha256": "6e3df71ebe0294bf6f34263507bb12e82fc74967ee98353c7e0c7ad9c83cdc6c"
+      "bytes": 73538,
+      "sha256": "e88c4e116caecee86a36090082ed40b48111892a2ef1370f5603263442af748a"
     },
     {
       "path": "src/ui/MainWindow.h",
@@ -17309,8 +18249,8 @@
     },
     {
       "path": "src/ui/MainWindowLinks.cpp",
-      "bytes": 13920,
-      "sha256": "1542ab8681b981c40f0766ba742e264928460d19118c4f2a31b02786c61e8a17"
+      "bytes": 13980,
+      "sha256": "1da52e025229076f23f061dc744c898ff8a9e825b0ba2a8dcfdee240e5372698"
     },
     {
       "path": "src/ui/MainWindowMutations.cpp",
@@ -17378,6 +18318,16 @@
       "sha256": "610638770b1cd8b15450b7a9d81694515eb9c701eb48953e181e36cc9500dd80"
     },
     {
+      "path": "src/ui/ModelSelector.cpp",
+      "bytes": 2099,
+      "sha256": "3eba3e2cdab29595526cbda43c4c5d67b38f2ce4e99d4a0052afd08605f5f847"
+    },
+    {
+      "path": "src/ui/ModelSelector.h",
+      "bytes": 321,
+      "sha256": "467cba97b4aac48ad85d9221916b132a1f3cfd8e4099497b911d8fd35602be5e"
+    },
+    {
       "path": "src/ui/ProviderCatalog.cpp",
       "bytes": 7949,
       "sha256": "f64e167e851da78377082e724176969cd868e83ef0f145273fb31b4fab34e107"
@@ -17436,6 +18386,16 @@
       "path": "src/ui/QuestionPanel.h",
       "bytes": 1158,
       "sha256": "4947141869aacb3ef67bc6188679b6de817cadafadca0d8096c9c36774f7659e"
+    },
+    {
+      "path": "src/ui/QuestionToolPart.cpp",
+      "bytes": 11126,
+      "sha256": "32f1e2a065a786bc69f1cf4deb1f9de298b3d84a5b525eec6fbcbac25e786eef"
+    },
+    {
+      "path": "src/ui/QuestionToolPart.h",
+      "bytes": 1235,
+      "sha256": "a3ce022eefdcbab13f85e3c66caaef98ae926fc678efc2bd85bef7c9f88214e4"
     },
     {
       "path": "src/ui/SessionStore.cpp",
@@ -17603,6 +18563,11 @@
       "sha256": "9f429860e924a49c11c33062ff46b04b16dcbcbf89f43686ac8402dda230faa8"
     },
     {
+      "path": "tests/support/DirectMcpFixture.cpp",
+      "bytes": 14929,
+      "sha256": "d53bc051f60fce561ef0d76cf5f474a8696fb7f489ea281198cb7a4b0ff60024"
+    },
+    {
       "path": "tests/support/HarnessAttachmentAcpFixture.cpp",
       "bytes": 14385,
       "sha256": "c2ad77ad0d54df668d588972eda314a9a72241a5c9ee15e1a2ba7e77e66e809f"
@@ -17634,8 +18599,8 @@
     },
     {
       "path": "tests/support/QuestionMcpAcpFixture.cpp",
-      "bytes": 11104,
-      "sha256": "fa60277436d6c62401b92807bf914cbdade9b2bd43884d6d0000fc7d0efaa2e2"
+      "bytes": 11366,
+      "sha256": "ff170854befb6ede7b04b74b8cef1726b1ab7f06276f800f3dbf95d44165e302"
     },
     {
       "path": "tests/support/QuestionMcpDeadlineFixture.cpp",
@@ -17878,6 +18843,11 @@
       "sha256": "45017b7558bf1ae01a9016ec431d162fea1474ee59c0e2ae7e4061a355b2c506"
     },
     {
+      "path": "tests/test_direct_question_mcp.cpp",
+      "bytes": 25236,
+      "sha256": "d05aa2bfe12ce4b6f61596dacb9f84c12611f9ed6f85d06e4c0ff40c0f4c2f35"
+    },
+    {
       "path": "tests/test_downloads.cpp",
       "bytes": 14568,
       "sha256": "236d2bc5fea4ef6e7dae4b502bec5c72be62826b1070fbcffa20bdb490e4cb68"
@@ -17968,6 +18938,16 @@
       "sha256": "e3fb605efdc2833f4308d15fbab7a006af98f495a33a6544a8d457d3e52e845e"
     },
     {
+      "path": "tests/test_harness_attachment_mime.cpp",
+      "bytes": 8011,
+      "sha256": "07b7f00f899c508c72cf8d315aee34fa29f36b10bb81ce20d309b1534b874a02"
+    },
+    {
+      "path": "tests/test_harness_attachment_source.cpp",
+      "bytes": 5645,
+      "sha256": "d79abe46a39c8a85f599dd8f3cfb90e4051020eaf978e5dd399a91a2dc14b4e9"
+    },
+    {
       "path": "tests/test_harness_attachment_store.cpp",
       "bytes": 17630,
       "sha256": "2551f206213238db0d125294085fc71b89e943ea3ad7fdb2192a40353f334f71"
@@ -18008,6 +18988,11 @@
       "sha256": "0424cd378aed98963ba02b97c33b36f6e6ccb9895cdc6250f486252be46846f7"
     },
     {
+      "path": "tests/test_historical_attachments.cpp",
+      "bytes": 9737,
+      "sha256": "bf793490a4b180361efb1ee2d24c836afb448918b1f3b80f07f0a70f6cad9e25"
+    },
+    {
       "path": "tests/test_history_projection.cpp",
       "bytes": 8775,
       "sha256": "2dfe2d646f7694085ff385f26fc6c4790df5e177cda1e867e1318d2ca17d25e7"
@@ -18039,8 +19024,8 @@
     },
     {
       "path": "tests/test_mcp_presentation.cpp",
-      "bytes": 16428,
-      "sha256": "acacedde8ab418cb74c356ad33c630613c9e223171e733ee13f99884db02b385"
+      "bytes": 16435,
+      "sha256": "77e260702fa93cd3809eadb8701137b54a859de2119ed6584f23f2fa41168bd1"
     },
     {
       "path": "tests/test_mini_apps.cpp",
@@ -18056,6 +19041,11 @@
       "path": "tests/test_model_discovery_host.cpp",
       "bytes": 14176,
       "sha256": "072ba4b39468888dcfb965b518490be72276f6078af3344b6bbf3d90cfc5a72e"
+    },
+    {
+      "path": "tests/test_model_selector_display.cpp",
+      "bytes": 6572,
+      "sha256": "39f7e971232c910a74956a06b2bcd13b117268f4abde6ec207c12f371c4d3b53"
     },
     {
       "path": "tests/test_mutation_runtime.cpp",
@@ -18156,6 +19146,16 @@
       "path": "tests/test_question_panel.cpp",
       "bytes": 7835,
       "sha256": "b34be41010d9502a04934760e1b2b1773e3bb618581332c22098462a85f6b31a"
+    },
+    {
+      "path": "tests/test_question_presentation.cpp",
+      "bytes": 17423,
+      "sha256": "493671f7f0193735b278823dd7945087ad779598a42089a71b07fe82b0b9f2d6"
+    },
+    {
+      "path": "tests/test_question_presentation_host.cpp",
+      "bytes": 5267,
+      "sha256": "9c1cdc1d69252dee6dfd263d7ee0582ade9acaf1cebcb93ad84f379e8155100d"
     },
     {
       "path": "tests/test_raw_enumeration_races.cpp",

@@ -1,0 +1,74 @@
+{
+  "verifiedUtc": "2026-11-07T00:57:18.453882+00:00",
+  "binarySha256": "8f9dce9c969b1298508c2fac9662efcec482cd64c02d69a976e38cf5381f4549",
+  "testedDirectory": "out/native-questions-candidate-2",
+  "finalPackageBytesIdentical": true,
+  "runtime": "Installed managed-account Codex; gpt-6.1-sol; low reasoning effort",
+  "submittedUserTurns": 1,
+  "passed": true,
+  "scope": "Actual Windows ADE composer, real managed model invokes shared MCP question, user selection submitted through native form, exact final ADE_SHARED_QUESTION_OK. No auth UI or credential extraction.",
+  "questionParts": 1,
+  "wrapperParts": 1,
+  "canonicalTools": [
+    {
+      "name": "stagewise_request_user_input",
+      "state": "output-available",
+      "questionWrapper": true
+    },
+    {
+      "name": "askUserQuestions",
+      "state": "output-available",
+      "questionWrapper": false
+    }
+  ],
+  "answerAccepted": true,
+  "exactReply": true,
+  "workspaceUnchanged": true,
+  "errorParts": 0,
+  "exitCode": 0,
+  "closedViaTitleBarX": true,
+  "ownedTestProcessesRemaining": 0,
+  "screenshotsLocalOnly": true,
+  "screenshots": [
+    {
+      "localPath": "private/parity-live/native-question-2/01-main.jpg",
+      "sha256": "b648177c4c5129f6a88dc401fdd3bf6502f036111560a82fede18bc4fc382ce6"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/02-send-enabled.jpg",
+      "sha256": "7c928bf16ff2b6f57ba2c5b5cd847a57614879e19b3ed540b4c82a03cb89ac01"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/03-submitted.jpg",
+      "sha256": "8d59d2281de77570220ef9cddbbe50a65f234de89c8e18aa26881b7c64e12c2d"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/04-native-form.jpg",
+      "sha256": "685c0af98120fc891a85ccf10a0330eddc372fc63de266d7064a0faf5fdce348"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/05-answer-selected.jpg",
+      "sha256": "584a81bbb0307581fd5304e570f82fb5a37dd774966c94be94c8ace6cbe972d2"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/06-answer-submitted.jpg",
+      "sha256": "ce21bedfb221a28cc18890ec77ed0a470a995c22b7d65f41640f583e782dbd41"
+    },
+    {
+      "localPath": "private/parity-live/native-question-2/07-live-completed.jpg",
+      "sha256": "bbcba473b9b32ceffcf4c15df48fb301f9154b907b5903d5c24814ff28c63b64"
+    }
+  ],
+  "beforeRepair": {
+    "candidateSha256": "651e69d4ee85626ac115dddb4254c8c421498a6b53f558a0f80932995969ebfa",
+    "submittedUserTurns": 1,
+    "result": "Same model did not locate the shared question tool. Local installed-runtime inspection showed it was available in a deferred registry.",
+    "localEvidence": "private/parity-live/native-question-1/process.json"
+  },
+  "repair": "Conditional exact-name tool-discovery guidance for Codex runtimes exposing functions.exec and ALL_TOOLS; original user prompt and selected model retained.",
+  "limits": [
+    "Submitted user turns do not assert provider request/billing counts.",
+    "Canonical wrapper and native result remain stored while UI projects one question card.",
+    "No paid Claude inference, universal tool discovery, deterministic model reasoning or exhaustive source parity is established."
+  ]
+}

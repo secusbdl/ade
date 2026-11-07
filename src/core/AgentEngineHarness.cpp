@@ -1,13 +1,14 @@
 #include "AgentEngine.h"
 #include "HarnessHistory.h"
-#include "harness/CodexHarnessSession.h"
 #include "harness/AcpHarnessSession.h"
 #include "harness/ClaudeHarnessSession.h"
+#include "harness/CodexHarnessSession.h"
+#include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QFutureWatcher>
 #include <QJsonDocument>
 #include <QUuid>
-#include <QFutureWatcher>
 #include <QtConcurrentRun>
 
 namespace ade {
@@ -69,7 +70,9 @@ void AgentEngine::stopHarness() {
   // Preserve the user's owned partial form before stopping the external
   // process. This is display history, not an invented native model
   // tool-call/result pair.
-  if (m_acp && m_acp->isStagewiseQuestion(m_harnessQuestionToken) &&
+  if (((m_acp && m_acp->isStagewiseQuestion(m_harnessQuestionToken)) ||
+       (m_claude && m_claude->isStagewiseQuestion(m_harnessQuestionToken)) ||
+       (m_harness && m_harness->isStagewiseQuestion(m_harnessQuestionToken))) &&
       !m_questionToken.isEmpty() && m_harnessTools.contains(m_questionCallId)) {
     const auto reason = m_questionStopReason.isEmpty()
                             ? QString("agent_stopped")
@@ -337,6 +340,38 @@ void AgentEngine::dispatchPreparedHarness(const QJsonArray& input,const QStringL
         m_questionCallId = "codex-question/" + token;
         emit questionChanged();
       });
+  connect(
+      m_harness, &CodexHarnessSession::stagewiseQuestionRequired, this,
+      [this, generation](const QString &token, const QJsonObject &definition) {
+        if (!m_busy || generation != m_generation)
+          return;
+        if (!m_questionToolEnabled || !m_questionToken.isEmpty()) {
+          m_harness->cancelQuestion(token);
+          return;
+        }
+        QuestionForm form;
+        QString error;
+        if (!form.begin(definition, &error)) {
+          m_harness->completeStagewiseQuestion(token, {}, error);
+          return;
+        }
+        m_question = std::move(form);
+        m_harnessQuestionToken = token;
+        m_questionToken = QUuid::createUuid().toString(QUuid::WithoutBraces);
+        m_questionCallId =
+            "codex/" + m_harness->questionTurnId() + "/stagewise-mcp:" + token;
+        emit questionChanged();
+      });
+  connect(m_harness, &CodexHarnessSession::stagewiseQuestionCancelled, this,
+          [this, generation](const QString &token) {
+            if (generation != m_generation || token != m_harnessQuestionToken)
+              return;
+            m_harnessQuestionToken.clear();
+            m_questionToken.clear();
+            m_questionCallId.clear();
+            m_questionStopReason.clear();
+            emit questionChanged();
+          });
   connect(m_harness, &CodexHarnessSession::failed, this,
           [this, generation](const QString &error) {
             if (m_busy && generation == m_generation)
@@ -374,6 +409,8 @@ void AgentEngine::dispatchPreparedHarness(const QJsonArray& input,const QStringL
   options.workspace = m_tools.workspace().isEmpty() ? m_harnessFallbackWorkspace
                                                     : m_tools.workspace();
   options.alwaysAllow = m_alwaysAllow;
+  if (m_questionToolEnabled)
+    options.questionMcpExecutable = QCoreApplication::applicationFilePath();
   if (!transcript.isEmpty())
     options.historyContext = "<conversation-history>\n" +
                              transcript.join("\n\n") +
@@ -465,7 +502,9 @@ void AgentEngine::finishHarnessQuestion(const QString &reason) {
   m_questionCallId.clear();
   m_questionStopReason.clear();
   if (m_provider.isClaudeHarness() && m_claude) {
-    if (reason.isEmpty())
+    if (m_claude->isStagewiseQuestion(token))
+      m_claude->completeStagewiseQuestion(token, result);
+    else if (reason.isEmpty())
       m_claude->answerQuestion(token, answers);
     else
       m_claude->cancelQuestion(token);
@@ -477,7 +516,9 @@ void AgentEngine::finishHarnessQuestion(const QString &reason) {
     else
       m_acp->cancelQuestion(token);
   } else if (m_harness) {
-    if (reason.isEmpty())
+    if (m_harness->isStagewiseQuestion(token))
+      m_harness->completeStagewiseQuestion(token, result);
+    else if (reason.isEmpty())
       m_harness->answerQuestion(token, answers);
     else
       m_harness->cancelQuestion(token);

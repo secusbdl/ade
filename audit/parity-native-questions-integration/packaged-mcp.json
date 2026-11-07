@@ -1,0 +1,24 @@
+{
+  "verifiedUtc": "2026-11-07T00:47:09.618603+00:00",
+  "executable": "out/native-questions-candidate-2/ADE.exe",
+  "sha256": "8f9dce9c969b1298508c2fac9662efcec482cd64c02d69a976e38cf5381f4549",
+  "milliseconds": 266,
+  "exitCode": 0,
+  "invalidEnvironmentExitCode": 3,
+  "steps": [
+    "actual ADE early stdio initialization",
+    "exact single-tool catalog/schema",
+    "unknown tool rejected",
+    "Unicode form reaches authenticated loopback callback",
+    "structuredContent and text JSON match full callback result",
+    "invalid UTF-8 rejected; next ping succeeds",
+    "stdin EOF exits cleanly",
+    "invalid capability rejected before GUI/profile creation"
+  ],
+  "callbackRequests": 1,
+  "isolatedProfileFiles": 0,
+  "externalNetworkRequests": 0,
+  "modelCalls": 0,
+  "limits": "Actual executable stdio transport only; loopback callback is synthetic, not the full ACP question panel or a live model invocation.",
+  "finalPackageBytesIdentical": true
+}

@@ -4,6 +4,7 @@
 #include "MarkdownParts.h"
 #include "FileDiffView.h"
 #include "TurnFileEdits.h"
+#include "QuestionToolPart.h"
 #include "editor/CodeEditor.h"
 #include <QApplication>
 #include <QClipboard>
@@ -50,6 +51,7 @@ bool exploratory(const QJsonObject &part){
     return part["type"]=="tool"&&QStringList{"glob","grepSearch","read","ls","searchInLibraryDocs","listLibraryDocs","executeSandboxJs","readConsoleLogs","getLintingDiagnostics"}.contains(visualToolName(part));
 }
 QString partPlain(const QJsonObject &part){
+    if(isNativeQuestionPart(part))return questionToolPlainText(part);
     if(part["type"]=="tool") {
         QString result=part["name"].toString();
         if(!part["inputText"].toString().isEmpty())result+='\n'+part["inputText"].toString();
@@ -205,6 +207,8 @@ public:
             markdown=new MarkdownParts(disclosure->body);disclosure->bodyLayout->addWidget(markdown);
             connect(markdown,&MarkdownParts::linkActivated,this,[this](const QUrl &url){const auto callback=this->callbacks.link;const auto message=this->messageId;const auto part=this->partId;callback(message,part,url);});
         } else if(type=="tool") {
+            questionPart=new QuestionToolPart(this);layout->addWidget(questionPart);questionPart->hide();
+            connect(questionPart,&QuestionToolPart::linkActivated,this,[this](const QUrl& url){const auto callback=this->callbacks.link;const auto message=this->messageId;const auto part=this->partId;callback(message,part,url);});
             disclosure=new Disclosure(key,callbacks,this);layout->addWidget(disclosure);
             preview=new CodeEditor(disclosure->body);preview->setObjectName("toolCodePreview");preview->setReadOnly(true);preview->setFrameShape(QFrame::NoFrame);preview->setLineWrapMode(QPlainTextEdit::NoWrap);preview->hide();disclosure->bodyLayout->addWidget(preview);
             inputSection=new Disclosure(key+"/arguments",callbacks,disclosure->body);inputSection->trigger->setObjectName("toolArgumentsToggle");disclosure->bodyLayout->addWidget(inputSection);
@@ -242,7 +246,33 @@ public:
             markdown->updateText(part["text"].toString(),state=="streaming");
             auto p=markdown->palette();auto foreground=palette().color(QPalette::Text);foreground.setAlphaF(0.75);p.setColor(QPalette::Text,foreground);markdown->setPalette(p);
         } else if(type=="tool") {
-            callId=part["toolCallId"].toString();const auto mapped=part["acpPresentation"].toObject();
+            callId=part["toolCallId"].toString();
+            const bool question=isNativeQuestionPart(part);
+            questionPart->setVisible(question);
+            if(!self||updateGeneration!=updateEpoch)return;
+            if(question){
+                questionPart->updatePart(part);
+                if(!self||updateGeneration!=updateEpoch)return;
+                // The source question card has no raw JSON/copy disclosures.
+                // Canonical results remain untouched; generic copy callbacks
+                // cannot expose a previously rendered password value.
+                rawInput.clear();rawOutput.clear();input->setSource({},false);
+                if(!self||updateGeneration!=updateEpoch)return;
+                output->setSource({},false);
+                if(!self||updateGeneration!=updateEpoch)return;
+                inputSection->hide();outputSection->hide();preview->hide();fileDiff->hide();acpDiffs->hide();
+                const bool requested=state=="approval-requested";
+                disclosure->setVisible(requested);
+                if(!self||updateGeneration!=updateEpoch)return;
+                if(requested){disclosure->compact(false);disclosure->title("Approval required · askUserQuestions");disclosure->policy(true);}
+                if(previousState!=state)decisionPending=false;
+                approvalBar->setVisible(requested);canDecide=requested&&!decisionPending&&!callId.isEmpty()&&busy;
+                approve->setEnabled(canDecide);deny->setEnabled(canDecide);
+                approve->setProperty("toolCallId",callId);deny->setProperty("toolCallId",callId);previousState=state;
+                return;
+            }
+            disclosure->show();
+            const auto mapped=part["acpPresentation"].toObject();
             const auto mappedEntry=acpEntry(part);const auto name=visualToolName(part);
             const bool hasMapped=!mappedEntry.isEmpty();const auto mappedKind=mappedEntry["kind"].toString();
             const bool hasDiff=hasMapped&&QStringList{"write","edit","delete"}.contains(mappedKind);
@@ -328,7 +358,7 @@ private:
     QJsonObject previousPart;bool initialized=false,wasLast=false,wasBusy=false;quint64 updateGeneration=0;
     MarkdownParts *markdown=nullptr;Disclosure *disclosure=nullptr;TranscriptText *input=nullptr,*output=nullptr,*error=nullptr;
     Disclosure *inputSection=nullptr,*outputSection=nullptr;CodeEditor *preview=nullptr;
-    FileDiffView* fileDiff=nullptr;ReportedDiffEntries* acpDiffs=nullptr;
+    FileDiffView* fileDiff=nullptr;ReportedDiffEntries* acpDiffs=nullptr;QuestionToolPart* questionPart=nullptr;
     QWidget *approvalBar=nullptr;QPushButton *approve=nullptr,*deny=nullptr;
 };
 
@@ -526,7 +556,7 @@ void ConversationView::setConversation(const QString &id,const QJsonArray &messa
     const auto contextEpoch=d->contextEpoch;
     callbacks.link=[self,id,contextEpoch](const QString &messageId,const QString &partId,const QUrl &url){
         if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch)return;
-        for(const auto &value:self->d->messages){const auto message=value.toObject();if(message["id"]!=messageId)continue;for(const auto &entry:message["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==partId&&(part["type"]=="text"||part["type"]=="reasoning")){emit self->scopedLinkActivated(id,messageId,partId,url);if(self&&self->d->id==id&&self->d->contextEpoch==contextEpoch)emit self->linkActivated(url);return;}}}
+        for(const auto &value:self->d->messages){const auto message=value.toObject();if(message["id"]!=messageId)continue;for(const auto &entry:message["parts"].toArray()){const auto part=entry.toObject();if(part["id"]==partId&&(part["type"]=="text"||part["type"]=="reasoning"||isNativeQuestionPart(part))){emit self->scopedLinkActivated(id,messageId,partId,url);if(self&&self->d->id==id&&self->d->contextEpoch==contextEpoch)emit self->linkActivated(url);return;}}}
     };
     callbacks.approval=[self,id,contextEpoch](const QString &messageId,const QString &partId,const QString &call,bool allowed){
         if(!self||self->d->id!=id||self->d->contextEpoch!=contextEpoch||!self->d->busy)return;
@@ -657,5 +687,19 @@ bool ConversationView::eventFilter(QObject *object,QEvent *event){
     return QWidget::eventFilter(object,event);
 }
 void ConversationView::resizeEvent(QResizeEvent *event){if(!d->id.isEmpty()&&!d->pending)d->remember();QWidget::resizeEvent(event);d->jump->move(width()-45,height()-43);if(!d->id.isEmpty())d->scheduleScroll();}
-void ConversationView::changeEvent(QEvent *event){QWidget::changeEvent(event);if(event->type()==QEvent::FontChange)d->updateMargins();if(event->type()==QEvent::PaletteChange){d->jump->setStyleSheet("QToolButton{border:1px solid "+QString(darkFor(this)?"#505762":"#d5dae2")+";border-radius:15px;background:"+QString(darkFor(this)?"#2c313b":"#ffffff")+";}");for(auto *markdown:findChildren<MarkdownParts*>())markdown->refreshAppearance();}}
+void ConversationView::changeEvent(QEvent *event){
+    const QPointer<ConversationView> self(this);QWidget::changeEvent(event);if(!self)return;
+    if(event->type()==QEvent::FontChange)d->updateMargins();
+    if(!self)return;
+    if(event->type()==QEvent::PaletteChange){
+        d->jump->setStyleSheet("QToolButton{border:1px solid "+QString(darkFor(this)?"#505762":"#d5dae2")+";border-radius:15px;background:"+QString(darkFor(this)?"#2c313b":"#ffffff")+";}");
+        if(!self)return;
+        QList<QPointer<MarkdownParts>> texts;for(auto* text:findChildren<MarkdownParts*>())texts.append(text);
+        for(const auto& text:texts){if(text)text->refreshAppearance();if(!self)return;}
+    }
+    if(event->type()==QEvent::PaletteChange||event->type()==QEvent::FontChange){
+        QList<QPointer<QuestionToolPart>> questions;for(auto* question:findChildren<QuestionToolPart*>())questions.append(question);
+        for(const auto& question:questions){if(question)question->refreshAppearance();if(!self)return;}
+    }
+}
 } // namespace ade

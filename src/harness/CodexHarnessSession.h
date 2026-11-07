@@ -1,6 +1,7 @@
 #pragma once
-#include "HarnessPreparedTurn.h"
 #include "CodexAppServer.h"
+#include "HarnessPreparedTurn.h"
+#include "HarnessQuestionMcp.h"
 #include "HarnessWorkspace.h"
 #include <QHash>
 
@@ -11,6 +12,8 @@ struct CodexHarnessOptions {
   bool alwaysAllow = false;
   QString historyContext;
   HarnessAttachments attachments;
+  QString questionMcpExecutable;
+  int turnTimeoutMs = 300000;
 };
 
 // One host-owned chat/session. Output is normalized into bounded UI events;
@@ -28,11 +31,22 @@ public:
   bool answerQuestion(const QString &token, const QJsonObject &answers);
   bool cancelQuestion(const QString &token);
   bool isBusy() const { return m_busy; }
+  bool isStagewiseQuestion(const QString &token) const {
+    return m_questionMcp.owns(token);
+  }
+  QString questionTurnId() const { return m_questionMcp.turn(); }
+  bool completeStagewiseQuestion(const QString &token,
+                                 const QJsonObject &result,
+                                 const QString &error = {}) {
+    return m_busy && m_questionMcp.complete(token, result, error);
+  }
   QJsonObject sessionState() const;
   // Fork is explicitly requested by the owning host. Never resume a source
   // thread for a cloned chat: copy state with fork:true for the first turn.
   static QJsonObject forkState(QJsonObject source);
 signals:
+  void stagewiseQuestionRequired(QString token, QJsonObject form);
+  void stagewiseQuestionCancelled(QString token);
   void event(QJsonObject event);
   void sessionStateChanged(QJsonObject state);
   void approvalRequired(QString token, QString name, QJsonObject details);
@@ -41,12 +55,16 @@ signals:
   void failed(QString error);
 
 private:
+  HarnessQuestionMcp m_questionMcp;
   struct PendingInput {
     QJsonValue id;
     QString method, itemId;
     QJsonObject parameters;
   };
   void beginThread();
+  void pauseForDecision();
+  void resumeAfterDecision();
+  void refreshQuestionBlock();
   void sendTurn();
   void receiveReply(const QString &id, const QString &method,
                     const QJsonValue &result, const QJsonObject &error);
@@ -69,9 +87,10 @@ private:
   QHash<QString, QString> m_requests;
   QString m_threadId, m_turnId;
   QTimer m_timeout;
+  int m_waitRemaining = -1;
   quint64 m_generation = 0;
   qsizetype m_outputChars = 0, m_itemBytes = 0, m_earlyBytes = 0;
   bool m_busy = false, m_interrupted = false, m_turnSent = false,
-       m_sessionCreated = false;
+       m_sessionCreated = false, m_previouslyConfiguredQuestions = false;
 };
 } // namespace ade

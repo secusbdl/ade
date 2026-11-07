@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen_private_ready_for_root_integration",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeObservedHead": "823d5472cc0f945cf8e2d63874db85ff9fa159c7",
+  "baseScope": "Current uncommitted root attachment/continuity/settlement/Claude-resume integration; source-manifest.json records exact canonical-LF base/result hashes, not merely HEAD.",
+  "patch": "direct-question.patch",
+  "patchCanonicalLfSha256": "9154d1fb6a63034827bfcfbcb4a9d77aac20a46b57d1e2701b67678b0e7f6db8",
+  "applyCheck": "git apply --check succeeded without whitespace overrides against current root",
+  "cmake": "CMAKE-SNIPPET.cmake",
+  "manifest": "source-manifest.json",
+  "apis": {
+    "shared": "HarnessQuestionMcp owns the existing native token-auth loopback QuestionMcpBridge and prepares standard stdio MCP config. Early helper remains ADE --question-mcp-stdio; no Node sidecar.",
+    "adapters": [
+      "Trailing Options.questionMcpExecutable enables bridge; empty disables. Existing attachments and native question/control APIs preserved.",
+      "isStagewiseQuestion, questionTurnId, completeStagewiseQuestion(full result), stagewiseQuestionRequired/cancelled.",
+      "CodexAppServer suspendDeadline/resumeDeadline delegates to existing JsonRpcProcess; Codex Options.turnTimeoutMs bounded100..600000ms, default300000ms."
+    ],
+    "engine": "Question tool opt-in controls helper config; uses existing QuestionForm, token/owner guards, signals and display. Partial result saved before shutdown. No MainWindow or renderer changes.",
+    "wrapper": "Only configured exact Codex mcpToolCall server=stagewise/tool=stagewise_request_user_input or exact Claude claude.mcp__stagewise__stagewise_request_user_input gets existing validated UI-only acpPresentation.questionWrapper. Canonical raw name/input/result preserved; pending or ever-seen approval remains visible."
+  },
+  "sourceContract": [
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/stagewise-mcp-server.ts",
+      "lines": [
+        14,
+        51
+      ],
+      "behavior": "Only shared structured-question tool is registered; no browser/plugin API bridge is claimed."
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/stagewise-mcp-bridge.ts",
+      "lines": [
+        7,
+        107
+      ],
+      "behavior": "Owner callback with bearer capability and bounded request form."
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/runtime.ts",
+      "lines": [
+        312,
+        348
+      ],
+      "behavior": "MCP configuration supplied for fresh/resumed external sessions."
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/agents/acp/prompt-builder.ts",
+      "lines": [
+        20,
+        27
+      ],
+      "behavior": "Exact shared-question preference, never tool-command approval."
+    },
+    {
+      "path": "private/claude-harness-plan/reference/src__claude_agent_sdk___internal__transport__subprocess_cli.py",
+      "lines": [
+        667,
+        701
+      ],
+      "upstreamCommit": "2209f2c134fee914c0f75733b631a5fc238ca846",
+      "behavior": "Official SDK standard --mcp-config JSON construction; managed CLI account retained."
+    },
+    {
+      "url": "https://developers.openai.com/codex/app-server",
+      "localSchemas": [
+        "private/provider-harness-plan/schema/v2/ThreadStartParams.json",
+        "private/provider-harness-plan/schema/v2/ThreadResumeParams.json",
+        "private/provider-harness-plan/schema/v2/ThreadForkParams.json"
+      ],
+      "behavior": "Ordinary per-thread config override; no experimental dynamic tool fields."
+    },
+    {
+      "url": "https://developers.openai.com/codex/mcp",
+      "cachedReference": "reference/dynamic_tools_mcp.rs",
+      "behavior": "Official native client uses dotted mcp_servers.<namespace> override. Installed native configuration discovery below validates accepted shape."
+    }
+  ],
+  "tested": {
+    "reports": [
+      {
+        "suite": "direct_question_mcp",
+        "passed": 46,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 19254,
+        "text": "final-direct_question_mcp.txt",
+        "xml": "final-direct_question_mcp.xml",
+        "textCanonicalLfSha256": "4f38bf06865b249b4460439916219cad16190bc7e065b80558abedc94442fe29",
+        "xmlCanonicalLfSha256": "1ea8f2b80bf8a52ad0071819da07c7a0f90e83020c225363e8e212a00096505f"
+      },
+      {
+        "suite": "codex_harness",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 5295,
+        "text": "final-codex_harness.txt",
+        "xml": "final-codex_harness.xml",
+        "textCanonicalLfSha256": "1ffc50a0eb10748b0193edff7e058637260944216dcab3c957355eef1496e14f",
+        "xmlCanonicalLfSha256": "55de7dcc5ffa28b8957a1c8fe62208cfaed5832cc50fc08f663769811edd6210"
+      },
+      {
+        "suite": "codex_engine",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 3090,
+        "text": "final-codex_engine.txt",
+        "xml": "final-codex_engine.xml",
+        "textCanonicalLfSha256": "4b88d65c9b76c4d08ea0e02202048be575c087fccfc6732d9a02904bf5a8cf48",
+        "xmlCanonicalLfSha256": "8db3568d4a4ae6484027d8428a6812a2b890c0b3eb92c92c131d12401e4cc4b0"
+      },
+      {
+        "suite": "claude_session",
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 7244,
+        "text": "final-claude_session.txt",
+        "xml": "final-claude_session.xml",
+        "textCanonicalLfSha256": "82dd8e359e12221cb4db2da6debc6a752e011d24f88c083a387cd603afeb0bb7",
+        "xmlCanonicalLfSha256": "016d0c44490c97c56841bfc9f8262e22c1504965442ae5155287cbbe50055837"
+      },
+      {
+        "suite": "claude_engine",
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 2631,
+        "text": "final-claude_engine.txt",
+        "xml": "final-claude_engine.xml",
+        "textCanonicalLfSha256": "02224b929072c46a7a3a7f6efd00b845364e1b86d1582d68bcd5eb2f805220d4",
+        "xmlCanonicalLfSha256": "1bd4c7472903bde64dd3410fcb3f3cd290b26ae52c0da07c097a665386e2edc6"
+      },
+      {
+        "suite": "claude_resume",
+        "passed": 31,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 7713,
+        "text": "final-claude_resume.txt",
+        "xml": "final-claude_resume.xml",
+        "textCanonicalLfSha256": "7060a13758c9bea9b126170d7a7c134cdaa54f178ae4bfdd96b2dbd7d276f468",
+        "xmlCanonicalLfSha256": "541473de2d4d8af641950df781e304d2a4eaa199713d1f91d86fb5af0f28bc18"
+      },
+      {
+        "suite": "mcp_engine",
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 4269,
+        "text": "final-mcp_engine.txt",
+        "xml": "final-mcp_engine.xml",
+        "textCanonicalLfSha256": "f7e06ae43998e3fa32e6836fbed166a870b38397fd3dd419088db9bff9435e1d",
+        "xmlCanonicalLfSha256": "fb4868e59708319ae97b0c698ed0e46f87936080b0e5892904ecd310dbe90e40"
+      }
+    ],
+    "totalPassed": 169,
+    "totalFailed": 0,
+    "scope": "Native deterministic CLI process + actual same-binary stdio MCP helper + real loopback callback + Engine QuestionForm; no model inference. Compatibility suites rebuilt against complete matching copied source."
+  },
+  "beforeEvidence": [
+    {
+      "text": "before.txt",
+      "xml": "before.xml",
+      "passed": 2,
+      "failed": 2,
+      "cause": "Both original direct adapters omit shared MCP configuration; fixture returns NO_MCP and no native shared form."
+    },
+    {
+      "text": "wrapper-before-corrected.txt",
+      "xml": "wrapper-before-corrected.xml",
+      "passed": 6,
+      "failed": 2,
+      "cause": "Both exact known wrappers remain visible before annotation. Foreign/similar identity controls pass. Additional done-count messages follow initial Qt assertion short-circuit and are not distinct defects."
+    },
+    {
+      "text": "native-answer-before.txt",
+      "xml": "native-answer-before.xml",
+      "passed": 3,
+      "failed": 0,
+      "cause": "Peer native answer API inconsistency did NOT reproduce runtime acceptance: transport refuses empty inbound request ID and pending deadline remains paused. Explicit native-route rejection is preventative clarity."
+    }
+  ],
+  "fixtureCorrections": [
+    "Initial after-first13/3: two-step UI rotates token; fixture must cancel current token and reject original. Claude native choice uses o0, not label Yes. No runtime fix attributed to these assertion errors.",
+    "Initial wrapper-before2/6 included incorrect arguments field; projection stores inputText. Corrected before independently establishes2 real missing-marker rows with4 negative-identity rows passing.",
+    "Initial isolated Codex config probe used a non-hex synthetic callback token and was correctly rejected;64-hex synthetic capability succeeded. No actual credential was used."
+  ],
+  "installedInitializationOnly": [
+    {
+      "adapter": "Codex",
+      "summary": "isolated-config-e25351c21f/summary.json",
+      "result": {
+        "scope": "Native installed Codex, isolated config, no account calls or prompt/model turn",
+        "binarySha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+        "helperSha256": "e03ab1acfdaf7a7d515331def377e2084ec29e4eaa6f5324dd62640176b7eabd",
+        "calls": [
+          "initialize",
+          "thread/start",
+          "mcpServerStatus/list"
+        ],
+        "toolNames": [
+          "stagewise_request_user_input"
+        ],
+        "success": true
+      },
+      "runtimeDifference": "Probe validates same dotted stdio config shape; production additionally sets tool_timeout_sec43200. No turn/start, account/read or model inference."
+    },
+    {
+      "adapter": "Claude",
+      "summary": "isolated-claude-be85c8bd40/summary.json",
+      "result": {
+        "scope": "Installed native Claude initialization and MCP status only; isolated HOME/config, zero user/model prompts or account calls",
+        "binarySha256": "66e00df32e6981f686a91f67287fcc86e6e1b80ba4973a7b7c4aa43c59986cfa",
+        "helperSha256": "c38810b4b9f8005904fd3a5c2021330c9953821a81b7f967dbe31764d2d551e6",
+        "calls": [
+          "initialize",
+          "mcp_status",
+          "mcp_status"
+        ],
+        "connected": true,
+        "toolNames": [
+          "stagewise_request_user_input"
+        ],
+        "status": "connected"
+      },
+      "versionEvidence": "private/claude-harness-plan/installed-version.txt:2.1.314; no user prompt or account read."
+    }
+  ],
+  "coveredBehaviors": [
+    "Native structured form submit/full result/partial cancel",
+    "Foreign/stale tokens and native-vs-shared form collision",
+    "Stop/restart, owner deletion at form/result, cancel from presentation",
+    "Helper process loss clears current form",
+    "Existing native provider questions and separate allow/deny approvals remain functional",
+    "Two live turns, successful restored session, missing-session recovery, cross-owner fork",
+    "Disabling bridge after configured live/restored session",
+    "500ms active provider deadline stays paused during700ms human wait",
+    "Exact wrapper only; one visible native form; raw results and persisted approval history retained"
+  ],
+  "remainingLimits": [
+    "Not yet root-integrated or tested in shipped ADE/MainWindow; private Engine uses real QuestionForm state and renderer suppression predicate, not a new GUI screenshot claim. Existing shared forms UI and wrapper renderer remain unchanged.",
+    "No paid model turn or account/entitlement validation for this bridge. Installed CLI probes are isolated initialization/discovery only.",
+    "External CLI binaries remain optional selected runtimes and own managed auth, tools, config merge and external timeout policy. ADE does not extract subscription tokens or write global CLI config.",
+    "Ephemeral callback capability is passed to the selected CLI/helper transport config and may be inspected by the local process/OS; it is excluded from ADE persisted model history and sanitized evidence. Do not claim universal secrecy from a same-account process.",
+    "Active request deadlines pause for owned human decisions; external CLI MCP timeout policy remains its own. Codex config requests12h; Claude inherited user policy is not overridden.",
+    "Codex has no invented MCP command-approval protocol. Actual approval-before-wrapper process fixture is Claude; generic validated presentation checks both raw adapter names plus existing Codex command approval tests.",
+    "Only the shared structured-question MCP tool is added. No browser/plugin/general sandbox tool bridge, Cursor adapter, new account login flow or new media codec is included.",
+    "Initial helper configuration is source-verified and native-discovered; broad older CLI version compatibility is unverified."
+  ],
+  "integrationInstructions": [
+    "Apply direct-question.patch after current root checkpoint; it preserves integrated attachment Options/preparer, continuity, resume recovery and wrapper projector seams.",
+    "Add CMAKE-SNIPPET.cmake or equivalent; reconfigure ade_harness glob. No AgentEngine header changes or UI integration hooks required.",
+    "Rebuild every harness/core/UI consumer due to changed session option/class layouts; never mix previous static archives and headers.",
+    "Run native_direct_question_mcp plus existing Codex/Claude/ACP MCP and observer suites in root gate.",
+    "Keep raw CLI diagnostics and private scratch catalogs/config out of public evidence. Only sanitized summaries and synthetic Qt reports are suitable to retain."
+  ],
+  "referenceFiles": [
+    {
+      "file": "reference/dynamic_tools_mcp.rs",
+      "canonicalLfSha256": "b1dba867e4640a3ac49d632dcde1d7db2712aab5ab94b7dd304b573d11fdd2d2",
+      "scope": "Official upstream OpenAI design reference fetched during configuration investigation; no runtime/vendor source imported."
+    },
+    {
+      "file": "reference/session_lifecycle_requests.rs",
+      "canonicalLfSha256": "1d471085f597e5f3b2a0e8fa4c7d422c759cddd8b3aa2b80f1721af7a869e454",
+      "scope": "Official upstream OpenAI design reference fetched during configuration investigation; no runtime/vendor source imported."
+    }
+  ],
+  "productionChangedByThisStage": false,
+  "committed": false,
+  "runningPrivateProcesses": []
+}

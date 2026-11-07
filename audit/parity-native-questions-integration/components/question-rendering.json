@@ -1,0 +1,164 @@
+{
+  "status": "frozen_private_ready_for_parent_integration",
+  "date": "2026-11-07",
+  "baseNativeHead": "823d5472cc0f945cf8e2d63874db85ff9fa159c7",
+  "upstream": {
+    "renderer": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-part-ui/tools/ask-user-questions.tsx",
+    "lines": {
+      "answerFormatting": "20-60",
+      "fieldMap": "64-77",
+      "error": "95-108",
+      "pending": "111-138",
+      "summaryAndAnswers": "142-207",
+      "fallback": "211-221"
+    },
+    "dispatch": "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx:204"
+  },
+  "pinnedSource": "17a0123a0e896885465df36169457199d5225eb5",
+  "patch": "question-presentation.patch",
+  "patchCanonicalLfSha256": "a01d1b9795cb0eebce55d6b871bacb30b6884e6f920fe6f563a45583946cf1ff",
+  "manifest": "manifest.json",
+  "applyCheck": {
+    "path": "apply-check.txt",
+    "exitCode": 0
+  },
+  "cmake": "CMAKE-HANDOFF.txt",
+  "sourceScope": [
+    "src/ui/QuestionToolPart.h",
+    "src/ui/QuestionToolPart.cpp",
+    "src/ui/ConversationView.cpp",
+    "src/ui/MainWindowLinks.cpp",
+    "tests/test_question_presentation.cpp",
+    "tests/test_question_presentation_host.cpp",
+    "tests/test_mcp_presentation.cpp",
+    "tests/support/QuestionMcpAcpFixture.cpp"
+  ],
+  "behavior": [
+    "Pending labels exactly Writing up some questions... and Waiting for response...; no raw argument controls for native askUserQuestions. Native running maps to waiting because direct API question dispatch currently uses running.",
+    "Completed title, notice priority, canceled reasons, partial-answer list, choice labels, Other values, empty/none/boolean values and six-bullet password mask match pinned renderer.",
+    "Render-only: canonical input/output/IDs and actual QuestionPanel/Engine authority stay unchanged. Explicit native approval controls remain available for any askUserQuestions part that requests approval.",
+    "Stable outer part and per-answer widgets across streaming/result/theme changes; scoped label links preserve raw row+part IDs. No automatic image/network/file loading.",
+    "Bound imported form/output parsing and Unicode truncation; malformed question output yields source fallback title, never raw JSON or unmasked copy fallback.",
+    "Question label Markdown links now pass the exact typed askUserQuestions gate in ConversationView and routeTranscriptLink; current/side owner, row, part, scope, mount and resolver validation remain in force. Image gate is unchanged.",
+    "Application text zoom updates source-relative 12px labels,14px answer values and24px status row; tested13-to26px scaling.",
+    "No Engine, protocol, canonical result, form, journal or credential changes. Explicit approval buttons remain separately visible for approval-requested parts."
+  ],
+  "before": [
+    {
+      "report": "before.txt",
+      "junit": "before.xml",
+      "passed": 2,
+      "failed": 2,
+      "reproduced": [
+        "Pending compact source status absent.",
+        "Synthetic password exposed by generic transcript toPlainText."
+      ]
+    },
+    {
+      "report": "expanded.txt",
+      "junit": "expanded.xml",
+      "passed": 38,
+      "failed": 1,
+      "reproduced": [
+        "Existing ConversationView link gate blocked specialized question labels."
+      ]
+    },
+    {
+      "report": "host/before.txt",
+      "junit": "host/before.xml",
+      "passed": 3,
+      "failed": 2,
+      "reproduced": [
+        "Actual MainWindow old route rejected the owning question label attachment.",
+        "Foreign/unbound link never reached guarded resolver/status because old part-type gate rejected all question tools."
+      ]
+    }
+  ],
+  "final": {
+    "suites": 6,
+    "tests": 148,
+    "failures": 0,
+    "skips": 0,
+    "reports": [
+      {
+        "name": "question_presentation",
+        "tests": 44,
+        "failures": 0,
+        "skipped": 0,
+        "text": "final-question_presentation.txt",
+        "junit": "final-question_presentation.xml",
+        "textCanonicalLfSha256": "fe2f7f7777e191cc1e716b4c9fea04a29f9e93707f50b6d8868589eb78e47044"
+      },
+      {
+        "name": "mcp_presentation",
+        "tests": 26,
+        "failures": 0,
+        "skipped": 0,
+        "text": "final-mcp_presentation.txt",
+        "junit": "final-mcp_presentation.xml",
+        "textCanonicalLfSha256": "3ea34187dd01b83747751a9dd07ebf973225c7e64f5486e5729ceeb543f1d07d"
+      },
+      {
+        "name": "transcript",
+        "tests": 35,
+        "failures": 0,
+        "skipped": 0,
+        "text": "final-transcript.txt",
+        "junit": "final-transcript.xml",
+        "textCanonicalLfSha256": "cad8707ff4633a06a4a3c0517c2650965099815ad44f92bbbd123d8a883b5639"
+      },
+      {
+        "name": "transcript_grouping",
+        "tests": 18,
+        "failures": 0,
+        "skipped": 0,
+        "text": "final-transcript_grouping.txt",
+        "junit": "final-transcript_grouping.xml",
+        "textCanonicalLfSha256": "87e72d2eed7404ec304a58c93bd6bfa1dc6881366f764c7c88fa7f4172ffd042"
+      },
+      {
+        "name": "acp_presentation_ui",
+        "tests": 20,
+        "failures": 0,
+        "skipped": 0,
+        "text": "final-acp_presentation_ui.txt",
+        "junit": "final-acp_presentation_ui.xml",
+        "textCanonicalLfSha256": "a53fdbec1f06b740a6a15353db768d27043ef5e0053d94841312b870cb8ee543"
+      },
+      {
+        "name": "question_presentation_host",
+        "tests": 5,
+        "failures": 0,
+        "skipped": 0,
+        "text": "host/after.txt",
+        "junit": "host/after.xml",
+        "textCanonicalLfSha256": "65bbe9f450fb7aadabfd944f3e73cd754a1b83d229f1c95b830eb6a0c9ff5133"
+      }
+    ]
+  },
+  "hostBuild": {
+    "cohort": "host/cohort/manifest.json",
+    "scope": "Copied coherent current154-suite frozen root static libraries and headers after root build exit0. Actual MainWindow tests override only ConversationView/QuestionToolPart and, after regression, MainWindowLinks. No duplicate UI metaobjects.",
+    "beforeRouteOption": false,
+    "afterRouteOption": true,
+    "buildBefore": "host/build-before.txt",
+    "buildAfter": "host/build-after.txt",
+    "noDesktopOrNetwork": true
+  },
+  "renderEvidence": "renders/index.json",
+  "peerReview": {
+    "reviewer": "native_core",
+    "scope": "Bounded source read of QuestionToolPart projection/masking and inspected update callbacks; no concrete new defect found. Did not independently run UI or audit arbitrary event-filter behavior; final font-forwarding addition verified by local regression."
+  },
+  "limits": [
+    "Presentation masking covers declared password answers in the exact native askUserQuestions tool card and its plain-text/copy projection. Canonical stored answers and model-authored assistant text remain unchanged, as source semantics require.",
+    "No pixel-identical parity claim or packaged-app UI verification in this private slice. Native running maps to Waiting because direct native question dispatch uses running. Independent drawn icon replaces unavailable source icon artwork.",
+    "Imported input/output JSON strings bounded2MiB; display65536UTF16 units; five steps/50fields,100options/array entries, nested fallback arrays depth8; Unicode clipping avoids split surrogate pairs and visible truncation is explicit.",
+    "Malformed/oversized question output displays source fallback title, never raw JSON. Field order follows existing native QJsonObject key order; this is not a canonical data format change.",
+    "Question-label Markdown uses existing bounded native renderer; automatic image/network/file loads remain denied. Supported path links retain actual host authority checks.",
+    "Shared integration, full gate and packaged rendering remain pending parent integration. These checks establish only their tested scope."
+  ],
+  "productionChanges": false,
+  "credentialsOrLiveServices": false,
+  "runningPrivateProcesses": []
+}

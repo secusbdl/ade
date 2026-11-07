@@ -1,0 +1,38 @@
+{
+  "status": "frozen_private_narrow_patch",
+  "patch": "discovery-preference.patch",
+  "scope": "Only Codex question preference adds conditional installed-runtime deferred-tool lookup. Source preference, selected model, native approvals, bridge lifecycle, attachments and other adapters unchanged.",
+  "files": [
+    {
+      "path": "src/harness/CodexHarnessSession.cpp",
+      "baseLfSha256": "bfa2f4057275578f55cc119c25a91ea3e19a555ca3b2889d8136420064de5f34",
+      "resultLfSha256": "b28b7cd84713e0eafb051c43ab526e5bbdf9d554daf005291655b2af461238a8"
+    },
+    {
+      "path": "tests/test_direct_question_mcp.cpp",
+      "baseLfSha256": "3a00b25990fe97257ba1ed2e5b2555d81378c7ae6dc2cfe951ccec1ac39c6fbb",
+      "resultLfSha256": "d05aa2bfe12ce4b6f61596dacb9f84c12611f9ed6f85d06e4c0ff40c0f4c2f35"
+    }
+  ],
+  "before": {
+    "file": "before.txt",
+    "pass": 3,
+    "fail": 1,
+    "scope": "Actual CodexHarnessSession and native fake process using candidate ADE helper; enabled outgoing prompt lacks guidance. Disabled bridge passes."
+  },
+  "after": {
+    "file": "after.txt",
+    "pass": 4,
+    "fail": 0
+  },
+  "fixtureCorrection": "Initial test expected model in fixture log that intentionally omits it; corrected assertion reads adapter finished.model. Original failing report preserved as before-fixture-correction.",
+  "integratedRegression": "Existing test_direct_question_mcp actualBridge(codex) now checks emitted guidance; this root test modification is not independently rebuilt in this tiny target. Root affected suite required.",
+  "installedCliEvidence": "../direct-question-live-gap/isolated-config-eb3a95ffab/summary.json",
+  "installedCliScope": "Installed exactCLI9d563e + candidateADE651e69, strict isolatedHOME, local fakeResponses6.1-sol and synthetic loopback question callback. Exact deferred-name discovery/invocation returned LOCAL_QUESTION_OK;2localmodelrequests,1authenticatedcallback,completed. No account/authfile/remote provider call.",
+  "limits": [
+    "Prompt guidance cannot guarantee every model follows instructions. Root real same-model UI question validation remains distinct.",
+    "No undocumented CLI feature flag or automatic model substitution.",
+    "Raw loopback wire data stays private."
+  ],
+  "runningProcesses": []
+}

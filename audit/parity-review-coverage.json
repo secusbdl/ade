@@ -399,6 +399,11 @@
           "report": "audit/parity-harness-followups-integration.json",
           "capability": "captured_original_delivery_and_lifecycle",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "typed_historical_absence_and_acp_mime_hints",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -436,6 +441,11 @@
         {
           "report": "audit/parity-harness-followups-integration.json",
           "capability": "source_derived_duplicate_wrapper_suppression",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "native_question_card_and_direct_shared_mcp",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -676,6 +686,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "media.markdown_svg",
           "assessment": "source_only_no_native_equivalent"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "question_label_scoped_markdown_links",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1876,6 +1891,11 @@
           "report": "audit/parity-harness-followups-integration.json",
           "capability": "canonical_completed_session_binding",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "direct_native_question_and_conditional_deferred_discovery",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1899,6 +1919,11 @@
         {
           "report": "audit/parity-harness-followups-integration.json",
           "capability": "narrow_owned_missing_session_recovery",
+          "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "direct_shared_question_mcp_owner_lifecycle",
           "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
@@ -1924,6 +1949,11 @@
           "report": "audit/parity-harness-followups-integration.json",
           "capability": "pending_decision_and_late_tool_settlement",
           "assessment": "implemented_and_tested_with_explicit_limits"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "typed_historical_attachment_replay",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -1938,6 +1968,11 @@
           "report": "audit/parity-review-ui.json",
           "capability": "settings.providers",
           "assessment": "partial_native_with_tests"
+        },
+        {
+          "report": "audit/parity-native-questions-integration.json",
+          "capability": "left_anchored_idle_model_label",
+          "assessment": "implemented_and_tested_with_explicit_limits"
         }
       ],
       "nativeParity": "not_proven_for_complete_acceptance_criteria"
@@ -7845,6 +7880,12 @@
       "sha256CanonicalLf": "da377cbae26ade07263eeadae27e3f6e4fd853b68d9316f314a5aafac8e9352c",
       "linkedFeatureRows": 10,
       "scope": "Incremental tested behaviors; no claim that whole feature rows or source functions are completed."
+    },
+    {
+      "path": "audit/parity-native-questions-integration.json",
+      "sha256CanonicalLf": "c8f658569e0007a3a09ec26017bca2ef3841dc27dfa5132f2f2c23ce2e4105ed",
+      "linkedFeatureRows": 7,
+      "scope": "Incremental tested behaviors; whole feature rows and indexed source functions are not declared complete."
     }
   ]
 }
