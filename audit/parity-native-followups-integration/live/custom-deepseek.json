@@ -1,0 +1,74 @@
+{
+  "startedUtc": "2026-11-07T05:14:50.329821+00:00",
+  "finishedUtc": "2026-11-07T05:14:52.958643+00:00",
+  "binarySha256": "ee6d51c93e0c4bf5ba3c0ee132c8021d8480856c154a51c65b1dac9ae92183fe",
+  "provider": "DeepSeek API through exact custom model definition",
+  "requestedModel": "deepseek-flash",
+  "actualModel": "deepseek-flash",
+  "customDefinition": {
+    "contextWindowSize": 128000,
+    "outputLimitViaCustomOption": 512,
+    "benignCustomHeaderConfigured": true,
+    "privateConfigurationEncrypted": true
+  },
+  "mode": "Actual native --smoke model-selection path and ConversationView captures; no full MainWindow input",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "markerMatched": true,
+  "fencedCodePresent": true,
+  "tools": [
+    "read"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 2427,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 98,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "8982d4fd1bc85ab09e568cdc48f7632d50eb7f7c1ce00c080fdbf2e29a1acc95",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "efab5347d7ba2cf84253827b3d13ab6100330834d12ba2a4e086f4bbb36595ca",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-reasoning.png",
+        "sha256": "79d0364b87055d7e048d1d5ae4f085b77de00276d44525c74e091b5430710457",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-text.png",
+        "sha256": "100c864ce498abd4c6da0839deb0fbbb2038b64a037a4a0398ff75a8e6b79059",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "05-completed.png",
+        "sha256": "81bbb62aedff974c15e00c45899b5af9618f442fddf7d1ef59f21caeaa08dc13",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 3.713,
+    "meanSetConversationMs": 0.9064714285714286,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 48,
+    "renderUpdates": 21,
+    "textDeltas": 26,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "scope": "One submitted native turn; provider tool round trips may involve multiple HTTP requests. Remote success verifies the selected real model, streaming and read-tool path; exact outgoing option/header mapping is separately covered by loopback tests, not inferred from remote response."
+}

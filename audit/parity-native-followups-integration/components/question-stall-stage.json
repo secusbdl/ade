@@ -1,0 +1,127 @@
+{
+  "state": "frozen_private",
+  "scope": "Suppress contradictory transcript stall notice during current assistant question/approval waits. Pure UI predicate; wire/history/approval and form identity remain unchanged.",
+  "cohort": "private/behavior-cohort-186/manifest.json; immutable coherent completed186, no shared build/source edits",
+  "patch": {
+    "path": "question-stall.patch",
+    "sha256": "4d7a8e86d2d9f85f60c75d2319508b9ff89672be1b81016fb868691241498755"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "3587a03ea0d0ced166538c3ebde80f89a9632c30e40d6bf4dba701b53f64a523",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes"
+  },
+  "contract": [
+    "Current row approval-requested and askUserQuestions running/input-available suppress stall regardless of other unfinished parts.",
+    "Question input-streaming and genuine running tools/text/reasoning retain the five-second working-stream indication.",
+    "Answer then renewed generation restarts ordinary delay; historical prior-turn forms do not suppress current work.",
+    "Clear/destruction retire timer; actual QuestionPanel remains enabled and transcript waiting label stays visible."
+  ],
+  "sourceComparison": {
+    "pin": "17a0123a0e896885465df36169457199d5225eb5",
+    "refs": [
+      "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-stalled-stream.tsx:4-24",
+      "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-assistant.tsx:440-442",
+      "reference/stagewise/apps/browser/src/ui/screens/main/agent-chat/chat/_components/message-utils.ts:55-74"
+    ],
+    "classification": "Native usability correction requested after actual package8 observation. The pinned rendering component itself gates only working+unfinished parts and has no explicit question exclusion; this is not claimed to reproduce a missing upstream special case."
+  },
+  "tests": {
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "name": "before-final",
+        "tests": 10,
+        "failures": 6,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before-final.txt",
+            "sha256": "779c2d9531cf0062fb6dd238db124b8231b5b3a6e667710640325cf1fe9c30c1"
+          },
+          {
+            "path": "before-final.xml",
+            "sha256": "52bc749ae347e957e3a1b174478a5964faa05e190b4da182b7c561f4e63b56c0"
+          }
+        ]
+      },
+      {
+        "name": "after",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after.txt",
+            "sha256": "769212e244453dfd05431779fcf3de93671d7631feabe77866009b9a7d449a65"
+          },
+          {
+            "path": "after.xml",
+            "sha256": "7d21328ce35f04677cb8f178b7ef61cc5d85834157f192d26d4c8371e2abef9a"
+          }
+        ]
+      },
+      {
+        "name": "streaming",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "streaming.txt",
+            "sha256": "7794d768524c516f2a3c21350a910a0232ee97c3ffc6bba9e542433490c31b05"
+          },
+          {
+            "path": "streaming.xml",
+            "sha256": "f45a19bf32636682402d28d871124d6c27910a286379155363d1821ada4bba14"
+          }
+        ]
+      },
+      {
+        "name": "presentation",
+        "tests": 44,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "presentation.txt",
+            "sha256": "658997c87be5270794841b69fbd4990b7b38c8bed2432763fb27816628e75524"
+          },
+          {
+            "path": "presentation.xml",
+            "sha256": "f7137490047bdee919fc45a8c70115243313ec1973a34ec22315a46a318ed10d"
+          }
+        ]
+      }
+    ],
+    "privateHarnessCorrection": "Initial existing streaming invocation omitted target QT_QPA_FONTDIR=$SystemRoot/Fonts and failed five scroll-height preconditions (streaming-missing-fontdir.txt/xml retained). Rerun uses exact repository target environment, no compatibility test/source change."
+  },
+  "captures": [
+    {
+      "path": "captures-before/pending-question.png",
+      "sha256": "08aee4a429547366c9734fcc1c177234d74570b849e6dce95fb266e970121922"
+    },
+    {
+      "path": "captures-after/pending-question.png",
+      "sha256": "27d82facb26aa9f635c86949152d934907d09cbd79455f891d49ac382c725c3c"
+    }
+  ],
+  "visualInspection": [
+    "captures-before/pending-question.png",
+    "captures-after/pending-question.png"
+  ],
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "limits": [
+    "Synthetic native widget/timer fixtures on Windows offscreen, no live model/UI automation.",
+    "Only the latest raw assistant row determines this transient notice, preserving the existing native activity scope.",
+    "This change does not rewrite unfinished reasoning labels, transcript parts, question state, or transport timeouts.",
+    "Parent must rebuild/test current assembled source; private compatibility is not a full197+ integration gate."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "stage": "browser-output-stage",
+  "appliedUtc": "2026-11-07T03:38:58.065396+00:00",
+  "handoffSha256CanonicalLf": "5eef1ddea6010e70bc434b7a8cf98beecd6b75ae1dc619dc2574e871ff55eda2",
+  "patchSha256CanonicalLf": "b9132ed66cefec1b80e93231cfffc144dc245d162c5ae251516890fd94122e01",
+  "before": {
+    "src/browser/BrowserToolResult.h": null,
+    "src/browser/BrowserToolResult.cpp": null,
+    "src/browser/BrowserToolBridge.cpp": "24fde68fd259505fb892729808f1f3f40eeb61423c4f80daa21120164eac10d5",
+    "src/runtime/AgentToolHost.h": "b8b715a20dd99d8cd106af450c022d3cb1037d05cf5e9e19adba9ea75b801de2",
+    "src/runtime/AgentToolHost.cpp": "b502d786236a4de35b147f8a7ba5fecf2e6bc0e83817334fe5ed85dee358f1b3",
+    "tests/test_browser_output.cpp": null
+  },
+  "after": {
+    "src/browser/BrowserToolResult.h": "b6fa8bd630d6b79e2e8063adfa7551d1838b67042c8bfa3ea557f00cc53be4fb",
+    "src/browser/BrowserToolResult.cpp": "bd7a8b60ff3c28a8e9d9f02734e04e2bf6ff431786d85c17073775e5c6e3fee3",
+    "src/browser/BrowserToolBridge.cpp": "717158c18e0e0ee8e92599575ab3bd0700e6ad98ee30443b3b2c12e50251e4a8",
+    "src/runtime/AgentToolHost.h": "1b4283c19f437e16f77ee53f133580d35ad134b582337f025ec2c8a677fe1596",
+    "src/runtime/AgentToolHost.cpp": "1a4f6139973c3df37f14a3d28395ed8039965833df0a520f6a1890e992227647",
+    "tests/test_browser_output.cpp": "37162684501323647ca0634fbb7c454d5fdda8943da03b419d7313e554cc8dc7"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

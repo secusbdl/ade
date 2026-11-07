@@ -49,8 +49,14 @@ bool integer(const QJsonValue &v, int min, int max) {
 
 BrowserInspector::BrowserInspector(BrowserWidget *browser, QObject *parent)
     : QObject(parent), m_browser(browser) {
-  if (!browser)
+  if (!browser || browser->isClosing()) {
+    m_browser = nullptr;
     return;
+  }
+  connect(browser, &BrowserWidget::aboutToBeDestroyed, this, [this] {
+    m_browser = nullptr;
+    resetForNavigation();
+  });
   connect(browser, &BrowserWidget::loadingChanged, this, [this](bool loading) {
     if (loading)
       resetForNavigation();
@@ -88,8 +94,8 @@ BrowserInspector::BrowserInspector(BrowserWidget *browser, QObject *parent)
                             .left(1024);
             request.reply(obj, failure);
           });
-  browser->subscribeDevToolsEvent("Overlay.inspectNodeRequested");
-  browser->subscribeDevToolsEvent("Overlay.inspectModeCanceled");
+  browser->subscribeDevToolsEvent("Overlay.inspectNodeRequested", this);
+  browser->subscribeDevToolsEvent("Overlay.inspectModeCanceled", this);
   connect(browser, &BrowserWidget::devToolsEventReceived, this,
           [this](const QString &event, const QString &json) {
             if (!m_selecting || json.size() > 8192)
@@ -111,8 +117,7 @@ BrowserInspector::~BrowserInspector() {
   for (const auto &request : std::as_const(m_pending))
     if (request.timer)
       request.timer->stop();
-  // The controller shares its tab's event subscriptions with the tool bridge;
-  // leave subscriptions attached until the browser itself is destroyed.
+  if (m_browser) m_browser->releaseDevToolsEvents(this);
   if (m_browser && m_selecting)
     m_browser->callDevTools("Overlay.setInspectMode", "{\"mode\":\"none\"}");
 }

@@ -1,0 +1,8 @@
+********* Start testing of CustomModelSmokeTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : CustomModelSmokeTest::initTestCase()
+PASS   : CustomModelSmokeTest::actualMainUsesSavedCustomDefinition(exact-second-instance)
+PASS   : CustomModelSmokeTest::actualMainUsesSavedCustomDefinition(removed-definition-refused)
+PASS   : CustomModelSmokeTest::cleanupTestCase()
+Totals: 4 passed, 0 failed, 0 skipped, 0 blacklisted, 315ms
+********* Finished testing of CustomModelSmokeTest *********

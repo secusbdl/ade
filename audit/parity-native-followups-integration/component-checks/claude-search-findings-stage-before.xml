@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="SearchFindings" timestamp="2026&#x002D;11&#x002D;07T05:17:18" hostname="VOID" tests="15" failures="9" errors="0" skipped="0" time="0.075">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="SearchFindings" time="0.000"/>
+  <testcase name="grepPattern(basename&#x002D;any&#x002D;depth)" classname="SearchFindings" time="0.004">
+    <failure type="fail" message="&apos;output(result).contains(&quot;src/a.ts:1: needle&quot;)&apos; returned FALSE. (b.ts:1: needle">
+      <![CDATA[)]]>
+    </failure>
+  </testcase>
+  <testcase name="grepPattern(explicit&#x002D;path)" classname="SearchFindings" time="0.003"/>
+  <testcase name="grepPattern(recursive)" classname="SearchFindings" time="0.003"/>
+  <testcase name="largeFileOmissionIsDisclosed" classname="SearchFindings" time="0.003">
+    <failure type="fail" message="&apos;output(result).contains(&quot;needle&quot;) || output(result).contains(&quot;limit&quot;, Qt::CaseInsensitive) || output(result).contains(&quot;skipped&quot;, Qt::CaseInsensitive)&apos; returned FALSE. (No matches.)"/>
+  </testcase>
+  <testcase name="unreadableFileOmissionIsDisclosed" classname="SearchFindings" time="0.002">
+    <failure type="fail" message="&apos;output(result).contains(&quot;skipped&quot;, Qt::CaseInsensitive) || output(result).contains(&quot;incomplete&quot;, Qt::CaseInsensitive)&apos; returned FALSE. (No matches.)"/>
+  </testcase>
+  <testcase name="exhaustedReadBudgetIsDisclosed" classname="SearchFindings" time="0.038">
+    <failure type="fail" message="&apos;output(result).contains(&quot;limit&quot;, Qt::CaseInsensitive) || output(result).contains(&quot;skipped&quot;, Qt::CaseInsensitive)&apos; returned FALSE. (No matches.)"/>
+  </testcase>
+  <testcase name="previewIsBounded" classname="SearchFindings" time="0.006">
+    <failure type="fail" message="&apos;preview.size() &lt;= 503&apos; returned FALSE. (preview length = 10006)"/>
+  </testcase>
+  <testcase name="textEncoding(utf8)" classname="SearchFindings" time="0.002"/>
+  <testcase name="textEncoding(utf8&#x002D;bom)" classname="SearchFindings" time="0.002"/>
+  <testcase name="textEncoding(utf16&#x002D;le)" classname="SearchFindings" time="0.002">
+    <failure type="fail" message="&apos;output(result).contains(&quot;a.ts:1: import x&quot;)&apos; returned FALSE. (No matches.)"/>
+  </testcase>
+  <testcase name="textEncoding(utf16&#x002D;be)" classname="SearchFindings" time="0.002">
+    <failure type="fail" message="&apos;output(result).contains(&quot;a.ts:1: import x&quot;)&apos; returned FALSE. (No matches.)"/>
+  </testcase>
+  <testcase name="gitignoreDefault" classname="SearchFindings" time="0.004">
+    <failure type="fail" message="&apos;!output(result).contains(&quot;dist/a.ts&quot;)&apos; returned FALSE. (dist/a.ts:1: needle">
+      <![CDATA[src/a.ts:1: needle
+)]]>
+    </failure>
+  </testcase>
+  <testcase name="advertisedSourceSearchFilters" classname="SearchFindings" time="0.000">
+    <failure type="fail" message="&apos;grep.contains(&quot;include_gitignored&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="SearchFindings" time="0.000"/>
+</testsuite>

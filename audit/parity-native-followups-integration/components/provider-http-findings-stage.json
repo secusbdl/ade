@@ -1,0 +1,161 @@
+{
+  "status": "frozen_private_not_integrated",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "rootHeadAtFreeze": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
+  "patch": "provider-http-findings.patch",
+  "patchCanonicalLfSha256": "5410769f6f6cb61ebb19e9782c9fb253065b3e2a6b76c767716b533a81faf915",
+  "manifest": "manifest.json",
+  "productionAndTestPaths": 7,
+  "cmake": "cmake-additions.txt",
+  "summary": [
+    "Ordinary Anthropic requests use the pinned SDK output defaults/caps, include a default1024 manual thinking budget and add the budget to requested output. Impossible ordinary manual budget is rejected before dispatch.",
+    "Non-custom title/compression requests omit unsupported temperature for pinned OpenAI reasoning model traits and Anthropic enabled/adaptive thinking; explicit utility thinking overrides and task output budgets remain intact.",
+    "Selecting another HTTP model on an exact provider instance clears default-model reasoning/thinking/output/context settings before explicit selection overrides. Default exact model, custom definitions and external harness settings keep their existing behavior.",
+    "Existing custom normalization shares the extracted model rules; its binding/header/options validation remains independent."
+  ],
+  "before": {
+    "passed": 12,
+    "failed": 19,
+    "skipped": 0,
+    "report": "before.txt",
+    "xml": "before.xml",
+    "capturedBodies": "before-payloads.json",
+    "scope": "Exact pure serialized bodies, actual UtilityService loopback payloads and resolved provider configs. No real provider response/rejection was observed."
+  },
+  "after": {
+    "passed": 232,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "provider_http_rules",
+        "passed": 44,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-provider_http_rules.txt",
+        "xml": "final-provider_http_rules.xml",
+        "textCanonicalLfSha256": "0bcf7cfe2908e8b44e82fda0d46da0f473a9c198724999ad0ae6aa62825bbe0b"
+      },
+      {
+        "name": "provider_http_engine",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-provider_http_engine.txt",
+        "xml": "final-provider_http_engine.xml",
+        "textCanonicalLfSha256": "ace73b22c8b8cc2cba4058f3d19633f5b700a3e944a64116272fe00fcdc85d3a"
+      },
+      {
+        "name": "custom_model_options",
+        "passed": 158,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-custom_model_options.txt",
+        "xml": "final-custom_model_options.xml",
+        "textCanonicalLfSha256": "f723ea4dcf3027645fe385772f62813c31c0f55e72fec6aa4e29c1bd8ef66d9d"
+      },
+      {
+        "name": "custom_model_engine",
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-custom_model_engine.txt",
+        "xml": "final-custom_model_engine.xml",
+        "textCanonicalLfSha256": "706c9d58cadf6d45c80e749aca800bbc97cf91c4365ba330e489d3b159b4a848"
+      }
+    ],
+    "capture": [
+      "final-payloads.json",
+      "final-engine-payloads.json"
+    ]
+  },
+  "fixtureCorrection": {
+    "report": "engine-fallback-fixture-first.txt",
+    "finding": "New fallback test initially expected only one effectiveProviderChanged signal; Engine emits initial selection and fallback. Fixed to assert exact ordered IDs/model/index for both. No production fix made for this fixture expectation."
+  },
+  "build": {
+    "compiler": "MinGW GCC16.2 / Qt6.11.2 static",
+    "privateJobs": 1,
+    "cohort": "private/claude-browser-findings-stage/cohort",
+    "libraryManifest": "immutable-libraries.json",
+    "sourceHeaders": "src copied from immutable180 cohort, four ABI-neutral source overrides, no changed class layout or moc definitions",
+    "rootSourceAndBuildWrites": false,
+    "desktopOrLiveProviderCalls": false
+  },
+  "sourceContracts": [
+    {
+      "path": "reference/stagewise/apps/browser/src/backend/agents/model-provider.ts",
+      "lines": [
+        1053,
+        1078,
+        1107,
+        1208
+      ],
+      "contract": "Discovered model override keyed by instance ID and model ID, explicit utility/preset override precedence."
+    },
+    {
+      "path": "reference/stagewise/apps/browser/src/shared/model-thinking-capabilities.ts",
+      "lines": [
+        139,
+        145,
+        589,
+        620
+      ],
+      "contract": "Manual Anthropic budget patch and per-model thinking choices."
+    },
+    {
+      "path": "private/custom-model-wire-review/installed-stagewise-1.31.1-main.js",
+      "sha256": "23796825a29d6590f95d0e84373b8bbbccdaaddab2bef7c77c211acfb001c6a4",
+      "lineConvention": "one-based LF split",
+      "lines": [
+        32710,
+        32728,
+        32762,
+        32779,
+        32899,
+        32925,
+        34045,
+        34086,
+        41085,
+        41093,
+        41891,
+        41919,
+        45728,
+        45734
+      ],
+      "contract": "Bundled Anthropic3.0.76/OpenAI3.0.84 output/thinking/default/sampling rules; no SDK execution or downloaded replacement."
+    }
+  ],
+  "officialChecks": [
+    {
+      "url": "https://developers.openai.com/api/docs/guides/latest-model?model=gpt-5.2",
+      "section": "GPT-5.2 parameter compatibility",
+      "claim": "GPT5.1/5.2 sampling only with effort none; older GPT5 sampling fields rejected. Used to corroborate pinned fixture expectations, not a current model catalog."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+      "section": "Budget rules and tuning",
+      "claim": "Manual budget minimum1024 and normally below total max_tokens; manual interleaved exception exists. Native ordinary path here does not configure interleaved thinking."
+    },
+    {
+      "url": "https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking",
+      "section": "Working with thinking budgets / limitations",
+      "claim": "Thinking sampling incompatibility corroborates pinned SDK removal."
+    }
+  ],
+  "peerReview": {
+    "reviewer": "native_core",
+    "method": "Bounded source-only review; no independent fixture execution.",
+    "scope": "Shared model traits/output arithmetic, post-title thinking sampling, custom isolation and HTTP-only selected-model clearing.",
+    "result": "No additional concrete issue found in inspected paths."
+  },
+  "limits": [
+    "Full root integration/build/gate pending. No real API requests, entitlement checks or credentials.",
+    "Pinned model traits and limits are transport serialization defaults, not exhaustive current provider capability discovery. Newer unknown IDs (including beyond pinned GPT5 traits) retain existing unknown behavior.",
+    "Ordinary Anthropic positive explicit budgets below1024 or >= capped total reject locally as a narrow native validation correction; custom explicit budget validation remains its existing separate policy.",
+    "Unset known Anthropic output may increase from former8192 to the pinned model cap; unknown IDs use SDK4096 fallback and are not capped to an invented catalog limit.",
+    "External harness default setting behavior is intentionally unchanged. This is not a full HTTP provider/SDK parity audit."
+  ],
+  "frozen": true,
+  "runningPrivateProcesses": []
+}

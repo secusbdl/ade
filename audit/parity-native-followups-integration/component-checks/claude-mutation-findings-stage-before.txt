@@ -1,0 +1,44 @@
+********* Start testing of MutationFindingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MutationFindingsTest::initTestCase()
+FAIL!  : MutationFindingsTest::directModelMutationNotifiesActualHost(write) Compared values are not the same
+   Actual   (changed.size()): 0
+   Expected (1)             : 1
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(81) : failure location
+FAIL!  : MutationFindingsTest::directModelMutationNotifiesActualHost(multiEdit) Compared values are not the same
+   Actual   (changed.size()): 0
+   Expected (1)             : 1
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(81) : failure location
+FAIL!  : MutationFindingsTest::cancelAfterActualCommitStillNotifies() Compared values are not the same
+   Actual   (changed.size()): 0
+   Expected (1)             : 1
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(82) : failure location
+FAIL!  : MutationFindingsTest::settlementObserverCancelStillNotifies() Compared values are not the same
+   Actual   (changed.size()): 0
+   Expected (1)             : 1
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(83) : failure location
+FAIL!  : MutationFindingsTest::existingLeafCaseSurvivesMutationAndUndo(write) 'QDir(root.path()).entryList(QDir::Files).contains("README.md")' returned FALSE. ()
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(85) : failure location
+FAIL!  : MutationFindingsTest::existingLeafCaseSurvivesMutationAndUndo(multiEdit) 'QDir(root.path()).entryList(QDir::Files).contains("README.md")' returned FALSE. ()
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(85) : failure location
+FAIL!  : MutationFindingsTest::existingLeafCaseSurvivesMutationAndUndo(copy) 'QDir(root.path()).entryList(QDir::Files).contains("README.md")' returned FALSE. ()
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(85) : failure location
+FAIL!  : MutationFindingsTest::existingLeafCaseSurvivesMutationAndUndo(delete) 'QDir(root.path()).entryList(QDir::Files).contains("README.md")' returned FALSE. ()
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(85) : failure location
+FAIL!  : MutationFindingsTest::ordinaryHexLikeFolderNamesRemainWorkspaceRelative(web) '!tools.resolvePath(folder+"/file.txt",&error).isEmpty()' returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(87) : failure location
+FAIL!  : MutationFindingsTest::ordinaryHexLikeFolderNamesRemainWorkspaceRelative(wd) '!tools.resolvePath(folder+"/file.txt",&error).isEmpty()' returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(87) : failure location
+FAIL!  : MutationFindingsTest::ordinaryHexLikeFolderNamesRemainWorkspaceRelative(wade) '!tools.resolvePath(folder+"/file.txt",&error).isEmpty()' returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(87) : failure location
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(wdead)
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(wcafe)
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(w2)
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(ws2)
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(att)
+PASS   : MutationFindingsTest::unknownMountsRemainUnavailable(logs)
+FAIL!  : MutationFindingsTest::unknownMountsRemainUnavailable(plans) 'tools.resolvePath(prefix+"/file.txt",&error).isEmpty()' returned FALSE. ()
+D:/age/ADE/private/claude-mutation-findings-stage/tests/test_mutation_findings.cpp(89) : failure location
+PASS   : MutationFindingsTest::cleanupTestCase()
+Totals: 8 passed, 12 failed, 0 skipped, 0 blacklisted, 979ms
+********* Finished testing of MutationFindingsTest *********

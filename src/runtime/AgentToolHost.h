@@ -96,6 +96,8 @@ private:
     void resetEvents();
     void deliverWatcherMessage(const QString& sessionId);
     void scheduleWatcherRetry();
+    void completeDirectBrowserResult(const QString& id,const QString& output,bool error);
+    QSet<QString> m_directScreenshots;
     void runMutationAction(const QString& requestId,const QStringList& mutationIds,bool recover);
 };
 }

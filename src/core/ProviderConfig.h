@@ -41,9 +41,10 @@ struct ProviderConfig {
     // Runtime-only explicit selection/task thinking/output overrides. Applied
     // after custom normalization; never merged into the durable definition.
     QJsonObject requestOverrides{};
+    bool isCursorHarness() const { return kind == QStringLiteral("cursor"); }
     bool isClaudeHarness() const { return kind == QStringLiteral("claude-code"); }
     bool isOpenCodeHarness() const { return kind == QStringLiteral("opencode"); }
-    bool isExternalHarness() const { return isCodexHarness() || isOpenCodeHarness() || isClaudeHarness(); }
+    bool isExternalHarness() const { return isCodexHarness() || isOpenCodeHarness() || isClaudeHarness() || isCursorHarness(); }
     bool isCodexHarness() const { return kind == QStringLiteral("codex"); }
 
     QJsonObject publicJson() const {

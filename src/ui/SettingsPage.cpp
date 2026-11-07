@@ -196,24 +196,33 @@ QWidget *card(QVBoxLayout *layout, const QString &title, const QString &descript
     return widget;
 }
 // Source cards identify the configured provider, rather than its selected model.
-// Legacy instances may be recognized only by the catalog's exact endpoint/kind
-// contract; edited or unrecognized endpoints remain explicitly custom.
-QString providerDescription(const ProviderConfig& provider) {
-    for(const auto& entry:ProviderCatalog::all()) {
-        auto candidate=provider;
-        if(candidate.templateId.isEmpty())candidate.templateId=entry.id;
-        if(ProviderCatalog::matches(candidate,entry))return entry.description;
+// Legacy instances may be recognized only by a unique fixed endpoint/kind
+// contract. A configurable endpoint or a shared API/plan URL cannot prove which
+// setup template was selected. Display inference never changes stored provenance.
+const ProviderTemplate* providerPresentationTemplate(const ProviderConfig& provider) {
+    if(!provider.templateId.isEmpty()) {
+        const auto* entry=ProviderCatalog::find(provider.templateId);
+        return entry&&ProviderCatalog::matches(provider,*entry)?entry:nullptr;
     }
+    const ProviderTemplate* match=nullptr;
+    for(const auto& entry:ProviderCatalog::all()) {
+        if(entry.id=="custom"||entry.configurableEndpoint||provider.kind!=entry.kind||
+           provider.protocol!=entry.protocol||QUrl(provider.baseUrl)!=QUrl(entry.baseUrl))continue;
+        if(match)return nullptr;
+        match=&entry;
+    }
+    return match;
+}
+
+QString providerDescription(const ProviderConfig& provider) {
+    if(const auto* entry=providerPresentationTemplate(provider))return entry->description;
     return provider.isExternalHarness()?QStringLiteral("External coding agent using its own configured account.")
         :QStringLiteral("Custom model endpoint using %1.").arg(provider.protocol);
 }
 
 QString providerMark(const ProviderConfig& provider) {
     const QMap<QString,QString> marks={{"deepseek-api","deepseek"},{"claude-code","anthropic"},{"anthropic-api","anthropic"},{"codex","openai"},{"openai-api","openai"},{"alibaba-api","alibaba"},{"qwen-plan","alibaba"},{"qwen-token-plan","alibaba"},{"minimax-api","minimax"},{"minimax-plan","minimax"},{"moonshotai-api","moonshotai"},{"kimi-plan","moonshotai"},{"mistral-api","mistral"},{"z-ai-api","z-ai"},{"glm-coding-plan","z-ai"},{"ollama","ollama"}};
-    for(const auto& entry:ProviderCatalog::all()) {
-        auto candidate=provider;if(candidate.templateId.isEmpty())candidate.templateId=entry.id;
-        if(ProviderCatalog::matches(candidate,entry)&&marks.contains(entry.id))return marks.value(entry.id);
-    }
+    if(const auto* entry=providerPresentationTemplate(provider);entry&&marks.contains(entry->id))return marks.value(entry->id);
     return provider.isExternalHarness()?QStringLiteral("terminal"):QStringLiteral("brain");
 }
 

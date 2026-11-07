@@ -1,0 +1,199 @@
+{
+  "status": "frozen_private_not_integrated",
+  "frozen": true,
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "rootHeadAtFreeze": "91ed23d4453874f141db1d987c94ba71bd05f4ce",
+  "patch": "search-findings.patch",
+  "patchCanonicalLfSha256": "507c72f242cd5175bc3fc91906c1fb07cf82db57997ab70d25544556448cc7ee",
+  "manifest": "manifest.json",
+  "cmake": "cmake-additions.txt",
+  "pathCount": 3,
+  "cohort": {
+    "source": "private/behavior-cohort-186",
+    "libraryHashes": "cohort-library-hashes.json",
+    "overrides": "ToolExecutor.cpp, unchanged public header/ABI. Final private source additionally preserves the current root mount-pattern and committed-fileChanged hunks, verified by diff before handoff."
+  },
+  "changes": [
+    "grepSearch slashless include patterns match the basename at any depth; slash-containing filters and the separate glob pattern semantics remain unchanged.",
+    "Files skipped by bounded/safe reads or malformed BOM-marked UTF16 now yield a counted Search incomplete diagnostic. Existing valid matches remain visible; a bounded or unreadable search no longer returns bare No matches.",
+    "UTF16LE/BE with BOM is decoded before binary detection; odd-length/unpaired surrogate text is omitted explicitly. UTF8 BOM already worked before this patch.",
+    "Each matching preview is capped to500 UTF16 units including ellipsis, with code-point-safe truncation as a native correction. Whole result rows and completion diagnostics fit the64Ki-character output bound.",
+    "The optional search-only remainingReadBytes counter caps actual native reads and debits overflowing/discarded chunks. A real post-size-validation growth fixture proved9,240,576 bytes read before the fix and <=8,388,608 afterward. Other helper callers preserve their default behavior."
+  ],
+  "results": {
+    "finalPassed": 92,
+    "finalFailed": 0,
+    "finalSkipped": 0,
+    "suites": {
+      "search": 28,
+      "growth": 3,
+      "coreCompatibility": 48,
+      "rawEnumerationRaces": 13
+    },
+    "reports": [
+      {
+        "name": "before",
+        "passed": 6,
+        "failed": 9,
+        "skipped": 0,
+        "milliseconds": 75,
+        "text": "evidence/before.txt",
+        "xml": "evidence/before.xml",
+        "canonicalLfSha256": "7f8d9b027e3d63a8fb351fb6988b09a93e56f219eb040d8ed8fe97d44713ecf2"
+      },
+      {
+        "name": "after-first",
+        "passed": 13,
+        "failed": 2,
+        "skipped": 0,
+        "milliseconds": 80,
+        "text": "evidence/after-first.txt",
+        "xml": "evidence/after-first.xml",
+        "canonicalLfSha256": "0be841e64db206cfcbe0e1cf401757cbdd1edc84ad6bcda9eabb844c9ec5e206"
+      },
+      {
+        "name": "expanded",
+        "passed": 25,
+        "failed": 2,
+        "skipped": 0,
+        "milliseconds": 275,
+        "text": "evidence/expanded.txt",
+        "xml": "evidence/expanded.xml",
+        "canonicalLfSha256": "a82495b23a5ab215a215926d5ec2dab4fd465fa807208841a4e3baa80ef87fec"
+      },
+      {
+        "name": "expanded-after",
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 333,
+        "text": "evidence/expanded-after.txt",
+        "xml": "evidence/expanded-after.xml",
+        "canonicalLfSha256": "917b7681b4ad282b4af95cee553dacc4fa05a170f62f89600f1ad9810be272d9"
+      },
+      {
+        "name": "growth-before",
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "milliseconds": 64,
+        "text": "evidence/growth-before.txt",
+        "xml": "evidence/growth-before.xml",
+        "canonicalLfSha256": "01ae12bd8cd9f45c40e5192a0488ddb762da71a9c53392c6477d12d95d04d3f1"
+      },
+      {
+        "name": "growth-after",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 48,
+        "text": "evidence/growth-after.txt",
+        "xml": "evidence/growth-after.xml",
+        "canonicalLfSha256": "2eac6647a747592fb236131ec56d6de74e4a2d1c54c3fce800ae633f71f0a7a7"
+      },
+      {
+        "name": "final-search",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 538,
+        "text": "evidence/final-search.txt",
+        "xml": "evidence/final-search.xml",
+        "canonicalLfSha256": "8652e8091491ba52df2dc56d87321f9a1b29e39e3234465ca7483fa5c880046e"
+      },
+      {
+        "name": "final-growth",
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 79,
+        "text": "evidence/final-growth.txt",
+        "xml": "evidence/final-growth.xml",
+        "canonicalLfSha256": "e1d7876925c2095e5725443c36e272d905b20466d55f8babdb42c81e238ea892"
+      },
+      {
+        "name": "final-core",
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 9446,
+        "text": "evidence/final-core.txt",
+        "xml": "evidence/final-core.xml",
+        "canonicalLfSha256": "87caef7578bd83a4da5ae604f3807af3ef96523df18464ad314bbc8176deaee3"
+      },
+      {
+        "name": "final-raw-enumeration",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "milliseconds": 1990,
+        "text": "evidence/final-raw-enumeration.txt",
+        "xml": "evidence/final-raw-enumeration.xml",
+        "canonicalLfSha256": "71a71d1edec82f676a1b4c6fcc7f650b4543bcdaeed4b0264c23078d535844b0"
+      }
+    ],
+    "baselineInterpretation": "Initial6pass/9fail includes7 defects repaired here plus2 confirmed gitignore/schema gaps retained separately. Additional growth baseline2pass/1fail; first expanded fixture25pass/2fail captured malformed UTF16 validation omission and a test-only missing asynchronous wait, both corrected with explicit evidence.",
+    "remainingDiagnosticFixture": "tests/test_search_remaining.cpp is intentionally private, excluded from passing patch/CMake. REMAINING.json retains the unresolved findings."
+  },
+  "sourceContracts": [
+    {
+      "path": "packages/agent-core/src/services/toolbox/universal-tools.ts",
+      "lines": [
+        757,
+        767,
+        793,
+        811,
+        825,
+        830
+      ],
+      "contract": "Source search routing/filter options, max50 grep matches and500-unit previews; structured shape remains a native gap."
+    },
+    {
+      "path": "packages/agent-core/src/services/toolbox/utils.ts",
+      "lines": [
+        198,
+        204
+      ],
+      "contract": "Preview limit includes the three-dot indicator."
+    },
+    {
+      "path": "agent/runtime-node/src/grep/grep-ripgrep.ts",
+      "lines": [
+        42,
+        48,
+        60,
+        62,
+        66
+      ],
+      "contract": "Primary runtime passes include filter as -g and excludes global config; source runtime dependency rather than native authority bypass."
+    },
+    {
+      "path": "agent/runtime-node/src/grep/grep-node-fallback.ts",
+      "lines": [
+        129,
+        133
+      ],
+      "contract": "Slashless include filtering compares the entry basename."
+    }
+  ],
+  "localComparison": {
+    "path": "ripgrep-encoding-probe.json",
+    "scope": "Installed rg15.0.0 confirms all3 BOM cases; not a claim to have executed the pinned bundled rg binary or full Node runtime."
+  },
+  "peerReview": {
+    "reviewer": "license_review",
+    "method": "Source-only bounded review, no independent test execution",
+    "scope": "Basename filtering, same-handle mount containment, decoder ownership, surrogate-safe preview and diagnostic reservation. Reviewer identified actual-byte growth accounting; independently reproduced and fixed. Final bounded helper reread found no additional concrete defect in limited/debited reads or same-handle exhaustion check; no independent rerun."
+  },
+  "limits": [
+    "Root full integration/build/test is pending. No production edits, shared builds, live network, credentials or desktop access.",
+    "Only Windows/MinGW execution was verified; non-Windows helper branch was source-updated but not executed.",
+    "Native512KiB accepted file cap,8MiB aggregate read cap,10000 captured-entry traversal cap,depth64,50grep match cap and64Ki-character output remain deliberate differences from unrestricted source searches.",
+    "Nested .gitignore/include_gitignored/exclude_file_pattern,glob character classes/braces and source50glob cap remain missing; see REMAINING.json.",
+    "Binary NUL-containing files remain deliberately excluded. No BOM-less UTF16 or general encoding detection is claimed.",
+    "Read/search is not an atomic filesystem snapshot, PCRE dialect/runtime behavior is unchanged, and this is not a universal regex-time or resource-bound audit.",
+    "Existing reparse/mount authority is retained and actual raw enumeration race fixtures pass. Special read-only mounts are not newly authorized for search."
+  ],
+  "evidenceSanitization": "Canonical LF copies only; optional temporary OS-profile prefix is replaced with <temporary-root> if present. Test data are synthetic.",
+  "runningPrivateProcesses": []
+}

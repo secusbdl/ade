@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCase name="SkillsHostTest">
+  <Environment>
+    <QtVersion>6.11.2</QtVersion>
+    <QtBuild>Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)</QtBuild>
+    <QTestVersion>6.11.2</QTestVersion>
+  </Environment>
+  <TestFunction name="initTestCase">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="1.476"/>
+  </TestFunction>
+  <TestFunction name="skillResolvesAgainOnSecondTurn">
+  <Message type="qwarn" file="" line="0">
+    <Description><![CDATA[This plugin does not support propagateSizeHints()]]></Description>
+  </Message>
+  <Message type="qwarn" file="" line="0">
+    <Description><![CDATA[This plugin does not support raise()]]></Description>
+  </Message>
+    <Incident type="fail" file="D:/age/ADE/private/skills&#x002D;slash&#x002D;stage/tests/test_skills_host.cpp" line="94">
+      <Description><![CDATA['encoded(model.requests[1]).contains("SKILL_BODY_SENTINEL")' returned FALSE. (Earlier accepted skill invocation vanished from second provider request)]]></Description>
+    </Incident>
+    <Duration msecs="698.345"/>
+  </TestFunction>
+  <TestFunction name="sideSlashIsAnOwnedAction">
+  <Message type="qwarn" file="" line="0">
+    <Description><![CDATA[This plugin does not support propagateSizeHints()]]></Description>
+  </Message>
+  <Message type="qwarn" file="" line="0">
+    <Description><![CDATA[This plugin does not support raise()]]></Description>
+  </Message>
+    <Incident type="fail" file="D:/age/ADE/private/skills&#x002D;slash&#x002D;stage/tests/test_skills_host.cpp" line="99">
+      <Description><![CDATA['choice(composer,"command:side")>=0' returned FALSE. ()]]></Description>
+    </Incident>
+    <Duration msecs="7270.14"/>
+  </TestFunction>
+  <TestFunction name="cleanupTestCase">
+    <Incident type="pass" file="" line="0" />
+    <Duration msecs="0.0396"/>
+  </TestFunction>
+  <Duration msecs="7971.53"/>
+</TestCase>

@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "harness/CursorHarnessSession.h"
 #include "CustomModelOptions.h"
 #include "HarnessHistory.h"
 #include "AgentPrompt.h"
@@ -254,6 +255,10 @@ bool AgentEngine::startUserMessage(const QString &prompt, const QJsonArray &refe
         || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
         rejectSubmission("Configure the installed OpenCode coding agent and its chat context first."); return false;
     }
+    if (m_provider.isCursorHarness() && (!CursorExecutable::resolve(m_provider.harnessExecutable).valid() || m_harnessOwnerId.isEmpty()
+        || (m_tools.workspace().isEmpty() && m_harnessFallbackWorkspace.isEmpty()))) {
+        rejectSubmission("Choose an installed Cursor Agent executable and an owned workspace."); return false;
+    }
     if (!m_provider.isExternalHarness() && !ProviderProtocol::supports(m_provider)) {
         rejectSubmission(QStringLiteral("This provider protocol is not implemented yet.")); return false;
     }
@@ -361,13 +366,11 @@ void AgentEngine::requestModel() {
         const auto message = m_messages[i].toObject();
         if (message["role"] == "user" && !message["ade_compressedHistory"].toString().isEmpty()) { boundary = i; break; }
     }
+    QString boundarySummary;
     for (int i = boundary; i < m_messages.size(); ++i) {
         auto message = m_messages[i].toObject();
         const auto summary = message.take("ade_compressedHistory").toString();
-        if (i == boundary && !summary.isEmpty()) {
-            QString safe = summary; safe.replace("]]>", "]]]]><![CDATA[>");
-            message["content"] = "<memory><![CDATA[" + safe + "]]></memory>\n" + message["content"].toString();
-        }
+        if (i == boundary) boundarySummary = summary;
         requestHistory.append(message);
     }
     if (m_messagePreparer) {
@@ -377,6 +380,17 @@ void AgentEngine::requestModel() {
         requestHistory = preparer(requestHistory, provider, &preparationError);
         if (!self || generation != m_generation || !m_busy) return;
         if (!preparationError.isEmpty()) { fail(preparationError); return; }
+    }
+    if (!boundarySummary.isEmpty() && !requestHistory.isEmpty()) {
+        QString safe = boundarySummary; safe.replace("]]>", "]]]]><![CDATA[>");
+        const auto memory = "<memory><![CDATA[" + safe + "]]></memory>\n";
+        auto first = requestHistory.first().toObject();
+        if (first["content"].isArray()) {
+            QJsonArray parts{QJsonObject{{"type", "text"}, {"text", memory}}};
+            for (const auto& part : first["content"].toArray()) parts.append(part);
+            first["content"] = parts;
+        } else first["content"] = memory + first["content"].toString();
+        requestHistory[0] = first;
     }
     const auto prepared = ProviderProtocol::prepare(m_provider, requestHistory, instructions, definitions);
     if (!prepared.error.isEmpty()) { fail(prepared.error); return; }
@@ -921,6 +935,17 @@ void AgentEngine::completeExternalToolWithAttachments(const QString &requestId, 
 }
 
 void AgentEngine::approveTool(const QString &id, bool allow) {
+    if(m_busy&&m_provider.isCursorHarness()&&m_cursor&&m_harnessApprovals.contains(id)) {
+        const auto token=m_harnessApprovals.take(id);const auto kind=m_cursorDecisions.value(id);
+        const QPointer<AgentEngine>self(this);const auto generation=m_generation;
+        const bool accepted=kind=="authentication"?(allow?m_cursor->authenticate(token):m_cursor->rejectAuthentication(token)):
+            kind=="plan"?m_cursor->answerPlan(token,allow):m_cursor->answerApproval(token,allow);
+        if(self&&m_busy&&generation==m_generation&&accepted) {
+            m_display.toolState(id,allow?(kind=="plan"?"output-available":"input-available"):"output-denied");if(kind!="authentication")m_cursorDecisions.remove(id);emit displayChanged();
+        }
+        return;
+    }
+
     if(m_busy&&m_provider.isClaudeHarness()&&m_claude&&m_harnessApprovals.contains(id)){
         const auto token=m_harnessApprovals.take(id);
         if(m_claude->answerApproval(token,allow)){m_display.toolState(id,allow?"input-available":"output-denied");emit displayChanged();}

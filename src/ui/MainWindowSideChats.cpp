@@ -54,6 +54,7 @@ void MainWindow::refreshSideChat(const QString& id){
     pane->setUiScale(m_settings->preference("personalization.uiZoom").toInt(100)/100.0);const int index=m_tabs->indexOf(pane);if(index>=0){m_tabs->setTabText(index,snapshot.title.left(36));m_tabs->setTabToolTip(index,snapshot.title);}
 }
 void MainWindow::openSideChat(const QString& id){
+    if(m_sessionTransition)return;
     const auto* session=find(id);if(!session||session->archived||session->sideChatParentId.isEmpty())return;const auto* parent=find(session->sideChatParentId);if(!parent||parent->archived)return;
     if(const auto existing=m_sideChats.value(id)){m_tabs->setCurrentWidget(existing);revealContent();return;}
     const auto initialTitle=session->title;
@@ -112,6 +113,7 @@ bool MainWindow::discardSideChat(const QString& id){
     const QPointer<MainWindow> self(this);if(auto* engine=m_engines.value(id);engine&&engine->isBusy())engine->cancel();if(!self)return false;session=find(id);if(!session||session->sideChatParentId.isEmpty())return false;return deleteConversation(id);
 }
 void MainWindow::sendSideChat(const QString& id){
+    if(m_sessionTransition)return;
     const QPointer<SideChatPane> pane=m_sideChats.value(id);auto* session=find(id);if(!pane||!session||session->archived||session->sideChatParentId.isEmpty()||(pane->composer()->toPlainText().trimmed().isEmpty()&&session->draftAttachments.isEmpty()))return;
     if(gitPathBusy(session->workspace)){pane->setError("Wait for the workspace operation before sending.");return;}
     const QPointer<MainWindow> self(this);const QPointer<AgentEngine> engine(engineFor(id));if(!self||!pane||!engine)return;session=find(id);if(!session)return;

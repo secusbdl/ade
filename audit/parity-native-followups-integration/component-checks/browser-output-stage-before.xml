@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="BrowserOutputTests" timestamp="2026&#x002D;11&#x002D;07T05:27:32" hostname="VOID" tests="9" failures="6" errors="0" skipped="0" time="7.923">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="BrowserOutputTests" time="0.000"/>
+  <testcase name="screenshotsBecomeImageAttachments(openai)" classname="BrowserOutputTests" time="1.189">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (refs.size()): 0
+   Expected (1)          : 1]]>
+    </failure>
+    <system-out>
+      <![CDATA[screenshot stored text characters 626931 attachment count 0]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-EMOPpk" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="screenshotsBecomeImageAttachments(responses)" classname="BrowserOutputTests" time="1.193">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (refs.size()): 0
+   Expected (1)          : 1]]>
+    </failure>
+    <system-out>
+      <![CDATA[screenshot stored text characters 626931 attachment count 0]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-ushPdO" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="screenshotsBecomeImageAttachments(anthropic)" classname="BrowserOutputTests" time="1.039">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (refs.size()): 0
+   Expected (1)          : 1]]>
+    </failure>
+    <system-out>
+      <![CDATA[screenshot stored text characters 626931 attachment count 0]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-ZFShkK" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="screenshotsBecomeImageAttachments(google)" classname="BrowserOutputTests" time="0.980">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (refs.size()): 0
+   Expected (1)          : 1]]>
+    </failure>
+    <system-out>
+      <![CDATA[screenshot stored text characters 626931 attachment count 0]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-xlgmkj" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="directLargeDomAndConsoleAreCapped(DOM)" classname="BrowserOutputTests" time="0.958">
+    <failure type="fail" message="&apos;output.toUtf8().size()&lt;=40*1024&apos; returned FALSE. (180039)"/>
+    <system-out>
+      <![CDATA[direct model output UTF8 bytes 180039]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-iBGMnC" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="directLargeDomAndConsoleAreCapped(console)" classname="BrowserOutputTests" time="1.252">
+    <failure type="fail" message="&apos;output.toUtf8().size()&lt;=40*1024&apos; returned FALSE. (132164)"/>
+    <system-out>
+      <![CDATA[direct model output UTF8 bytes 132164]]>
+    </system-out>
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-mWbZCY" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="sandboxRetainsRawScreenshotAndLargeCdp" classname="BrowserOutputTests" time="1.308">
+    <system-err>
+      <![CDATA[QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-OccDsK" most likely due to the presence of read-only files.]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="BrowserOutputTests" time="0.000"/>
+</testsuite>

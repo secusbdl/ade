@@ -154,7 +154,6 @@ void AgentEngine::reconcileMutationHistory(){
             if(row["agentId"]!=m_mutationAgentId||!requested.contains(id))continue;
             const bool committed=row["committed"].toBool();auto output=row["output"].toObject();
             if(!row["error"].toString().isEmpty())output[committed?"warning":"error"]=row["error"];
-            if(!output.contains("_diff"))output["_diff"]=QJsonValue::Null;
             const QJsonObject record{{"agentId",m_mutationAgentId},{"mutationId",row["mutationId"]},{"committed",committed},{"recoveryRequired",row["recoveryRequired"]}};
             settleMutation(id,QString::fromUtf8(QJsonDocument(output).toJson(QJsonDocument::Compact)),!committed,QJsonObject{{"mutations",QJsonArray{record}}},true);
             if(!self||m_busy)return;

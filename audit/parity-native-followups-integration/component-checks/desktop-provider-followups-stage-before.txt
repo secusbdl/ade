@@ -1,0 +1,20 @@
+********* Start testing of DesktopProviderTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : DesktopProviderTest::initTestCase()
+PASS   : DesktopProviderTest::providerErrorDoesNotSkipOwnedCleanup(valid-provider-control)
+FAIL!  : DesktopProviderTest::providerErrorDoesNotSkipOwnedCleanup(invalid-provider) '!QFileInfo::exists(path)' returned FALSE. ()
+D:/age/ADE/private/desktop-provider-followups-stage/tests/test_desktop_provider.cpp(128) : failure location
+FAIL!  : DesktopProviderTest::failedCleanupRemainsPendingAndRetriesWithProviderError() '!QFileInfo::exists(path)' returned FALSE. ()
+D:/age/ADE/private/desktop-provider-followups-stage/tests/test_desktop_provider.cpp(165) : failure location
+PASS   : DesktopProviderTest::invalidSessionEnvelopeNeverAuthorizesCleanup()
+FAIL!  : DesktopProviderTest::importRefreshesOpenSideChatAndPreservesDraftSelection() 'hasModel(combo, "gpt-4o-mini")' returned FALSE. (Imported model must be offered in the already open side chat)
+D:/age/ADE/private/desktop-provider-followups-stage/tests/test_desktop_provider.cpp(210) : failure location
+QWARN  : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(save) This plugin does not support propagateSizeHints()
+FAIL!  : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(save) 'hasModel(combo, "new-model")' returned FALSE. (Saved provider model must refresh the already open side chat)
+D:/age/ADE/private/desktop-provider-followups-stage/tests/test_desktop_provider.cpp(257) : failure location
+QWARN  : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(cancel) This plugin does not support propagateSizeHints()
+PASS   : DesktopProviderTest::dialogSaveRefreshesOpenSideChat(cancel)
+PASS   : DesktopProviderTest::failedImportDoesNotPublishUncommittedChoices()
+PASS   : DesktopProviderTest::cleanupTestCase()
+Totals: 6 passed, 4 failed, 0 skipped, 0 blacklisted, 22932ms
+********* Finished testing of DesktopProviderTest *********

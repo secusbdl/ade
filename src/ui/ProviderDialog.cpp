@@ -1,4 +1,5 @@
 #include "ProviderDiscovery.h"
+#include "harness/CursorExecutable.h"
 #include "ProviderDialog.h"
 #include "AddProviderDialog.h"
 #include "ProviderCatalog.h"
@@ -56,6 +57,8 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     if(auto* model=qobject_cast<QStandardItemModel*>(m_protocol->model()))model->item(m_protocol->count()-1)->setEnabled(false);
     m_protocol->addItem("Claude Code coding agent","claude-control");
     if(auto* model=qobject_cast<QStandardItemModel*>(m_protocol->model()))model->item(m_protocol->count()-1)->setEnabled(false);
+    m_protocol->addItem("Cursor coding agent","cursor-acp");
+    if(auto* model=qobject_cast<QStandardItemModel*>(m_protocol->model()))model->item(m_protocol->count()-1)->setEnabled(false);
     m_reasoning=new QComboBox;m_reasoning->addItem("Provider default",QString());for(const auto& effort:QStringList{"low","medium","high","xhigh","max","minimal","none"})m_reasoning->addItem(effort,effort);
     m_thinking=new QComboBox;m_thinking->setObjectName("providerThinking");m_thinking->addItem("Provider default",QString());m_thinking->addItem("Enabled","enabled");m_thinking->addItem("Disabled","disabled");
     m_thinkingBudget=new QSpinBox;m_thinkingBudget->setObjectName("providerThinkingBudget");m_thinkingBudget->setRange(0,200000);m_thinkingBudget->setSpecialValueText("Provider default");
@@ -71,7 +74,7 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     m_executable=new QLineEdit;m_executable->setObjectName("codexExecutable");m_executable->setPlaceholderText("Find installed codex automatically");harnessLayout->addWidget(m_executable);
     auto* harnessButtons=new QHBoxLayout;m_connectHarness=new QPushButton("Connect ChatGPT subscription");m_connectHarness->setObjectName("connectCodexSubscription");m_cancelHarness=new QPushButton("Cancel sign-in");m_cancelHarness->setObjectName("cancelCodexSubscription");harnessButtons->addWidget(m_connectHarness);harnessButtons->addWidget(m_cancelHarness);harnessLayout->addLayout(harnessButtons);right->addWidget(m_harnessGroup);
     m_harness=new CodexAppServer(this);
-    connect(m_connectHarness,&QPushButton::clicked,this,[this]{if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else beginHarnessConnection(true);});
+    connect(m_connectHarness,&QPushButton::clicked,this,[this]{if(currentConfig().isCursorHarness())checkCursorInstallation();else if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else beginHarnessConnection(true);});
     connect(m_cancelHarness,&QPushButton::clicked,this,[this]{
         if(!m_harnessBusy)return;
         const QPointer<ProviderDialog> self(this);
@@ -90,8 +93,8 @@ ProviderDialog::ProviderDialog(QList<ProviderConfig> providers,QJsonObject catal
     m_feedback=new QLabel;m_feedback->setTextFormat(Qt::PlainText);m_feedback->setWordWrap(true);right->addWidget(m_feedback);right->addStretch();
     auto* apply=new QPushButton("Apply provider");right->addWidget(apply,0,Qt::AlignRight);
     auto* probeRow=new QHBoxLayout;auto* discover=new QPushButton("Fetch models");auto* validate=new QPushButton("Test connection");m_validateProvider=validate;discover->setObjectName("fetchProviderModels");validate->setObjectName("testProviderConnection");probeRow->addWidget(discover);probeRow->addWidget(validate);right->addLayout(probeRow);
-    connect(discover,&QPushButton::clicked,this,[this]{if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(false);});
-    connect(validate,&QPushButton::clicked,this,[this]{if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(true);});
+    connect(discover,&QPushButton::clicked,this,[this]{if(currentConfig().isCursorHarness())checkCursorInstallation();else if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(false);});
+    connect(validate,&QPushButton::clicked,this,[this]{if(currentConfig().isCursorHarness())checkCursorInstallation();else if(currentConfig().isClaudeHarness())beginClaudeDiscovery();else if(currentConfig().isOpenCodeHarness())beginOpenCodeDiscovery();else if(currentConfig().isCodexHarness())beginHarnessConnection(false);else beginApiOperation(true);});
     auto* buttons=new QDialogButtonBox(QDialogButtonBox::Save|QDialogButtonBox::Cancel);outer->addWidget(buttons);
     m_operationControls={m_list,add,addCodex,import,apply,discover,validate,buttons->button(QDialogButtonBox::Save),m_name,m_model,m_reasoning,m_executable,m_keyHelp,m_planHelp,m_removeProvider};
     m_selectedControls={m_name,m_model,m_reasoning,m_executable,apply,discover,validate,m_removeProvider};
@@ -188,24 +191,26 @@ void ProviderDialog::selectProvider(int row) {
     auto i=m_protocol->findData(p.protocol);m_protocol->setCurrentIndex(qMax(0,i));m_feedback->clear();m_feedback->setProperty("error",false);
     m_reasoning->setCurrentIndex(qMax(0,m_reasoning->findData(p.reasoningEffort)));m_thinking->setCurrentIndex(qMax(0,m_thinking->findData(p.thinkingMode)));m_thinkingBudget->setValue(p.thinkingBudget);m_maxTokens->setValue(p.maxOutputTokens);
     m_contextTokens->setValue(p.contextWindowTokens);
-    const bool openCode=p.isOpenCodeHarness(),claude=p.isClaudeHarness();
-    m_harnessGroup->setTitle(claude?"Claude Code coding agent":(openCode?"OpenCode coding agent":"Codex subscription"));
-    m_harnessGroup->setObjectName(claude?"claudeConnectionGroup":(openCode?"openCodeConnectionGroup":"codexConnectionGroup"));
-    m_harnessHelp->setText(claude ? "Uses your installed Claude Code CLI and its own sign-in. Run claude in your terminal if sign-in is needed. Model discovery initializes the CLI without a prompt; it does not validate subscription entitlement." : openCode
+    const bool openCode=p.isOpenCodeHarness(),claude=p.isClaudeHarness(),cursor=p.isCursorHarness();
+    m_harnessGroup->setTitle(cursor?"Cursor coding agent":claude?"Claude Code coding agent":(openCode?"OpenCode coding agent":"Codex subscription"));
+    m_harnessGroup->setObjectName(cursor?"cursorConnectionGroup":claude?"claudeConnectionGroup":(openCode?"openCodeConnectionGroup":"codexConnectionGroup"));
+    m_harnessHelp->setText(cursor ? "Uses your separately installed Cursor Agent and its own account/runtime. Use default for the CLI-selected model, or enter an exact model ID. Sending asks for an explicit connection decision before Cursor can open a sign-in browser. Model availability is checked against the live session; this installation check does not verify account access." : claude ? "Uses your installed Claude Code CLI and its own sign-in. Run claude in your terminal if sign-in is needed. Model discovery initializes the CLI without a prompt; it does not validate subscription entitlement." : openCode
         ? "Uses your installed OpenCode CLI, its configured account and its own tools. Run opencode auth login in your terminal first if sign-in is needed. Fetching models checks CLI discovery; it does not verify account entitlement or send a model request."
         : "Uses your installed Codex CLI and its ChatGPT sign-in. ADE does not collect your subscription token. This optional coding agent runs its own tools in the selected workspace.");
-    m_executable->setObjectName(claude?"claudeExecutable":(openCode?"opencodeExecutable":"codexExecutable"));
-    m_executable->setPlaceholderText(claude?"Find installed claude automatically":(openCode?"Find installed opencode automatically":"Find installed codex automatically"));
-    m_connectHarness->setObjectName(claude?"connectClaude":(openCode?"connectOpenCode":"connectCodexSubscription"));
-    m_connectHarness->setText(claude?"Fetch Claude models":(openCode?"Fetch OpenCode models":"Connect ChatGPT subscription"));
+    m_executable->setObjectName(cursor?"cursorExecutable":claude?"claudeExecutable":(openCode?"opencodeExecutable":"codexExecutable"));
+    m_executable->setPlaceholderText(cursor?"Find installed Cursor Agent automatically":claude?"Find installed claude automatically":(openCode?"Find installed opencode automatically":"Find installed codex automatically"));
+    m_connectHarness->setObjectName(cursor?"checkCursorInstallation":claude?"connectClaude":(openCode?"connectOpenCode":"connectCodexSubscription"));
+    m_connectHarness->setText(cursor?"Check Cursor installation":claude?"Fetch Claude models":(openCode?"Fetch OpenCode models":"Connect ChatGPT subscription"));
     m_cancelHarness->setObjectName(claude?"cancelClaudeDiscovery":(openCode?"cancelOpenCodeDiscovery":"cancelCodexSubscription"));
     m_cancelHarness->setText((openCode||claude)?"Cancel discovery":"Cancel sign-in");
-    m_validateProvider->setText((openCode||claude)?"Check CLI":"Test connection");
+    m_validateProvider->setText((openCode||claude||cursor)?"Check CLI":"Test connection");
+    m_cancelHarness->setVisible(!cursor);
     m_executable->setText(p.harnessExecutable);m_harnessGroup->setVisible(p.isExternalHarness());
     for(auto* edit:{m_url,m_key})edit->setEnabled(!p.isExternalHarness());
     m_protocol->setEnabled(!p.isExternalHarness());m_thinking->setEnabled(!p.isExternalHarness());m_thinkingBudget->setEnabled(!p.isExternalHarness());m_maxTokens->setEnabled(!p.isExternalHarness());m_contextTokens->setEnabled(!p.isExternalHarness());
     updateOperationControls();
     for(QWidget* widget:QList<QWidget*>{m_url,m_key,m_protocol,m_thinking,m_thinkingBudget,m_maxTokens,m_contextTokens})m_form->setRowVisible(widget,!p.isExternalHarness());
+    m_form->setRowVisible(m_reasoning,!cursor);
     m_form->setRowVisible(m_thinking, !p.isExternalHarness() || p.isOpenCodeHarness() || claude);
     m_form->setRowVisible(m_thinkingBudget,!p.isExternalHarness()||claude);
     m_thinking->setToolTip(claude?"Claude receives explicit thinking settings through its native CLI. Enabled with zero budget selects adaptive thinking; model support is determined by the CLI.":p.isOpenCodeHarness()?"OpenCode receives only options advertised by its current session. Disabled selects none/off/disabled when available; effort uses the selected reasoning level.":QString());
@@ -215,6 +220,14 @@ void ProviderDialog::applyProvider() {
     m_feedback->setProperty("error",false);
     if(m_removePrompt||m_apiBusy||m_harnessBusy){m_feedback->setProperty("error",true);m_feedback->setText("Wait for the provider operation or cancel it before saving.");return;}
     if(m_selected<0)return;
+    if(m_providers[m_selected].isCursorHarness()){
+        const auto p=currentConfig();QString error;
+        if(p.name.isEmpty()||p.model.isEmpty()||!CursorExecutable::resolve(p.harnessExecutable,&error).valid()){
+            m_feedback->setProperty("error",true);m_feedback->setText(error.isEmpty()?"Enter a name and model ID, or default.":error);return;
+        }
+        m_providers[m_selected]=p;m_list->item(m_selected)->setText(p.name);
+        m_feedback->setText("Cursor configured. Save to use it. Account and model access are checked by the CLI when you explicitly connect.");return;
+    }
     if(m_providers[m_selected].isClaudeHarness()){
         const auto p=currentConfig();
         const auto executable=QStandardPaths::findExecutable(p.harnessExecutable.isEmpty()?QStringLiteral("claude"):p.harnessExecutable);
@@ -266,8 +279,9 @@ QList<ProviderConfig> ProviderDialog::providers() const {
 ProviderConfig ProviderDialog::currentConfig() const {
     ProviderConfig p;if(m_selected>=0&&m_selected<m_providers.size())p=m_providers[m_selected];
     p.name=m_name->text().trimmed();p.model=m_model->text().trimmed();p.reasoningEffort=m_reasoning->currentData().toString();
-    if(p.isExternalHarness()){p.baseUrl.clear();p.apiKey.clear();p.protocol=p.isClaudeHarness()?"claude-control":(p.isOpenCodeHarness()?"opencode-acp":"codex-app-server");p.harnessExecutable=m_executable->text().trimmed();p.thinkingMode=(p.isOpenCodeHarness()||p.isClaudeHarness())?m_thinking->currentData().toString():QString();p.thinkingBudget=p.isClaudeHarness()?m_thinkingBudget->value():0;p.maxOutputTokens=0;p.contextWindowTokens=0;}
+    if(p.isExternalHarness()){p.baseUrl.clear();p.apiKey.clear();p.protocol=p.isCursorHarness()?"cursor-acp":p.isClaudeHarness()?"claude-control":(p.isOpenCodeHarness()?"opencode-acp":"codex-app-server");p.harnessExecutable=m_executable->text().trimmed();p.thinkingMode=(p.isOpenCodeHarness()||p.isClaudeHarness())?m_thinking->currentData().toString():QString();p.thinkingBudget=p.isClaudeHarness()?m_thinkingBudget->value():0;p.maxOutputTokens=0;p.contextWindowTokens=0;}
     else {p.baseUrl=m_url->text().trimmed();p.apiKey=m_key->text().trimmed();p.protocol=m_protocol->currentData().toString();p.thinkingMode=m_thinking->currentData().toString();p.thinkingBudget=m_thinkingBudget->value();p.maxOutputTokens=m_maxTokens->value();p.contextWindowTokens=m_contextTokens->value();}
+    if(p.isCursorHarness())p.reasoningEffort.clear();
     ProviderCatalog::clearChangedProvenance(p);invalidateModelDiscovery(p);
     return p;
 }
@@ -289,6 +303,9 @@ void ProviderDialog::updateOperationControls(){
     if(selected && (m_providers[m_selected].isOpenCodeHarness()||m_providers[m_selected].isClaudeHarness()))m_thinking->setEnabled(!busy);
     if(selected && m_providers[m_selected].isClaudeHarness())m_thinkingBudget->setEnabled(!busy);
     m_connectHarness->setEnabled(!busy&&harness);m_cancelHarness->setEnabled(m_harnessBusy);
+    const bool cursor=selected&&m_providers[m_selected].isCursorHarness();
+    if(auto* discover=findChild<QPushButton*>("fetchProviderModels")){discover->setEnabled(!busy&&selected&&!cursor);discover->setToolTip(cursor?"Use default or an exact model ID; Cursor validates it from the active session. Catalog discovery is not available here yet.":QString());}
+
 }
 void ProviderDialog::cancelOperations(){
     const auto epoch=++m_operationEpoch;m_apiBusy=false;m_harnessBusy=false;m_harnessLogin=false;
@@ -401,5 +418,13 @@ void ProviderDialog::beginHarnessConnection(bool login){
         m_feedback->setText(models.isEmpty()?"Codex returned no selectable models.":QString("ChatGPT subscription connected. Discovered %1 models; Save to use them in the model picker.").arg(models.size()));finishHarnessConnection();
     });
     updateOperationControls();if(!valid())return;m_feedback->setText("Starting installed Codex…");m_harness->start(provider.harnessExecutable);
+}
+}
+
+namespace ade {
+void ProviderDialog::checkCursorInstallation(){
+    if(m_apiBusy||m_harnessBusy||m_closing||m_removePrompt||m_selected<0||!m_providers[m_selected].isCursorHarness())return;
+    const auto p=currentConfig();QString error;const auto exe=CursorExecutable::resolve(p.harnessExecutable,&error);
+    m_feedback->setProperty("error",!exe.valid());m_feedback->setText(exe.valid()?"Cursor Agent files found. No process, login, account check or model request was started. Save, then Send to connect explicitly.":error);
 }
 }

@@ -1,0 +1,22 @@
+********* Start testing of BrowserFindings *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserFindings::initTestCase()
+PASS   : BrowserFindings::historyButtonsStartDisabled()
+PASS   : BrowserFindings::historyButtonsTrackAvailability()
+PASS   : BrowserFindings::loadingActionChangesToStop()
+PASS   : BrowserFindings::inputContracts(file-with-spaces)
+PASS   : BrowserFindings::inputContracts(file-url)
+PASS   : BrowserFindings::inputContracts(native-blank)
+PASS   : BrowserFindings::inputContracts(uppercase-localhost)
+PASS   : BrowserFindings::inputContracts(bare-loopback)
+PASS   : BrowserFindings::inputContracts(unicode-search)
+PASS   : BrowserFindings::inputContracts(explicit-http)
+PASS   : BrowserFindings::inputContracts(trimmed-domain)
+PASS   : BrowserFindings::inputContracts(single-word)
+PASS   : BrowserFindings::addressClassification(localhost-path)
+PASS   : BrowserFindings::addressClassification(loopback-ipv6)
+PASS   : BrowserFindings::addressClassification(domain)
+PASS   : BrowserFindings::addressClassification(plain-search)
+PASS   : BrowserFindings::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 832ms
+********* Finished testing of BrowserFindings *********

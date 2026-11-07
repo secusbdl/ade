@@ -1,0 +1,15 @@
+{
+  "stage": "desktop-provider-followups-stage",
+  "appliedUtc": "2026-11-07T03:38:24.495204+00:00",
+  "handoffSha256CanonicalLf": "168573bc825907c43210355a851687eeda2aae122f420a0fd5c8417eeee0bac7",
+  "patchSha256CanonicalLf": "069dbed933154accb5649776b0d066e6fdac5c5f5b8ba44f93daa0baff6b9cbe",
+  "before": {
+    "src/ui/MainWindow.cpp": "f73304991cbf43fab8e20a7d4de0a58d5dfe9a0821c4310496b579d65dd3ec63",
+    "tests/test_desktop_provider.cpp": null
+  },
+  "after": {
+    "src/ui/MainWindow.cpp": "a8ea36ef69a05df2ebf9db396eec7f75b335b94c0096d3dc97807f1f83eca411",
+    "tests/test_desktop_provider.cpp": "e362306bf04dd907a9e933b70f63c39e6debf2707a95b10488fff074652a4db2"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

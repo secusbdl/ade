@@ -25,6 +25,7 @@ public:
     ~BrowserWidget() override;
 
     bool isReady() const;
+    bool isClosing() const;
     QUrl currentUrl() const;
     bool setProfileDirectory(const QString& directory);
     bool setPermissionDefaults(const QJsonObject& defaults);
@@ -47,8 +48,11 @@ public slots:
     void callDevTools(const QString& method, const QString& json = QStringLiteral("{}"));
     void callDevToolsRequest(const QString& requestId, const QString& method,
                             const QString& json = QStringLiteral("{}"));
-    void subscribeDevToolsEvent(const QString& eventName);
-    void unsubscribeDevToolsEvent(const QString& eventName);
+    // Repeated subscriptions by the same owner are idempotent. A null owner
+    // denotes the legacy widget-owned subscription, independent of other users.
+    void subscribeDevToolsEvent(const QString& eventName, QObject* owner = nullptr);
+    void unsubscribeDevToolsEvent(const QString& eventName, QObject* owner = nullptr);
+    void releaseDevToolsEvents(QObject* owner);
     void requestScreenshot();
     void openDevTools();
     void resolvePermission(const QString& requestId, bool allow);
@@ -59,6 +63,8 @@ public slots:
     bool resumeDownload(const QString& downloadId);
 
 signals:
+    // Emitted while Impl still exists; owners must retire before QWidget children.
+    void aboutToBeDestroyed();
     void readyChanged(bool ready);
     void urlChanged(const QUrl& url);
     void titleChanged(const QString& title);
@@ -99,6 +105,7 @@ private:
     class Impl;
     std::unique_ptr<Impl> d;
     void initialize();
+    void attachDevToolsEvent(const QString& eventName);
     void updateBounds();
     void reportError(const QString& operation, long result);
     void requestPermissionDecision(const QUrl& origin, const QString& permission,

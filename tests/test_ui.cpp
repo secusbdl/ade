@@ -164,7 +164,12 @@ void UiTest::sendStreamsAndPersists(){
     QCOMPARE(request["model"].toString(),QString("fixture-model"));
     QCOMPARE(request["reasoning_effort"].toString(),QString("high"));
     QCOMPARE(stored[0].presetId,QString("careful"));
-    const auto outgoing=request["messages"].toArray();QCOMPARE(outgoing.last().toObject()["content"].toString(),QString("Verify native UI"));
+    const auto outgoing=request["messages"].toArray();
+    // Upstream message-conversion.ts wraps user text in <user-msg> CDATA; the OpenAI-compatible
+    // chat converter sends a single text part as plain string content.
+    QCOMPARE(outgoing.last().toObject()["role"].toString(),QString("user"));
+    QVERIFY2(outgoing.last().toObject()["content"].isString(),QJsonDocument(QJsonArray{outgoing.last()}).toJson(QJsonDocument::Compact).right(3000).constData());
+    QCOMPARE(outgoing.last().toObject()["content"].toString(),QString("<user-msg><![CDATA[Verify native UI]]></user-msg>"));
     QVERIFY(QJsonDocument(outgoing).toJson().contains("CONTEXT_WIRED_8371"));
     QCOMPARE(input->toPlainText(),QString());
 }

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-11-07T04:24:35.625014+00:00",
+  "trigger": "Full206 gate behavior-next-full-1: 202/206 pass, 4 failures (private/behavior-next-full-1-summary.json). Isolated reruns: 3 deterministic, 1 load flake.",
+  "files": {
+    "src/core/ProviderProtocol.cpp": {
+      "before": "7409ec7b01b4a3b7f6c9b996981deee597d807e0962c98d911fb3183f9b9554e",
+      "after": "2952b4ba01af7a3476b7e16dada41f254de83038da6a05526ecb00000e79963c"
+    },
+    "tests/test_ui.cpp": {
+      "before": "3ba0b3fc9346264cd95885610a2c652682845ea3ad3fd57c020833e21b79472c",
+      "after": "e3e403aae4da67d548c029de74b21158335a57068c4d0fd6271dc60939196186"
+    },
+    "tests/test_provider_picker.cpp": {
+      "before": "41689d25fa860bc3d237f9c2b58492fe41fe64315c28a140cbd1bad27e9b4b0d",
+      "after": "ba57873baa7dea683fe650621ff003c37f004d13a911632970b964e60ad7fb19"
+    },
+    "tests/test_harness_forms_host.cpp": {
+      "before": "0992321e2abe992363413ac3b9bf5e85fc4a04d0ea662514e9c428e88fa3cb52",
+      "after": "f4a96e2ed91c8b6e7fdd486a18a3713333aca8d6fa17a8a118028ae6b98279ac"
+    },
+    "tests/test_turn_files_host.cpp": {
+      "before": "996320bc89d31f5984f6d91b5cc14e7405c93ce8b0df9cf07151a7a75eff89c8",
+      "after": "a9d5e818dbd026ff33f9eb4a53fa49247e22eaea62c199cde9fee40a140a4dfb"
+    },
+    "tests/test_runtime_apps.cpp": {
+      "before": "ba54f3c374e73f9bd5fa9360c353f6c11e36ae1f367114347680f9d5718fdacc",
+      "after": "5a8af48edb56ff424597ce703a1add960f2438895518663a940b68fcc0bca44e"
+    },
+    "tests/test_shell_followups.cpp": {
+      "before": "c10dd4edcf0b9e624887057f88a49cd2993c9bac7a8c4525ddba9d2f451a7ea9",
+      "after": "51690fe963b634a4ceb29cef007f66e3072bbe8cb5e5a0b544ff88d6e72d73b0"
+    }
+  },
+  "changes": [
+    {
+      "suite": "native_ui",
+      "kind": "product_fix_plus_test_update",
+      "finding": "skills-slash-stage made ContextLoader wrap user text as a <user-msg> CDATA text part (upstream packages/agent-core/src/agents/shared/message-conversion.ts:1193-1229). Native OpenAI-chat wire then sent a one-element content array.",
+      "upstream": "@ai-sdk/openai-compatible@2.0.47 src/chat/convert-to-openai-compatible-chat-messages.ts user case: content.length===1 && type text -> content: content[0].text (string). Verified via unpkg source 2026-11-07.",
+      "fix": "ProviderProtocol OpenAI-chat history: user message with exactly one text part sent as string content; other cases unchanged.",
+      "test": "test_ui sendStreamsAndPersists asserts role user and string content <user-msg><![CDATA[Verify native UI]]></user-msg>."
+    },
+    {
+      "suite": "native_provider_picker",
+      "kind": "stale_test",
+      "finding": "provider-parity-next-stage added optional native Cursor ACP catalog entry (model default, protocol cursor-acp); test still expected 23 entries.",
+      "fix": "Test covers cursor branch and 24 entries. Cursor is a user-requested extension, not an upstream route."
+    },
+    {
+      "suite": "native_harness_forms_host",
+      "kind": "stale_test",
+      "finding": "claude-question-findings-stage moved Cancel/Stop to submitted-only answers.",
+      "upstream": "apps/browser/src/backend/services/toolbox/index.ts toolbox.cancelUserQuestion handler passes no draftAnswers; ask-user-questions.ts cleanupQuestionsForAgent(agent_stopped) passes none; drafts only merged for user_sent_message.",
+      "fix": "Test asserts unsubmitted second-step draft absent."
+    },
+    {
+      "suite": "native_turn_files_host",
+      "kind": "timing",
+      "finding": "QTRY default 5000 ms exceeded (6250 ms needed) under full-suite load; isolated rerun 12/12 pass.",
+      "fix": "Single wait raised to 15000 ms; no assertion change."
+    },
+    {
+      "suite": "native_runtime_apps",
+      "kind": "test_update_for_wire_fix",
+      "finding": "Test helper read OpenAI-chat user content only as arrays; after the single-text string alignment it read nothing (gate 2 failure at test_runtime_apps.cpp:109). A first helper revision kept a QJsonValueRef into a temporary QJsonObject and crashed (gdb: QJsonValueConstRef::concreteString inside the lambda); final helper copies QJsonValue.",
+      "fix": "Helper accepts string or part-array content. 15/15 pass isolated."
+    },
+    {
+      "suite": "native_shell_followups",
+      "kind": "environment_dependency",
+      "finding": "withoutReadLine required pwsh.exe on PATH. The first gate inherited Codex's bundled PowerShell 7 (WindowsApps OpenAI.CodexPrimaryRuntime dependencies/native/powershell); this machine has no standalone pwsh and ADE resolves Windows PowerShell 5.1.",
+      "fix": "Test resolves its real shell exactly like ShellService::shellExecutable(): pwsh.exe, else powershell.exe. 23/23 pass with Windows PowerShell 5.1."
+    }
+  ],
+  "limits": [
+    "Assistant/tool OpenAI-chat content conversion unchanged; only the single-text user case is aligned.",
+    "No live provider call made for this fix yet; exact-binary live smoke follows packaging."
+  ],
+  "secondGate": {
+    "prefix": "behavior-next-full-2",
+    "passed": 204,
+    "failed": [
+      "native_runtime_apps",
+      "native_shell_followups"
+    ],
+    "summary": "private/behavior-next-full-2-summary.json"
+  },
+  "updatedUtc": "2026-11-07T04:54:49.341690+00:00"
+}

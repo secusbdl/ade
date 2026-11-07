@@ -1,0 +1,106 @@
+********* Start testing of QuestionFindingsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionFindingsTest::initTestCase()
+FAIL!  : QuestionFindingsTest::resultDistinguishesSubmittedFromDraft(cancel) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (keep)                                          : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(29) : failure location
+FAIL!  : QuestionFindingsTest::resultDistinguishesSubmittedFromDraft(stop) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (keep)                                          : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(29) : failure location
+PASS   : QuestionFindingsTest::resultDistinguishesSubmittedFromDraft(message)
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(openai-cancel) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(openai-stop) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+PASS   : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(openai-message)
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(responses-cancel) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(responses-stop) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+PASS   : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(responses-message)
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(anthropic-cancel) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(anthropic-stop) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+PASS   : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(anthropic-message)
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(google-cancel) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+FAIL!  : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(google-stop) Compared values are not the same
+   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(31) : failure location
+PASS   : QuestionFindingsTest::engineCancellationDoesNotPersistDraft(google-message)
+QWARN  : QuestionFindingsTest::panelCancelOmitsDraft() QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : QuestionFindingsTest::panelCancelOmitsDraft() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::panelCancelOmitsDraft() 'spy[0][2].toJsonObject().isEmpty()' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(32) : failure location
+QWARN  : QuestionFindingsTest::numberAnswersKeepJsonType(default) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::numberAnswersKeepJsonType(default) 'value.isDouble()' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(34) : failure location
+QWARN  : QuestionFindingsTest::numberAnswersKeepJsonType(decimal) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::numberAnswersKeepJsonType(decimal) 'value.isDouble()' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(34) : failure location
+QWARN  : QuestionFindingsTest::numberAnswersKeepJsonType(exponent) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::numberAnswersKeepJsonType(exponent) 'value.isDouble()' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(34) : failure location
+QWARN  : QuestionFindingsTest::numberAnswersKeepJsonType(empty) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::numberAnswersKeepJsonType(empty) 'value.isDouble()' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(34) : failure location
+QWARN  : QuestionFindingsTest::emptyAndInvalidNumbersAreNotCoerced() This plugin does not support propagateSizeHints()
+QWARN  : QuestionFindingsTest::emptyAndInvalidNumbersAreNotCoerced() This plugin does not support propagateSizeHints()
+PASS   : QuestionFindingsTest::emptyAndInvalidNumbersAreNotCoerced()
+QWARN  : QuestionFindingsTest::enterSubmitsCurrentTextStep(plain) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::enterSubmitsCurrentTextStep(plain) Compared values are not the same
+   Actual   (spy.size()): 0
+   Expected (1)         : 1
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(37) : failure location
+QWARN  : QuestionFindingsTest::enterSubmitsCurrentTextStep(control) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::enterSubmitsCurrentTextStep(control) Compared values are not the same
+   Actual   (spy.size()): 0
+   Expected (1)         : 1
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(37) : failure location
+QWARN  : QuestionFindingsTest::enterSubmitsCurrentTextStep(meta) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::enterSubmitsCurrentTextStep(meta) Compared values are not the same
+   Actual   (spy.size()): 0
+   Expected (1)         : 1
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(37) : failure location
+QWARN  : QuestionFindingsTest::enterOtherAndExclusions() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::enterOtherAndExclusions() Compared values are not the same
+   Actual   (spy.size()): 0
+   Expected (1)         : 1
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(38) : failure location
+QWARN  : QuestionFindingsTest::submitCallbackMayDeletePanel() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionFindingsTest::submitCallbackMayDeletePanel() '!alive' returned FALSE. ()
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(39) : failure location
+FAIL!  : QuestionFindingsTest::helperDisconnectKeepsSubmittedProgress(codex) Compared values are not the same
+   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(41) : failure location
+FAIL!  : QuestionFindingsTest::helperDisconnectKeepsSubmittedProgress(claude-code) Compared values are not the same
+   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(41) : failure location
+FAIL!  : QuestionFindingsTest::helperDisconnectKeepsSubmittedProgress(opencode) Compared values are not the same
+   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped
+D:/age/ADE/private/claude-question-findings-stage/tests/test_question_findings.cpp(41) : failure location
+PASS   : QuestionFindingsTest::cleanupTestCase()
+Totals: 8 passed, 23 failed, 0 skipped, 0 blacklisted, 4494ms
+********* Finished testing of QuestionFindingsTest *********

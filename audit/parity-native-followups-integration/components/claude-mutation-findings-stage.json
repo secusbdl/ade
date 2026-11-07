@@ -1,0 +1,189 @@
+{
+  "state": "frozen_private",
+  "scope": "Five source cpp deltas plus one new synthetic native regression suite.",
+  "patch": {
+    "path": "mutation-followups.patch",
+    "sha256": "e635ad0b620a78a74d73a5acb906685f62ac85ec6f7805118ef84952de918592"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "618f9b67c9bf87ce31ac63192f2f94b54468baffe42c83d73aebfb6c682656f1",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes; newly generated handoff artifacts LF"
+  },
+  "cohort": {
+    "path": "D:\\age\\ADE\\private\\claude-browser-findings-stage\\cohort",
+    "manifest": "D:/age/ADE/private/claude-browser-findings-stage/cohort-manifest.json",
+    "manifestSha256": "955135398de11b6b4ca65f3e62d559153aff3232cdd46518b450b326b1bd3af1",
+    "basis": "Parent-designated immutable completed180 source/archive cohort; no overlay used."
+  },
+  "tests": {
+    "finalPassed": 163,
+    "finalFailed": 0,
+    "finalSkipped": 0,
+    "suites": {
+      "mutation_findings": 35,
+      "file_mutations": 60,
+      "mutation_runtime": 20,
+      "core": 48
+    },
+    "sameFixtureBaseline": {
+      "passed": 9,
+      "failed": 26
+    },
+    "reports": [
+      {
+        "name": "before",
+        "cases": 20,
+        "failures": 12,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before.txt",
+            "sha256": "abc475381fc3ed3c3f4bb64a7a331e6d75d4611d9c18246493c3323cdf7429aa"
+          },
+          {
+            "path": "before.xml",
+            "sha256": "05b599dba2f98aa413829d2afa11b855f01935af2d5b2268a15ad78a14a4abf9"
+          }
+        ]
+      },
+      {
+        "name": "path-before",
+        "cases": 11,
+        "failures": 9,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "path-before.txt",
+            "sha256": "2d5ddf3e2c75d07f00af1b0154285dc7b25dbc878a957602f6d7789c15501d60"
+          },
+          {
+            "path": "path-before.xml",
+            "sha256": "94c4028c8ecd43837e46f32dc6eef48d531e1dca4dc3d1e57698307e36f5b22d"
+          }
+        ]
+      },
+      {
+        "name": "secondary-before",
+        "cases": 9,
+        "failures": 7,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "secondary-before.txt",
+            "sha256": "592bb5f9440df3b220030fa95c307478cbceef0e1bd6b0beb39edee6f65b385e"
+          },
+          {
+            "path": "secondary-before.xml",
+            "sha256": "e287d9d26f9dcc34210fe3fc3f04a8f1d262173807d8ac4a9151d37640bb03c1"
+          }
+        ]
+      },
+      {
+        "name": "final-before",
+        "cases": 35,
+        "failures": 26,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "final-before.txt",
+            "sha256": "2fd19e38b1692fdd0b4106e345a4c2fc631d4806cb36ae4301ecad6b902a35db"
+          },
+          {
+            "path": "final-before.xml",
+            "sha256": "26d8e390ef856d0cceb18bf272b701c0af8c56d110d3f4308ba8255df7cb6f9b"
+          }
+        ]
+      },
+      {
+        "name": "mutation_findings_after-final",
+        "cases": 35,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "mutation_findings_after-final.txt",
+            "sha256": "c1f5a5849bdfd01b5ed37ecffeebed0683aae89caa0dce1363591ae4bd162eba"
+          },
+          {
+            "path": "mutation_findings_after-final.xml",
+            "sha256": "90de283acfa8351368ed3dbcde589758a712173dfebde617c98e60f83fbcae8e"
+          }
+        ]
+      },
+      {
+        "name": "file_mutations-final",
+        "cases": 60,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "file_mutations-final.txt",
+            "sha256": "18ce5d12242f82d3ea1cac922d588848302e23e3151cd9288cf5570b093ffde6"
+          },
+          {
+            "path": "file_mutations-final.xml",
+            "sha256": "02fed3cdd29d147b61b31618a8171e2eb09e30b2aad5a74ad59fac0792aa8179"
+          }
+        ]
+      },
+      {
+        "name": "mutation_runtime-final",
+        "cases": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "mutation_runtime-final.txt",
+            "sha256": "60936591c5d1a7722a5bf8a943f749c7899e06b088ff5892f5cef9c7d285fbde"
+          },
+          {
+            "path": "mutation_runtime-final.xml",
+            "sha256": "efea01beafe75c12091c5dae981f329118d72cc17cf19af62ea1dfdca0e32bcc"
+          }
+        ]
+      },
+      {
+        "name": "core-final",
+        "cases": 48,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "core-final.txt",
+            "sha256": "f68e8fd4145878c138a0207e63a30b2000a838a9b4a176b338cf2e4f1d2db135"
+          },
+          {
+            "path": "core-final.xml",
+            "sha256": "d48e81fab221e706a5e1d71fc10106b452f63432a8e3ffeca792d5550dadad92"
+          }
+        ]
+      }
+    ]
+  },
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "headersChanged": false,
+  "notes": [
+    "Private after objects override matching immutable cohort archives; no header or class layout changes.",
+    "Compatibility worker copied from immutable packaged out/parity-integration-7, not current mutable shared build.",
+    "Raw source snapshots untouched except listed5 cpp; root must merge narrow Host hunk with unrelated current changes."
+  ],
+  "limits": [
+    "Private fixtures establish tested behavior, not universal parity or zero-defect guarantee.",
+    "No shared production edit, shared build, real user file, credentials, external request, foreground GUI or live model used.",
+    "Parent must apply patch/rebuild/retest integrated current source; this cohort is immutable completed180, not a full current186 validation.",
+    "Rename publication does not preserve old ACL/ADS/attributes/creation time; exclusive sharing can reject open files.",
+    "No-op journal entries remain; upstream also registers unchanged edits, while summary hides equal endpoints.",
+    "No automatic mutation rollback or user-file deletion added."
+  ],
+  "scan": "SCAN.json"
+}

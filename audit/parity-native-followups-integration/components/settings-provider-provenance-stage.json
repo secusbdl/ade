@@ -1,0 +1,114 @@
+{
+  "state": "frozen_private",
+  "scope": "Correct Settings provider description and service mark selection only. No stored provenance, API authority, provider runtime, credential, endpoint or catalog semantics changed.",
+  "cohort": "private/behavior-cohort-186/manifest.json; coherent completed186 immutable source/libraries, no shared builds or source edits",
+  "patch": {
+    "path": "provider-provenance.patch",
+    "sha256": "ebff460818ddacd58d3fdbc7441d99d9daddb1c3e33cc1a5bd36bca124a3f911"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "bd38aa6b98002b525010d3d68a402389c0760ad7eff7b5d215811115390bd5ec",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes"
+  },
+  "reproduction": "Actual package8 report corroborated privately with synthetic ProviderStore/SettingsPage. Before:8 failing data rows; after:18/18 and unchanged Settings presentation17/17.",
+  "contract": [
+    "Valid explicit templateId uses catalog match, including configurable regional endpoints.",
+    "Absent provenance uses only unique fixed endpoint/kind/protocol match.",
+    "Configurable, unknown, invalid explicit, protocol-mismatched or ambiguous shared API/plan endpoints remain generic.",
+    "Whole-card exact ID action retained; settings render/reload leaves providers.json byte-exact."
+  ],
+  "references": [
+    "src/ui/SettingsPage.cpp providerDescription/providerMark",
+    "src/ui/ProviderCatalog.cpp matches/all",
+    "reference/stagewise/apps/browser/src/ui/screens/settings/sections/models-providers-section.tsx (source provider identity is persisted, not guessed from arbitrary endpoint)"
+  ],
+  "tests": {
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "name": "before",
+        "tests": 18,
+        "failures": 8,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before.txt",
+            "sha256": "f51199c59fa43d5ac89b64bfd0f56053992be95871c2e4dd343ded340a7557f9"
+          },
+          {
+            "path": "before.xml",
+            "sha256": "0479a30dd3eb9911c00ca31482f319a786feada7851ae345517e4ffcc8e31fef"
+          }
+        ]
+      },
+      {
+        "name": "after",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after.txt",
+            "sha256": "7dc9e60501a642bbeab9d00c81e18a3786cdf20adc1c2732c550bb0f9519b533"
+          },
+          {
+            "path": "after.xml",
+            "sha256": "e4e9a3d366dd4d427bc821293c4e666e627579d00766a30b3502ddc7f80a5615"
+          }
+        ]
+      },
+      {
+        "name": "compatibility",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "compatibility.txt",
+            "sha256": "ff32138e51c0ce1948b8125c8b5848eaacebd1a8c439f5b9f729795b6c46ac8f"
+          },
+          {
+            "path": "compatibility.xml",
+            "sha256": "acde3134919fc5543e32e24a993019f6722b0edfd3be33e2a69445c77f59c772"
+          }
+        ]
+      }
+    ]
+  },
+  "captures": [
+    {
+      "path": "captures-before/providers-dark.png",
+      "sha256": "ff761f7da8e96f18ce3251d7c63ab82275406122d33ae64c6bcd3212a209c9b4"
+    },
+    {
+      "path": "captures-before/providers-light.png",
+      "sha256": "561d0ad137dc672d53648f50838c93242ad36552b63feab71033bf2bcf2e23e5"
+    },
+    {
+      "path": "captures-after/providers-dark.png",
+      "sha256": "eeb73bf9fbaa65be5f471e44d1269d8bb24c8fc86e638836007bd598bd7af3da"
+    },
+    {
+      "path": "captures-after/providers-light.png",
+      "sha256": "f6d07ad3b778bcad036c7e890743d6a789ca43d4e9811f22223711d0cb2effbd"
+    }
+  ],
+  "visualInspection": [
+    "captures-before/providers-light.png",
+    "captures-after/providers-light.png",
+    "captures-after/providers-dark.png"
+  ],
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "limits": [
+    "Private synthetic offscreen widget verification; no new real packaged GUI run or live service call.",
+    "Ambiguous legacy endpoints deliberately use generic identity until user selects explicit template; no model/provider identity inferred from display name.",
+    "This narrow correction is not a full Settings parity claim."
+  ]
+}

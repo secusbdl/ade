@@ -33,6 +33,7 @@ public:
   void beginCommand() { m_inCommand = true; }
   bool ready() const { return m_ready; }
   bool inCommand()const{return m_inCommand;}
+  static QString expandStdinEscapes(const QString &text);
   static QString powerShellIntegration(const QString &token);
   static QProcessEnvironment
   agentEnvironment(const QProcessEnvironment &source);

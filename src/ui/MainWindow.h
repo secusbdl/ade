@@ -16,7 +16,7 @@ class QPlainTextEdit; class QSplitter; class QStackedWidget; class QTabWidget; c
 class QToolButton; class QTreeView;
 class QHBoxLayout;
 class QScrollArea;
-class QShortcut; class QTimer;
+class QShortcut; class QTimer; class QMessageBox; class QStatusBar;
 class QImage;
 namespace ade {
 class AgentEngine; class AgentToolHost; class BrowserWidget; class BrowserToolBridge; class Composer; class SettingsPage; class UtilityService;
@@ -186,5 +186,19 @@ private:
     QSet<QString> m_liveConversationOwners;
     QHash<QString,QStringList> m_removalAffectedSessions;
     PluginCatalog m_pluginCatalog;
+    void initializeSessionRecovery();
+    void showSessionRecovery(const QString& error);
+    void showCloseRecovery();
+    void requestSessionReload();
+    void reloadSessionsConfirmed();
+    bool sessionReloadIsSafe() const;
+    QString m_sessionRecoveryError;
+    QString m_normalComposerPlaceholder;
+    QPointer<QMessageBox> m_sessionRecoveryDialog;
+    QStatusBar* m_sessionRecoveryBar=nullptr;
+    QLabel* m_sessionRecoveryLabel=nullptr;
+    bool m_discardSessionChangesOnClose=false,m_sessionTransition=false;
+    quint64 m_sessionRecoverySerial=0;
+
 };
 }

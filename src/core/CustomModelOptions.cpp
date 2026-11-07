@@ -1,4 +1,5 @@
 #include "CustomModelOptions.h"
+#include "ProviderModelRules.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QRegularExpression>
@@ -341,40 +342,6 @@ bool boundRequest(const ProviderConfig &p, QString *error) {
                   "not supported by native HTTP chat.");
   return true;
 }
-struct OpenAiTraits {
-  bool reasoning, nonReasoning, flex, priority;
-};
-OpenAiTraits openAi(const QString &m, const QJsonObject &options) {
-  const bool gpt5 = m.startsWith("gpt-5") && !m.startsWith("gpt-5-chat");
-  const bool o = m.startsWith("o3") || m.startsWith("o4-mini");
-  bool nonReasoning = false;
-  for (const auto &v :
-       {"gpt-5.1", "gpt-5.2", "gpt-5.3", "gpt-5.4", "gpt-5.5", "gpt-5.6"})
-    nonReasoning |= m.startsWith(v);
-  return {
-      options.value("forceReasoning").toBool(m.startsWith("o1") || o || gpt5),
-      nonReasoning, o || gpt5,
-      m.startsWith("gpt-4") || o ||
-          (gpt5 && !m.startsWith("gpt-5-nano") &&
-           !m.startsWith("gpt-5.4-nano"))};
-}
-int anthropicLimit(const QString &m) {
-  if (m.contains("claude-opus-4-7") || m.contains("claude-opus-4-6") ||
-      m.contains("claude-sonnet-4-6"))
-    return 128000;
-  if (m.contains("claude-sonnet-4-5") || m.contains("claude-opus-4-5") ||
-      m.contains("claude-haiku-4-5"))
-    return 64000;
-  if (m.contains("claude-opus-4-1"))
-    return 32000;
-  if (m.contains("claude-sonnet-4-"))
-    return 64000;
-  if (m.contains("claude-opus-4-"))
-    return 32000;
-  if (m.contains("claude-3-haiku"))
-    return 4096;
-  return 0; // No guessed limit for an unknown custom ID.
-}
 void map(const QJsonObject &from, QJsonObject &to, const char *source,
          const char *destination) {
   if (from.contains(source) && !from.value(source).isNull())
@@ -561,7 +528,7 @@ bool CustomModelOptions::apply(const ProviderConfig &p, QJsonObject *targetBody,
     body.remove("toolConfig");
   }
   if (protocol == "openai" || protocol == "responses") {
-    const auto traits = openAi(p.model, options);
+    const auto traits = providerModelRules::openAi(p.model, options);
     for (const auto &pair :
          {qMakePair("user", "user"), qMakePair("store", "store"),
           qMakePair("metadata", "metadata"),
@@ -601,7 +568,7 @@ bool CustomModelOptions::apply(const ProviderConfig &p, QJsonObject *targetBody,
                    ? "max_completion_tokens"
                    : "max_tokens"] = output;
       }
-      if (traits.reasoning || openAi(p.model, {}).reasoning) {
+      if (traits.reasoning || providerModelRules::openAi(p.model, {}).reasoning) {
         auto messages = body.value("messages").toArray();
         for (int i = 0; i < messages.size(); ++i) {
           auto message = messages[i].toObject();
@@ -663,10 +630,7 @@ bool CustomModelOptions::apply(const ProviderConfig &p, QJsonObject *targetBody,
     const auto type = thinking.value("type").toString();
     const int budget =
         type == "enabled" ? thinking.value("budgetTokens").toInt(1024) : 0;
-    const int limit = anthropicLimit(wireModel);
-    const int requested = output > 0 ? output : limit > 0 ? limit : 4096;
-    body["max_tokens"] =
-        limit > 0 ? qMin(limit, requested + budget) : requested + budget;
+    body["max_tokens"] = providerModelRules::anthropicOutputTokens(wireModel, output, budget);
     if (type == "enabled")
       body["thinking"] = QJsonObject{{"type", type}, {"budget_tokens", budget}};
     else if (type == "adaptive")

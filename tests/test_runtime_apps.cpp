@@ -105,7 +105,7 @@ private slots:
             QVERIFY(!savedResults[index]["content"].toString().contains("<body>Updated</body>"));
         }
         QCOMPARE(provider.requests.size(),8);
-        const auto userContext=[](const QJsonObject& request){QString text;for(const auto& message:request["messages"].toArray())if(message.toObject()["role"]=="user")for(const auto& part:message.toObject()["content"].toArray())text+=part.toObject()["text"].toString();return text;};
+        const auto userContext=[](const QJsonObject& request){QString text;for(const auto& message:request["messages"].toArray())if(message.toObject()["role"]=="user"){const QJsonValue content=message.toObject().value("content");if(content.isString())text+=content.toString();else for(const auto& part:content.toArray())text+=part.toObject()["text"].toString();}return text;};
         const auto fileContext=userContext(provider.requests[4]);QVERIFY(fileContext.contains("apps/native/index.html"));QVERIFY(fileContext.contains("1|<body>Updated</body>"));
         const auto directoryContext=userContext(provider.requests[5]);QVERIFY(directoryContext.contains("type:directory"));QVERIFY(directoryContext.contains("index.html"));
         QVERIFY(engine.workspace().isEmpty());QFile file(host.apps()->agentAppsDirectory()+"/native/index.html");QVERIFY(file.open(QIODevice::ReadOnly));QCOMPARE(file.readAll(),QByteArray("<body>Updated</body>"));
@@ -211,21 +211,21 @@ private slots:
         const auto result=run(host,"return {saved,identity:await fsPromises.readFile('ws1/identity.txt','utf8')};");QVERIFY2(!result.error,qPrintable(result.output));
         const auto value=QJsonDocument::fromJson(resultValue(result).toUtf8()).object();QCOMPARE(value["saved"].toInt(),7);QCOMPARE(value["identity"].toString(),"accepted root");
     }
-    void contextResetCanDeleteHostFromActualAppClose(){
+    void contextResetCanDeleteHostFromActualAppDeactivation(){
         QTemporaryDir data;
         BrowserToolBridge bridge;AgentEngine engine;
         auto* host=new AgentToolHost(&engine,&bridge,"delete-on-app-close",data.path());
         QPointer<AgentToolHost> guard(host);QVERIFY(installFixture(host->apps()->agentAppsDirectory()));connectTabs(*host,bridge);
         const auto opened=run(*host,"return await API.openApp('demo');");QVERIFY2(!opened.error,qPrintable(opened.output));
         QTRY_VERIFY_WITH_TIMEOUT(host->apps()->activePage()&&host->apps()->activePage()->isReady(),15000);
-        const QPointer<MiniAppPage> page=host->apps()->activePage();bool closed=false;
-        connect(host->apps(),&MiniAppHost::pageCloseRequested,this,[&](const QString&,const QString&){
-            closed=true;delete host;
+        const QPointer<MiniAppPage> page=host->apps()->activePage();bool deactivated=false;
+        connect(host->apps(),&MiniAppHost::activeAppChanged,this,[&]{
+            deactivated=true;delete host;
         });
         // Deletion happens inside AgentToolHost's contextReset cleanup, rather
         // than after reset returns. Both nested hosts must stop touching members.
         host->sandbox()->resetAgent("delete-on-app-close");
-        QVERIFY(closed);QVERIFY(guard.isNull());
+        QVERIFY(deactivated);QVERIFY(guard.isNull());
         QCoreApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);QVERIFY(page.isNull());
     }
     void synchronousBrowserCancellationCanDeleteItsHost(){

@@ -1,0 +1,26 @@
+{
+  "stage": "mini-app-findings-stage",
+  "appliedUtc": "2026-11-07T03:08:44.158458+00:00",
+  "handoffSha256CanonicalLf": "124f2797c289c9d840119f696859722c362607e8f0dbff662c14dd32d480e2cd",
+  "patchSha256CanonicalLf": "e70b7d8318c256f06fed5df7ed4840d1c7d94707c05baf407ff41a802849a498",
+  "before": {
+    "src/apps/MiniAppHost.h": "c40c4cd8aac1343596d540ea20f191d19ed3cdf7c875d8ad4aeef650123b0b39",
+    "src/apps/MiniAppHost.cpp": "8c080dceecc0fcbf686760728c563caec34f75d1a7fa871d9d701f9a9810bb0e",
+    "src/apps/MiniAppPage.h": "b0b8bdf7586b9ae4436cc219aa79aaa5ac4975e7775f1cfb183aa782883a1450",
+    "src/apps/MiniAppPage.cpp": "8eb00ed7c61e69e20a1957cb234b737f446b6cf7663b9a0219b2dd8d6c5ccd25",
+    "src/runtime/AgentToolHost.cpp": "24a5ce84e2492129a2b2ea1d970e9eb71bda3aff7731ded6aa7a70842ad1acda",
+    "tests/test_runtime_apps.cpp": "27db14952e4804c3d7a029c2dd62ba0f61d07df7743d07e453d1655fda56f8dd",
+    "tests/test_mini_app_findings.cpp": null
+  },
+  "after": {
+    "src/apps/MiniAppHost.h": "83d476db7668054e7cd572158bc817e5cd38d4b4cccebd6c07b4be6b34c45a64",
+    "src/apps/MiniAppHost.cpp": "8a7d9c42414726ad3c17842e64762350db1233dd2515c73bc7306fadc66fd40a",
+    "src/apps/MiniAppPage.h": "a10fb1190c402caa88230163019e947ed654f4590d3aa71a301b44d0c102ddd1",
+    "src/apps/MiniAppPage.cpp": "883986d79f295635ebd792fb09b92a86d71971758ef2a70afe9a5a2d4ecf343c",
+    "src/runtime/AgentToolHost.cpp": "b502d786236a4de35b147f8a7ba5fecf2e6bc0e83817334fe5ed85dee358f1b3",
+    "tests/test_runtime_apps.cpp": "ba54f3c374e73f9bd5fa9360c353f6c11e36ae1f367114347680f9d5718fdacc",
+    "tests/test_mini_app_findings.cpp": "8cf60d6697b4f3eef218404021fc281e8d25d09bd36d971167cfaf0a55d5607e"
+  },
+  "cmakeAdditionsSha256CanonicalLf": "fd5b3f491216411cdbd7dd9689e1545714e363acf7ae7346c9a4b3809d29909b",
+  "integrationNote": "Applied only patch hunks; current unrelated source changes retained. Provider HTTP test runtime directory aligned with existing CMake targets. Full coherent rebuild/gate still required."
+}

@@ -1,0 +1,22 @@
+********* Start testing of ClaudeFollowupsSessionTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ClaudeFollowupsSessionTest::initTestCase()
+PASS   : ClaudeFollowupsSessionTest::realProcessSplitAndImageComplete(split-final)
+PASS   : ClaudeFollowupsSessionTest::realProcessSplitAndImageComplete(image-result)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-none)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-child)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-foreign)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-invalid)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-trailing-newline)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(init)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-assistant)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(telemetry-precedence)
+PASS   : ClaudeFollowupsSessionTest::observedModelsAreOwnedAndExplicit(conflict)
+PASS   : ClaudeFollowupsSessionTest::reusedSessionDoesNotInheritObservation()
+PASS   : ClaudeFollowupsSessionTest::imagePublicationCanCancelDeleteOrReplace(cancel)
+PASS   : ClaudeFollowupsSessionTest::imagePublicationCanCancelDeleteOrReplace(delete)
+PASS   : ClaudeFollowupsSessionTest::imagePublicationCanCancelDeleteOrReplace(replace)
+PASS   : ClaudeFollowupsSessionTest::activeOutputDoesNotResetExistingBudget()
+PASS   : ClaudeFollowupsSessionTest::cleanupTestCase()
+Totals: 18 passed, 0 failed, 0 skipped, 0 blacklisted, 2989ms
+********* Finished testing of ClaudeFollowupsSessionTest *********

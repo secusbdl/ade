@@ -34,6 +34,8 @@ public:
     void setCompletionResults(quint64 requestId,const QJsonArray &items,const QString &emptyText={});
     bool commitCompletion(quint64 requestId,const QString &itemId);
     std::optional<QString> completionDraft(quint64 requestId,const QString &itemId) const;
+    std::optional<QString> completionActionDraft(quint64 requestId,const QString &itemId) const;
+    bool commitCompletionAction(quint64 requestId,const QString &itemId);
 signals:
     void submitted();
     void filesAttached(QStringList paths);

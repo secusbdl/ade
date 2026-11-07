@@ -1,0 +1,26 @@
+{
+  "stage": "provider-http-findings-stage",
+  "appliedUtc": "2026-11-07T03:08:44.075604+00:00",
+  "handoffSha256CanonicalLf": "33a8201c801eeb57e46a7e9d888e118781ad7f4914a9d62e33daa859c68bf1b0",
+  "patchSha256CanonicalLf": "5410769f6f6cb61ebb19e9782c9fb253065b3e2a6b76c767716b533a81faf915",
+  "before": {
+    "src/core/ProviderModelRules.h": null,
+    "src/core/ProviderProtocol.cpp": "2fe78ab7dc95ae635a6a4407ae6d369d95e615e0c5d198f1aff96fc8966e79d5",
+    "src/core/CustomModelOptions.cpp": "7942d4f8ed953d798de1da39fad2384aaae15f27c0e1bb53e3da30e6588bd1f2",
+    "src/core/UtilityService.cpp": "bec51c06aa2976143c778504c9143defed0ffae57b559e12dd4031d2b9b5470a",
+    "src/ui/ModelSelection.cpp": "ace4091ba747706ab7d8a49ac409ae26f5dfd5be3dbfb658e9bb7872c527cd3a",
+    "tests/test_provider_http_rules.cpp": null,
+    "tests/test_provider_http_engine.cpp": null
+  },
+  "after": {
+    "src/core/ProviderModelRules.h": "322c5a30928945c7bd7856f788aec5a963b9aa27df78ff1602731d60958e337a",
+    "src/core/ProviderProtocol.cpp": "7409ec7b01b4a3b7f6c9b996981deee597d807e0962c98d911fb3183f9b9554e",
+    "src/core/CustomModelOptions.cpp": "24b15d4135392ed51689d8318449603d278e4f336f343a4ac998fc2405b29731",
+    "src/core/UtilityService.cpp": "89bd1b2f8478c41c53c16c752e4e318f8ff9e2d620e64cbb67f2cb6ec7376721",
+    "src/ui/ModelSelection.cpp": "de1f13a51140b3d22b72cce2eb1138dec42894c7e9e1261cecff56805d760be9",
+    "tests/test_provider_http_rules.cpp": "ab8aeb832bc3e123548d187ad880cbb360e153e031dde8287b3350d265c23bf7",
+    "tests/test_provider_http_engine.cpp": "171854a93ca06aa645991dd044cfbbce1a52b1e85fae3a1dc0263a86dd394fff"
+  },
+  "cmakeAdditionsSha256CanonicalLf": "70e1744508c2f253f86f8bc14d17880e81d9fcae33bb6a5ea5100075a6f8264b",
+  "integrationNote": "Applied only patch hunks; current unrelated source changes retained. Provider HTTP test runtime directory aligned with existing CMake targets. Full coherent rebuild/gate still required."
+}

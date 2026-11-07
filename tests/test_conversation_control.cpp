@@ -593,7 +593,7 @@ private slots:
     const auto result = toolResult(engine);
     QCOMPARE(result["cancelReason"], "user_cancelled");
     QCOMPARE(result["completedSteps"], 1);
-    QCOMPARE(result["answers"].toObject()["mode"], "__other__:custom");
+    QVERIFY(!result["answers"].toObject().contains("mode"));
     engine.cancel();
   }
   void normalMessageInterruptsQuestionBeforeNextRequest() {

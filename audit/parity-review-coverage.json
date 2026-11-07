@@ -7943,6 +7943,12 @@
       "sha256CanonicalLf": "0375b5f5e2b0858bdac23e5c7aed12a4dbfdfbcc1a9da9b2a35da7a4a522012b",
       "linkedFeatureRows": 0,
       "scope": "Checkpoint-level source/test/live/GUI evidence with explicit findings; no whole feature row or source function is declared completed."
+    },
+    {
+      "path": "audit/parity-native-followups-integration.json",
+      "sha256CanonicalLf": "e8174b4e9eb135933e88fc190a39fe8d4d451f2a228cf40b2009da4e542c4dae",
+      "linkedFeatureRows": 0,
+      "scope": "Checkpoint 9: frozen206 cohort plus regression fixes; full suite, exact-binary live and bounded UI Automation evidence. No whole feature row or source function is declared completed."
     }
   ]
 }

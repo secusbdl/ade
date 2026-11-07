@@ -1,0 +1,15 @@
+{
+  "stage": "question-stall-stage",
+  "appliedUtc": "2026-11-07T03:28:39.894807+00:00",
+  "handoffSha256CanonicalLf": "7fa8aa10f94aad00caba7a6b1a74c2dba62e58f1f12f12095f2cc5b061a3666a",
+  "patchSha256CanonicalLf": "4d7a8e86d2d9f85f60c75d2319508b9ff89672be1b81016fb868691241498755",
+  "before": {
+    "src/ui/ConversationView.cpp": "ed1ec4e3cd32dcd4c4fd218fc3ee25d040b2f8082b56542a822c13ea6ac727c5",
+    "tests/test_question_stall.cpp": null
+  },
+  "after": {
+    "src/ui/ConversationView.cpp": "6e58e1fcdb714f6c2dfce977a40275c8a1e7ff9a4baca31dea5319e580f38cd6",
+    "tests/test_question_stall.cpp": "bba12233a41351af90b0ae5dd48eec2a59dcb1baff96d49935966a2cc8dcc223"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

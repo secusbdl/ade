@@ -1,0 +1,240 @@
+{
+  "status": "frozen-private-ready-for-integration",
+  "scope": "Optional native Cursor Agent adapter requested by user; not a coding-agent provider present in pinned Stagewise. Production/shared build unchanged.",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "sourceScope": "provider-scope.json",
+  "patch": "cursor-adapter.patch",
+  "patchCanonicalLfSha256": "75dd5bb14f79687a9506ace3e8858446e01323ea147d24192209bf7ad4b0b1fe",
+  "manifest": "manifest.json",
+  "cmake": "cmake-additions.txt",
+  "ownedPaths": 22,
+  "sourceCohort": "private/claude-browser-findings-stage/cohort",
+  "sourceCohortManifestCanonicalLfSha256": "955135398de11b6b4ca65f3e62d559153aff3232cdd46518b450b326b1bd3af1",
+  "applyCheck": {
+    "command": "git apply --check --whitespace=error-all",
+    "exitCode": 0,
+    "report": "apply-check.txt"
+  },
+  "tests": [
+    {
+      "name": "cursor",
+      "text": "final-cursor.txt",
+      "xml": "final-cursor.xml",
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "0de13a41aa51e8d524e4820a60545eff5f2d50617155f51bc53266848429c8cf"
+    },
+    {
+      "name": "cursor_engine",
+      "text": "final-cursor_engine.txt",
+      "xml": "final-cursor_engine.xml",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "4d30437dad8119361f6a7b0dd51c3a28d197105b760c9afefcdff1de23c44898"
+    },
+    {
+      "name": "cursor_ui",
+      "text": "final-cursor_ui.txt",
+      "xml": "final-cursor_ui.xml",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "0fabfad7719bfec0d81a4f381c4316054d6d4c5dd96f5aadfba0262ccbc44caa"
+    },
+    {
+      "name": "cursor_host",
+      "text": "final-cursor_host.txt",
+      "xml": "final-cursor_host.xml",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "4ed940d89d735dcc75f2cf56085204ccde20c084cf6e0c3dfdd292e495ff2921"
+    },
+    {
+      "name": "core",
+      "text": "coherent-compat-core.txt",
+      "xml": "coherent-compat-core.xml",
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "a7a8deb714c43c2de009017f5d585a625cf7db9fda143dc8fd7900448eea481b"
+    },
+    {
+      "name": "opencode_harness",
+      "text": "coherent-compat-opencode_harness.txt",
+      "xml": "coherent-compat-opencode_harness.xml",
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "e159e956ee81afd7fb0a9f4be3943d5c57232832ec640eb34982c2ca754b81bf"
+    },
+    {
+      "name": "provider_operations",
+      "text": "coherent-compat-provider_operations.txt",
+      "xml": "coherent-compat-provider_operations.xml",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "2107a182f9d6593be31e234176307ad83d47f9359cf380a46c442223cb7846f5"
+    },
+    {
+      "name": "provider_removal",
+      "text": "coherent-compat-provider_removal.txt",
+      "xml": "coherent-compat-provider_removal.xml",
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "eb5fe8ba3a0dcd126710f65540082c10007da0f33b456b7ce77cefc08cae05fe"
+    },
+    {
+      "name": "codex_provider_ui",
+      "text": "coherent-compat-codex_provider_ui.txt",
+      "xml": "coherent-compat-codex_provider_ui.xml",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "d022dc24abbca831eb6dde7d69023a5276bfc912dcc3ff281d30ec4a089c5da1"
+    },
+    {
+      "name": "opencode_provider_ui",
+      "text": "coherent-compat-opencode_provider_ui.txt",
+      "xml": "coherent-compat-opencode_provider_ui.xml",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "a46b27c60ef44576fa2e0ee2103c305136ad845ebf9c67986f17df7be9065922"
+    },
+    {
+      "name": "claude_provider_ui",
+      "text": "coherent-compat-claude_provider_ui.txt",
+      "xml": "coherent-compat-claude_provider_ui.xml",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "canonicalLfSha256": "0e9d56b8a3e0ea679acf2ed68e6c6cb7587ccef27f263e86d3a36b4c8db26296"
+    }
+  ],
+  "totalPassed": 194,
+  "totalFailed": 0,
+  "beforeEvidence": [
+    {
+      "report": "continuity-before.txt",
+      "passed": 2,
+      "failed": 2,
+      "finding": "Live authenticated process reused an empty/foreign history mapping. Reuse now requires complete exact ownership and session identity."
+    },
+    {
+      "report": "host-first.txt",
+      "passed": 11,
+      "failed": 1,
+      "finding": "Answered native Cursor question was missing from saved display history. Completed and stopped partial answers now persist as typed native question presentation."
+    },
+    {
+      "report": "wrapper-before.txt",
+      "passed": 2,
+      "failed": 1,
+      "finding": "Generic ACP mapping would hide an ordinary Cursor request_user_input tool as a Stagewise wrapper. Cursor has no owned Stagewise bridge, so only that suppression marker is stripped."
+    }
+  ],
+  "integration": [
+    "Existing core/harness source globs discover the seven new production files. Add four native suite targets and cursor_fixture using cmake-additions.txt.",
+    "ProviderConfig gains Cursor external-kind predicates, no added stored fields; ProviderStore validates cursor-acp with empty URL/key.",
+    "AgentEngine gains fields, requiring coherent ABI rebuild of UI/host consumers. AgentToolHost sends existing typed original-image grants through ACP preparation for Cursor.",
+    "No MainWindow hooks are necessary: actual production MainWindow controls/host dispatch are covered by the private13-row host suite.",
+    "Provider picker adds genuine Cursor card; editor uses token-free executable/default-or-explicit-model form and file-only Check. Send presents explicit Connect before vendor authenticate; tool permissions and plan approvals remain independent."
+  ],
+  "verifiedBehavior": [
+    "Native process initialize/authenticate/new/load/config/prompt/update/permissions/cancel protocol using local deterministic CLI fixture.",
+    "Real MainWindow Send, inline connection/permission/plan decisions, chat-switch question ownership, Stop stale decisions, saved completed/partial questions and restart.",
+    "Exact PNG bytes through actual AgentToolHost original-image grant path; canonical attachment reference preserved.",
+    "Foreign owner/provider/workspace/executable/fork/edited-history cannot resume old vendor context.",
+    "Authentication failure diagnostics do not echo raw vendor error; pending human decisions pause bounded active deadlines."
+  ],
+  "vendorEvidence": {
+    "inspection": "vendor-inspection.json",
+    "initialize": "vendor-initialize.json",
+    "version": "2026.11.05-86047df",
+    "liveScope": "Only isolated help/version/ACP initialize. No real authenticate, OAuth, account status, token read or model request. Help/version exit0; initialize probe returned capabilities then owned stdin shutdown exit1; not claimed as full session success.",
+    "runtime": "ADE is native; optional separately installed vendor CLI may use its own bundled Node. No ADE Node sidecar or vendor bundle is shipped."
+  },
+  "visualEvidence": {
+    "index": [
+      {
+        "file": "renders-final/01-connect-light.png",
+        "sha256": "6cbff08d005f17deab3fcb5886db3ce8046f95123fc2752b14171bf7507547dd"
+      },
+      {
+        "file": "renders-final/02-completed-light.png",
+        "sha256": "7d06040b23ba79526cd5559cd21bee17127dda9076032fae18e3c6228f55431f"
+      },
+      {
+        "file": "renders-final/03-permission.png",
+        "sha256": "1a12e86c9f9e85633213c8bf8521c3ae5102745431f070489b760b2fd0060ff2"
+      },
+      {
+        "file": "renders-final/03-plan.png",
+        "sha256": "c4dd1f582de7ca79fb3079c870a3705bb4a4636aef5b2c092fb21e81b5fdb88f"
+      },
+      {
+        "file": "renders-final/04-question-narrow.png",
+        "sha256": "582cd63fbef308082196bd3f5e8df080f005954a1d1854246c417533d86fbcc6"
+      },
+      {
+        "file": "renders-final/05-question-answered.png",
+        "sha256": "c4956ac961c83d51c5bd944c0cd1972c1181c27ee79ad091093a931d313f1d63"
+      },
+      {
+        "file": "renders-final/05-question-stopped.png",
+        "sha256": "edfeb21c45b2f70acca2e5b0f0e55dc4307501820306b724bdf437498e9b4463"
+      },
+      {
+        "file": "renders-final/connect-dark-1100.png",
+        "sha256": "646119e4ee0111e902a98d0226108d01b3d6db010def6c5635144d792f032b4b"
+      },
+      {
+        "file": "renders-final/connect-dark-350.png",
+        "sha256": "9e343f66ed9710deb7a4fb51eae509c8e67bfb05c9b8b78c30cb8880be21cb60"
+      },
+      {
+        "file": "renders-final/connect-light-1100.png",
+        "sha256": "3b3656b3f4955beb9bec7a6b08c60b75bf45bc27d300d234148788d93dcf2828"
+      },
+      {
+        "file": "renders-final/connect-light-350.png",
+        "sha256": "c7371faf292f0bc547d9b5be594ec1dc6bdd53ad33ffe1a7727456298723ce7a"
+      }
+    ],
+    "reviewed": [
+      "connect-dark-350.png",
+      "connect-light-1100.png",
+      "04-question-narrow.png",
+      "05-question-answered.png"
+    ],
+    "scope": "Actual hidden MainWindow local-fixture renders. Four appearance/width rows assert actual Base palette and visible decision bounds. Three event-loop settlement passes precede capture. Not upstream screenshot parity.",
+    "historicalFixtureNote": "Initial renders/ used personalization.theme instead of appearance for two dark-named captures. They are excluded from final evidence; renders-final/ uses appearance and palette assertions."
+  },
+  "limits": [
+    "Real vendor authentication, subscription/model availability and live inference remain untested; parent coordinates any live smoke.",
+    "Catalog discovery is unavailable; default or explicit saved model is checked against authenticated session controls. Account/quota management stays with Cursor.",
+    "Component supports agent/plan/ask configuration, but current provider UI dispatches agent mode; no new mode chooser in this slice.",
+    "Cursor task/todo/generated-image notifications remain bounded display reports; they do not create ADE journal/undo grants or trusted generated attachments.",
+    "No ADE-owned Stagewise MCP server is injected into Cursor. Vendor-managed project/user MCP settings remain vendor-owned.",
+    "Hosted Stagewise account/OAuth/proxy/subscription provisioning, Azure/Bedrock/Vertex adapters and full coding-plan quota flows remain distinct documented gaps.",
+    "Passing194 rows establishes only this fixture/compatibility scope, not complete Stagewise/vendor protocol parity or universal absence of defects."
+  ],
+  "peerReviews": [
+    {
+      "agent": "license_review",
+      "scope": "Cursor component lifecycle/authentication/ownership/reply/deadlines/cancel/shutdown source-only",
+      "result": "No additional concrete defect found; no independent execution."
+    },
+    {
+      "agent": "native_core",
+      "scope": "Engine explicit auth/plan/permission/question routing and cancellation source-only",
+      "result": "No additional concrete blocker found; predates final question-summary/wrapper changes."
+    }
+  ],
+  "runningProcesses": []
+}

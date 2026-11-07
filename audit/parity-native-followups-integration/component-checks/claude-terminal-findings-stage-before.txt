@@ -1,0 +1,5 @@
+********* Start testing of ShellFollowups *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ShellFollowups::initTestCase()
+FAIL!  : ShellFollowups::echoMustNotMatchOutputPattern() '!f.result("pattern").isEmpty()' returned FALSE. ()
+D:/age/ADE/private/claude-terminal-findings-stage/test_shell_followups.cpp(64) : failure location

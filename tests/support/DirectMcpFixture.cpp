@@ -215,6 +215,13 @@ private:
     }
   }
   void launch() {
+    // The previous response closes stdin, but its helper may not yet have
+    // exited when the next model turn arrives. QProcess::start cannot reuse a
+    // still-running process; synchronize that owned fixture boundary once.
+    if (helper.state() != QProcess::NotRunning && !helper.waitForFinished(1000)) {
+      done("Synthetic MCP helper did not exit after its completed response.");
+      return;
+    }
     if (scenario.startsWith("wrapper"))
       wrapper(false);
     if (config.isEmpty() || config.value("enabled") == false) {

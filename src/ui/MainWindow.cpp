@@ -72,6 +72,7 @@
 #include <QTreeView>
 #include <QUuid>
 #include <algorithm>
+#include <utility>
 namespace ade {
 namespace {
 QToolButton* button(const QString& image,const QString& hint,QWidget* parent=nullptr) {
@@ -81,19 +82,23 @@ QToolButton* button(const QString& image,const QString& hint,QWidget* parent=nul
 MainWindow::MainWindow(QString dataDirectory,QWidget* parent):QMainWindow(parent),m_store(std::move(dataDirectory)),m_providerRepository(m_store.directory()+"/providers.json") {
     setWindowTitle("ADE");setObjectName("adeMainWindow");resize(1540,940);setMinimumSize(350,250);
     setWindowIcon(icon("agent",QColor("#4169ff")));
-    QString error,providerError;m_sessions=m_store.load(&error);m_providers=m_providerRepository.load(&providerError);if(error.isEmpty())error=providerError;
-    buildUi();applyPreferences();refreshModels();refreshAgents();
+    QString error,providerError;m_sessions=m_store.load(&error);m_providers=m_providerRepository.load(&providerError);const QString sessionError=error;if(error.isEmpty())error=providerError;
+    buildUi();initializeSessionRecovery();applyPreferences();refreshModels();refreshAgents();
     QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);
     const auto lastId=settings.value("lastConversationId").toString();
     if(const auto* saved=find(lastId);saved&&!saved->archived&&saved->sideChatParentId.isEmpty())selectConversation(lastId);
     if(m_currentId.isEmpty())for(const auto& s:m_sessions)if(!s.archived&&s.sideChatParentId.isEmpty()){selectConversation(s.id);break;}
     if(m_currentId.isEmpty())newConversation();
     if(!error.isEmpty())m_status->setText(error);
-    else QTimer::singleShot(0,this,&MainWindow::retryConversationCleanup);
+    // Deleted-chat cleanup is authorized by the independently valid session
+    // store. A broken provider configuration must not suppress that retry.
+    if(sessionError.isEmpty())QTimer::singleShot(0,this,&MainWindow::retryConversationCleanup);
     if(settings.contains("geometry"))restoreGeometry(settings.value("geometry").toByteArray());
     if(settings.contains("splitter"))m_splitter->restoreLegacyState(settings.value("splitter").toByteArray());
     initializeSideChats();
     initializeBrowserSession();
+    if(!sessionError.isEmpty())showSessionRecovery(sessionError);
+    updateComposerState();
 }
 void MainWindow::buildUi() {
     m_browserBridge=new BrowserToolBridge(this);
@@ -136,7 +141,7 @@ void MainWindow::buildUi() {
         if(!saveSessions())session->draftAttachments=previous;
         refreshAttachments();
     });
-    m_composer=new Composer;compose->addWidget(m_composer);
+    m_composer=new Composer;m_normalComposerPlaceholder=m_composer->placeholderText();compose->addWidget(m_composer);
     connect(m_composer,&Composer::filesAttached,this,&MainWindow::attachFiles);
     connect(m_composer,&Composer::imageAttached,this,&MainWindow::attachImage);
     auto* draftTimer=new QTimer(this);draftTimer->setSingleShot(true);draftTimer->setInterval(500);
@@ -309,6 +314,7 @@ void MainWindow::restoreModelSelection(){
     else {m_models->addItem("Saved provider unavailable",saved.toJson());m_models->setCurrentIndex(m_models->count()-1);}
 }
 void MainWindow::selectConversation(const QString& id){
+    if(m_sessionTransition)return;
     auto* s=find(id);if(!s||!s->sideChatParentId.isEmpty())return;
     if(auto* previous=current();previous&&previous->id!=id){
         previous->draft=m_composer->toPlainText();
@@ -363,8 +369,15 @@ void MainWindow::renderConversation(){
     const QPointer<MainWindow> self(this);m_transcript->setConversation(session->id,rows,engine&&engine->isBusy());if(!self)return;
     m_chat->setHistoryPresent(!rows.isEmpty());refreshWorkbench();refreshAgentControls();
 }
-bool MainWindow::saveSessions(){QString error;if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);return false;}updateGitUsageTracking();return true;}
-AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))return m_engines[id];
+bool MainWindow::saveSessions(){
+    if(m_sessionTransition)return false;
+    QString error;
+    if(!m_store.save(m_sessions,&error)){m_status->setText("Could not save conversations: "+error);showSessionRecovery(error);return false;}
+    showSessionRecovery({});updateGitUsageTracking();return true;
+}
+AgentEngine* MainWindow::engineFor(const QString& id){
+    if(m_sessionTransition)return nullptr;
+    if(m_engines.contains(id))return m_engines[id];
     if(const auto* session=find(id);session&&!session->archived)m_liveConversationOwners.insert(id);
     auto* engine=new AgentEngine(this);engine->setQuestionToolEnabled(true);m_engines.insert(id,engine);if(auto* s=find(id)){engine->setMessages(s->messages);engine->setWorkspace(s->workspace);}
     auto* host=new AgentToolHost(engine,m_browserBridge,id,m_store.directory(),engine);m_toolHosts.insert(id,host);host->setWorkspace(engine->workspace());
@@ -403,6 +416,7 @@ AgentEngine* MainWindow::engineFor(const QString& id){if(m_engines.contains(id))
     return engine;
 }
 void MainWindow::send(){
+    if(m_sessionTransition)return;
     auto* session=current();
     if(!session||session->archived||(m_composer->toPlainText().trimmed().isEmpty()&&session->draftAttachments.isEmpty()))return;
     if(gitPathBusy(session->workspace)){m_status->setText("Wait for the workspace operation to finish before running this agent.");return;}
@@ -459,6 +473,10 @@ void MainWindow::updateComposerState(){
     const auto* host=session?m_toolHosts.value(session->id):nullptr;
     const bool undoing=(host&&host->mutationBusy())||(session&&m_mutationUndoAgent==session->id&&!m_mutationUndoId.isEmpty());
     const bool active=session&&!session->archived;
+    // A missing owner cannot retain text or attachments. Keep the explanation
+    // visible instead of accepting an orphan draft that cannot be saved.
+    if(!session){m_composer->setReadOnly(true);m_composer->setPlaceholderText(m_sessionRecoveryError.isEmpty()?"Create a conversation to start.":"Conversations unavailable. Reload storage to continue.");}
+    else{if(!session->archived)m_composer->setReadOnly(false);m_composer->setPlaceholderText(m_normalComposerPlaceholder);}
     m_models->setEnabled(active&&!busy&&!undoing);m_permissions->setEnabled(active&&!busy&&!undoing);m_workspace->setEnabled(active&&!busy&&!undoing);
     m_send->setToolTip(busy?"Add message to queue":"Send message");
     m_send->setEnabled(session&&!session->archived&&!undoing&&(!m_composer->toPlainText().trimmed().isEmpty()||!session->draftAttachments.isEmpty()));
@@ -491,7 +509,7 @@ void MainWindow::attachImage(const QImage& image){
     if(!saveSessions())session->draftAttachments=previous;
     refreshAttachments();
 }
-void MainWindow::submitPrompt(const QString& prompt){m_composer->setPlainText(prompt);send();}
+void MainWindow::submitPrompt(const QString& prompt){if(m_sessionTransition)return;m_composer->setPlainText(prompt);send();}
 void MainWindow::configureUtilities(UtilityService* service,const Conversation& session){
     ModelSelection selection{session.providerId,session.model,session.presetId,{},{}};
     const auto presets=m_settings->preference("modelPresets").toArray();
@@ -509,6 +527,7 @@ void MainWindow::configureUtilities(UtilityService* service,const Conversation& 
     service->setCompressionModels(plan.compressionModels);
 }
 void MainWindow::generateTitle(const QString& id){
+    if(m_sessionTransition)return;
     auto* session=find(id);if(!session||session->titleLocked||session->autoTitleAttempted||session->messages.isEmpty())return;
     const auto last=session->messages.last().toObject();if(last["role"].toString()!="assistant"||last["content"].toString().trimmed().isEmpty())return;
     session->autoTitleAttempted=true;const auto originalTitle=session->title;
@@ -523,6 +542,7 @@ void MainWindow::generateTitle(const QString& id){
     utility->generateTitle(session->messages);
 }
 void MainWindow::compressContext(){
+    if(m_sessionTransition)return;
     auto* session=current();if(!session)return;const auto id=session->id;auto* engine=engineFor(id);
     if(engine->isBusy()){m_status->setText("Wait for the agent before compressing context.");return;}
     const auto snapshot=engine->messages();const int boundary=UtilityService::compressionBoundary(snapshot);
@@ -574,7 +594,7 @@ void MainWindow::showProviders(bool add,const QString& providerId){
     m_providers=providers;
     // Discovery and visibility were saved in the same provider CAS revision.
     finish();
-    if(self)refreshModels();
+    if(self){refreshModels();if(self)refreshSideChats();}
 }
 void MainWindow::showSettings(){m_settings->setContextWorkspace(current()?current()->workspace:QString());m_settings->reload();m_pages->setCurrentWidget(m_settings);}
 void MainWindow::applyPreferences(){
@@ -625,8 +645,11 @@ void MainWindow::importKeys(const QString& path){
     const auto notice=error;
     providers=ProviderStore::mergeImported(providers,imported);
     if(!m_providerRepository.save(providers,&error)){report(error,true);return;}
-    m_providers=providers;refreshModels();
     const QPointer<MainWindow> self(this);
+    m_providers=providers;refreshModels();
+    if(!self)return;
+    refreshSideChats();
+    if(!self)return;
     if(m_settings)m_settings->reload();
     if(!self)return;
     report(QString("Imported %1 provider key(s). ").arg(imported.size())+notice,false);
@@ -884,25 +907,53 @@ void MainWindow::finishBrowsingDataClear(bool success,const QString& error){
     m_settings->completeBrowsingDataClear(failures.isEmpty(),failures.isEmpty()?QString():"Some selected data was cleared, but these items failed: "+failures.join(", "));
 }
 void MainWindow::closeEvent(QCloseEvent* event){
+    const QPointer<MainWindow> self(this);
+    if(m_sessionTransition){event->ignore();return;}
+    if(const QPointer<QMessageBox> dialog=m_sessionRecoveryDialog){
+        event->ignore();dialog->raise();
+        if(self&&dialog&&m_sessionRecoveryDialog==dialog)dialog->activateWindow();
+        return;
+    }
+    const bool discardConversations=std::exchange(m_discardSessionChangesOnClose,false);
     bool discardSetupDrafts=false;
     if(m_worktreeSettings&&m_worktreeSettings->isMutating()){
         m_status->setText("Wait for the worktree operation to finish before closing.");event->ignore();return;
     }
     if(m_worktreeSettings&&m_worktreeSettings->hasUnsavedDrafts()){
         const auto choice=QMessageBox::question(this,"Unsaved setup scripts","Discard the unsaved worktree setup scripts and close?",QMessageBox::Discard|QMessageBox::Cancel,QMessageBox::Cancel);
+        if(!self)return;
         if(choice!=QMessageBox::Discard){event->ignore();return;}
-        // Retain drafts until all remaining close checks succeed.
         discardSetupDrafts=true;
     }
-    for(int i=0;i<m_tabs->count();++i)if(auto* editor=qobject_cast<EditorWidget*>(m_tabs->widget(i));editor&&!editor->requestClose()){event->ignore();return;}
-    for(auto* engine:std::as_const(m_engines))if(engine->isBusy())engine->cancel();
+    for(int i=0;i<m_tabs->count();++i)if(auto* editor=qobject_cast<EditorWidget*>(m_tabs->widget(i));editor){
+        const bool accepted=editor->requestClose();if(!self)return;
+        if(!accepted){event->ignore();return;}
+    }
     if(auto* s=current())s->draft=m_composer->toPlainText();
-    if(!saveSessions()){event->ignore();return;}
-    saveBrowserSession();
+    const bool emptyUnloaded=m_sessions.isEmpty()&&m_engines.isEmpty()&&m_composer->toPlainText().isEmpty()&&!m_sessionRecoveryError.isEmpty();
+    if(!discardConversations&&!emptyUnloaded&&!saveSessions()){
+        if(!self)return;
+        showCloseRecovery();event->ignore();return;
+    }
+    if(!self)return;
+    // No agent is interrupted until the first save and other close decisions
+    // succeed. Explicit discard suppresses cancellation callbacks' saves.
+    m_sessionTransition=true;
+    QList<QPointer<AgentEngine>> engines;for(auto* engine:std::as_const(m_engines))engines.append(engine);
+    for(const auto& engine:engines){if(engine&&engine->isBusy())engine->cancel();if(!self)return;}
+    m_sessionTransition=false;
+    if(!discardConversations&&!emptyUnloaded&&!saveSessions()){
+        if(!self)return;
+        showCloseRecovery();event->ignore();return;
+    }
+    if(!self)return;
+    m_sessionTransition=true; // Accepted close: late callbacks cannot save or start new work.
+    saveBrowserSession();if(!self)return;
     if(discardSetupDrafts)m_worktreeSettings->discardDrafts();
-    for(auto utility:std::as_const(m_utilities))if(utility)utility->cancel();
+    const auto utilities=m_utilities;for(const auto& utility:utilities){if(utility)utility->cancel();if(!self)return;}
     if(m_worktreeSetup)m_worktreeSetup->cancelAll();
-    closeGitUsageTracking();
+    if(!self)return;
+    closeGitUsageTracking();if(!self)return;
     QSettings settings(m_store.directory()+"/window.ini",QSettings::IniFormat);settings.setValue("geometry",saveGeometry());m_splitter->savePreferences();QMainWindow::closeEvent(event);
 }
 }

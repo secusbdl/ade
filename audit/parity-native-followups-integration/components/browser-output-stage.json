@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-private-ready-for-narrow-integration",
+  "createdUtc": "2026-11-07T03:38:50.756795+00:00",
+  "task": "Desktop browser finding B1: direct model-facing CDP/console output and screenshot attachments",
+  "basis": {
+    "cohort": "private/behavior-cohort-186",
+    "cohortManifestSha256CanonicalLF": "89a9bb173c77abf50673d2414445e2ed12ee5c77e442ae87facd51c08d5adec0",
+    "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+    "applyCheckedRootHead": "91ed23d4453874f141db1d987c94ba71bd05f4ce",
+    "rootAlsoHasUncommittedIntegratedSlices": true,
+    "sharedSourceEdited": false,
+    "sharedBuildUsed": false,
+    "noSharedArchiveReads": true
+  },
+  "patch": {
+    "path": "browser-output.patch",
+    "sha256CanonicalLF": "b9132ed66cefec1b80e93231cfffc144dc245d162c5ae251516890fd94122e01",
+    "files": [
+      {
+        "path": "src/browser/BrowserToolResult.h",
+        "preimageSha256LF": null,
+        "postimageSha256LF": "b6fa8bd630d6b79e2e8063adfa7551d1838b67042c8bfa3ea557f00cc53be4fb"
+      },
+      {
+        "path": "src/browser/BrowserToolResult.cpp",
+        "preimageSha256LF": null,
+        "postimageSha256LF": "bd7a8b60ff3c28a8e9d9f02734e04e2bf6ff431786d85c17073775e5c6e3fee3"
+      },
+      {
+        "path": "src/browser/BrowserToolBridge.cpp",
+        "preimageSha256LF": "73724bcc7b3d4346fe9befcad3e0b7459d4bdcaf664d7007e5c57b23dcb0adb8",
+        "postimageSha256LF": "e78f7586694538442be59c0d0f812d33ba96144bfc88e908313b1530feb5d46a"
+      },
+      {
+        "path": "src/runtime/AgentToolHost.h",
+        "preimageSha256LF": "b8b715a20dd99d8cd106af450c022d3cb1037d05cf5e9e19adba9ea75b801de2",
+        "postimageSha256LF": "1b4283c19f437e16f77ee53f133580d35ad134b582337f025ec2c8a677fe1596"
+      },
+      {
+        "path": "src/runtime/AgentToolHost.cpp",
+        "preimageSha256LF": "37935ef507c85eb2fa01648af7f58429039832ea6856e0c71b39a6fb0df86a56",
+        "postimageSha256LF": "8af7cd0d494e57b2a6820c62ab08dc559f5f939448a162c7ec086131510ff484"
+      },
+      {
+        "path": "tests/test_browser_output.cpp",
+        "preimageSha256LF": null,
+        "postimageSha256LF": "37162684501323647ca0634fbb7c454d5fdda8943da03b419d7313e554cc8dc7"
+      }
+    ],
+    "applyCheck": "git apply --check --ignore-space-change succeeds current root; preserve all B4 shutdown/constructor and other integrated changes, do not copy whole Host/Bridge files",
+    "cmake": "cmake-additions.txt",
+    "newTarget": "test_browser_output / native_browser_output",
+    "dependencies": "New BrowserToolResult pure QtCore/QtGui helper is picked up by BROWSER_SOURCES glob; no new runtime/library dependency. Test uses ade_ui for SessionStore plus QtTest and existing worker/WebView loader. Windows platform is required, with hidden fixture windows."
+  },
+  "reproduction": {
+    "baselineScreenshotTextCharacters": 626931,
+    "baselineScreenshotAttachmentCount": 0,
+    "baselineDomOutputUtf8Bytes": 180039,
+    "baselineConsoleOutputUtf8Bytes": 132164,
+    "firstCapRedactionExpansionUtf8Bytes": 407554,
+    "finalScreenshotTextCharacters": 130,
+    "finalScreenshotAttachments": 1,
+    "finalRedactionExpandedOutputUtf8Bytes": 40948
+  },
+  "sourceContract": [
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/env-domains/browser-domain-adapter.prompt.md:3",
+      "behavior": "Browser CDP is sandbox-only upstream, except readConsoleLogs. Native direct browser tools are an existing extension, retained here."
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/env-domains/browser-domain-adapter.prompt.md:8",
+      "behavior": "Screenshot workflow captures raw API.sendCDP data, Buffer.from base64, API.createAttachment, then injects att image on next model step."
+    },
+    {
+      "path": "upstream/stagewise/packages/agent-core/src/services/toolbox/utils.ts:71",
+      "behavior": "capToolOutput defaults to40*1024 JSON UTF8 bytes; string truncation respects UTF8. Native direct outputs are serialized text, so this slice caps that string with transparent suffix, not a claim of identical typed-object/array truncation."
+    },
+    {
+      "path": "upstream/stagewise/apps/browser/src/backend/services/toolbox/tools/browser/read-console-logs.ts:142",
+      "behavior": "Console tool result is capped upstream."
+    }
+  ],
+  "implementation": [
+    "BrowserToolBridge raw completed responses and sandbox API.sendCDP retain the existing2*1024*1024 UTF16-code-unit transport bound; that existing check is not2MiB of UTF8 bytes.",
+    "AgentToolHost tracks only directly dispatched Page.captureScreenshot opaque request IDs. Successful raw PNG/JPEG/WebP screenshots are strictly base64-decoded, type/dimensions/full-decode checked, stored through existing per-agent AttachmentStore, captured into immutable pathReferences/pathMetadata, and completed via completeExternalToolWithAttachments.",
+    "Direct screenshot history retains a short acknowledgment and owned att reference. Existing provider-aware AttachmentPipeline supplies image parts transiently for supported models. Stored original bytes equal the actual CDP response; no base64 screenshot text is persisted.",
+    "Direct getBrowserTabs/sendCDP/readConsoleLogs text is capped to40KiB measured as JSON-encoded UTF8 string including escaping and Engine error prefix, with explicit truncation/narrower-query/sandbox guidance. Small text remains exact apart from existing secret redaction semantics.",
+    "Redaction occurs before slicing to avoid exposing a partial configured secret, and limit calculation accounts for Engine recordToolResult redacting again. Synthetic short-key expansion is tested; no Engine or credential-loading changes.",
+    "attachmentCreated publishes a virtual owned path, then lifetime/engine/original opaque token is rechecked before settlement. Cancel/replacement or Host/Engine deletion cannot attach the old result to replacement work.",
+    "Definitions now describe image attachments for direct screenshots and distinguish direct model cap from raw sandbox transport."
+  ],
+  "validation": {
+    "reports": [
+      {
+        "path": "before.txt",
+        "sha256CanonicalLF": "61eca47700f3a091093ff2c10d200adcffbb1a352f7b62d9f3517a3299e108a5",
+        "scope": "Immutable186 runtime; six concrete B1 failures",
+        "passed": 3,
+        "failed": 6,
+        "skipped": 0,
+        "durationMs": 7923
+      },
+      {
+        "path": "first-after.txt",
+        "sha256CanonicalLF": "60ecb67abcaf667420b35d3a54db58f03ef5a4efee0e99cc5f20db7328029e66",
+        "scope": "First direct-only image/cap fix",
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 6986
+      },
+      {
+        "path": "expanded.txt",
+        "sha256CanonicalLF": "88dc13a614c4f0b42cbc763d8a4f7fa95d08f5cff423715d2fa15050824f9781",
+        "scope": "Expanded four-protocol and callback/storage bounds before final redaction refinement",
+        "passed": 25,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 15026
+      },
+      {
+        "path": "redaction-before.txt",
+        "sha256CanonicalLF": "bde03f2d7631473127ff6417939dcb7b3b6a5060a1b3d2c90e9ea1901d84af87",
+        "scope": "New actual-host short-key redaction expansion reproduced after initial cap",
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "durationMs": 1040
+      },
+      {
+        "path": "final.txt",
+        "sha256CanonicalLF": "aa367bfbf2cb011e581b1f2f29d401e1f7c11e31f5870958b563c287b9fec2e0",
+        "scope": "Final source, complete new suite",
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 15665
+      },
+      {
+        "path": "browser-tools-compatibility.txt",
+        "sha256CanonicalLF": "332204d722da0bbb567196c731511a2c609fd1d57f87b6d2dab74121f908fc03",
+        "scope": "Selected unchanged bridge tests before final Host redaction refinement",
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 4673
+      },
+      {
+        "path": "runtime-compatibility.txt",
+        "sha256CanonicalLF": "e46e860b08d78f6f3754ab08ab921e9d6331f3caae9407b0a90141751555bbee",
+        "scope": "Selected unchanged actual sandbox/Host tests before final Host redaction refinement",
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 4755
+      }
+    ],
+    "finalSuite": {
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0
+    },
+    "adjacentPassingRows": 17,
+    "aggregateScopedPassingRows": 44,
+    "countMeaning": "Qt row totals include initialization/cleanup. Adjacent11+6 suites ran before final Host cap-redaction refinement; final new27 suite reran complete after that change. No full-root integration claim.",
+    "coverage": [
+      "actual local WebView noise canvas screenshot through all4 real Engine protocol parsers and next loopback provider requests",
+      "exact decoded original screenshot bytes retained as blob; image part in next request; compact SessionStore persistence and exact reload metadata",
+      "large real DOM and80 console messages capped and disclosed on all4 protocols",
+      "actual QuickJS API.sendCDP retains full180000-character DOM value and raw screenshot; Buffer.from plus API.createAttachment reaches next image request unchanged",
+      "Unicode/surrogate/JSON escaping and Engine Error prefix accounting; private value redacted before truncation; actual short configured key cannot expand retained output past bound",
+      "malformed/base64/non-image/wrong-type/transport-limit screenshot refusal without echoing image payload",
+      "failed immutable snapshot storage surfaces error and no image metadata/base64",
+      "attachment observer cancellation+new turn, Host destruction, Engine destruction",
+      "existing selected bridge correlation/console/navigation/cancel/timeouts/error/teardown tests; actual sandbox-browser-files-attachment, CDP error continuation, two-host isolation, destruction compatibility"
+    ],
+    "harnessNotes": [
+      "Initial test compilation required fixing a missing initializer brace and a C++ JavaScript-string quote. These were fixture construction errors, not app failures; build logs retained.",
+      "Image verification compares exact raw captured bytes and validates nonempty dimensions rather than assuming CSS clip dimensions equal physical screenshot pixels on a high-DPI Windows display.",
+      "Private worker and WebView loader copied from immutable out/parity-integration-8. Tests use only temporary profiles and local HTTP model/page servers; no paid API, credentials, user browser or GUI focus interactions.",
+      "WebView temporary-profile cleanup warnings remain in successful reports; no claim that Chromium deletes every temporary cache synchronously."
+    ]
+  },
+  "peerReview": {
+    "reviewer": "qt_port_review",
+    "scope": "bounded source-only cap/screenshot/Host completion prior to final redaction refinement",
+    "result": "No additional concrete issue found; no independent execution claim."
+  },
+  "remainingLimits": [
+    "Only direct Page.captureScreenshot is classified as an image result. Other CDP methods returning arbitrary binary/base64 stay bounded text; use the documented sandbox attachment workflow for those.",
+    "Truncated direct raw JSON is intentionally text with a visible suffix and may no longer be parseable JSON. Raw API.sendCDP remains available to code needing complete structure.",
+    "Actual screenshot transport fixture exercised PNG. JPEG/WebP share validated decoder paths but were not independently exercised against this WebView runtime.",
+    "Existing raw transport ceiling may reject large screenshots before Host conversion; no high-DPI capture fallback or screenshot compression strategy was added.",
+    "Image validation keeps the existing64M-pixel native decode ceiling. Per-model resizing/format/request caps remain AttachmentPipeline policy; declared vision capability is not live provider entitlement.",
+    "A failure or cancellation after writing but before publication can leave an unreferenced owned blob/snapshot under existing file-context cleanup; no false history authority is granted.",
+    "Canonical result and UI display metadata may each retain capped text;40KiB is the final model tool-content limit, not a total-session byte limit.",
+    "No B2 tab ownership, B3 hidden-tab startup, B4 shared event subscriptions, or other browser-review scope implemented by this slice.",
+    "Source remains private; root coherent integration/build and broader gate are still required."
+  ],
+  "processState": {
+    "lastExecSession": 60105,
+    "exitCode": 0,
+    "ownedBuildOrTestRunning": false
+  }
+}

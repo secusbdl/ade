@@ -1,0 +1,29 @@
+{
+  "stage": "startup-recovery-stage",
+  "appliedUtc": "2026-11-07T03:28:40.878725+00:00",
+  "handoffSha256CanonicalLf": "3cb3504a65a9aaf6c61c78b678bb1ce72657cffce1cc3262e9c2d975caab6953",
+  "patchSha256CanonicalLf": "1c62fc7ff194a592751001e44d8111f887706fe6dcdd6844318321e3f0f02b17",
+  "before": {
+    "src/ui/MainWindow.h": "11d98083e809b37a59d5a3d43b32c0b4d1e247619d29ba438083defdadf5cb7b",
+    "src/ui/MainWindow.cpp": "a605a04e606121c363a7c822834bb7d7f74b52c7a5964e3f74a5157bc60563f7",
+    "src/ui/MainWindowConversations.cpp": "99487cdf85fb18f775ce1e6c9fc185a441f028181b994e096395f6afdd1b424b",
+    "src/ui/MainWindowControl.cpp": "32058f2dc494f1fd5043715fbbdf99dcf2fa6d567d7a4f91aa7a5f06ee278f91",
+    "src/ui/MainWindowSideChats.cpp": "a622c665a1bf12483f9cfd255172223665877353eecc5930b4b4ab7f90eaaedf",
+    "src/ui/SessionStore.h": "334d6aa7fa5b2a0b4fb1fc123d5d08c5e7c3ebef0737d4334cdbbe0383829a69",
+    "src/ui/SessionStore.cpp": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7",
+    "src/ui/MainWindowRecovery.cpp": null,
+    "tests/test_startup_recovery.cpp": null
+  },
+  "after": {
+    "src/ui/MainWindow.h": "50c6e154c597f7234c3772817e4b3533575a83032c556640a44b47118e3c1ea8",
+    "src/ui/MainWindow.cpp": "f73304991cbf43fab8e20a7d4de0a58d5dfe9a0821c4310496b579d65dd3ec63",
+    "src/ui/MainWindowConversations.cpp": "894dcc8313833145861c486d2ac4d0737bad83f003f6ec5f0b7a4bad4c176aee",
+    "src/ui/MainWindowControl.cpp": "11252df0611fe91fb396975240d5e90a5c3291e2fb08433f583cbbc4d0fb6405",
+    "src/ui/MainWindowSideChats.cpp": "53dbf5948e6cfbb3af75bc805a1c27b8dc9e095b1ae38d8c9b3967b8d0df110a",
+    "src/ui/SessionStore.h": "cf4b11d3cefe0ab9ff9ecfd7f2c3919892993f3d3f5db00d6b1583d94387009f",
+    "src/ui/SessionStore.cpp": "862de68e4752840da6e5e0c792b8334f7a743c3cf6d990ea40e4459d15b595b4",
+    "src/ui/MainWindowRecovery.cpp": "1ab23ddefe58aa0311282e5066e3a2964577057324ec37efd4923146e27d3c01",
+    "tests/test_startup_recovery.cpp": "1897e2a8805c480ce5b6704e52c1b55a6723705dce1dbced74ef98f662b466ff"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

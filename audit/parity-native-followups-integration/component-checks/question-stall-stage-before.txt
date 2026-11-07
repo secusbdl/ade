@@ -1,0 +1,36 @@
+********* Start testing of QuestionStallTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : QuestionStallTest::initTestCase()
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(native-or-mcp-question) QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(native-or-mcp-question) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::humanDecisionIsNotStreaming(native-or-mcp-question) '!activity(view)->isVisible()' returned FALSE. (running)
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(82) : failure location
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(question-input-available) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::humanDecisionIsNotStreaming(question-input-available) '!activity(view)->isVisible()' returned FALSE. (input-available)
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(82) : failure location
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(question-approval) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::humanDecisionIsNotStreaming(question-approval) '!activity(view)->isVisible()' returned FALSE. (approval-requested)
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(82) : failure location
+QWARN  : QuestionStallTest::humanDecisionIsNotStreaming(ordinary-tool-approval) This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::humanDecisionIsNotStreaming(ordinary-tool-approval) '!activity(view)->isVisible()' returned FALSE. (approval-requested)
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(82) : failure location
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+QWARN  : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::genuineWorkAndSettledHistoryRemainCorrect()
+QWARN  : QuestionStallTest::transitionClearsOldStallAndRestartsWorkingDelay() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::transitionClearsOldStallAndRestartsWorkingDelay() '!activity(view)->isVisible()' returned FALSE. ()
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(140) : failure location
+QWARN  : QuestionStallTest::clearingOrDestroyingPendingViewRetiresTimer() This plugin does not support propagateSizeHints()
+PASS   : QuestionStallTest::clearingOrDestroyingPendingViewRetiresTimer()
+QWARN  : QuestionStallTest::actualFormAndTranscriptCapture() This plugin does not support propagateSizeHints()
+FAIL!  : QuestionStallTest::actualFormAndTranscriptCapture() '!activity(*view)->isVisible()' returned FALSE. ()
+D:/age/ADE/private/question-stall-stage/tests/test_question_stall.cpp(187) : failure location
+PASS   : QuestionStallTest::cleanupTestCase()
+Totals: 4 passed, 6 failed, 0 skipped, 0 blacklisted, 44584ms
+********* Finished testing of QuestionStallTest *********

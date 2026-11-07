@@ -1,0 +1,17 @@
+********* Start testing of StartupRecoveryTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : StartupRecoveryTests::initTestCase()
+QWARN  : StartupRecoveryTests::corruptEmptyProfileCanCloseWithoutChangingBytes(truncated) QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+FAIL!  : StartupRecoveryTests::corruptEmptyProfileCanCloseWithoutChangingBytes(truncated) 'window.close()' returned FALSE. (No unsaved chat or draft should trap a corrupt-profile window)
+D:/age/ADE/private/startup-recovery-stage/tests/test_startup_recovery.cpp(48) : failure location
+FAIL!  : StartupRecoveryTests::corruptEmptyProfileCanCloseWithoutChangingBytes(schema) 'window.close()' returned FALSE. (No unsaved chat or draft should trap a corrupt-profile window)
+D:/age/ADE/private/startup-recovery-stage/tests/test_startup_recovery.cpp(48) : failure location
+FAIL!  : StartupRecoveryTests::noChatComposerIsReadOnlyWithRecoveryExplanation() 'input->isReadOnly()' returned FALSE. ()
+D:/age/ADE/private/startup-recovery-stage/tests/test_startup_recovery.cpp(53) : failure location
+FAIL!  : StartupRecoveryTests::failedCloseKeepsBusyEngineAndDraftUntilDecision() 'engine->isBusy()' returned FALSE. (A refused close must not cancel the running task)
+D:/age/ADE/private/startup-recovery-stage/tests/test_startup_recovery.cpp(61) : failure location
+PASS   : StartupRecoveryTests::validProfileCloseStillSavesDraft()
+PASS   : StartupRecoveryTests::cleanupTestCase()
+Totals: 3 passed, 4 failed, 0 skipped, 0 blacklisted, 470ms
+********* Finished testing of StartupRecoveryTests *********

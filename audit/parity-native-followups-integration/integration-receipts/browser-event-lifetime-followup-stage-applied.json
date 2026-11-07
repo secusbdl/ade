@@ -1,0 +1,15 @@
+{
+  "stage": "browser-event-lifetime-followup-stage",
+  "appliedUtc": "2026-11-07T03:34:36.181211+00:00",
+  "handoffSha256CanonicalLf": "0dc1d23010dfb171497f6573dd728de781c147836776c2cf0b70afed295c847e",
+  "patchSha256CanonicalLf": "0be4bf2096d49777d88d89841f135c9c3985b6a4b1625151d9ff97b375d6ca4f",
+  "before": {
+    "src/browser/BrowserInspector.cpp": "f00c66ab8c3aaec7ec6e6c11d435904773d43fe9ebf19ec9e1a8288829f1158f",
+    "tests/test_browser_event_findings.cpp": "c452ee0816dcaee205f7cd8ad8c09cb4e09a9693a0fe911b984d1df4eead0b1e"
+  },
+  "after": {
+    "src/browser/BrowserInspector.cpp": "4ce4efdbe1f1ee96847d2461b1bea7c77cee91d55339ac4e134b8e1585392871",
+    "tests/test_browser_event_findings.cpp": "865281d6fe7ccaac52c0ac72ffeffc28a113c79c98de2a8c0c738a7e3067ce44"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

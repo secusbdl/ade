@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="StartupRecoveryTests" timestamp="2026&#x002D;11&#x002D;07T05:00:49" hostname="VOID" tests="7" failures="4" errors="0" skipped="0" time="0.470">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="StartupRecoveryTests" time="0.000"/>
+  <testcase name="corruptEmptyProfileCanCloseWithoutChangingBytes(truncated)" classname="StartupRecoveryTests" time="0.045">
+    <failure type="fail" message="&apos;window.close()&apos; returned FALSE. (No unsaved chat or draft should trap a corrupt&#x002D;profile window)"/>
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+    </system-err>
+  </testcase>
+  <testcase name="corruptEmptyProfileCanCloseWithoutChangingBytes(schema)" classname="StartupRecoveryTests" time="0.030">
+    <failure type="fail" message="&apos;window.close()&apos; returned FALSE. (No unsaved chat or draft should trap a corrupt&#x002D;profile window)"/>
+  </testcase>
+  <testcase name="noChatComposerIsReadOnlyWithRecoveryExplanation" classname="StartupRecoveryTests" time="0.029">
+    <failure type="fail" message="&apos;input&#x002D;&gt;isReadOnly()&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="failedCloseKeepsBusyEngineAndDraftUntilDecision" classname="StartupRecoveryTests" time="0.267">
+    <failure type="fail" message="&apos;engine&#x002D;&gt;isBusy()&apos; returned FALSE. (A refused close must not cancel the running task)"/>
+  </testcase>
+  <testcase name="validProfileCloseStillSavesDraft" classname="StartupRecoveryTests" time="0.097"/>
+  <testcase name="cleanupTestCase" classname="StartupRecoveryTests" time="0.000"/>
+</testsuite>

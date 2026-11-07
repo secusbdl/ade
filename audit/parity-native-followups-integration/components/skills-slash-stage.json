@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "status": "Frozen private candidate; 123 final cases passed across seven suites, zero failures/skips. No production/source or shared build writes.",
+  "patch": "skills-slash.patch",
+  "cmake": "cmake-additions.txt",
+  "files": [
+    {
+      "path": "src/core/ContextLoader.h",
+      "canonicalLfSha256": "166c0a230b2480500ec4c506a52db12234ed00eecb090993e49ff9a2d7f7e3e5",
+      "preimageCanonicalLfSha256": "83363064d48f4479a5114fe670cbecb9c4e576792e7bfefc82d893cc057c31b5"
+    },
+    {
+      "path": "src/core/ContextLoader.cpp",
+      "canonicalLfSha256": "aa2b1d46982d9cc0909a67f691062e7baa076d08bfbb809454773769c03483b1",
+      "preimageCanonicalLfSha256": "30e5c088921f80a133124cc312ff720ded843495eefef5cffaaa6cf46fbd1fff"
+    },
+    {
+      "path": "src/core/AgentEngine.cpp",
+      "canonicalLfSha256": "26f85e74530def06a85804fbc8125063b7296c06204ecf627d220142631a33fc",
+      "preimageCanonicalLfSha256": "92660005d531b023e264cc94f10aabe7ba160ea4910dba2e9726e250fe400b8e"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "canonicalLfSha256": "176982a9219dc1681e0268590551a6678ad0191cd454dd4e1a00600fd483d1e1",
+      "preimageCanonicalLfSha256": "37935ef507c85eb2fa01648af7f58429039832ea6856e0c71b39a6fb0df86a56"
+    },
+    {
+      "path": "src/ui/Composer.h",
+      "canonicalLfSha256": "8e33ddd0d56be2e0061d8f33f797f8f6b31f8039aa2f5d1d0b71ebb0d6ba19f3",
+      "preimageCanonicalLfSha256": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265"
+    },
+    {
+      "path": "src/ui/Composer.cpp",
+      "canonicalLfSha256": "8bbab34ec54b4e530864222988b92fe10e054fd0a3946c47d85c506f011ae1b8",
+      "preimageCanonicalLfSha256": "5b18faa312de207bf681d32db9be97f8b876d7a5a44504b6ae0ed1d57cb466b1"
+    },
+    {
+      "path": "src/ui/MainWindowCompletions.cpp",
+      "canonicalLfSha256": "2f46b80f9cdf8f956d3e980fbd2c91967ac92325f49acb70ab183cf6576272b4",
+      "preimageCanonicalLfSha256": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648"
+    },
+    {
+      "path": "tests/test_composer_host.cpp",
+      "canonicalLfSha256": "0681c54ac866cf324a54e2175e29108a629820a79eeafc77830bb1c1c59bd99b",
+      "preimageCanonicalLfSha256": "2e63a5f5e041adf5ff41b789caa2be63bd4461dab616e0c3227c8e53e299192c"
+    },
+    {
+      "path": "tests/test_slash_context.cpp",
+      "canonicalLfSha256": "881bc627b14216c0684bd944fba0cb34439d69fe0ac36984836943010b0443c5"
+    },
+    {
+      "path": "tests/test_skills_host.cpp",
+      "canonicalLfSha256": "dc24afbd343b0f7fef70022c25bda3d28afd121103067fae22e2a77948c1b3e3"
+    }
+  ],
+  "patchCanonicalLfSha256": "16bddf7467699b06e43e1e68c3efd14f71d7d51e2e4da6022554b89e0d4643e3",
+  "cohort": "cohort-manifest.json; copied completed180 source+archives, no ABI/layout changes; linked only copied archives",
+  "reports": [
+    {
+      "path": "before.txt",
+      "canonicalLfSha256": "b9f88acb65731ee46e35e4d0e71cf2d44c6c6cf4065dff39a5b59d02943a7bcd",
+      "counts": {
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 7972
+      }
+    },
+    {
+      "path": "first-after.txt",
+      "canonicalLfSha256": "c54cda1e70bbd8c555eac16c35e1b81cef013e0839571ee5405c6fb8afbccdd7",
+      "counts": {
+        "passed": 3,
+        "failed": 1,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 8113
+      }
+    },
+    {
+      "path": "hide-reentry-before.txt",
+      "canonicalLfSha256": "ab1e9abb62b186285f8d2e0da05110ff6b643022a59e1595b7003796bbfcd75d",
+      "counts": {
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 408
+      }
+    },
+    {
+      "path": "slash_context-expanded.txt",
+      "canonicalLfSha256": "ad78d9afd0efaf72c9154a10a075e275cae729909498cc73717661eec15346ac",
+      "counts": {
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 71
+      }
+    },
+    {
+      "path": "context-expanded.txt",
+      "canonicalLfSha256": "238cfa916b544d6db2f2e1c4c092e82a829d65f6b28941b6706ccbdb8abb37ad",
+      "counts": {
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 188
+      }
+    },
+    {
+      "path": "usage_compression-expanded.txt",
+      "canonicalLfSha256": "3386c9263b50229aa66c019d2f74e9ca49ff82f7668a588d6d349858f170d673",
+      "counts": {
+        "passed": 31,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 4938
+      }
+    },
+    {
+      "path": "history_recovery-expanded.txt",
+      "canonicalLfSha256": "785aa59e166b1585009a4071d402da279f2cf09b2172594e4da480c8b681b2ae",
+      "counts": {
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 1384
+      }
+    },
+    {
+      "path": "host-final.txt",
+      "canonicalLfSha256": "a1718d378035e615d7ab8115ad858b1d57af8737f135e89ab8dad57fad8884cc",
+      "counts": {
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 8547
+      }
+    },
+    {
+      "path": "composer_completion-final.txt",
+      "canonicalLfSha256": "a553cba13fc5ae941e4602265a21f7419612dd513a9b107a90c7cb2965593903",
+      "counts": {
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 2231
+      }
+    },
+    {
+      "path": "composer_host-final.txt",
+      "canonicalLfSha256": "57ea79b55def2884a49d1acac21c7ce3f2c2c17be7776275bd0f2b4b7a3b4d2e",
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "blacklisted": 0,
+        "durationMs": 3176
+      }
+    }
+  ],
+  "finalSuiteCount": 7,
+  "finalPassed": 123,
+  "engineScope": "AgentEngine.cpp::requestModel only; keeps boundary summary string outside user converter, inserts same memory content after preparation before file/skill/user parts. No AgentEngine.h/harness/Claude telemetry hunk.",
+  "behavior": [
+    "HTTP current enabled catalog re-resolution for every retained user invocation, current file bytes cached only during one request; restart/fork keeps canonical links, not stale skill bodies.",
+    "Frontmatter removed/empty bodies omitted, slash IDs resolve exact first then one percent decode for native old links, escaped CDATA wrapper. Existing native bare /name shortcut retained.",
+    "ContextLoader::nativeSystemContext excludes duplicate current invocation body; externalHarnessContext path unchanged.",
+    "Whole transient conversion fails before network on 1Mi character cumulative skill output bound, preserving canonical history.",
+    "/side is exact action-only completion for top-level owner chats; removes query and uses existing child fork with draft/session CAS, current-owner checks, no send.",
+    "Popup invalidation commits state before terminal hide; completion helpers guard replacement/deletion after hide. Action text notifications are delivered after Qt document editing returns.",
+    "Only changed legacy fixture assertion expects slash-command rather than old invoked_skill and additionally asserts old duplicate absent."
+  ],
+  "beforeEvidence": [
+    "before.txt: actual MainWindow missing skill on second request and absent /side both reproduced (2pass/2fail).",
+    "first-after.txt: replay fixed; exact action descriptor initially filtered by generic insert-text validation (3pass/1fail), fixed for command:side only.",
+    "hide-reentry-before.txt: current context replaced during popup Hide still accepted old action (2pass/1fail), guarded after terminal invalidation.",
+    "delete-reentry-stack.txt: synchronous textChanged observer deleting owner caused QTextDocument::finishEdit crash; fixed via terminal publication after guarded edit; final host case passes.",
+    "host-expanded.txt: fork count assertion saw valid extra title utility request; final test asserts exact three streamed requests and fork payload separately."
+  ],
+  "excludedExperiment": {
+    "reports": [
+      "hide-delete-before.txt",
+      "hide-delete-stack.txt",
+      "hide-delete-test.cpp",
+      "host-after.txt"
+    ],
+    "result": "Direct synchronous deletion of owning MainWindow from child QEvent::Hide filter crashes inside Qt QWidgetPrivate::hideChildren; post-hide QPointer cannot repair toolkit frame. Recorded as unsupported synchronous event-filter receiver destruction, not declared fixed. Final tests instead validate normal close/deleteLater plus context replacement and public textChanged owner deletion. No popup lifetime redesign."
+  },
+  "limits": [
+    "Builtins are not packaged by this patch. Watch is ready for a tested resource slice; Preview needs documented obsolete overwriteFile recipe mapping; Plan/Implement require plans owner storage; Debug requires logIngest/logs; Learn global writes lack approved writable mount.",
+    "Reference ACP prompt builder does not use the HTTP per-message converter. Existing external invoked context retained unchanged, no repeated transcript or fabricated native APIs.",
+    "Enabled registry is host configured at turn start; file bodies re-read each HTTP request. Live mid-turn catalog/preferences rediscovery is not added by this patch.",
+    "Native strict UTF8 and bounded frontmatter parser remain deliberate differences from Node/gray-matter; no encoding relaxation.",
+    "Percent-encoded UI path links remain unchanged; existing scoped clicked-link decoder and raw attachment paths continue working.",
+    "No universal full skills/context/tool parity claim; no real credentials, user profiles, live model calls or desktop actions."
+  ],
+  "peerReview": {
+    "qt_port_review": "Source review identified Hide replacement and snapshot rollback boundaries; reproduced/fixed replacement and owner-only rollback. Agreed Qt hideChildren exclusion and supported deferred-close fixture.",
+    "license_review": "Bounded source-only read of prepareMessages/nativeSystemContext and requestModel summary placement found no additional concrete defect: copied user conversion, untouched non-user/native/signed rows, current enabled registry, per-row dedup, CDATA/body budget and sibling memory ordering confirmed. Did not run123cases or broaden file race/frontmatter review. Bundled requirements also source-reviewed."
+  },
+  "applyCheckExitCode": 0
+}

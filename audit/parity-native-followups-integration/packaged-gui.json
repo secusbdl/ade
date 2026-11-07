@@ -1,0 +1,113 @@
+{
+  "verifiedUtc": "2026-11-07T05:18:55.805082+00:00",
+  "binarySha256": "ee6d51c93e0c4bf5ba3c0ee132c8021d8480856c154a51c65b1dac9ae92183fe",
+  "status": "bounded_direct_windows_checks_passed_with_display_findings",
+  "method": "Windows UI Automation (System.Windows.Automation Invoke/Value/Window patterns) on the real packaged application in isolated profiles and scratch workspaces; captures by PrintWindow of ADE-owned windows only. No Computer Use was available in this session.",
+  "checks": {
+    "typedDraftEnablesSend": true,
+    "sendButtonStartsActualDeepSeekTurn": true,
+    "realReadToolAndExpectedMarker": true,
+    "markdownHeadingListAndCppBlockVisible": true,
+    "composerClearedAfterSend": true,
+    "workspaceUnchanged": true,
+    "settingsButtonOpensSettings": true,
+    "customDeepSeekCardShowsDeepSeekIdentity": true,
+    "apiKeyImportFileChooserOpensAndCancels": true,
+    "providersUnchangedAfterImportCancel": true,
+    "fivePluginCardsVisible": true,
+    "githubTokenFieldIsMasked": true,
+    "backReturnsToChatComposer": true,
+    "idleCloseExits": true,
+    "idleCloseObservedLatencyMs": 442,
+    "idleCloseExitCode": "not_observable_from_detached_launcher",
+    "closeDuringPendingDirectMcpQuestionExits": true,
+    "pendingCloseProcessExitCode": 0,
+    "pendingCloseObservedLatencyMs": 132,
+    "pendingQuestionShowsOnlyWaitingNotice": true,
+    "ownedDirectMcpFixtureProcessesAbsentAfterClose": true
+  },
+  "liveProvider": "DeepSeek deepseek-flash; one main-window submitted read-only turn, separate from the --smoke runs.",
+  "pendingClose": "Synthetic local Codex-protocol fixture (build-next/bin/direct_mcp_fixture.exe from the tested cohort); actual native form and process shutdown. No remote model call.",
+  "screenshots": [
+    {
+      "localEvidence": "private/package9-gui-1/evidence/00-launched.png",
+      "sha256": "4529f56413166157f1fb97675fbe7b36087b1ab78b00333ddd1c4e4137cea6d7",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/01-send-enabled.png",
+      "sha256": "3cb409de97cfecd237d94941fdae2e6e1ee06c1704de09e6c71c953138a2b8c0",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/02-submitted.png",
+      "sha256": "49d4123bc193bd0651a793b5c04ec1cf267e2ace53b87673ea3d5755e9c7f31f",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/03-completed.png",
+      "sha256": "45bd5d90a08522936e5ca4e60d4cb46ba0a7f623cd4dfb912849386b467d1139",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/04-settings.png",
+      "sha256": "1b1895170d67659f6c2c8cc5ce80d96ad9c97902997a391bb544005a7d2f9c3c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/05-import-dialog.png",
+      "sha256": "be16c03b1de6ff966e07af198c6679f381ab11e2b6eb8fc639c4d1fe1f4b57e2",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/06-plugins.png",
+      "sha256": "7744e54273cdf742a506d1a667f5fdde4c5766bfe87e09413babfe70048cad2c",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/07-github-token-controls.png",
+      "sha256": "132d9f6279ebbc5b2ad46ea6ddd87701458220c119e97e1e095e866e27bf5548",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-gui-1/evidence/08-back-to-chat.png",
+      "sha256": "45bd5d90a08522936e5ca4e60d4cb46ba0a7f623cd4dfb912849386b467d1139",
+      "publicRasterExport": false
+    },
+    {
+      "localEvidence": "private/package9-close-gui-1/evidence/01-pending-question.png",
+      "sha256": "c7526b883d57a3deb6cdff3f2b3f77739d5f2a37b1490e05f35f59799353ec6c",
+      "publicRasterExport": false
+    }
+  ],
+  "resolvedFromCheckpoint8": [
+    {
+      "id": "legacy-provider-card-provenance",
+      "status": "verified_fixed_in_this_binary",
+      "details": "The same custom DeepSeek definition now shows the DeepSeek description and mark."
+    },
+    {
+      "id": "pending-question-stall-label",
+      "status": "verified_fixed_in_this_binary",
+      "details": "A pending shared question shows Waiting for response without the Still on it notice."
+    }
+  ],
+  "findings": [
+    {
+      "id": "code-block-trailing-empty-line",
+      "status": "observed_not_fixed_in_this_binary",
+      "details": "A fenced block whose source ends with a newline renders an extra numbered empty line (e.g. 2 after one code line). Also visible in checkpoint 8 captures."
+    },
+    {
+      "id": "first-frame-user-bubble-padding",
+      "status": "observed_not_fixed_in_this_binary",
+      "details": "The first transcript capture after submit shows the user bubble with excess vertical padding before relayout; present in checkpoint 8 captures as well."
+    }
+  ],
+  "limits": [
+    "These cases do not test every control or establish pixel/semantic parity.",
+    "Import chooser reachability was verified; no credential was imported. The chooser was closed with its window Close (Cancel) after an accidental folder navigation; providers.json hash is unchanged.",
+    "No token was entered in the GitHub card.",
+    "UI Automation drives accessibility patterns, not physical mouse/keyboard input."
+  ]
+}

@@ -1,6 +1,7 @@
 #include "UtilityService.h"
 #include "CustomModelOptions.h"
 #include "ProviderProtocol.h"
+#include "ProviderModelRules.h"
 #include "UtilityPrompts.h"
 #include <QJsonDocument>
 #include <QRegularExpression>
@@ -167,7 +168,7 @@ void UtilityService::attempt() {
         url.setPath(path); url.setQuery(QString{}); prepared.request.setUrl(url);
         auto generation = prepared.body["generationConfig"].toObject(); if (p.customRequest.isEmpty()) generation["temperature"] = m_title ? 0.15 : 0.1;
         prepared.body["generationConfig"] = generation;
-    } else { prepared.body["stream"] = false; prepared.body.remove("stream_options"); if (p.customRequest.isEmpty()) prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
+    } else { prepared.body["stream"] = false; prepared.body.remove("stream_options"); if (p.customRequest.isEmpty() && providerModelRules::permitsTemperature(ProviderProtocol::kind(p), p.model, p.thinkingMode, p.reasoningEffort)) prepared.body["temperature"] = m_title ? 0.15 : 0.1; }
     prepared.request.setTransferTimeout(m_title ? 15000 : 30000);
     m_body.clear(); m_timedOut = false; m_tooLarge = false;
     m_reply = m_network.post(prepared.request, QJsonDocument(prepared.body).toJson(QJsonDocument::Compact));

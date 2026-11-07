@@ -1,0 +1,31 @@
+********* Start testing of SearchFindings *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SearchFindings::initTestCase()
+FAIL!  : SearchFindings::grepPattern(basename-any-depth) 'output(result).contains("src/a.ts:1: needle")' returned FALSE. (b.ts:1: needle
+)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(62) : failure location
+PASS   : SearchFindings::grepPattern(explicit-path)
+PASS   : SearchFindings::grepPattern(recursive)
+FAIL!  : SearchFindings::largeFileOmissionIsDisclosed() 'output(result).contains("needle") || output(result).contains("limit", Qt::CaseInsensitive) || output(result).contains("skipped", Qt::CaseInsensitive)' returned FALSE. (No matches.)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(72) : failure location
+FAIL!  : SearchFindings::unreadableFileOmissionIsDisclosed() 'output(result).contains("skipped", Qt::CaseInsensitive) || output(result).contains("incomplete", Qt::CaseInsensitive)' returned FALSE. (No matches.)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(88) : failure location
+FAIL!  : SearchFindings::exhaustedReadBudgetIsDisclosed() 'output(result).contains("limit", Qt::CaseInsensitive) || output(result).contains("skipped", Qt::CaseInsensitive)' returned FALSE. (No matches.)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(100) : failure location
+FAIL!  : SearchFindings::previewIsBounded() 'preview.size() <= 503' returned FALSE. (preview length = 10006)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(111) : failure location
+PASS   : SearchFindings::textEncoding(utf8)
+PASS   : SearchFindings::textEncoding(utf8-bom)
+FAIL!  : SearchFindings::textEncoding(utf16-le) 'output(result).contains("a.ts:1: import x")' returned FALSE. (No matches.)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(127) : failure location
+FAIL!  : SearchFindings::textEncoding(utf16-be) 'output(result).contains("a.ts:1: import x")' returned FALSE. (No matches.)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(127) : failure location
+FAIL!  : SearchFindings::gitignoreDefault() '!output(result).contains("dist/a.ts")' returned FALSE. (dist/a.ts:1: needle
+src/a.ts:1: needle
+)
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(138) : failure location
+FAIL!  : SearchFindings::advertisedSourceSearchFilters() 'grep.contains("include_gitignored")' returned FALSE. ()
+D:/age/ADE/private/claude-search-findings-stage/tests/test_search_findings.cpp(146) : failure location
+PASS   : SearchFindings::cleanupTestCase()
+Totals: 6 passed, 9 failed, 0 skipped, 0 blacklisted, 75ms
+********* Finished testing of SearchFindings *********

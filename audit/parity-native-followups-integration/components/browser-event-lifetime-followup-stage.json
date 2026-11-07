@@ -1,0 +1,18 @@
+{
+  "status": "frozen_private",
+  "createdUtc": "2026-11-07T03:34:36.017914+00:00",
+  "patch": {
+    "path": "followup.patch",
+    "sha256": "0be4bf2096d49777d88d89841f135c9c3985b6a4b1625151d9ff97b375d6ca4f"
+  },
+  "reports": {
+    "late-inspector-before-ready.txt": "178fa2006323b3c950c4ee5e347b82630d88dce90b847eb1eac11aa08e2d6e11",
+    "final-followup.txt": "155aa9dc7ff0525f3bce6af0939b676f401b6d4b73625be4e83e34551e6f7112",
+    "compat-inspector-followup.txt": "e4c2611221a5544eb6ccc598d4aa4a89a3d5cf481d96d530fc89405dcd45eec1"
+  },
+  "finalPassed": 31,
+  "finalFailed": 0,
+  "scope": "Reject constructing an inspector on a closing browser and cover pre-ready/ready late construction. Existing owner teardown bug belongs to earlier slice.",
+  "evidence": "Late-construction cases both passed BEFORE guard; this is a source-derived preventative lifetime guard, not a reproduced crash. Final18 event cases+13 inspector compatibility pass.",
+  "peerReview": "license_review identified constructor gap; root independently tested both readiness states."
+}

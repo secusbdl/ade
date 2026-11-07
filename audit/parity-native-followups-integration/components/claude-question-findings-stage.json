@@ -1,0 +1,279 @@
+{
+  "state": "frozen_private",
+  "patch": {
+    "path": "question-followups.patch",
+    "sha256": "8c78abb24663fbc7a790d241a4be7b98eb9b5702c794599559786aceb976c5b6"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "cb378a44272dca2b5085c9642903cbcd6b20299053f8e4254b2e37237fe1ad46",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes; new artifacts LF"
+  },
+  "cohort": {
+    "path": "private/behavior-cohort-186",
+    "manifestSha256": "c75f0751a443718720749de7278245d3fbe659090c45060604d0af475cb84673",
+    "basis": "Parent-provided completed542-action build with19 coherent archives,415file manifest; full186 gate was ongoing. No mixed180 source."
+  },
+  "headersChanged": false,
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "tests": {
+    "passed": 137,
+    "failed": 0,
+    "skipped": 0,
+    "suites": {
+      "question_findings": 43,
+      "conversation_control": 26,
+      "question_panel": 8,
+      "mcp_engine": 14,
+      "direct_question_mcp": 46
+    },
+    "sameFinalFixtureBaseline": {
+      "passed": 12,
+      "failed": 31
+    },
+    "additionalFixtureOnlyCheck": {
+      "passed": 4,
+      "failed": 0
+    },
+    "reports": [
+      {
+        "name": "before",
+        "cases": 31,
+        "failures": 23,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before.txt",
+            "sha256": "074d848d1a93dfe65044c11520769fd30194db53e4ee8a18d45b9bf29081b03a"
+          },
+          {
+            "path": "before.xml",
+            "sha256": "8a5875932492a0ad67f2be4bfe3d982a4c32cf2ca5bd49ea9640c2799af8291e"
+          }
+        ]
+      },
+      {
+        "name": "after-initial",
+        "cases": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after-initial.txt",
+            "sha256": "15fb2bc4544e19694884826d2e030dab7cb62f79952f1ca3f3de8e57df60fb4a"
+          },
+          {
+            "path": "after-initial.xml",
+            "sha256": "7e6f8fcc80fa78b6fe43a67ebb1b46e902e149b38efd6ce1f894931c0a606cf3"
+          }
+        ]
+      },
+      {
+        "name": "after-expanded",
+        "cases": 41,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after-expanded.txt",
+            "sha256": "b731f1317d1afce983952b1e8c87685c6ca8f2e5a9a890acd4f41af040211da7"
+          },
+          {
+            "path": "after-expanded.xml",
+            "sha256": "18dbd065600f7b9035c2ba79e7e274974775a0aa1cf6a38d5d4fbee77d661bb6"
+          }
+        ]
+      },
+      {
+        "name": "key-peer-before",
+        "cases": 3,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "key-peer-before.txt",
+            "sha256": "010e91131adf7bb40e1bf6e97c6887e50d7d6fd4031f8d8749f4908cedac9bd7"
+          },
+          {
+            "path": "key-peer-before.xml",
+            "sha256": "4cede86eb7a6d5010f2bc815c91e433ac74e115be022415bb047e60dfd7676be"
+          }
+        ]
+      },
+      {
+        "name": "after-peer",
+        "cases": 42,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after-peer.txt",
+            "sha256": "c91cad82f3d0cf7ed24d995950e7fc98fc69e90efca9f01c8d9c9ed80cacaf82"
+          },
+          {
+            "path": "after-peer.xml",
+            "sha256": "3377091d95164b003c5707ec7edd4176b00ccc1f3b94bbcb2e065d1e711e73a9"
+          }
+        ]
+      },
+      {
+        "name": "baseline-compat",
+        "cases": 3,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "baseline-compat.txt",
+            "sha256": "66a917dcab71f7fe2ec37e813018f2bb885d6e718c828ede64198fd3a7675528"
+          },
+          {
+            "path": "baseline-compat.xml",
+            "sha256": "99c05313026aba71cb5b982def3c538f2e698963afbf4b188e07825273f41024"
+          }
+        ]
+      },
+      {
+        "name": "fixture-after",
+        "cases": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "fixture-after.txt",
+            "sha256": "aa728ac7c9c99e79c1d15193aa11c12765e235cc84b38fa1cc379f74cc7f6faf"
+          },
+          {
+            "path": "fixture-after.xml",
+            "sha256": "c6d50f6ff1772d08e4f3d2c96430d4a57d094fe619cee55573415cf3978ed0d0"
+          }
+        ]
+      },
+      {
+        "name": "final-before",
+        "cases": 43,
+        "failures": 31,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "final-before.txt",
+            "sha256": "b89f7290bf9aee688d769a756ffbf981a25f306d33664e31e1389e849d7f36f1"
+          },
+          {
+            "path": "final-before.xml",
+            "sha256": "fb383260d623b716f24ec6072f1a4c46f94297e5489661cf910fff890f8be1b1"
+          }
+        ]
+      },
+      {
+        "name": "question_findings_after-final",
+        "cases": 43,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "question_findings_after-final.txt",
+            "sha256": "9fcb985efa0b52199e7f74521bbbf508f6bc43bb7496c504e2f717a64a0b10b5"
+          },
+          {
+            "path": "question_findings_after-final.xml",
+            "sha256": "5b617524995dc53ea61d439c0d36c6945ad6f729b4981975ca156472ac93e21c"
+          }
+        ]
+      },
+      {
+        "name": "conversation_control-final",
+        "cases": 26,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "conversation_control-final.txt",
+            "sha256": "271cdaad1a475c059d92830087e6f2e634327d1de7e7e5c93f347dbb15f9ee7c"
+          },
+          {
+            "path": "conversation_control-final.xml",
+            "sha256": "5f82f13d76da73284ee21bb558b3a3bedbd0d3b278e3bb70625adc671bad0a3f"
+          }
+        ]
+      },
+      {
+        "name": "question_panel-final",
+        "cases": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "question_panel-final.txt",
+            "sha256": "6528695ad833ca0f8cd260a04b6e4823cad899086a3e61c46781d7a4555e33b8"
+          },
+          {
+            "path": "question_panel-final.xml",
+            "sha256": "40ee6fa5c2815eb9e9c3a962c41802ee82e0c829db09ced5e281c658342cbc83"
+          }
+        ]
+      },
+      {
+        "name": "mcp_engine-final",
+        "cases": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "mcp_engine-final.txt",
+            "sha256": "96d833db8e5384d0ba0b01cc09f551f9a1f75d3df28bd7b981cd470e166c54c4"
+          },
+          {
+            "path": "mcp_engine-final.xml",
+            "sha256": "4dea42401f1c64364165f8177b94bc2821825f6b6a40410abf43f56fdf2900a7"
+          }
+        ]
+      },
+      {
+        "name": "direct_question_mcp-final",
+        "cases": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "direct_question_mcp-final.txt",
+            "sha256": "94cc01cf7ae036826b81b64ae7dd9078b218263592af66b2d4cd41c8d3f220b5"
+          },
+          {
+            "path": "direct_question_mcp-final.xml",
+            "sha256": "ff8118bf4f0fa08b2f1fcfb3745b6bc629c76e79023b37fd552481dbda57d7dc"
+          }
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "No shared source/build, foreground GUI, real credentials, auth calls, model/network service calls or user files; loopback/synthetic fixtures only.",
+    "Private Windows static Qt6.11.2/GCC16.2 test cohort; parent current integrated rebuild/regressions remain required.",
+    "No universal parity/zero-bug guarantee. Full global command-Enter priority registry remains separate.",
+    "Explicit submitted passwords are preserved by requested form contract; only unsubmitted drafts are omitted on Cancel/Stop.",
+    "MCP disconnected-peer transport is not retroactively given a result; correct submitted progress is retained in owned Engine presentation/history.",
+    "F5 keeps first active form rather than source newest-wins; no policy relaxation in this slice."
+  ],
+  "notes": [
+    "Four cpp-only runtime/UI changes; no header/layout/API expansion.",
+    "Three existing assertions updated from draft-on-cancel to source submitted-only contract; message-interruption draft tests unchanged and pass.",
+    "Existing DirectMcpFixture gets bounded previous-helper-exit synchronization after independent immutable baseline reproduction.",
+    "New three-adapter cases use one compact synthetic fixture source compiled under two executable names for direct/ACP launch.",
+    "Deprecated QApplication::setActiveWindow appears only in offscreen test preconditions as existing native test convention."
+  ],
+  "scan": "SCAN.json"
+}

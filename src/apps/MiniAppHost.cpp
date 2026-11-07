@@ -75,7 +75,12 @@ void MiniAppHost::open(const QString& id,const QJsonObject& args){
     Instance instance;instance.page=page;instance.appId=appId;instance.pluginId=pluginId;instance.opening.insert(id);
     m_instances.insert(instanceId,instance);m_pendingOpen.insert(id,instanceId);m_activeInstance=instanceId;
     page->setTheme(m_theme);
-    connect(page,&MiniAppPage::messageReceived,this,[this,instanceId](const QJsonValue& data){if(m_activeInstance!=instanceId)return;const auto instance=m_instances.value(instanceId);if(instance.page)emit messageReceived(instance.appId,instance.pluginId,data);});
+    // Inbound messages belong to the still-owned page, including inactive tabs.
+    // Only outbound API.sendMessage is restricted to the active app.
+    connect(page,&MiniAppPage::messageReceived,this,[this,instanceId,page](const QJsonValue& data){
+        const auto instance=m_instances.value(instanceId);
+        if(instance.page==page)emit messageReceived(instance.appId,instance.pluginId,data);
+    });
     connect(page,&QObject::destroyed,this,[this,instanceId]{pageDestroyed(instanceId);});
     connect(page,&MiniAppPage::failed,this,[this,instanceId](const QString& error){if(!m_instances.contains(instanceId))return;const auto requests=m_instances.value(instanceId).opening;const QPointer<MiniAppHost> self(this);for(const auto& request:requests){m_pendingOpen.remove(request);m_instances[instanceId].opening.remove(request);emit completed(request,QJsonValue(),error);if(!self)return;}});
     QTimer::singleShot(10000,this,[this,instanceId]{const auto instance=m_instances.value(instanceId);if(instance.page&&instance.tabId.isEmpty())closeInstance(instanceId,tr("The native app tab was not attached."));});
@@ -108,5 +113,24 @@ void MiniAppHost::pageDestroyed(const QString& id){
     const QPointer<MiniAppHost> self(this);for(const auto& request:instance.opening){m_pendingOpen.remove(request);emit completed(request,QJsonValue(),tr("App tab was closed."));if(!self)return;}if(active)emit activeAppChanged();
 }
 void MiniAppHost::closeTab(const QString& instanceId){closeInstance(instanceId,tr("App tab was closed."));}
+void MiniAppHost::resetContext(){
+    const auto pending=std::exchange(m_pendingOpen,{});
+    QStringList unbound;
+    const bool active=!m_activeInstance.isEmpty();
+    m_activeInstance.clear();
+    // Commit revocation before any public callback can open a replacement app.
+    for(auto it=m_instances.begin();it!=m_instances.end();++it){
+        it->opening.clear();
+        if(it->page)it->page->discardPendingMessages();
+        if(it->tabId.isEmpty())unbound.append(it.key());
+    }
+    const QPointer<MiniAppHost> self(this);
+    for(const auto& id:unbound){closeInstance(id,tr("Agent app context was reset."));if(!self)return;}
+    for(auto it=pending.cbegin();it!=pending.cend();++it){
+        emit completed(it.key(),QJsonValue(),tr("Agent app context was reset."));
+        if(!self)return;
+    }
+    if(active)emit activeAppChanged();
+}
 void MiniAppHost::reset(){const auto ids=m_instances.keys();const QPointer<MiniAppHost> self(this);for(const auto& id:ids){closeInstance(id,tr("Agent app context was reset."));if(!self)return;}}
 }

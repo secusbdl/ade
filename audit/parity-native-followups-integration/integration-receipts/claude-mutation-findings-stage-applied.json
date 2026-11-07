@@ -1,0 +1,24 @@
+{
+  "stage": "claude-mutation-findings-stage",
+  "appliedUtc": "2026-11-07T03:08:43.975622+00:00",
+  "handoffSha256CanonicalLf": "ff8dc365fc6a46177e03a2125ba792d35215e82960d754a2b48131a6eb60a1aa",
+  "patchSha256CanonicalLf": "e635ad0b620a78a74d73a5acb906685f62ac85ec6f7805118ef84952de918592",
+  "before": {
+    "src/core/ToolExecutor.cpp": "da3d0459ec4952d98ca11eb8510ab02b36a1c36851f5b5b72a565765705fe40e",
+    "src/runtime/AgentToolHost.cpp": "b058d402203fdfcc427369a70efd91f91b6175fae657a0b68177ee998f56a375",
+    "src/mutations/FileMutationJournal.cpp": "367ad78ee994c2069ff7b0a795c9c6c4483d5e1c8cd0edca13b45583a2653e72",
+    "src/mutations/FileMutationStore.cpp": "63fd4bbe498713c69bc1a946c9371200055896d896e4b0452e2686a252041531",
+    "src/core/AgentEngineMutations.cpp": "ad061cebbb67bb8cb5fea6024808373a7e73e4fc7e7568ec0b4ac6368c547e27",
+    "tests/test_mutation_findings.cpp": null
+  },
+  "after": {
+    "src/core/ToolExecutor.cpp": "9e42c81c538ab0fc176a48d75c535217278ded3c44f5e7f7eb2c451af124c8cd",
+    "src/runtime/AgentToolHost.cpp": "24a5ce84e2492129a2b2ea1d970e9eb71bda3aff7731ded6aa7a70842ad1acda",
+    "src/mutations/FileMutationJournal.cpp": "2afeb7f55c065b932e336a15ff056a88d5bd6f325467f9369eebb1abef0773c9",
+    "src/mutations/FileMutationStore.cpp": "3da39a130e1e7a48f241d33a4770128c2c161b11b4ca8a61a40d857d6f210da0",
+    "src/core/AgentEngineMutations.cpp": "99734e7e9b00693c089c3fdf2132e86ba54cd772b109f10f14bb822b0cea84d2",
+    "tests/test_mutation_findings.cpp": "a9fd00776c8f1aa5b176af3a229be9a966caf0c10bd2d6554608985e979cddd0"
+  },
+  "cmakeAdditionsSha256CanonicalLf": "5197835d5db33740bc97da34d4ba4e6b8cad284fe3bbf4d3c2816ace20856289",
+  "integrationNote": "Applied only patch hunks; current unrelated source changes retained. Provider HTTP test runtime directory aligned with existing CMake targets. Full coherent rebuild/gate still required."
+}

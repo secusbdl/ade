@@ -101,6 +101,8 @@ void MainWindow::initializeComposerCompletions(Composer* composer,const QString&
         CompletionQuery input;input.chat=chat;input.id=request;input.trigger=trigger;input.query=query.left(200);input.workspace=GitService::canonicalPath(session->workspace);
         state->chat=chat;state->workspace=input.workspace;state->request=request;state->offered.clear();
         if(trigger=='/'){
+            if(session->sideChatParentId.isEmpty()&&(query.isEmpty()||QString("command:side Side Fork this chat into an independent side chat").contains(query,Qt::CaseInsensitive)))
+                input.base.append(QJsonObject{{"id","command:side"},{"kind","side-chat"},{"label","Side"},{"description","Fork this chat into an independent side chat"},{"group","builtin"}});
             input.options=contextOptionsFor(m_settings->preferences(),session->workspace,QDir::homePath());QString error;
             const auto plugins=PluginCatalog::context(m_store.directory(),m_settings->preferences(),&error);
             if(!error.isEmpty()){target->setCompletionResults(request,{},error);return;}
@@ -120,6 +122,33 @@ void MainWindow::initializeComposerCompletions(Composer* composer,const QString&
     connect(target,&Composer::completionActivated,this,[this,stateGuard,target,sessionFor,report,fixedChat](const QString &chat,quint64 request,const QJsonObject &item){
         auto *state=stateGuard.data();auto *session=sessionFor();const auto itemId=item["id"].toString();
         if(!state||!session||session->archived||session->id!=chat||state->request!=request||state->offered.value(itemId)!=item||GitService::canonicalPath(session->workspace)!=state->workspace)return;
+        if(item["kind"]=="side-chat") {
+            if(!session->sideChatParentId.isEmpty())return;
+            const auto nextDraft=target->completionActionDraft(request,itemId);if(!nextDraft)return;
+            const auto previousDraft=target->toPlainText();
+            auto next=m_sessions;for(auto& row:next)if(row.id==chat)row.draft=*nextDraft;
+            const QPointer<MainWindow> self(this);
+            if(!commitConversationState(next,m_store.pendingCleanup())){if(self)report(m_status->text());return;}
+            if(!self||!target)return;
+            if(!target->commitCompletionAction(request,itemId)) {
+                if(self)if(const auto* owner=find(chat);owner&&owner->draft==*nextDraft) {
+                    auto restored=m_sessions;for(auto& row:restored)if(row.id==chat)row.draft=previousDraft;
+                    commitConversationState(restored,m_store.pendingCleanup());
+                }
+                return;
+            }
+            if(!self||!target)return;
+            const auto* active=sessionFor();
+            if(!active||active->id!=chat||target->toPlainText()!=*nextDraft)return;
+            if(createSideChat(chat)||!self)return;
+            // Fork failure must not eat the command or unrelated draft edits.
+            const auto* owner=find(chat);
+            if(owner&&owner->draft==*nextDraft&&target&&target->toPlainText()==*nextDraft) {
+                auto restored=m_sessions;for(auto& row:restored)if(row.id==chat)row.draft=previousDraft;
+                if(commitConversationState(restored,m_store.pendingCleanup())&&self&&target)target->setPlainText(previousDraft);
+            }
+            return;
+        }
         const auto nextDraft=target->completionDraft(request,itemId);if(!nextDraft)return;
         auto refs=session->draftAttachments;const auto kind=item["kind"].toString();ComposerPathPin pin;QString error;
         if(kind=="file"||kind=="directory"){

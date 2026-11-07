@@ -73,7 +73,15 @@ ScopedPath scoped(const QString& logical,const QString& root,const QString& root
     result.parents=pinAbsolute(root);if(identity(raw(result.parents.last()))!=rootId)fail("Mount identity changed");
     bool missing=false;for(int i=1;i<parts.size();++i){if(!validPart(parts[i]))fail("Invalid or reserved mutation path component");if(i+1<parts.size()){result.parentPath+='/'+parts[i];if(missing||!QFileInfo::exists(result.parentPath)){if(!allowMissing)fail("Parent directory does not exist");missing=true;}else result.parents.append(directory(result.parentPath));}}
     if(missing)return result;
-    result.file=openFile(result.parentPath+'/'+result.leaf,change);if(result.file)result.state=state(raw(result.file));return result;
+    result.file=openFile(result.parentPath+'/'+result.leaf,change);
+    if(result.file){
+        // Windows opens are case-insensitive, but rename-based publication must
+        // preserve the existing directory entry spelling, including after undo.
+        result.leaf=finalPath(raw(result.file)).section('/',-1);
+        result.logical=logical.left(logical.lastIndexOf('/')+1)+result.leaf;
+        result.state=state(raw(result.file));
+    }
+    return result;
 }
 void renameTo(const Handle& file,const ScopedPath& target,const QString& name){
     const auto wide=QDir::toNativeSeparators(target.parentPath+'/'+name).toStdWString();std::vector<char> buffer(offsetof(FILE_RENAME_INFO,FileName)+(wide.size()+1)*sizeof(wchar_t),0);

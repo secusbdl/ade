@@ -112,7 +112,7 @@ struct ShellService::Session {
   QStringDecoder decoder{QStringDecoder::Utf8};
   int markLine = 0, exitCode = -1;
   bool ready = false, dispatched = false, exited = false, watcherActive = false,
-       raw = false, hasOutput = false, commandActive = false;
+       raw = false, hasOutput = false, commandActive = false, outputActive = false;
   quint64 generation = 0, waitSerial = 0, exitSerial = 0;
 };
 ShellService::ShellService(QString agentId,
@@ -337,7 +337,36 @@ void ShellService::create(const QString &requestId, const QJsonObject &args,
         {"startedAt", session->created},
         {"expiresAt", session->created + args["timeout_ms"].toInteger()}};
     session->watcherActive = true;
-    session->command = args["command"].toString();
+    // One encoded script avoids interactive Enter splitting a multiline
+    // watcher. Preserve the script's process exit status, including explicit
+    // `exit N`.
+    session->command =
+        QStringLiteral("$global:LASTEXITCODE = $null; "
+                       "$global:__ADEAgentShell.WatcherSuccess = $true; & "
+                       "([ScriptBlock]::Create("
+                       "[Text.Encoding]::Unicode.GetString([Convert]::"
+                       "FromBase64String('%1')))); "
+                       "$__adeWatcherSuccess = $?; "
+                       "$__adeWatcherCode = if ($null -ne $global:LASTEXITCODE "
+                       "-and $global:LASTEXITCODE -ne 0) "
+                       "{ $global:LASTEXITCODE } elseif ($__adeWatcherSuccess "
+                       "-and $global:__ADEAgentShell.WatcherSuccess) { 0 } "
+                       "else { 1 }; exit $__adeWatcherCode")
+            .arg(QString::fromLatin1([&] {
+              // PowerShell's call operator can report success after a
+              // scriptblock emitted a nonterminating error. Capture its final
+              // statement status inside the block, before returning to the
+              // wrapper's expressions.
+              const auto source =
+                  args["command"].toString() +
+                  QStringLiteral(
+                      "\n$global:__ADEAgentShell.WatcherSuccess = $?\n");
+              // Two bytes per UTF-16 source unit keep the complete 65536-unit
+              // command below the 256 KiB input queue after base64 and framing.
+              return QByteArray(reinterpret_cast<const char *>(source.utf16()),
+                                source.size() * 2)
+                  .toBase64();
+            }()));
   }
   connect(
       session->process, &ConPtyProcess::outputReady, this,
@@ -370,7 +399,11 @@ void ShellService::create(const QString &requestId, const QJsonObject &args,
     if (!owns(session) || session->requestId.isEmpty() || !session->model)
       return;
     const auto request = session->requestId;
-    auto view = utf8Tail(session->model->plainText(), 16 * 1024);
+    const auto lines = session->model->plainText().split('\n');
+    const auto current = session->model->alternateScreen()
+                             ? session->model->plainText(false)
+                             : lines.mid(qBound(0, session->markLine, int(lines.size()))).join('\n');
+    auto view = utf8Tail(current, 16 * 1024);
     emit outputSnapshot(request, view);
   });
   connect(session->inputPump, &QTimer::timeout, this,
@@ -479,7 +512,8 @@ void ShellService::command(const QString &requestId, const QJsonObject &args) {
   ++session->waitSerial;
   session->requestId = requestId;
   session->command =
-      raw ? args["stdin"].toString() : args["command"].toString();
+      raw ? ShellProtocol::expandStdinEscapes(args["stdin"].toString())
+          : args["command"].toString();
   session->raw = raw;
   session->policy = policy;
   session->dispatched = false;
@@ -500,6 +534,7 @@ void ShellService::dispatch(const SessionPtr &session) {
   if (session->command.isEmpty())
     return;
   if (!session->raw) {
+    session->outputActive = false;
     session->protocol.beginCommand();
     session->commandActive = true;
   }
@@ -564,11 +599,11 @@ void ShellService::receive(const SessionPtr &session, const QByteArray &bytes) {
       // the new wait's matching/idle/output state.
       if (!sameWait)
         return;
-      if (!session->requestId.isEmpty() && !decoded.isEmpty()) {
+      if (!session->requestId.isEmpty() && session->outputActive && !decoded.isEmpty()) {
         session->hasOutput = true;
         session->matchText =
             utf8Tail(session->matchText + decoded, 1024 * 1024);
-        if (session->policy.idleMs > 0)
+        if (session->policy.idleMs > 0 && !decoded.trimmed().isEmpty())
           session->idle->start(session->policy.idleMs);
         if (!session->stream->isActive())
           session->stream->start(100);
@@ -580,6 +615,7 @@ void ShellService::receive(const SessionPtr &session, const QByteArray &bytes) {
         }
       }
     } else if (event.kind == ShellProtocolEvent::CommandStart) {
+      session->outputActive = true;
       session->commandActive = true;
       session->dispatched = true;
       if (!session->requestId.isEmpty())
@@ -611,6 +647,7 @@ void ShellService::receive(const SessionPtr &session, const QByteArray &bytes) {
       if (!session->requestId.isEmpty())
         dispatch(session);
     } else if (event.kind == ShellProtocolEvent::CommandDone) {
+      session->outputActive = false;
       session->commandActive = false;
       session->dispatched = false;
       if (session->watcherActive) {

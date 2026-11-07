@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "harness/CursorHarnessSession.h"
 #include "HarnessHistory.h"
 #include "harness/AcpHarnessSession.h"
 #include "harness/ClaudeHarnessSession.h"
@@ -70,7 +71,8 @@ void AgentEngine::stopHarness() {
   // Preserve the user's owned partial form before stopping the external
   // process. This is display history, not an invented native model
   // tool-call/result pair.
-  if (((m_acp && m_acp->isStagewiseQuestion(m_harnessQuestionToken)) ||
+  if (((m_cursor && m_provider.isCursorHarness() && !m_harnessQuestionToken.isEmpty()) ||
+       (m_acp && m_acp->isStagewiseQuestion(m_harnessQuestionToken)) ||
        (m_claude && m_claude->isStagewiseQuestion(m_harnessQuestionToken)) ||
        (m_harness && m_harness->isStagewiseQuestion(m_harnessQuestionToken))) &&
       !m_questionToken.isEmpty() && m_harnessTools.contains(m_questionCallId)) {
@@ -85,6 +87,8 @@ void AgentEngine::stopHarness() {
                                               ? "output-available"
                                               : "canceled");
   }
+  if(m_cursor)m_cursor->shutdown();
+  m_cursorDecisions.clear();
   if(m_acp)m_acp->shutdown();
   if(m_claude)m_claude->shutdown();
   if (m_harness)
@@ -235,6 +239,7 @@ void AgentEngine::dispatchPreparedHarness(const QJsonArray& input,const QStringL
     if(!m_harnessState.isEmpty() && m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState["fork"]=true;
     requestClaudeHarness(input,transcript);return;
   }
+  if(m_provider.isCursorHarness()) { requestCursorHarness(input,transcript);return; }
   if(m_provider.isOpenCodeHarness()) {
     if(!m_harnessState.isEmpty() && m_harnessState["ownerId"].toString()!=m_harnessOwnerId)m_harnessState["fork"]=true;
     requestAcpHarness(input,transcript);return;
@@ -464,21 +469,33 @@ void AgentEngine::consumeHarnessEvent(const QJsonObject &event) {
     if (first)
       m_harnessTools[key] = m_harnessTools.size();
     const auto args = event["arguments"].toObject();
+    auto state = event["state"].toString();
+    auto output = event["output"].toString();
+    // A disconnected MCP caller has no access to ADE's submitted-step state.
+    // Replace only the terminal cancellation for this exact owned form; never
+    // adopt form progress or identity from an external tool's output.
+    if (!m_harnessQuestionToken.isEmpty() && !m_questionToken.isEmpty() &&
+        key == m_questionCallId && event["name"] == "askUserQuestions" &&
+        state == "output-available" &&
+        QJsonDocument::fromJson(output.toUtf8()).object().value("cancelled") == true) {
+      output = QString::fromUtf8(QJsonDocument(m_question.result("agent_stopped"))
+                                    .toJson(QJsonDocument::Compact));
+      state = "canceled";
+    }
     m_display.tool(
         m_harnessTools[key], key, event["name"].toString(),
         event.value("argumentText").isString() ? event.value("argumentText").toString() : QString::fromUtf8(QJsonDocument(args).toJson(QJsonDocument::Compact)));
     if (event.contains("acpPresentation"))
       m_display.setToolPresentation(key, event["acpPresentation"].toObject());
-    m_display.toolState(key, m_harnessApprovals.contains(key) ? QString("approval-requested") : event["state"].toString());
-    m_display.setToolOutput(key, event["output"].toString());
+    m_display.toolState(key, m_harnessApprovals.contains(key) ? QString("approval-requested") : state);
+    m_display.setToolOutput(key, output);
     if (first) {
       emit toolStarted(key, event["name"].toString(), args);
       if (!self || generation != m_generation || !m_busy)
         return;
     }
     if (event["state"].toString().startsWith("output-")) {
-      emit toolFinished(key, event["output"].toString(),
-                        event["state"] == "output-error");
+      emit toolFinished(key, output, state == "output-error");
       if (!self || generation != m_generation || !m_busy)
         return;
     }
@@ -499,6 +516,11 @@ void AgentEngine::finishHarnessQuestion(const QString &reason) {
   const auto answers = result["answers"].toObject();
   const auto generation = m_generation;
   const QPointer<AgentEngine> self(this);
+  const bool cursorQuestion = m_provider.isCursorHarness() && m_cursor && m_harnessTools.contains(m_questionCallId);
+  if (cursorQuestion) {
+    m_display.setToolOutput(m_questionCallId, QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Compact)));
+    m_display.toolState(m_questionCallId, reason.isEmpty() || reason == "user_sent_message" ? "output-available" : "canceled");
+  }
   m_harnessQuestionToken.clear();
   m_questionToken.clear();
   m_questionCallId.clear();
@@ -510,6 +532,8 @@ void AgentEngine::finishHarnessQuestion(const QString &reason) {
       m_claude->answerQuestion(token, answers);
     else
       m_claude->cancelQuestion(token);
+  } else if (m_provider.isCursorHarness() && m_cursor) {
+    if(reason.isEmpty())m_cursor->answerQuestion(token,answers);else m_cursor->cancelQuestion(token);
   } else if (m_provider.isOpenCodeHarness() && m_acp) {
     if (m_acp->isStagewiseQuestion(token))
       m_acp->completeStagewiseQuestion(token, result);
@@ -525,6 +549,8 @@ void AgentEngine::finishHarnessQuestion(const QString &reason) {
     else
       m_harness->cancelQuestion(token);
   }
+  if (self && generation == m_generation && cursorQuestion)
+    emit displayChanged();
   if (self && generation == m_generation)
     emit questionChanged();
 }

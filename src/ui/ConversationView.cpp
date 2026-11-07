@@ -40,6 +40,16 @@ bool hasUnfinishedAssistant(const QJsonArray &messages) {
     if(messages.isEmpty())return false;
     const auto message=messages.last().toObject();
     if(message["role"]!="assistant")return false;
+    // A visible human decision is not a stalled model stream. Inspect the
+    // complete current row first: earlier reasoning may still be unfinished
+    // while its question/approval waits. Historical turns do not suppress work.
+    for(const auto &value:message["parts"].toArray()) {
+        const auto part=value.toObject();
+        if(part["type"]!="tool")continue;
+        const auto state=part["state"].toString();
+        if(state=="approval-requested"||
+           (isNativeQuestionPart(part)&&(state=="running"||state=="input-available")))return false;
+    }
     for(const auto &value:message["parts"].toArray()) {
         const auto part=value.toObject();const auto type=part["type"].toString();
         const auto state=part["state"].toString();

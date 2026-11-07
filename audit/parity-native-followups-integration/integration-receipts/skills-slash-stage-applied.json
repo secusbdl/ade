@@ -1,0 +1,32 @@
+{
+  "stage": "skills-slash-stage",
+  "appliedUtc": "2026-11-07T03:08:43.894263+00:00",
+  "handoffSha256CanonicalLf": "da0a6f0af3c328d164148abd444917d5e2edd441301916d5aedef87fcd689743",
+  "patchSha256CanonicalLf": "16bddf7467699b06e43e1e68c3efd14f71d7d51e2e4da6022554b89e0d4643e3",
+  "before": {
+    "src/core/ContextLoader.h": "83363064d48f4479a5114fe670cbecb9c4e576792e7bfefc82d893cc057c31b5",
+    "src/core/ContextLoader.cpp": "30e5c088921f80a133124cc312ff720ded843495eefef5cffaaa6cf46fbd1fff",
+    "src/core/AgentEngine.cpp": "4a7e1bc605f122cd5aaa0b1781a13fb28cc30fba62e9b82e7958327f7e44ab7e",
+    "src/runtime/AgentToolHost.cpp": "bea1c661e44bd1c81b77c8abf0ca29556576cbbc40ad8b8483d4765f98fc911a",
+    "src/ui/Composer.h": "65ec122c1d47bbc6727a22fa608b725abd1097684e218bc5c87fb021e2ed9265",
+    "src/ui/Composer.cpp": "5b18faa312de207bf681d32db9be97f8b876d7a5a44504b6ae0ed1d57cb466b1",
+    "src/ui/MainWindowCompletions.cpp": "b9fad68bcaa062ac75800194550fd41e544a68730905769a06a3810695919648",
+    "tests/test_composer_host.cpp": "2e63a5f5e041adf5ff41b789caa2be63bd4461dab616e0c3227c8e53e299192c",
+    "tests/test_slash_context.cpp": null,
+    "tests/test_skills_host.cpp": null
+  },
+  "after": {
+    "src/core/ContextLoader.h": "166c0a230b2480500ec4c506a52db12234ed00eecb090993e49ff9a2d7f7e3e5",
+    "src/core/ContextLoader.cpp": "aa2b1d46982d9cc0909a67f691062e7baa076d08bfbb809454773769c03483b1",
+    "src/core/AgentEngine.cpp": "78feab695a9c159a50883933d61b66fce630e2940aa3465954b5f91a4bbeaaf2",
+    "src/runtime/AgentToolHost.cpp": "b058d402203fdfcc427369a70efd91f91b6175fae657a0b68177ee998f56a375",
+    "src/ui/Composer.h": "8e33ddd0d56be2e0061d8f33f797f8f6b31f8039aa2f5d1d0b71ebb0d6ba19f3",
+    "src/ui/Composer.cpp": "8bbab34ec54b4e530864222988b92fe10e054fd0a3946c47d85c506f011ae1b8",
+    "src/ui/MainWindowCompletions.cpp": "2f46b80f9cdf8f956d3e980fbd2c91967ac92325f49acb70ab183cf6576272b4",
+    "tests/test_composer_host.cpp": "0681c54ac866cf324a54e2175e29108a629820a79eeafc77830bb1c1c59bd99b",
+    "tests/test_slash_context.cpp": "881bc627b14216c0684bd944fba0cb34439d69fe0ac36984836943010b0443c5",
+    "tests/test_skills_host.cpp": "dc24afbd343b0f7fef70022c25bda3d28afd121103067fae22e2a77948c1b3e3"
+  },
+  "cmakeAdditionsSha256CanonicalLf": "47be09b0808f90c72928a640c44657dcf6a5a5de7fdd01528bcc0acc8a2ad925",
+  "integrationNote": "Applied only patch hunks; current unrelated source changes retained. Provider HTTP test runtime directory aligned with existing CMake targets. Full coherent rebuild/gate still required."
+}

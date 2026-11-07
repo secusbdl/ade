@@ -31,14 +31,17 @@ void MainWindow::conversationError(const QString& message) {
     if(m_settings&&m_settings->currentSection()=="archived-agents")m_settings->reportConversationError(message);
 }
 bool MainWindow::commitConversationState(const QList<Conversation>& next,const QStringList& pendingCleanup) {
+    if(m_sessionTransition)return false;
     QString error;
     if(!m_store.saveWithCleanup(next,pendingCleanup,&error)) {
-        conversationError("Could not save conversations: "+error);return false;
+        conversationError("Could not save conversations: "+error);showSessionRecovery(error);return false;
     }
-    m_sessions=next;updateGitUsageTracking();return true;
+    m_sessions=next;showSessionRecovery({});updateGitUsageTracking();return true;
 }
 void MainWindow::newConversation() {
+    if(m_sessionTransition)return;
     Conversation session;
+    if(!current())session.draft=m_composer->toPlainText();
     if(const auto* previous=current())session.alwaysAllow=previous->alwaysAllow;
     const auto selection=ModelSelection::fromJson(m_models->currentData().toJsonObject());
     session.providerId=selection.providerId;session.model=selection.modelId;session.presetId=selection.presetId;
@@ -93,6 +96,7 @@ bool MainWindow::createSideChat(const QString& sourceId) {
     return cloneConversation(id,true);
 }
 bool MainWindow::cloneConversation(const QString& id,bool sideChat) {
+    if(m_sessionTransition)return false;
     const auto* source=find(id);if(!source)return false;
     if((m_toolHosts.value(id)&&m_toolHosts.value(id)->mutationBusy())||(m_mutationUndoAgent==id&&!m_mutationUndoId.isEmpty())){conversationError("Wait for file changes to finish before forking this chat.");return false;}
     if(!source->sideChatParentId.isEmpty()){conversationError("Move this side chat to the sidebar before forking it again.");return false;}
@@ -138,10 +142,11 @@ void MainWindow::selectAfterConversationRemoval(const QString& id) {
     m_currentId.clear();
     for(const auto& session:m_sessions)if(!session.archived&&session.sideChatParentId.isEmpty()){const auto nextId=session.id;selectConversation(nextId);return;}
     // Retain no editable selection if creating the replacement cannot be saved.
-    m_currentId.clear();m_send->setEnabled(false);m_stop->setEnabled(false);m_composer->clear();m_transcript->clear();
+    m_currentId.clear();m_send->setEnabled(false);m_stop->setEnabled(false);m_composer->clear();m_composer->setReadOnly(true);m_transcript->clear();
     newConversation();refreshAgents();updateGitContext();
 }
 bool MainWindow::archiveConversation(const QString& id) {
+    if(m_sessionTransition)return false;
     if(!find(id))return false;
     const QPointer<MainWindow> self(this);
     QStringList children;for(const auto& session:m_sessions)if(session.sideChatParentId==id)children.append(session.id);
@@ -164,6 +169,7 @@ bool MainWindow::archiveConversation(const QString& id) {
     selectAfterConversationRemoval(id);if(m_settings->currentSection()=="archived-agents")m_settings->reload();return true;
 }
 bool MainWindow::restoreConversation(const QString& id) {
+    if(m_sessionTransition)return false;
     if(!find(id))return false;
     auto next=m_sessions;for(auto& session:next)if(session.id==id){session.archived=false;session.archivedAt=0;}
     if(!commitConversationState(next,m_store.pendingCleanup()))return false;
@@ -180,6 +186,7 @@ void MainWindow::requestDeleteConversation(const QString& id) {
     connect(box,&QMessageBox::finished,this,[this,id](int result){if(result==QMessageBox::Yes)deleteConversation(id);});box->open();
 }
 bool MainWindow::deleteConversation(const QString& id) {
+    if(m_sessionTransition)return false;
     if(!find(id))return false;
     if(auto* engine=m_engines.value(id);engine&&engine->isBusy()){conversationError("Stop this chat before deleting it.");return false;}
     const QPointer<MainWindow> self(this);QStringList deleted{id};for(const auto& session:m_sessions)if(session.sideChatParentId==id)deleted.append(session.id);

@@ -1,0 +1,17 @@
+{
+  "stage": "claude-search-findings-stage",
+  "appliedUtc": "2026-11-07T03:29:50.053036+00:00",
+  "handoffSha256CanonicalLf": "67a28f4809c09eaeb03b6053004835e9c9bc57fe86c1dd34fa49feae920a36a6",
+  "patchSha256CanonicalLf": "507c72f242cd5175bc3fc91906c1fb07cf82db57997ab70d25544556448cc7ee",
+  "before": {
+    "src/core/ToolExecutor.cpp": "9e42c81c538ab0fc176a48d75c535217278ded3c44f5e7f7eb2c451af124c8cd",
+    "tests/test_search_findings.cpp": null,
+    "tests/test_search_read_budget.cpp": null
+  },
+  "after": {
+    "src/core/ToolExecutor.cpp": "ef6b1af2aeb16057fb86765d6f5db2497fbb8c678e97aa167f3b834609d422d6",
+    "tests/test_search_findings.cpp": "abbb3f0a7afbf6c341a82fc8f5a58166bf2c0bd68b85f10d89403c519d1a1323",
+    "tests/test_search_read_budget.cpp": "58f8ecb9922c96c74412f119aaca8aaa701fef4eb71de13681254361d8ecbff3"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

@@ -1,0 +1,62 @@
+********* Start testing of BrowserOutputTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserOutputTests::initTestCase()
+QINFO  : BrowserOutputTests::screenshotsBecomeImageAttachments(openai) screenshot stored text characters 130 attachment count 1
+QWARN  : BrowserOutputTests::screenshotsBecomeImageAttachments(openai) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-LcYrgI" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::screenshotsBecomeImageAttachments(openai)
+QINFO  : BrowserOutputTests::screenshotsBecomeImageAttachments(responses) screenshot stored text characters 130 attachment count 1
+QWARN  : BrowserOutputTests::screenshotsBecomeImageAttachments(responses) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-OsRfPt" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::screenshotsBecomeImageAttachments(responses)
+QINFO  : BrowserOutputTests::screenshotsBecomeImageAttachments(anthropic) screenshot stored text characters 130 attachment count 1
+QWARN  : BrowserOutputTests::screenshotsBecomeImageAttachments(anthropic) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-TzlNEs" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::screenshotsBecomeImageAttachments(anthropic)
+QINFO  : BrowserOutputTests::screenshotsBecomeImageAttachments(google) screenshot stored text characters 130 attachment count 1
+QWARN  : BrowserOutputTests::screenshotsBecomeImageAttachments(google) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-XVvECI" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::screenshotsBecomeImageAttachments(google)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-DOM) direct model output UTF8 bytes 40948
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-DOM) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-lMFjrQ" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-DOM)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-console) direct model output UTF8 bytes 39956
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-console) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-RyhiZD" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(openai-console)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-DOM) direct model output UTF8 bytes 40948
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-DOM) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-fNCEmn" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-DOM)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-console) direct model output UTF8 bytes 39956
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-console) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-wmEfiI" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(responses-console)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-DOM) direct model output UTF8 bytes 40948
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-DOM) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-dAAWIi" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-DOM)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-console) direct model output UTF8 bytes 39956
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-console) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-VovZvP" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(anthropic-console)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-DOM) direct model output UTF8 bytes 40948
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-DOM) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-AoEoeL" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-DOM)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-console) direct model output UTF8 bytes 39956
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-console) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-alxaoE" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(google-console)
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands) direct model output UTF8 bytes 40948
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-sKMKtr" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands)
+QWARN  : BrowserOutputTests::sandboxRetainsRawScreenshotAndLargeCdp() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-fvrhLf" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::sandboxRetainsRawScreenshotAndLargeCdp()
+PASS   : BrowserOutputTests::textBudgetPreservesUnicodeAndSmallExactPayload()
+PASS   : BrowserOutputTests::privateValueIsRedactedBeforeTruncation()
+PASS   : BrowserOutputTests::invalidScreenshotsFailWithoutEchoingData(not-json)
+PASS   : BrowserOutputTests::invalidScreenshotsFailWithoutEchoingData(invalid-base64)
+PASS   : BrowserOutputTests::invalidScreenshotsFailWithoutEchoingData(not-image)
+PASS   : BrowserOutputTests::invalidScreenshotsFailWithoutEchoingData(wrong-type)
+PASS   : BrowserOutputTests::invalidScreenshotsFailWithoutEchoingData(transport-limit)
+QWARN  : BrowserOutputTests::failedSnapshotStorageDoesNotPublishBase64() QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-VKbgih" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::failedSnapshotStorageDoesNotPublishBase64()
+QWARN  : BrowserOutputTests::attachmentObserverCannotSettleReplacement(cancel-replace) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-PEIKEJ" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::attachmentObserverCannotSettleReplacement(cancel-replace)
+QWARN  : BrowserOutputTests::attachmentObserverCannotSettleReplacement(delete-host) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-VpVVuH" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::attachmentObserverCannotSettleReplacement(delete-host)
+QWARN  : BrowserOutputTests::attachmentObserverCannotSettleReplacement(delete-engine) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-BpDZqA" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::attachmentObserverCannotSettleReplacement(delete-engine)
+PASS   : BrowserOutputTests::cleanupTestCase()
+Totals: 27 passed, 0 failed, 0 skipped, 0 blacklisted, 15665ms
+********* Finished testing of BrowserOutputTests *********

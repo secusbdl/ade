@@ -22,6 +22,7 @@ public:
     QUrl appUrl() const;
     bool isReady() const {return m_ready;}
     bool postMessage(const QJsonValue& data,QString* error=nullptr);
+    void discardPendingMessages();
     void reloadApp();
     void setTheme(const QJsonObject& variables);
 

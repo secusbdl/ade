@@ -1,0 +1,60 @@
+{
+  "startedUtc": "2026-11-07T05:14:58.124057+00:00",
+  "recordedUtc": "2026-11-07T05:15:11.639241+00:00",
+  "packageSha256": "ee6d51c93e0c4bf5ba3c0ee132c8021d8480856c154a51c65b1dac9ae92183fe",
+  "provider": "Codex installed native CLI, managed ChatGPT subscription",
+  "credentialsReadByRunnerOrADE": false,
+  "model": "gpt-6.1-sol",
+  "exitCode": 0,
+  "nativeSuccess": true,
+  "exactMarker": true,
+  "toolNames": [
+    "commandExecution"
+  ],
+  "workspaceUnchanged": true,
+  "elapsedMs": 13326,
+  "error": "",
+  "transcriptCapture": {
+    "displayNotifications": 16,
+    "error": "",
+    "frames": [
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "01-submitted.png",
+        "sha256": "b79e4791401023748abb92c1037bacb6d2d4bcde0d760de0de07831f0b4712d0",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "02-tool.png",
+        "sha256": "05b1ed6682a4768109eff544824ddd10051c59ac9ae3b8e426e5f049f813360f",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "03-text.png",
+        "sha256": "8aef37adda9708c51f5b245f78263c4f2174c1e1f23183b199023e3354bdb736",
+        "width": 1500
+      },
+      {
+        "devicePixelRatio": 1.5,
+        "height": 1200,
+        "path": "04-completed.png",
+        "sha256": "9875c46adec963b1f15c3015625ccc43bed11c3af81b8269fe79957133deb31e",
+        "width": 1500
+      }
+    ],
+    "maxSetConversationMs": 4.5437,
+    "meanSetConversationMs": 1.2614714285714286,
+    "mode": "Hidden native ConversationView rendered from actual AgentEngine events; not a full-window GUI or end-to-end interaction test",
+    "reasoningDeltas": 0,
+    "renderUpdates": 7,
+    "textDeltas": 5,
+    "timingScope": "Projection, redaction and setConversation only; excludes deferred layout, raster capture and compositor"
+  },
+  "usagePresent": true,
+  "scope": "Actual packaged native AgentEngine+AgentToolHost, live managed Codex, one read-only turn. Hidden transcript renders; not main-window input or complete parity."
+}

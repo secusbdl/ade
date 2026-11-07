@@ -45,6 +45,9 @@ public:
     ContextSnapshot snapshot() const { return m_snapshot; }
     QString readFile(const QString &virtualPath, QString *error = nullptr) const;
     static QJsonArray toolDefinitions();
+    // Transient HTTP user-message conversion; canonical history is unchanged.
+    QJsonArray prepareMessages(const QJsonArray& history, QString* error = nullptr) const;
+    QString nativeSystemContext() const;
     // For an external CLI's own tool runtime. No native mount/tool roster is
     // advertised; explicit instructions/invoked bodies are preserved as data.
     static QString externalHarnessContext(const ContextSnapshot& snapshot);

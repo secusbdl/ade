@@ -1200,3 +1200,167 @@ set_target_properties(test_browser_history_followups PROPERTIES WIN32_EXECUTABLE
 add_custom_command(TARGET test_browser_history_followups POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/third_party/webview2/x64/WebView2Loader.dll" "$<TARGET_FILE_DIR:test_browser_history_followups>")
 add_test(NAME native_browser_history_followups COMMAND test_browser_history_followups -o "${CMAKE_BINARY_DIR}/Testing/native_browser_history_followups.txt,txt")
 set_tests_properties(native_browser_history_followups PROPERTIES TIMEOUT 180 ENVIRONMENT "QT_QPA_PLATFORM=windows;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts;ADE_BROWSER_CAPTURE_DIR=${CMAKE_BINARY_DIR}/Testing/browser-followup-renders")
+
+# Integrated reviewed slice: provider-parity-next-stage
+qt_add_executable(cursor_fixture tests/support/CursorFixture.cpp)
+target_link_libraries(cursor_fixture PRIVATE Qt6::Core)
+set_target_properties(cursor_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+foreach(name IN ITEMS cursor cursor_engine cursor_ui cursor_host)
+  qt_add_executable(test_${name} tests/test_${name}.cpp)
+  target_link_libraries(test_${name} PRIVATE Qt6::Test)
+  add_dependencies(test_${name} cursor_fixture)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 120)
+endforeach()
+target_link_libraries(test_cursor PRIVATE ade_harness)
+target_link_libraries(test_cursor_engine PRIVATE ade_core)
+foreach(name IN ITEMS cursor_ui cursor_host)
+  target_link_libraries(test_${name} PRIVATE ade_ui Qt6::QOffscreenIntegrationPlugin)
+  qt_import_plugins(test_${name} INCLUDE Qt6::QOffscreenIntegrationPlugin)
+  set_tests_properties(native_${name} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+endforeach()
+add_dependencies(test_cursor_host ADE-sandbox-worker)
+# New native source files are included by existing harness/core globs.
+
+
+# Integrated reviewed slice: skills-slash-stage
+qt_add_executable(test_slash_context tests/test_slash_context.cpp)
+target_link_libraries(test_slash_context PRIVATE ade_core Qt6::Test)
+set_target_properties(test_slash_context PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_slash_context COMMAND test_slash_context -o "${CMAKE_BINARY_DIR}/Testing/native_slash_context.txt,txt")
+set_tests_properties(native_slash_context PROPERTIES TIMEOUT 45)
+qt_add_executable(test_skills_host tests/test_skills_host.cpp)
+target_link_libraries(test_skills_host PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_skills_host INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_skills_host PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_skills_host COMMAND test_skills_host -o "${CMAKE_BINARY_DIR}/Testing/native_skills_host.txt,txt")
+set_tests_properties(native_skills_host PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+
+# Integrated reviewed slice: claude-mutation-findings-stage
+qt_add_executable(test_mutation_findings tests/test_mutation_findings.cpp)
+target_link_libraries(test_mutation_findings PRIVATE ade_host Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_mutation_findings INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_mutation_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_mutation_findings COMMAND test_mutation_findings -o "${CMAKE_BINARY_DIR}/Testing/native_mutation_findings.txt,txt")
+set_tests_properties(native_mutation_findings PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+
+# Integrated reviewed slice: provider-http-findings-stage
+# Production source glob discovers new ProviderModelRules.h; no new binary dependency.
+foreach(name provider_http_rules provider_http_engine)
+  qt_add_executable(test_${name} tests/test_${name}.cpp src/ui/ModelSelection.cpp)
+  target_include_directories(test_${name} PRIVATE src)
+  target_link_libraries(test_${name} PRIVATE ade_core Qt6::Test)
+  set_target_properties(test_${name} PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  add_test(NAME native_${name} COMMAND test_${name} -o "${CMAKE_BINARY_DIR}/Testing/native_${name}.txt,txt")
+  set_tests_properties(native_${name} PROPERTIES TIMEOUT 60)
+endforeach()
+
+
+# Integrated reviewed slice: mini-app-findings-stage
+qt_add_executable(test_mini_app_findings tests/test_mini_app_findings.cpp)
+target_link_libraries(test_mini_app_findings PRIVATE ade_host Qt6::Test)
+set_target_properties(test_mini_app_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_dependencies(test_mini_app_findings ADE-sandbox-worker)
+add_test(NAME native_mini_app_findings COMMAND test_mini_app_findings -o "${CMAKE_BINARY_DIR}/Testing/native_mini_app_findings.txt,txt")
+set_tests_properties(native_mini_app_findings PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=windows")
+
+
+# Integrated reviewed slice: claude-question-findings-stage
+foreach(kind IN ITEMS Direct Acp)
+  qt_add_executable(question_findings_${kind}_fixture tests/support/QuestionFindingsFixture.cpp)
+  target_link_libraries(question_findings_${kind}_fixture PRIVATE Qt6::Core)
+  set_target_properties(question_findings_${kind}_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+endforeach()
+qt_add_executable(test_question_findings tests/test_question_findings.cpp)
+target_link_libraries(test_question_findings PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_question_findings INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_question_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_dependencies(test_question_findings question_findings_Direct_fixture question_findings_Acp_fixture)
+add_test(NAME native_question_findings COMMAND test_question_findings -o "${CMAKE_BINARY_DIR}/Testing/native_question_findings.txt,txt")
+set_tests_properties(native_question_findings PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+# Integrated reviewed slice: claude-terminal-findings-stage
+qt_add_executable(shell_fallback_fixture tests/support/ShellFallbackFixture.cpp)
+target_link_libraries(shell_fallback_fixture PRIVATE Qt6::Core)
+set_target_properties(shell_fallback_fixture PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+qt_add_executable(test_shell_followups tests/test_shell_followups.cpp)
+target_include_directories(test_shell_followups PRIVATE src)
+target_link_libraries(test_shell_followups PRIVATE ade_shell Qt6::Widgets Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_shell_followups INCLUDE Qt6::QOffscreenIntegrationPlugin)
+add_dependencies(test_shell_followups shell_fallback_fixture)
+set_target_properties(test_shell_followups PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_shell_followups COMMAND test_shell_followups -o "${CMAKE_BINARY_DIR}/Testing/native_shell_followups.txt,txt")
+set_tests_properties(native_shell_followups PROPERTIES TIMEOUT 180 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+# Integrated reviewed slice: settings-provider-provenance-stage
+qt_add_executable(test_provider_provenance tests/test_provider_provenance.cpp)
+target_link_libraries(test_provider_provenance PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_provider_provenance INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_provider_provenance PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_provider_provenance COMMAND test_provider_provenance -o "${CMAKE_BINARY_DIR}/Testing/native_provider_provenance.txt,txt")
+set_tests_properties(native_provider_provenance PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+# Integrated reviewed slice: question-stall-stage
+qt_add_executable(test_question_stall tests/test_question_stall.cpp)
+target_link_libraries(test_question_stall PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_question_stall INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_question_stall PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_question_stall COMMAND test_question_stall -o "${CMAKE_BINARY_DIR}/Testing/native_question_stall.txt,txt")
+set_tests_properties(native_question_stall PROPERTIES TIMEOUT 120 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+# Integrated reviewed slice: startup-recovery-stage
+# MainWindowRecovery.cpp is picked up by the existing UI_SOURCES CONFIGURE_DEPENDS glob.
+qt_add_executable(test_startup_recovery tests/test_startup_recovery.cpp)
+target_include_directories(test_startup_recovery PRIVATE src)
+target_link_libraries(test_startup_recovery PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_startup_recovery INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_startup_recovery PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_startup_recovery COMMAND test_startup_recovery -o "${CMAKE_BINARY_DIR}/Testing/native_startup_recovery.txt,txt")
+set_tests_properties(native_startup_recovery PROPERTIES TIMEOUT 60 ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+
+# Integrated reviewed slice: claude-search-findings-stage
+qt_add_executable(test_search_findings tests/test_search_findings.cpp)
+target_link_libraries(test_search_findings PRIVATE ade_core Qt6::Test)
+set_target_properties(test_search_findings PROPERTIES WIN32_EXECUTABLE FALSE)
+add_test(NAME native_search_findings COMMAND test_search_findings -o "${CMAKE_BINARY_DIR}/Testing/native_search_findings.txt,txt")
+set_tests_properties(native_search_findings PROPERTIES TIMEOUT 60)
+
+# Includes the real ToolExecutor implementation under test-local Win32 wrappers.
+qt_add_executable(test_search_read_budget tests/test_search_read_budget.cpp src/core/ToolExecutor.h src/core/ScopedDirectory.cpp)
+target_include_directories(test_search_read_budget PRIVATE src)
+target_link_libraries(test_search_read_budget PRIVATE ade_file_transformer Qt6::Core Qt6::Concurrent Qt6::Test)
+set_target_properties(test_search_read_budget PROPERTIES WIN32_EXECUTABLE FALSE)
+add_test(NAME native_search_read_budget COMMAND test_search_read_budget -o "${CMAKE_BINARY_DIR}/Testing/native_search_read_budget.txt,txt")
+set_tests_properties(native_search_read_budget PROPERTIES TIMEOUT 45)
+
+# Integrated reviewed slice: browser-event-stage
+qt_add_executable(test_browser_event_findings tests/test_browser_event_findings.cpp ${BROWSER_SOURCES})
+target_include_directories(test_browser_event_findings PRIVATE src)
+target_include_directories(test_browser_event_findings SYSTEM PRIVATE third_party/webview2/include)
+target_link_libraries(test_browser_event_findings PRIVATE Qt6::Widgets Qt6::Network Qt6::Test ole32)
+set_target_properties(test_browser_event_findings PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_custom_command(TARGET test_browser_event_findings POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/third_party/webview2/x64/WebView2Loader.dll" "$<TARGET_FILE_DIR:test_browser_event_findings>")
+add_test(NAME native_browser_event_findings COMMAND test_browser_event_findings -o "${CMAKE_BINARY_DIR}/Testing/native_browser_event_findings.txt,txt")
+set_tests_properties(native_browser_event_findings PROPERTIES TIMEOUT 90)
+
+# Integrated reviewed slice: desktop-provider-followups-stage
+qt_add_executable(test_desktop_provider tests/test_desktop_provider.cpp)
+target_link_libraries(test_desktop_provider PRIVATE ade_ui Qt6::Test Qt6::QOffscreenIntegrationPlugin)
+qt_import_plugins(test_desktop_provider INCLUDE Qt6::QOffscreenIntegrationPlugin)
+set_target_properties(test_desktop_provider PROPERTIES WIN32_EXECUTABLE FALSE RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_test(NAME native_desktop_provider COMMAND test_desktop_provider -o "${CMAKE_BINARY_DIR}/Testing/native_desktop_provider.txt,txt")
+set_tests_properties(native_desktop_provider PROPERTIES TIMEOUT 90 ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QPA_FONTDIR=$ENV{SystemRoot}/Fonts")
+
+# Integrated reviewed slice: browser-output-stage
+# BrowserToolResult.cpp/h are included by existing BROWSER_SOURCES CONFIGURE_DEPENDS glob.
+qt_add_executable(test_browser_output tests/test_browser_output.cpp)
+target_include_directories(test_browser_output PRIVATE src)
+target_link_libraries(test_browser_output PRIVATE ade_ui Qt6::Test)
+set_target_properties(test_browser_output PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+add_dependencies(test_browser_output ADE-sandbox-worker)
+add_test(NAME native_browser_output COMMAND test_browser_output -o "${CMAKE_BINARY_DIR}/Testing/native_browser_output.txt,txt")
+set_tests_properties(native_browser_output PROPERTIES TIMEOUT 120 ENVIRONMENT "QT_QPA_PLATFORM=windows")
+# Use normal WebView2Loader.dll deployment in build bin. No offscreen skip: this target exercises real hidden native WebView.

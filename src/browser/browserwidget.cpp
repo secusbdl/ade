@@ -211,6 +211,8 @@ public:
     quint64 navigationId = 0;
     quint64 navigationRevision = 0;
     QSet<QString> eventNames;
+    QHash<QString, QSet<QObject*>> eventOwners;
+    QHash<QObject*, QMetaObject::Connection> eventOwnerConnections;
     QJsonObject permissionDefaults;
     QJsonObject permissionExceptions;
     int permissionTimeoutMs = 30000;
@@ -273,6 +275,11 @@ BrowserWidget::BrowserWidget(QWidget* parent) : QWidget(parent), d(std::make_uni
 
 BrowserWidget::~BrowserWidget() {
     d->lifetime.reset();
+    d->ready = false;
+    emit aboutToBeDestroyed();
+    // Child owners can be destroyed after Impl during QWidget teardown.
+    for (const auto& connection : std::as_const(d->eventOwnerConnections)) disconnect(connection);
+    d->eventOwnerConnections.clear();
     const auto requests = std::exchange(d->permissions, {});
     for (const auto& request : requests) {
         if (request.deadline) request.deadline->stop();
@@ -316,6 +323,7 @@ BrowserWidget::~BrowserWidget() {
 }
 
 bool BrowserWidget::isReady() const { return d->ready; }
+bool BrowserWidget::isClosing() const { return !d->lifetime; }
 QUrl BrowserWidget::currentUrl() const { return d->currentUrl; }
 bool BrowserWidget::setProfileDirectory(const QString& directory) {
     if (d->initializing || d->ready) return false;
@@ -861,7 +869,7 @@ void BrowserWidget::initialize() {
             const quint64 revision = self->d->navigationRevision;
             const auto eventNames = self->d->eventNames;
             for (const auto& eventName : eventNames) {
-                self->subscribeDevToolsEvent(eventName);
+                self->attachDevToolsEvent(eventName);
                 if (lifetime.expired() || !self) return S_OK;
             }
             emit self->readyChanged(true);
@@ -950,6 +958,7 @@ void BrowserWidget::callDevTools(const QString& method, const QString& json) {
 }
 
 void BrowserWidget::callDevToolsRequest(const QString& requestId, const QString& method, const QString& json) {
+    if (!d->lifetime) return;
 #ifdef Q_OS_WIN
     const auto failRequest = [this, requestId](const QString& message) {
         if (requestId.isEmpty()) emit errorOccurred(message);
@@ -985,9 +994,21 @@ void BrowserWidget::callDevToolsRequest(const QString& requestId, const QString&
 #endif
 }
 
-void BrowserWidget::subscribeDevToolsEvent(const QString& eventName) {
+void BrowserWidget::subscribeDevToolsEvent(const QString& eventName, QObject* owner) {
+    if (!d->lifetime) return;
     if (eventName.isEmpty() || eventName.size() > 200) return;
+    if (!owner) owner = this;
+    if (owner->thread() != thread()) return;
+    d->eventOwners[eventName].insert(owner);
     d->eventNames.insert(eventName);
+    if (owner != this && !d->eventOwnerConnections.contains(owner)) {
+        d->eventOwnerConnections.insert(owner, connect(owner, &QObject::destroyed, this,
+            [this, owner] { releaseDevToolsEvents(owner); }));
+    }
+    attachDevToolsEvent(eventName);
+}
+void BrowserWidget::attachDevToolsEvent(const QString& eventName) {
+    if (!d->eventNames.contains(eventName)) return;
 #ifdef Q_OS_WIN
     if (!d->ready || d->subscriptions.contains(eventName)) return;
     Impl::DevToolsSubscription subscription;
@@ -1009,13 +1030,29 @@ void BrowserWidget::subscribeDevToolsEvent(const QString& eventName) {
     d->subscriptions.insert(eventName, std::move(subscription));
 #endif
 }
-void BrowserWidget::unsubscribeDevToolsEvent(const QString& eventName) {
+void BrowserWidget::unsubscribeDevToolsEvent(const QString& eventName, QObject* owner) {
+    if (!owner) owner = this;
+    auto owners = d->eventOwners.find(eventName);
+    if (owners == d->eventOwners.end() || !owners->remove(owner)) return;
+    bool ownerStillUsed = false;
+    for (const auto& users : std::as_const(d->eventOwners)) {
+        if (users.contains(owner)) { ownerStillUsed = true; break; }
+    }
+    if (!ownerStillUsed) disconnect(d->eventOwnerConnections.take(owner));
+    if (!owners->isEmpty()) return;
+    d->eventOwners.erase(owners);
     d->eventNames.remove(eventName);
 #ifdef Q_OS_WIN
     auto it=d->subscriptions.find(eventName);if(it==d->subscriptions.end())return;
     auto subscription=it.value();d->subscriptions.erase(it);
     subscription.receiver->remove_DevToolsProtocolEventReceived(subscription.token);
 #endif
+}
+
+void BrowserWidget::releaseDevToolsEvents(QObject* owner) {
+    if (!owner) owner = this;
+    const auto names = d->eventOwners.keys();
+    for (const auto& name : names) unsubscribeDevToolsEvent(name, owner);
 }
 
 void BrowserWidget::requestScreenshot() {

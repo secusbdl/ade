@@ -1,0 +1,19 @@
+********* Start testing of AcpSettlementTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : AcpSettlementTest::initTestCase()
+PASS   : AcpSettlementTest::denialContinuesOnlyRemainingTask()
+PASS   : AcpSettlementTest::lateCommandCompletionIsNotLost()
+PASS   : AcpSettlementTest::earlyPromptEndKeepsPendingDecision()
+PASS   : AcpSettlementTest::repeatedDenialsAreBounded()
+PASS   : AcpSettlementTest::missingCommandStatusHasThreeRecoveryPrompts()
+PASS   : AcpSettlementTest::humanDecisionPauseIncludesEarlyTerminalResponse()
+PASS   : AcpSettlementTest::nestedTerminalUpdateIsNotOverwrittenByStaleSweep()
+PASS   : AcpSettlementTest::activeProgressCannotExtendWholeTurnDeadline()
+PASS   : AcpSettlementTest::cancellationFromDeniedToolSuppressesContinuation()
+PASS   : AcpSettlementTest::lateOutputObserverCanDeleteSession()
+PASS   : AcpSettlementTest::interruptedSettlementCannotFinishReplacement()
+PASS   : AcpSettlementTest::engineOwnsOneTurn(denial)
+PASS   : AcpSettlementTest::engineOwnsOneTurn(late-command)
+PASS   : AcpSettlementTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 11964ms
+********* Finished testing of AcpSettlementTest *********

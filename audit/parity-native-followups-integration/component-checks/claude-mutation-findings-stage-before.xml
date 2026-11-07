@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="MutationFindingsTest" timestamp="2026&#x002D;11&#x002D;07T04:28:23" hostname="VOID" tests="20" failures="12" errors="0" skipped="0" time="0.979">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="MutationFindingsTest" time="0.000"/>
+  <testcase name="directModelMutationNotifiesActualHost(write)" classname="MutationFindingsTest" time="0.233">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (changed.size()): 0
+   Expected (1)             : 1]]>
+    </failure>
+  </testcase>
+  <testcase name="directModelMutationNotifiesActualHost(multiEdit)" classname="MutationFindingsTest" time="0.209">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (changed.size()): 0
+   Expected (1)             : 1]]>
+    </failure>
+  </testcase>
+  <testcase name="cancelAfterActualCommitStillNotifies" classname="MutationFindingsTest" time="0.144">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (changed.size()): 0
+   Expected (1)             : 1]]>
+    </failure>
+  </testcase>
+  <testcase name="settlementObserverCancelStillNotifies" classname="MutationFindingsTest" time="0.088">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (changed.size()): 0
+   Expected (1)             : 1]]>
+    </failure>
+  </testcase>
+  <testcase name="existingLeafCaseSurvivesMutationAndUndo(write)" classname="MutationFindingsTest" time="0.034">
+    <failure type="fail" message="&apos;QDir(root.path()).entryList(QDir::Files).contains(&quot;README.md&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="existingLeafCaseSurvivesMutationAndUndo(multiEdit)" classname="MutationFindingsTest" time="0.027">
+    <failure type="fail" message="&apos;QDir(root.path()).entryList(QDir::Files).contains(&quot;README.md&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="existingLeafCaseSurvivesMutationAndUndo(copy)" classname="MutationFindingsTest" time="0.028">
+    <failure type="fail" message="&apos;QDir(root.path()).entryList(QDir::Files).contains(&quot;README.md&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="existingLeafCaseSurvivesMutationAndUndo(delete)" classname="MutationFindingsTest" time="0.044">
+    <failure type="fail" message="&apos;QDir(root.path()).entryList(QDir::Files).contains(&quot;README.md&quot;)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="ordinaryHexLikeFolderNamesRemainWorkspaceRelative(web)" classname="MutationFindingsTest" time="0.004">
+    <failure type="fail" message="&apos;!tools.resolvePath(folder+&quot;/file.txt&quot;,&amp;error).isEmpty()&apos; returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)"/>
+  </testcase>
+  <testcase name="ordinaryHexLikeFolderNamesRemainWorkspaceRelative(wd)" classname="MutationFindingsTest" time="0.003">
+    <failure type="fail" message="&apos;!tools.resolvePath(folder+&quot;/file.txt&quot;,&amp;error).isEmpty()&apos; returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)"/>
+  </testcase>
+  <testcase name="ordinaryHexLikeFolderNamesRemainWorkspaceRelative(wade)" classname="MutationFindingsTest" time="0.002">
+    <failure type="fail" message="&apos;!tools.resolvePath(folder+&quot;/file.txt&quot;,&amp;error).isEmpty()&apos; returned FALSE. (The requested mount is unavailable. Connect a workspace or use the configured apps/ mount.)"/>
+  </testcase>
+  <testcase name="unknownMountsRemainUnavailable(wdead)" classname="MutationFindingsTest" time="0.027"/>
+  <testcase name="unknownMountsRemainUnavailable(wcafe)" classname="MutationFindingsTest" time="0.029"/>
+  <testcase name="unknownMountsRemainUnavailable(w2)" classname="MutationFindingsTest" time="0.025"/>
+  <testcase name="unknownMountsRemainUnavailable(ws2)" classname="MutationFindingsTest" time="0.027"/>
+  <testcase name="unknownMountsRemainUnavailable(att)" classname="MutationFindingsTest" time="0.026"/>
+  <testcase name="unknownMountsRemainUnavailable(logs)" classname="MutationFindingsTest" time="0.024"/>
+  <testcase name="unknownMountsRemainUnavailable(plans)" classname="MutationFindingsTest" time="0.003">
+    <failure type="fail" message="&apos;tools.resolvePath(prefix+&quot;/file.txt&quot;,&amp;error).isEmpty()&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="MutationFindingsTest" time="0.000"/>
+</testsuite>

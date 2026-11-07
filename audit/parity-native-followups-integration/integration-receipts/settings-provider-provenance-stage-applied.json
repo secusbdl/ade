@@ -1,0 +1,15 @@
+{
+  "stage": "settings-provider-provenance-stage",
+  "appliedUtc": "2026-11-07T03:28:38.966251+00:00",
+  "handoffSha256CanonicalLf": "07c937fc6f47ed2df4103500cf5d00743f008bc8c1d1dee1feae7bd79383a333",
+  "patchSha256CanonicalLf": "ebff460818ddacd58d3fdbc7441d99d9daddb1c3e33cc1a5bd36bca124a3f911",
+  "before": {
+    "src/ui/SettingsPage.cpp": "da6ec2dd80a2727f7f558b5dee33aefb1f0fcca3c369fc784df3c394773b0b1c",
+    "tests/test_provider_provenance.cpp": null
+  },
+  "after": {
+    "src/ui/SettingsPage.cpp": "c0f7dc9bc3826943e6a5169faa4275b775cd0474bde052cb91242cf7f7faefd6",
+    "tests/test_provider_provenance.cpp": "ae065754bb46f8c777e925be0a836267a4f9b1ff507c5356df4573f4ecb1e7aa"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

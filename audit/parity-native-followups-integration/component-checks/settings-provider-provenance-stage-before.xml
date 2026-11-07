@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="ProviderProvenanceTest" timestamp="2026&#x002D;11&#x002D;07T05:13:33" hostname="VOID" tests="18" failures="8" errors="0" skipped="0" time="0.527">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="ProviderProvenanceTest" time="0.001"/>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;deepseek)" classname="ProviderProvenanceTest" time="0.024">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "DeepSeek models."]]>
+    </failure>
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;unknown)" classname="ProviderProvenanceTest" time="0.019">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;qwen&#x002D;configurable&#x002D;default)" classname="ProviderProvenanceTest" time="0.018">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;qwen&#x002D;configurable&#x002D;regional)" classname="ProviderProvenanceTest" time="0.019">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(explicit&#x002D;qwen&#x002D;regional)" classname="ProviderProvenanceTest" time="0.028">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(explicit&#x002D;custom&#x002D;official&#x002D;url)" classname="ProviderProvenanceTest" time="0.035">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;ambiguous&#x002D;minimax)" classname="ProviderProvenanceTest" time="0.018">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;ambiguous&#x002D;moonshot)" classname="ProviderProvenanceTest" time="0.019">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Kimi models through the Moonshot platform."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(explicit&#x002D;minimax&#x002D;api)" classname="ProviderProvenanceTest" time="0.031">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(explicit&#x002D;minimax&#x002D;plan)" classname="ProviderProvenanceTest" time="0.031">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;protocol&#x002D;mismatch)" classname="ProviderProvenanceTest" time="0.019">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Choose a supported protocol and your own endpoint."
+   Expected (expected)           : "Custom model endpoint using anthropic."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;near&#x002D;url)" classname="ProviderProvenanceTest" time="0.016">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (description->text()): "Qwen and partner models through Token Plan."
+   Expected (expected)           : "Custom model endpoint using openai."]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(explicit&#x002D;stale&#x002D;template)" classname="ProviderProvenanceTest" time="0.028">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;codex)" classname="ProviderProvenanceTest" time="0.028">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cardsRequireRealTemplateOrUniqueFixedEndpoint(legacy&#x002D;claude)" classname="ProviderProvenanceTest" time="0.030">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="syntheticBeforeAfterCaptures" classname="ProviderProvenanceTest" time="0.075">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="ProviderProvenanceTest" time="0.000"/>
+</testsuite>

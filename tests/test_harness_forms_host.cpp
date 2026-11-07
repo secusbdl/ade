@@ -286,8 +286,9 @@ private slots:
     QVERIFY(result.value("cancelled").toBool());
     QCOMPARE(result.value("answers").toObject().value("answer").toString(),
              QString("completed step"));
-    QCOMPARE(result.value("answers").toObject().value("second").toString(),
-             QString("retained partial draft"));
+    // Upstream toolbox.cancelUserQuestion and cleanupQuestionsForAgent pass no
+    // draft answers: Cancel and Stop return submitted steps only.
+    QVERIFY(!result.value("answers").toObject().contains("second"));
     QVERIFY(!QJsonDocument(stored(dir.path(), "first").messages)
                  .toJson()
                  .contains("retired token"));

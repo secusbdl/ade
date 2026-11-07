@@ -1,0 +1,152 @@
+{
+  "status": "frozen_private_not_integrated",
+  "sourcePin": "17a0123a0e896885465df36169457199d5225eb5",
+  "rootHeadAtFreeze": "91ed23d4453874f141db1d987c94ba71bd05f4ce",
+  "patch": "terminal-followups.patch",
+  "patchCanonicalLfSha256": "1679cebb5e4c4b4e0820d663aae1deed43da2a64fe6982670d761087919e0431",
+  "manifest": "manifest.json",
+  "cmake": "cmake-additions.txt",
+  "pathCount": 5,
+  "changes": [
+    "Frame actual command output for pattern/idle matching; ignore command echo and whitespace-only output for idle arming.",
+    "Emit current-command/alternate-screen live preview rather than entire terminal history.",
+    "Expand exact pinned C-style stdin escapes while preserving unknown escapes.",
+    "Encode a complete watcher script as one command; preserve explicit/native exit codes and capture final PowerShell statement failure inside the block before call-operator status resets.",
+    "Provide a basic Console.ReadLine boundary wrapper when PSReadLine is unavailable, retaining post-echo OSC C framing for managed commands/raw stdin/polls.",
+    "Use bounded UTF-16LE base64 for watcher source: full65536 UTF-16-unit limit plus trailer/wrapper fits the256KiB input queue even for CJK/surrogate pairs."
+  ],
+  "results": {
+    "finalPassed": 44,
+    "finalFailed": 0,
+    "finalSkipped": 0,
+    "reports": [
+      {
+        "name": "before-2",
+        "passed": 2,
+        "failed": 5,
+        "skipped": 0,
+        "text": "before-2.txt",
+        "xml": "before-2.xml",
+        "canonicalLfSha256": "9b8009f0b356a434c7e37e9db83337e0ec8228d307be629fdb863359bf24412b"
+      },
+      {
+        "name": "after-expanded",
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "text": "after-expanded.txt",
+        "xml": "after-expanded.xml",
+        "canonicalLfSha256": "342adeea6264ec7b04777a2f0b8a9c69af85884d6fc86b4e9396abf60b67eab5"
+      },
+      {
+        "name": "peer-before",
+        "passed": 3,
+        "failed": 6,
+        "skipped": 0,
+        "text": "peer-before.txt",
+        "xml": "peer-before.xml",
+        "canonicalLfSha256": "380c41f8157cd93a94f979851867d3647de909fe283a223635c3a77701592214"
+      },
+      {
+        "name": "peer-after-first",
+        "passed": 6,
+        "failed": 3,
+        "skipped": 0,
+        "text": "peer-after-first.txt",
+        "xml": "peer-after-first.xml",
+        "canonicalLfSha256": "df12a3d1c866c2b25c111c2b3177de0eac67ea713e169442f62aa61312d34649"
+      },
+      {
+        "name": "peer-after-expanded",
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "text": "peer-after-expanded.txt",
+        "xml": "peer-after-expanded.xml",
+        "canonicalLfSha256": "adbfff416bd53cd36a5390cae3b194aa095ecc4b3ea027b77dcb0050e1155aba"
+      },
+      {
+        "name": "final-followups",
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-followups.txt",
+        "xml": "final-followups.xml",
+        "canonicalLfSha256": "c6da7be1f4e5f9505bad191e02985a25b032b7067df96ce56d4eeb5e0dac1094"
+      },
+      {
+        "name": "final-compat",
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0,
+        "text": "final-compat.txt",
+        "xml": "final-compat.xml",
+        "canonicalLfSha256": "71fd0e93db96e81aa9cf90cfc68411c6b3d06ec8b4749c7d84cccc39a8b31947"
+      }
+    ],
+    "fullIntegrationPending": true,
+    "beforeFailureRows": 11,
+    "beforeFailureNote": "5 initial parent-stage failures and6 later peer rows; these are regression rows across8 issue categories, not11 independent defects."
+  },
+  "validation": [
+    "Actual Windows ConPTY+PowerShell processes; no simulated output for new fallback/watcher cases.",
+    "Fallback test helper launches the discovered real PowerShell under the same pseudoconsole after deliberately removing PSReadLine from the generated integration; no production test seam.",
+    "Fallback pattern/idle/raw/poll and echo-negative; terminal-only compatibility includes cancellation, replacement/deletion observers, paced input and session/log ownership.",
+    "Watcher final Write-Error, native-success then Write-Error, failed cmdlet, native7, native7 followed by successful output, handled nonterminal error, throw and explicit exit0.",
+    "Actual65536-unit watcher containing CJK and emoji output completes once; previous UTF8 encoding exceeded input queue and never reported watcher completion."
+  ],
+  "sourceRefs": [
+    {
+      "path": "reference/stagewise/packages/agent-shell/src/tools/execute-shell-command.ts",
+      "lines": [
+        214,
+        238,
+        506
+      ],
+      "contract": "Exact C escape expansion for raw stdin."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-shell/src/engine/session-manager.ts",
+      "lines": [
+        573,
+        623,
+        1187,
+        1223
+      ],
+      "contract": "OSC C/D command framing, markLine and actual-output-only matching/idle."
+    },
+    {
+      "path": "reference/stagewise/packages/agent-shell/src/engine/session-manager.ts",
+      "lines": [
+        288,
+        338,
+        1344,
+        1358
+      ],
+      "contract": "PowerShell read-line/prompt integration and one-script watcher execution with native exit-code precedence."
+    }
+  ],
+  "nativeCorrections": [
+    "Pinned PSReadLine-only C framing does not supply a no-module start marker; native basic read-line wrapper closes this tested fallback gap.",
+    "Pinned watcher wrapper also checks $? after expressions/call return; native captures the final statement inside the scriptblock to avoid false success.",
+    "UTF16LE in-memory encoding differs from pinned temporary script file; tested full source-size bound and Unicode, with no staging-file cleanup authority."
+  ],
+  "scope": {
+    "sourceAndSharedBuildWrites": false,
+    "cohort": "private/claude-terminal-findings-stage/cohort (immutable180)",
+    "libraryHashes": "cohort-library-hashes.json",
+    "privateJobs": 1,
+    "guiPlatform": "offscreen",
+    "liveNetworkOrKeys": false,
+    "runningPrivateProcesses": []
+  },
+  "limits": [
+    "Root coherent rebuild/full gate pending; this is not full POSIX or all-shell parity.",
+    "Actual new fixtures use installed preferred pwsh; WindowsPowerShell5.1 and constrained-language/no-Console environments are not separately validated.",
+    "No claim that every earlier handled PowerShell error makes a watcher fail: last statement status is captured and existing nonzero native LASTEXITCODE precedence remains. Explicit exit wins.",
+    "The basic no-PSReadLine fallback has no advanced editing/completion features.",
+    "Raw private before reports include OS temporary fixture paths. evidence/ copies canonicalize LF and replace only C:/Users/<user>/AppData/Local/Temp/ with <temporary-root>/; no candidate values or credentials are present."
+  ],
+  "peerReview": "Earlier parent-assigned source review generated the concrete reproduced followups. Optional second review requested from license_review; no unreceived review claimed.",
+  "frozen": true
+}

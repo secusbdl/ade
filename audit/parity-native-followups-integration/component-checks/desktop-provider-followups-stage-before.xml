@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="DesktopProviderTest" timestamp="2026&#x002D;11&#x002D;07T05:32:06" hostname="VOID" tests="10" failures="4" errors="0" skipped="0" time="22.932">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="DesktopProviderTest" time="0.002"/>
+  <testcase name="providerErrorDoesNotSkipOwnedCleanup(valid&#x002D;provider&#x002D;control)" classname="DesktopProviderTest" time="0.248"/>
+  <testcase name="providerErrorDoesNotSkipOwnedCleanup(invalid&#x002D;provider)" classname="DesktopProviderTest" time="10.689">
+    <failure type="fail" message="&apos;!QFileInfo::exists(path)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="failedCleanupRemainsPendingAndRetriesWithProviderError" classname="DesktopProviderTest" time="10.996">
+    <failure type="fail" message="&apos;!QFileInfo::exists(path)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="invalidSessionEnvelopeNeverAuthorizesCleanup" classname="DesktopProviderTest" time="0.253"/>
+  <testcase name="importRefreshesOpenSideChatAndPreservesDraftSelection" classname="DesktopProviderTest" time="0.172">
+    <failure type="fail" message="&apos;hasModel(combo, &quot;gpt&#x002D;4o&#x002D;mini&quot;)&apos; returned FALSE. (Imported model must be offered in the already open side chat)"/>
+  </testcase>
+  <testcase name="dialogSaveRefreshesOpenSideChat(save)" classname="DesktopProviderTest" time="0.163">
+    <failure type="fail" message="&apos;hasModel(combo, &quot;new&#x002D;model&quot;)&apos; returned FALSE. (Saved provider model must refresh the already open side chat)"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="dialogSaveRefreshesOpenSideChat(cancel)" classname="DesktopProviderTest" time="0.163">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="failedImportDoesNotPublishUncommittedChoices" classname="DesktopProviderTest" time="0.155"/>
+  <testcase name="cleanupTestCase" classname="DesktopProviderTest" time="0.000"/>
+</testsuite>

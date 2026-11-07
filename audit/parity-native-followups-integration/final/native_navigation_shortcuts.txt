@@ -1,0 +1,29 @@
+********* Start testing of NavigationShortcutsTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : NavigationShortcutsTest::initTestCase()
+PASS   : NavigationShortcutsTest::focusChatDoesNotAlterDraft()
+PASS   : NavigationShortcutsTest::numericAgentNavigationFollowsSidebarAndKeepsDrafts()
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary) This plugin does not support raise()
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary) This plugin does not support grabbing the keyboard
+PASS   : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(primary)
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias) This plugin does not support raise()
+QWARN  : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias) This plugin does not support grabbing the keyboard
+PASS   : NavigationShortcutsTest::modelShortcutOpensPickerWithoutSending(shift-alias)
+PASS   : NavigationShortcutsTest::filteredAgentListAndAbsentIndicesDoNotSelectHiddenChats()
+PASS   : NavigationShortcutsTest::tabCyclingWrapsAndNineSelectsNinthNotLast()
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(alt-d)
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(f6)
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l) This plugin does not support setting window masks
+QWARN  : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l) This plugin does not support setting window masks
+PASS   : NavigationShortcutsTest::addressAliasesFocusCurrentBrowserOnly(ctrl-alt-l)
+PASS   : NavigationShortcutsTest::mainNavigationIsSuppressedInSettingsAndModalDialogs()
+PASS   : NavigationShortcutsTest::registeredNavigationWorksFromTerminalWithoutStealingCopy()
+PASS   : NavigationShortcutsTest::focusChatRevealsHiddenNarrowComposer()
+PASS   : NavigationShortcutsTest::modelFocusObserverCanCloseWindow()
+PASS   : NavigationShortcutsTest::cleanupTestCase()
+Totals: 15 passed, 0 failed, 0 skipped, 0 blacklisted, 1601ms
+********* Finished testing of NavigationShortcutsTest *********

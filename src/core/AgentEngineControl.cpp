@@ -1,4 +1,5 @@
 #include "AgentEngine.h"
+#include "harness/CursorHarnessSession.h"
 #include "harness/AcpHarnessSession.h"
 #include "harness/ClaudeHarnessSession.h"
 #include "QueuedMessages.h"
@@ -257,6 +258,12 @@ bool AgentEngine::submitQuestionStep(const QString &token, int step,
       emit questionError(token,"The answers do not satisfy Claude's form constraints.");return false;
     }
   }
+  if(m_provider.isCursorHarness()&&m_cursor&&!m_harnessQuestionToken.isEmpty()) {
+    auto candidate=m_question;
+    if(candidate.submit(step,answers,&error)&&candidate.completed()&&!m_cursor->validQuestionAnswer(m_harnessQuestionToken,candidate.result({})["answers"].toObject())) {
+      emit questionError(token,"Choose only the options in Cursor's current question.");return false;
+    }
+  }
   if(m_provider.isOpenCodeHarness()&&m_acp&&!m_harnessQuestionToken.isEmpty()) {
     auto candidate=m_question;
     if(candidate.submit(step,answers,&error)&&candidate.completed()&&!m_acp->validQuestionAnswer(m_harnessQuestionToken,candidate.result({})["answers"].toObject())) {
@@ -287,8 +294,9 @@ bool AgentEngine::cancelQuestion(const QString &token,
                                  const QJsonObject &draft) {
   if (!m_busy || token.isEmpty() || token != m_questionToken)
     return false;
-  if (!draft.isEmpty() && !updateQuestionDraft(token, m_question.step(), draft))
-    return false;
+  // Retain the API shape for callers, but explicit cancellation does not
+  // submit or validate an unsubmitted draft. Message interruption is separate.
+  Q_UNUSED(draft);
   finishQuestion("user_cancelled");
   return true;
 }

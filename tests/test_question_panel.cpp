@@ -90,7 +90,7 @@ private slots:
     QCOMPARE(answer["targets"], QJsonArray{"desktop"});
     QCOMPARE(submitted[0][1].toString(), "phase-token");
   }
-  void cancellationPreservesCurrentDraftAndContext() {
+  void cancellationOmitsCurrentDraftAndKeepsContext() {
     QuestionPanel panel;
     panel.setQuestion("first", pending());
     QSignalSpy cancelled(&panel, &QuestionPanel::cancelled);
@@ -98,7 +98,7 @@ private slots:
     panel.findChild<QPushButton *>("questionCancel")->click();
     QCOMPARE(cancelled.size(), 1);
     QCOMPARE(cancelled[0][0].toString(), "first");
-    QCOMPARE(cancelled[0][2].toJsonObject()["name"], "unfinished");
+    QVERIFY(cancelled[0][2].toJsonObject().isEmpty());
     auto next = pending();
     next["id"] = "new-token";
     panel.setQuestion("second", next);

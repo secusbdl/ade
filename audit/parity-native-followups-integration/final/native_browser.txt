@@ -1,0 +1,18 @@
+********* Start testing of BrowserTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserTest::initTestCase()
+PASS   : BrowserTest::screenshotBeforeReadyIsReported()
+PASS   : BrowserTest::queuedNavigationAndDomAccess()
+PASS   : BrowserTest::failedNavigationRecovers()
+PASS   : BrowserTest::resizeAndScreenshot()
+PASS   : BrowserTest::twoViewsRemainIndependent()
+PASS   : BrowserTest::devToolsErrorAndSuccess()
+PASS   : BrowserTest::readySignalDoesNotOverwriteNavigation()
+PASS   : BrowserTest::popupStaysInPreview()
+PASS   : BrowserTest::destroyDuringAsyncCreation()
+PASS   : BrowserTest::destroyFromReadySignal()
+PASS   : BrowserTest::destroyFromNavigationSignal()
+PASS   : BrowserTest::destroyWithOutstandingOperations()
+PASS   : BrowserTest::cleanupTestCase()
+Totals: 14 passed, 0 failed, 0 skipped, 0 blacklisted, 5618ms
+********* Finished testing of BrowserTest *********

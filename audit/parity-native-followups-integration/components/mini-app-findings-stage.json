@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "status": "Frozen private candidate; 38/38 final cases across4 suites, zero skips. No production/shared build writes.",
+  "upstreamPin": "17a0123a0e896885465df36169457199d5225eb5",
+  "nativeBaseCommit": "bea34bc582e81ed63308d10c966b5ed835d3f7f9",
+  "cohort": "Immutable180 source/libs at private/claude-browser-findings-stage/cohort; source manifest beside it. Worker/loader copied from immutable package7, exact hashes in cohort.json.",
+  "patch": "mini-app-findings.patch",
+  "cmake": "cmake-additions.txt",
+  "files": [
+    {
+      "path": "src/apps/MiniAppHost.h",
+      "preimageCanonicalLfSha256": "c40c4cd8aac1343596d540ea20f191d19ed3cdf7c875d8ad4aeef650123b0b39",
+      "postimageCanonicalLfSha256": "83d476db7668054e7cd572158bc817e5cd38d4b4cccebd6c07b4be6b34c45a64",
+      "compiledPrivateSourceCanonicalLfSha256": "83d476db7668054e7cd572158bc817e5cd38d4b4cccebd6c07b4be6b34c45a64"
+    },
+    {
+      "path": "src/apps/MiniAppHost.cpp",
+      "preimageCanonicalLfSha256": "8c080dceecc0fcbf686760728c563caec34f75d1a7fa871d9d701f9a9810bb0e",
+      "postimageCanonicalLfSha256": "8a7d9c42414726ad3c17842e64762350db1233dd2515c73bc7306fadc66fd40a",
+      "compiledPrivateSourceCanonicalLfSha256": "8a7d9c42414726ad3c17842e64762350db1233dd2515c73bc7306fadc66fd40a"
+    },
+    {
+      "path": "src/apps/MiniAppPage.h",
+      "preimageCanonicalLfSha256": "b0b8bdf7586b9ae4436cc219aa79aaa5ac4975e7775f1cfb183aa782883a1450",
+      "postimageCanonicalLfSha256": "a10fb1190c402caa88230163019e947ed654f4590d3aa71a301b44d0c102ddd1",
+      "compiledPrivateSourceCanonicalLfSha256": "a10fb1190c402caa88230163019e947ed654f4590d3aa71a301b44d0c102ddd1"
+    },
+    {
+      "path": "src/apps/MiniAppPage.cpp",
+      "preimageCanonicalLfSha256": "8eb00ed7c61e69e20a1957cb234b737f446b6cf7663b9a0219b2dd8d6c5ccd25",
+      "postimageCanonicalLfSha256": "883986d79f295635ebd792fb09b92a86d71971758ef2a70afe9a5a2d4ecf343c",
+      "compiledPrivateSourceCanonicalLfSha256": "883986d79f295635ebd792fb09b92a86d71971758ef2a70afe9a5a2d4ecf343c"
+    },
+    {
+      "path": "src/runtime/AgentToolHost.cpp",
+      "preimageCanonicalLfSha256": "37935ef507c85eb2fa01648af7f58429039832ea6856e0c71b39a6fb0df86a56",
+      "postimageCanonicalLfSha256": "9b2a992eba1e82de4e4e0039fa80a3efdb1141fc0aa3e862176a0b8ede77eebf",
+      "compiledPrivateSourceCanonicalLfSha256": "9b2a992eba1e82de4e4e0039fa80a3efdb1141fc0aa3e862176a0b8ede77eebf"
+    },
+    {
+      "path": "tests/test_runtime_apps.cpp",
+      "preimageCanonicalLfSha256": "27db14952e4804c3d7a029c2dd62ba0f61d07df7743d07e453d1655fda56f8dd",
+      "postimageCanonicalLfSha256": "ba54f3c374e73f9bd5fa9360c353f6c11e36ae1f367114347680f9d5718fdacc",
+      "compiledPrivateSourceCanonicalLfSha256": "ba54f3c374e73f9bd5fa9360c353f6c11e36ae1f367114347680f9d5718fdacc"
+    },
+    {
+      "path": "tests/test_mini_app_findings.cpp",
+      "preimageCanonicalLfSha256": null,
+      "postimageCanonicalLfSha256": "8cf60d6697b4f3eef218404021fc281e8d25d09bd36d971167cfaf0a55d5607e",
+      "compiledPrivateSourceCanonicalLfSha256": "8cf60d6697b4f3eef218404021fc281e8d25d09bd36d971167cfaf0a55d5607e"
+    }
+  ],
+  "reports": [
+    {
+      "suite": "mini_app_findings",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 9069,
+      "text": "mini_app_findings-final2.txt",
+      "textCanonicalLfSha256": "6e1f8bca95490fa2b2a0752cee23cacd270dfdef5e6e7f97cc73d6fe45118fb9",
+      "junit": "mini_app_findings-final2.xml",
+      "junitCanonicalLfSha256": "669e19f9147b4ac2cdd859b6c21b2e8fd2dc643b137edf1fb50343893652fef6"
+    },
+    {
+      "suite": "mini_apps",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 3377,
+      "text": "mini_apps-final2.txt",
+      "textCanonicalLfSha256": "619d21216898a53c32efb23d87b85e6b1e5f34fa8f3667954085a64ba5c3f3e5",
+      "junit": "mini_apps-final2.xml",
+      "junitCanonicalLfSha256": "d6edfe9aaa74b94b364c1e78c9ea6532bfdddd65782f3ee3907ad82cd13ce362"
+    },
+    {
+      "suite": "sandbox_apps",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 1916,
+      "text": "sandbox_apps-final2.txt",
+      "textCanonicalLfSha256": "120bb50f245ee5aac441f9cc8354c884b9f9bbca09570487f28de994e06e0835",
+      "junit": "sandbox_apps-final2.xml",
+      "junitCanonicalLfSha256": "020391697d38b634bd052c9306ee8067870f51477c728cf2e1624fd018783ebd"
+    },
+    {
+      "suite": "runtime_apps",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "milliseconds": 6824,
+      "text": "runtime_apps-final2.txt",
+      "textCanonicalLfSha256": "a7e847dda4fc64bc93b2a3fde699541f0bf35431e2eb8b363524373495b93953",
+      "junit": "runtime_apps-final2.xml",
+      "junitCanonicalLfSha256": "5cf6efdfb31afb291c6d70a18210e858b2e4d70f9ad3c59b84f06e659d0c9c7d"
+    }
+  ],
+  "totalPassed": 38,
+  "applyCheck": 0,
+  "productionSeam": "AgentToolHost.cpp contextReset lambda only: ordinary resetContext, permanent m_fileContextRemoved uses hard reset. Apply patch; do not copy old cohort Host wholesale. No Engine/worker/MainWindow/SessionStore changes.",
+  "behavior": [
+    "Inactive still-owned app inbound messages reach appId/pluginId listeners; API.sendMessage remains active-only.",
+    "Parsing-time iframe messages accepted before load; exact preview URL/nonce/channel and128KiB limit remain. Outbound waits for readiness.",
+    "Sandbox reset/cancel/workspace changes clear active mapping, pending opens and queued outbound messages; bound preview pages retained. Old realm listeners are revoked; new same-owner listeners may receive retained-page events.",
+    "Unbound canceled pages, plugin authorization revocation, permanent file-context removal and host destruction hard-close as before."
+  ],
+  "evidenceBefore": [
+    "before.txt:2pass2fail real WebView routing gaps",
+    "reset-before2.txt:2pass3fail actualHost reset/cancel/workspace page closure"
+  ],
+  "fixtureCorrections": [
+    "reset-before.txt wrong signal watched for console.log; corrected before reproducing all3 cases.",
+    "reset-after.txt canceled execution must reach exact completion before replacement script; final fixture waits for that event.",
+    "expanded.txt ended at fixture empty-URL list indexing; expanded-harness-crash.txt explains safe readiness/bounds correction.",
+    "runtime_apps-final.txt old close-on-context-reset assertion migrated to activeAppChanged deactivation while retaining nested owner-deletion and page-destruction assertions; final15/15."
+  ],
+  "compatibilityNotes": [
+    "mini_apps and sandbox_apps private copies set WA_DontShowOnScreen before show; assertions unchanged. Those private-only visibility changes are NOT in migration patch.",
+    "Legacy runtime_apps emits several QTemporaryDir cleanup warnings for transient WebView profiles. No cleanup guarantee inferred from those existing cases; the new suite explicitly waits for profile cleanup."
+  ],
+  "peerReview": {
+    "reviewer": "license_review",
+    "scope": "Source-only resetContext/inbound membership/ready gate; no additional concrete defect. No independent execution or broad reload/flush audit."
+  },
+  "renders": [
+    {
+      "path": "renders/bound-after-context-reset.png",
+      "sha256": "a284871e7c3686bf156f6eac48a466429100c5c3c96fcd4ddfdca571d1259c67"
+    },
+    {
+      "path": "renders/bound-before-context-reset.png",
+      "sha256": "a284871e7c3686bf156f6eac48a466429100c5c3c96fcd4ddfdca571d1259c67"
+    }
+  ],
+  "remaining": [
+    "F3 persisted app tab restoration remains confirmed missing; bounded descriptor/store/restore plan in PLAN.json.",
+    "Strict native CSP remains deliberate; no external script/connect/image allowance.",
+    "Context reset still discards JavaScript realm state; preserved pages do not preserve old worker callbacks.",
+    "Existing16-preview/64-message/1MiB queue bounds unchanged; posted/inflight browser messages cannot be recalled by clearing queued messages."
+  ],
+  "runningPrivateProcesses": []
+}

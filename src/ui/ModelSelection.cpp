@@ -66,7 +66,15 @@ bool ModelSelection::resolve(const QList<ProviderConfig> &providers, ProviderCon
         if(custom){
             result->contextWindowTokens=custom->contextWindowSize;result->reasoningEffort.clear();result->thinkingMode.clear();result->thinkingBudget=0;result->maxOutputTokens=0;
             result->customRequest={{"providerInstanceId",provider.id},{"modelId",modelId},{"providerOptions",custom->providerOptions},{"headers",custom->headers},{"capabilities",custom->capabilities}};
-        }else if(modelId!=provider.model)result->contextWindowTokens=0;
+        }else if(modelId!=provider.model){
+            result->contextWindowTokens=0;
+            // HTTP form settings describe its selected default model. Another
+            // discovered model receives only its own explicit selection overrides.
+            if(provider.kind=="api"){
+                result->reasoningEffort.clear();result->thinkingMode.clear();
+                result->thinkingBudget=0;result->maxOutputTokens=0;
+            }
+        }
         for(const auto& key:{"reasoningEffort","thinkingMode","thinkingBudget","maxOutputTokens"})if(overrides.contains(key))result->requestOverrides[key]=overrides.value(key);
         if(overrides.contains("reasoningEffort"))result->reasoningEffort=overrides["reasoningEffort"].toString();
         if(overrides.contains("thinkingMode"))result->thinkingMode=overrides["thinkingMode"].toString();

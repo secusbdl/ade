@@ -1,0 +1,18 @@
+********* Start testing of PolishTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : PolishTests::initTestCase()
+QWARN  : PolishTests::inlineCodeUsesApplicationMono() This plugin does not support propagateSizeHints()
+QWARN  : PolishTests::inlineCodeUsesApplicationMono() This plugin does not support propagateSizeHints()
+QINFO  : PolishTests::inlineCodeUsesApplicationMono() inline code font QVariant(QStringList, QList("Roboto Mono")) "Roboto Mono" fixed true
+PASS   : PolishTests::inlineCodeUsesApplicationMono()
+QWARN  : PolishTests::completedShortTurnKeepsFollowingAfterLayout(normal) This plugin does not support propagateSizeHints()
+QINFO  : PolishTests::completedShortTurnKeepsFollowingAfterLayout(normal) scroll 6 6 jump false viewport QSize(1486, 1200)
+PASS   : PolishTests::completedShortTurnKeepsFollowingAfterLayout(normal)
+QWARN  : PolishTests::completedShortTurnKeepsFollowingAfterLayout(large) This plugin does not support propagateSizeHints()
+QINFO  : PolishTests::completedShortTurnKeepsFollowingAfterLayout(large) scroll 13 13 jump false viewport QSize(1486, 1200)
+PASS   : PolishTests::completedShortTurnKeepsFollowingAfterLayout(large)
+QWARN  : PolishTests::jumpUsesSourceBottomThreshold() This plugin does not support propagateSizeHints()
+PASS   : PolishTests::jumpUsesSourceBottomThreshold()
+PASS   : PolishTests::cleanupTestCase()
+Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 1630ms
+********* Finished testing of PolishTests *********

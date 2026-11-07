@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="QuestionStallTest" timestamp="2026&#x002D;11&#x002D;07T05:16:29" hostname="VOID" tests="10" failures="6" errors="0" skipped="0" time="44.584">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="QuestionStallTest" time="0.002"/>
+  <testcase name="humanDecisionIsNotStreaming(native&#x002D;or&#x002D;mcp&#x002D;question)" classname="QuestionStallTest" time="5.528">
+    <failure type="fail" message="&apos;!activity(view)&#x002D;&gt;isVisible()&apos; returned FALSE. (running)"/>
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="humanDecisionIsNotStreaming(question&#x002D;input&#x002D;available)" classname="QuestionStallTest" time="5.520">
+    <failure type="fail" message="&apos;!activity(view)&#x002D;&gt;isVisible()&apos; returned FALSE. (input&#x002D;available)"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="humanDecisionIsNotStreaming(question&#x002D;approval)" classname="QuestionStallTest" time="5.508">
+    <failure type="fail" message="&apos;!activity(view)&#x002D;&gt;isVisible()&apos; returned FALSE. (approval&#x002D;requested)"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="humanDecisionIsNotStreaming(ordinary&#x002D;tool&#x002D;approval)" classname="QuestionStallTest" time="5.532">
+    <failure type="fail" message="&apos;!activity(view)&#x002D;&gt;isVisible()&apos; returned FALSE. (approval&#x002D;requested)"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="genuineWorkAndSettledHistoryRemainCorrect" classname="QuestionStallTest" time="5.532">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="transitionClearsOldStallAndRestartsWorkingDelay" classname="QuestionStallTest" time="11.021">
+    <failure type="fail" message="&apos;!activity(view)&#x002D;&gt;isVisible()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="clearingOrDestroyingPendingViewRetiresTimer" classname="QuestionStallTest" time="0.309">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="actualFormAndTranscriptCapture" classname="QuestionStallTest" time="5.517">
+    <failure type="fail" message="&apos;!activity(*view)&#x002D;&gt;isVisible()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="QuestionStallTest" time="0.000"/>
+</testsuite>

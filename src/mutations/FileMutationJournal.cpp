@@ -26,7 +26,7 @@ QString logicalPath(QString path,const QMap<QString,Binding>& mounts,QString* er
         auto prefix=path.section('/',0,0);
         if(prefix=="w1"||prefix=="workspace")path="ws1"+path.mid(prefix.size());
         else if(!mounts.contains(prefix)){
-            if(QStringList{"att","apps","plugins","logs","shells","memory","plans"}.contains(prefix)||QRegularExpression("^w(?:s)?[0-9a-f]+$").match(prefix).hasMatch()){*error="The requested mutation mount is unavailable.";return {};}
+            if(QStringList{"att","apps","plugins","logs","shells","memory","plans"}.contains(prefix)||QRegularExpression("^(?:w[0-9a-f]{4}|w[0-9]+|ws[0-9]+)$").match(prefix).hasMatch()){*error="The requested mutation mount is unavailable.";return {};}
             path="ws1/"+path;
         }
     }
@@ -35,7 +35,6 @@ QString logicalPath(QString path,const QMap<QString,Binding>& mounts,QString* er
 FileMutationOutcome outcome(const mutations::Result& result,const QString& agent){
     QJsonObject record{{"mutationId",result.mutationId},{"agentId",agent},{"committed",result.success},{"recoveryRequired",result.recoveryRequired}};
     QJsonObject value=result.output;if(!result.error.isEmpty())value[result.success?"warning":"error"]=result.error;
-    if(!value.contains("_diff"))value["_diff"]=QJsonValue::Null;
     QJsonObject metadata{{"mutations",QJsonArray{record}}};
     if(result.success&&!result.changes.isEmpty())metadata["fileDiff"]=mutationDiffMetadata(result.changes);
     return {QString::fromUtf8(QJsonDocument(value).toJson(QJsonDocument::Compact)),!result.success,metadata,result.changes};

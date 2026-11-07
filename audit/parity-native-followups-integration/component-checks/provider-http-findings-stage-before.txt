@@ -1,0 +1,84 @@
+********* Start testing of ProviderHttpRulesTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : ProviderHttpRulesTest::initTestCase()
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(enabled-provider-default-budget) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 200
+   Expected (expectedOutput)                    : 1224
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(large-budget-unset-output) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 8192
+   Expected (expectedOutput)                    : 64000
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(explicit-output-plus-budget) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 100
+   Expected (expectedOutput)                    : 2148
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(known-output-cap) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 63000
+   Expected (expectedOutput)                    : 64000
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(unknown-model-default) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 8192
+   Expected (expectedOutput)                    : 5120
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+FAIL!  : ProviderHttpRulesTest::anthropicBudget(legacy-haiku-limit) Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 32000
+   Expected (expectedOutput)                    : 4096
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(147) : failure location
+PASS   : ProviderHttpRulesTest::anthropicBudget(adaptive-no-manual-budget)
+FAIL!  : ProviderHttpRulesTest::utilityPayload(openai-gpt5-title) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+FAIL!  : ProviderHttpRulesTest::utilityPayload(openai-o3-compression) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+PASS   : ProviderHttpRulesTest::utilityPayload(openai-gpt51-none)
+PASS   : ProviderHttpRulesTest::utilityPayload(openai-gpt41)
+PASS   : ProviderHttpRulesTest::utilityPayload(openai-gpt5-chat)
+FAIL!  : ProviderHttpRulesTest::utilityPayload(responses-gpt5-title) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+FAIL!  : ProviderHttpRulesTest::utilityPayload(responses-o3-compression) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+PASS   : ProviderHttpRulesTest::utilityPayload(responses-gpt51-none)
+PASS   : ProviderHttpRulesTest::utilityPayload(responses-gpt41)
+PASS   : ProviderHttpRulesTest::utilityPayload(responses-gpt5-chat)
+FAIL!  : ProviderHttpRulesTest::utilityPayload(anthropic-title-explicit-thinking) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+PASS   : ProviderHttpRulesTest::utilityPayload(anthropic-title-default-disables-thinking)
+FAIL!  : ProviderHttpRulesTest::utilityPayload(anthropic-compress-enabled) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+FAIL!  : ProviderHttpRulesTest::utilityPayload(anthropic-compress-adaptive) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+FAIL!  : ProviderHttpRulesTest::utilityPayload(anthropic-opus47) Compared values are not the same
+   Actual   (sampling.contains("temperature")): 1
+   Expected (temperature)                     : 0
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(182) : failure location
+PASS   : ProviderHttpRulesTest::utilityPayload(google-unaffected)
+PASS   : ProviderHttpRulesTest::utilityPayload(compatible-unknown-not-guessed)
+FAIL!  : ProviderHttpRulesTest::discoveredModelDoesNotInheritDefault(openai) 'result.reasoningEffort.isEmpty()' returned FALSE. ()
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(204) : failure location
+FAIL!  : ProviderHttpRulesTest::discoveredModelDoesNotInheritDefault(responses) 'result.reasoningEffort.isEmpty()' returned FALSE. ()
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(204) : failure location
+FAIL!  : ProviderHttpRulesTest::discoveredModelDoesNotInheritDefault(anthropic) 'result.reasoningEffort.isEmpty()' returned FALSE. ()
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(204) : failure location
+FAIL!  : ProviderHttpRulesTest::discoveredModelDoesNotInheritDefault(google) 'result.reasoningEffort.isEmpty()' returned FALSE. ()
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(204) : failure location
+FAIL!  : ProviderHttpRulesTest::defaultAndExplicitSelectionKeepTheirOwnSettings() Compared values are not the same
+   Actual   (r.body.value("max_tokens").toInt()): 500
+   Expected (2548)                              : 2548
+D:/age/ADE/private/provider-http-findings-stage/tests/test_provider_http_rules.cpp(214) : failure location
+PASS   : ProviderHttpRulesTest::cleanupTestCase()
+Totals: 12 passed, 19 failed, 0 skipped, 0 blacklisted, 1779ms
+********* Finished testing of ProviderHttpRulesTest *********

@@ -37,6 +37,7 @@ void MiniAppPage::reloadApp(){
     const QString nonce=m_nonce;QTimer::singleShot(20000,this,[this,nonce]{if(nonce==m_nonce&&!m_ready)emit failed(tr("The app preview did not become ready within 20 seconds."));});
 }
 void MiniAppPage::setTheme(const QJsonObject& variables){m_theme=variables;if(m_ready)postMessage(QJsonObject{{"type","__stagewise_theme"},{"variables",variables}});}
+void MiniAppPage::discardPendingMessages(){m_queue.clear();m_queuedBytes=0;}
 bool MiniAppPage::postMessage(const QJsonValue& data,QString* error){
     const auto fail=[&](const QString& text){if(error)*error=text;return false;};
     if(!m_browser)return fail(m_error);
@@ -63,7 +64,9 @@ void MiniAppPage::receive(const QUrl& source,const QJsonValue& value){
         m_ready=true;const QString nonce=m_nonce;const QPointer<MiniAppPage> self(this);emit readyChanged(true);if(!self||nonce!=m_nonce)return;
         if(!m_theme.isEmpty())postMessage(QJsonObject{{"type","__stagewise_theme"},{"variables",m_theme}});
         if(self)flush();
-    }else if(object["kind"]=="message"&&m_ready&&encoded(object["data"]).size()<=MaxMessageBytes)emit messageReceived(object["data"]);
+    // The iframe can post while parsing, before its load notification. Readiness
+    // gates outbound delivery only; source and navigation nonce still gate inbound.
+    }else if(object["kind"]=="message"&&encoded(object["data"]).size()<=MaxMessageBytes)emit messageReceived(object["data"]);
 }
 AppResourceResponse MiniAppPage::resource(const QUrl& url,const QByteArray& method) const{
     if(url==m_previewUrl){

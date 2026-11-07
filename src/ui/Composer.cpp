@@ -8,6 +8,7 @@
 #include <QPointer>
 #include <QScreen>
 #include <QSet>
+#include <QSignalBlocker>
 #include <QVBoxLayout>
 
 namespace ade {
@@ -37,9 +38,10 @@ void Composer::setCompletionContext(const QString &chatId) {
     m_completionChat=chatId;invalidateCompletions();
 }
 void Composer::invalidateCompletions() {
-    ++m_completionRequest;m_completionTimer->stop();m_completionPopup->hide();m_completionItems={};
+    ++m_completionRequest;m_completionTimer->stop();m_completionItems={};
     m_completionStart=m_completionEnd=-1;m_completionToken.clear();m_completionSuppressed=false;
     m_expandedCompletionGroups.clear();
+    m_completionPopup->hide(); // Terminal: a Hide observer may replace/delete this composer.
 }
 bool Composer::completionIsCurrent() const {
     if(m_completionChat.isEmpty()||m_completionStart<0||m_completionEnd<0)return false;
@@ -76,7 +78,7 @@ void Composer::setCompletionResults(quint64 requestId,const QJsonArray &items,co
         const auto item=value.toObject();const auto id=item["id"].toString();const auto label=item["label"].toString();
         const auto insertion=item["insertText"].toString();
         if(id.isEmpty()||id.size()>2048||ids.contains(id)||label.isEmpty()||label.size()>200||
-           insertion.isEmpty()||insertion.size()>4096)continue;
+           (insertion.isEmpty()&&!(id=="command:side"&&item["kind"]=="side-chat"))||insertion.size()>4096)continue;
         ids.insert(id);m_completionItems.append(item);
     }
     renderCompletionItems(emptyText);
@@ -144,8 +146,10 @@ bool Composer::commitCompletion(quint64 requestId,const QString &itemId) {
     auto cursor=textCursor();cursor.setPosition(m_completionStart);cursor.setPosition(m_completionEnd,QTextCursor::KeepAnchor);
     const auto chat=m_completionChat;const auto value=insertion.endsWith(' ')?insertion:insertion+' ';
     auto expected=toPlainText();expected.replace(m_completionStart,m_completionEnd-m_completionStart,value);
+    const auto before=toPlainText();const QPointer<Composer> self(this);
     invalidateCompletions();
-    const QPointer<Composer> self(this);cursor.insertText(value);
+    if(!self||m_completionChat!=chat||m_completionRequest!=requestId+1||toPlainText()!=before)return false;
+    cursor.insertText(value);
     if(!self)return true;
     if(m_completionChat!=chat||toPlainText()!=expected)return true;
     setTextCursor(cursor);return true;
@@ -155,6 +159,32 @@ std::optional<QString> Composer::completionDraft(quint64 requestId,const QString
     QString insertion;for(const auto &entry:m_completionItems)if(entry.toObject()["id"]==itemId){insertion=entry.toObject()["insertText"].toString();break;}
     if(insertion.isEmpty())return {};
     auto result=toPlainText();result.replace(m_completionStart,m_completionEnd-m_completionStart,insertion.endsWith(' ')?insertion:insertion+' ');return result;
+}
+std::optional<QString> Composer::completionActionDraft(quint64 requestId,const QString &itemId) const {
+    if(requestId!=m_completionRequest||!completionIsCurrent()||m_completionSuppressed)return {};
+    bool action=false;for(const auto& entry:m_completionItems){const auto item=entry.toObject();if(itemId=="command:side"&&item["id"]==itemId&&item["kind"]=="side-chat")action=true;}
+    if(!action)return {};
+    auto result=toPlainText();result.remove(m_completionStart,m_completionEnd-m_completionStart);return result;
+}
+bool Composer::commitCompletionAction(quint64 requestId,const QString &itemId) {
+    const auto expected=completionActionDraft(requestId,itemId);if(!expected)return false;
+    auto cursor=textCursor();cursor.setPosition(m_completionStart);cursor.setPosition(m_completionEnd,QTextCursor::KeepAnchor);
+    const auto chat=m_completionChat;const auto before=toPlainText();const bool wasVisible=isVisible();const QPointer<Composer> self(this);
+    invalidateCompletions();
+    if(!self||(wasVisible&&!isVisible())||m_completionChat!=chat||m_completionRequest!=requestId+1||toPlainText()!=before)return false;
+    // Do not deliver external text observers from QTextDocument::finishEdit:
+    // a valid observer may destroy the whole owning chat. Publish only after
+    // the edit and caret update have returned to this guarded frame.
+    QSignalBlocker blocked(this);
+    cursor.removeSelectedText();
+    if(!self){blocked.dismiss();return true;}
+    if(m_completionChat==chat&&toPlainText()==*expected)setTextCursor(cursor);
+    if(!self){blocked.dismiss();return true;}
+    blocked.unblock();
+    emit cursorPositionChanged();
+    if(!self)return true;
+    emit textChanged();
+    return true;
 }
 bool Composer::handleCompletionKey(QKeyEvent *event) {
     if(!m_completionPopup||!m_completionPopup->isVisible())return false;

@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen-private-reviewed-ready-for-root-integration",
+  "task": "Startup session recovery and nonblocking close",
+  "createdUtc": "2026-11-07T03:22:45.574989+00:00",
+  "basis": {
+    "cohort": "private/behavior-cohort-186",
+    "manifestSha256": "89a9bb173c77abf50673d2414445e2ed12ee5c77e442ae87facd51c08d5adec0",
+    "upstreamCommit": "17a0123a0e896885465df36169457199d5225eb5",
+    "rootApplyCheckAgainstHead": "91ed23d4453874f141db1d987c94ba71bd05f4ce",
+    "rootHasAdditionalUncommittedIntegratedSlices": true,
+    "sharedSourceEdited": false,
+    "sharedBuildUsed": false
+  },
+  "patch": {
+    "path": "startup-recovery.patch",
+    "sha256CanonicalLF": "1c62fc7ff194a592751001e44d8111f887706fe6dcdd6844318321e3f0f02b17",
+    "paths": [
+      {
+        "path": "src/ui/MainWindow.h",
+        "preimageSha256LF": "11d98083e809b37a59d5a3d43b32c0b4d1e247619d29ba438083defdadf5cb7b",
+        "postimageSha256LF": "50c6e154c597f7234c3772817e4b3533575a83032c556640a44b47118e3c1ea8"
+      },
+      {
+        "path": "src/ui/MainWindow.cpp",
+        "preimageSha256LF": "a605a04e606121c363a7c822834bb7d7f74b52c7a5964e3f74a5157bc60563f7",
+        "postimageSha256LF": "f73304991cbf43fab8e20a7d4de0a58d5dfe9a0821c4310496b579d65dd3ec63"
+      },
+      {
+        "path": "src/ui/MainWindowConversations.cpp",
+        "preimageSha256LF": "99487cdf85fb18f775ce1e6c9fc185a441f028181b994e096395f6afdd1b424b",
+        "postimageSha256LF": "894dcc8313833145861c486d2ac4d0737bad83f003f6ec5f0b7a4bad4c176aee"
+      },
+      {
+        "path": "src/ui/MainWindowControl.cpp",
+        "preimageSha256LF": "32058f2dc494f1fd5043715fbbdf99dcf2fa6d567d7a4f91aa7a5f06ee278f91",
+        "postimageSha256LF": "11252df0611fe91fb396975240d5e90a5c3291e2fb08433f583cbbc4d0fb6405"
+      },
+      {
+        "path": "src/ui/MainWindowSideChats.cpp",
+        "preimageSha256LF": "a622c665a1bf12483f9cfd255172223665877353eecc5930b4b4ab7f90eaaedf",
+        "postimageSha256LF": "53dbf5948e6cfbb3af75bc805a1c27b8dc9e095b1ae38d8c9b3967b8d0df110a"
+      },
+      {
+        "path": "src/ui/SessionStore.h",
+        "preimageSha256LF": "334d6aa7fa5b2a0b4fb1fc123d5d08c5e7c3ebef0737d4334cdbbe0383829a69",
+        "postimageSha256LF": "cf4b11d3cefe0ab9ff9ecfd7f2c3919892993f3d3f5db00d6b1583d94387009f"
+      },
+      {
+        "path": "src/ui/SessionStore.cpp",
+        "preimageSha256LF": "4785e65703d273b2c09aab687a13897f5b79f9367270458037cd3a80bebb58e7",
+        "postimageSha256LF": "862de68e4752840da6e5e0c792b8334f7a743c3cf6d990ea40e4459d15b595b4"
+      },
+      {
+        "path": "src/ui/MainWindowRecovery.cpp",
+        "preimageSha256LF": null,
+        "postimageSha256LF": "1ab23ddefe58aa0311282e5066e3a2964577057324ec37efd4923146e27d3c01"
+      },
+      {
+        "path": "tests/test_startup_recovery.cpp",
+        "preimageSha256LF": null,
+        "postimageSha256LF": "1897e2a8805c480ce5b6704e52c1b55a6723705dce1dbced74ef98f662b466ff"
+      }
+    ],
+    "applyCheck": "git apply --check --ignore-space-change succeeds against current root; no full-file overwrites",
+    "cmake": "cmake-additions.txt",
+    "newTarget": "test_startup_recovery / native_startup_recovery",
+    "uiSources": "MainWindowRecovery.cpp picked up by existing CONFIGURE_DEPENDS glob",
+    "abi": "MainWindow adds trailing private fields; no existing field reordered; SessionStore adds nonvirtual public canAdoptReload, no fields. Root coherent rebuild required."
+  },
+  "changes": [
+    "Save preflight before canceling any running Engine; a rejected close leaves work and draft intact.",
+    "Owned asynchronous QMessageBox offers Keep working (default/escape), Retry saving, Close without saving. No nested event loop in session-recovery dialogs.",
+    "Invalid startup with no loaded chats, engines or draft may close without attempting an overwrite.",
+    "Persistent recovery strip remains visible on Settings as well as chat; explicit reload requires confirmation when in-memory chats/drafts may be discarded.",
+    "Reload loads a separate bounded/validated SessionStore candidate and checks original directory/canonical authority before retiring old owner contexts. Invalid candidate preserves active memory and original disk bytes.",
+    "Transition guards prevent Engine hydration, sending, queue commits, conversation lifecycle or sidechat replacement during retirement/cancellation; a terminal accepted close also blocks late saves/new work.",
+    "No-chat composer is read-only with an explanation. A programmatic orphan draft is retained if New Agent succeeds; original valid-chat placeholder is restored after reload.",
+    "Cached dialog lifetime and identity rechecked after raise; obsolete owner cannot rehydrate itself from a destroyed callback while reload swaps state."
+  ],
+  "sourceContract": [
+    {
+      "upstream": "upstream/stagewise/apps/browser/src/backend/services/window-layout/index.ts:633",
+      "behavior": "Window close persists window/tab state; native conversation preservation and explicit recovery remain stricter UX, not a byte-for-byte implementation."
+    },
+    {
+      "upstream": "upstream/stagewise/apps/browser/src/backend/main.ts:1322",
+      "behavior": "Quit teardown uses a1000ms budget (line1366), then exits. Native aggregate shutdown budget is unchanged in this slice."
+    },
+    {
+      "upstream": "upstream/stagewise/apps/browser/src/backend/index.ts:100",
+      "behavior": "Single-instance request lock exists upstream; native single-instance IPC remains missing, explicit reload resolves a stale window after user confirmation."
+    },
+    {
+      "upstream": "upstream/stagewise/apps/browser/src/backend/services/window-layout/index.ts:662",
+      "behavior": "Second instance focuses existing window upstream; not implemented here."
+    }
+  ],
+  "tests": {
+    "reports": [
+      {
+        "path": "before.txt",
+        "scope": "Unmodified coherent186 source, first reproduction",
+        "sha256CanonicalLF": "4a9b58c22888409b55b727c0df20cebc36e1ea819a46d982730c23b096ec7e11",
+        "passed": 3,
+        "failed": 4,
+        "skipped": 0,
+        "durationMs": 470
+      },
+      {
+        "path": "first-after.txt",
+        "scope": "Initial narrow fix",
+        "sha256CanonicalLF": "2ba8c77afa6d267f87f11721afbb87153a0b209337c39fe1c009bedfef85a9b5",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 479
+      },
+      {
+        "path": "expanded.txt",
+        "scope": "Intermediate fixture issue; observer used deliberately disconnected receiver context",
+        "sha256CanonicalLF": "d76058f80f69553c0900a1117262a83ad860a5297553ec0728ebcf17f1a8410e",
+        "passed": 16,
+        "failed": 1,
+        "skipped": 0,
+        "durationMs": 2820
+      },
+      {
+        "path": "owner-reentry-before.txt",
+        "scope": "Reconstructed missing retirement barrier",
+        "sha256CanonicalLF": "059f57bb9bdaf6c77028c55a6db8f943c7f6b14d51b1e51d59c7f9c99a84df18",
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "durationMs": 391
+      },
+      {
+        "path": "dialog-reentry-before.txt",
+        "scope": "Reconstructed missing post-raise dialog guard; process crashed",
+        "sha256CanonicalLF": "2a9390527ae678f22f01eba83502a778326d3d525cb7979a6af3082b18483d2d",
+        "processExit": "0xc0000005"
+      },
+      {
+        "path": "startup_recovery-candidate.txt",
+        "scope": "Expanded candidate before final original-placeholder preservation",
+        "sha256CanonicalLF": "787149e26725114f40fbb0db891be43e1aee61cd50f83cf66f9841af7736c756",
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 4763
+      },
+      {
+        "path": "startup_recovery-final.txt",
+        "scope": "Final patch; original composer placeholder asserted",
+        "sha256CanonicalLF": "0b9ec74decea1619f4f6b5b559f376f887638c92837fe82d6365b6b930af9dd1",
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 5100
+      },
+      {
+        "path": "conversations-candidate.txt",
+        "scope": "Candidate before final original-placeholder preservation",
+        "sha256CanonicalLF": "9492cb3f735c751749c8ed2bddd5d65825e74b735556d9c84449d6742202094c",
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 28691
+      },
+      {
+        "path": "session_cleanup-candidate.txt",
+        "scope": "Candidate before final original-placeholder preservation",
+        "sha256CanonicalLF": "1b4bab65e0743119b900f85841a1971542ddd89027d8f955f2e45ba41cdcd285",
+        "passed": 33,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 602
+      },
+      {
+        "path": "main_chrome-candidate.txt",
+        "scope": "Candidate before final original-placeholder preservation",
+        "sha256CanonicalLF": "0e5fec39b42fe066d61ba9c979e669403a12f494e1fdc794baa2752f117de632",
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 5855
+      },
+      {
+        "path": "ui_audit-candidate.txt",
+        "scope": "Offscreen/missing loader harness, real WebView rows failed startup",
+        "sha256CanonicalLF": "0f161fd9bc7a77a31b10a42d559169570a8ec0ec28e28605907299efcf779ab0",
+        "passed": 15,
+        "failed": 2,
+        "skipped": 0,
+        "durationMs": 111507
+      },
+      {
+        "path": "ui_audit-final.txt",
+        "scope": "Final patch, Windows platform and packaged WebView loader",
+        "sha256CanonicalLF": "aadf7979b67b7558604fd5a38b3eac7b3d9e93eb6b3206fd42b6a35e456f7515",
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 6134
+      }
+    ],
+    "finalAndAdjacentTotal": 119,
+    "scope": "20 final recovery +17 final real-Windows ui_audit +26 conversations +33 cleanup +23 chrome. Adjacent three suites ran immediately before last placeholder-only correction, explicitly labelled in reports; no universal zero-defect claim. Counts include Qt init/cleanup and data rows.",
+    "finalSourceNewRecovery": {
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    "focusedCoverage": [
+      "truncated JSON and wrong schema remain byte-exact while empty window closes",
+      "held actual loopback SSE Engine continues after close preflight failure; Keep working retains task/draft",
+      "explicit discard closes, cancels and suppresses delayed autosave; retry after writer lock release saves draft",
+      "reload invalid candidate keeps memory; valid candidate preserves exact disk snapshot, retires old context and refuses destroyed-callback rehydration",
+      "busy operation blocks reload without canceling it",
+      "actual Windows directory-junction retarget rejects candidate adoption",
+      "dialog ZOrderChange reject cannot dereference cleared member",
+      "second-save failure during cancellation retains partial history/draft for explicit decision",
+      "light/dark350x600 actual widget captures show recovery strip/button in Settings",
+      "existing chat fork/archive/delete/persistence, strict cleanup parsing and composer keyboard tests remain green",
+      "Windows WebView app theme/close and real app-owner teardown compatibility green"
+    ],
+    "harnessCorrections": [
+      "Initial partial source-header copy caused duplicate SessionStore declarations; copied full coherent186 source headers before testing. No production defect claimed.",
+      "Intermediate owner-retirement fixture used window as destroyed observer context; disposeConversation intentionally disconnects it. Replaced test receiver with independent test object to exercise external observer.",
+      "ui_audit first used offscreen and lacked copied WebView2Loader; 2 real WebView startup rows failed. Same test/source passed17/17 under Windows with packaged loader. No test skips or production changes used.",
+      "Windows WebView tests reported temporary-profile cleanup warnings after successful teardown; no claim of immediate removal of all Chromium temporary profile files."
+    ]
+  },
+  "peerReview": {
+    "reviewer": "license_review",
+    "type": "bounded source-only; no independent final execution",
+    "findings": "Both reported callback boundaries reproduced and fixed; follow-up read found no additional concrete issue in reload/canAdoptReload/cached-dialog changes."
+  },
+  "screenshots": [
+    {
+      "path": "renders/storage-error-settings-dark.png",
+      "sha256": "ec42fe187ade755d1754cc99659039c11e4bf498a4fc17ac749354de326f97f3",
+      "visuallyInspected": true
+    },
+    {
+      "path": "renders/storage-error-settings-light.png",
+      "sha256": "2b22b147d97fae7cb0ef9fa9c84ef5248892f2ab0aa130e70d2fd71fd2a68099",
+      "visuallyInspected": true
+    }
+  ],
+  "runtimeArtifacts": [
+    {
+      "from": "out/parity-integration-8/WebView2Loader.dll",
+      "sha256": "d3fce90bdeecb08596e377dea6a316354dd8949e32ff09b89d51be00c14e21b6",
+      "purpose": "Private existing ui_audit runtime setup only, not source patch"
+    },
+    {
+      "from": "out/parity-integration-8/ADE-sandbox-worker.exe",
+      "sha256": "036424ec5d5426c149d443715f6b6261ada4f277d504f782ba0453293d0b8377",
+      "purpose": "Private existing ui_audit runtime setup only, not source patch"
+    }
+  ],
+  "limits": [
+    "Single-instance lock/focus IPC remains separate; reload is explicit, not automatic conflict resolution or merge.",
+    "No automatic recovery export/copy, overwrite, schema repair, truncation, relaxation of64MiB bound, revision CAS or ownership checks.",
+    "If storage changes after the successful preflight while Engines are being canceled, the final save can still fail. The window remains open with canceled partial history and draft; explicit recovery choices are shown. This precise race is tested, not claimed fully transactional.",
+    "Reload is refused while Engines/workspace mutations are active; it never silently cancels to reload.",
+    "Canonical-directory adoption inherits existing SessionStore authority policy; no broad adversarial filesystem-race proof.",
+    "Existing setup-script/editor close decisions and child-process shutdown behavior are unchanged; only session recovery dialogs are newly nonblocking.",
+    "Desktop review F4 provider-error-skips-cleanup, F5 settings shortcut routing and F6 sidechat provider refresh are outside this patch; no blanket parity completion.",
+    "No user profile, history, credentials, real provider or remote service was accessed."
+  ],
+  "processes": {
+    "privateBuildAndTestsFinished": true,
+    "lastExecSession": 83827,
+    "exitCode": 0,
+    "runningOwnedBuildOrTestProcesses": []
+  }
+}

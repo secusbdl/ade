@@ -55,14 +55,16 @@ const QStringList& consoleLevels() {
 BrowserToolBridge::BrowserToolBridge(QObject* parent) : QObject(parent) {}
 BrowserToolBridge::~BrowserToolBridge() {
     const auto subscriptions=m_subscriptions.keys();for(const auto& id:subscriptions)unsubscribeEvent(id);
-    for (const auto& tab : std::as_const(m_tabs))
+    for (const auto& tab : std::as_const(m_tabs)) {
         for (const auto& connection : tab.connections) disconnect(connection);
+        if (tab.browser) tab.browser->releaseDevToolsEvents(this);
+    }
     for (const auto& pending : std::as_const(m_pending))
         if (pending.timeout) pending.timeout->stop();
 }
 
 QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& requestedId) {
-    if (!browser || browser->thread() != thread()) return {};
+    if (!browser || browser->isClosing() || browser->thread() != thread()) return {};
     for (auto it = m_tabs.cbegin(); it != m_tabs.cend(); ++it)
         if (it->browser == browser) return it.key();
     QString id = requestedId;
@@ -76,6 +78,7 @@ QString BrowserToolBridge::registerTab(BrowserWidget* browser, const QString& re
     tab.browser = browser;
     tab.url = browser->currentUrl().toString(QUrl::FullyEncoded);
     tab.connections.append(connect(browser, &QObject::destroyed, this, [this, id] { unregisterTab(id); }));
+    tab.connections.append(connect(browser, &BrowserWidget::aboutToBeDestroyed, this, [this, id] { unregisterTab(id); }));
     tab.connections.append(connect(browser, &BrowserWidget::titleChanged, this, [this, id](const QString& title) {
         if (auto it = m_tabs.find(id); it != m_tabs.end()) { it->title = title; emit tabsChanged(); }
     }));
@@ -110,6 +113,7 @@ void BrowserToolBridge::unregisterTab(const QString& tabId) {
     if (!m_tabs.contains(tabId)) return;
     const auto tab = m_tabs.take(tabId);
     for (const auto& connection : tab.connections) disconnect(connection);
+    if (tab.browser) tab.browser->releaseDevToolsEvents(this);
     m_order.removeAll(tabId);
     if (m_activeTabId == tabId) m_activeTabId.clear();
     const QPointer<BrowserToolBridge> self(this);
@@ -141,14 +145,14 @@ void BrowserToolBridge::setRequestTimeoutMs(int milliseconds) { m_timeoutMs = qB
 void BrowserToolBridge::subscribeEvent(const QString& id,const QString& tabId,const QString& event){
     static const QRegularExpression valid(QStringLiteral("^[A-Za-z][A-Za-z0-9]*\\.[A-Za-z][A-Za-z0-9]*$"));
     if(id.isEmpty()||id.size()>256||m_subscriptions.contains(id)||m_subscriptions.size()>=256||!valid.match(event).hasMatch()||event.size()>200||!m_tabs.contains(tabId)||!m_tabs.value(tabId).browser){emit subscriptionEnded(id,QStringLiteral("Invalid browser event subscription or missing tab."));return;}
-    m_subscriptions.insert(id,{tabId,event});m_tabs.value(tabId).browser->subscribeDevToolsEvent(event);
+    m_subscriptions.insert(id,{tabId,event});m_tabs.value(tabId).browser->subscribeDevToolsEvent(event, this);
 }
 void BrowserToolBridge::unsubscribeEvent(const QString& id){
     if(!m_subscriptions.contains(id))return;
     const auto subscription=m_subscriptions.take(id);
     for(const auto& other:std::as_const(m_subscriptions))if(other.tabId==subscription.tabId&&other.eventName==subscription.eventName)return;
     if(QStringList{"Runtime.consoleAPICalled","Runtime.exceptionThrown","Log.entryAdded"}.contains(subscription.eventName))return;
-    if(auto* browser=m_tabs.value(subscription.tabId).browser.data())browser->unsubscribeDevToolsEvent(subscription.eventName);
+    if(auto* browser=m_tabs.value(subscription.tabId).browser.data())browser->unsubscribeDevToolsEvent(subscription.eventName, this);
 }
 void BrowserToolBridge::receiveEvent(const QString& tabId,const QString& event,const QString& json){
     const QPointer<BrowserToolBridge> self(this);receiveConsole(tabId,event,json);if(!self)return;
@@ -168,7 +172,7 @@ QJsonArray BrowserToolBridge::definitions() const {
     for (const auto& level : consoleLevels()) levels.append(level);
     return {
         definition("getBrowserTabs", "List ADE's registered browser tabs and active tab ID. Use these stable tab IDs for sendCDP and readConsoleLogs. This is native tab discovery.", {}, {}),
-        definition("sendCDP", "Send one Chrome DevTools Protocol command to an ADE browser tab. Native exposure of Stagewise API.sendCDP; this does not execute Node.js sandbox code. Use Runtime.evaluate for page JavaScript/DOM inspection (awaitPromise supported), Page.navigate for navigation, Page.getNavigationHistory and Page.navigateToHistoryEntry for history, and Page.captureScreenshot for base64 image data. Returns raw protocol JSON, limited to 2 MiB. Actions run in the selected page; cancellation stops waiting but cannot undo an issued browser action.",
+        definition("sendCDP", "Send one Chrome DevTools Protocol command to an ADE browser tab. Native exposure of Stagewise API.sendCDP; this does not execute Node.js sandbox code. Use Runtime.evaluate for page JavaScript/DOM inspection (awaitPromise supported), Page.navigate for navigation, Page.getNavigationHistory and Page.navigateToHistoryEntry for history, and Page.captureScreenshot to save a screenshot as an owned image attachment for the next model step. Other direct results are capped at 40 KiB with an explicit truncation notice. The underlying CDP transport is limited to 2 Mi UTF-16 code units. For full raw protocol data, use executeSandboxJs with API.sendCDP; persist screenshots with API.createAttachment instead of returning base64 text. Actions run in the selected page; cancellation stops waiting but cannot undo an issued browser action.",
             {{"tabId", stringProperty("Stable tab ID from getBrowserTabs.")},
              {"method", stringProperty("CDP method, for example Runtime.evaluate or Page.navigate.")},
              {"params", QJsonObject{{"type", "object"}, {"description", "CDP method parameters; default {}."}, {"additionalProperties", true}}}}, {"tabId", "method"}),
@@ -307,9 +311,9 @@ void BrowserToolBridge::cancelAll() {
 void BrowserToolBridge::prepareConsole(const QString& tabId) {
     auto tab = m_tabs.find(tabId);
     if (tab == m_tabs.end() || !tab->browser) return;
-    tab->browser->subscribeDevToolsEvent(QStringLiteral("Runtime.consoleAPICalled"));
-    tab->browser->subscribeDevToolsEvent(QStringLiteral("Runtime.exceptionThrown"));
-    tab->browser->subscribeDevToolsEvent(QStringLiteral("Log.entryAdded"));
+    tab->browser->subscribeDevToolsEvent(QStringLiteral("Runtime.consoleAPICalled"), this);
+    tab->browser->subscribeDevToolsEvent(QStringLiteral("Runtime.exceptionThrown"), this);
+    tab->browser->subscribeDevToolsEvent(QStringLiteral("Log.entryAdded"), this);
     if (!tab->browser->isReady()) return;
     tab->browser->callDevToolsRequest(QStringLiteral("console-enable-runtime-") + tabId, QStringLiteral("Runtime.enable"));
     tab->browser->callDevToolsRequest(QStringLiteral("console-enable-log-") + tabId, QStringLiteral("Log.enable"));

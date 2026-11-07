@@ -155,8 +155,8 @@ QList<ProviderConfig> ProviderStore::load(const QString &path, QString *error) {
             if (error) *error = QStringLiteral("Invalid provider template identifier.");
             return {};
         }
-        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode" && provider.kind != "claude-code")
-            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):(provider.isClaudeHarness()?QString("claude-control"):QString("opencode-acp"))) || !provider.baseUrl.isEmpty()
+        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode" && provider.kind != "claude-code" && provider.kind != "cursor")
+            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):(provider.isClaudeHarness()?QString("claude-control"):(provider.isCursorHarness()?QString("cursor-acp"):QString("opencode-acp")))) || !provider.baseUrl.isEmpty()
                 || !object["encryptedApiKey"].toString().isEmpty()))
             || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
             || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
@@ -205,8 +205,8 @@ bool ProviderStore::save(const QString &path, const QList<ProviderConfig> &provi
             if (error) *error = QStringLiteral("Invalid provider template identifier.");
             return false;
         }
-        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode" && provider.kind != "claude-code")
-            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):(provider.isClaudeHarness()?QString("claude-control"):QString("opencode-acp"))) || !provider.baseUrl.isEmpty() || !provider.apiKey.isEmpty()))
+        if ((provider.kind != "api" && provider.kind != "codex" && provider.kind != "opencode" && provider.kind != "claude-code" && provider.kind != "cursor")
+            || (provider.isExternalHarness() && (provider.protocol != (provider.isCodexHarness()?QString("codex-app-server"):(provider.isClaudeHarness()?QString("claude-control"):(provider.isCursorHarness()?QString("cursor-acp"):QString("opencode-acp")))) || !provider.baseUrl.isEmpty() || !provider.apiKey.isEmpty()))
             || (provider.kind == "api" && !provider.harnessExecutable.isEmpty())
             || provider.harnessExecutable.size() > 32768 || provider.harnessExecutable.contains(QChar::Null)) {
             if (error) *error = QStringLiteral("Invalid coding-agent provider configuration.");

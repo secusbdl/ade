@@ -1,0 +1,14 @@
+********* Start testing of BrowserEventFindings *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserEventFindings::initTestCase()
+PASS   : BrowserEventFindings::inspectorWorksBeforeUnsubscribe()
+FAIL!  : BrowserEventFindings::inspectorSurvivesSandboxUnsubscribe() 'pick(b,inspector)' returned FALSE. (Sandbox unsubscribe removed the inspector's real CDP event receiver)
+D:/age/ADE/private/browser-event-stage/tests/test_browser_event_findings.cpp(29) : failure location
+FAIL!  : BrowserEventFindings::inspectorSurvivesPreReadyUnsubscribe() 'pick(b,inspector)' returned FALSE. ()
+D:/age/ADE/private/browser-event-stage/tests/test_browser_event_findings.cpp(30) : failure location
+FAIL!  : BrowserEventFindings::inspectorSurvivesBridgeDestruction() 'pick(b,inspector)' returned FALSE. ()
+D:/age/ADE/private/browser-event-stage/tests/test_browser_event_findings.cpp(31) : failure location
+PASS   : BrowserEventFindings::consoleReturnsAfterDisableAndNavigation()
+PASS   : BrowserEventFindings::cleanupTestCase()
+Totals: 4 passed, 3 failed, 0 skipped, 0 blacklisted, 10863ms
+********* Finished testing of BrowserEventFindings *********

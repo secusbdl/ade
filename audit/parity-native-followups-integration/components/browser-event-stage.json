@@ -1,0 +1,103 @@
+{
+  "status": "frozen_private",
+  "createdUtc": "2026-11-07T03:29:50.879786+00:00",
+  "patch": {
+    "path": "browser-events.patch",
+    "sha256": "e78d01e55d6280e717f0433aa3541a819facb776341cb62493ba5c38cd717be6"
+  },
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "sourceHashes": {
+    "src/browser/browserwidget.h": "ab239478d8aebc05595f732e32c7124d0a2211c81c006527ef7951b799c989d8",
+    "src/browser/browserwidget.cpp": "1e212f03ef0ab0a65c172dcd760a8051b558bbbab730898da293a96c8d15bf12",
+    "src/browser/BrowserToolBridge.cpp": "24fde68fd259505fb892729808f1f3f40eeb61423c4f80daa21120164eac10d5",
+    "src/browser/BrowserInspector.cpp": "f00c66ab8c3aaec7ec6e6c11d435904773d43fe9ebf19ec9e1a8288829f1158f",
+    "tests/test_browser_event_findings.cpp": "c452ee0816dcaee205f7cd8ad8c09cb4e09a9693a0fe911b984d1df4eead0b1e"
+  },
+  "reports": {
+    "before": {
+      "path": "before.txt",
+      "sha256CanonicalLF": "70d26a00a358c04496d4110d44d2e423fa0275610ad00b9be6db1c8f7a97642a",
+      "counts": [
+        4,
+        3,
+        0
+      ],
+      "crash": false
+    },
+    "after-initial": {
+      "path": "after-initial.txt",
+      "sha256CanonicalLF": "72e250f63a4c7b9818824b3969265edff4130ff1211b2642d0e7a84f25d3ced6",
+      "counts": [
+        7,
+        0,
+        0
+      ],
+      "crash": false
+    },
+    "child-owner-before": {
+      "path": "child-owner-before.txt",
+      "sha256CanonicalLF": "916f27e3ce094bbfb5a5cac38c8df1ae49fa5843fbec0475ff030ff17085a65c",
+      "counts": null,
+      "crash": true
+    },
+    "after-expanded": {
+      "path": "after-expanded.txt",
+      "sha256CanonicalLF": "5db16c74b79f993936d27db151e23fdcb6a4325488d62901e485a1719447e4dd",
+      "counts": [
+        12,
+        0,
+        0
+      ],
+      "crash": false
+    },
+    "final": {
+      "path": "final.txt",
+      "sha256CanonicalLF": "5fae2b9450b319dcfa593381433252facc99837edbdf774f6ba441430341a929",
+      "counts": [
+        16,
+        0,
+        0
+      ],
+      "crash": false
+    },
+    "compat-inspector": {
+      "path": "compat-inspector.txt",
+      "sha256CanonicalLF": "77b02b42e2dd8afdcb765ee64cab0a29622e1f38896ce9876f4c744e5dffee50",
+      "counts": [
+        13,
+        0,
+        0
+      ],
+      "crash": false
+    },
+    "compat-tools": {
+      "path": "compat-tools.txt",
+      "sha256CanonicalLF": "7496df4ecd6311c143946fb3f4df00807298cfff5063f3bc4d0adb123b71345c",
+      "counts": [
+        24,
+        0,
+        0
+      ],
+      "crash": false
+    }
+  },
+  "passedFinalAndCompatibility": 53,
+  "failedFinalAndCompatibility": 0,
+  "changes": [
+    "Owner-scoped idempotent receiver interest preserves inspector, bridge, multiple sandbox listeners and legacy callers independently.",
+    "Release on explicit tab unregister, owner destruction and bridge teardown; pre-ready replay attaches interest without acquiring duplicate owners.",
+    "Early derived-destructor notification retires consumers while BrowserWidget implementation exists; closing rejects reentrant register/subscribe/CDP."
+  ],
+  "evidence": [
+    "Actual WebView2 overlay mouse input baseline4pass3fail; same cases after7pass.",
+    "Expanded final16pass, existing browser inspector13pass, existing browser tools24pass.",
+    "Additional child-owner destructor regression crashed the first private patch (0xc0000005) and passes after early teardown notification."
+  ],
+  "limits": [
+    "Console Runtime.disable/Log.disable followed by navigation already passed baseline; no navigation enable change or defect claim.",
+    "Desktop report is a source proposal; its generic COM-handler self-removal crash suspicion was not reproduced. Actual deleting-owner-inside-event regression passes.",
+    "Native C++ ownership differs from upstream callback sets; tests prove this scoped behavior, not complete browser parity.",
+    "No production or shared build test until coherent integration rebuild."
+  ],
+  "reference": "private/claude-desktop-review/source/BROWSER-EVENT-REPAIR.md"
+}

@@ -7,6 +7,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QKeyEvent>
+#include <QShortcut>
+#include <cmath>
 #include <QPointer>
 #include <QPushButton>
 #include <QRadioButton>
@@ -16,6 +19,29 @@
 #include <QVBoxLayout>
 namespace ade {
 namespace {
+class SubmitTextOnEnter final : public QObject {
+public:
+  SubmitTextOnEnter(QObject *parent, std::function<void()> submit)
+      : QObject(parent), m_submit(std::move(submit)) {}
+protected:
+  bool eventFilter(QObject *watched, QEvent *event) override {
+    if (event->type() != QEvent::KeyPress) return false;
+    const auto *key = static_cast<QKeyEvent *>(event);
+    if ((key->key() != Qt::Key_Return && key->key() != Qt::Key_Enter) ||
+        (key->modifiers() & (Qt::ShiftModifier | Qt::ControlModifier | Qt::MetaModifier)))
+      return false;
+    // Copy before calling out: submission may synchronously replace/delete us.
+    if (auto *button = qobject_cast<QPushButton *>(watched)) {
+      if (!key->isAutoRepeat()) button->click();
+      return true;
+    }
+    const auto submit = m_submit;
+    if (!key->isAutoRepeat()) submit();
+    return true;
+  }
+private:
+  std::function<void()> m_submit;
+};
 TranscriptText *formText(const QString &markdown, QWidget *parent) {
   // Shared denied document + image-object handler prevent Qt's local-file
   // image fallback. Questions do not install a trusted image resolver.
@@ -127,11 +153,20 @@ void QuestionPanel::rebuild() {
       input->setText(
           values[fieldId].isString()
               ? values[fieldId].toString()
-              : QString::number(values[fieldId].toDouble(), 'g', 16));
+              : QString::number(values[fieldId].toDouble(), 'g', 17));
       if (f["inputType"] == "password")
         input->setEchoMode(QLineEdit::Password);
       fieldLayout->addWidget(input);
-      m_values[fieldId] = [input] { return QJsonValue(input->text()); };
+      const bool number = f["inputType"] == "number";
+      m_values[fieldId] = [input, number] {
+        const auto text = input->text();
+        if (number && !text.isEmpty()) {
+          bool ok = false;
+          const double value = text.toDouble(&ok);
+          if (ok && std::isfinite(value)) return QJsonValue(value);
+        }
+        return QJsonValue(text);
+      };
       connect(input, &QLineEdit::textChanged, this, [this] { changed(); });
     } else if (type == "checkbox") {
       auto *input = new QCheckBox(f["label"].toString(), container);
@@ -231,14 +266,18 @@ void QuestionPanel::rebuild() {
   auto *submit = new QPushButton(
       step + 1 == steps.size() ? QString("Submit") : QString("Next"), actions);
   submit->setObjectName("questionSubmit");
-  submit->setDefault(true);
+  // Explicit text/command-Enter handlers below avoid QDialog default-button
+  // behavior submitting when Enter belongs to a checkbox/radio control.
+  submit->setAutoDefault(false);
   row->addWidget(submit);
   m_layout->addWidget(actions);
   connect(cancel, &QPushButton::clicked, this,
-          [this, chat, id] { emit cancelled(chat, id, draftAnswers()); });
+          [this, chat, id] { emit cancelled(chat, id, {}); });
   connect(back, &QPushButton::clicked, this,
           [this, chat, id, step] { emit goBack(chat, id, step); });
-  connect(submit, &QPushButton::clicked, this, [this, chat, id, step, fields] {
+  const auto submitCurrent = [this, chat, id, step, fields] {
+    if (m_chatId != chat || token() != id || m_question["currentStep"].toInt() != step)
+      return;
     const auto answers = draftAnswers();
     QString error;
     if (!QuestionForm::validateAnswers(fields, answers, true, &error)) {
@@ -246,12 +285,29 @@ void QuestionPanel::rebuild() {
       return;
     }
     emit submitStep(chat, id, step, answers);
-  });
+  };
+  connect(submit, &QPushButton::clicked, this, submitCurrent);
+  auto *enter = new SubmitTextOnEnter(actions, submitCurrent);
+  for (auto *input : body->findChildren<QLineEdit *>()) input->installEventFilter(enter);
+  // Main and side-chat forms may be visible together. Route command-Enter to
+  // the focused form, so equal window-wide shortcuts cannot cancel each other.
+  for (const auto modifier : {Qt::CTRL, Qt::META})
+    for (const auto key : {Qt::Key_Return, Qt::Key_Enter}) {
+      auto *shortcut = new QShortcut(QKeySequence(modifier | key), this);
+      shortcut->setContext(Qt::WidgetWithChildrenShortcut);
+      shortcut->setAutoRepeat(false);
+      connect(actions, &QObject::destroyed, shortcut, [shortcut] { delete shortcut; });
+      connect(shortcut, &QShortcut::activated, this, submitCurrent);
+    }
   auto *message = new QPushButton("Write a message instead", this);
   message->setObjectName("questionWriteMessage");
   m_layout->addWidget(message);
   connect(message, &QPushButton::clicked, this,
           [this, chat, id] { emit messageRequested(chat, id); });
+  for (auto *button : findChildren<QPushButton *>()) {
+    button->setAutoDefault(false);
+    button->installEventFilter(enter);
+  }
   show();
 }
 } // namespace ade

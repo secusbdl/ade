@@ -2,6 +2,7 @@
 #include "HarnessInputPreparation.h"
 #include "core/AgentEngine.h"
 #include "browser/BrowserToolBridge.h"
+#include "browser/BrowserToolResult.h"
 #include "attachments/ModelMediaCatalog.h"
 #include "attachments/ContextContentLimits.h"
 #include <QDir>
@@ -39,7 +40,9 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     engine->setFileReadCommitter([lease=m_readLease](const FileReadCapture& capture,const std::atomic_bool* canceled,QString* error){return FileReadSnapshotStore::commit(lease,capture,canceled,error);});
     engine->setMessagePreparer([guard=QPointer<AgentToolHost>(this)](const QJsonArray& history,const ProviderConfig& provider,QString* error){
         if(!guard||guard->m_fileContextRemoved){if(error)*error="The file context host is unavailable or was removed.";return QJsonArray{};}
-        return guard->m_attachmentPipeline.prepare(history,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),ContextContentLimits::forProvider(provider),error);
+        const auto converted = guard->m_context.prepareMessages(history, error);
+        if (error && !error->isEmpty()) return QJsonArray{};
+        return guard->m_attachmentPipeline.prepare(converted,guard->m_agentId,guard->m_attachmentMounts,ModelMediaCatalog::resolve(provider),ContextContentLimits::forProvider(provider),error);
     });
     engine->setHarnessInputPreparer([guard = QPointer<AgentToolHost>(this)](
                                         const QJsonArray &history,
@@ -54,7 +57,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
       const HarnessAttachmentSource source(handoff.profileDirectory(), guard->m_agentId,
                                            guard->m_attachmentMounts);
       const auto media = ModelMediaCatalog::resolve(provider);
-      const bool acpOriginalImages = provider.isOpenCodeHarness();
+      const bool acpOriginalImages = provider.isOpenCodeHarness() || provider.isCursorHarness();
       return [handoff, source, history,
               media, acpOriginalImages](const std::atomic_bool *cancelled) {
         return prepareHarnessInput(handoff, source, history,
@@ -86,12 +89,17 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         if(ShellService::handles(name)){m_shells.execute(id,name,args);return;}
         if(name=="readContext"){QString error;const auto output=m_context.readFile(args["path"].toString(),&error);if(m_engine)m_engine->completeExternalTool(id,error.isEmpty()?output:error,!error.isEmpty());return;}
         if(m_sandbox.handles(name)){m_toolAttachments.remove(id);m_attachmentErrors.remove(id);m_toolMutations.insert(id,{});m_sandbox.execute(id,name,args);return;}
-        if(m_browser&&m_browser->handles(name)){m_directBrowser.insert(id);m_browser->executeForAgent(id,m_agentId,name,args);return;}
+        if(m_browser&&m_browser->handles(name)){
+            m_directBrowser.insert(id);
+            if(name=="sendCDP"&&args.value("method")=="Page.captureScreenshot")m_directScreenshots.insert(id);
+            m_browser->executeForAgent(id,m_agentId,name,args);return;
+        }
         if(m_engine)m_engine->completeExternalTool(id,"Error: External tool is unavailable.",true);
     });
     connect(engine,&AgentEngine::externalToolCancellationRequested,this,[this](const QString& id){
         const QPointer<AgentToolHost> self(this);m_shells.cancel(id);if(!self)return;
         m_sandbox.cancel(id);if(!self)return;
+        m_directScreenshots.remove(id);
         if(m_directBrowser.remove(id)&&m_browser)m_browser->cancel(id);
     });
     connect(&m_shells,&ShellService::completed,this,[this](const QString& id,const QString& output,bool error){
@@ -160,7 +168,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
     });
     if(browser)connect(browser,&BrowserToolBridge::completed,this,[this](const QString& id,const QString& output,bool error){
         if(m_sandboxBrowser.remove(id))m_sandbox.completeBrowserRequest(id,output,error);
-        else if(m_directBrowser.remove(id)&&m_engine)m_engine->completeExternalTool(id,output,error);
+        else if(m_directBrowser.remove(id))completeDirectBrowserResult(id,output,error);
     });
     connect(&m_sandbox,&SandboxHost::fileRequest,this,[this](const QString& id,const QString& name,const QJsonObject& arguments){
         if(m_workspaceChanging){m_sandbox.completeFileRequest(id,"The workspace is changing; retry after it is connected.",true);return;}
@@ -202,6 +210,7 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         if(m_engine)m_engine->settleExternalMutation(invocation,metadata);
     });
     connect(&m_files,&ToolExecutor::fileChanged,this,&AgentToolHost::fileChanged);
+    connect(engine,&AgentEngine::fileChanged,this,&AgentToolHost::fileChanged);
     connect(&m_sandbox,&SandboxHost::attachmentFileRequest,this,[this](const QString& id,const QString& agent,const QString& operation,const QJsonObject& arguments){
         m_sandboxAttachmentFiles.insert(id);m_attachmentFiles.execute(id,agent,operation,arguments);
     });
@@ -224,7 +233,9 @@ AgentToolHost::AgentToolHost(AgentEngine* engine,BrowserToolBridge* browser,cons
         const QPointer<AgentToolHost> self(this);
         m_sandboxNetwork.clear();m_network.resetAgent(m_agentId);if(!self)return;
         resetEvents();if(!self)return;
-        m_sandboxApps.clear();m_apps.reset();if(!self)return;
+        m_sandboxApps.clear();
+        if(m_fileContextRemoved)m_apps.reset();else m_apps.resetContext();
+        if(!self)return;
         m_sandboxFiles.clear();m_files.cancel();if(!self)return;
         for(const auto& id:m_sandboxFileOwners.keys())if(!m_pendingFileMutations.contains(id))m_sandboxFileOwners.remove(id);
         m_sandboxAttachmentFiles.clear();m_attachmentFiles.cancelAll();
@@ -296,10 +307,31 @@ AgentToolHost::~AgentToolHost(){
     disconnect(&m_sandbox,nullptr,this,nullptr);disconnect(&m_network,nullptr,this,nullptr);
     if(m_browser){
         // Remove IDs before cancellation: completion can be emitted synchronously.
-        const auto direct=m_directBrowser;const auto sandbox=m_sandboxBrowser;m_directBrowser.clear();m_sandboxBrowser.clear();
+        const auto direct=m_directBrowser;const auto sandbox=m_sandboxBrowser;m_directBrowser.clear();m_directScreenshots.clear();m_sandboxBrowser.clear();
         for(const auto& id:direct)m_browser->cancel(id);
         for(const auto& id:sandbox)m_browser->cancel(id);
     }
+}
+void AgentToolHost::completeDirectBrowserResult(const QString& id,const QString& output,bool error){
+    const bool screenshot=m_directScreenshots.remove(id);
+    const QPointer<AgentEngine> engine=m_engine;
+    if(!engine||engine->externalToolCallId(id).isEmpty())return;
+    if(!screenshot||error){engine->completeExternalTool(id,capBrowserModelOutput(output,error,engine->provider().apiKey),error);return;}
+    if(m_fileContextRemoved){engine->completeExternalTool(id,"The screenshot attachment context was removed.",true);return;}
+    const auto image=decodeBrowserScreenshot(output);
+    if(!image.error.isEmpty()){engine->completeExternalTool(id,image.error,true);return;}
+    QString failure;
+    const auto reference=m_attachmentStore.write(m_agentId,image.fileName,image.bytes,&failure);
+    QJsonObject metadata;
+    if(failure.isEmpty())metadata=captureAttachments(QJsonArray{reference.toJson()},&failure);
+    if(!failure.isEmpty()){engine->completeExternalTool(id,capBrowserModelOutput("Screenshot attachment failed: "+failure,true,engine->provider().apiKey),true);return;}
+    const QPointer<AgentToolHost> self(this);
+    // Publish only an owned virtual path. A listener may cancel/remove this host
+    // or start a replacement request; recheck the original opaque token after it.
+    emit attachmentCreated(id,reference.path,image.mimeType);
+    if(!self||!engine||m_engine!=engine||m_fileContextRemoved||engine->externalToolCallId(id).isEmpty())return;
+    engine->completeExternalToolWithAttachments(id,"Screenshot saved to "+reference.path+". Image content is prepared for models that support images.",false,
+        metadata.value("attachments").toArray(),metadata.value("pathReferences").toObject(),metadata.value("pathMetadata").toObject());
 }
 void AgentToolHost::removeEventSubscription(const QString& id){const auto details=m_eventSubscriptions.take(id);if(details["kind"]=="cdp"&&m_browser)m_browser->unsubscribeEvent(id);}
 void AgentToolHost::resetEvents(){const auto ids=m_eventSubscriptions.keys();const QPointer<AgentToolHost> self(this);for(const auto& id:ids){removeEventSubscription(id);if(!self)return;}}
@@ -440,7 +472,7 @@ void AgentToolHost::cancelUndo(const QString& id){if(const auto canceled=m_undoR
 ContextSnapshot AgentToolHost::configureContext(const ContextOptions& options) {
     auto snapshot = m_context.load(options);
     if (m_engine) {
-        m_engine->setSystemContext(snapshot.prompt);
+        m_engine->setSystemContext(m_context.nativeSystemContext());
         m_engine->setExternalHarnessContext(ContextLoader::externalHarnessContext(snapshot));
     }
     return snapshot;

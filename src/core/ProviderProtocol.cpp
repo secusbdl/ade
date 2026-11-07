@@ -1,5 +1,6 @@
 #include "ProviderProtocol.h"
 #include "CustomModelOptions.h"
+#include "ProviderModelRules.h"
 #include "AgentPresentation.h"
 #include <QJsonDocument>
 #include <QMap>
@@ -139,8 +140,17 @@ ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonAr
             }
             appendGrouped(messages, role == "assistant" ? "assistant" : "user", content, "content");
         }
-        body = {{"model", p.model}, {"messages", messages}, {"system", system}, {"stream", true},
-                {"max_tokens", p.maxOutputTokens > 0 ? p.maxOutputTokens : 8192}};
+        auto wireModel = p.model;
+        wireModel.replace('.', '-');
+        const int budget = p.thinkingMode == "enabled" ? (p.thinkingBudget > 0 ? p.thinkingBudget : 1024) : 0;
+        const auto output = providerModelRules::anthropicOutputTokens(wireModel, p.maxOutputTokens, budget);
+        // Custom options are validated and normalized later, independently of
+        // the provider-default fields. Reject an impossible ordinary manual
+        // budget before dispatch instead of sending a known-invalid request.
+        if (p.customRequest.isEmpty() && p.thinkingMode == "enabled" && (budget < 1024 || qint64(budget) >= output))
+            return {{}, {}, "Anthropic thinking budget must be at least 1024 and less than the total output limit."};
+        body = {{"model", wireModel}, {"messages", messages}, {"system", system}, {"stream", true},
+                {"max_tokens", output}};
         if (!tools.isEmpty()) {
             QJsonArray nativeTools;
             for (const auto &value : tools) { const auto fn = value.toObject()["function"].toObject();
@@ -149,7 +159,7 @@ ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonAr
         }
         if (!p.thinkingMode.isEmpty()) {
             QJsonObject thinking{{"type", p.thinkingMode}};
-            if (p.thinkingMode == "enabled" && p.thinkingBudget > 0) thinking["budget_tokens"] = p.thinkingBudget;
+            if (p.thinkingMode == "enabled") thinking["budget_tokens"] = budget;
             body["thinking"] = thinking;
         }
         if (!p.reasoningEffort.isEmpty()) body["output_config"] = QJsonObject{{"effort", p.reasoningEffort}};
@@ -211,7 +221,16 @@ ProviderRequest ProviderProtocol::prepare(const ProviderConfig &p, const QJsonAr
         QJsonArray messages{QJsonObject{{"role", "system"}, {"content", system}}};
         for (const auto &value : history) {
             auto message = value.toObject(); message.remove("ade_native"); message.remove("metadata"); message.remove("ade_compressedHistory");
-            if (message["content"].isArray()) message["content"] = modelContent(message["content"], protocol, message["role"].toString());
+            if (message["content"].isArray()) {
+                auto content = modelContent(message["content"], protocol, message["role"].toString());
+                // @ai-sdk/openai-compatible 2.0.47 convertToOpenAICompatibleChatMessages:
+                // a user message with exactly one text part is sent as plain string content.
+                if (message["role"].toString() == "user" && content.size() == 1
+                    && content.first().toObject()["type"].toString() == "text")
+                    message["content"] = content.first().toObject()["text"].toString();
+                else
+                    message["content"] = content;
+            }
             const auto source = message.take("ade_reasoning_source").toObject();
             if (source["providerId"].toString() != p.id || source["model"].toString() != p.model)
                 message.remove("reasoning_content");

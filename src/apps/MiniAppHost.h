@@ -25,6 +25,8 @@ public:
     MiniAppPage* activePage() const;
     bool ownsPage(const QString& instanceId,const MiniAppPage* page) const;
     QString activeTabId() const;
+    // Forget sandbox-owned activity without closing already bound preview tabs.
+    void resetContext();
 
 public slots:
     void execute(const QString& requestId,const QString& operation,const QJsonObject& arguments);

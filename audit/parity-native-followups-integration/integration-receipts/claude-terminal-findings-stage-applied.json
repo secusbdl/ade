@@ -1,0 +1,21 @@
+{
+  "stage": "claude-terminal-findings-stage",
+  "appliedUtc": "2026-11-07T03:12:18.530711+00:00",
+  "handoffSha256CanonicalLf": "427a8f31fa44131ffb947e3e7787707a732aebb382030fc13078afa538d02cee",
+  "patchSha256CanonicalLf": "1679cebb5e4c4b4e0820d663aae1deed43da2a64fe6982670d761087919e0431",
+  "before": {
+    "src/shell/ShellProtocol.h": "7322bdea6554396165f05502ab93f9f230aa1d0d2030190cd1632db5590dc028",
+    "src/shell/ShellProtocol.cpp": "62b1c2a441a73422540d415d6f29bd48460ccb1bf3f6b5272110f410e7cca5b9",
+    "src/shell/ShellService.cpp": "4f8a7c443f36923a9a6319d65d182aae008d9dde31529d4040796fa6d80cd984",
+    "tests/test_shell_followups.cpp": null,
+    "tests/support/ShellFallbackFixture.cpp": null
+  },
+  "after": {
+    "src/shell/ShellProtocol.h": "9b63b48cad583fd828a292436b0bb2fbf8e06750259882f9f796c251158ddf4c",
+    "src/shell/ShellProtocol.cpp": "7e666961ab6d1cd0c792af50f2fdf624863c7c9ffc7868e5641132ea299ae8d3",
+    "src/shell/ShellService.cpp": "03ae9a73eb99fb08fb6ab3c0e56fd3d60a06bcee6b603d3ffe4f86cf8458a8b0",
+    "tests/test_shell_followups.cpp": "c10dd4edcf0b9e624887057f88a49cd2993c9bac7a8c4525ddba9d2f451a7ea9",
+    "tests/support/ShellFallbackFixture.cpp": "1c69632a676fcaa4beb191663f11a4e029b14f53b224589808107ae34e1b17b5"
+  },
+  "integrationNote": "Narrow patch hunks preserve other integrated changes. Full assembled verification pending."
+}

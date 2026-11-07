@@ -1,0 +1,14 @@
+********* Start testing of MiniAppFindingsTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : MiniAppFindingsTests::initTestCase()
+FAIL!  : MiniAppFindingsTests::inactiveOpenAppStillReachesItsQuickJsListener() Compared values are not the same
+   Actual   (received.size()): 0
+   Expected (1)              : 1
+D:/age/ADE/private/mini-app-findings-stage/tests/test_mini_app_findings.cpp(82) : failure location
+FAIL!  : MiniAppFindingsTests::parsingMessageArrivesBeforeLoadAndOnReload() Compared values are not the same
+   Actual   (messages.size()): 0
+   Expected (1)              : 1
+D:/age/ADE/private/mini-app-findings-stage/tests/test_mini_app_findings.cpp(97) : failure location
+PASS   : MiniAppFindingsTests::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 9645ms
+********* Finished testing of MiniAppFindingsTests *********

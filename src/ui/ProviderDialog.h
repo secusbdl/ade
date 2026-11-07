@@ -38,6 +38,7 @@ private:
     void beginHarnessConnection(bool login);
     void beginOpenCodeDiscovery();
     void beginClaudeDiscovery();
+    void checkCursorInstallation();
     void finishHarnessConnection();
     void beginApiOperation(bool validation);
     void cancelOperations();

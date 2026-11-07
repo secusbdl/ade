@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="BrowserEventFindings" timestamp="2026&#x002D;11&#x002D;07T05:21:17" hostname="VOID" tests="7" failures="3" errors="0" skipped="0" time="10.863">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="BrowserEventFindings" time="0.001"/>
+  <testcase name="inspectorWorksBeforeUnsubscribe" classname="BrowserEventFindings" time="0.732"/>
+  <testcase name="inspectorSurvivesSandboxUnsubscribe" classname="BrowserEventFindings" time="3.052">
+    <failure type="fail" message="&apos;pick(b,inspector)&apos; returned FALSE. (Sandbox unsubscribe removed the inspector&apos;s real CDP event receiver)"/>
+  </testcase>
+  <testcase name="inspectorSurvivesPreReadyUnsubscribe" classname="BrowserEventFindings" time="3.074">
+    <failure type="fail" message="&apos;pick(b,inspector)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="inspectorSurvivesBridgeDestruction" classname="BrowserEventFindings" time="3.069">
+    <failure type="fail" message="&apos;pick(b,inspector)&apos; returned FALSE. ()"/>
+  </testcase>
+  <testcase name="consoleReturnsAfterDisableAndNavigation" classname="BrowserEventFindings" time="0.931"/>
+  <testcase name="cleanupTestCase" classname="BrowserEventFindings" time="0.000"/>
+</testsuite>

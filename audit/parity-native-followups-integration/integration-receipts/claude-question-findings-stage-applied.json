@@ -1,0 +1,34 @@
+{
+  "stage": "claude-question-findings-stage",
+  "appliedUtc": "2026-11-07T03:08:44.246567+00:00",
+  "handoffSha256CanonicalLf": "95b007487266db55f8b67cec3d01aa2bd970b14eecf4523d9515b1aa9695b7b4",
+  "patchSha256CanonicalLf": "8c78abb24663fbc7a790d241a4be7b98eb9b5702c794599559786aceb976c5b6",
+  "before": {
+    "src/core/QuestionForm.cpp": "f1c8c1cfa9d870b92ac3ba85426094f7c628993a783052c0884461ddf9cea0f9",
+    "src/core/AgentEngineControl.cpp": "6acaeacab41c9d81285e22391f815e2a1a150d03d471c04aa96da08b49b372cc",
+    "src/core/AgentEngineHarness.cpp": "251abbaec9b006cd90f9c9554a4bc4a2847428a9952f4eaa03ad6a9b06c325aa",
+    "src/ui/QuestionPanel.cpp": "fc0740ead3f74ff3d8c041d940e2e5ed6a6ce2208fb15c188c98d64f3043982b",
+    "tests/test_conversation_control.cpp": "296c0cff6d19ffc7d33b5506841323b527d69ba904b8b987157e1604a6ee6227",
+    "tests/test_question_panel.cpp": "b34be41010d9502a04934760e1b2b1773e3bb618581332c22098462a85f6b31a",
+    "tests/test_mcp_engine.cpp": "2f3e5ebbc79c1201daae99b5b7e18e6e08846122c71faedbd9adf6b8a676196e",
+    "tests/support/DirectMcpFixture.cpp": "d53bc051f60fce561ef0d76cf5f474a8696fb7f489ea281198cb7a4b0ff60024",
+    "tests/test_question_findings.cpp": null,
+    "tests/TestQuestionHelpers.h": null,
+    "tests/support/QuestionFindingsFixture.cpp": null
+  },
+  "after": {
+    "src/core/QuestionForm.cpp": "4822edba9f56dafa528e463193d0979f4b8306d75d046ad46670cb6a0f87154e",
+    "src/core/AgentEngineControl.cpp": "d1613ccd038a5c8dd292505f73d6f951e48242293db7a9a3681f1eb17f9acb48",
+    "src/core/AgentEngineHarness.cpp": "8ee8597f9fb4b78fafaea355ff89892472abeb4bdfb240c9150384a98b7a4294",
+    "src/ui/QuestionPanel.cpp": "86cf5b06def6135da81d9e31f7cfc553ab3fee3bb18c4963cc76d1367bdb027a",
+    "tests/test_conversation_control.cpp": "29efd611a65b7260cc4f350f73c0c1c857091b5bdc35030dee9e0be517981ab6",
+    "tests/test_question_panel.cpp": "96c6ef86170c02c49797718738cdeb2c1204cb7ffc8d5844eda9a21612b5e83b",
+    "tests/test_mcp_engine.cpp": "dab820e39eb266fe294c644124788a8657f33bf1cd3e24909a7e00a0858c9b7d",
+    "tests/support/DirectMcpFixture.cpp": "0ca93e1bc78764d38cc617fdde9e14888a313533dddacc101a242e872e80820d",
+    "tests/test_question_findings.cpp": "cc8b75d4721b49bf7005f00f69b1ef7ec59b247456c5c501df00bdd388c20242",
+    "tests/TestQuestionHelpers.h": "341dafd99128aaa09a0b6b266f3b1e43286f86f574972962a961cc604cc30836",
+    "tests/support/QuestionFindingsFixture.cpp": "a77519c0962815c17d60dcffa609d190d904384ad27afe829d66a7849ab8d22d"
+  },
+  "cmakeAdditionsSha256CanonicalLf": "5ecfc080a15fe2f12a0cfb3915247a90e00aa35912244d71525ae0c5c5838f7a",
+  "integrationNote": "Applied only patch hunks; current unrelated source changes retained. Provider HTTP test runtime directory aligned with existing CMake targets. Full coherent rebuild/gate still required."
+}

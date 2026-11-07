@@ -146,6 +146,15 @@ QList<Conversation> SessionStore::load(QString* error) const {
     }
     m_valid=true;return result;
 }
+bool SessionStore::canAdoptReload(const SessionStore& candidate,QString* error) const {
+    if(error)error->clear();
+    if(!candidate.m_loaded||!candidate.m_valid){if(error)*error="The reloaded conversation storage is invalid.";return false;}
+    if(candidate.m_directory!=m_directory||(!m_canonicalDirectory.isEmpty()&&candidate.m_canonicalDirectory.compare(m_canonicalDirectory,Qt::CaseInsensitive)!=0)){
+        if(error)*error="Conversation storage moved. Reopen the original data directory; this window has not adopted the replacement.";
+        return false;
+    }
+    return true;
+}
 bool SessionStore::save(const QList<Conversation>& sessions, QString* error) const {
     if(!m_loaded){QString loadError;load(&loadError);if(!loadError.isEmpty()){if(error)*error=loadError;return false;}}
     return saveWithCleanup(sessions,m_pendingCleanup,error);

@@ -1,0 +1,129 @@
+{
+  "state": "frozen_private",
+  "scope": "Desktop review F4 cleanup scheduling and F6 open side-chat model refresh only. Apply after startup-recovery.patch; no headers/API changes in this delta.",
+  "patch": {
+    "path": "desktop-provider-followups.patch",
+    "sha256": "069dbed933154accb5649776b0d066e6fdac5c5f5b8ba44f93daa0baff6b9cbe"
+  },
+  "manifest": {
+    "path": "SOURCE-MANIFEST.json",
+    "sha256": "74b4e26f2a0b20166d8d70ca278f16573c032079f356955124aff95a23197838",
+    "sourceHashBasis": "canonical_git_text_LF",
+    "artifactHashBasis": "exact_raw_bytes"
+  },
+  "cohort": {
+    "base": "private/behavior-cohort-186/manifest.json",
+    "recoveryOverlay": "private/startup-recovery-stage; copied frozen source only, compiled privately against coherent186 archives",
+    "commonHashes": [
+      {
+        "path": "MainWindow.h",
+        "sha256": "50c6e154c597f7234c3772817e4b3533575a83032c556640a44b47118e3c1ea8"
+      },
+      {
+        "path": "MainWindowControl.cpp",
+        "sha256": "11252df0611fe91fb396975240d5e90a5c3291e2fb08433f583cbbc4d0fb6405"
+      },
+      {
+        "path": "MainWindowConversations.cpp",
+        "sha256": "894dcc8313833145861c486d2ac4d0737bad83f003f6ec5f0b7a4bad4c176aee"
+      },
+      {
+        "path": "MainWindowRecovery.cpp",
+        "sha256": "1ab23ddefe58aa0311282e5066e3a2964577057324ec37efd4923146e27d3c01"
+      },
+      {
+        "path": "MainWindowSideChats.cpp",
+        "sha256": "53dbf5948e6cfbb3af75bc805a1c27b8dc9e095b1ae38d8c9b3967b8d0df110a"
+      },
+      {
+        "path": "SessionStore.cpp",
+        "sha256": "862de68e4752840da6e5e0c792b8334f7a743c3cf6d990ea40e4459d15b595b4"
+      },
+      {
+        "path": "SessionStore.h",
+        "sha256": "cf4b11d3cefe0ab9ff9ecfd7f2c3919892993f3d3f5db00d6b1583d94387009f"
+      }
+    ],
+    "dependency": "MainWindow constructor uses the existing sessionError captured by the preceding recovery patch."
+  },
+  "findings": [
+    {
+      "id": "F4",
+      "state": "reproduced_fixed",
+      "change": "Startup cleanup is scheduled solely when session load succeeded, independently of provider load diagnostics. Invalid session envelopes never authorize cleanup; failed transaction retains marker and retries next launch. Provider file remains byte-exact."
+    },
+    {
+      "id": "F6",
+      "state": "reproduced_fixed",
+      "change": "After successful provider CAS import/dialog Save, refresh open side panes as well as main models. Guard window lifetime across refresh callbacks. Preserve exact chat selection/draft/current tab; Cancel and lock-rejected imports publish nothing."
+    }
+  ],
+  "tests": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "reports": [
+      {
+        "name": "before-final",
+        "tests": 10,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "before-final.txt",
+            "sha256": "21b4185e07d889448b1d15f8e478e6a032b1fb24c4e4e16e439bddd2d248a64a"
+          },
+          {
+            "path": "before-final.xml",
+            "sha256": "358cafbc5ac7a8d2035123e258ed9bae4167ae3e3f8dd5fd1837bb095ed81f56"
+          }
+        ]
+      },
+      {
+        "name": "after-final",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "after-final.txt",
+            "sha256": "0e51561baecfb0aa1ba6d3febe38641585445fddb8bcd9032479354886913374"
+          },
+          {
+            "path": "after-final.xml",
+            "sha256": "4bd7b7009a24f0737f9c52b6ca5bc6c2da54cb6ff3cc9d37ae8d5073bbe94591"
+          }
+        ]
+      },
+      {
+        "name": "side-host",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "files": [
+          {
+            "path": "side-host.txt",
+            "sha256": "64c7c18d89ac76fecc8914d95d5c4be5663c7c7acf0fa1cad3bd37e2527d9b7a"
+          },
+          {
+            "path": "side-host.xml",
+            "sha256": "775fc38cb6cfe95b9f2197c7d259aa3121434b85293c5d9bdaef278b2fb9ca3f"
+          }
+        ]
+      }
+    ]
+  },
+  "cmake": "CMAKE-ADDITIONS.txt",
+  "harnessNotes": [
+    "Initial private compilation mixed quoted old/new SessionStore headers; corrected by copying the immutable header tree before overlaying the frozen recovery headers. No production defect inferred from that compiler error.",
+    "No live credentials, network/model request, desktop input, shared source or shared build used. Provider keys are explicit synthetic fixtures encrypted by normal ProviderStore."
+  ],
+  "limits": [
+    "Current assembled shared integration still requires root rebuild/test.",
+    "F5 Settings keyboard routing is separate investigation, not included here.",
+    "Cleanup continues to rely on existing durable SessionStore ownership/locking/revision checks; this patch changes only scheduling."
+  ]
+}

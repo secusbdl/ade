@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="QuestionFindingsTest" timestamp="2026&#x002D;11&#x002D;07T04:49:12" hostname="VOID" tests="31" failures="23" errors="0" skipped="0" time="4.494">
+  <properties>
+    <property name="QTestVersion" value="6.11.2"/>
+    <property name="QtVersion" value="6.11.2"/>
+    <property name="QtBuild" value="Qt 6.11.2 (x86_64&#x002D;little_endian&#x002D;llp64 static release build; by GCC 16.2.0)"/>
+  </properties>
+  <testcase name="initTestCase" classname="QuestionFindingsTest" time="0.000"/>
+  <testcase name="resultDistinguishesSubmittedFromDraft(cancel)" classname="QuestionFindingsTest" time="0.000">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (keep)                                          : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="resultDistinguishesSubmittedFromDraft(stop)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (keep)                                          : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="resultDistinguishesSubmittedFromDraft(message)" classname="QuestionFindingsTest" time="0.000"/>
+  <testcase name="engineCancellationDoesNotPersistDraft(openai&#x002D;cancel)" classname="QuestionFindingsTest" time="0.249">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(openai&#x002D;stop)" classname="QuestionFindingsTest" time="0.194">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(openai&#x002D;message)" classname="QuestionFindingsTest" time="0.263"/>
+  <testcase name="engineCancellationDoesNotPersistDraft(responses&#x002D;cancel)" classname="QuestionFindingsTest" time="0.189">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(responses&#x002D;stop)" classname="QuestionFindingsTest" time="0.184">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(responses&#x002D;message)" classname="QuestionFindingsTest" time="0.293"/>
+  <testcase name="engineCancellationDoesNotPersistDraft(anthropic&#x002D;cancel)" classname="QuestionFindingsTest" time="0.203">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(anthropic&#x002D;stop)" classname="QuestionFindingsTest" time="0.204">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(anthropic&#x002D;message)" classname="QuestionFindingsTest" time="0.264"/>
+  <testcase name="engineCancellationDoesNotPersistDraft(google&#x002D;cancel)" classname="QuestionFindingsTest" time="0.213">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(google&#x002D;stop)" classname="QuestionFindingsTest" time="0.214">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["answers"].toObject().contains("draft")): 1
+   Expected (action=="message")                             : 0]]>
+    </failure>
+  </testcase>
+  <testcase name="engineCancellationDoesNotPersistDraft(google&#x002D;message)" classname="QuestionFindingsTest" time="0.279"/>
+  <testcase name="panelCancelOmitsDraft" classname="QuestionFindingsTest" time="0.004">
+    <failure type="fail" message="&apos;spy[0][2].toJsonObject().isEmpty()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[QFontDatabase: Cannot find font directory C:/Qt/6.11.2-mingw64-static/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="numberAnswersKeepJsonType(default)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="&apos;value.isDouble()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="numberAnswersKeepJsonType(decimal)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="&apos;value.isDouble()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="numberAnswersKeepJsonType(exponent)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="&apos;value.isDouble()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="numberAnswersKeepJsonType(empty)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="&apos;value.isDouble()&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="emptyAndInvalidNumbersAreNotCoerced" classname="QuestionFindingsTest" time="0.001">
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="enterSubmitsCurrentTextStep(plain)" classname="QuestionFindingsTest" time="0.002">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (spy.size()): 0
+   Expected (1)         : 1]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="enterSubmitsCurrentTextStep(control)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (spy.size()): 0
+   Expected (1)         : 1]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="enterSubmitsCurrentTextStep(meta)" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (spy.size()): 0
+   Expected (1)         : 1]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="enterOtherAndExclusions" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (spy.size()): 0
+   Expected (1)         : 1]]>
+    </failure>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="submitCallbackMayDeletePanel" classname="QuestionFindingsTest" time="0.001">
+    <failure type="fail" message="&apos;!alive&apos; returned FALSE. ()"/>
+    <system-err>
+      <![CDATA[This plugin does not support propagateSizeHints()]]>
+    </system-err>
+  </testcase>
+  <testcase name="helperDisconnectKeepsSubmittedProgress(codex)" classname="QuestionFindingsTest" time="0.601">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped]]>
+    </failure>
+  </testcase>
+  <testcase name="helperDisconnectKeepsSubmittedProgress(claude&#x002D;code)" classname="QuestionFindingsTest" time="0.465">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped]]>
+    </failure>
+  </testcase>
+  <testcase name="helperDisconnectKeepsSubmittedProgress(opencode)" classname="QuestionFindingsTest" time="0.564">
+    <failure type="fail" message="Compared values are not the same">
+      <![CDATA[   Actual   (result["cancelReason"]): QJsonValue(undefined)
+   Expected ("agent_stopped")       : agent_stopped]]>
+    </failure>
+  </testcase>
+  <testcase name="cleanupTestCase" classname="QuestionFindingsTest" time="0.000"/>
+</testsuite>

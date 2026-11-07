@@ -354,8 +354,11 @@ QJsonObject QuestionForm::snapshot(const QString &token) const {
 }
 QJsonObject QuestionForm::result(const QString &reason) const {
   auto answers = m_answers;
-  for (auto it = m_draft.begin(); it != m_draft.end(); ++it)
-    answers[it.key()] = it.value();
+  // Explicit Cancel and agent Stop preserve only submitted steps. The
+  // message-interrupt path deliberately carries the current draft upstream.
+  if (reason.isEmpty() || reason == "user_sent_message")
+    for (auto it = m_draft.begin(); it != m_draft.end(); ++it)
+      answers[it.key()] = it.value();
   QJsonObject out{
       {"completed", reason.isEmpty() && completed()},
       {"cancelled", !reason.isEmpty() && reason != "user_sent_message"},

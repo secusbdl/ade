@@ -76,7 +76,7 @@ private slots:
     QTRY_COMPARE_WITH_TIMEOUT(done.size(), 1, 5000);
     const auto history = QJsonDocument(engine.messages()).toJson();
     QVERIFY(history.contains("first answer"));
-    QVERIFY(history.contains("partial draft"));
+    QVERIFY(!history.contains("partial draft"));
     QVERIFY(history.contains("completedSteps"));
     QVERIFY(history.contains("cancelled"));
     QVERIFY(engine.lastTurnSucceeded());

@@ -180,7 +180,7 @@ void MainWindow::connectAgentControls(const QString &id, AgentEngine *engine) {
   engine->setQueueCommitter([self, owner, id](const QJsonArray &history,
                                               const QJsonArray &queue,
                                               QString *error) {
-    if (!self || !owner || self->m_engines.value(id) != owner) {
+    if (!self || self->m_sessionTransition || !owner || self->m_engines.value(id) != owner) {
       if (error)
         *error = "The chat is no longer available.";
       return false;

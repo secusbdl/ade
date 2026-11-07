@@ -1,0 +1,14 @@
+********* Start testing of SkillsHostTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : SkillsHostTest::initTestCase()
+QWARN  : SkillsHostTest::skillResolvesAgainOnSecondTurn() This plugin does not support propagateSizeHints()
+QWARN  : SkillsHostTest::skillResolvesAgainOnSecondTurn() This plugin does not support raise()
+FAIL!  : SkillsHostTest::skillResolvesAgainOnSecondTurn() 'encoded(model.requests[1]).contains("SKILL_BODY_SENTINEL")' returned FALSE. (Earlier accepted skill invocation vanished from second provider request)
+D:/age/ADE/private/skills-slash-stage/tests/test_skills_host.cpp(94) : failure location
+QWARN  : SkillsHostTest::sideSlashIsAnOwnedAction() This plugin does not support propagateSizeHints()
+QWARN  : SkillsHostTest::sideSlashIsAnOwnedAction() This plugin does not support raise()
+FAIL!  : SkillsHostTest::sideSlashIsAnOwnedAction() 'choice(composer,"command:side")>=0' returned FALSE. ()
+D:/age/ADE/private/skills-slash-stage/tests/test_skills_host.cpp(99) : failure location
+PASS   : SkillsHostTest::cleanupTestCase()
+Totals: 2 passed, 2 failed, 0 skipped, 0 blacklisted, 7972ms
+********* Finished testing of SkillsHostTest *********

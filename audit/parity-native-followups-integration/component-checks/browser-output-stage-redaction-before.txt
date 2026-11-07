@@ -1,0 +1,10 @@
+********* Start testing of BrowserOutputTests *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-llp64 static release build; by GCC 16.2.0), windows 11
+PASS   : BrowserOutputTests::initTestCase()
+QINFO  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands) direct model output UTF8 bytes 407554
+FAIL!  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands) 'output.toUtf8().size() <= 40 * 1024' returned FALSE. (407554)
+D:/age/ADE/private/browser-output-stage/tests/test_browser_output.cpp(381) : failure location
+QWARN  : BrowserOutputTests::directLargeDomAndConsoleAreCapped(redaction-expands) QTemporaryDir: Unable to remove "C:\\Users\\secus\\AppData\\Local\\Temp\\test_browser_output-xLJFTE" most likely due to the presence of read-only files.
+PASS   : BrowserOutputTests::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 1040ms
+********* Finished testing of BrowserOutputTests *********
